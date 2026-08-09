@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2eade">
+<title>스위치를 켜자 나침반이 돌았다 · 전류가 흐르는 코일 주위의 자기장</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --abyss:#f2eade; --deep:#f3ece1; --surface:#f3ede3; --surface2:#f4efe5;
+  --line:#c1ac82; --line-soft:#dccfae;
+  --ink:#2e2315; --ink-dim:#5c4a33; --ink-mute:#96805c;
+  --accent:#a05c2c; --accent2:#a05c2c; --on-accent:#21328c;
+  --c1:#8a5f24;  /* 마찰 전기 */
+  --c2:#7d5ba6;  /* 전기력 */
+  --c3:#3a7a3f;  /* 전자 */
+  --c4:#b23a30;  /* (+)전하 · 대전 */
+  --c5:#2e5f8f;  /* (-)전하 */
+  --gold:#8a5f24; --ok:#2c7a44; --danger:#b3362e;
+  --disp:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:var(--disp); --mono:"JetBrains Mono",ui-monospace,monospace; --jua:"Jua",var(--disp);
+  --header-h:60px; --r:16px; --shadow:0 18px 50px -22px rgba(0,0,0,.8); --scrim:.82;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);line-height:1.62;
+  background:radial-gradient(1150px 600px at 78% -8%, rgba(160,92,44,.14), transparent 60%),
+    radial-gradient(820px 520px at 10% 10%, rgba(125,91,166,.07), transparent 58%), var(--abyss);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+::selection{background:rgba(160,92,44,.32);color:#fff}
+#bgLayer{position:fixed;inset:0;z-index:-3;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .45s}
+#bgScrim{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:linear-gradient(180deg,rgba(250,244,230,calc(var(--scrim)*.84)),rgba(250,244,230,var(--scrim)) 58%,rgba(250,244,230,calc(var(--scrim)*1.12)))}
+#stars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+@media print{#bgLayer,#bgScrim,#stars{display:none}}
+
+#cover{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:26px 18px;overflow-y:auto;
+  background:linear-gradient(180deg,rgba(250,244,230,.5),rgba(250,244,230,.86))}
+#cover.hide{display:none}
+body.cover-on header.top,body.cover-on main,body.cover-on #app-credit,
+body.cover-on .prog-list,body.cover-on #toast{display:none!important}
+.cover-in{width:100%;max-width:720px;text-align:center;animation:coverUp .6s cubic-bezier(.22,1,.36,1)}
+@keyframes coverUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.cover-emoji{font-size:clamp(30px,7vw,44px);letter-spacing:.18em;line-height:1;filter:drop-shadow(0 0 18px rgba(160,92,44,.7))}
+.cover-title{font-family:var(--disp);font-weight:800;font-size:clamp(28px,5.8vw,50px);line-height:1.16;margin:18px 0 10px;
+  letter-spacing:-.6px;text-shadow:0 0 26px rgba(160,92,44,.4),0 2px 20px rgba(0,0,0,.75)}
+.cover-sub{color:var(--ink-dim);font-size:clamp(14px,2.6vw,17px)}
+.cover-meta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.steps-card{background:rgba(242,232,210,.85);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;
+  margin:26px auto 0;max-width:540px;text-align:left;backdrop-filter:blur(8px);box-shadow:var(--shadow)}
+.steps-card h3{font-family:var(--jua);font-size:18px;text-align:center;color:var(--gold);margin-bottom:14px}
+.steps-card ol{list-style:none;display:grid;gap:11px}
+.steps-card li{display:flex;gap:11px;align-items:flex-start;font-size:15px;color:var(--ink-dim);line-height:1.5}
+.steps-card li .sn{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;
+  font-weight:800;background:var(--ok);color:#f2f7ea;margin-top:2px}
+.steps-card li.opt .sn{background:#b09a6e;color:#b9873c}
+.steps-card li b{color:var(--ink)}
+.cover-cta{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:26px}
+.btn.xl{font-size:18px;padding:16px 34px;border-radius:16px}
+.cover-hint{font-size:12.5px;color:var(--ink-mute)}
+
+header.top{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(246,238,219,.96),rgba(246,238,219,.8) 70%,rgba(246,238,219,0));
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
+.top-bar{max-width:1180px;margin:0 auto;height:var(--header-h);display:flex;align-items:center;gap:12px;padding:0 16px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;background:none;border:0;cursor:pointer;font-family:var(--body);color:inherit;text-align:left;padding:0}
+.brand .logo{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;font-size:18px;
+  background:radial-gradient(circle at 30% 30%,#f6f1e9,#f3ece1);border:1px solid var(--line)}
+.brand b{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:-.2px;white-space:nowrap}
+.brand b span{color:var(--accent2)}
+.brand .sub{font-size:11px;color:var(--ink-mute);white-space:nowrap}
+@media(max-width:560px){.brand .sub{display:none}}
+.head-right{margin-left:auto;display:flex;align-items:center;gap:9px}
+.hbtn{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:15px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--ink-dim);cursor:pointer;transition:.18s;text-decoration:none}
+.hbtn:hover{border-color:var(--accent);color:var(--ink)}
+body.teacher #tmodeBtn{background:rgba(138,95,36,.14);border-color:var(--gold)}
+.progress-mini{display:flex;align-items:center;gap:9px;cursor:help}
+.progress-mini .bar{width:92px;height:7px;border-radius:99px;background:#f3ede3;overflow:hidden;border:1px solid var(--line)}
+.progress-mini .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .5s cubic-bezier(.22,1,.36,1);box-shadow:0 0 12px var(--accent)}
+.progress-mini .pct{font-family:var(--mono);font-size:12px;color:var(--accent2);min-width:34px;text-align:right}
+@media(max-width:520px){.progress-mini .bar{width:48px}}
+
+nav.tabs{max-width:1180px;margin:0 auto;padding:0 8px 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:none;display:flex;align-items:center;gap:7px;font-family:var(--body);font-size:14px;font-weight:700;
+  color:var(--ink-dim);background:transparent;border:1px solid transparent;padding:8px 13px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:.2s}
+nav.tabs button .sn{flex:none;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);
+  font-size:11px;font-weight:700;background:#efe4c9;border:1px solid var(--line);color:var(--ink-mute)}
+nav.tabs button:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+nav.tabs button.active{color:#fff;background:linear-gradient(180deg,#b9873c,var(--accent));box-shadow:0 6px 18px -6px var(--accent)}
+nav.tabs button.active .sn{background:#f4eee4;color:var(--accent2);border-color:transparent}
+nav.tabs button.done .sn{background:var(--ok);color:#f2f7ea;border-color:transparent}
+nav.tabs button.done .sn i{display:none}
+nav.tabs button.done .sn::after{content:"✓"}
+nav.tabs .tab-sep{flex:none;width:1px;height:20px;background:var(--line);margin:0 4px}
+nav.tabs button.optional{color:#b9873c;border-color:#f6f1e8;background:rgba(176,154,110,.18)}
+nav.tabs button.optional.active{background:linear-gradient(180deg,#7d5ba6,#7d5ba6);color:#fff}
+
+main{max-width:1180px;margin:0 auto;padding:20px 16px 90px}
+.panel{display:none;animation:fade .45s cubic-bezier(.22,1,.36,1)}
+.panel.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.stepline{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.stepline .sbadge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;letter-spacing:1px;
+  color:#fff;background:linear-gradient(180deg,#b9873c,var(--accent));padding:4px 12px;border-radius:999px;font-weight:700}
+.stepline .swhat{font-size:13px;color:var(--ink-mute)}
+.stepline.opt .sbadge{background:linear-gradient(180deg,#7d5ba6,#7d5ba6)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--accent2);margin-bottom:12px}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--accent)}
+h1.big{font-family:var(--disp);font-weight:800;font-size:clamp(28px,6vw,52px);line-height:1.1;letter-spacing:-.6px;text-shadow:0 2px 24px rgba(0,0,0,.65)}
+h2.sec{font-family:var(--disp);font-weight:800;font-size:clamp(22px,4.2vw,34px);letter-spacing:-.3px;line-height:1.16;margin:0 0 6px;text-shadow:0 2px 16px rgba(0,0,0,.5)}
+h3.card-t{font-family:var(--jua);font-size:20px;letter-spacing:.2px;color:var(--ink)}
+.lead{font-size:clamp(15px,2.4vw,18px);color:var(--ink-dim);max-width:64ch;text-shadow:0 1px 12px rgba(0,0,0,.4)}
+.muted{color:var(--ink-mute)}
+.help{font-size:13px;color:var(--ink-mute);margin-top:8px;line-height:1.55}
+b.k{color:var(--ink);font-weight:800}
+.t1{color:var(--c1)}.t2{color:var(--c2)}.t3{color:var(--c3)}.t4{color:var(--c4)}.t5{color:var(--c5)}
+.card{background:linear-gradient(180deg,var(--surface),var(--deep));border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.card+.card{margin-top:18px}
+.grid{display:grid;gap:18px}
+@media(min-width:760px){.grid.c2{grid-template-columns:1fr 1fr}}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink-dim)}
+.badge.gold{background:rgba(138,95,36,.1);border-color:#c9ae7c;color:var(--gold)}
+.pill-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pill{font-size:13px;padding:6px 12px;border-radius:99px;background:#efe4c9;border:1px solid var(--line);color:var(--ink-dim)}
+.pill b{color:var(--ink)}
+.note{display:flex;gap:12px;align-items:flex-start;border-left:3px solid var(--accent);background:rgba(160,92,44,.08);
+  padding:13px 15px;border-radius:0 12px 12px 0;margin-top:14px;font-size:14.5px;color:var(--ink-dim)}
+.note .ic{flex:none;font-size:17px;line-height:1.4}
+.note.myth{border-color:var(--danger);background:rgba(179,54,46,.07)}
+.note.myth b{color:#8c212b}
+.note.class{display:none;border-color:var(--gold);background:rgba(138,95,36,.07)}
+.note.class b{color:var(--gold)}
+body.teacher .note.class{display:flex}
+.honest{font-size:12px;color:var(--ink-mute);margin-top:8px;display:flex;gap:6px;align-items:flex-start}
+.btn{font-family:var(--body);font-weight:800;font-size:15px;cursor:pointer;padding:12px 20px;border-radius:12px;border:1px solid transparent;
+  display:inline-flex;align-items:center;gap:9px;transition:.18s;user-select:none}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn.primary{background:linear-gradient(180deg,#a05c2c,var(--accent));color:#fff;box-shadow:0 10px 24px -10px var(--accent)}
+.btn.ghost{background:rgba(255,255,255,.04);border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{background:rgba(255,255,255,.08);border-color:var(--accent)}
+.btn.sm{padding:8px 14px;font-size:13.5px;border-radius:10px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;align-items:center}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.choices{display:grid;gap:10px;margin-top:14px}
+.choice{text-align:left;font-family:var(--body);font-size:15.5px;color:var(--ink);background:var(--surface2);border:1.5px solid var(--line);
+  border-radius:13px;padding:14px 16px;cursor:pointer;transition:.16s;display:flex;gap:12px;align-items:center;line-height:1.4}
+.choice .key{flex:none;width:27px;height:27px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;
+  font-size:14px;background:#efe4c9;border:1px solid var(--line);color:var(--ink-dim)}
+.choice:hover:not(.done){border-color:var(--accent);background:#efe0c2;transform:translateX(3px)}
+.choice.correct{border-color:var(--ok);background:rgba(44,122,68,.13)}
+.choice.correct .key{background:var(--ok);color:#f2f7ea}
+.choice.wrong{border-color:var(--danger);background:rgba(179,54,46,.12)}
+.choice.wrong .key{background:var(--danger);color:#fdf1ef}
+.choice.dim{opacity:.5}.choice.done{cursor:default}
+.explain{margin-top:14px;border-radius:13px;padding:15px 17px;font-size:14.5px;line-height:1.6;border:1px solid var(--line);
+  background:rgba(160,92,44,.08);color:var(--ink-dim);display:none;animation:fade .35s}
+.explain.show{display:block}
+.explain.ok{border-color:#7fae83;background:rgba(44,122,68,.09)}
+.explain.no{border-color:#c99a94;background:rgba(179,54,46,.09)}
+.explain b{color:var(--ink)}
+.explain .why{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:13px;color:var(--accent2);margin-bottom:5px}
+
+/* 🎈 풍선 실험실 */
+.lab{background:linear-gradient(180deg,#f3ede3,#f3ece1);border:1.5px solid #b09a6e;border-radius:15px;padding:20px 22px;margin-top:16px}
+.lab h3{font-family:var(--jua);font-size:18px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.simgrid{display:grid;gap:16px;grid-template-columns:1fr;margin-top:14px}
+@media(min-width:900px){.simgrid{grid-template-columns:minmax(0,1fr) 268px;align-items:start}}
+.simstage{background:#faf4e6;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.simstage canvas{display:block;width:100%;height:auto}
+.simctl{background:#efe4c9;border:1px solid var(--line);border-radius:13px;padding:16px}
+.simctl h4{font-family:var(--jua);font-size:15px;margin-bottom:4px}
+.ctl{margin-top:14px}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--ink-dim);font-weight:600;margin-bottom:7px}
+.ctl label .val{font-family:var(--mono);font-size:14px;color:var(--accent2)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;
+  background:linear-gradient(90deg,var(--accent) 0%,var(--accent) var(--p,0%),#f4eee4 var(--p,0%));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#2e2315;
+  border:3px solid var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.5),0 0 10px var(--accent);cursor:grab}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#2e2315;border:3px solid var(--accent);cursor:grab}
+.readout{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.readout .r{flex:1;min-width:112px;background:#f4ecda;border:1px solid var(--line);border-radius:11px;padding:10px 12px;text-align:center}
+.readout .r .lab2{font-size:11px;color:var(--ink-mute)}
+.readout .r .v{font-family:var(--mono);font-size:18px;font-weight:700;line-height:1.25}
+.readout .r.near .v{color:var(--c1)} .readout .r.far .v{color:var(--c5)}
+.readout .r .v small{font-size:11px;color:var(--ink-mute);font-weight:400}
+.dl-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.dl-head h4{font-family:var(--jua);font-size:16px}
+.dl-head .btn-row{margin:0;margin-left:auto;flex:none}
+.dl-head .btn-row .btn{flex:none}
+.dtable-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#efe4c9;margin-top:12px}
+table.dtable{width:100%;border-collapse:collapse;font-size:13.5px;min-width:420px}
+.dtable th{background:rgba(255,255,255,.05);color:var(--ink-dim);font-weight:700;font-size:12px;padding:9px 10px;
+  text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+.dtable td{padding:9px 10px;text-align:center;font-family:var(--mono);border-bottom:1px solid var(--line-soft);white-space:nowrap}
+.dtable td:first-child{font-family:var(--body)}
+.dtable tr:last-child td{border-bottom:0}
+.dtable tr.fresh td{animation:rowIn .5s}
+@keyframes rowIn{from{background:rgba(160,92,44,.22)}to{background:transparent}}
+.dtable td.del{cursor:pointer;color:var(--ink-mute);font-family:var(--body)}
+.dtable td.del:hover{color:var(--danger)}
+.dtable .empty{color:var(--ink-mute);font-family:var(--body);padding:16px;font-size:13px}
+.graph-wrap{margin-top:12px;background:#efe4c9;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.graph-wrap canvas{display:block;width:100%;height:auto}
+.legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:12.5px;color:var(--ink-mute)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:6px}
+
+/* ⚡ 이 페이지 전용 — 체크 목록 · 실험 순서 · SVG 무대 · 단서 카드 */
+.checkgrid{display:grid;gap:10px;margin-top:14px}
+.checkline{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--ink-dim);line-height:1.45;
+  background:var(--surface2);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.16s}
+.checkline:hover{border-color:var(--accent)}
+.checkline input{flex:none;width:20px;height:20px;accent-color:var(--c1);margin-top:2px;cursor:pointer}
+.checkline.on{border-color:var(--c1);background:rgba(138,95,36,.09);color:var(--ink)}
+.doit{list-style:none;display:grid;gap:10px;margin-top:12px;counter-reset:d}
+.doit li{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--ink-dim);line-height:1.55}
+.doit li::before{counter-increment:d;content:counter(d);flex:none;width:24px;height:24px;border-radius:50%;
+  display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:700;
+  background:#efe4c9;border:1px solid var(--line);color:var(--accent2)}
+.svgstage{background:#faf4e6;border:1px solid var(--line);border-radius:13px;padding:10px;margin-top:14px;overflow-x:auto}
+.svgstage svg{display:block;width:100%;height:auto;max-width:660px;margin:0 auto}
+.modebar{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.modebar .btn.on{background:linear-gradient(180deg,#21338c,var(--accent));color:#fff;border-color:transparent}
+.verdict{margin-top:14px;border-radius:12px;padding:13px 15px;font-size:15.5px;line-height:1.6;
+  border:1px solid var(--line);background:#f2e8d2;color:var(--ink-dim)}
+.verdict b{color:var(--ink)}
+.verdict.hit{border-color:#7fae83;background:rgba(44,122,68,.09)}
+.forcegrid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:16px}
+@media(min-width:700px){.forcegrid{grid-template-columns:repeat(3,1fr)}}
+.forcecard{background:var(--surface2);border:1px solid var(--line);border-radius:13px;padding:12px 12px 10px}
+.forcecard svg{display:block;width:100%;height:auto}
+.forcecard .fc-t{font-family:var(--jua);font-size:16.5px;text-align:center;margin-top:4px}
+.forcecard .fc-d{font-size:13.5px;color:var(--ink-mute);text-align:center;line-height:1.5;margin-top:3px}
+.clue{border:1.5px solid var(--c2);background:rgba(125,91,166,.07);border-radius:14px;padding:17px 19px;margin-top:18px}
+.clue .cl-h{font-family:var(--jua);font-size:18.5px;color:var(--c2);display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.clue p{font-size:15.5px;color:var(--ink-dim);line-height:1.65}
+.linkcard{display:flex;gap:14px;align-items:center;text-decoration:none;color:inherit;background:var(--surface2);
+  border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px;transition:.18s}
+.linkcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+.linkcard .lc-e{font-size:30px;flex:none}
+.linkcard .lc-t{display:block;font-family:var(--jua);font-size:17.5px}
+.linkcard .lc-d{display:block;font-size:13.5px;color:var(--ink-mute);line-height:1.5;margin-top:2px}
+#fsSwing{transition:transform .95s cubic-bezier(.34,1.15,.5,1)}
+#fsProbe{transition:transform 1.05s ease-in-out}
+.fe{transition:transform .75s cubic-bezier(.42,0,.35,1)}
+
+/* 그림 슬롯 */
+.fig{margin:14px 0 0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#efe4c9;position:relative}
+.fig img{display:block;width:100%;height:auto}
+.fig figcaption{font-size:12.5px;color:var(--ink-mute);padding:10px 14px;line-height:1.5;text-align:center;border-top:1px solid var(--line-soft)}
+.fig.slot{display:none;border-style:dashed;border-color:#b09a6e;background:rgba(160,92,44,.05);padding:18px 14px;text-align:center}
+body.teacher .fig.slot{display:block}
+.fig.slot .fe{font-size:24px;opacity:.6}
+.fig.slot .fn{font-family:var(--mono);font-size:11.5px;color:var(--accent2);margin-top:7px;word-break:break-all}
+.fig.slot .fd{font-size:12px;color:var(--ink-mute);margin-top:5px;line-height:1.5}
+.use .fig{margin:0 0 4px}
+
+.terms{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(min-width:760px){.terms{grid-template-columns:repeat(4,1fr)}}
+.term{background:var(--surface2);border:1px solid var(--line);border-radius:13px;padding:14px;border-top:3px solid var(--c,var(--accent))}
+.term .nm{font-family:var(--jua);font-size:17px;margin-bottom:3px}
+.term .de{font-size:13px;color:var(--ink-mute);line-height:1.5}
+.use-grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:680px){.use-grid{grid-template-columns:1fr 1fr}}
+.use{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.use .u-t{font-family:var(--jua);font-size:17px;display:flex;align-items:center;gap:8px}
+.use .u-d{font-size:13.5px;color:var(--ink-dim);line-height:1.55}
+
+.cloze-line{font-size:15.5px;line-height:2.05;color:var(--ink-dim)}
+.cloze-line+.cloze-line{margin-top:6px}
+.cloze{display:inline-block;min-width:52px;text-align:center;padding:2px 11px;margin:0 2px;border-radius:8px;background:#efe4c9;
+  border:1.5px dashed var(--line);color:transparent;cursor:pointer;font-weight:800;transition:.16s;user-select:none;line-height:1.3}
+.cloze::after{content:"❓";font-size:12px}
+.cloze:hover{border-color:var(--accent);background:#efe4c9}
+.cloze.revealed{border-style:solid;cursor:default;animation:clozePop .42s}
+.cloze.revealed::after{content:none}
+@keyframes clozePop{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
+.cloze-done{display:none;align-items:center;gap:6px;margin-top:12px;font-size:13px;font-weight:700;color:var(--ok)}
+.cloze-set.complete .cloze-done{display:inline-flex;animation:fade .4s}
+.cloze-hint{font-size:12.5px;color:var(--ink-mute);margin-top:10px}
+
+.miniquiz{background:linear-gradient(180deg,#f4eee3,#f2e8d2);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:16px}
+.miniquiz .mq-head{display:flex;align-items:center;gap:9px;margin-bottom:4px;flex-wrap:wrap}
+.miniquiz .mq-badge{font-size:12px;font-weight:800;color:#fff;background:linear-gradient(180deg,#a05c2c,var(--accent));padding:4px 10px;border-radius:99px}
+.miniquiz .mq-prog{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink-mute)}
+.mq-q{margin-top:14px}
+.mq-q .mq-text{font-size:15px;font-weight:600;margin-bottom:9px}
+.mq-q .mq-text .qn{font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-right:6px}
+.mq-choices{display:grid;gap:8px}
+.mq-opt{text-align:left;font-family:var(--body);font-size:14.5px;color:var(--ink);background:var(--surface2);border:1.5px solid var(--line);
+  border-radius:11px;padding:11px 14px;cursor:pointer;transition:.15s;display:flex;gap:10px;align-items:center}
+.mq-opt .k{flex:none;width:23px;height:23px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;
+  font-size:12px;background:#efe4c9;border:1px solid var(--line);color:var(--ink-dim)}
+.mq-opt:hover:not(.locked){border-color:var(--accent);background:#efe0c2}
+.mq-opt.correct{border-color:var(--ok);background:rgba(44,122,68,.13)}
+.mq-opt.correct .k{background:var(--ok);color:#f2f7ea}
+.mq-opt.wrong{border-color:var(--danger);background:rgba(179,54,46,.12)}
+.mq-opt.wrong .k{background:var(--danger);color:#fdf1ef}
+.mq-opt.locked{cursor:default}
+.mq-fb{margin-top:9px;font-size:13.5px;line-height:1.55;border-radius:10px;padding:11px 13px;display:none}
+.mq-fb.show{display:block;animation:fade .3s}
+.mq-fb.ok{background:rgba(44,122,68,.09);border:1px solid #7fae83;color:var(--ink-dim)}
+.mq-fb.no{background:rgba(179,54,46,.09);border:1px solid #c99a94;color:var(--ink-dim)}
+.mq-fb b{color:var(--ink)}
+.mq-done{display:none;align-items:center;gap:8px;margin-top:14px;padding:11px 14px;border-radius:11px;background:rgba(138,95,36,.08);
+  border:1px solid #c9ae7c;color:var(--gold);font-weight:700;font-size:14px}
+.miniquiz.alldone .mq-done{display:flex;animation:fade .4s}
+
+.game-hud{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.lives{display:flex;gap:5px}.lives .h{font-size:22px;transition:.3s}
+.lives .h.gone{filter:grayscale(1) brightness(.5);transform:scale(.85)}
+.score-box{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;background:#efe4c9;border:1px solid var(--line);padding:7px 13px;border-radius:11px}
+.score-box .lab2{font-size:11px;color:var(--ink-mute);font-weight:400;font-family:var(--body)}
+.score-box .num{font-size:18px;color:var(--gold)}
+.earned{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.medal{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;padding:8px 13px;border-radius:11px;
+  background:linear-gradient(180deg,#f2ece0,#f2eade);border:1px solid #c9ae7c;color:var(--gold);opacity:.3;filter:grayscale(.6);transition:.4s}
+.medal.got{opacity:1;filter:none;box-shadow:0 0 16px -4px var(--gold)}
+.medal .e{font-size:18px}
+textarea{width:100%;font-family:var(--body);font-size:14.5px;color:var(--ink);background:#efe4c9;border:1.5px solid var(--line);
+  border-radius:12px;padding:12px 14px;min-height:88px;resize:vertical;outline:none;margin-top:8px;line-height:1.55;transition:.18s}
+textarea:focus{border-color:var(--accent);background:#efe4c9}
+textarea::placeholder{color:var(--ink-mute)}
+.savemark{font-size:12px;color:var(--ok);margin-top:6px;display:inline-block;opacity:0;transition:.3s}
+.savemark.on{opacity:1}
+.prog-list{position:fixed;right:14px;top:calc(var(--header-h) + 8px);z-index:60;width:264px;background:rgba(249,242,227,.97);
+  border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);display:none}
+.prog-list.show{display:block;animation:fade .3s}
+.prog-list h4{font-family:var(--jua);font-size:15px;margin-bottom:10px}
+.prog-list li{list-style:none;display:flex;gap:8px;font-size:13px;color:var(--ink-mute);padding:4px 0;line-height:1.45}
+.prog-list li.on{color:var(--ink-dim)}
+.prog-list li .mk{flex:none;color:var(--ink-mute)}
+.prog-list li.on .mk{color:var(--ok)}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);z-index:200;background:rgba(249,242,227,.96);
+  border:1px solid var(--accent);color:var(--ink);padding:12px 20px;border-radius:13px;font-weight:700;font-size:14.5px;
+  box-shadow:0 16px 40px -12px rgba(0,0,0,.8);opacity:0;pointer-events:none;transition:.3s;max-width:90vw}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.good{border-color:var(--ok)}#toast.bad{border-color:var(--danger)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.08s!important;scroll-behavior:auto}}
+@media print{
+  #cover,header.top,nav.tabs,#toast,.prog-list,.cta-row,.btn{display:none!important}
+  body{background:#fff;color:#111}
+  .panel{display:block!important;page-break-after:always}
+  .card,.lab{background:#fff;border-color:#ccc;box-shadow:none}
+  .lead,.muted,.note{color:#333}
+  h1.big,h2.sec,h3.card-t{color:#111}
+  .note.class{display:flex!important}
+  .cloze{color:#111!important;border-style:solid}.cloze::after{content:none}
+}
+</style>
+
+<style id="board-v2">
+/* ═══════════════════════════════════════════════════════════
+   전자칠판 판 v2 — 글자 크기·명암비 상향
+   교실 앞 화면에서 뒷자리까지 읽히도록 본문을 키우고,
+   배경과 붙어 보이던 회색 계열 글자색의 명암비를 올렸습니다.
+   (--ink-mute 4.0:1 → 7.7:1 / --ink-dim 8.6:1 → 12.0:1)
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --line:#cbb894; --line-soft:#d5c5a2;
+  --ink:#2a2013; --ink-dim:#4a3a26; --ink-mute:#6b573f;
+  --ok:#2c7a44; --danger:#b3362e;
+}
+body{line-height:1.68}
+b.k{color:#fff}
+
+/* 본문 계열 */
+.lead{font-size:clamp(17px,2.5vw,20px)}
+.help{font-size:15px;line-height:1.6}
+.honest{font-size:14px;line-height:1.6}
+.note{font-size:16px;line-height:1.65;padding:15px 17px;border-left-width:4px}
+.note .ic{font-size:19px}
+.badge{font-size:14px;padding:6px 13px}
+.pill{font-size:15px;padding:7px 14px}
+.term .nm{font-size:19px}
+.term .de{font-size:15px;line-height:1.6}
+.use .u-t{font-size:19px}
+.use .u-d{font-size:15.5px;line-height:1.6}
+h3.card-t{font-size:22px}
+.stepline .swhat{font-size:14.5px}
+.stepline .sbadge{font-size:13px}
+.eyebrow{font-size:13px}
+.fig figcaption{font-size:14.5px;line-height:1.6}
+.fig.slot .fn{font-size:13px}
+.fig.slot .fd{font-size:14px}
+
+/* 상호작용 */
+.btn{font-size:16.5px;padding:13px 22px}
+.btn.sm{font-size:15px;padding:9px 16px}
+nav.tabs button{font-size:15.5px;padding:9px 15px}
+nav.tabs button .sn{width:21px;height:21px;font-size:12px}
+.brand b{font-size:18px}
+.brand .sub{font-size:12.5px}
+.progress-mini .pct{font-size:13.5px}
+.choice{font-size:17px;border-width:2px;padding:15px 17px}
+.choice .key{width:30px;height:30px;font-size:15px}
+.explain{font-size:16px;line-height:1.68}
+.explain .why{font-size:14.5px}
+.cloze-line{font-size:17.5px;line-height:2.1}
+.cloze{border-width:2px;padding:3px 12px;min-width:56px}
+.cloze-hint{font-size:14.5px}
+.cloze-done{font-size:15px}
+textarea{font-size:16.5px;border-width:2px}
+.savemark{font-size:14px}
+.checkline{font-size:16.5px}
+.doit li{font-size:16.5px;line-height:1.6}
+.dtable{font-size:15.5px}
+.dtable th{font-size:14px;padding:11px 12px}
+.dtable td{padding:10px 12px}
+.dtable .empty{font-size:15px}
+.prog-list{width:290px}
+.prog-list li{font-size:14.5px}
+.prog-list h4{font-size:17px}
+#toast{font-size:16px;padding:14px 22px;border-width:2px}
+.medal{font-size:14.5px}
+.medal .e{font-size:20px}
+.score-box .num{font-size:20px}
+.score-box .lab2{font-size:13px}
+.lives .h{font-size:24px}
+.steps-card li{font-size:16.5px}
+.steps-card h3{font-size:20px}
+.cover-sub{font-size:clamp(16px,2.7vw,19px)}
+.cover-hint{font-size:14px}
+
+/* 실험실 조작판 */
+.simctl h4,.lab h3,.simlab h3{font-size:18px}
+.ctl label{font-size:15px}
+.ctl label .val{font-size:16px}
+.readout .r .lab2{font-size:13px}
+.readout .r .v{font-size:22px}
+.readout .r .v small{font-size:13px}
+.dl-head h4{font-size:18px}
+input[type=range]{height:8px}
+input[type=range]::-webkit-slider-thumb{width:24px;height:24px;border-width:4px}
+
+/* 문항 */
+.miniquiz .mq-badge{font-size:13.5px;padding:5px 12px}
+.miniquiz .mq-prog{font-size:13.5px}
+.mq-q .mq-text{font-size:17px;line-height:1.6}
+.mq-q .mq-text .qn{font-size:12.5px}
+.mq-opt{font-size:16.5px;padding:13px 16px;border-width:2px;line-height:1.5}
+.mq-opt .k{width:26px;height:26px;font-size:13.5px}
+.mq-fb{font-size:15.5px;line-height:1.65;padding:13px 15px}
+.mq-done{font-size:16px}
+
+/* ── 수능형 문항 — 자료 · <보기> · 다음 버튼 ── */
+.qfig{background:#faf4e6;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:14px;overflow-x:auto}
+.qfig svg{width:100%;height:auto;display:block;max-width:600px;margin:0 auto}
+.bogi{background:#f2e8d2;border:1.5px solid var(--line);border-radius:12px;padding:15px 18px;margin:0 0 14px}
+.bogi-t{display:inline-block;font-weight:800;font-size:14px;color:var(--ink-dim);border:1px solid var(--line);
+  border-radius:7px;padding:2px 14px;margin-bottom:11px;letter-spacing:3px}
+.bogi ul{list-style:none;display:grid;gap:10px;margin:0;padding:0}
+.bogi li{display:flex;gap:11px;align-items:flex-start;font-size:16.5px;line-height:1.62;color:var(--ink)}
+.bogi li .bk{flex:none;width:25px;height:25px;border-radius:7px;display:grid;place-items:center;font-size:14px;
+  font-weight:800;background:#e2d3b2;border:1px solid var(--line);color:var(--ink-dim);margin-top:2px;transition:.25s}
+.bogi li .bv{display:none;margin-left:auto;flex:none;font-size:13.5px;font-weight:800;padding:2px 9px;border-radius:99px}
+.bogi.reveal li.t .bk{background:var(--ok);color:#f2f7ea;border-color:transparent}
+.bogi.reveal li.f .bk{background:var(--danger);color:#fdf1ef;border-color:transparent}
+.bogi.reveal li .bv{display:inline-block;animation:fade .3s}
+.bogi.reveal li.t .bv{background:rgba(44,122,68,.16);color:var(--ok)}
+.bogi.reveal li.f .bv{background:rgba(179,54,46,.16);color:var(--danger)}
+.mq-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.mq-lv{font-size:13px;font-weight:800;padding:4px 11px;border-radius:99px;border:1px solid var(--line);background:#f2e8d2}
+.mq-lv[data-lv="하"]{color:#2c7a44;border-color:#2c7a44}
+.mq-lv[data-lv="중"]{color:#8a5f24;border-color:#c9ae7c}
+.mq-lv[data-lv="상"]{color:#8c2144;border-color:#c99a94}
+.mq-next{display:none;margin-top:18px;justify-content:flex-end}
+.mq-next.show{display:flex;animation:fade .3s}
+@media print{
+  .mq-next{display:none!important}
+  .qfig{background:#fff}
+  .bogi{background:#fff;border-color:#ccc}
+  .bogi li{color:#111}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Nanum+Gothic+Coding&display=swap">
+<style id="edison-lab">
+/* ═══════════════════════════════════════════════════════════
+   에디슨 연구실 판 v1 — 종이·원목·황동 라이트 테마
+   구조(탭·저장·진행도·교사 모드)는 그대로, 시각만 갈아입힘.
+   전자칠판(밝은 교실)에서 라이트 테마가 더 잘 보이고,
+   종이 배경이라 인쇄·학습지 변환이 자연스럽다.
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --paper:#f2e8d5; --paper-hi:#f9f2e3; --paper-lo:#e6d7ba;
+  --wood:#6d4b2a; --wood-dk:#4e3216; --wood-hi:#8a6339;
+  --brass:#b9873c; --brass-hi:#e6c17a; --brass-dk:#7d541e;
+  --ink:#2a2013; --ink-dim:#4a3a26; --ink-mute:#6b573f;
+  --line:#cbb894; --line-soft:#dccfae;
+  --surface:#f7f0de; --surface2:#f2e8d2;
+  --accent:#a05c2c; --accent2:#8a5f24; --gold:#8a5f24;
+  --ok:#2c7a44; --danger:#b3362e;
+  --jua:'Gowun Batang',serif;
+  --body:'Gowun Dodum','Pretendard',sans-serif;
+  --mono:'Nanum Gothic Coding',monospace;
+  --shadow:0 12px 26px -16px rgba(96,64,22,.38);
+}
+html,body{background:var(--paper-lo)}
+body{color:var(--ink)}
+/* 종이 결 — 화면 전체에 은은한 입자 */
+body::after{content:"";position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.5;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.045'/></feComponentTransfer></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+#stars{display:none}
+#bgScrim{background:radial-gradient(120% 80% at 50% 0%,rgba(255,244,214,.55),rgba(230,215,186,0) 60%)}
+#bgLayer{opacity:.08;filter:sepia(.55) contrast(.9)}
+
+/* ── 원목 헤더 + 황동 명패 ── */
+header.top{background:
+  repeating-linear-gradient(93deg,rgba(0,0,0,.10) 0 26px,rgba(0,0,0,0) 26px 30px),
+  repeating-linear-gradient(91deg,#6d4b2a 0 9px,#75522e 9px 17px,#5e3f1d 17px 21px,#7f5a34 21px 34px);
+  border-bottom:3px solid var(--brass-dk);box-shadow:0 4px 14px rgba(60,38,15,.35)}
+.brand .logo{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 45%,var(--brass-dk));
+  border:1px solid #5f3f12;box-shadow:inset 0 1px 0 rgba(255,245,215,.7)}
+.brand b,.brand b span{color:#f6ecd2;text-shadow:0 1px 2px rgba(40,24,6,.55)}
+.brand .sub{color:#e2d2ac}
+.hbtn{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));
+  border:1px solid #5f3f12;color:#2c1c06;box-shadow:inset 0 1px 0 rgba(255,245,215,.7)}
+.hbtn:hover{filter:brightness(1.08)}
+.progress-mini .bar{background:#f6eedb;border:1.5px solid var(--brass-dk);box-shadow:inset 0 1px 3px rgba(70,45,10,.35)}
+.progress-mini .bar i{background:linear-gradient(90deg,#a05c2c,#c98237)}
+.progress-mini .pct{color:#f6ecd2;text-shadow:0 1px 2px rgba(40,24,6,.55)}
+
+/* ── 탭 = 나무 서랍 + 황동 명패 ── */
+nav.tabs button{background:linear-gradient(180deg,#8a6339,#6d4b2a);color:#f0e2c4;
+  border:1px solid #4e3216;box-shadow:inset 0 1px 0 rgba(255,235,200,.25),0 2px 4px rgba(40,25,8,.3)}
+nav.tabs button .sn{background:rgba(46,28,8,.5);border-color:rgba(46,28,8,.6);color:#f0e2c4}
+nav.tabs button:hover{filter:brightness(1.12)}
+nav.tabs button.active{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 45%,var(--brass-dk));
+  color:#2c1c06;border-color:#5f3f12;text-shadow:0 1px 0 rgba(255,240,200,.5)}
+nav.tabs button.active .sn{background:#2c1c06;color:#e6c17a;border-color:transparent}
+nav.tabs button.done:not(.active){color:#ffe9b3}
+.tab-sep{background:#4e3216}
+
+/* ── 표지 = 인쇄물 + 상하 원목 띠 ── */
+#cover{background:linear-gradient(180deg,var(--paper-hi),var(--paper))}
+#cover::before,#cover::after{content:"";position:fixed;left:0;right:0;height:16px;z-index:4;
+  background:repeating-linear-gradient(90deg,#6d4b2a 0 30px,#5e3f1d 30px 33px,#7a5631 33px 60px);
+  box-shadow:0 2px 8px rgba(60,38,15,.35)}
+#cover::before{top:0}#cover::after{bottom:0;box-shadow:0 -2px 8px rgba(60,38,15,.35)}
+.cover-title{color:var(--ink)}
+.cover-sub{color:var(--ink-dim)}
+.badge{background:var(--paper-hi);border-color:var(--line);color:var(--ink-dim)}
+.badge.gold{background:#f6edd6;border-color:var(--brass);color:var(--brass-dk)}
+.steps-card{background:var(--paper-hi);border-color:var(--line)}
+.steps-card .sn{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));
+  color:#2c1c06;border:1px solid #5f3f12}
+.cover-hint{color:var(--ink-mute)}
+
+/* ── 버튼 = 황동 ── */
+.btn{background:var(--paper-hi);border-color:var(--line);color:var(--ink)}
+.btn:hover{border-color:var(--accent);background:#f6edd6}
+.btn.primary{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 45%,var(--brass-dk));
+  color:#2c1c06;border:1px solid #5f3f12;text-shadow:0 1px 0 rgba(255,240,200,.45);
+  box-shadow:inset 0 1px 0 rgba(255,245,215,.8),0 3px 7px rgba(60,40,10,.32)}
+.btn.primary:hover{filter:brightness(1.06);transform:translateY(-1px)}
+
+/* ── 면·카드 ── */
+.card,.lab,.miniquiz{box-shadow:var(--shadow)}
+.lab{border:2px solid var(--brass-dk);box-shadow:inset 0 0 0 3px var(--brass),var(--shadow)}
+.stepline .sbadge{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));
+  color:#2c1c06;border:1px solid #5f3f12}
+.note.class{background:#efe6ce;border:1px dashed var(--accent);border-left:4px solid var(--accent)}
+.pill{background:var(--paper-hi)}
+
+/* ── 빈칸 = 잉크 밑줄 (누르면 만년필 잉크로 스며듦) ── */
+.cloze{background:transparent;border:none;border-bottom:2.5px dashed #8a755c;border-radius:0;min-width:58px}
+.cloze::after{content:"✒️";font-size:12px}
+.cloze:hover{background:rgba(160,92,44,.09);border-bottom-color:var(--accent)}
+.cloze.revealed{border-bottom-style:solid;background:transparent}
+
+/* ── 훈장 = 밀랍 인장 ── */
+.medal{background:var(--paper-hi);border:1.5px solid var(--brass);color:var(--brass-dk)}
+.medal.got{box-shadow:0 0 14px -4px var(--brass)}
+
+/* ── 그림 슬롯 ── */
+.fig{background:var(--paper-hi)}
+.fig.slot{background:rgba(160,92,44,.05);border-color:#b09a6e}
+
+/* ── 계기·입력 ── */
+input[type=range]::-webkit-slider-thumb{background:radial-gradient(circle at 35% 30%,#f0d79c,var(--brass) 55%,var(--brass-dk));
+  border-color:#553a10}
+textarea:focus{background:#faf4e6}
+#toast{border-width:2px}
+:focus-visible{outline-color:var(--accent)}
+
+/* 어두운 배경 전제였던 흰 광택 하이라이트 무력화 */
+ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
+
+@media print{body::after{display:none}}
+</style>
+
+
+<style id="edison-polish">
+/* ── 전압계 진행도 ── */
+.pgauge{width:72px;height:auto;display:block;filter:drop-shadow(0 1px 2px rgba(50,32,8,.35))}
+#progNeedle{transition:transform .7s cubic-bezier(.34,1.2,.45,1)}
+.progress-mini .bar[hidden]{display:none}
+/* ── 표지 전구 점등 ── */
+.cover-bulb{width:74px;margin:6px auto 2px;filter:drop-shadow(0 0 20px rgba(240,166,62,.55))}
+.cover-bulb svg{display:block;width:100%;height:auto}
+.cover-bulb .filament{animation:filaGlow 2.6s ease-in-out infinite}
+.cover-bulb .filament.f2{animation-delay:.35s}
+@keyframes filaGlow{
+  0%,100%{stroke:#e0932e;filter:drop-shadow(0 0 1px rgba(240,166,62,.5))}
+  45%{stroke:#ffd98a;filter:drop-shadow(0 0 6px rgba(255,207,125,.95))}
+  55%{stroke:#ffcf7d;filter:drop-shadow(0 0 7px rgba(255,207,125,1))}
+}
+@media(prefers-reduced-motion:reduce){.cover-bulb .filament{animation:none;stroke:#ffcf7d}}
+</style>
+</head>
+<body><!-- board-v2: inline font bumped -->
+<div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
+
+<div id="cover">
+  <div class="cover-in">
+    <div class="cover-emoji">🧭 🔌 🧲</div>
+    <div class="cover-bulb" aria-hidden="true"><svg viewBox="0 0 90 128">
+      <circle cx="45" cy="46" r="34" fill="rgba(255,214,140,.30)" stroke="#b9873c" stroke-width="2.4"/>
+      <circle cx="45" cy="46" r="34" fill="none" stroke="#fff6df" stroke-width="1" opacity=".85"/>
+      <path class="filament" d="M38 74 L38 56 L32 48 L40 40 L34 32 M52 74 L52 56 L58 48 L50 40 L56 32"
+        stroke="#f0a63e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path class="filament f2" d="M34 32 Q45 21 56 32" stroke="#ffcf7d" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      <rect x="33" y="78" width="24" height="6" rx="2" fill="#8a5f24"/>
+      <rect x="34" y="84" width="22" height="5" rx="2" fill="#b9873c"/>
+      <rect x="35" y="89" width="20" height="5" rx="2" fill="#8a5f24"/>
+      <rect x="36" y="94" width="18" height="5" rx="2" fill="#b9873c"/>
+      <path d="M38 99 L52 99 L45 110 Z" fill="#5f3f12"/>
+    </svg></div>
+    <h1 class="cover-title">스위치를 켜자<br>나침반이 돌았다</h1>
+    <p class="cover-sub">전류가 흐르는 코일 주위의 자기장 🧲</p>
+    <div class="cover-meta">
+      <span class="badge">⏱️ 45분</span>
+      <span class="badge">📘 VII. 전기와 자기 · 3. 전류의 자기 작용 ① · 252~255쪽</span>
+      <span class="badge gold" id="coverSaved" style="display:none">🔖 이어서 하기</span>
+    </div>
+    <div class="steps-card">
+      <h3>💡 학습 단계 안내</h3>
+      <ol>
+        <li><span class="sn">1</span><div><b>생각 열기</b> — 코일은 어떻게 자석을 끌어당기는 것일까</div></li>
+        <li><span class="sn">2</span><div><b>탐구하기</b> — 예상 먼저, 그다음 코일 실험대에서 관찰</div></li>
+        <li><span class="sn">3</span><div><b>규칙 세우기</b> — 코일 자기장의 모양·방향·세기</div></li>
+        <li><span class="sn">4</span><div><b>적용하기</b> — 전자석이 일하는 곳, 그리고 단서 하나</div></li>
+        <li><span class="sn">5</span><div><b>확인하기</b> — 배운 것 점검하기</div></li>
+        <li class="opt"><span class="sn">+</span><div><b>더 알아보기</b> — 나침반을 움직인 우연한 발견</div></li>
+      </ol>
+    </div>
+    <div class="cover-cta">
+      <button class="btn primary xl" id="coverGo">스위치 켜러 가기 🧭</button>
+      <span class="cover-hint">진행 상황은 이 기기에 자동 저장돼요 · 왼쪽 위 제목을 누르면 이 화면으로 돌아옵니다</span>
+    </div>
+  </div>
+</div>
+
+<header class="top">
+  <div class="top-bar">
+    <button class="brand" id="brandBtn" title="표지로 돌아가기">
+      <div class="logo">🧭</div>
+      <div><b>스위치와 <span>나침반</span></b>
+        <div class="sub">VII. 전기와 자기 · 3. 전류의 자기 작용 ① · 중2 과학</div></div>
+    </button>
+    <div class="head-right">
+      <a class="hbtn" href="index.html" title="단원 허브로">⚡</a>
+      <button class="hbtn" id="tmodeBtn" title="교사 모드">🧑‍🏫</button>
+      <div class="progress-mini" id="progWrap" title="진행도 — 누르면 남은 활동이 보여요">
+        <svg class="pgauge" viewBox="0 0 96 56" aria-hidden="true">
+          <path d="M10 50 A38 38 0 0 1 86 50" fill="#f6eedb" stroke="#7d541e" stroke-width="2.5"/>
+          <path d="M10 50 A38 38 0 0 1 86 50" fill="none" stroke="#b9873c" stroke-width="1" opacity=".7"/>
+          <g stroke="#584634" stroke-width="1.5" opacity=".8">
+            <line x1="15" y1="46" x2="20" y2="43"/><line x1="25" y1="33" x2="29" y2="37"/>
+            <line x1="45" y1="24" x2="46" y2="29"/><line x1="63" y1="28" x2="61" y2="33"/>
+            <line x1="78" y1="40" x2="74" y2="43"/>
+          </g>
+          <g id="progNeedle" style="transform-origin:48px 50px;transform:rotate(-90deg)">
+            <line x1="48" y1="50" x2="48" y2="18" stroke="#992f24" stroke-width="2.6" stroke-linecap="round"/>
+          </g>
+          <circle cx="48" cy="50" r="4.5" fill="#b9873c" stroke="#5f3f12"/>
+        </svg>
+        <div class="bar" hidden><i id="progBar"></i></div><div class="pct" id="progPct">0%</div>
+      </div>
+    </div>
+  </div>
+  <nav class="tabs" id="tabNav">
+    <button data-tab="open" class="active"><span class="sn"><i>1</i></span>생각 열기</button>
+    <button data-tab="explore"><span class="sn"><i>2</i></span>탐구하기</button>
+    <button data-tab="rule"><span class="sn"><i>3</i></span>규칙 세우기</button>
+    <button data-tab="apply"><span class="sn"><i>4</i></span>적용하기</button>
+    <button data-tab="check"><span class="sn"><i>5</i></span>확인하기</button>
+    <span class="tab-sep"></span>
+    <button data-tab="beyond" class="optional"><span class="sn"><i>+</i></span>🧲 더 알아보기</button>
+  </nav>
+</header>
+
+<div class="prog-list" id="progList"><h4>남은 활동</h4><ul id="progItems"></ul></div>
+
+<main>
+
+<!-- 1 -->
+<section class="panel show" id="panel-open">
+  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">생각 열기 · 공중에 뜬 액자의 비밀</span></div>
+  <h1 class="big">코일은 어떻게<br>자석을 <span style="color:#2c6e5f">끌어당기는</span> 것일까?</h1>
+  <p class="lead" style="margin-top:16px">
+    자석이 든 액자가 받침대 위 허공에 <b class="k">둥둥 떠</b> 있습니다.
+    액자에는 아래로 당기는 중력이 작용하는데도 떨어지지 않아요.
+    그런데 받침대 속에 든 것은 자석이 아니라 <b class="k">도선을 여러 번 감은 코일</b>.
+    코일에 무슨 일이 생기길래 자석을 끌어당길 수 있을까요?
+  </p>
+  <figure class="fig" data-fig="co-frame"
+    data-alt="받침대 위 허공에 떠 있는 액자 — 받침대 속의 코일이 액자 안의 자석을 끌어당기고 있다"
+    data-cap="어떻게 떠 있는 거야? — 받침대 속에는 코일이 있다 (교과서 252쪽 도입)"></figure>
+
+  <div class="card" style="margin-top:20px">
+    <h2 class="sec" style="font-size:clamp(19px,3vw,24px)">✅ 이미 알고 있는 것에 표시해 보자</h2>
+    <p class="lead" style="font-size:17px">초등학교에서 만났던 내용입니다. <b class="k">기억나는 것</b>을 눌러 보세요.</p>
+    <div class="checkgrid" id="seenList">
+      <label class="checkline"><input type="checkbox" data-seen="s1"><span>자석의 <b class="k">같은 극끼리는 밀어 내고</b>, 다른 극끼리는 끌어당긴다</span></label>
+      <label class="checkline"><input type="checkbox" data-seen="s2"><span><b class="k">전자석</b>에 전류가 흐르면 자석처럼 밀고 당기는 힘이 작용한다</span></label>
+      <label class="checkline"><input type="checkbox" data-seen="s3"><span>전자석에 흐르는 <b class="k">전류의 방향이 바뀌면</b> 전자석의 극이 바뀐다</span></label>
+      <label class="checkline"><input type="checkbox" data-seen="s4"><span>나침반 바늘은 가만히 두면 <b class="k">남북</b>을 가리킨다</span></label>
+    </div>
+    <p class="help" id="seenMsg">기억나는 것에 표시해 보세요 — 오늘 배움은 초등학교 때 만난 전자석 위에 쌓입니다.</p>
+    <div class="note class"><span class="ic">💬</span><div><b>선지식 확인(교과서 251쪽)</b> — 초등 3~4학년 '자석의 이용', 5~6학년 '전기의 이용'에서 배운 내용입니다. 전자석을 만들어 본 경험을 이야기하게 하되, <b>"코일이 곧 전자석"이라는 답은 아직 말하지 마세요.</b> 2단계 탐구에서 학생이 나침반의 움직임으로 스스로 확인하게 합니다.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">🧭 탐구 준비 — 자기장, 그리고 나침반 읽는 법</h3>
+    <p class="lead" style="font-size:17px;margin-top:8px">
+      자석에 나침반을 가까이 하면 바늘이 움직입니다. 자석 주위에 <b class="k">자기력</b>이 작용하기 때문이죠.
+      자석 주위에 철 가루를 뿌리면 철 가루가 자기력을 받아 늘어서는 것도 같은 까닭입니다.
+      이렇게 <b class="k">자기력이 작용하는 공간</b>을 <b style="color:#2c6e5f">자기장</b>이라고 해요.
+      그렇다면 눈에 보이지 않는 자기장의 <b>방향</b>은 무엇으로 정할까요?</p>
+    <div class="modebar" id="warmBar">
+      <button class="btn ghost sm" data-warm="n">① 나침반 바늘의 N극이 가리키는 방향</button>
+      <button class="btn ghost sm" data-warm="s">② 나침반 바늘의 S극이 가리키는 방향</button>
+    </div>
+    <div class="verdict" id="warmMsg">오늘 탐구 내내 쓸 약속입니다. 하나를 골라 보세요.</div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="eyebrow" style="margin-bottom:8px">오늘의 목표</div>
+    <h3 class="card-t" style="margin-bottom:14px">이번 시간이 끝나면 이걸 할 수 있다</h3>
+    <div class="grid c2">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:none;width:30px;height:30px;border-radius:9px;background:#2c6e5f;color:#f2f7ea;display:grid;place-items:center;font-family:var(--mono);font-weight:700">1</div>
+        <div><b class="k">전류가 흐르는 코일 주위의 자기장을 관찰하고 설명할 수 있다.</b><br><span class="muted" style="font-size:16px">나침반 하나로.</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:none;width:30px;height:30px;border-radius:9px;background:var(--c1);color:#f2f7ea;display:grid;place-items:center;font-family:var(--mono);font-weight:700">2</div>
+        <div><b class="k">자기장의 방향과 세기를 전류와 관련지어 말할 수 있다.</b><br><span class="muted" style="font-size:16px">오른손 하나로.</span></div>
+      </div>
+    </div>
+    <div class="pill-list">
+      <span class="pill">핵심어 · <b>자기장</b></span><span class="pill"><b>나침반의 N극</b></span>
+      <span class="pill"><b>전류의 방향과 세기</b></span><span class="pill"><b>전자석</b></span>
+    </div>
+  </div>
+  <div class="cta-row"><button class="btn primary" data-go="explore">2단계 · 스위치를 닫으러 가기 →</button></div>
+</section>
+
+<!-- 2 -->
+<section class="panel" id="panel-explore">
+  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">탐구하기 · 예상 먼저, 관찰은 그다음</span></div>
+  <h2 class="sec">스위치를 닫고, 나침반을 지켜봅시다</h2>
+  <p class="lead">교과서 252~253쪽 「탐구」입니다. 코일 주위에 <b class="k">나침반</b>을 놓고 스위치를 닫으면
+    바늘이 어떻게 될까요? <b style="color:#a05c2c">전류의 방향</b>을 바꾸면요?
+    단, <b class="k">관찰하기 전에 예상부터</b> 합니다.</p>
+
+  <div class="card" style="margin-top:20px">
+    <h3 class="card-t">🔮 먼저 예상해 봅시다</h3>
+    <p class="lead" style="font-size:17.5px;margin-top:10px">
+      스위치를 닫았더니 나침반 바늘이 돌아가 멈췄습니다. 이제 전원 장치의
+      <b style="color:#b23a30">(+)극</b>과 <b style="color:#2e5f8f">(−)극</b>에 연결된 두 전선을
+      <b class="k">서로 바꾸어</b> 연결하면(전류의 방향 반전) — 나침반 바늘은 어떻게 될까요?</p>
+    <div class="modebar" id="poeBar">
+      <button class="btn ghost sm" data-poe="flip">① 반대로 돌아간다</button>
+      <button class="btn ghost sm" data-poe="same">② 처음 그대로다</button>
+      <button class="btn ghost sm" data-poe="none">③ 바늘이 움직이지 않는다</button>
+    </div>
+    <div class="verdict" id="poeMsg">셋 중 하나를 골라 보세요. <b>지금은 틀려도 됩니다.</b> 실험이 심판을 봐 줄 거예요.</div>
+    <div class="note class"><span class="ic">💬</span><div><b>POE 운영</b> — 손들기로 세 예상의 분포를 칠판에 적어 두세요. 근거를 물으면 "전기가 반대로 가니까 바늘도 반대", "자석은 그대로니까 변화 없다" 같은 생각이 나옵니다. 판정하지 말고 기록만 해 두고, 실험 후 자기 예상과 결과를 비교하게 하는 것이 핵심입니다.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:12px">🧪 실제 실험 순서 (교과서 252~253쪽)</div>
+    <ol class="doit">
+      <li>코일 주위에 나침반을 놓고, 스위치·디지털 전류계·전원 장치를 코일에 연결한다.</li>
+      <li>스위치를 닫았을 때 <b class="k">나침반 바늘의 N극이 가리키는 방향</b>을 관찰하여 그린다.</li>
+      <li>전원 장치의 (+)극과 (−)극에 연결된 두 전선을 <b class="k">서로 바꾸어</b> 전류의 방향을 반대로 하고, 과정 2를 반복한다.</li>
+      <li>클립을 스탠드에 실로 매달아 코일에 가까이 가져간 뒤, 스위치를 닫아 <b class="k">클립의 움직임</b>을 관찰한다.</li>
+      <li>코일에 흐르는 <b class="k">전류의 세기</b>를 세게 했을 때와 약하게 했을 때 클립의 움직임을 관찰한다.</li>
+    </ol>
+    <figure class="fig" data-fig="co-setup"
+      data-alt="코일, 디지털 전류계, 전원 장치, 스위치를 집게 달린 전선으로 연결하고 코일 옆에 나침반을 놓은 실험 장치"
+      data-cap="준비물: 코일, 디지털 전류계, 전원 장치, 스위치, 집게 달린 전선, 나침반, 클립, 실, 스탠드, 면장갑 (교과서 252쪽)"></figure>
+    <div class="note class"><span class="ic">💬</span><div><b>탐구 지도 유의점(교과서 명시)</b> — ① 스위치를 오래 누르면 코일에 열이 나 <b>화상 위험</b>이 있습니다. <b>관찰할 때만 스위치를 닫게</b> 하세요. ② 전류가 흐르는 동안 코일이나 전선을 만지지 않게 합니다. ③ 나침반은 지름 20 mm 정도로 작은 것을 코일 <b>가까이</b> 둡니다. ④ 전류가 약하면 지구 자기장의 영향이 상대적으로 커져 결과가 잘 안 나옵니다 — 전원 장치·코일·스위치로만 회로를 만들어 충분히 센 전류를 흘리고, 코일의 중심축은 동서(또는 남북) 방향으로 놓으세요. ⑤ 아래 가상 실험대는 실제 실험을 대신하지 않습니다 — 예습·복습용입니다.</div></div>
+  </div>
+
+  <!-- 🧲 코일 실험대 -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:12px">🧲 가상 실험 — 스위치·방향·세기·감은 수를 바꿔 보기</div>
+    <div class="lab">
+      <h3>🧲 코일 실험대</h3>
+      <p class="lead" style="font-size:17px">스위치를 닫고 <b class="k">나침반의 빨간 바늘(N극)</b>을 지켜보세요.
+        (+)(−)를 바꾸면? 전류를 세게 하면? 촘촘히 감으면?
+        관찰한 상태는 <b>📌 기록</b>을 눌러 표에 쌓입니다.
+        <b class="k">(+)(−)를 바꾼 경우까지 꼭 기록</b>해야 아까의 예상이 판정됩니다.</p>
+      <div class="simgrid">
+        <div>
+          <div class="svgstage">
+            <svg viewBox="0 0 620 330" role="img" aria-label="코일과 나침반 실험 장치. 코일 왼쪽에 나침반이 놓여 있고, 코일은 스위치와 전원 장치에 연결되어 있다. 스위치를 닫으면 나침반 바늘이 돌아가고, 전원 장치의 극을 바꾸어 연결하면 바늘이 반대쪽으로 돌아간다.">
+              <g id="fieldG" opacity="0">
+                <ellipse cx="378" cy="140" rx="150" ry="82" fill="none" stroke="#2c6e5f" stroke-width="2" stroke-dasharray="7 6"/>
+                <ellipse cx="378" cy="140" rx="196" ry="112" fill="none" stroke="#2c6e5f" stroke-width="1.6" stroke-dasharray="7 6" opacity="0.7"/>
+                <g id="fldF"><line x1="262" y1="140" x2="238" y2="140" stroke="#2c6e5f" stroke-width="2.6"/><polygon points="226,140 242,132 242,148" fill="#2c6e5f"/><text x="248" y="122" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#2c6e5f">자기장</text></g>
+                <g id="fldR" opacity="0"><line x1="226" y1="140" x2="250" y2="140" stroke="#2c6e5f" stroke-width="2.6"/><polygon points="262,140 246,132 246,148" fill="#2c6e5f"/><text x="244" y="122" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#2c6e5f">자기장</text></g>
+              </g>
+              <circle cx="135" cy="140" r="46" fill="#faf4e6" stroke="#a08b64" stroke-width="2"/>
+              <g id="cpNeedle" style="transform-origin:135px 140px;transition:transform .9s cubic-bezier(.34,1.15,.5,1)">
+                <polygon points="135,102 127,140 143,140" fill="#b3362e"/>
+                <polygon points="135,178 127,140 143,140" fill="#2e5f8f"/>
+              </g>
+              <circle cx="135" cy="140" r="4" fill="#4a3a26"/>
+              <text x="135" y="212" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">나침반 (위쪽이 북쪽)</text>
+              <g id="loopsSparse">
+                <ellipse cx="300" cy="140" rx="8" ry="38" fill="none" stroke="#a05c2c" stroke-width="3"/>
+                <ellipse cx="326" cy="140" rx="8" ry="38" fill="none" stroke="#a05c2c" stroke-width="3"/>
+                <ellipse cx="352" cy="140" rx="8" ry="38" fill="none" stroke="#a05c2c" stroke-width="3"/>
+                <ellipse cx="378" cy="140" rx="8" ry="38" fill="none" stroke="#a05c2c" stroke-width="3"/>
+                <ellipse cx="404" cy="140" rx="8" ry="38" fill="none" stroke="#a05c2c" stroke-width="3"/>
+                <ellipse cx="430" cy="140" rx="8" ry="38" fill="none" stroke="#a05c2c" stroke-width="3"/>
+                <ellipse cx="456" cy="140" rx="8" ry="38" fill="none" stroke="#a05c2c" stroke-width="3"/>
+              </g>
+              <g id="loopsDense" opacity="0">
+                <ellipse cx="300" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="313" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="326" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="339" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="352" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="365" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="378" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="391" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="404" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="417" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="430" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="443" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+                <ellipse cx="456" cy="140" rx="7" ry="38" fill="none" stroke="#a05c2c" stroke-width="2.6"/>
+              </g>
+              <text x="332" y="202" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">코일</text>
+              <g id="curUp" opacity="0"><line x1="390" y1="186" x2="390" y2="112" stroke="#a05c2c" stroke-width="3"/><polygon points="390,100 382,116 398,116" fill="#a05c2c"/><text x="390" y="88" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#a05c2c">전류(코일 앞면)</text></g>
+              <g id="curDown" opacity="0"><line x1="390" y1="112" x2="390" y2="186" stroke="#a05c2c" stroke-width="3"/><polygon points="390,198 382,182 398,182" fill="#a05c2c"/><text x="390" y="88" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#a05c2c">전류(코일 앞면)</text></g>
+              <text id="polL" x="284" y="94" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="22" font-weight="800" fill="#b3362e" opacity="0">N</text>
+              <text id="polR" x="472" y="94" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="22" font-weight="800" fill="#2e5f8f" opacity="0">S</text>
+              <path d="M300 178 V226 H265 V252" fill="none" stroke="#a08b64" stroke-width="2.5"/>
+              <path d="M456 178 V226 H420" fill="none" stroke="#a08b64" stroke-width="2.5"/>
+              <path d="M382 226 H335 V252" fill="none" stroke="#a08b64" stroke-width="2.5"/>
+              <circle cx="420" cy="226" r="4.5" fill="#6b573f"/><circle cx="382" cy="226" r="4.5" fill="#6b573f"/>
+              <line id="swClosed" x1="420" y1="226" x2="382" y2="226" stroke="#6b573f" stroke-width="3" opacity="0"/>
+              <line id="swOpen" x1="420" y1="226" x2="390" y2="204" stroke="#6b573f" stroke-width="3"/>
+              <text x="404" y="250" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">스위치</text>
+              <rect x="230" y="252" width="140" height="56" rx="10" fill="#faf4e6" stroke="#cbb894" stroke-width="1.8"/>
+              <circle cx="265" cy="252" r="4" fill="#6b573f"/><circle cx="335" cy="252" r="4" fill="#6b573f"/>
+              <text x="300" y="276" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#4a3a26">전원 장치</text>
+              <text id="termL" x="265" y="298" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="800" fill="#2e5f8f">−</text>
+              <text id="termR" x="335" y="298" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="800" fill="#b23a30">+</text>
+              <text x="310" y="325" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f" id="coilCap">스위치 열림 — 전류 0. 나침반 바늘은 남북(지구 자기장)을 가리킵니다</text>
+            </svg>
+          </div>
+          <div class="dl-head">
+            <h4>📋 관찰 기록표</h4>
+            <div class="btn-row">
+              <button class="btn primary sm" id="labRec">📌 기록</button>
+              <button class="btn ghost sm" id="labClear">기록 지우기</button>
+            </div>
+          </div>
+          <div class="dtable-wrap">
+            <table class="dtable" id="labTable">
+              <tr><th>스위치</th><th>전원 연결</th><th>전류의 세기</th><th>감은 수</th><th>나침반 N극</th><th></th></tr>
+              <tr><td class="empty" colspan="6">아직 기록이 없어요 — 조건을 정한 뒤 📌 기록을 눌러 보세요</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="simctl">
+          <h4>🎛️ 조작판</h4>
+          <p class="help" style="margin-top:2px">실제 실험에서 바꿀 수 있는 것들입니다.</p>
+          <div class="ctl">
+            <label><span>🔘 스위치</span></label>
+            <div class="btn-row" style="margin-top:4px">
+              <button class="btn ghost sm" id="swBtn">🟢 스위치 닫기</button>
+            </div>
+          </div>
+          <div class="ctl">
+            <label><span>🔁 전원 장치 연결</span><span class="val" id="dirVal">처음 연결</span></label>
+            <div class="btn-row" style="margin-top:4px">
+              <button class="btn ghost sm" id="dirBtn">(+)극과 (−)극 바꾸어 연결</button>
+            </div>
+          </div>
+          <div class="ctl">
+            <label><span>⚡ 전류의 세기</span><span class="val" id="iVal">1.5 A</span></label>
+            <input type="range" id="iSlider" min="0.5" max="3" step="0.5" value="1.5">
+          </div>
+          <div class="ctl">
+            <label><span>🌀 코일 감은 수</span><span class="val" id="coilVal">성기게</span></label>
+            <div class="btn-row" style="margin-top:4px">
+              <button class="btn ghost sm on" data-coil="sparse">성기게 감기</button>
+              <button class="btn ghost sm" data-coil="dense">촘촘히 감기</button>
+            </div>
+          </div>
+          <div class="readout">
+            <div class="r"><div class="lab2">🧲 코일의 N극 쪽</div><div class="v" id="rPole" style="color:#b3362e;font-size:15.5px">—</div></div>
+            <div class="r"><div class="lab2">🌫️ 자기장 세기</div><div class="v" id="rMag" style="color:#2c6e5f;font-size:15.5px"><small>자기장 없음</small></div></div>
+            <div class="r"><div class="lab2">🧭 나침반 N극</div><div class="v" id="rNeedle" style="color:#4a3a26;font-size:15.5px">북쪽 (남북 방향)</div></div>
+          </div>
+          <p class="help">전류의 세기와 감은 수를 바꾸면 <b>자기장 세기</b> 칸이 변해요. 방향을 정하는 손잡이와 세기를 정하는 손잡이가 서로 다릅니다 — 갈라서 보세요.</p>
+        </div>
+      </div>
+      <div class="verdict" id="labMsg">먼저 <b>스위치를 닫은 상태</b>를 기록하고, 이어서 <b>(+)(−)를 바꾸어 연결한 상태</b>도 기록해 보세요.</div>
+      <p class="honest"><span class="ic">📌</span>이 실험대의 나침반은 지구 자기장의 영향을 받지 않는 이상적인 나침반입니다.
+        실제 실험에서는 전류가 약하면 바늘이 지구 자기장을 따라가 덜 돌아가요. <b>진짜 실험을 꼭 해 보세요.</b> 이 화면은 예습·복습용입니다.</p>
+      <div class="note class"><span class="ic">💬</span><div><b>탐구 모범 답안(교과서 253쪽)</b> — ① 전류의 방향이 바뀌면 나침반 바늘이 가리키는 방향이 <b>반대로</b> 바뀐다 → 코일 주위의 <b>자기장 방향이 바뀐다</b>. ② 전류의 세기를 세게 하면 클립이 <b>더 많이 끌려온다</b> → 전류의 세기가 증가하면 클립이 받는 <b>자기력의 크기도 증가</b>한다. 「다르게 해 보기」(자기 센서) 정리 — 전류의 방향이 바뀌면 자기장의 방향도 바뀌고, 전류의 세기가 증가하면 자기장의 세기도 증가한다. 결과 해석 때 지구 자기장의 영향이 있음을 함께 짚어 주세요.</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">🧾 정리해 볼까 — 관찰에서 두 문장을 캐내기</h3>
+    <p class="lead" style="font-size:17px;margin-top:8px">기록표에서 다음 <b class="k">두 쌍</b>을 찾아 견주어 보세요.</p>
+    <div class="pill-list">
+      <span class="pill">① <b>전류의 방향</b>을 바꿨을 때 : 나침반 바늘은 어떻게 됐나?</span>
+      <span class="pill">② <b>전류의 세기</b>를 키웠을 때 : 자기장 세기(클립의 움직임)는?</span>
+    </div>
+    <textarea id="conclTa" placeholder="예: 전류의 방향을 바꾸면 나침반 바늘이 …, 전류를 세게 하면 클립이 …"></textarea>
+    <span class="savemark" id="conclSaved">✔ 저장됨</span>
+    <div class="btn-row"><button class="btn ghost sm" id="conclAnsBtn">모범 답안 확인하기</button></div>
+    <div class="explain" id="conclAns" style="margin-top:12px">
+      <div class="why">✍️ 모범 답안</div>
+      코일에 흐르는 전류의 방향이 달라지면 나침반 바늘이 가리키는 방향이 <b>반대로 바뀐다</b> —
+      코일 주위의 <b>자기장 방향이 바뀌기 때문</b>이다.
+      또 전류의 세기가 세지면 클립이 <b>더 많이 끌려온다</b> —
+      클립이 받는 <b>자기력(자기장의 세기)이 커지기 때문</b>이다.
+    </div>
+    <p class="help">이 두 문장에 이름과 규칙을 붙이는 것이 <b class="k">3단계</b>입니다. 자기장의 모양, 방향을 찾는 오른손, 그리고 세기의 규칙까지.</p>
+  </div>
+  <div class="cta-row"><button class="btn primary" data-go="rule">3단계 · 규칙으로 정리하기 →</button></div>
+</section>
+
+<!-- 3 -->
+<section class="panel" id="panel-rule">
+  <div class="stepline"><span class="sbadge">STEP 3</span><span class="swhat">규칙 세우기 · 관찰을 세 개의 규칙으로</span></div>
+  <h2 class="sec">관찰한 것을 세 개의 규칙으로 정리합시다</h2>
+  <p class="lead">나침반이 돌고, 클립이 끌려왔습니다. 이 관찰을 과학의 말로 바꾸면
+    <b class="k">모양 · 방향 · 세기</b>, 딱 세 개의 규칙이 됩니다.</p>
+
+  <div class="card" style="margin-top:20px">
+    <h3 class="card-t">규칙 ① — 전류가 흐르는 코일 주위에는 자기장이 생긴다</h3>
+    <p class="lead" style="font-size:17px;margin-top:8px">
+      스위치를 닫는 순간 나침반이 움직였죠. 코일 주위에 <b style="color:#2c6e5f">자기장</b>이 생겼다는 증거입니다.
+      그 모양은 <b class="k">막대자석 주위에 생기는 자기장의 모양과 비슷</b>해요(교과서 254쪽).
+      그래서 전류가 흐르는 코일에도 자석처럼 <b style="color:#b3362e">N극</b>과 <b style="color:#2e5f8f">S극</b>이 생깁니다.</p>
+    <div class="svgstage">
+      <svg viewBox="0 0 560 250" role="img" aria-label="막대자석 주위의 자기장과 전류가 흐르는 코일 주위의 자기장을 비교한 그림. 두 자기장의 모양이 서로 비슷하다.">
+        <text x="280" y="28" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="800" fill="#2c6e5f">모양이 서로 비슷하다!</text>
+        <ellipse cx="130" cy="130" rx="88" ry="48" fill="none" stroke="#2c6e5f" stroke-width="1.8" stroke-dasharray="7 6"/>
+        <ellipse cx="130" cy="130" rx="118" ry="72" fill="none" stroke="#2c6e5f" stroke-width="1.5" stroke-dasharray="7 6" opacity="0.7"/>
+        <polygon points="8,130 24,122 24,138" fill="#2c6e5f"/>
+        <rect x="70" y="113" width="60" height="34" rx="3" fill="#b3362e"/>
+        <rect x="130" y="113" width="60" height="34" rx="3" fill="#2e5f8f"/>
+        <text x="100" y="136" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="800" fill="#fdf6ea">N</text>
+        <text x="160" y="136" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="800" fill="#fdf6ea">S</text>
+        <text x="130" y="232" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" fill="#4a3a26">막대자석 주위의 자기장</text>
+        <ellipse cx="430" cy="130" rx="88" ry="48" fill="none" stroke="#2c6e5f" stroke-width="1.8" stroke-dasharray="7 6"/>
+        <ellipse cx="430" cy="130" rx="118" ry="72" fill="none" stroke="#2c6e5f" stroke-width="1.5" stroke-dasharray="7 6" opacity="0.7"/>
+        <polygon points="308,130 324,122 324,138" fill="#2c6e5f"/>
+        <ellipse cx="385" cy="130" rx="6" ry="28" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="403" cy="130" rx="6" ry="28" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="421" cy="130" rx="6" ry="28" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="439" cy="130" rx="6" ry="28" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="457" cy="130" rx="6" ry="28" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="475" cy="130" rx="6" ry="28" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <line x1="433" y1="156" x2="433" y2="100" stroke="#a05c2c" stroke-width="2.6"/>
+        <polygon points="433,92 426,106 440,106" fill="#a05c2c"/>
+        <text x="433" y="82" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#a05c2c">전류</text>
+        <text x="358" y="90" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="800" fill="#b3362e">N</text>
+        <text x="502" y="90" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="800" fill="#2e5f8f">S</text>
+        <text x="430" y="232" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" fill="#4a3a26">전류가 흐르는 코일 주위의 자기장</text>
+      </svg>
+    </div>
+    <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ①</b> — "스위치를 열어(전류를 끊어) 놓아도 코일은 자석으로 남는다."<br>
+      → <b class="k">아닙니다.</b> 실험대에서 스위치를 여는 순간 나침반이 남북으로 되돌아갔죠.
+      코일은 <b>전류가 흐르는 동안만</b> 자석의 성질을 띱니다. 그래서 켜고 끌 수 있는 자석이 되는 거예요.</div></div>
+    <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ②</b> — "나침반 바늘이 움직인 건 바늘이 <b>전선에 달라붙는</b> 성질 때문이다."<br>
+      → <b class="k">아닙니다.</b> 전류가 흐르지 않는 코일 옆에서는 바늘이 꿈쩍도 하지 않습니다.
+      바늘(작은 자석)을 움직인 것은 코일 주위에 생긴 <b style="color:#2c6e5f">자기장(자기력)</b>이에요.</div></div>
+    <div class="note class"><span class="ic">💬</span><div><b>지도상의 유의점(교과서 253쪽)</b> — 자기력선은 다루지 않습니다. 철 가루가 배열된 모양으로 자기장의 모습을 아는 수준까지만. 위 도해의 점선도 "철 가루가 늘어서는 모양" 정도로 읽게 해 주세요.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">규칙 ② — 방향은 오른손이 알려 준다</h3>
+    <p class="lead" style="font-size:17px;margin-top:8px">
+      코일의 어느 쪽이 N극일까요? <b class="k">오른손 네 손가락을 코일에 흐르는 전류의 방향으로 감아쥐면,
+      엄지손가락이 가리키는 방향</b>이 자기장의 방향 — 곧 <b style="color:#b3362e">N극 쪽</b>입니다(교과서 254쪽).</p>
+    <div class="svgstage">
+      <svg viewBox="0 0 560 260" role="img" aria-label="오른손으로 코일을 감아쥔 모습을 나타낸 도해. 네 손가락은 코일에 흐르는 전류의 방향을 따라 감아쥐고, 엄지손가락은 자기장의 방향, 즉 코일의 N극 쪽을 가리킨다.">
+        <ellipse cx="350" cy="130" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="372" cy="130" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="394" cy="130" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="416" cy="130" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="438" cy="130" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <path d="M346 176 C 332 150, 332 110, 346 84" fill="none" stroke="#8a5f24" stroke-width="4.5" stroke-linecap="round"/>
+        <polygon points="346,70 339,84 353,84" fill="#8a5f24"/>
+        <path d="M368 176 C 354 150, 354 110, 368 84" fill="none" stroke="#8a5f24" stroke-width="4.5" stroke-linecap="round"/>
+        <polygon points="368,70 361,84 375,84" fill="#8a5f24"/>
+        <path d="M390 176 C 376 150, 376 110, 390 84" fill="none" stroke="#8a5f24" stroke-width="4.5" stroke-linecap="round"/>
+        <polygon points="390,70 383,84 397,84" fill="#8a5f24"/>
+        <path d="M412 176 C 398 150, 398 110, 412 84" fill="none" stroke="#8a5f24" stroke-width="4.5" stroke-linecap="round"/>
+        <polygon points="412,70 405,84 419,84" fill="#8a5f24"/>
+        <text x="400" y="226" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="700" fill="#8a5f24">네 손가락 — 전류의 방향으로 감아쥔다</text>
+        <line x1="463" y1="164" x2="512" y2="164" stroke="#a05c2c" stroke-width="2.4"/>
+        <polygon points="522,164 508,157 508,171" fill="#a05c2c"/>
+        <text x="492" y="192" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#a05c2c">전류</text>
+        <line x1="330" y1="130" x2="245" y2="130" stroke="#2c6e5f" stroke-width="9" stroke-linecap="round"/>
+        <polygon points="222,130 248,116 248,144" fill="#2c6e5f"/>
+        <text x="292" y="100" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="700" fill="#2c6e5f">엄지손가락 — 자기장의 방향</text>
+        <text x="232" y="164" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="800" fill="#b3362e">이쪽이 N극</text>
+      </svg>
+    </div>
+    <p class="help">전류의 방향이 반대가 되면 감아쥐는 방향도 반대 — 엄지도 반대쪽을 가리킵니다.
+      실험대에서 (+)(−)를 바꿨을 때 나침반이 반대로 돌았던 것과 정확히 같은 이야기예요.</p>
+
+    <h3 class="card-t" style="margin-top:22px">🖐️ 연습 — 코일의 N극을 찾아라</h3>
+    <p class="lead" style="font-size:16.5px;margin-top:6px">화살표는 코일 <b class="k">앞면</b>에서 전류가 흐르는 방향입니다. 오른손을 감아쥐고 N극을 골라 보세요.</p>
+    <div class="grid c2" id="rhWrap" style="margin-top:14px">
+      <div class="forcecard rh-item" data-rh="r1" data-k="left">
+        <svg viewBox="0 0 300 190" role="img" aria-label="코일에 전류가 흐르는 그림. 코일 앞면에서 전류가 위쪽으로 흐른다. 코일의 왼쪽 끝은 첫째 기호, 오른쪽 끝은 둘째 기호로 표시되어 있다.">
+          <ellipse cx="95" cy="100" rx="7" ry="32" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+          <ellipse cx="117" cy="100" rx="7" ry="32" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+          <ellipse cx="139" cy="100" rx="7" ry="32" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+          <ellipse cx="161" cy="100" rx="7" ry="32" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+          <ellipse cx="183" cy="100" rx="7" ry="32" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+          <line x1="139" y1="140" x2="139" y2="68" stroke="#a05c2c" stroke-width="3"/>
+          <polygon points="139,56 131,72 147,72" fill="#a05c2c"/>
+          <text x="139" y="44" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#a05c2c">전류(앞면)</text>
+          <text x="52" y="66" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="800" fill="#4a3a26">㉠</text>
+          <text x="228" y="66" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="800" fill="#4a3a26">㉡</text>
+        </svg>
+        <div class="fc-t">연습 ① — N극은 어느 쪽?</div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn ghost sm" data-side="left">㉠ 쪽이 N극</button>
+          <button class="btn ghost sm" data-side="right">㉡ 쪽이 N극</button>
+        </div>
+        <div class="verdict rh-msg" style="font-size:14.5px;margin-top:10px">오른손을 감아쥐고 골라 보세요.</div>
+      </div>
+      <div class="forcecard rh-item" data-rh="r2" data-k="right">
+        <svg viewBox="0 0 300 190" role="img" aria-label="코일에 전류가 흐르는 그림. 코일 앞면에서 전류가 아래쪽으로 흐른다. 코일의 왼쪽 끝은 첫째 기호, 오른쪽 끝은 둘째 기호로 표시되어 있다.">
+          <ellipse cx="95" cy="100" rx="7" ry="32" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+          <ellipse cx="117" cy="100" rx="7" ry="32" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+          <ellipse cx="139" cy="100" rx="7" ry="32" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+          <ellipse cx="161" cy="100" rx="7" ry="32" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+          <ellipse cx="183" cy="100" rx="7" ry="32" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+          <line x1="139" y1="68" x2="139" y2="140" stroke="#a05c2c" stroke-width="3"/>
+          <polygon points="139,152 131,136 147,136" fill="#a05c2c"/>
+          <text x="139" y="44" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#a05c2c">전류(앞면)</text>
+          <text x="52" y="66" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="800" fill="#4a3a26">㉠</text>
+          <text x="228" y="66" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="800" fill="#4a3a26">㉡</text>
+        </svg>
+        <div class="fc-t">연습 ② — 이번엔 어느 쪽?</div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn ghost sm" data-side="left">㉠ 쪽이 N극</button>
+          <button class="btn ghost sm" data-side="right">㉡ 쪽이 N극</button>
+        </div>
+        <div class="verdict rh-msg" style="font-size:14.5px;margin-top:10px">연습 ①과 전류의 방향이 반대입니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">규칙 ③ — 세기는 전류와 감은 수가 정한다</h3>
+    <p class="lead" style="font-size:17px;margin-top:8px">
+      전류를 세게 하니 클립이 더 많이 끌려왔죠. <b class="k">전류의 세기가 셀수록</b>,
+      그리고 같은 길이에 도선을 <b class="k">촘촘히 많이 감을수록</b> 코일 주위 자기장의 세기가 커집니다.</p>
+    <div class="pill-list">
+      <span class="pill">🔺 세게 만들기 ① — <b>전류를 세게</b></span>
+      <span class="pill">🔺 세게 만들기 ② — <b>도선을 촘촘히 감기</b></span>
+      <span class="pill">🔁 방향 바꾸기 — <b>(+)(−) 바꾸어 연결</b></span>
+    </div>
+    <div class="note"><span class="ic">📌</span><div><b>전자석</b> — 전류가 흐르는 코일 주위에 자기장이 생기는 현상을 이용하면 <b>전자석</b>을 만들 수 있습니다.
+      전류의 방향과 세기를 조절해 <b>자기장의 방향과 세기를 마음대로 조절</b>할 수 있는 자석 —
+      초등학교 때 만들어 본 바로 그것입니다. 어디에 쓰이는지는 4단계에서.</div></div>
+    <div class="note class"><span class="ic">💬</span><div><b>극 찾기를 어려워하면(교과서 제안)</b> — 코일 안에 막대자석 모양을 겹쳐 그려 극을 찾게 하면 도움이 됩니다. "코일은 전자석 역할을 한다"라고 초등 경험과 연결해 주세요. 세기·방향은 <b>정성적으로만</b> 다룹니다.</div></div>
+  </div>
+
+  <!-- 빈칸 -->
+  <div class="card cloze-set" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:12px">✍️ 빈칸을 눌러 확인 — 먼저 머릿속으로 답한 뒤에</div>
+    <p class="cloze-line">
+      자석 주위와 같이 자기력이 작용하는 공간을 <span class="cloze" data-ans="자기장" data-c="mag">　</span>이라 하고,
+      그 방향은 나침반 바늘의 <span class="cloze" data-ans="N극" data-c="danger">　</span>이 가리키는 방향이다.
+    </p>
+    <p class="cloze-line">
+      코일에 <span class="cloze" data-ans="전류" data-c="accent">　</span>가 흐르면 코일 주위에 자기장이 생기며,
+      그 모양은 <span class="cloze" data-ans="막대자석" data-c="mag">　</span> 주위의 자기장 모양과 비슷하다.
+    </p>
+    <p class="cloze-line">
+      오른손 네 손가락을 전류의 방향으로 감아쥐었을 때 <span class="cloze" data-ans="엄지손가락" data-c="mag">　</span>이
+      가리키는 방향이 자기장의 방향(N극 쪽)이다.
+    </p>
+    <p class="cloze-line">
+      전류의 방향이 바뀌면 자기장의 방향도 <span class="cloze" data-ans="반대" data-c="danger">　</span>로 바뀐다.
+    </p>
+    <p class="cloze-line">
+      전류의 세기가 셀수록, 도선을 <span class="cloze" data-ans="촘촘히" data-c="accent">　</span> 감을수록 자기장의 세기가
+      <span class="cloze" data-ans="증가" data-c="mag">　</span>한다.
+    </p>
+    <p class="cloze-line">
+      이 성질을 이용해 자기장의 방향과 세기를 조절할 수 있게 만든 자석을 <span class="cloze" data-ans="전자석" data-c="c1">　</span>이라고 한다.
+    </p>
+    <div class="cloze-done">✅ 이 문단은 다 채웠어요!</div>
+    <p class="cloze-hint">빈칸을 그냥 눌러 답만 보면 남지 않아요. 소리 내어 답해 보고 누르세요.</p>
+  </div>
+
+  <div class="miniquiz" data-quiz="rule"></div>
+  <div class="cta-row"><button class="btn primary" data-go="apply">4단계 · 어디에 쓰일까 →</button></div>
+</section>
+
+<!-- 4 -->
+<section class="panel" id="panel-apply">
+  <div class="stepline"><span class="sbadge">STEP 4</span><span class="swhat">적용하기 · 코일의 자기장이 일하는 곳</span></div>
+  <h2 class="sec">코일의 자기장은 이미 우리 곁에서 일하고 있다</h2>
+  <p class="lead">전류로 <b class="k">켜고 끌 수 있고</b>, 방향과 세기까지 <b class="k">마음대로 조절</b>되는 자석 —
+    그래서 전자석은 쓰임새가 많습니다. 교과서 254~255쪽의 사례를 살펴봅시다.</p>
+
+  <div class="use-grid" style="margin-top:20px">
+    <div class="use">
+      <div class="u-t">🏗️ 전자석 기중기</div>
+      <div class="u-d">고철 더미에서 무거운 철제 물체를 들어 올릴 때는 <b class="k">전류를 흘려 강한 자석</b>으로 만들고,
+        내려놓을 자리에서는 <b class="k">전류를 끊어</b> 놓아 줍니다.
+        영구 자석이라면 붙은 철을 떼어 낼 수 없겠죠 — 켜고 끌 수 있어서 가능한 일입니다.</div>
+    </div>
+    <div class="use">
+      <div class="u-t">🚄 자기 부상 열차</div>
+      <div class="u-d">전자석은 <b class="k">전류의 방향과 세기를 조절해 자기장의 방향과 세기를 조절</b>할 수 있습니다.
+        자기 부상 열차는 이 성질로 차체를 선로 위에 띄우고 나아가게 해요(교과서 254쪽).</div>
+    </div>
+  </div>
+  <figure class="fig" data-fig="co-crane"
+    data-alt="폐차장에서 전자석 기중기가 고철을 들어 올리는 모습"
+    data-cap="전자석 기중기 — 전류를 흘리면 자석, 끊으면 보통 쇳덩이 (교과서 254쪽)"></figure>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">🍳 불꽃 없이 요리한다 — 인덕션 레인지 <span class="badge" style="vertical-align:middle">교과서 255쪽 · 과학 이야기</span></h3>
+    <p class="lead" style="font-size:17px;margin-top:10px">
+      인덕션 레인지를 켜면 안에 있는 <b class="k">코일에 전류가 흐르면서 자기장</b>이 생깁니다.
+      이 자기장이 조리 도구에 에너지를 전달해 조리 도구를 뜨겁게 만들어요.
+      직접 불을 피우지 않으니 <b class="k">조리 도구를 올려놓지 않으면 윗면이 뜨거워지지 않고</b>,
+      가스레인지보다 화상 피해가 적습니다. 화석 연료가 탈 때 나오는 이산화탄소도 나오지 않아요.</p>
+    <figure class="fig" data-fig="co-induction"
+      data-alt="인덕션 레인지 위에서 냄비가 가열되는 모습 — 상판에는 불꽃이 없다"
+      data-cap="인덕션 레인지 속에도 코일이 있다 (교과서 255쪽)"></figure>
+    <div class="note class"><span class="ic">💬</span><div><b>지도 방향(교과서 255쪽 명시)</b> — <b>전자기 유도는 다루지 않습니다.</b> "코일의 자기장이 조리 도구에 에너지를 전달해 뜨거워진다" 수준까지만. 안전성(불꽃 없음·화상 적음)과 친환경성(이산화탄소 배출 없음)을 파악하는 데 초점을 두세요.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">교과서 254쪽 · 사고력</span></h3>
+    <p class="lead" style="font-size:17.5px;margin-top:10px">
+      그림과 같이 코일 (가)와 (나)가 나란히 놓여 있고, 두 코일 모두에 전류가 흐르고 있습니다.
+      (가)에는 화살표 방향으로 전류가 흐르고, 두 코일 사이에는 <b class="k">서로 끌어당기는 방향</b>으로
+      자기력이 작용합니다. (나)에는 어느 방향으로 전류가 흐를지 설명해 보세요.</p>
+    <div class="svgstage">
+      <svg viewBox="0 0 560 230" role="img" aria-label="코일 가와 코일 나가 나란히 놓여 있고 두 코일 사이에 서로 끌어당기는 방향으로 자기력이 작용한다. 코일 가의 앞면에는 위쪽 화살표 방향으로 전류가 흐르고, 코일 나의 전류 방향은 물음표로 표시되어 있다.">
+        <text x="135" y="36" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="800" fill="#4a3a26">(가)</text>
+        <ellipse cx="95" cy="120" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="115" cy="120" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="135" cy="120" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="155" cy="120" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="175" cy="120" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <line x1="138" y1="158" x2="138" y2="86" stroke="#a05c2c" stroke-width="3"/>
+        <polygon points="138,74 130,90 146,90" fill="#a05c2c"/>
+        <text x="138" y="196" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#a05c2c">전류(앞면)</text>
+        <text x="425" y="36" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="800" fill="#4a3a26">(나)</text>
+        <ellipse cx="385" cy="120" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="405" cy="120" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="425" cy="120" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="445" cy="120" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <ellipse cx="465" cy="120" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
+        <text x="425" y="196" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" fill="#6b573f">전류의 방향은?</text>
+        <line x1="215" y1="120" x2="245" y2="120" stroke="#2c7a44" stroke-width="3"/>
+        <polygon points="257,120 241,112 241,128" fill="#2c7a44"/>
+        <line x1="345" y1="120" x2="315" y2="120" stroke="#2c7a44" stroke-width="3"/>
+        <polygon points="303,120 319,112 319,128" fill="#2c7a44"/>
+        <text x="280" y="88" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="700" fill="#2c7a44">서로 끌어당긴다</text>
+      </svg>
+    </div>
+    <textarea id="essay" placeholder="힌트: 먼저 오른손 규칙으로 (가)의 N극과 S극을 찾으세요. 그다음, 끌어당기려면 (나)의 왼쪽 끝이 무슨 극이어야 할지 따져 보세요."></textarea>
+    <span class="savemark" id="essaySaved">✔ 저장됨</span>
+    <div class="btn-row"><button class="btn ghost sm" id="ansBtn">모범 답안 확인하기</button></div>
+    <div class="explain" id="modelAns" style="margin-top:12px">
+      <div class="why">✍️ 모범 답안 (교과서 254쪽)</div>
+      코일 (가)에 흐르는 전류가 만드는 자기장의 방향이 <b>왼쪽</b>이므로 (가)의 오른쪽 끝은 <b>S극</b>이다.
+      두 코일이 서로 끌어당기려면 (나)의 왼쪽 끝이 <b>N극</b>이 되어야 한다.
+      따라서 (나)에는 <b>(가)와 같은 방향</b>으로 전류가 흐른다.
+    </div>
+    <div class="note class"><span class="ic">💬</span><div><b>채점 포인트</b> — ① 오른손 규칙으로 (가)의 극(왼쪽 N·오른쪽 S)을 찾았는가 ② 끌어당기려면 (나)의 왼쪽이 N극이어야 함을 밝혔는가 ③ 결론이 "(가)와 같은 방향"인가. 극 찾기를 어려워하면 코일 안에 막대자석을 그려 보게 하세요.</div></div>
+  </div>
+
+  <div class="clue">
+    <div class="cl-h">🧩 세 번째 블록 질문 — 단서 ①을 손에 넣었다</div>
+    <p><b>"전동기를 더 빨리 회전하게 하려면 어떻게 해야 할까?"</b> — 이 단원의 큰 질문입니다.
+      오늘 그 첫 번째 단서를 찾았어요.</p>
+    <p style="margin-top:8px">🔑 <b>단서 ①</b> — 코일에 전류가 흐르면 주위에 <b style="color:#2c6e5f">자기장</b>이 생긴다.
+      그리고 <b>코일에 흐르는 전류의 세기가 세지면 코일 주위의 자기장의 세기가 증가한다</b>(교과서 254쪽).</p>
+    <p style="margin-top:8px">전동기 속에는 코일과 자석이 들어 있다고 했죠.
+      코일이 자석이 될 수 있다면 — 진짜 자석 옆에서는 무슨 일이 벌어질까요? 나머지 단서는 다음 차시에서 찾습니다.</p>
+  </div>
+
+  <a class="linkcard" href="08-motor.html">
+    <span class="lc-e">🚁</span>
+    <span><span class="lc-t">다음 차시 · 전류가 흐르자 코일이 움직였다</span>
+      <span class="lc-d">자기장 속에서 코일이 받는 힘 — 전동기와 스피커의 비밀 · 교과서 256~259쪽</span></span>
+  </a>
+
+  <div class="cta-row"><button class="btn primary" data-go="check">5단계 · 얼마나 알게 됐는지 확인 →</button></div>
+</section>
+
+<!-- 5 -->
+<section class="panel" id="panel-check">
+  <div class="stepline"><span class="sbadge">STEP 5</span><span class="swhat">확인하기 · 형성평가</span></div>
+  <h2 class="sec">배운 것을 확인해 봅시다</h2>
+  <p class="lead">점수에 들어가지 않습니다. 어디가 헷갈리는지 찾는 게 목적이에요.</p>
+  <div class="card" style="margin-top:20px">
+    <div class="game-hud">
+      <div class="lives" id="lives"><span class="h">❤️</span><span class="h">❤️</span><span class="h">❤️</span></div>
+      <div class="score-box"><span class="lab2">점수</span><span class="num" id="score">0</span></div>
+      <div class="score-box"><span class="lab2">문항</span><span class="num" id="qno">0/0</span></div>
+    </div>
+    <div id="gameBody">
+      <div style="text-align:center;padding:30px 10px">
+        <p class="lead" style="margin:0 auto 18px">준비됐나요? 5문항입니다.</p>
+        <button class="btn primary" id="gameStart">확인 문제 시작</button>
+      </div>
+    </div>
+    <div class="earned" id="medals">
+      <div class="medal" data-medal="first"><span class="e">🥉</span>첫 정답</div>
+      <div class="medal" data-medal="half"><span class="e">🥈</span>절반 돌파</div>
+      <div class="medal" data-medal="perfect"><span class="e">🥇</span>전부 정답</div>
+    </div>
+  </div>
+  <div class="cta-row"><button class="btn ghost" data-go="beyond">⚡ 더 알아보기 (선택)</button></div>
+</section>
+
+<!-- + -->
+<section class="panel" id="panel-beyond">
+  <div class="stepline opt"><span class="sbadge">선택</span><span class="swhat">더 알아보기 · 시험에 나오지 않습니다</span></div>
+  <h2 class="sec">나침반을 움직인 우연, 그리고 켜고 끄는 자석의 세계</h2>
+  <p class="lead">여기서부터는 <b class="k">교과서 밖 이야기</b>입니다. 시험에 나오지 않아요. 외우지 말고 그냥 읽어 보세요.</p>
+
+  <div class="grid c2" style="margin-top:20px">
+    <div class="card">
+      <h3 class="card-t">👨‍🔬 강의 중에 움찔한 나침반 <span class="badge">시험 X</span></h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        1820년, 덴마크의 과학자 외르스테드는 강의 도중 전선에 전류를 흘렸다가
+        옆에 놓여 있던 <b class="k">나침반 바늘이 움찔 움직이는 것</b>을 보았습니다.<br><br>
+        그때까지 전기와 자기는 서로 남남인 줄 알았어요.
+        <b class="k">전류가 자기장을 만든다</b>는 사실이 처음 드러난 순간이었고,
+        이 소식이 퍼지면서 코일과 전자석 연구가 폭발적으로 이어졌습니다.
+        오늘 여러분이 실험대에서 본 바로 그 장면이 과학사를 바꾼 장면이에요.</p>
+    </div>
+    <div class="card">
+      <h3 class="card-t">🌍 지구도 거대한 자석 <span class="badge">시험 X</span></h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        나침반 바늘이 가만히 두면 늘 남북을 가리키는 이유 —
+        <b class="k">지구 자체가 커다란 자석</b>이라 지구 주위에도 자기장이 있기 때문입니다.<br><br>
+        그래서 코일 실험에서 전류가 약하면 바늘이 코일의 자기장 대신
+        <b class="k">지구 자기장을 따라가</b> 버려요. 실험에서 충분히 센 전류를 쓰라고 했던 건
+        코일의 자기장이 지구 자기장을 이기게 하기 위해서였습니다.</p>
+    </div>
+  </div>
+
+  <div class="grid c2" style="margin-top:18px">
+    <div class="card">
+      <h3 class="card-t">🏗️ 켜고 끄는 자석의 쓸모 <span class="badge">시험 X</span></h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        폐차장의 전자석 기중기를 다시 떠올려 보세요. 영구 자석이었다면
+        들어 올린 고철을 <b class="k">내려놓을 방법이 없습니다.</b>
+        전자석은 스위치 하나로 자석이 되었다가 보통 쇳덩이가 되죠.<br><br>
+        병원의 MRI 장치 속에도 사람이 들어갈 만큼 <b class="k">거대한 코일</b>이 있고,
+        스피커·이어폰·전동기 속에도 작은 코일이 숨어 있습니다.
+        코일 속은 다음 차시에서 계속 들여다봅니다.</p>
+    </div>
+    <div class="card">
+      <h3 class="card-t">🎬 다시, 처음 그 질문 <span class="badge">시험 X</span></h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        <b class="k">"코일은 어떻게 자석을 끌어당기는 것일까?"</b><br><br>
+        이제 답할 수 있습니다 — 코일에 전류가 흐르면 코일이 <b>전자석이 되어</b>
+        액자 속 자석을 끌어당깁니다. 아래로 당기는 중력과 위로 당기는 자기력이
+        균형을 이루어 액자가 떠 있는 것이죠.<br><br>
+        스위치를 내리면? 자기장이 사라지고, 액자는 떨어집니다.
+        전류가 흐르는 <b>동안만</b> 자석 — 오늘 배운 규칙 그대로예요.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">📜 오늘의 세 규칙, 한 번 더</h3>
+    <p class="lead" style="font-size:18px;margin-top:10px">
+      ① 코일에 전류가 흐르면 주위에 <b style="color:#2c6e5f">자기장</b>이 생긴다 — 모양은 막대자석과 비슷.<br>
+      ② 방향은 <b class="k">오른손</b>이 알려 준다 — 네 손가락은 전류, 엄지는 <b style="color:#b3362e">N극</b>.
+      전류가 반대면 극도 반대.<br>
+      ③ 세기는 <b style="color:#a05c2c">전류의 세기</b>와 <b class="k">감은 수</b>가 정한다.<br><br>
+      다음 시간에는 이 코일을 <b class="k">진짜 자석 옆</b>에 놓습니다. 무슨 일이 벌어질까요?
+    </p>
+    <div class="cta-row" style="justify-content:center">
+      <button class="btn ghost" data-go="open">1단계로 돌아가기 ↑</button>
+      <a class="btn ghost" href="08-motor.html">🚁 다음 차시로 가기</a>
+      <a class="btn ghost" href="index.html">⚡ 단원 허브로</a>
+    </div>
+  </div>
+</section>
+
+</main>
+<div id="toast"></div>
+<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-08-08</span></footer>
+
+<script>
+"use strict";
+const FIGS={
+  'co-frame':'img/co-frame.jpg', 'co-setup':'img/co-setup.jpg', 'co-crane':'img/co-crane.jpg', 'co-induction':'img/co-induction.jpg'
+};
+const BG_IMAGES={cover:'',open:'',explore:'',rule:'',apply:'',check:'',beyond:''};
+const BG_FALLBACK={
+  cover:'radial-gradient(120% 90% at 50% 0%, #f6f1e8, #f4ebd7 68%)',
+  open:'radial-gradient(110% 80% at 50% 0%, #f6f1e8, #f4ebd7 66%)',
+  explore:'radial-gradient(100% 80% at 50% 20%, #f5f0e7, #f4ebd7 70%)',
+  rule:'linear-gradient(180deg, #f5efe6, #f4ebd7 74%)',
+  apply:'radial-gradient(90% 80% at 68% 15%, #efe0c2, #f4ebd7 70%)',
+  check:'radial-gradient(100% 85% at 30% 15%, #f5efe6, #f4ebd7 70%)',
+  beyond:'radial-gradient(110% 85% at 50% 0%, #f4efe5, #f4ebd7 66%)'
+};
+const SAVE='elec_coil_v1';
+document.documentElement.style.setProperty('--mag','#2c6e5f');
+
+/* 🧲 코일 실험대 — 화면 약속: 처음 연결(DIR=1)일 때 코일 앞면의 전류가 위쪽 →
+   오른손 규칙에 따라 왼쪽 끝(나침반 쪽)이 N극 → 나침반 N극은 서쪽(코일 반대쪽).
+   (+)(−)를 바꾸면(DIR=-1) 극과 자기장·바늘 방향이 모두 반대가 된다.
+   나침반 바늘의 각도는 오직 스위치(ON)와 전류의 방향(DIR)으로만 계산한다. */
+
+/* 🖐️ N극 찾기 연습 — 정답 판정 후 해설 */
+const RH_WHY={
+  r1:'앞면의 전류가 <b>위쪽</b>으로 흐르니, 오른손 네 손가락을 그 방향으로 감아쥐면 엄지는 <b>㉠(왼쪽)</b>을 가리킵니다. ㉠ 쪽이 N극이에요.',
+  r2:'이번에는 앞면의 전류가 <b>아래쪽</b> — 감아쥔 오른손이 뒤집히고, 엄지는 <b>㉡(오른쪽)</b>을 가리킵니다. 전류의 방향이 반대면 N극도 반대쪽!'
+};
+
+const QUIZ_SETS={
+  rule:{title:'코일 자기장으로 답하기', qs:[
+    {q:'코일에 전류가 흐르는 동안, 코일 주위에는 무엇이 생길까?',
+     ch:[{t:'자기장 — 자기력이 작용하는 공간',ok:1},
+         {t:'아무 변화도 생기지 않는다',ok:0},
+         {t:'전류를 끊은 뒤에도 계속 남아 있는 자기장',ok:0}],
+     why:'코일에 전류가 흐르면 주위에 <b>자기장</b>이 생깁니다. 단, <b>전류가 흐르는 동안만</b>이에요 — 스위치를 열면 자기장도 사라집니다.'},
+    {q:'전원 장치의 (+)극과 (−)극을 바꾸어 연결하면(전류의 방향 반전), 코일 주위의 자기장은?',
+     ch:[{t:'방향이 반대로 바뀐다',ok:1},
+         {t:'방향은 그대로이고 세기만 커진다',ok:0},
+         {t:'아무 변화가 없다',ok:0}],
+     why:'실험대에서 본 그대로 — 전류의 방향이 바뀌면 자기장의 <b>방향이 반대</b>로 바뀌고, 나침반 바늘도 반대쪽을 가리킵니다.'},
+    {q:'코일 주위의 자기장을 더 세게 만드는 방법은?',
+     ch:[{t:'전류를 더 세게 하거나, 도선을 더 촘촘히 감는다',ok:1},
+         {t:'(+)극과 (−)극을 바꾸어 연결한다',ok:0},
+         {t:'전류를 끊고 코일만 남겨 둔다',ok:0}],
+     why:'자기장의 세기는 <b>전류가 셀수록, 촘촘히 감을수록</b> 커집니다. (+)(−)를 바꾸는 것은 <b>방향</b>을 바꿀 뿐 세기는 그대로예요.'}
+  ]}
+};
+
+const GAME_QS=[
+  {id:"q1",
+   difficulty:"하",
+   intent:"전류가 흐르는 동안에만 코일 주위에 자기장이 생긴다는 핵심 사실을 확인한다. 오답은 페이지 오개념 카드에서 파생 — ② '전류를 끊어도 자석으로 남는다'(오해①), ③ '바늘이 도선에 달라붙는 성질'(오해②), ④ 자기장 방향 정의(S극) 혼동, ⑤ '전류 방향을 바꿔도 자기장은 그대로'.",
+   stem:"전류가 흐르는 코일 주위의 자기장에 대한 설명으로 옳은 것은?",
+   ch:[{t:"코일 주위의 자기장은 코일에 전류가 흐르는 동안에만 생긴다.",ok:1},{t:"스위치를 열어 전류를 끊어도 코일은 자석의 성질을 계속 지닌다.",ok:0},{t:"코일 옆의 나침반 바늘이 움직인 것은 바늘이 도선에 달라붙는 성질 때문이다.",ok:0},{t:"자기장의 방향은 나침반 바늘의 S극이 가리키는 방향으로 정한다.",ok:0},{t:"코일에 흐르는 전류의 방향을 반대로 바꾸어도 자기장의 방향은 변하지 않는다.",ok:0}],
+   why:"<b>정답 ①.</b> [판정 기준] '전류가 흐르는 <b>동안에만</b>'이라는 조건까지 정확해야 한다 — 실험에서 스위치를 여는 순간 나침반이 남북으로 되돌아간 것이 그 증거다.<br>② 전류를 끊으면 자기장도 함께 사라진다. '전류를 끊어도 자석으로 남는다'는 대표적인 오개념이다.<br>③ 바늘(작은 자석)을 돌린 힘은 코일 주위에 생긴 <b>자기장(자기력)</b>이다. 전류가 흐르지 않는 도선 옆에서는 바늘이 움직이지 않는다.<br>④ 자기장의 방향은 나침반 바늘의 <b>N극</b>이 가리키는 방향으로 약속한다.<br>⑤ 전류의 방향이 바뀌면 자기장의 방향도 <b>반대로</b> 바뀐다."},
+
+  {id:"q2",
+   difficulty:"중",
+   intent:"관찰 기록표를 해석해 '전류가 흐르는 동안만 자기장'과 '전류 방향 반전 → 자기장 방향 반전' 규칙을 도출한다. ㄴ은 '전류를 끊어도 자석으로 남는다'(오해① 카드)에서 파생한 거짓 진술로, 표 1행의 관찰이 직접 반례가 된다.",
+   svg:"<svg viewBox=\"0 0 560 230\" role=\"img\" aria-label=\"코일 P 옆 지점 ㉠에 나침반 (가)를 고정해 두고 조건을 바꾸어 가며 바늘의 N극이 가리키는 방향을 관찰한 기록표. 스위치를 열었을 때는 북쪽, 스위치를 닫고 처음대로 연결했을 때는 서쪽, 스위치를 닫고 두 전선을 바꾸어 연결했을 때는 동쪽을 가리켰다.\"><rect x=\"52\" y=\"34\" width=\"456\" height=\"154\" rx=\"10\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"1.8\"/><line x1=\"52\" y1=\"72\" x2=\"508\" y2=\"72\" stroke=\"#cbb894\" stroke-width=\"1.6\"/><line x1=\"52\" y1=\"110\" x2=\"508\" y2=\"110\" stroke=\"#dccfae\" stroke-width=\"1.4\"/><line x1=\"52\" y1=\"148\" x2=\"508\" y2=\"148\" stroke=\"#dccfae\" stroke-width=\"1.4\"/><line x1=\"332\" y1=\"34\" x2=\"332\" y2=\"188\" stroke=\"#cbb894\" stroke-width=\"1.6\"/><text x=\"192\" y=\"59\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">조건</text><text x=\"420\" y=\"59\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">나침반 (가)의 N극</text><text x=\"192\" y=\"98\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">스위치를 열었을 때</text><text x=\"420\" y=\"98\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#4a3a26\">북쪽</text><text x=\"192\" y=\"136\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">스위치를 닫음 (처음 연결)</text><text x=\"420\" y=\"136\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#a05c2c\">서쪽</text><text x=\"192\" y=\"174\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">스위치를 닫음 (두 전선을 바꿈)</text><text x=\"420\" y=\"174\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#2c6e5f\">동쪽</text><text x=\"280\" y=\"216\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">※ 나침반 (가)는 코일 P 옆 지점 ㉠에 고정해 두고 관찰했다.</text></svg>",
+   stem:"표는 코일 P 옆 지점 ㉠에 나침반 (가)를 고정해 두고, 조건을 바꾸어 가며 바늘의 N극이 가리키는 방향을 관찰한 기록이다. 이에 대한 설명으로 옳은 것만을 &lt;보기&gt;에서 있는 대로 고른 것은?",
+   boxes:["코일 P 주위의 자기장은 코일에 전류가 흐르는 동안에만 생긴다.", "세 번째 관찰 뒤 스위치를 다시 열어도, (가)의 바늘은 동쪽을 가리킨 채 그대로 있을 것이다.", "코일에 흐르는 전류의 방향이 바뀌면 코일 주위 자기장의 방향도 반대로 바뀐다."],
+   boxVerdicts:[true, false, true],
+   ch:[{t:"ㄱ",ok:0},{t:"ㄴ",ok:0},{t:"ㄱ, ㄷ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+   why:"<b>ㄱ. 옳다.</b> 스위치를 열었을 때 바늘이 북쪽(남북)을 가리켰다 — 전류가 흐르는 <b>동안에만</b> 코일 주위에 자기장이 생긴다는 증거로 읽어야 한다.<br><b>ㄴ. 옳지 않다.</b> 스위치를 열면 전류가 끊겨 자기장이 사라지므로 바늘은 다시 <b>북쪽</b>으로 되돌아간다. '전류를 끊어도 자석으로 남는다'는 오개념이며, 표의 1행이 그 반례다.<br><b>ㄷ. 옳다.</b> 두 전선을 바꾸어 연결(전류의 방향 반전)하자 바늘이 서쪽 ↔ <b>동쪽</b>으로 정반대가 되었다 — 자기장의 방향이 반대로 바뀐 것이다.<br>따라서 정답은 <b>ㄱ, ㄷ</b>."},
+
+  {id:"q3",
+   difficulty:"중",
+   intent:"오른손 규칙으로 코일의 N극을 판정한다. 그림은 앞면 전류가 아래쪽 → 오른손 규칙으로 검증하면 엄지가 ㉡(오른쪽)을 가리켜 ㉡이 N극(페이지 연습②의 감김 약속과 동일). 오답은 엄지·네 손가락을 맞바꾼 규칙, '항상 위쪽이 N극', '코일에는 극이 없다', '전류 방향을 바꿔도 극은 그대로'(오개념 카드 파생).",
+   svg:"<svg viewBox=\"0 0 560 200\" role=\"img\" aria-label=\"전원 장치에 연결되어 전류가 흐르는 코일 P. 코일 앞면에서 전류는 아래쪽으로 흐르고, 코일의 왼쪽 끝 지점은 ㉠, 오른쪽 끝 지점은 ㉡으로 표시되어 있다.\"><ellipse cx=\"205\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><ellipse cx=\"229\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><ellipse cx=\"253\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><ellipse cx=\"277\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><ellipse cx=\"301\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><ellipse cx=\"325\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><line x1=\"265\" y1=\"62\" x2=\"265\" y2=\"132\" stroke=\"#a05c2c\" stroke-width=\"3\"/><polygon points=\"265,144 257,128 273,128\" fill=\"#a05c2c\"/><text x=\"265\" y=\"40\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" font-weight=\"700\" fill=\"#a05c2c\">전류의 방향(앞면)</text><text x=\"150\" y=\"68\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"20\" font-weight=\"800\" fill=\"#4a3a26\">㉠</text><text x=\"382\" y=\"68\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"20\" font-weight=\"800\" fill=\"#4a3a26\">㉡</text><text x=\"280\" y=\"190\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">코일 P는 전원 장치에 연결되어 전류가 흐르고 있다.</text></svg>",
+   stem:"그림은 전원 장치에 연결되어 전류가 흐르는 코일 P를 나타낸 것이다. 코일의 양 끝 지점 ㉠, ㉡에 대한 설명으로 옳은 것은?",
+   ch:[{t:"엄지손가락을 전류의 방향으로 향하게 하고 네 손가락으로 감아쥐어 찾으면, ㉠ 쪽이 N극이다.",ok:0},{t:"전류의 방향과 관계없이 코일의 위쪽이 항상 N극이다.",ok:0},{t:"코일 P는 진짜 자석이 아니므로 N극과 S극이 생기지 않는다.",ok:0},{t:"오른손 네 손가락을 전류의 방향으로 감아쥐면 엄지손가락이 ㉡ 쪽을 가리키므로, ㉡ 쪽이 N극이다.",ok:1},{t:"전류의 방향을 반대로 바꾸어도 코일에 생기는 N극의 위치는 변하지 않는다.",ok:0}],
+   why:"<b>정답 ④.</b> [채점 기준] ⑴ 감아쥐는 것은 <b>네 손가락(전류의 방향)</b>, 뻗은 <b>엄지가 N극 쪽</b>이라는 규칙을 적용했는가. ⑵ 앞면의 전류가 <b>아래쪽</b>이므로 감아쥔 오른손의 엄지가 <b>㉡(오른쪽)</b>을 가리킴을 찾았는가.<br>① 엄지와 네 손가락의 역할을 맞바꾼 잘못된 규칙이다.<br>② N극의 위치는 전류의 방향이 정한다 — '항상 위쪽' 같은 정해진 자리는 없다.<br>③ 전류가 흐르는 코일에는 막대자석처럼 <b>N극과 S극이 생긴다</b> — 자기장의 모양도 막대자석 주위와 비슷하다.<br>⑤ 전류의 방향을 반대로 하면 감아쥐는 방향이 뒤집혀 <b>N극과 S극의 위치도 서로 바뀐다</b>."},
+
+  {id:"q4",
+   difficulty:"상",
+   intent:"[상 · 2단계 추론] 1단계: 오른손 규칙으로 극 판정(앞면 전류 위쪽 → ㉠ 쪽이 N극, 규칙으로 직접 검증·페이지 연습①과 동일 약속). 2단계: 양쪽 지점의 나침반 방향 예측 — ㉡ 쪽은 S극이므로 (나)의 N극은 코일 쪽(서쪽), (가)의 N극은 코일 반대쪽(서쪽). ㄷ은 '전류 방향을 바꿔도 그대로' 오개념에서 파생.",
+   svg:"<svg viewBox=\"0 0 560 280\" role=\"img\" aria-label=\"코일 P의 왼쪽 지점 ㉠에 나침반 (가), 오른쪽 지점 ㉡에 나침반 (나)가 놓여 있다. 스위치를 닫으면 코일 앞면에서 전류가 위쪽으로 흐르도록 전원 장치에 연결되어 있다. 그림은 스위치를 닫기 전 모습으로 두 나침반 바늘은 남북을 가리키고 있으며, 위쪽이 북쪽이다.\"><text x=\"280\" y=\"24\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">(위쪽이 북쪽)</text><circle cx=\"80\" cy=\"112\" r=\"40\" fill=\"#faf4e6\" stroke=\"#a08b64\" stroke-width=\"2\"/><polygon points=\"80,79 73,112 87,112\" fill=\"#b3362e\"/><polygon points=\"80,145 73,112 87,112\" fill=\"#2e5f8f\"/><circle cx=\"80\" cy=\"112\" r=\"3.5\" fill=\"#4a3a26\"/><text x=\"80\" y=\"176\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">(가) · 지점 ㉠</text><circle cx=\"480\" cy=\"112\" r=\"40\" fill=\"#faf4e6\" stroke=\"#a08b64\" stroke-width=\"2\"/><polygon points=\"480,79 473,112 487,112\" fill=\"#b3362e\"/><polygon points=\"480,145 473,112 487,112\" fill=\"#2e5f8f\"/><circle cx=\"480\" cy=\"112\" r=\"3.5\" fill=\"#4a3a26\"/><text x=\"480\" y=\"176\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">(나) · 지점 ㉡</text><ellipse cx=\"220\" cy=\"112\" rx=\"8\" ry=\"38\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.8\"/><ellipse cx=\"244\" cy=\"112\" rx=\"8\" ry=\"38\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.8\"/><ellipse cx=\"268\" cy=\"112\" rx=\"8\" ry=\"38\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.8\"/><ellipse cx=\"292\" cy=\"112\" rx=\"8\" ry=\"38\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.8\"/><ellipse cx=\"316\" cy=\"112\" rx=\"8\" ry=\"38\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.8\"/><ellipse cx=\"340\" cy=\"112\" rx=\"8\" ry=\"38\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.8\"/><line x1=\"280\" y1=\"148\" x2=\"280\" y2=\"80\" stroke=\"#a05c2c\" stroke-width=\"3\"/><polygon points=\"280,68 272,84 288,84\" fill=\"#a05c2c\"/><text x=\"280\" y=\"50\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#a05c2c\">전류(앞면, 스위치를 닫았을 때)</text><text x=\"280\" y=\"174\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">코일 P</text><path d=\"M220 150 V232 H235\" fill=\"none\" stroke=\"#a08b64\" stroke-width=\"2.4\"/><path d=\"M340 150 V232 H385\" fill=\"none\" stroke=\"#a08b64\" stroke-width=\"2.4\"/><rect x=\"235\" y=\"206\" width=\"150\" height=\"52\" rx=\"9\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"1.8\"/><text x=\"310\" y=\"228\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#4a3a26\">전원 장치</text><text x=\"310\" y=\"248\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">스위치 열림</text><text x=\"280\" y=\"274\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">화살표는 스위치를 닫았을 때 전류의 방향이다.</text></svg>",
+   stem:"그림과 같이 코일 P의 왼쪽 지점 ㉠에 나침반 (가)를, 오른쪽 지점 ㉡에 나침반 (나)를 놓았다. 스위치를 닫으면 코일 앞면에서 전류가 화살표 방향(위쪽)으로 흐른다. 스위치를 닫은 뒤에 대한 설명으로 옳은 것만을 &lt;보기&gt;에서 있는 대로 고른 것은? (단, 스위치를 닫으면 지점 ㉠, ㉡에서 코일의 자기장은 지구 자기장보다 매우 세다.)",
+   boxes:["코일 P의 ㉠ 쪽 끝은 N극이 된다.", "나침반 (나)의 바늘 N극은 코일 P 쪽(서쪽)을 가리킨다.", "전원 장치의 두 전선을 서로 바꾸어 연결해도 (가)의 바늘이 가리키는 방향은 변하지 않는다."],
+   boxVerdicts:[true, true, false],
+   ch:[{t:"ㄱ",ok:0},{t:"ㄴ",ok:0},{t:"ㄱ, ㄴ",ok:1},{t:"ㄱ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+   why:"<b>ㄱ. 옳다.</b> [1단계 · 극 판정] 앞면의 전류가 위쪽 → 오른손 네 손가락을 그 방향으로 감아쥐면 엄지는 왼쪽 — <b>㉠ 쪽 끝이 N극</b>, ㉡ 쪽 끝은 S극이다.<br><b>ㄴ. 옳다.</b> [2단계 · 나침반 판정] ㉡ 쪽 끝이 S극이므로 (나)의 바늘 N극은 S극에 끌려 <b>코일 P 쪽(서쪽)</b>을 가리킨다. 같은 논리로 (가)의 N극은 N극에 밀려 코일 반대쪽(서쪽) — 막대자석 주위처럼 두 바늘이 같은 방향을 가리키게 된다.<br><b>ㄷ. 옳지 않다.</b> 두 전선을 바꾸면 전류의 방향이 반대 → 코일의 극과 자기장의 방향이 모두 반대 → (가)와 (나)의 바늘 모두 <b>반대쪽으로 돌아간다</b>. '전류 방향을 바꿔도 그대로'는 오개념이다.<br>따라서 정답은 <b>ㄱ, ㄴ</b>."},
+
+  {id:"q5",
+   difficulty:"상",
+   intent:"[상 · 2단계 추론] 교과서 254쪽 사고력 문항의 변형. 1단계: 두 코일의 극을 각각 오른손 규칙으로 판정 — P는 앞면 전류 위쪽 → 왼쪽 N극이므로 ㉠(오른쪽)=S극, Q는 앞면 전류 아래쪽 → 오른쪽 N극이므로 ㉡(왼쪽)=S극(규칙으로 직접 검증). 2단계: 같은 극 마주 → 척력. 오답은 규칙 오적용(①), '코일에는 극이 없다'(③), '방향 바꿔도 그대로'(④), 세기·방향 혼동(⑤)에서 파생.",
+   svg:"<svg viewBox=\"0 0 560 230\" role=\"img\" aria-label=\"코일 P와 코일 Q가 같은 중심축 위에 마주 놓여 있다. 코일 P의 앞면에서 전류는 위쪽으로, 코일 Q의 앞면에서 전류는 아래쪽으로 흐른다. 마주 보는 P의 오른쪽 끝 지점은 ㉠, Q의 왼쪽 끝 지점은 ㉡으로 표시되어 있다.\"><line x1=\"202\" y1=\"118\" x2=\"358\" y2=\"118\" stroke=\"#cbb894\" stroke-width=\"1.6\" stroke-dasharray=\"6 6\"/><ellipse cx=\"100\" cy=\"118\" rx=\"7\" ry=\"34\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.5\"/><ellipse cx=\"122\" cy=\"118\" rx=\"7\" ry=\"34\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.5\"/><ellipse cx=\"144\" cy=\"118\" rx=\"7\" ry=\"34\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.5\"/><ellipse cx=\"166\" cy=\"118\" rx=\"7\" ry=\"34\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.5\"/><ellipse cx=\"188\" cy=\"118\" rx=\"7\" ry=\"34\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.5\"/><line x1=\"147\" y1=\"148\" x2=\"147\" y2=\"92\" stroke=\"#a05c2c\" stroke-width=\"3\"/><polygon points=\"147,80 139,96 155,96\" fill=\"#a05c2c\"/><text x=\"144\" y=\"64\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#a05c2c\">전류(앞면)</text><text x=\"144\" y=\"200\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">코일 P</text><ellipse cx=\"372\" cy=\"118\" rx=\"7\" ry=\"34\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.5\"/><ellipse cx=\"394\" cy=\"118\" rx=\"7\" ry=\"34\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.5\"/><ellipse cx=\"416\" cy=\"118\" rx=\"7\" ry=\"34\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.5\"/><ellipse cx=\"438\" cy=\"118\" rx=\"7\" ry=\"34\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.5\"/><ellipse cx=\"460\" cy=\"118\" rx=\"7\" ry=\"34\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.5\"/><line x1=\"419\" y1=\"88\" x2=\"419\" y2=\"144\" stroke=\"#a05c2c\" stroke-width=\"3\"/><polygon points=\"419,156 411,140 427,140\" fill=\"#a05c2c\"/><text x=\"416\" y=\"64\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#a05c2c\">전류(앞면)</text><text x=\"416\" y=\"200\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">코일 Q</text><line x1=\"216\" y1=\"82\" x2=\"198\" y2=\"96\" stroke=\"#a08b64\" stroke-width=\"1.6\"/><text x=\"224\" y=\"76\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"20\" font-weight=\"800\" fill=\"#4a3a26\">㉠</text><line x1=\"344\" y1=\"82\" x2=\"362\" y2=\"96\" stroke=\"#a08b64\" stroke-width=\"1.6\"/><text x=\"336\" y=\"76\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"20\" font-weight=\"800\" fill=\"#4a3a26\">㉡</text><text x=\"280\" y=\"224\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">두 코일은 같은 중심축 위에 마주 놓여 있다.</text></svg>",
+   stem:"그림과 같이 코일 P와 Q가 같은 중심축 위에 마주 놓여 있고, 두 코일에 각각 화살표 방향으로 전류가 흐르고 있다. 마주 보는 두 끝 지점 ㉠(P의 오른쪽 끝)과 ㉡(Q의 왼쪽 끝)에 대한 설명으로 옳은 것은?",
+   ch:[{t:"㉠은 N극, ㉡은 S극이므로, P와 Q 사이에는 서로 끌어당기는 힘이 작용한다.",ok:0},{t:"㉠과 ㉡은 모두 S극이므로, P와 Q 사이에는 서로 밀어 내는 힘이 작용한다.",ok:1},{t:"전류가 흐르는 코일에는 극이 생기지 않으므로, P와 Q 사이에는 힘이 작용하지 않는다.",ok:0},{t:"Q에 흐르는 전류의 방향을 반대로 바꾸어도 두 코일 사이에 작용하는 힘의 종류는 변하지 않는다.",ok:0},{t:"P에 흐르는 전류의 세기를 세게 하면 두 코일 사이에 작용하는 힘의 방향이 반대로 바뀐다.",ok:0}],
+   why:"<b>정답 ②.</b> [채점 기준 — 2단계 추론] ⑴ 극 판정: P는 앞면 전류가 <b>위쪽</b> → 왼쪽 끝이 N극이므로 마주 보는 <b>㉠은 S극</b>. Q는 앞면 전류가 <b>아래쪽</b> → 오른쪽 끝이 N극이므로 마주 보는 <b>㉡도 S극</b>. ⑵ 힘 판정: 같은 극(S–S)이 마주 보므로 <b>서로 밀어 낸다</b>.<br>① 오른손 규칙을 잘못 적용한 결과다 — 감아쥔 네 손가락이 전류, 엄지가 N극임을 지키면 ㉠은 N극이 될 수 없다.<br>③ 전류가 흐르는 코일에는 막대자석처럼 극이 생기고, 두 코일 사이에 자기력이 작용한다.<br>④ Q의 전류를 반대로 하면 ㉡이 N극이 되어 다른 극이 마주 보므로 힘이 <b>인력으로 바뀐다</b>.<br>⑤ 전류의 세기는 힘의 <b>크기</b>만 키운다. 힘의 방향(종류)을 정하는 것은 전류의 <b>방향</b>이다."}
+];
+
+/* ── 엔진 ── */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TAU=Math.PI*2;
+const TABS=['open','explore','rule','apply','check','beyond'];
+const CS=getComputedStyle(document.documentElement);
+const CV=k=>CS.getPropertyValue('--'+k).trim();
+const C={accent:CV('accent'),accent2:CV('accent2'),c1:CV('c1'),c2:CV('c2'),c3:CV('c3'),c4:CV('c4'),c5:CV('c5'),
+  line:CV('line'),linesoft:CV('line-soft'),ink:CV('ink'),inkdim:CV('ink-dim'),inkmute:CV('ink-mute'),
+  ok:CV('ok'),danger:CV('danger'),gold:CV('gold')};
+
+function setBg(tab){
+  const L=$('#bgLayer'); if(!L)return;
+  const img=BG_IMAGES[tab]||(tab==='cover'?BG_IMAGES.open:'');
+  L.style.opacity='0';
+  setTimeout(()=>{L.style.backgroundImage=img?`url("${img}")`:(BG_FALLBACK[tab]||BG_FALLBACK.open);L.style.opacity='1';},150);
+}
+function fit(cv){
+  const dpr=Math.min(devicePixelRatio||1,2.5);
+  const w=cv.clientWidth||cv.parentElement.clientWidth||320;
+  const h=parseInt(cv.getAttribute('height'))||300;
+  cv.style.height=h+'px';cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+  const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w,h};
+}
+const A={ctx:null,
+  ensure(){if(!this.ctx){try{this.ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+    if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume();return this.ctx;},
+  blip(f=600,d=.08,type='sine',vol=.15){const c=this.ensure();if(!c)return;
+    const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=f;o.connect(g);g.connect(c.destination);
+    const t=c.currentTime;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.03);},
+  correct(){this.blip(660,.11);setTimeout(()=>this.blip(880,.13),85);setTimeout(()=>this.blip(1170,.18),190);},
+  wrong(){this.blip(200,.2,'sawtooth',.1);setTimeout(()=>this.blip(150,.24,'sawtooth',.08),130);},
+  pop(){this.blip(440,.05,'triangle',.13);},
+  win(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>this.blip(f,.22,'sine',.15),i*110));}};
+['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>A.ensure(),{once:true}));
+
+let S=load()||{tab:'open',visited:{},seen:{},warm:'',poe:'',rows:[],concl:'',cloze:{},mini:{},rh:{},essay:'',best:0,medals:{}};
+S.visited=S.visited||{};S.seen=S.seen||{};S.rows=S.rows||[];S.cloze=S.cloze||{};S.mini=S.mini||{};
+S.medals=S.medals||{};S.essay=S.essay||'';S.poe=S.poe||'';S.concl=S.concl||'';S.rh=S.rh||{};S.warm=S.warm||'';
+let CLOZE_TOTAL=0;
+function save(){try{localStorage.setItem(SAVE,JSON.stringify(S));}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(SAVE));}catch(e){return null;}}
+function labOk(){
+  const rows=S.rows||[];
+  const f=rows.some(r=>r.sw&&r.dir===1), b=rows.some(r=>r.sw&&r.dir===-1);
+  return f&&b;
+}
+function progChecks(){
+  return [
+    {label:'1단계 · 알고 있는 것 표시하기',       ok:Object.keys(S.seen||{}).length>=1},
+    {label:'1단계 · 자기장의 방향 답하기',        ok:!!S.warm},
+    {label:'2단계 · 결과 예상하기',              ok:!!S.poe},
+    {label:'2단계 · 두 전류 방향 모두 기록',      ok:labOk()},
+    {label:'2단계 · 나의 결론 써 보기',          ok:(S.concl||'').trim().length>=10},
+    {label:'3단계 · 빈칸 모두 채우기',           ok:CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL},
+    {label:'3단계 · N극 찾기 연습 2문',          ok:Object.keys(S.rh||{}).length>=2},
+    {label:'3단계 · 개념 확인 퀴즈',             ok:!!S.mini.rule},
+    {label:'4단계 · 사고력 문제 답쓰기',         ok:(S.essay||'').trim().length>=15},
+    {label:'5단계 · 확인 문제 완주',             ok:S.best>0}
+  ];
+}
+function updateProgress(){
+  const c=progChecks(), pct=Math.round(c.filter(x=>x.ok).length/c.length*100);
+  $('#progBar').style.width=pct+'%';$('#progPct').textContent=pct+'%';
+  const _pn=$('#progNeedle'); if(_pn)_pn.style.transform='rotate('+(pct*1.8-90)+'deg)';
+  const ul=$('#progItems');
+  if(ul)ul.innerHTML=c.map(x=>`<li class="${x.ok?'on':''}"><span class="mk">${x.ok?'✔':'○'}</span>${x.label}</li>`).join('');
+  const done={open:Object.keys(S.seen||{}).length>=1&&!!S.warm,
+    explore:!!S.poe&&labOk()&&(S.concl||'').trim().length>=10,
+    rule:CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL&&!!S.mini.rule&&Object.keys(S.rh||{}).length>=2,
+    apply:(S.essay||'').trim().length>=15,
+    check:S.best>0, beyond:!!S.visited.beyond};
+  $$('#tabNav button').forEach(b=>b.classList.toggle('done',!!done[b.dataset.tab]));
+}
+let toastT;
+function toast(msg,kind=''){const el=$('#toast');el.innerHTML=msg;el.className='show '+kind;
+  clearTimeout(toastT);toastT=setTimeout(()=>el.className='',2300);}
+
+function showTab(id,noScroll){
+  if(!TABS.includes(id))return;
+  $$('.panel').forEach(p=>p.classList.remove('show'));
+  $('#panel-'+id).classList.add('show');
+  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  setBg(id);S.tab=id;S.visited[id]=true;save();updateProgress();
+  if(!noScroll)scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
+}
+$('#tabNav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.tab);});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){A.ensure();showTab(b.dataset.go);}});
+
+function refreshCover(){
+  const any=progChecks().some(x=>x.ok);
+  $('#coverSaved').style.display=any?'inline-flex':'none';
+  $('#coverGo').textContent=any?`이어서 하기 (${$('#progPct').textContent}) 🧭`:'스위치 켜러 가기 🧭';
+}
+$('#coverGo').addEventListener('click',()=>{$('#cover').classList.add('hide');
+  document.body.classList.remove('cover-on');A.ensure();A.pop();showTab(S.tab||'open',true);});
+$('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classList.remove('hide');
+  document.body.classList.add('cover-on');setBg('cover');});
+
+(function(){const KEY='teacherMode';
+  document.body.classList.toggle('teacher',localStorage.getItem(KEY)==='1');
+  $('#tmodeBtn').addEventListener('click',()=>{
+    const on=!document.body.classList.contains('teacher');
+    document.body.classList.toggle('teacher',on);localStorage.setItem(KEY,on?'1':'0');
+    toast(on?'교사 모드 ON — 교실 연결 노트가 보입니다 🧑‍🏫':'교사 모드 OFF — 학생 화면입니다 🎒');});})();
+
+(function(){const wrap=$('#progWrap'),list=$('#progList');
+  wrap.addEventListener('click',()=>list.classList.toggle('show'));
+  document.addEventListener('click',e=>{if(!list.contains(e.target)&&!wrap.contains(e.target))list.classList.remove('show');});})();
+
+/* 그림 슬롯 */
+(function(){
+  $$('[data-fig]').forEach(el=>{
+    const key=el.dataset.fig,src=FIGS[key]||'',alt=el.dataset.alt||'',cap=el.dataset.cap||'';
+    const slot=()=>{el.classList.add('slot');
+      el.innerHTML=`<div class="fe">🖼️</div><div class="fn">${FIGS[key]||'img/'+key+'.jpg'}</div><div class="fd">${alt}</div>`;};
+    if(!src){slot();return;}
+    const im=new Image();
+    im.onload=()=>{el.classList.remove('slot');
+      el.innerHTML=`<img src="${src}" alt="${alt.replace(/"/g,'&quot;')}" loading="lazy">`+(cap?`<figcaption>${cap}</figcaption>`:'');};
+    im.onerror=slot;im.src=src;
+  });
+})();
+
+/* 1단계 — 이미 알고 있는 것 표시 */
+(function(){
+  const wrap=$('#seenList');if(!wrap)return;
+  const msg=$('#seenMsg');
+  function paint(){
+    let n=0;
+    $$('input[data-seen]',wrap).forEach(cb=>{
+      const on=!!S.seen[cb.dataset.seen];cb.checked=on;
+      cb.closest('.checkline').classList.toggle('on',on);if(on)n++;});
+    if(msg)msg.innerHTML = n===0
+      ? '기억나는 것에 표시해 보세요 — 오늘 배움은 초등학교 때 만난 전자석 위에 쌓입니다.'
+      : (n>=3 ? `<b>${n}가지</b>나 기억하고 있네요. 오늘은 그 전자석이 <b>왜</b> 자석이 되는지, 나침반으로 직접 확인하는 날입니다.`
+              : `<b>${n}가지</b>를 기억하고 있어요. 나머지도 오늘 탐구에서 다시 만나게 됩니다.`);
+  }
+  wrap.addEventListener('change',e=>{
+    const cb=e.target.closest('input[data-seen]');if(!cb)return;
+    if(cb.checked)S.seen[cb.dataset.seen]=1;else delete S.seen[cb.dataset.seen];
+    save();paint();updateProgress();A.pop();});
+  paint();
+})();
+
+/* 1단계 — 자기장의 방향 미리 정하기 */
+(function(){
+  const bar=$('#warmBar'),msg=$('#warmMsg');if(!bar)return;
+  function solve(){
+    $$('[data-warm]',bar).forEach(b=>{
+      if(b.dataset.warm==='n'){b.style.borderColor='var(--ok)';b.style.background='rgba(44,122,68,.13)';}
+      else b.style.opacity='.55';});
+    msg.className='verdict hit';
+    msg.innerHTML='맞아요 — <b>자기장의 방향은 나침반 바늘의 N극이 가리키는 방향</b>입니다(교과서 252쪽). 오늘 탐구 내내 나침반의 <b style="color:#b3362e">빨간 바늘(N극)</b>만 따라가면 됩니다.';
+  }
+  bar.addEventListener('click',e=>{
+    const b=e.target.closest('[data-warm]');if(!b||S.warm)return;
+    if(b.dataset.warm==='n'){S.warm='n';save();A.correct();solve();updateProgress();}
+    else{A.wrong();b.style.borderColor='var(--danger)';b.style.background='rgba(179,54,46,.14)';
+      setTimeout(()=>{b.style.borderColor='';b.style.background='';},800);
+      toast('나침반의 <b>빨간 쪽 바늘이 N극</b> — 자기장의 방향은 N극이 가리키는 방향으로 약속합니다','bad');}
+  });
+  if(S.warm)solve();
+})();
+
+/* 2단계 — POE 예상 고르기 */
+(function(){
+  const bar=$('#poeBar'),msg=$('#poeMsg');if(!bar)return;
+  const TXT={flip:'① 반대로 돌아간다',same:'② 처음 그대로다',none:'③ 바늘이 움직이지 않는다'};
+  function paint(){
+    $$('[data-poe]',bar).forEach(b=>b.classList.toggle('on',S.poe===b.dataset.poe));
+    if(S.poe)msg.innerHTML=`나의 예상: <b>${TXT[S.poe]}</b> — 기록해 두었어요. 이제 아래 실험대에서 스위치를 닫아 관찰하고, <b>(+)(−)를 바꾼 경우까지 기록</b>해 판정해 봅시다.`;
+  }
+  bar.addEventListener('click',e=>{
+    const b=e.target.closest('[data-poe]');if(!b)return;
+    S.poe=b.dataset.poe;save();updateProgress();A.pop();paint();});
+  paint();
+})();
+
+/* ═══════ 🧲 2단계 · 코일 실험대 ═══════ */
+(function(){
+  const sl=$('#iSlider');if(!sl)return;
+  let ON=false, DIR=1, I=1.5, COIL='sparse';
+  const coilName=c=>c==='dense'?'촘촘히':'성기게';
+  const dirName=d=>d===1?'처음 연결':'(+)(−) 바꿈';
+  const needleOf=(sw,d)=>!sw?'북쪽 (남북 방향)':(d===1?'서쪽 (코일 반대쪽)':'동쪽 (코일 쪽)');
+  const strength=()=>!ON?0:I*(COIL==='dense'?2:1);
+  const strTxt=s=>s<1.5?'약함':s<3?'보통':s<4.5?'강함':'매우 강함';
+  function paint(){
+    $('#iVal').textContent=I.toFixed(1)+' A';
+    sl.style.setProperty('--p',((I-0.5)/2.5*100)+'%');
+    $('#coilVal').textContent=coilName(COIL);
+    $('#dirVal').textContent=dirName(DIR);
+    $$('[data-coil]').forEach(b=>b.classList.toggle('on',b.dataset.coil===COIL));
+    $('#swBtn').textContent=ON?'🔴 스위치 열기':'🟢 스위치 닫기';
+    $('#swBtn').classList.toggle('on',ON);
+    $('#dirBtn').classList.toggle('on',DIR===-1);
+    $('#loopsSparse').setAttribute('opacity',COIL==='sparse'?'1':'0');
+    $('#loopsDense').setAttribute('opacity',COIL==='dense'?'1':'0');
+    const s=strength();
+    $('#fieldG').setAttribute('opacity',ON?String(Math.min(0.3+s*0.12,1)):'0');
+    $('#fldF').setAttribute('opacity',DIR===1?'1':'0');
+    $('#fldR').setAttribute('opacity',DIR===-1?'1':'0');
+    $('#curUp').setAttribute('opacity',ON&&DIR===1?'1':'0');
+    $('#curDown').setAttribute('opacity',ON&&DIR===-1?'1':'0');
+    $('#swClosed').setAttribute('opacity',ON?'1':'0');
+    $('#swOpen').setAttribute('opacity',ON?'0':'1');
+    $('#termL').textContent=DIR===1?'−':'+';
+    $('#termL').setAttribute('fill',DIR===1?'#2e5f8f':'#b23a30');
+    $('#termR').textContent=DIR===1?'+':'−';
+    $('#termR').setAttribute('fill',DIR===1?'#b23a30':'#2e5f8f');
+    const pl=$('#polL'),pr=$('#polR');
+    pl.setAttribute('opacity',ON?'1':'0');pr.setAttribute('opacity',ON?'1':'0');
+    pl.textContent=DIR===1?'N':'S';pl.setAttribute('fill',DIR===1?'#b3362e':'#2e5f8f');
+    pr.textContent=DIR===1?'S':'N';pr.setAttribute('fill',DIR===1?'#2e5f8f':'#b3362e');
+    /* 나침반 바늘 — 각도는 스위치·전류 방향으로만 결정: 방향 반전이면 반드시 정반대(−90° ↔ +90°) */
+    $('#cpNeedle').style.transform='rotate('+(!ON?0:(DIR===1?-90:90))+'deg)';
+    $('#rPole').textContent=!ON?'—':(DIR===1?'나침반 쪽 (왼쪽)':'반대쪽 (오른쪽)');
+    $('#rNeedle').textContent=needleOf(ON,DIR);
+    $('#rMag').innerHTML=ON?'▮'.repeat(Math.max(1,Math.round(s)))+' <small>'+strTxt(s)+'</small>':'<small>자기장 없음</small>';
+    $('#coilCap').textContent=!ON
+      ? '스위치 열림 — 전류 0. 나침반 바늘은 남북(지구 자기장)을 가리킵니다'
+      : dirName(DIR)+' · '+I.toFixed(1)+' A · '+coilName(COIL)+' 감음 → 나침반 N극은 '+needleOf(true,DIR);
+  }
+  function paintTable(){
+    const tb=$('#labTable');
+    let html='<tr><th>스위치</th><th>전원 연결</th><th>전류의 세기</th><th>감은 수</th><th>나침반 N극</th><th></th></tr>';
+    if(!S.rows.length)html+='<tr><td class="empty" colspan="6">아직 기록이 없어요 — 조건을 정한 뒤 📌 기록을 눌러 보세요</td></tr>';
+    S.rows.forEach((r,n)=>{
+      html+=`<tr><td>${r.sw?'닫음':'열림'}</td><td>${r.sw?dirName(r.dir):'—'}</td><td>${r.sw?r.i.toFixed(1)+' A':'0 A'}</td><td>${coilName(r.c)}</td><td style="font-weight:700;color:${r.sw?(r.dir===1?'#a05c2c':'#2c6e5f'):'#6b573f'}">${needleOf(r.sw,r.dir)}</td><td class="del" data-del="${n}" title="이 기록 지우기">✕</td></tr>`;});
+    tb.innerHTML=html;
+  }
+  function judge(){
+    const msg=$('#labMsg');
+    const f=S.rows.some(r=>r.sw&&r.dir===1), b=S.rows.some(r=>r.sw&&r.dir===-1);
+    if(f&&b){
+      const vt=S.poe==='flip'
+        ? '🔮 예상 판정 — <b>적중!</b> 예상대로 바늘이 반대로 돌아갔습니다.'
+        : (S.poe?'🔮 예상 판정 — 실험 결과는 <b>① 반대로 돌아간다</b>였습니다. 예상과 달랐다면 오히려 좋아요, 틀린 예상이 더 오래 기억에 남거든요.'
+                :'🔮 위의 예상 카드에서 예상을 골라 두면 여기서 판정해 드립니다.');
+      msg.className='verdict hit';
+      msg.innerHTML='같은 코일, 같은 나침반 — <b>(+)극과 (−)극만 바꾸어 연결</b>했더니 나침반 N극이 <b>서쪽 ↔ 동쪽</b>, 정반대를 가리켰습니다.'
+        +'<br>전류의 방향이 바뀌면 코일 주위 <b style="color:#2c6e5f">자기장의 방향</b>이 바뀐다는 뜻이에요.<br>'+vt
+        +'<br><br>이번에는 <b>전류의 세기 슬라이더와 감은 수</b>를 바꿔 보세요 — 자기장 세기 칸은 변하지만, 나침반이 가리키는 <b>방향</b>은 변하지 않습니다. 방향을 정하는 손잡이와 세기를 정하는 손잡이가 서로 다릅니다.';
+    } else if(S.rows.length){
+      msg.className='verdict';
+      msg.innerHTML=`기록 ${S.rows.length}개. <b>스위치를 닫은 상태에서 '처음 연결'과 '(+)(−) 바꿈'</b>을 각각 한 번씩 기록하면 비교 판정이 나옵니다.`;
+    } else {
+      msg.className='verdict';
+      msg.innerHTML='먼저 <b>스위치를 닫은 상태</b>를 기록하고, 이어서 <b>(+)(−)를 바꾸어 연결한 상태</b>도 기록해 보세요.';
+    }
+  }
+  $('#swBtn').addEventListener('click',()=>{ON=!ON;A.pop();paint();});
+  $('#dirBtn').addEventListener('click',()=>{DIR=-DIR;A.pop();paint();
+    if(ON)toast(DIR===1?'처음 연결로 되돌렸어요 — 바늘을 보세요 🧭':'(+)(−)를 바꾸었어요 — 바늘이 반대로! 🧭');});
+  sl.addEventListener('input',()=>{I=parseFloat(sl.value);paint();});
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-coil]');if(!b)return;
+    COIL=b.dataset.coil;paint();A.pop();});
+  $('#labRec').addEventListener('click',()=>{
+    S.rows=S.rows.filter(r=>!(r.sw===(ON?1:0)&&r.dir===DIR&&r.i===I&&r.c===COIL));
+    S.rows.push({sw:ON?1:0,dir:DIR,i:I,c:COIL});
+    save();paintTable();judge();updateProgress();A.pop();
+    toast(ON?`기록! ${dirName(DIR)} · ${I.toFixed(1)} A → 나침반 N극 ${needleOf(true,DIR)}`:'기록! 스위치 열림 → 나침반은 북쪽 그대로 — 이것도 훌륭한 데이터입니다 📌','good');
+  });
+  $('#labClear').addEventListener('click',()=>{
+    S.rows=[];save();paintTable();judge();updateProgress();A.pop();});
+  $('#labTable').addEventListener('click',e=>{
+    const d=e.target.closest('[data-del]');if(!d)return;
+    S.rows.splice(parseInt(d.dataset.del),1);
+    save();paintTable();judge();updateProgress();A.pop();});
+  document.addEventListener('click',e=>{if(e.target.closest('[data-poe]'))judge();});
+  paint();paintTable();judge();
+})();
+
+/* 2단계 — 나의 결론 */
+(function(){
+  const ta=$('#conclTa'),mark=$('#conclSaved');if(!ta)return;let t;
+  ta.value=S.concl||'';
+  ta.addEventListener('input',()=>{S.concl=ta.value;save();updateProgress();
+    mark.classList.add('on');clearTimeout(t);t=setTimeout(()=>mark.classList.remove('on'),1400);});
+  const btn=$('#conclAnsBtn');
+  btn.addEventListener('click',()=>{
+    const box=$('#conclAns'),open=box.classList.toggle('show');
+    btn.textContent=open?'모범 답안 접기':'모범 답안 확인하기';
+    if(open){A.pop();if((S.concl||'').trim().length<10)toast('먼저 <b>내 문장으로 써 본 뒤</b>에 보면 훨씬 남아요 ✍️');}});
+})();
+
+/* ═══════ 🖐️ 3단계 · N극 찾기 연습 ═══════ */
+(function(){
+  const wrap=$('#rhWrap');if(!wrap)return;
+  $$('.rh-item',wrap).forEach(item=>{
+    const key=item.dataset.rh, ans=item.dataset.k, msg=$('.rh-msg',item);
+    function solve(){
+      $$('[data-side]',item).forEach(b=>{b.classList.add('locked');
+        if(b.dataset.side===ans){b.style.borderColor='var(--ok)';b.style.background='rgba(44,122,68,.13)';}
+        else b.style.opacity='.55';});
+      msg.classList.add('hit');msg.innerHTML='✅ '+(RH_WHY[key]||'');
+    }
+    item.addEventListener('click',e=>{
+      const b=e.target.closest('[data-side]');if(!b||S.rh[key])return;
+      if(b.dataset.side===ans){S.rh[key]=1;save();A.correct();solve();updateProgress();
+        if(Object.keys(S.rh).length>=2)toast('N극 찾기 완주! 오른손만 있으면 됩니다 🖐️','good');}
+      else{A.wrong();b.style.borderColor='var(--danger)';b.style.background='rgba(179,54,46,.14)';
+        setTimeout(()=>{b.style.borderColor='';b.style.background='';},800);
+        toast('오른손을 실제로 감아쥐어 보세요 — <b>네 손가락은 전류, 엄지는 N극</b> 🖐️','bad');}
+    });
+    if(S.rh[key])solve();
+  });
+})();
+
+/* 빈칸 */
+(function(){
+  const all=$$('.cloze');CLOZE_TOTAL=all.length;
+  all.forEach((cz,i)=>{
+    const reveal=silent=>{
+      if(cz.classList.contains('revealed'))return;
+      cz.textContent=cz.dataset.ans;
+      const col=CV(cz.dataset.c||'accent');cz.style.color=col;cz.style.borderColor=col;
+      cz.classList.add('revealed');if(!silent)A.blip(720,.08);
+      S.cloze[i]=1;save();
+      const set=cz.closest('.cloze-set');
+      if(set&&$$('.cloze',set).every(x=>x.classList.contains('revealed'))){set.classList.add('complete');if(!silent)A.pop();}
+      updateProgress();};
+    cz.addEventListener('click',()=>reveal(false));
+    if(S.cloze[i])reveal(true);
+  });
+})();
+
+/* 미니 퀴즈 */
+(function(){
+  function build(host,key){
+    const set=QUIZ_SETS[key];if(!set)return;
+    let done=0;const total=set.qs.length;
+    host.innerHTML=`<div class="mq-head"><span class="mq-badge">✅ 개념 확인</span>
+      <span style="font-weight:700">${set.title}</span><span class="mq-prog" data-prog>0/${total}</span></div>`;
+    set.qs.forEach((q,qi)=>{
+      const qEl=document.createElement('div');qEl.className='mq-q';
+      qEl.innerHTML=`<div class="mq-text"><span class="qn">Q${qi+1}.</span>${q.q}</div><div class="mq-choices"></div><div class="mq-fb"></div>`;
+      const cw=$('.mq-choices',qEl),fb=$('.mq-fb',qEl);
+      let answered=false,solved=false;
+      q.ch.map((c,i)=>i).sort(()=>Math.random()-.5).forEach((idx,n)=>{
+        const c=q.ch[idx];
+        const b=document.createElement('button');b.className='mq-opt';b.dataset.ok=c.ok?'1':'0';
+        b.innerHTML=`<span class="k">${'①②③④⑤'[n]}</span>${c.t}`;
+        b.addEventListener('click',()=>{
+          if(answered||solved)return;answered=true;
+          if(c.ok){solved=true;b.classList.add('correct');
+            $$('.mq-opt',cw).forEach(x=>x.classList.add('locked'));
+            A.correct();fb.className='mq-fb show ok';fb.innerHTML=`<b>정답!</b> ${q.why}`;done++;upd();}
+          else{b.classList.add('wrong');A.wrong();
+            fb.className='mq-fb show no';fb.innerHTML=`<b>다시 생각해 볼까요.</b> ${q.why}`;
+            setTimeout(()=>{answered=false;b.classList.remove('wrong');},1600);}});
+        cw.appendChild(b);});
+      host.appendChild(qEl);});
+    const d=document.createElement('div');d.className='mq-done';d.innerHTML='🏅 개념 확인 완료!';host.appendChild(d);
+    function upd(){const p=host.querySelector('[data-prog]');if(p)p.textContent=done+'/'+total;
+      if(done>=total){host.classList.add('alldone');
+        if(!S.mini[key]){S.mini[key]=1;save();updateProgress();toast('개념 확인 완료! ✅','good');}}}
+  }
+  $$('.miniquiz').forEach(h=>build(h,h.dataset.quiz));
+})();
+
+/* 서술형 */
+(function(){
+  const ta=$('#essay'),mark=$('#essaySaved');let t;
+  ta.value=S.essay||'';
+  ta.addEventListener('input',()=>{S.essay=ta.value;save();updateProgress();
+    mark.classList.add('on');clearTimeout(t);t=setTimeout(()=>mark.classList.remove('on'),1400);});
+  $('#ansBtn').addEventListener('click',()=>{
+    const box=$('#modelAns'),open=box.classList.toggle('show');
+    $('#ansBtn').textContent=open?'모범 답안 접기':'모범 답안 확인하기';
+    if(open){A.pop();if((S.essay||'').trim().length<15)toast('먼저 <b>내 문장으로 써 본 뒤</b>에 보면 훨씬 남아요 ✍️');}});
+})();
+
+/* 확인 문제 */
+(function(){
+  const body=$('#gameBody');let i=0,score=0,lives=3,order=[];
+  function medal(k){if(S.medals[k])return;S.medals[k]=1;save();
+    const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');}
+  function paint(){Object.keys(S.medals).forEach(k=>{const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');});}
+  function hud(){$('#score').textContent=score;
+    $('#qno').textContent=Math.min(i+1,GAME_QS.length)+'/'+GAME_QS.length;
+    $$('#lives .h').forEach((h,n)=>h.classList.toggle('gone',n>=lives));}
+  function start(){i=0;score=0;lives=3;order=GAME_QS.map((_,n)=>n).sort(()=>Math.random()-.5);hud();next();}
+  function next(){
+    if(i>=order.length||lives<=0)return end();
+    hud();const q=GAME_QS[order[i]];
+    const bg=(q.boxes&&q.boxes.length)
+      ? '<div class="bogi" id="bogiBox"><div class="bogi-t">보 기</div><ul>'
+        + q.boxes.map(function(b,n){return '<li data-bi="'+n+'"><span class="bk">'+'\u3131\u3134\u3137\u3139'[n]+'</span><span>'+b+'</span><span class="bv"></span></li>';}).join('')
+        + '</ul></div>'
+      : '';
+    body.innerHTML='<div class="mq-q" style="margin-top:0">'
+      + '<div class="mq-meta"><span class="mq-lv" data-lv="'+(q.difficulty||'중')+'">난이도 '+(q.difficulty||'중')+'</span>'
+      + (q.boxes&&q.boxes.length?'<span class="mq-lv" style="color:var(--accent2)">&lt;보기&gt;형</span>':'')
+      + (q.svg?'<span class="mq-lv" style="color:var(--ink-mute)">자료 해석</span>':'') + '</div>'
+      + (q.svg?'<div class="qfig">'+q.svg+'</div>':'')
+      + '<div class="mq-text" style="font-size:18px"><span class="qn">Q'+(i+1)+'.</span>'+(q.stem||q.q)+'</div>'
+      + bg
+      + '<div class="mq-choices"></div><div class="mq-fb"></div>'
+      + '<div class="mq-next"><button class="btn primary sm" id="qNext">다음 문항 →</button></div></div>';
+    const cw=$('.mq-choices',body),fb=$('.mq-fb',body);let locked=false;
+    q.ch.map((c,n)=>n).sort(()=>Math.random()-.5).forEach((idx,n)=>{
+      const c=q.ch[idx];
+      const b=document.createElement('button');b.className='mq-opt';b.dataset.ok=c.ok?'1':'0';
+      b.innerHTML=`<span class="k">${'①②③④⑤'[n]}</span>${c.t}`;
+      b.addEventListener('click',()=>{
+        if(locked)return;locked=true;
+        $$('.mq-opt',cw).forEach(x=>x.classList.add('locked'));
+        if(c.ok){b.classList.add('correct');A.correct();score+=20;medal('first');
+          if(i+1>=Math.ceil(GAME_QS.length/2))medal('half');
+          fb.className='mq-fb show ok';fb.innerHTML=`<b>정답!</b> ${q.why}`;}
+        else{b.classList.add('wrong');A.wrong();lives--;
+          $$('.mq-opt',cw).forEach(x=>{if(x.dataset.ok==='1')x.classList.add('correct');});
+          fb.className='mq-fb show no';fb.innerHTML=`<b>아쉬워요.</b> ${q.why}`;}
+        const bx=$('#bogiBox');
+        if(bx&&q.boxVerdicts){$$('li',bx).forEach(function(li,n){
+          const t=!!q.boxVerdicts[n];li.classList.add(t?'t':'f');
+          const v=$('.bv',li);if(v)v.textContent=t?'옳음':'옳지 않음';});bx.classList.add('reveal');}
+        const nx=$('.mq-next',body);if(nx){nx.classList.add('show');
+          const nb=$('#qNext');if(nb){nb.textContent=(i+1>=order.length||lives<=0)?'결과 보기 →':'다음 문항 →';
+            nb.addEventListener('click',function(){A.pop();i++;next();
+              scrollTo({top:document.querySelector('#panel-check').offsetTop-70,behavior:reduceMotion?'auto':'smooth'});});}}
+        hud();});
+      cw.appendChild(b);});}
+  function end(){
+    const perfect=score===GAME_QS.length*20;
+    if(perfect)medal('perfect');
+    if(score>(S.best||0)){S.best=score;save();}
+    updateProgress();perfect?A.win():A.pop();
+    body.innerHTML=`<div style="text-align:center;padding:26px 10px">
+      <div style="font-size:44px">${perfect?'🏆':(lives>0?'🎉':'💪')}</div>
+      <h3 class="card-t" style="margin:10px 0 6px">${perfect?'전부 정답! 완벽해요':(lives>0?'끝까지 풀었어요':'다시 한 번 풀어 볼까요?')}</h3>
+      <p class="lead" style="margin:0 auto 16px">점수 <b class="k">${score}</b> / ${GAME_QS.length*20} · 최고 기록 <b class="k">${S.best||0}</b></p>
+      <button class="btn primary" id="gameAgain">다시 풀기</button></div>`;
+    $('#gameAgain').addEventListener('click',start);}
+  $('#gameStart').addEventListener('click',start);paint();
+})();
+
+/* 별 배경 */
+(function(){
+  const cv=$('#stars'),ctx=cv.getContext('2d');
+  let stars=[],w=0,h=0,t=0;
+  function build(){
+    const dpr=Math.min(devicePixelRatio||1,2);
+    w=innerWidth;h=innerHeight;cv.width=w*dpr;cv.height=h*dpr;cv.style.width=w+'px';cv.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const n=Math.round(Math.min(130,w*h/10500));
+    stars=Array.from({length:n},(_,i)=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+.3,
+      p:Math.random()*Math.PI*2,s:.6+Math.random()*1.1,c:['#ffffff','#4a3a26','#b9873c','#218c84'][i%4]}));}
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    stars.forEach(st=>{ctx.globalAlpha=reduceMotion?.6:(.35+.4*Math.sin(t*st.s+st.p));
+      ctx.fillStyle=st.c;ctx.shadowColor=st.c;ctx.shadowBlur=st.r*3.3;
+      ctx.beginPath();ctx.arc(st.x,st.y,st.r,0,TAU);ctx.fill();});
+    ctx.globalAlpha=1;ctx.shadowBlur=0;
+    if(!reduceMotion){t+=.013;requestAnimationFrame(draw);}}
+  let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{build();if(reduceMotion)draw();},200);});
+  build();draw();
+})();
+
+(function init(){
+  updateProgress();
+  const start=TABS.includes(S.tab)?S.tab:'open';
+  $$('.panel').forEach(p=>p.classList.remove('show'));
+  $('#panel-'+start).classList.add('show');
+  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===start));
+  S.tab=start;document.body.classList.add('cover-on');refreshCover();setBg('cover');
+})();
+</script>
+</body>
+</html>

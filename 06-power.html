@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2eade">
+<title>전기난로가 전기를 먹는 속도 · 전기 에너지의 전환과 소비 전력</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --abyss:#f2eade; --deep:#f3ece1; --surface:#f3ede3; --surface2:#f4efe5;
+  --line:#c1ac82; --line-soft:#dccfae;
+  --ink:#2e2315; --ink-dim:#5c4a33; --ink-mute:#96805c;
+  --accent:#a05c2c; --accent2:#a05c2c; --on-accent:#21328c;
+  --c1:#8a5f24;  /* 마찰 전기 */
+  --c2:#7d5ba6;  /* 전기력 */
+  --c3:#3a7a3f;  /* 전자 */
+  --c4:#b23a30;  /* (+)전하 · 대전 */
+  --c5:#2e5f8f;  /* (-)전하 */
+  --gold:#8a5f24; --ok:#2c7a44; --danger:#b3362e;
+  --disp:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:var(--disp); --mono:"JetBrains Mono",ui-monospace,monospace; --jua:"Jua",var(--disp);
+  --header-h:60px; --r:16px; --shadow:0 18px 50px -22px rgba(0,0,0,.8); --scrim:.82;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);line-height:1.62;
+  background:radial-gradient(1150px 600px at 78% -8%, rgba(160,92,44,.14), transparent 60%),
+    radial-gradient(820px 520px at 10% 10%, rgba(125,91,166,.07), transparent 58%), var(--abyss);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+::selection{background:rgba(160,92,44,.32);color:#fff}
+#bgLayer{position:fixed;inset:0;z-index:-3;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .45s}
+#bgScrim{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:linear-gradient(180deg,rgba(250,244,230,calc(var(--scrim)*.84)),rgba(250,244,230,var(--scrim)) 58%,rgba(250,244,230,calc(var(--scrim)*1.12)))}
+#stars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+@media print{#bgLayer,#bgScrim,#stars{display:none}}
+
+#cover{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:26px 18px;overflow-y:auto;
+  background:linear-gradient(180deg,rgba(250,244,230,.5),rgba(250,244,230,.86))}
+#cover.hide{display:none}
+body.cover-on header.top,body.cover-on main,body.cover-on #app-credit,
+body.cover-on .prog-list,body.cover-on #toast{display:none!important}
+.cover-in{width:100%;max-width:720px;text-align:center;animation:coverUp .6s cubic-bezier(.22,1,.36,1)}
+@keyframes coverUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.cover-emoji{font-size:clamp(30px,7vw,44px);letter-spacing:.18em;line-height:1;filter:drop-shadow(0 0 18px rgba(160,92,44,.7))}
+.cover-title{font-family:var(--disp);font-weight:800;font-size:clamp(28px,5.8vw,50px);line-height:1.16;margin:18px 0 10px;
+  letter-spacing:-.6px;text-shadow:0 0 26px rgba(160,92,44,.4),0 2px 20px rgba(0,0,0,.75)}
+.cover-sub{color:var(--ink-dim);font-size:clamp(14px,2.6vw,17px)}
+.cover-meta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.steps-card{background:rgba(242,232,210,.85);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;
+  margin:26px auto 0;max-width:540px;text-align:left;backdrop-filter:blur(8px);box-shadow:var(--shadow)}
+.steps-card h3{font-family:var(--jua);font-size:18px;text-align:center;color:var(--gold);margin-bottom:14px}
+.steps-card ol{list-style:none;display:grid;gap:11px}
+.steps-card li{display:flex;gap:11px;align-items:flex-start;font-size:15px;color:var(--ink-dim);line-height:1.5}
+.steps-card li .sn{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;
+  font-weight:800;background:var(--ok);color:#f2f7ea;margin-top:2px}
+.steps-card li.opt .sn{background:#b09a6e;color:#b9873c}
+.steps-card li b{color:var(--ink)}
+.cover-cta{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:26px}
+.btn.xl{font-size:18px;padding:16px 34px;border-radius:16px}
+.cover-hint{font-size:12.5px;color:var(--ink-mute)}
+
+header.top{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(246,238,219,.96),rgba(246,238,219,.8) 70%,rgba(246,238,219,0));
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
+.top-bar{max-width:1180px;margin:0 auto;height:var(--header-h);display:flex;align-items:center;gap:12px;padding:0 16px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;background:none;border:0;cursor:pointer;font-family:var(--body);color:inherit;text-align:left;padding:0}
+.brand .logo{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;font-size:18px;
+  background:radial-gradient(circle at 30% 30%,#f6f1e9,#f3ece1);border:1px solid var(--line)}
+.brand b{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:-.2px;white-space:nowrap}
+.brand b span{color:var(--accent2)}
+.brand .sub{font-size:11px;color:var(--ink-mute);white-space:nowrap}
+@media(max-width:560px){.brand .sub{display:none}}
+.head-right{margin-left:auto;display:flex;align-items:center;gap:9px}
+.hbtn{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:15px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--ink-dim);cursor:pointer;transition:.18s;text-decoration:none}
+.hbtn:hover{border-color:var(--accent);color:var(--ink)}
+body.teacher #tmodeBtn{background:rgba(138,95,36,.14);border-color:var(--gold)}
+.progress-mini{display:flex;align-items:center;gap:9px;cursor:help}
+.progress-mini .bar{width:92px;height:7px;border-radius:99px;background:#f3ede3;overflow:hidden;border:1px solid var(--line)}
+.progress-mini .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .5s cubic-bezier(.22,1,.36,1);box-shadow:0 0 12px var(--accent)}
+.progress-mini .pct{font-family:var(--mono);font-size:12px;color:var(--accent2);min-width:34px;text-align:right}
+@media(max-width:520px){.progress-mini .bar{width:48px}}
+
+nav.tabs{max-width:1180px;margin:0 auto;padding:0 8px 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:none;display:flex;align-items:center;gap:7px;font-family:var(--body);font-size:14px;font-weight:700;
+  color:var(--ink-dim);background:transparent;border:1px solid transparent;padding:8px 13px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:.2s}
+nav.tabs button .sn{flex:none;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);
+  font-size:11px;font-weight:700;background:#efe4c9;border:1px solid var(--line);color:var(--ink-mute)}
+nav.tabs button:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+nav.tabs button.active{color:#fff;background:linear-gradient(180deg,#b9873c,var(--accent));box-shadow:0 6px 18px -6px var(--accent)}
+nav.tabs button.active .sn{background:#f4eee4;color:var(--accent2);border-color:transparent}
+nav.tabs button.done .sn{background:var(--ok);color:#f2f7ea;border-color:transparent}
+nav.tabs button.done .sn i{display:none}
+nav.tabs button.done .sn::after{content:"✓"}
+nav.tabs .tab-sep{flex:none;width:1px;height:20px;background:var(--line);margin:0 4px}
+nav.tabs button.optional{color:#b9873c;border-color:#f6f1e8;background:rgba(176,154,110,.18)}
+nav.tabs button.optional.active{background:linear-gradient(180deg,#7d5ba6,#7d5ba6);color:#fff}
+
+main{max-width:1180px;margin:0 auto;padding:20px 16px 90px}
+.panel{display:none;animation:fade .45s cubic-bezier(.22,1,.36,1)}
+.panel.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.stepline{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.stepline .sbadge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;letter-spacing:1px;
+  color:#fff;background:linear-gradient(180deg,#b9873c,var(--accent));padding:4px 12px;border-radius:999px;font-weight:700}
+.stepline .swhat{font-size:13px;color:var(--ink-mute)}
+.stepline.opt .sbadge{background:linear-gradient(180deg,#7d5ba6,#7d5ba6)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--accent2);margin-bottom:12px}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--accent)}
+h1.big{font-family:var(--disp);font-weight:800;font-size:clamp(28px,6vw,52px);line-height:1.1;letter-spacing:-.6px;text-shadow:0 2px 24px rgba(0,0,0,.65)}
+h2.sec{font-family:var(--disp);font-weight:800;font-size:clamp(22px,4.2vw,34px);letter-spacing:-.3px;line-height:1.16;margin:0 0 6px;text-shadow:0 2px 16px rgba(0,0,0,.5)}
+h3.card-t{font-family:var(--jua);font-size:20px;letter-spacing:.2px;color:var(--ink)}
+.lead{font-size:clamp(15px,2.4vw,18px);color:var(--ink-dim);max-width:64ch;text-shadow:0 1px 12px rgba(0,0,0,.4)}
+.muted{color:var(--ink-mute)}
+.help{font-size:13px;color:var(--ink-mute);margin-top:8px;line-height:1.55}
+b.k{color:var(--ink);font-weight:800}
+.t1{color:var(--c1)}.t2{color:var(--c2)}.t3{color:var(--c3)}.t4{color:var(--c4)}.t5{color:var(--c5)}
+.card{background:linear-gradient(180deg,var(--surface),var(--deep));border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.card+.card{margin-top:18px}
+.grid{display:grid;gap:18px}
+@media(min-width:760px){.grid.c2{grid-template-columns:1fr 1fr}}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink-dim)}
+.badge.gold{background:rgba(138,95,36,.1);border-color:#c9ae7c;color:var(--gold)}
+.pill-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pill{font-size:13px;padding:6px 12px;border-radius:99px;background:#efe4c9;border:1px solid var(--line);color:var(--ink-dim)}
+.pill b{color:var(--ink)}
+.note{display:flex;gap:12px;align-items:flex-start;border-left:3px solid var(--accent);background:rgba(160,92,44,.08);
+  padding:13px 15px;border-radius:0 12px 12px 0;margin-top:14px;font-size:14.5px;color:var(--ink-dim)}
+.note .ic{flex:none;font-size:17px;line-height:1.4}
+.note.myth{border-color:var(--danger);background:rgba(179,54,46,.07)}
+.note.myth b{color:#8c212b}
+.note.class{display:none;border-color:var(--gold);background:rgba(138,95,36,.07)}
+.note.class b{color:var(--gold)}
+body.teacher .note.class{display:flex}
+.honest{font-size:12px;color:var(--ink-mute);margin-top:8px;display:flex;gap:6px;align-items:flex-start}
+.btn{font-family:var(--body);font-weight:800;font-size:15px;cursor:pointer;padding:12px 20px;border-radius:12px;border:1px solid transparent;
+  display:inline-flex;align-items:center;gap:9px;transition:.18s;user-select:none}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn.primary{background:linear-gradient(180deg,#a05c2c,var(--accent));color:#fff;box-shadow:0 10px 24px -10px var(--accent)}
+.btn.ghost{background:rgba(255,255,255,.04);border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{background:rgba(255,255,255,.08);border-color:var(--accent)}
+.btn.sm{padding:8px 14px;font-size:13.5px;border-radius:10px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;align-items:center}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.choices{display:grid;gap:10px;margin-top:14px}
+.choice{text-align:left;font-family:var(--body);font-size:15.5px;color:var(--ink);background:var(--surface2);border:1.5px solid var(--line);
+  border-radius:13px;padding:14px 16px;cursor:pointer;transition:.16s;display:flex;gap:12px;align-items:center;line-height:1.4}
+.choice .key{flex:none;width:27px;height:27px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;
+  font-size:14px;background:#efe4c9;border:1px solid var(--line);color:var(--ink-dim)}
+.choice:hover:not(.done){border-color:var(--accent);background:#efe0c2;transform:translateX(3px)}
+.choice.correct{border-color:var(--ok);background:rgba(44,122,68,.13)}
+.choice.correct .key{background:var(--ok);color:#f2f7ea}
+.choice.wrong{border-color:var(--danger);background:rgba(179,54,46,.12)}
+.choice.wrong .key{background:var(--danger);color:#fdf1ef}
+.choice.dim{opacity:.5}.choice.done{cursor:default}
+.explain{margin-top:14px;border-radius:13px;padding:15px 17px;font-size:14.5px;line-height:1.6;border:1px solid var(--line);
+  background:rgba(160,92,44,.08);color:var(--ink-dim);display:none;animation:fade .35s}
+.explain.show{display:block}
+.explain.ok{border-color:#7fae83;background:rgba(44,122,68,.09)}
+.explain.no{border-color:#c99a94;background:rgba(179,54,46,.09)}
+.explain b{color:var(--ink)}
+.explain .why{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:13px;color:var(--accent2);margin-bottom:5px}
+
+/* 🎈 풍선 실험실 */
+.lab{background:linear-gradient(180deg,#f3ede3,#f3ece1);border:1.5px solid #b09a6e;border-radius:15px;padding:20px 22px;margin-top:16px}
+.lab h3{font-family:var(--jua);font-size:18px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.simgrid{display:grid;gap:16px;grid-template-columns:1fr;margin-top:14px}
+@media(min-width:900px){.simgrid{grid-template-columns:minmax(0,1fr) 268px;align-items:start}}
+.simstage{background:#faf4e6;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.simstage canvas{display:block;width:100%;height:auto}
+.simctl{background:#efe4c9;border:1px solid var(--line);border-radius:13px;padding:16px}
+.simctl h4{font-family:var(--jua);font-size:15px;margin-bottom:4px}
+.ctl{margin-top:14px}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--ink-dim);font-weight:600;margin-bottom:7px}
+.ctl label .val{font-family:var(--mono);font-size:14px;color:var(--accent2)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;
+  background:linear-gradient(90deg,var(--accent) 0%,var(--accent) var(--p,0%),#f4eee4 var(--p,0%));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#2e2315;
+  border:3px solid var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.5),0 0 10px var(--accent);cursor:grab}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#2e2315;border:3px solid var(--accent);cursor:grab}
+.readout{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.readout .r{flex:1;min-width:112px;background:#f4ecda;border:1px solid var(--line);border-radius:11px;padding:10px 12px;text-align:center}
+.readout .r .lab2{font-size:11px;color:var(--ink-mute)}
+.readout .r .v{font-family:var(--mono);font-size:18px;font-weight:700;line-height:1.25}
+.readout .r.near .v{color:var(--c1)} .readout .r.far .v{color:var(--c5)}
+.readout .r .v small{font-size:11px;color:var(--ink-mute);font-weight:400}
+.dl-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.dl-head h4{font-family:var(--jua);font-size:16px}
+.dl-head .btn-row{margin:0;margin-left:auto;flex:none}
+.dl-head .btn-row .btn{flex:none}
+.dtable-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#efe4c9;margin-top:12px}
+table.dtable{width:100%;border-collapse:collapse;font-size:13.5px;min-width:420px}
+.dtable th{background:rgba(255,255,255,.05);color:var(--ink-dim);font-weight:700;font-size:12px;padding:9px 10px;
+  text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+.dtable td{padding:9px 10px;text-align:center;font-family:var(--mono);border-bottom:1px solid var(--line-soft);white-space:nowrap}
+.dtable td:first-child{font-family:var(--body)}
+.dtable tr:last-child td{border-bottom:0}
+.dtable tr.fresh td{animation:rowIn .5s}
+@keyframes rowIn{from{background:rgba(160,92,44,.22)}to{background:transparent}}
+.dtable td.del{cursor:pointer;color:var(--ink-mute);font-family:var(--body)}
+.dtable td.del:hover{color:var(--danger)}
+.dtable .empty{color:var(--ink-mute);font-family:var(--body);padding:16px;font-size:13px}
+.graph-wrap{margin-top:12px;background:#efe4c9;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.graph-wrap canvas{display:block;width:100%;height:auto}
+.legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:12.5px;color:var(--ink-mute)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:6px}
+
+/* ⚡ 이 페이지 전용 — 체크 목록 · 실험 순서 · SVG 무대 · 단서 카드 */
+.checkgrid{display:grid;gap:10px;margin-top:14px}
+.checkline{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--ink-dim);line-height:1.45;
+  background:var(--surface2);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.16s}
+.checkline:hover{border-color:var(--accent)}
+.checkline input{flex:none;width:20px;height:20px;accent-color:var(--c1);margin-top:2px;cursor:pointer}
+.checkline.on{border-color:var(--c1);background:rgba(138,95,36,.09);color:var(--ink)}
+.doit{list-style:none;display:grid;gap:10px;margin-top:12px;counter-reset:d}
+.doit li{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--ink-dim);line-height:1.55}
+.doit li::before{counter-increment:d;content:counter(d);flex:none;width:24px;height:24px;border-radius:50%;
+  display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:700;
+  background:#efe4c9;border:1px solid var(--line);color:var(--accent2)}
+.svgstage{background:#faf4e6;border:1px solid var(--line);border-radius:13px;padding:10px;margin-top:14px;overflow-x:auto}
+.svgstage svg{display:block;width:100%;height:auto;max-width:660px;margin:0 auto}
+.modebar{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.modebar .btn.on{background:linear-gradient(180deg,#21338c,var(--accent));color:#fff;border-color:transparent}
+.verdict{margin-top:14px;border-radius:12px;padding:13px 15px;font-size:15.5px;line-height:1.6;
+  border:1px solid var(--line);background:#f2e8d2;color:var(--ink-dim)}
+.verdict b{color:var(--ink)}
+.verdict.hit{border-color:#7fae83;background:rgba(44,122,68,.09)}
+.forcegrid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:16px}
+@media(min-width:700px){.forcegrid{grid-template-columns:repeat(3,1fr)}}
+.forcecard{background:var(--surface2);border:1px solid var(--line);border-radius:13px;padding:12px 12px 10px}
+.forcecard svg{display:block;width:100%;height:auto}
+.forcecard .fc-t{font-family:var(--jua);font-size:16.5px;text-align:center;margin-top:4px}
+.forcecard .fc-d{font-size:13.5px;color:var(--ink-mute);text-align:center;line-height:1.5;margin-top:3px}
+.clue{border:1.5px solid var(--c2);background:rgba(125,91,166,.07);border-radius:14px;padding:17px 19px;margin-top:18px}
+.clue .cl-h{font-family:var(--jua);font-size:18.5px;color:var(--c2);display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.clue p{font-size:15.5px;color:var(--ink-dim);line-height:1.65}
+.linkcard{display:flex;gap:14px;align-items:center;text-decoration:none;color:inherit;background:var(--surface2);
+  border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px;transition:.18s}
+.linkcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+.linkcard .lc-e{font-size:30px;flex:none}
+.linkcard .lc-t{display:block;font-family:var(--jua);font-size:17.5px}
+.linkcard .lc-d{display:block;font-size:13.5px;color:var(--ink-mute);line-height:1.5;margin-top:2px}
+#fsSwing{transition:transform .95s cubic-bezier(.34,1.15,.5,1)}
+#fsProbe{transition:transform 1.05s ease-in-out}
+.fe{transition:transform .75s cubic-bezier(.42,0,.35,1)}
+
+/* 그림 슬롯 */
+.fig{margin:14px 0 0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#efe4c9;position:relative}
+.fig img{display:block;width:100%;height:auto}
+.fig figcaption{font-size:12.5px;color:var(--ink-mute);padding:10px 14px;line-height:1.5;text-align:center;border-top:1px solid var(--line-soft)}
+.fig.slot{display:none;border-style:dashed;border-color:#b09a6e;background:rgba(160,92,44,.05);padding:18px 14px;text-align:center}
+body.teacher .fig.slot{display:block}
+.fig.slot .fe{font-size:24px;opacity:.6}
+.fig.slot .fn{font-family:var(--mono);font-size:11.5px;color:var(--accent2);margin-top:7px;word-break:break-all}
+.fig.slot .fd{font-size:12px;color:var(--ink-mute);margin-top:5px;line-height:1.5}
+.use .fig{margin:0 0 4px}
+
+.terms{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(min-width:760px){.terms{grid-template-columns:repeat(4,1fr)}}
+.term{background:var(--surface2);border:1px solid var(--line);border-radius:13px;padding:14px;border-top:3px solid var(--c,var(--accent))}
+.term .nm{font-family:var(--jua);font-size:17px;margin-bottom:3px}
+.term .de{font-size:13px;color:var(--ink-mute);line-height:1.5}
+.use-grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:680px){.use-grid{grid-template-columns:1fr 1fr}}
+.use{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.use .u-t{font-family:var(--jua);font-size:17px;display:flex;align-items:center;gap:8px}
+.use .u-d{font-size:13.5px;color:var(--ink-dim);line-height:1.55}
+
+.cloze-line{font-size:15.5px;line-height:2.05;color:var(--ink-dim)}
+.cloze-line+.cloze-line{margin-top:6px}
+.cloze{display:inline-block;min-width:52px;text-align:center;padding:2px 11px;margin:0 2px;border-radius:8px;background:#efe4c9;
+  border:1.5px dashed var(--line);color:transparent;cursor:pointer;font-weight:800;transition:.16s;user-select:none;line-height:1.3}
+.cloze::after{content:"❓";font-size:12px}
+.cloze:hover{border-color:var(--accent);background:#efe4c9}
+.cloze.revealed{border-style:solid;cursor:default;animation:clozePop .42s}
+.cloze.revealed::after{content:none}
+@keyframes clozePop{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
+.cloze-done{display:none;align-items:center;gap:6px;margin-top:12px;font-size:13px;font-weight:700;color:var(--ok)}
+.cloze-set.complete .cloze-done{display:inline-flex;animation:fade .4s}
+.cloze-hint{font-size:12.5px;color:var(--ink-mute);margin-top:10px}
+
+.miniquiz{background:linear-gradient(180deg,#f4eee3,#f2e8d2);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:16px}
+.miniquiz .mq-head{display:flex;align-items:center;gap:9px;margin-bottom:4px;flex-wrap:wrap}
+.miniquiz .mq-badge{font-size:12px;font-weight:800;color:#fff;background:linear-gradient(180deg,#a05c2c,var(--accent));padding:4px 10px;border-radius:99px}
+.miniquiz .mq-prog{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink-mute)}
+.mq-q{margin-top:14px}
+.mq-q .mq-text{font-size:15px;font-weight:600;margin-bottom:9px}
+.mq-q .mq-text .qn{font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-right:6px}
+.mq-choices{display:grid;gap:8px}
+.mq-opt{text-align:left;font-family:var(--body);font-size:14.5px;color:var(--ink);background:var(--surface2);border:1.5px solid var(--line);
+  border-radius:11px;padding:11px 14px;cursor:pointer;transition:.15s;display:flex;gap:10px;align-items:center}
+.mq-opt .k{flex:none;width:23px;height:23px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;
+  font-size:12px;background:#efe4c9;border:1px solid var(--line);color:var(--ink-dim)}
+.mq-opt:hover:not(.locked){border-color:var(--accent);background:#efe0c2}
+.mq-opt.correct{border-color:var(--ok);background:rgba(44,122,68,.13)}
+.mq-opt.correct .k{background:var(--ok);color:#f2f7ea}
+.mq-opt.wrong{border-color:var(--danger);background:rgba(179,54,46,.12)}
+.mq-opt.wrong .k{background:var(--danger);color:#fdf1ef}
+.mq-opt.locked{cursor:default}
+.mq-fb{margin-top:9px;font-size:13.5px;line-height:1.55;border-radius:10px;padding:11px 13px;display:none}
+.mq-fb.show{display:block;animation:fade .3s}
+.mq-fb.ok{background:rgba(44,122,68,.09);border:1px solid #7fae83;color:var(--ink-dim)}
+.mq-fb.no{background:rgba(179,54,46,.09);border:1px solid #c99a94;color:var(--ink-dim)}
+.mq-fb b{color:var(--ink)}
+.mq-done{display:none;align-items:center;gap:8px;margin-top:14px;padding:11px 14px;border-radius:11px;background:rgba(138,95,36,.08);
+  border:1px solid #c9ae7c;color:var(--gold);font-weight:700;font-size:14px}
+.miniquiz.alldone .mq-done{display:flex;animation:fade .4s}
+
+.game-hud{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.lives{display:flex;gap:5px}.lives .h{font-size:22px;transition:.3s}
+.lives .h.gone{filter:grayscale(1) brightness(.5);transform:scale(.85)}
+.score-box{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;background:#efe4c9;border:1px solid var(--line);padding:7px 13px;border-radius:11px}
+.score-box .lab2{font-size:11px;color:var(--ink-mute);font-weight:400;font-family:var(--body)}
+.score-box .num{font-size:18px;color:var(--gold)}
+.earned{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.medal{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;padding:8px 13px;border-radius:11px;
+  background:linear-gradient(180deg,#f2ece0,#f2eade);border:1px solid #c9ae7c;color:var(--gold);opacity:.3;filter:grayscale(.6);transition:.4s}
+.medal.got{opacity:1;filter:none;box-shadow:0 0 16px -4px var(--gold)}
+.medal .e{font-size:18px}
+textarea{width:100%;font-family:var(--body);font-size:14.5px;color:var(--ink);background:#efe4c9;border:1.5px solid var(--line);
+  border-radius:12px;padding:12px 14px;min-height:88px;resize:vertical;outline:none;margin-top:8px;line-height:1.55;transition:.18s}
+textarea:focus{border-color:var(--accent);background:#efe4c9}
+textarea::placeholder{color:var(--ink-mute)}
+.savemark{font-size:12px;color:var(--ok);margin-top:6px;display:inline-block;opacity:0;transition:.3s}
+.savemark.on{opacity:1}
+.prog-list{position:fixed;right:14px;top:calc(var(--header-h) + 8px);z-index:60;width:264px;background:rgba(249,242,227,.97);
+  border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);display:none}
+.prog-list.show{display:block;animation:fade .3s}
+.prog-list h4{font-family:var(--jua);font-size:15px;margin-bottom:10px}
+.prog-list li{list-style:none;display:flex;gap:8px;font-size:13px;color:var(--ink-mute);padding:4px 0;line-height:1.45}
+.prog-list li.on{color:var(--ink-dim)}
+.prog-list li .mk{flex:none;color:var(--ink-mute)}
+.prog-list li.on .mk{color:var(--ok)}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);z-index:200;background:rgba(249,242,227,.96);
+  border:1px solid var(--accent);color:var(--ink);padding:12px 20px;border-radius:13px;font-weight:700;font-size:14.5px;
+  box-shadow:0 16px 40px -12px rgba(0,0,0,.8);opacity:0;pointer-events:none;transition:.3s;max-width:90vw}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.good{border-color:var(--ok)}#toast.bad{border-color:var(--danger)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.08s!important;scroll-behavior:auto}}
+@media print{
+  #cover,header.top,nav.tabs,#toast,.prog-list,.cta-row,.btn{display:none!important}
+  body{background:#fff;color:#111}
+  .panel{display:block!important;page-break-after:always}
+  .card,.lab{background:#fff;border-color:#ccc;box-shadow:none}
+  .lead,.muted,.note{color:#333}
+  h1.big,h2.sec,h3.card-t{color:#111}
+  .note.class{display:flex!important}
+  .cloze{color:#111!important;border-style:solid}.cloze::after{content:none}
+}
+</style>
+
+<style id="board-v2">
+/* ═══════════════════════════════════════════════════════════
+   전자칠판 판 v2 — 글자 크기·명암비 상향
+   교실 앞 화면에서 뒷자리까지 읽히도록 본문을 키우고,
+   배경과 붙어 보이던 회색 계열 글자색의 명암비를 올렸습니다.
+   (--ink-mute 4.0:1 → 7.7:1 / --ink-dim 8.6:1 → 12.0:1)
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --line:#cbb894; --line-soft:#d5c5a2;
+  --ink:#2a2013; --ink-dim:#4a3a26; --ink-mute:#6b573f;
+  --ok:#2c7a44; --danger:#b3362e;
+}
+body{line-height:1.68}
+b.k{color:#fff}
+
+/* 본문 계열 */
+.lead{font-size:clamp(17px,2.5vw,20px)}
+.help{font-size:15px;line-height:1.6}
+.honest{font-size:14px;line-height:1.6}
+.note{font-size:16px;line-height:1.65;padding:15px 17px;border-left-width:4px}
+.note .ic{font-size:19px}
+.badge{font-size:14px;padding:6px 13px}
+.pill{font-size:15px;padding:7px 14px}
+.term .nm{font-size:19px}
+.term .de{font-size:15px;line-height:1.6}
+.use .u-t{font-size:19px}
+.use .u-d{font-size:15.5px;line-height:1.6}
+h3.card-t{font-size:22px}
+.stepline .swhat{font-size:14.5px}
+.stepline .sbadge{font-size:13px}
+.eyebrow{font-size:13px}
+.fig figcaption{font-size:14.5px;line-height:1.6}
+.fig.slot .fn{font-size:13px}
+.fig.slot .fd{font-size:14px}
+
+/* 상호작용 */
+.btn{font-size:16.5px;padding:13px 22px}
+.btn.sm{font-size:15px;padding:9px 16px}
+nav.tabs button{font-size:15.5px;padding:9px 15px}
+nav.tabs button .sn{width:21px;height:21px;font-size:12px}
+.brand b{font-size:18px}
+.brand .sub{font-size:12.5px}
+.progress-mini .pct{font-size:13.5px}
+.choice{font-size:17px;border-width:2px;padding:15px 17px}
+.choice .key{width:30px;height:30px;font-size:15px}
+.explain{font-size:16px;line-height:1.68}
+.explain .why{font-size:14.5px}
+.cloze-line{font-size:17.5px;line-height:2.1}
+.cloze{border-width:2px;padding:3px 12px;min-width:56px}
+.cloze-hint{font-size:14.5px}
+.cloze-done{font-size:15px}
+textarea{font-size:16.5px;border-width:2px}
+.savemark{font-size:14px}
+.checkline{font-size:16.5px}
+.doit li{font-size:16.5px;line-height:1.6}
+.dtable{font-size:15.5px}
+.dtable th{font-size:14px;padding:11px 12px}
+.dtable td{padding:10px 12px}
+.dtable .empty{font-size:15px}
+.prog-list{width:290px}
+.prog-list li{font-size:14.5px}
+.prog-list h4{font-size:17px}
+#toast{font-size:16px;padding:14px 22px;border-width:2px}
+.medal{font-size:14.5px}
+.medal .e{font-size:20px}
+.score-box .num{font-size:20px}
+.score-box .lab2{font-size:13px}
+.lives .h{font-size:24px}
+.steps-card li{font-size:16.5px}
+.steps-card h3{font-size:20px}
+.cover-sub{font-size:clamp(16px,2.7vw,19px)}
+.cover-hint{font-size:14px}
+
+/* 실험실 조작판 */
+.simctl h4,.lab h3,.simlab h3{font-size:18px}
+.ctl label{font-size:15px}
+.ctl label .val{font-size:16px}
+.readout .r .lab2{font-size:13px}
+.readout .r .v{font-size:22px}
+.readout .r .v small{font-size:13px}
+.dl-head h4{font-size:18px}
+input[type=range]{height:8px}
+input[type=range]::-webkit-slider-thumb{width:24px;height:24px;border-width:4px}
+
+/* 문항 */
+.miniquiz .mq-badge{font-size:13.5px;padding:5px 12px}
+.miniquiz .mq-prog{font-size:13.5px}
+.mq-q .mq-text{font-size:17px;line-height:1.6}
+.mq-q .mq-text .qn{font-size:12.5px}
+.mq-opt{font-size:16.5px;padding:13px 16px;border-width:2px;line-height:1.5}
+.mq-opt .k{width:26px;height:26px;font-size:13.5px}
+.mq-fb{font-size:15.5px;line-height:1.65;padding:13px 15px}
+.mq-done{font-size:16px}
+
+/* ── 수능형 문항 — 자료 · <보기> · 다음 버튼 ── */
+.qfig{background:#faf4e6;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:14px;overflow-x:auto}
+.qfig svg{width:100%;height:auto;display:block;max-width:600px;margin:0 auto}
+.bogi{background:#f2e8d2;border:1.5px solid var(--line);border-radius:12px;padding:15px 18px;margin:0 0 14px}
+.bogi-t{display:inline-block;font-weight:800;font-size:14px;color:var(--ink-dim);border:1px solid var(--line);
+  border-radius:7px;padding:2px 14px;margin-bottom:11px;letter-spacing:3px}
+.bogi ul{list-style:none;display:grid;gap:10px;margin:0;padding:0}
+.bogi li{display:flex;gap:11px;align-items:flex-start;font-size:16.5px;line-height:1.62;color:var(--ink)}
+.bogi li .bk{flex:none;width:25px;height:25px;border-radius:7px;display:grid;place-items:center;font-size:14px;
+  font-weight:800;background:#e2d3b2;border:1px solid var(--line);color:var(--ink-dim);margin-top:2px;transition:.25s}
+.bogi li .bv{display:none;margin-left:auto;flex:none;font-size:13.5px;font-weight:800;padding:2px 9px;border-radius:99px}
+.bogi.reveal li.t .bk{background:var(--ok);color:#f2f7ea;border-color:transparent}
+.bogi.reveal li.f .bk{background:var(--danger);color:#fdf1ef;border-color:transparent}
+.bogi.reveal li .bv{display:inline-block;animation:fade .3s}
+.bogi.reveal li.t .bv{background:rgba(44,122,68,.16);color:var(--ok)}
+.bogi.reveal li.f .bv{background:rgba(179,54,46,.16);color:var(--danger)}
+.mq-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.mq-lv{font-size:13px;font-weight:800;padding:4px 11px;border-radius:99px;border:1px solid var(--line);background:#f2e8d2}
+.mq-lv[data-lv="하"]{color:#2c7a44;border-color:#2c7a44}
+.mq-lv[data-lv="중"]{color:#8a5f24;border-color:#c9ae7c}
+.mq-lv[data-lv="상"]{color:#8c2144;border-color:#c99a94}
+.mq-next{display:none;margin-top:18px;justify-content:flex-end}
+.mq-next.show{display:flex;animation:fade .3s}
+@media print{
+  .mq-next{display:none!important}
+  .qfig{background:#fff}
+  .bogi{background:#fff;border-color:#ccc}
+  .bogi li{color:#111}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Nanum+Gothic+Coding&display=swap">
+<style id="edison-lab">
+/* ═══════════════════════════════════════════════════════════
+   에디슨 연구실 판 v1 — 종이·원목·황동 라이트 테마
+   구조(탭·저장·진행도·교사 모드)는 그대로, 시각만 갈아입힘.
+   전자칠판(밝은 교실)에서 라이트 테마가 더 잘 보이고,
+   종이 배경이라 인쇄·학습지 변환이 자연스럽다.
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --paper:#f2e8d5; --paper-hi:#f9f2e3; --paper-lo:#e6d7ba;
+  --wood:#6d4b2a; --wood-dk:#4e3216; --wood-hi:#8a6339;
+  --brass:#b9873c; --brass-hi:#e6c17a; --brass-dk:#7d541e;
+  --ink:#2a2013; --ink-dim:#4a3a26; --ink-mute:#6b573f;
+  --line:#cbb894; --line-soft:#dccfae;
+  --surface:#f7f0de; --surface2:#f2e8d2;
+  --accent:#a05c2c; --accent2:#8a5f24; --gold:#8a5f24;
+  --ok:#2c7a44; --danger:#b3362e;
+  --jua:'Gowun Batang',serif;
+  --body:'Gowun Dodum','Pretendard',sans-serif;
+  --mono:'Nanum Gothic Coding',monospace;
+  --shadow:0 12px 26px -16px rgba(96,64,22,.38);
+}
+html,body{background:var(--paper-lo)}
+body{color:var(--ink)}
+/* 종이 결 — 화면 전체에 은은한 입자 */
+body::after{content:"";position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.5;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.045'/></feComponentTransfer></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+#stars{display:none}
+#bgScrim{background:radial-gradient(120% 80% at 50% 0%,rgba(255,244,214,.55),rgba(230,215,186,0) 60%)}
+#bgLayer{opacity:.08;filter:sepia(.55) contrast(.9)}
+
+/* ── 원목 헤더 + 황동 명패 ── */
+header.top{background:
+  repeating-linear-gradient(93deg,rgba(0,0,0,.10) 0 26px,rgba(0,0,0,0) 26px 30px),
+  repeating-linear-gradient(91deg,#6d4b2a 0 9px,#75522e 9px 17px,#5e3f1d 17px 21px,#7f5a34 21px 34px);
+  border-bottom:3px solid var(--brass-dk);box-shadow:0 4px 14px rgba(60,38,15,.35)}
+.brand .logo{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 45%,var(--brass-dk));
+  border:1px solid #5f3f12;box-shadow:inset 0 1px 0 rgba(255,245,215,.7)}
+.brand b,.brand b span{color:#f6ecd2;text-shadow:0 1px 2px rgba(40,24,6,.55)}
+.brand .sub{color:#e2d2ac}
+.hbtn{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));
+  border:1px solid #5f3f12;color:#2c1c06;box-shadow:inset 0 1px 0 rgba(255,245,215,.7)}
+.hbtn:hover{filter:brightness(1.08)}
+.progress-mini .bar{background:#f6eedb;border:1.5px solid var(--brass-dk);box-shadow:inset 0 1px 3px rgba(70,45,10,.35)}
+.progress-mini .bar i{background:linear-gradient(90deg,#a05c2c,#c98237)}
+.progress-mini .pct{color:#f6ecd2;text-shadow:0 1px 2px rgba(40,24,6,.55)}
+
+/* ── 탭 = 나무 서랍 + 황동 명패 ── */
+nav.tabs button{background:linear-gradient(180deg,#8a6339,#6d4b2a);color:#f0e2c4;
+  border:1px solid #4e3216;box-shadow:inset 0 1px 0 rgba(255,235,200,.25),0 2px 4px rgba(40,25,8,.3)}
+nav.tabs button .sn{background:rgba(46,28,8,.5);border-color:rgba(46,28,8,.6);color:#f0e2c4}
+nav.tabs button:hover{filter:brightness(1.12)}
+nav.tabs button.active{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 45%,var(--brass-dk));
+  color:#2c1c06;border-color:#5f3f12;text-shadow:0 1px 0 rgba(255,240,200,.5)}
+nav.tabs button.active .sn{background:#2c1c06;color:#e6c17a;border-color:transparent}
+nav.tabs button.done:not(.active){color:#ffe9b3}
+.tab-sep{background:#4e3216}
+
+/* ── 표지 = 인쇄물 + 상하 원목 띠 ── */
+#cover{background:linear-gradient(180deg,var(--paper-hi),var(--paper))}
+#cover::before,#cover::after{content:"";position:fixed;left:0;right:0;height:16px;z-index:4;
+  background:repeating-linear-gradient(90deg,#6d4b2a 0 30px,#5e3f1d 30px 33px,#7a5631 33px 60px);
+  box-shadow:0 2px 8px rgba(60,38,15,.35)}
+#cover::before{top:0}#cover::after{bottom:0;box-shadow:0 -2px 8px rgba(60,38,15,.35)}
+.cover-title{color:var(--ink)}
+.cover-sub{color:var(--ink-dim)}
+.badge{background:var(--paper-hi);border-color:var(--line);color:var(--ink-dim)}
+.badge.gold{background:#f6edd6;border-color:var(--brass);color:var(--brass-dk)}
+.steps-card{background:var(--paper-hi);border-color:var(--line)}
+.steps-card .sn{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));
+  color:#2c1c06;border:1px solid #5f3f12}
+.cover-hint{color:var(--ink-mute)}
+
+/* ── 버튼 = 황동 ── */
+.btn{background:var(--paper-hi);border-color:var(--line);color:var(--ink)}
+.btn:hover{border-color:var(--accent);background:#f6edd6}
+.btn.primary{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 45%,var(--brass-dk));
+  color:#2c1c06;border:1px solid #5f3f12;text-shadow:0 1px 0 rgba(255,240,200,.45);
+  box-shadow:inset 0 1px 0 rgba(255,245,215,.8),0 3px 7px rgba(60,40,10,.32)}
+.btn.primary:hover{filter:brightness(1.06);transform:translateY(-1px)}
+
+/* ── 면·카드 ── */
+.card,.lab,.miniquiz{box-shadow:var(--shadow)}
+.lab{border:2px solid var(--brass-dk);box-shadow:inset 0 0 0 3px var(--brass),var(--shadow)}
+.stepline .sbadge{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));
+  color:#2c1c06;border:1px solid #5f3f12}
+.note.class{background:#efe6ce;border:1px dashed var(--accent);border-left:4px solid var(--accent)}
+.pill{background:var(--paper-hi)}
+
+/* ── 빈칸 = 잉크 밑줄 (누르면 만년필 잉크로 스며듦) ── */
+.cloze{background:transparent;border:none;border-bottom:2.5px dashed #8a755c;border-radius:0;min-width:58px}
+.cloze::after{content:"✒️";font-size:12px}
+.cloze:hover{background:rgba(160,92,44,.09);border-bottom-color:var(--accent)}
+.cloze.revealed{border-bottom-style:solid;background:transparent}
+
+/* ── 훈장 = 밀랍 인장 ── */
+.medal{background:var(--paper-hi);border:1.5px solid var(--brass);color:var(--brass-dk)}
+.medal.got{box-shadow:0 0 14px -4px var(--brass)}
+
+/* ── 그림 슬롯 ── */
+.fig{background:var(--paper-hi)}
+.fig.slot{background:rgba(160,92,44,.05);border-color:#b09a6e}
+
+/* ── 계기·입력 ── */
+input[type=range]::-webkit-slider-thumb{background:radial-gradient(circle at 35% 30%,#f0d79c,var(--brass) 55%,var(--brass-dk));
+  border-color:#553a10}
+textarea:focus{background:#faf4e6}
+#toast{border-width:2px}
+:focus-visible{outline-color:var(--accent)}
+
+/* 어두운 배경 전제였던 흰 광택 하이라이트 무력화 */
+ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
+
+@media print{body::after{display:none}}
+</style>
+
+
+<style id="edison-polish">
+/* ── 전압계 진행도 ── */
+.pgauge{width:72px;height:auto;display:block;filter:drop-shadow(0 1px 2px rgba(50,32,8,.35))}
+#progNeedle{transition:transform .7s cubic-bezier(.34,1.2,.45,1)}
+.progress-mini .bar[hidden]{display:none}
+/* ── 표지 전구 점등 ── */
+.cover-bulb{width:74px;margin:6px auto 2px;filter:drop-shadow(0 0 20px rgba(240,166,62,.55))}
+.cover-bulb svg{display:block;width:100%;height:auto}
+.cover-bulb .filament{animation:filaGlow 2.6s ease-in-out infinite}
+.cover-bulb .filament.f2{animation-delay:.35s}
+@keyframes filaGlow{
+  0%,100%{stroke:#e0932e;filter:drop-shadow(0 0 1px rgba(240,166,62,.5))}
+  45%{stroke:#ffd98a;filter:drop-shadow(0 0 6px rgba(255,207,125,.95))}
+  55%{stroke:#ffcf7d;filter:drop-shadow(0 0 7px rgba(255,207,125,1))}
+}
+@media(prefers-reduced-motion:reduce){.cover-bulb .filament{animation:none;stroke:#ffcf7d}}
+</style>
+</head>
+<body><!-- board-v2: inline font bumped -->
+<div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
+
+<div id="cover">
+  <div class="cover-in">
+    <div class="cover-emoji">🌀 🔥 ⚡</div>
+    <div class="cover-bulb" aria-hidden="true"><svg viewBox="0 0 90 128">
+      <circle cx="45" cy="46" r="34" fill="rgba(255,214,140,.30)" stroke="#b9873c" stroke-width="2.4"/>
+      <circle cx="45" cy="46" r="34" fill="none" stroke="#fff6df" stroke-width="1" opacity=".85"/>
+      <path class="filament" d="M38 74 L38 56 L32 48 L40 40 L34 32 M52 74 L52 56 L58 48 L50 40 L56 32"
+        stroke="#f0a63e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path class="filament f2" d="M34 32 Q45 21 56 32" stroke="#ffcf7d" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      <rect x="33" y="78" width="24" height="6" rx="2" fill="#8a5f24"/>
+      <rect x="34" y="84" width="22" height="5" rx="2" fill="#b9873c"/>
+      <rect x="35" y="89" width="20" height="5" rx="2" fill="#8a5f24"/>
+      <rect x="36" y="94" width="18" height="5" rx="2" fill="#b9873c"/>
+      <path d="M38 99 L52 99 L45 110 Z" fill="#5f3f12"/>
+    </svg></div>
+    <h1 class="cover-title">전기난로가<br>전기를 먹는 속도</h1>
+    <p class="cover-sub">전기 에너지의 전환과 소비 전력 🔥</p>
+    <div class="cover-meta">
+      <span class="badge">⏱️ 45분</span>
+      <span class="badge">📘 VII. 전기와 자기 · 2. 전기 회로와 에너지 ④ · 246~249쪽</span>
+      <span class="badge gold" id="coverSaved" style="display:none">🔖 이어서 하기</span>
+    </div>
+    <div class="steps-card">
+      <h3>💡 학습 단계 안내</h3>
+      <ol>
+        <li><span class="sn">1</span><div><b>자료 만나기</b> — 같은 전기인데 쓰임새가 다르다</div></li>
+        <li><span class="sn">2</span><div><b>읽어 내기</b> — 전기 기구에 적힌 W의 뜻</div></li>
+        <li><span class="sn">3</span><div><b>따져 보기</b> — 어느 기구가 전기를 많이 먹었을까</div></li>
+        <li><span class="sn">4</span><div><b>적용하기</b> — 효율적인 선택, 그리고 블록 질문의 답</div></li>
+        <li><span class="sn">5</span><div><b>확인하기</b> — 배운 것 점검하기</div></li>
+        <li class="opt"><span class="sn">+</span><div><b>더 알아보기</b> — 냉장고의 무지개 스티커와 전구 이야기</div></li>
+      </ol>
+    </div>
+    <div class="cover-cta">
+      <button class="btn primary xl" id="coverGo">자료 만나러 가기 🌀</button>
+      <span class="cover-hint">진행 상황은 이 기기에 자동 저장돼요 · 왼쪽 위 제목을 누르면 이 화면으로 돌아옵니다</span>
+    </div>
+  </div>
+</div>
+
+<header class="top">
+  <div class="top-bar">
+    <button class="brand" id="brandBtn" title="표지로 돌아가기">
+      <div class="logo">🔥</div>
+      <div><b>전기를 먹는 <span>속도</span></b>
+        <div class="sub">VII. 전기와 자기 · 2. 전기 회로와 에너지 ④ · 중2 과학</div></div>
+    </button>
+    <div class="head-right">
+      <a class="hbtn" href="index.html" title="단원 허브로">⚡</a>
+      <button class="hbtn" id="tmodeBtn" title="교사 모드">🧑‍🏫</button>
+      <div class="progress-mini" id="progWrap" title="진행도 — 누르면 남은 활동이 보여요">
+        <svg class="pgauge" viewBox="0 0 96 56" aria-hidden="true">
+          <path d="M10 50 A38 38 0 0 1 86 50" fill="#f6eedb" stroke="#7d541e" stroke-width="2.5"/>
+          <path d="M10 50 A38 38 0 0 1 86 50" fill="none" stroke="#b9873c" stroke-width="1" opacity=".7"/>
+          <g stroke="#584634" stroke-width="1.5" opacity=".8">
+            <line x1="15" y1="46" x2="20" y2="43"/><line x1="25" y1="33" x2="29" y2="37"/>
+            <line x1="45" y1="24" x2="46" y2="29"/><line x1="63" y1="28" x2="61" y2="33"/>
+            <line x1="78" y1="40" x2="74" y2="43"/>
+          </g>
+          <g id="progNeedle" style="transform-origin:48px 50px;transform:rotate(-90deg)">
+            <line x1="48" y1="50" x2="48" y2="18" stroke="#992f24" stroke-width="2.6" stroke-linecap="round"/>
+          </g>
+          <circle cx="48" cy="50" r="4.5" fill="#b9873c" stroke="#5f3f12"/>
+        </svg>
+        <div class="bar" hidden><i id="progBar"></i></div><div class="pct" id="progPct">0%</div>
+      </div>
+    </div>
+  </div>
+  <nav class="tabs" id="tabNav">
+    <button data-tab="meet" class="active"><span class="sn"><i>1</i></span>자료 만나기</button>
+    <button data-tab="read"><span class="sn"><i>2</i></span>읽어 내기</button>
+    <button data-tab="calc"><span class="sn"><i>3</i></span>따져 보기</button>
+    <button data-tab="apply"><span class="sn"><i>4</i></span>적용하기</button>
+    <button data-tab="check"><span class="sn"><i>5</i></span>확인하기</button>
+    <span class="tab-sep"></span>
+    <button data-tab="beyond" class="optional"><span class="sn"><i>+</i></span>⚡ 더 알아보기</button>
+  </nav>
+</header>
+
+<div class="prog-list" id="progList"><h4>남은 활동</h4><ul id="progItems"></ul></div>
+
+<main>
+
+<!-- 1 -->
+<section class="panel show" id="panel-meet">
+  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">자료 만나기 · 같은 전기, 다른 쓰임새</span></div>
+  <h1 class="big">선풍기는 바람, 전기난로는 열 —<br>같은 전기를 쓰는데 <span class="t1">왜</span> 다를까?</h1>
+  <p class="lead" style="margin-top:16px">
+    선풍기를 콘센트에 꽂으면 날개가 돌고, 전기난로를 꽂으면 빨갛게 달아오릅니다.
+    <b class="k">둘 다 같은 콘센트에서 같은 전기를 받는데, 하나는 바람을 만들고 하나는 열을 냅니다.</b>
+    오늘은 전기 기구들이 전기를 <b>무엇으로 바꾸어, 얼마나 빨리</b> 쓰는지 자료로 따져 봅니다.
+  </p>
+  <figure class="fig" data-fig="intro"
+    data-alt="바람을 일으키는 선풍기와 빨갛게 달아오른 전기난로가 나란히 놓여 있는 모습"
+    data-cap="선풍기와 전기난로는 전기 에너지를 어떻게 사용할까? (교과서 246쪽 도입)"></figure>
+
+  <div class="card" style="margin-top:20px">
+    <h3 class="card-t">⚡ 먼저 이름 하나 — 전기 에너지</h3>
+    <p class="lead" style="font-size:17.5px;margin-top:8px">
+      선풍기의 날개가 돌아가는 것은 선풍기에 <b style="color:#a05c2c">전류</b>가 흐르면서 에너지를 공급하기 때문입니다.
+      이렇게 <b class="k">전기 기구에 전류가 흐르면서 공급하는 에너지</b>를 <b class="t1">전기 에너지</b>라고 해요.</p>
+    <p class="help">일상생활에서는 전기 에너지를 <b style="color:#2c7a44">운동 에너지</b>,
+      <b style="color:#b3362e">열에너지</b>, <b style="color:#7d541e">빛에너지</b> 등
+      다양한 형태의 에너지로 바꾸어 사용합니다. 이것을 에너지의 <b class="k">전환</b>이라고 해요.
+      차시 ①에서 모은 단서가 기억나나요? — "전원을 켜면 회로에 전류가 흐른다." 오늘 그 뒷이야기가 완성됩니다.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:12px">🧩 활동 — 에너지 전환 짝짓기 <span class="muted" style="font-weight:400">교과서 246쪽</span></div>
+    <h3 class="card-t">이 기구는 전기를 무엇으로 바꿀까?</h3>
+    <p class="lead" style="font-size:17px;margin-top:8px">기구마다 <b class="k">주된 용도에 맞는 에너지</b>를 골라 보세요.
+      "이 기구를 <b>왜</b> 쓰지?"를 먼저 떠올리면 쉽습니다.</p>
+    <div class="checkgrid" id="matchList"></div>
+    <div class="verdict" id="matchMsg">기구마다 <b>주된 용도</b>를 떠올리고 버튼을 눌러 보세요.</div>
+    <p class="honest"><span class="ic">📌</span>선풍기에서도 소리가 나고, 모니터에서도 열이 납니다.
+      한 기구 안에서 전기 에너지는 여러 에너지로 전환되지만, 분류할 때는 <b>사용 목적에 맞는 주된 에너지</b>로 봅니다.</p>
+    <div class="note class"><span class="ic">💬</span><div><b>차시 지도상의 유의점(교과서 명시)</b> — ① 에너지의 종류를 너무 상세히 구분하지 않습니다. 운동·열·빛 정도면 충분해요. ② "세탁기에서도 열이 나는데요?"라는 질문이 나오면 <b>사용 목적</b>을 기준으로 세워 주세요. 이 질문은 4단계 '손실' 이야기의 복선이 됩니다.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="eyebrow" style="margin-bottom:8px">오늘의 목표</div>
+    <h3 class="card-t" style="margin-bottom:14px">이번 시간이 끝나면 이걸 할 수 있다</h3>
+    <div class="grid c2">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:none;width:30px;height:30px;border-radius:9px;background:var(--ok);color:#f2f7ea;display:grid;place-items:center;font-family:var(--mono);font-weight:700">1</div>
+        <div><b class="k">일상생활에서 전기 에너지가 다양한 에너지로 전환됨을 예를 들어 설명할 수 있다.</b><br><span class="muted" style="font-size:16px">돌리고, 데우고, 비추는 기구들로.</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:none;width:30px;height:30px;border-radius:9px;background:var(--c1);color:#f2ede4;display:grid;place-items:center;font-family:var(--mono);font-weight:700">2</div>
+        <div><b class="k">소비 전력의 뜻을 알고, 전기 기구가 사용하는 전기 에너지의 양을 비교할 수 있다.</b><br><span class="muted" style="font-size:16px">라벨의 W 숫자를 읽어 내면서.</span></div>
+      </div>
+    </div>
+    <div class="pill-list">
+      <span class="pill">핵심어 · <b>전기 에너지</b></span><span class="pill"><b>에너지 전환</b></span>
+      <span class="pill"><b>소비 전력</b></span><span class="pill"><b>W(와트)</b></span>
+    </div>
+  </div>
+  <div class="cta-row"><button class="btn primary" data-go="read">2단계 · W의 뜻 읽어 내기 →</button></div>
+</section>
+
+<!-- 2 -->
+<section class="panel" id="panel-read">
+  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">읽어 내기 · 전기 기구에 적힌 W의 뜻</span></div>
+  <h2 class="sec">전기 기구마다 붙어 있는 숫자, W</h2>
+  <p class="lead">세탁기 뒤쪽 라벨을 보면 <b class="k">220 V - 500 W</b> 같은 표시가 있습니다(교과서 247쪽).
+    이 <b class="t1">W(와트)</b>가 오늘의 주인공이에요. 무슨 뜻인지 읽어 봅시다.</p>
+
+  <div class="card" style="margin-top:20px">
+    <h3 class="card-t">🔎 라벨 읽는 법</h3>
+    <div class="svgstage">
+      <svg viewBox="0 0 560 230" role="img" aria-label="세탁기에 붙어 있는 제품 라벨. 220 볼트, 500 와트라고 적혀 있으며 220 볼트는 전압, 500 와트는 소비 전력임을 화살표로 설명한다.">
+        <rect x="28" y="34" width="226" height="162" rx="14" fill="#faf4e6" stroke="#cbb894" stroke-width="2"/>
+        <text x="141" y="62" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">제 품 표 시</text>
+        <line x1="46" y1="74" x2="236" y2="74" stroke="#a08b64" stroke-width="1.4"/>
+        <text x="141" y="103" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="700" fill="#4a3a26">세탁기</text>
+        <text x="141" y="145" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="23" font-weight="800" fill="#4a3a26"><tspan fill="#7d5ba6">220 V</tspan> - <tspan fill="#8a5f24">500 W</tspan></text>
+        <text x="141" y="180" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">KC 인증 · 라벨 예시</text>
+        <line x1="176" y1="118" x2="296" y2="70" stroke="#7d5ba6" stroke-width="1.6"/>
+        <text x="304" y="62" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="700" fill="#7d5ba6">전압(V)</text>
+        <text x="304" y="82" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">이 기구에 걸어 주는 전압 — 우리나라 가정은 220 V</text>
+        <line x1="216" y1="150" x2="296" y2="152" stroke="#8a5f24" stroke-width="1.6"/>
+        <text x="304" y="146" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="700" fill="#8a5f24">소비 전력(W)</text>
+        <text x="304" y="166" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">1초 동안 사용하는 전기 에너지의 양</text>
+        <text x="304" y="186" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#4a3a26">= 이 기구가 전기를 먹는 '속도'</text>
+      </svg>
+    </div>
+    <p class="lead" style="font-size:17.5px;margin-top:12px">
+      전기 기구가 <b class="k">1초 동안 사용하는 전기 에너지의 양</b>을 <b class="t1">소비 전력</b>이라고 하며,
+      단위는 <b class="t1">W(와트)</b>를 사용합니다. 1000 W는 <b class="k">1 kW(킬로와트)</b>라고도 써요.</p>
+    <p class="lead" style="font-size:17.5px;margin-top:10px">
+      제목의 뜻이 여기서 풀립니다 — 소비 전력은 그 기구가 <b class="k">전기를 먹는 '속도'</b>입니다.
+      전기난로에 990 W라고 적혀 있다면, 켜져 있는 동안 <b>1초마다 990 J씩</b> 전기 에너지를 먹어 치운다는 뜻이에요.</p>
+    <p class="honest"><span class="ic">📌</span>J(줄)은 에너지의 양을 재는 단위입니다. 자세한 건 나중에 배워요 —
+      여기서는 "<b>W가 클수록 1초에 먹는 전기 에너지가 많다</b>"만 챙기면 충분합니다.</p>
+    <div class="note class"><span class="ic">💬</span><div><b>차시 지도상의 유의점(교과서 명시)</b> — 소비 전력은 <b>정량적인 계산보다 에너지 전환 관점</b>에서 다루고, 효율적인 전기 기구를 선택하는 근거로 이해하게 하세요. 1 W = 1 J/s 관계식을 외우게 하지 않습니다.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:12px">📊 자료 — 전기 기구의 에너지 전환과 소비 전력 · 교과서 248쪽</div>
+    <div class="dtable-wrap">
+      <table class="dtable">
+        <tr><th>전기 기구</th><th>주로 전환되는 에너지</th><th>소비 전력(W)</th></tr>
+        <tr><td>세탁기</td><td style="color:#2c7a44;font-weight:800">운동 에너지</td><td>500</td></tr>
+        <tr><td>진공청소기</td><td style="color:#2c7a44;font-weight:800">운동 에너지</td><td>700</td></tr>
+        <tr><td>텔레비전</td><td style="color:#7d541e;font-weight:800">빛에너지</td><td>35</td></tr>
+        <tr><td>전기난로</td><td style="color:#b3362e;font-weight:800">열에너지</td><td>990</td></tr>
+        <tr><td>전기 다리미</td><td style="color:#b3362e;font-weight:800">열에너지</td><td>2200</td></tr>
+      </table>
+    </div>
+    <p class="help">표를 훑어보면 규칙이 하나 보입니다 — 무언가를 <b style="color:#b3362e">데우는 기구</b>가
+      유독 전기를 빨리 먹네요. 아래 퀴즈로 표를 직접 읽어 봅시다.</p>
+    <div class="note class"><span class="ic">💬</span><div><b>교과서 248쪽 탐구 운영</b> — 실제 수업에서는 학생이 <b>가정의 전기 기구 5가지</b>를 미리 조사해 오고, 공유 스프레드시트에 모아 소비 전력이 큰 순으로 정렬합니다. 위 표는 그 결과 예시(교과서 값)입니다. "소비 전력이 큰 기구는 주로 어떤 에너지로 전환하는가?"의 모범 답안은 <b>열에너지</b>입니다. 같은 용도인데 조사해 온 소비 전력이 서로 다르면 어떤 값을 기록할지 모둠 협의를 거치게 하세요.</div></div>
+  </div>
+
+  <div class="miniquiz" data-quiz="read"></div>
+  <div class="cta-row"><button class="btn primary" data-go="calc">3단계 · 누가 더 많이 먹었나 따지기 →</button></div>
+</section>
+
+<!-- 3 -->
+<section class="panel" id="panel-calc">
+  <div class="stepline"><span class="sbadge">STEP 3</span><span class="swhat">따져 보기 · 누가 더 많이 먹었을까</span></div>
+  <h2 class="sec">전기 에너지를 많이 쓴 쪽은 어디일까?</h2>
+  <p class="lead">이제 자료를 놓고 따져 봅니다. 규칙은 두 개뿐이에요 —
+    <b class="k">같은 시간이면 소비 전력이 큰 쪽</b>이 많이 쓰고,
+    시간이 다르면 <b class="k">소비 전력 × 시간</b>을 곱해서 비교합니다.</p>
+
+  <div class="card" style="margin-top:20px">
+    <h3 class="card-t">⏱️ 규칙 1 — 같은 시간이라면</h3>
+    <div class="svgstage">
+      <svg viewBox="0 0 560 200" role="img" aria-label="1초 동안 사용하는 전기 에너지를 막대 길이로 비교한 그림. 전기난로는 990줄로 막대가 길고, 텔레비전은 35줄로 막대가 매우 짧다.">
+        <text x="30" y="32" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="700" fill="#4a3a26">⏱️ 똑같은 1초 동안 먹는 전기 에너지</text>
+        <text x="30" y="76" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#4a3a26">전기난로</text>
+        <rect x="120" y="58" width="396" height="28" rx="6" fill="#b3362e"/>
+        <text x="508" y="77" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="800" fill="#fdf1ef">990 J</text>
+        <text x="30" y="136" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#4a3a26">텔레비전</text>
+        <rect x="120" y="118" width="14" height="28" rx="4" fill="#7d541e"/>
+        <text x="144" y="137" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="800" fill="#7d541e">35 J</text>
+        <text x="30" y="182" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">※ 막대 길이는 소비 전력(1초 동안 사용하는 전기 에너지의 양)에 비례한다.</text>
+      </svg>
+    </div>
+    <p class="lead" style="font-size:17.5px;margin-top:12px">
+      전기난로와 텔레비전을 <b class="k">같은 1시간</b>씩 켜 두면?
+      1초마다 990 J 대 35 J — 매초 <b>약 28배</b>씩 차이가 쌓입니다.
+      같은 시간 동안이라면 <b class="k">소비 전력이 큰 기구가 전기 에너지를 많이 사용</b>합니다.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">✖️ 규칙 2 — 시간이 다르면, 곱해 보기</h3>
+    <p class="lead" style="font-size:17.5px;margin-top:8px">
+      다리미는 잠깐, 텔레비전은 오래 씁니다. 이럴 땐 <b class="k">소비 전력 × 사용 시간</b>을 곱한 값으로
+      사용한 전기 에너지의 양을 비교해요.</p>
+    <div class="dtable-wrap" style="margin-top:12px">
+      <table class="dtable">
+        <tr><th>전기 기구</th><th>소비 전력(W)</th><th>사용 시간(분)</th><th>소비 전력 × 시간</th></tr>
+        <tr><td>전기 다리미</td><td>2200</td><td>3</td><td><b>6600</b></td></tr>
+        <tr><td>텔레비전</td><td>35</td><td>240</td><td><b>8400</b></td></tr>
+      </table>
+    </div>
+    <p class="help">곱한 값이 큰 쪽이 전기 에너지를 많이 쓴 겁니다 —
+      2200 W짜리 다리미(3분)보다 <b class="k">35 W짜리 텔레비전(4시간)이 더 많이</b> 썼어요.
+      소비 전력은 '속도'일 뿐, 실제로 쓴 양은 <b>시간까지 곱해야</b> 나옵니다.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">⚖️ 규칙 3 — 성능이 같다면 <span class="badge" style="vertical-align:middle">교과서 247쪽 · 해 보기</span></h3>
+    <div class="svgstage">
+      <svg viewBox="0 0 560 250" role="img" aria-label="전기 주전자 (가)와 (나)의 비교 실험. 두 주전자에 25도인 물 1리터를 넣고 동시에 전원을 켰더니 동시에 끓기 시작했다. (가)의 소비 전력은 1500와트, (나)는 1600와트이다.">
+        <rect x="30" y="36" width="230" height="152" rx="14" fill="#faf4e6" stroke="#cbb894" stroke-width="2"/>
+        <rect x="300" y="36" width="230" height="152" rx="14" fill="#faf4e6" stroke="#cbb894" stroke-width="2"/>
+        <text x="145" y="62" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="700" fill="#8a5f24">(가)</text>
+        <text x="415" y="62" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="700" fill="#8a5f24">(나)</text>
+        <path d="M132 82 q5 -12 10 0" fill="none" stroke="#a08b64" stroke-width="1.8"/>
+        <path d="M148 82 q5 -12 10 0" fill="none" stroke="#a08b64" stroke-width="1.8"/>
+        <path d="M402 82 q5 -12 10 0" fill="none" stroke="#a08b64" stroke-width="1.8"/>
+        <path d="M418 82 q5 -12 10 0" fill="none" stroke="#a08b64" stroke-width="1.8"/>
+        <rect x="112" y="88" width="66" height="56" rx="10" fill="#f2e8d2" stroke="#a08b64" stroke-width="2"/>
+        <path d="M178 100 q22 8 0 28" fill="none" stroke="#a08b64" stroke-width="2"/>
+        <rect x="106" y="144" width="78" height="10" rx="4" fill="#cbb894"/>
+        <rect x="382" y="88" width="66" height="56" rx="10" fill="#f2e8d2" stroke="#a08b64" stroke-width="2"/>
+        <path d="M448 100 q22 8 0 28" fill="none" stroke="#a08b64" stroke-width="2"/>
+        <rect x="376" y="144" width="78" height="10" rx="4" fill="#cbb894"/>
+        <text x="145" y="178" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="800" fill="#8a5f24">소비 전력 1500 W</text>
+        <text x="415" y="178" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="800" fill="#8a5f24">소비 전력 1600 W</text>
+        <text x="280" y="216" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="700" fill="#4a3a26">25 ℃ 물 1 L를 넣고 동시에 전원 ON → 두 주전자가 동시에 끓기 시작!</text>
+        <text x="280" y="238" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">※ 교과서 247쪽 「전기 기구의 소비 전력 비교하기」의 동영상 자료를 옮긴 것</text>
+      </svg>
+    </div>
+    <p class="lead" style="font-size:17.5px;margin-top:12px">
+      물이 <b>동시에</b> 끓기 시작했으니 두 주전자의 성능은 같습니다.
+      그런데 (나)는 1초마다 <b class="k">100 J씩 더</b> 먹고 있어요. 그 100 J은 물 끓이기에 쓰인 게 아니라
+      다른 에너지로 <b class="k">새어 나간(손실된)</b> 몫입니다.
+      그래서 성능이 같다면 <b>소비 전력이 작은 (가)</b>가 전기 에너지를 효율적으로 사용하는, 더 좋은 선택이에요.</p>
+    <div class="note class"><span class="ic">💬</span><div><b>해 보기 예시 답안(교과서)</b> — "(가). 두 제품의 성능이 동일하면 같은 시간 동안 사용했을 때 더 적은 전기 에너지를 사용하는 전기 기구가 더 효율적인 제품이다." 광고 속 '와트 수가 크니 더 세다'는 말을 반박해 보게 하면 토론이 살아납니다.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t" style="margin-bottom:6px">⚠️ 여기서 자주 어긋납니다</h3>
+    <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ①</b> — "소비 전력이 큰 전기 기구가 <b>좋은 기구·센 기구</b>다."<br>
+      → <b class="k">아닙니다.</b> 소비 전력은 좋고 나쁨이 아니라 <b>용도</b>의 문제입니다.
+      데우는 기구는 원래 크고, 텔레비전은 원래 작아요.
+      비교가 의미 있는 것은 <b>성능이 같은 두 기구</b>를 놓고 볼 때이고, 그때는 <b>작은 쪽이 효율적</b>입니다.</div></div>
+    <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ②</b> — "소비 전력이 크면 <b>무조건</b> 전기 에너지를 많이 쓴다."<br>
+      → <b class="k">아닙니다.</b> 얼마나 <b>오래</b> 쓰는지까지 곱해야 합니다.
+      위 표에서 2200 W짜리 다리미(3분)보다 35 W짜리 텔레비전(4시간)이 더 많이 썼죠.
+      소비 전력은 '속도', 사용한 양은 '속도 × 시간'입니다.</div></div>
+  </div>
+
+  <div class="card cloze-set" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:12px">✍️ 빈칸을 눌러 확인 — 먼저 머릿속으로 답한 뒤에</div>
+    <p class="cloze-line">
+      전기 기구에 전류가 흐르면서 공급하는 에너지를 <span class="cloze" data-ans="전기 에너지" data-c="gold">　</span>라고 한다.
+    </p>
+    <p class="cloze-line">
+      일상생활에서는 전기 에너지를 <span class="cloze" data-ans="운동" data-c="ok">　</span> 에너지,
+      <span class="cloze" data-ans="열" data-c="danger">　</span>에너지, 빛에너지 등 다양한 형태의 에너지로 전환하여 사용한다.
+    </p>
+    <p class="cloze-line">
+      전기 기구가 <span class="cloze" data-ans="1초" data-c="gold">　</span> 동안 사용하는 전기 에너지의 양을
+      <span class="cloze" data-ans="소비 전력" data-c="gold">　</span>이라고 한다.
+    </p>
+    <p class="cloze-line">
+      소비 전력의 단위는 <span class="cloze" data-ans="W(와트)" data-c="gold">　</span>를 사용하며,
+      1 kW는 <span class="cloze" data-ans="1000" data-c="gold">　</span> W와 같다.
+    </p>
+    <p class="cloze-line">
+      성능이 같다면 소비 전력이 <span class="cloze" data-ans="작은" data-c="ok">　</span> 전기 기구를 사용하는 것이
+      전기 에너지를 효율적으로 사용하는 방법이다.
+    </p>
+    <div class="cloze-done">✅ 이 문단은 다 채웠어요!</div>
+    <p class="cloze-hint">빈칸을 그냥 눌러 답만 보면 남지 않아요. 소리 내어 답해 보고 누르세요.</p>
+  </div>
+
+  <div class="miniquiz" data-quiz="calc"></div>
+  <div class="cta-row"><button class="btn primary" data-go="apply">4단계 · 블록 질문의 답 완성하기 →</button></div>
+</section>
+
+<!-- 4 -->
+<section class="panel" id="panel-apply">
+  <div class="stepline"><span class="sbadge">STEP 4</span><span class="swhat">적용하기 · 효율적인 선택, 블록 질문의 답</span></div>
+  <h2 class="sec">아껴 쓰는 것도 실력입니다</h2>
+  <p class="lead">전기 기구는 전기 에너지를 다른 에너지로 바꾸며 일합니다. 그런데 그 전환이
+    <b class="k">언제나 깔끔하지는 않아요.</b> 새어 나가는 몫이 있고, 그것이 '효율'과 '절약' 이야기로 이어집니다.</p>
+
+  <div class="grid c2" style="margin-top:20px">
+    <div class="card">
+      <h3 class="card-t">💨 새어 나가는 전기 — 손실</h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        선풍기를 켜면 바람만 나오는 게 아니라 <b>소리</b>도 나고, 모터에서 <b>열</b>도 납니다.
+        이렇게 전기 에너지가 주된 용도가 아닌 <b class="k">다른 에너지로 전환되어 새어 나가는 것</b>이 손실이에요.<br><br>
+        성능이 같은데 소비 전력이 더 크다면? <b class="k">그 차이만큼 손실이 많다</b>는 뜻입니다.
+        3단계의 주전자 (나)가 그랬죠. 그래서 성능이 같을 때는 소비 전력이 <b>작은</b> 기구가
+        전기 에너지를 효율적으로 사용하는 기구입니다.</p>
+    </div>
+    <div class="card">
+      <h3 class="card-t">🌍 아껴야 하는 진짜 이유</h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        전기 에너지를 생산하는 일부 과정에서는 이산화 탄소 같은 <b class="k">온실 기체</b>가 나옵니다.
+        지구 온난화 같은 환경 문제와 곧장 이어져 있죠.
+        전기 에너지를 효율적으로 쓰는 것은 전기 요금 이전에 <b class="k">온실 기체 배출을 줄이는 일</b>입니다.</p>
+      <div class="pill-list">
+        <span class="pill">빈 교실 <b>전등 끄기</b></span>
+        <span class="pill">안 쓰는 기구 <b>플러그 뽑기</b></span>
+        <span class="pill">다림질은 <b>모아서 한 번에</b></span>
+        <span class="pill">에어컨 1대 ≈ <b>선풍기 약 30대</b>의 전기</span>
+      </div>
+      <div class="note class"><span class="ic">💬</span><div><b>더 해 보기 운영(교과서 249쪽)</b> — 교실에서 실천할 약속을 학생들이 직접 정하고 일정 기간 기록하게 합니다. 낮에 운동장 쪽 조명 끄기, 냉난방기 사용 시 창문 닫기 등 교사용 예시가 있습니다. 실천 결과 공유는 환경·기후 변화 관점을 분명히 해서 토의로 마무리하세요.</div></div>
+    </div>
+  </div>
+
+  <div class="clue">
+    <div class="cl-h">🧩 두 번째 블록 · 마지막 조각을 맞춥시다</div>
+    <figure class="fig" data-fig="cleaner"
+      data-alt="전원이 켜진 공기 청정기가 작동하며 내부의 팬이 돌아가고, 공기가 들어왔다 나가는 모습"></figure>
+    <p style="margin-top:12px">이 중단원의 질문은 이것이었습니다 —
+      <b class="k">"팬이 작동할 때 전기 회로에서 어떤 일이 일어날까?"</b></p>
+    <p style="margin-top:10px">단서는 이미 두 개 다 모였습니다.<br>
+      🔹 <b>단서 ①</b> (차시 ① · 교과서 237쪽) — 공기 청정기의 전원을 켜면 내부의 전기 회로에 <b style="color:#a05c2c">전류</b>가 흘러 팬이 돌아간다.<br>
+      🔹 <b>단서 ②</b> (오늘 · 교과서 249쪽) — 공기 청정기는 공기 중의 먼지를 모으기 위해 <b class="t1">전기 에너지</b>를 <b style="color:#2c7a44">운동 에너지</b>로 전환하여 사용한다.</p>
+    <p style="margin-top:10px"><b class="k">두 단서를 한 문장으로 이어서</b>, 블록 질문의 최종 답을 직접 써 보세요.</p>
+    <textarea id="essay" placeholder="공기 청정기의 전원을 켜면 … (단서 ①: 회로에 무엇이 흐르나?) … 이때 전기 에너지는 … (단서 ②: 어떤 에너지로 전환되나?) … 팬이 돌아간다."></textarea>
+    <span class="savemark" id="essaySaved">✔ 저장됨</span>
+    <div class="btn-row"><button class="btn ghost sm" id="ansBtn">모범 답안 확인하기</button></div>
+    <div class="explain" id="modelAns" style="margin-top:12px">
+      <div class="why">✍️ 모범 답안 — 블록 찾기 성공! (교과서 250쪽)</div>
+      공기 청정기의 전원을 켜면 내부의 전기 회로에 <b>전류가 흘러</b> 팬이 돌아가는데,
+      이때 <b>전기 에너지는 운동 에너지로 전환</b>되어 사용된다.
+      팬이 돌면서 공기를 빨아들이고, 먼지는 필터에 걸러진다.
+    </div>
+    <div class="note class"><span class="ic">💬</span><div><b>채점 포인트(250쪽 지도 방향)</b> — ① <b>회로에 전류가 흐른다</b>(차시 ①의 단서)를 썼는가 ② <b>전기 에너지 → 운동 에너지 전환</b>(오늘의 단서)을 썼는가. 두 요소가 모두 있어야 블록 완성입니다. "전기가 통해서 돌아간다"처럼 뭉뚱그린 답은 단서 ①로 되돌려 보내세요. 각 소단원에서 모은 작은 블록을 학생이 <b>직접 이어 쓰게</b> 하는 것이 교과서의 설계입니다.</div></div>
+  </div>
+
+  <a class="linkcard" href="index.html">
+    <span class="lc-e">⚡</span>
+    <span><span class="lc-t">단원 허브 — 두 번째 블록 완성!</span>
+      <span class="lc-d">「전기 회로와 에너지」 네 차시가 모두 끝났습니다 · 다음 중단원은 3. 전류의 자기 작용</span></span>
+  </a>
+
+  <div class="cta-row"><button class="btn primary" data-go="check">5단계 · 얼마나 알게 됐는지 확인 →</button></div>
+</section>
+
+<!-- 5 -->
+<section class="panel" id="panel-check">
+  <div class="stepline"><span class="sbadge">STEP 5</span><span class="swhat">확인하기 · 형성평가</span></div>
+  <h2 class="sec">배운 것을 확인해 봅시다</h2>
+  <p class="lead">점수에 들어가지 않습니다. 어디가 헷갈리는지 찾는 게 목적이에요.</p>
+  <div class="card" style="margin-top:20px">
+    <div class="game-hud">
+      <div class="lives" id="lives"><span class="h">❤️</span><span class="h">❤️</span><span class="h">❤️</span></div>
+      <div class="score-box"><span class="lab2">점수</span><span class="num" id="score">0</span></div>
+      <div class="score-box"><span class="lab2">문항</span><span class="num" id="qno">0/0</span></div>
+    </div>
+    <div id="gameBody">
+      <div style="text-align:center;padding:30px 10px">
+        <p class="lead" style="margin:0 auto 18px">준비됐나요? 5문항입니다.</p>
+        <button class="btn primary" id="gameStart">확인 문제 시작</button>
+      </div>
+    </div>
+    <div class="earned" id="medals">
+      <div class="medal" data-medal="first"><span class="e">🥉</span>첫 정답</div>
+      <div class="medal" data-medal="half"><span class="e">🥈</span>절반 돌파</div>
+      <div class="medal" data-medal="perfect"><span class="e">🥇</span>전부 정답</div>
+    </div>
+  </div>
+  <div class="cta-row"><button class="btn ghost" data-go="beyond">⚡ 더 알아보기 (선택)</button></div>
+</section>
+
+<!-- + -->
+<section class="panel" id="panel-beyond">
+  <div class="stepline opt"><span class="sbadge">선택</span><span class="swhat">더 알아보기 · 시험에 나오지 않습니다</span></div>
+  <h2 class="sec">냉장고의 무지개 스티커, 그리고 전구 이야기</h2>
+  <p class="lead">여기서부터는 <b class="k">참고 이야기</b>입니다. 시험에 나오지 않아요. 외우지 말고 그냥 읽어 보세요.</p>
+
+  <div class="grid c2" style="margin-top:20px">
+    <div class="card">
+      <h3 class="card-t">🌈 에너지 소비 효율 등급 <span class="badge">시험 X</span></h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        냉장고나 세탁기에 붙어 있는 무지개색 스티커를 본 적 있나요?
+        전기 기구에 공급한 전기 에너지 중 <b class="k">필요한 에너지로 전환되는 비율</b>을
+        <b>에너지 효율</b>이라 하고, 이를 <b class="k">1~5등급</b>으로 표시한 것이
+        에너지 소비 효율 등급입니다.<br><br>
+        <b>1등급에 가까울수록</b> 불필요하게 낭비되는 에너지가 적은, 절약형 기구예요.
+        가전 매장에 가면 이 스티커부터 찾아보세요 — 오늘 배운 '성능이 같다면 적게 먹는 쪽'을
+        나라가 대신 계산해 붙여 둔 셈입니다.</p>
+      <p class="help">교과서 249쪽 「더 알아보기」에 실린 내용이에요.</p>
+    </div>
+    <div class="card">
+      <h3 class="card-t">💡 백열전구는 왜 퇴장했을까 <span class="badge">시험 X</span></h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        1879년 에디슨과 스완이 발명한 백열전구는 1887년 경복궁에 처음 들어와
+        100년 넘게 밤을 밝혔습니다. 그런데 백열전구는 전기 에너지의 <b class="k">약 95 %를 열로</b>
+        내보내는, 대표적인 저효율 조명이었어요. 조명인데 사실상 난로였던 거죠.<br><br>
+        그래서 2014년부터 우리나라에서는 백열전구를 퇴출하고 LED 등으로 바꿔 왔습니다.
+        LED는 백열전구보다 전기 에너지를 <b class="k">약 82 % 절감</b>합니다.
+        엘이디등이 오래 켜 놓아도 <b>덜 뜨거운</b> 까닭도 같은 이유 — 열로 손실되는 비율이 낮기 때문이에요.</p>
+      <div class="note class"><span class="ic">💬</span><div><b>교과서 249쪽 사고력 모범 답안</b> — "엘이디등은 오래 사용해도 덜 뜨거워지는 것으로 보아 전기 에너지 중 열에너지로 전환되는 비율이 낮다. 따라서 밝기가 동일한 다른 조명 장치보다 사용하는 전기 에너지의 양이 적으므로 에너지 효율 측면에서 좋다."</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">🎬 다시, 처음 그 문장</h3>
+    <p class="lead" style="font-size:18.5px;margin-top:10px">
+      <b class="k">"전기난로가 전기를 먹는 속도 — 그것이 소비 전력."</b><br><br>
+      전기를 빨리 먹는 게 나쁜 것도, 좋은 것도 아닙니다. 방을 데우려면 원래 많이 필요해요.
+      중요한 건 두 가지였습니다 — 실제로 쓴 양은 <b>속도 × 시간</b>이라는 것,
+      그리고 성능이 같다면 <b>천천히 먹는 쪽이 효율적</b>이라는 것.<br><br>
+      오늘부터 전기 기구를 볼 때 <b class="k">라벨의 W를 읽는 습관</b>을 가져 보세요.
+      숫자 하나로 그 기구가 전기를 먹는 속도가 보이고,
+      그 순간 여러분은 광고 문구보다 자료를 믿는 사람이 됩니다.
+    </p>
+    <div class="cta-row" style="justify-content:center">
+      <button class="btn ghost" data-go="meet">1단계로 돌아가기 ↑</button>
+      <a class="btn ghost" href="index.html">⚡ 단원 허브로</a>
+    </div>
+  </div>
+</section>
+
+</main>
+<div id="toast"></div>
+<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-08-08</span></footer>
+
+<script>
+"use strict";
+const FIGS={
+  intro:'img/pw-intro.jpg', cleaner:'img/pw-cleaner.jpg'
+};
+const BG_IMAGES={cover:'',meet:'',read:'',calc:'',apply:'',check:'',beyond:''};
+const BG_FALLBACK={
+  cover:'radial-gradient(120% 90% at 50% 0%, #f6f1e8, #f4ebd7 68%)',
+  meet:'radial-gradient(110% 80% at 50% 0%, #f6f1e8, #f4ebd7 66%)',
+  read:'radial-gradient(100% 80% at 50% 20%, #f5f0e7, #f4ebd7 70%)',
+  calc:'linear-gradient(180deg, #f5efe6, #f4ebd7 74%)',
+  apply:'radial-gradient(90% 80% at 68% 15%, #efe0c2, #f4ebd7 70%)',
+  check:'radial-gradient(100% 85% at 30% 15%, #f5efe6, #f4ebd7 70%)',
+  beyond:'radial-gradient(110% 85% at 50% 0%, #f4efe5, #f4ebd7 66%)'
+};
+const SAVE='elec_power_v1';
+
+/* 1단계 — 에너지 전환 짝짓기 (교과서 246쪽 그림 7-14의 예 + 도입 두 기구) */
+const MATCH=[
+  {id:'fan',    e:'🌀', n:'선풍기',        a:'move'},
+  {id:'heater', e:'🔥', n:'전기난로',      a:'heat'},
+  {id:'wash',   e:'🧺', n:'세탁기',        a:'move'},
+  {id:'monitor',e:'🖥️', n:'컴퓨터 모니터', a:'light'},
+  {id:'lamp',   e:'💡', n:'전등',          a:'light'},
+  {id:'kettle', e:'🫖', n:'전기 주전자',   a:'heat'},
+  {id:'vacuum', e:'🧹', n:'청소기',        a:'move'},
+  {id:'cooker', e:'🍚', n:'전기밥솥',      a:'heat'}
+];
+const MATCH_CAT={
+  move:{t:'운동 에너지', e:'🌀', col:'#2c7a44'},
+  heat:{t:'열에너지',   e:'🔥', col:'#b3362e'},
+  light:{t:'빛에너지',  e:'💡', col:'#7d541e'}
+};
+
+const QUIZ_SETS={
+  read:{title:'소비 전력 표 읽기', qs:[
+    {q:'표에서 소비 전력이 가장 큰 전기 기구는?',
+     ch:[{t:'전기 다리미',ok:1},{t:'전기난로',ok:0},{t:'세탁기',ok:0}],
+     why:'전기 다리미가 <b>2200 W</b>로 가장 크다. 소비 전력이 크다는 것은 <b>1초 동안 사용하는 전기 에너지가 많다</b>는 뜻이다.'},
+    {q:'소비 전력이 큰 기구들(전기난로·전기 다리미)은 전기 에너지를 주로 어떤 에너지로 전환하는가?',
+     ch:[{t:'열에너지',ok:1},{t:'빛에너지',ok:0},{t:'운동 에너지',ok:0}],
+     why:'표에서 소비 전력 상위 기구는 모두 무언가를 <b>데우는</b> 기구다. 전기 에너지를 주로 <b>열에너지</b>로 전환하는 기구가 전기를 빨리 먹는 편이다.'},
+    {q:'전기난로에 표시된 990 W의 뜻으로 옳은 것은?',
+     ch:[{t:'1초 동안 990 J의 전기 에너지를 사용한다',ok:1},
+         {t:'1시간 동안 990 J의 전기 에너지를 사용한다',ok:0},
+         {t:'990 V의 전압을 걸어 주어야 한다',ok:0}],
+     why:'소비 전력의 기준 시간은 <b>1초</b>다. 990 W는 켜져 있는 동안 <b>1초마다 990 J씩</b> 전기 에너지를 사용한다는 뜻이다. 전압은 V 단위로 따로 표시된다.'}
+  ]},
+  calc:{title:'누가 더 많이 먹었나 따지기', qs:[
+    {q:'전기난로(990 W)와 텔레비전(35 W)을 같은 시간 동안 사용했다. 전기 에너지를 더 많이 사용한 것은?',
+     ch:[{t:'전기난로',ok:1},{t:'텔레비전',ok:0},{t:'두 기구가 같다',ok:0}],
+     why:'<b>같은 시간</b>이라면 소비 전력이 큰 기구가 전기 에너지를 많이 사용한다. 990 W는 35 W의 약 28배 — 매초 그만큼씩 차이가 쌓인다.'},
+    {q:'성능이 같은 두 전기 주전자 (가) 1500 W와 (나) 1600 W 중 더 효율적인 것은?',
+     ch:[{t:'(가)',ok:1},{t:'(나)',ok:0},{t:'자료만으로는 알 수 없다',ok:0}],
+     why:'성능이 같다면 <b>소비 전력이 작은 쪽</b>이 효율적이다. (나)가 1초마다 더 먹는 100 J은 물 끓이기가 아닌 다른 에너지로 <b>손실</b>되는 몫이다.'},
+    {q:'전기 다리미(2200 W)를 3분, 텔레비전(35 W)을 240분 사용했다. 전기 에너지를 더 많이 사용한 것은?',
+     ch:[{t:'텔레비전',ok:1},{t:'전기 다리미',ok:0},{t:'두 기구가 같다',ok:0}],
+     why:'시간이 다르면 <b>소비 전력 × 시간</b>을 곱해서 비교한다. 다리미 2200×3=6600, 텔레비전 35×240=8400. 소비 전력이 커도 <b>짧게 쓰면</b> 적게 쓸 수 있다.'}
+  ]}
+};
+
+const GAME_QS=[
+  {id:"q1",
+   difficulty:"하",
+   intent:"라벨의 W 표시를 읽고 소비 전력의 정의(1초 동안 사용하는 전기 에너지의 양, 1 kW=1000 W)를 적용하는지 확인한다. 오답은 기준 시간 혼동(1시간), 라벨의 전압 220 V와의 혼동, kW 환산 오류, '소비 전력이 크면 좋은 기구'라는 오해 ①에서 파생했다.",
+   svg:"<svg viewBox=\"0 0 560 200\" role=\"img\" aria-label=\"전기난로와 그 뒷면에 붙어 있는 제품 라벨을 나타낸 그림. 라벨에는 제품명 전기난로와 함께 220 볼트 - 1300 와트라고 적혀 있다.\"><rect x=\"64\" y=\"64\" width=\"118\" height=\"96\" rx=\"12\" fill=\"#faf4e6\" stroke=\"#a08b64\" stroke-width=\"2\"/><rect x=\"80\" y=\"82\" width=\"86\" height=\"9\" rx=\"4.5\" fill=\"#f0a63e\"/><rect x=\"80\" y=\"104\" width=\"86\" height=\"9\" rx=\"4.5\" fill=\"#f0a63e\"/><rect x=\"80\" y=\"126\" width=\"86\" height=\"9\" rx=\"4.5\" fill=\"#f0a63e\"/><rect x=\"56\" y=\"160\" width=\"134\" height=\"10\" rx=\"4\" fill=\"#cbb894\"/><text x=\"123\" y=\"190\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">전기난로</text><line x1=\"182\" y1=\"100\" x2=\"272\" y2=\"92\" stroke=\"#a08b64\" stroke-width=\"1.6\" stroke-dasharray=\"5 4\"/><rect x=\"272\" y=\"30\" width=\"250\" height=\"140\" rx=\"12\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"2\"/><text x=\"397\" y=\"56\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">제 품 표 시</text><line x1=\"292\" y1=\"68\" x2=\"502\" y2=\"68\" stroke=\"#a08b64\" stroke-width=\"1.4\"/><text x=\"397\" y=\"96\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#4a3a26\">전기난로</text><text x=\"397\" y=\"132\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"21\" font-weight=\"800\" fill=\"#4a3a26\"><tspan fill=\"#7d5ba6\">220 V</tspan> - <tspan fill=\"#8a5f24\">1300 W</tspan></text><text x=\"397\" y=\"158\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">KC 인증 · 정격 표시</text></svg>",
+   stem:"그림은 어느 전기난로에 붙어 있는 제품 라벨을 나타낸 것이다. 이에 대한 설명으로 옳은 것은?",
+   ch:[{t:"이 전기난로는 1시간 동안 1300 J의 전기 에너지를 사용한다.",ok:0},{t:"이 전기난로는 켜져 있는 동안 1초마다 1300 J의 전기 에너지를 사용한다.",ok:1},{t:"1300 W는 이 전기난로에 걸어 주어야 하는 전압의 크기를 나타낸다.",ok:0},{t:"1300 W는 13 kW와 같다.",ok:0},{t:"소비 전력이 1300 W나 되므로 이 전기난로는 성능이 좋은 기구이다.",ok:0}],
+   why:"소비 전력은 전기 기구가 <b>1초 동안</b> 사용하는 전기 에너지의 양이고, 단위는 W(와트)다. 1300 W는 켜져 있는 동안 <b>1초마다 1300 J씩</b> 전기 에너지를 사용한다는 뜻이므로 ②가 옳다.<br>① 소비 전력의 기준 시간은 1시간이 아니라 <b>1초</b>다.<br>③ 전압은 라벨의 <b>220 V</b>다. W가 붙은 값이 소비 전력이고, V가 붙은 값이 전압이다.<br>④ 1 kW = <b>1000 W</b>이므로 1300 W는 13 kW가 아니라 <b>1.3 kW</b>다.<br>⑤ 소비 전력은 전기를 먹는 '속도'일 뿐, 좋고 나쁨·성능의 기준이 아니다. 데우는 기구는 용도상 원래 소비 전력이 크다."},
+
+  {id:"q2",
+   difficulty:"중",
+   intent:"교과서 248쪽 탐구 표를 읽고 W의 의미(1초당 사용하는 J)·같은 시간 기준 비교·에너지 전환(주된 용도 기준)을 해석하는지 평가한다. ㄷ은 교사 노트의 실제 오개념('세탁기에서도 열이 나는데요?')을 그대로 문장화한 것으로, 부수적으로 발생하는 열(손실)과 주된 전환 에너지를 구분해야 한다.",
+   svg:"<svg viewBox=\"0 0 560 240\" role=\"img\" aria-label=\"네 가지 전기 기구의 주로 전환되는 에너지와 소비 전력을 정리한 표. 세탁기는 운동 에너지 500와트, 진공청소기는 운동 에너지 700와트, 텔레비전은 빛에너지 35와트, 전기난로는 열에너지 990와트이다.\"><rect x=\"40\" y=\"26\" width=\"480\" height=\"204\" rx=\"10\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"2\"/><rect x=\"40\" y=\"26\" width=\"480\" height=\"38\" rx=\"10\" fill=\"#f2e8d2\"/><rect x=\"40\" y=\"46\" width=\"480\" height=\"18\" fill=\"#f2e8d2\"/><line x1=\"40\" y1=\"64\" x2=\"520\" y2=\"64\" stroke=\"#a08b64\" stroke-width=\"1.6\"/><line x1=\"210\" y1=\"26\" x2=\"210\" y2=\"230\" stroke=\"#a08b64\" stroke-width=\"1.4\"/><line x1=\"396\" y1=\"26\" x2=\"396\" y2=\"230\" stroke=\"#a08b64\" stroke-width=\"1.4\"/><line x1=\"40\" y1=\"105\" x2=\"520\" y2=\"105\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"40\" y1=\"146\" x2=\"520\" y2=\"146\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"40\" y1=\"187\" x2=\"520\" y2=\"187\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><text x=\"125\" y=\"50\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#6b573f\">전기 기구</text><text x=\"303\" y=\"50\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#6b573f\">주로 전환되는 에너지</text><text x=\"458\" y=\"50\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#6b573f\">소비 전력(W)</text><text x=\"125\" y=\"91\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">세탁기</text><text x=\"303\" y=\"91\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">운동 에너지</text><text x=\"458\" y=\"91\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">500</text><text x=\"125\" y=\"132\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">진공청소기</text><text x=\"303\" y=\"132\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">운동 에너지</text><text x=\"458\" y=\"132\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">700</text><text x=\"125\" y=\"173\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">텔레비전</text><text x=\"303\" y=\"173\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">빛에너지</text><text x=\"458\" y=\"173\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">35</text><text x=\"125\" y=\"214\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">전기난로</text><text x=\"303\" y=\"214\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">열에너지</text><text x=\"458\" y=\"214\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">990</text></svg>",
+   stem:"표는 여러 전기 기구에서 주로 전환되는 에너지와 소비 전력을 조사한 것이다. 이에 대한 설명으로 옳은 것만을 &lt;보기&gt;에서 있는 대로 고른 것은?",
+   boxes:["진공청소기는 1초 동안 700 J의 전기 에너지를 사용한다.", "같은 시간 동안 사용하면 전기난로는 세탁기보다 전기 에너지를 많이 사용한다.", "세탁기를 사용할 때 열도 발생하므로, 세탁기는 전기 에너지를 주로 열에너지로 전환하여 사용한다."],
+   boxVerdicts:[true, true, false],
+   ch:[{t:"ㄱ",ok:0},{t:"ㄷ",ok:0},{t:"ㄱ, ㄴ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+   why:"<b>ㄱ. 옳다.</b> 소비 전력 700 W는 <b>1초 동안 700 J</b>의 전기 에너지를 사용한다는 뜻이다.<br><b>ㄴ. 옳다.</b> 같은 시간 동안이라면 <b>소비 전력이 큰 기구</b>가 전기 에너지를 많이 사용한다. 전기난로 990 W &gt; 세탁기 500 W.<br><b>ㄷ. 옳지 않다.</b> 세탁기에서 나는 열은 주된 용도가 아니라 <b>손실</b>이다. 주로 전환되는 에너지는 <b>사용 목적에 맞는 주된 에너지</b>로 판단하므로, 세탁기는 전기 에너지를 주로 <b>운동 에너지</b>로 전환하여 사용한다.<br>따라서 정답은 <b>ㄱ, ㄴ</b>."},
+
+  {id:"q3",
+   difficulty:"중",
+   intent:"교과서 247쪽 해 보기(전기 주전자 비교)를 자료로 옮겨, 성능이 같을 때 소비 전력이 작은 쪽이 효율적임을 판단하는지 평가한다. 오답은 '소비 전력이 크면 세다·좋다'는 오해 ①, 손실 개념 부정, 자료('동시에 끓기 시작') 왜곡, '절약하려면 큰 것을 고른다'는 오해 ①의 역적용에서 파생했다.",
+   svg:"<svg viewBox=\"0 0 560 250\" role=\"img\" aria-label=\"전기 주전자 (가)와 (나)의 비교 실험. 두 주전자에 25도인 물 1리터씩을 넣고 동시에 전원을 켰더니 두 주전자의 물이 동시에 끓기 시작했다. (가)의 소비 전력은 1500와트, (나)는 1600와트이다.\"><rect x=\"30\" y=\"36\" width=\"230\" height=\"152\" rx=\"14\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"2\"/><rect x=\"300\" y=\"36\" width=\"230\" height=\"152\" rx=\"14\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"2\"/><text x=\"145\" y=\"62\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#8a5f24\">(가)</text><text x=\"415\" y=\"62\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#8a5f24\">(나)</text><path d=\"M132 82 q5 -12 10 0\" fill=\"none\" stroke=\"#a08b64\" stroke-width=\"1.8\"/><path d=\"M148 82 q5 -12 10 0\" fill=\"none\" stroke=\"#a08b64\" stroke-width=\"1.8\"/><path d=\"M402 82 q5 -12 10 0\" fill=\"none\" stroke=\"#a08b64\" stroke-width=\"1.8\"/><path d=\"M418 82 q5 -12 10 0\" fill=\"none\" stroke=\"#a08b64\" stroke-width=\"1.8\"/><rect x=\"112\" y=\"88\" width=\"66\" height=\"56\" rx=\"10\" fill=\"#f2e8d2\" stroke=\"#a08b64\" stroke-width=\"2\"/><path d=\"M178 100 q22 8 0 28\" fill=\"none\" stroke=\"#a08b64\" stroke-width=\"2\"/><rect x=\"106\" y=\"144\" width=\"78\" height=\"10\" rx=\"4\" fill=\"#cbb894\"/><rect x=\"382\" y=\"88\" width=\"66\" height=\"56\" rx=\"10\" fill=\"#f2e8d2\" stroke=\"#a08b64\" stroke-width=\"2\"/><path d=\"M448 100 q22 8 0 28\" fill=\"none\" stroke=\"#a08b64\" stroke-width=\"2\"/><rect x=\"376\" y=\"144\" width=\"78\" height=\"10\" rx=\"4\" fill=\"#cbb894\"/><text x=\"145\" y=\"178\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#8a5f24\">소비 전력 1500 W</text><text x=\"415\" y=\"178\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#8a5f24\">소비 전력 1600 W</text><text x=\"280\" y=\"216\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">25 ℃ 물 1 L씩 넣고 동시에 전원을 켬 → 두 주전자의 물이 동시에 끓기 시작</text><text x=\"280\" y=\"238\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">※ 두 주전자에 넣은 물의 양과 처음 온도는 같다.</text></svg>",
+   stem:"그림은 전기 주전자 (가), (나)에 25 ℃인 물 1 L씩을 넣고 동시에 전원을 켠 실험을 나타낸 것이다. 두 주전자의 물은 <b>동시에 끓기 시작</b>하였다. 이에 대한 설명으로 옳은 것은?",
+   ch:[{t:"같은 시간 동안 사용하면 (가)가 (나)보다 전기 에너지를 적게 사용한다.",ok:1},{t:"(나)는 소비 전력이 더 크므로 (가)보다 물을 더 빨리 끓인다.",ok:0},{t:"(나)가 (가)보다 전기 에너지를 효율적으로 사용하는 제품이다.",ok:0},{t:"(나)가 1초마다 (가)보다 100 J씩 더 사용하는 전기 에너지는 모두 물을 데우는 데 쓰인다.",ok:0},{t:"전기 에너지를 절약하려면 소비 전력이 큰 (나)를 선택하는 것이 좋다.",ok:0}],
+   why:"물이 <b>동시에</b> 끓기 시작했으므로 두 주전자의 성능은 같다.<br>① <b>옳다 → 정답.</b> 같은 시간이라면 소비 전력이 작은 (가) 1500 W가 (나) 1600 W보다 전기 에너지를 <b>적게</b> 사용한다.<br>② 자료에서 두 주전자의 물은 <b>동시에</b> 끓기 시작했다. 소비 전력이 크다고 성능이 더 센 것이 아니다.<br>③ 성능이 같은데 (나)는 1초마다 1600 − 1500 = <b>100 J씩 더</b> 사용한다. 그만큼 <b>손실</b>이 많다는 뜻이므로 효율적인 쪽은 <b>(가)</b>다.<br>④ 그 100 J은 물 데우기가 아닌 다른 에너지로 <b>새어 나간(손실된)</b> 몫이다. 모두 물을 데우는 데 쓰였다면 (나)의 물이 먼저 끓었어야 한다.<br>⑤ 반대다. 성능이 같다면 <b>소비 전력이 작은</b> 기구를 골라야 전기 에너지를 절약할 수 있다."},
+
+  {id:"q4",
+   difficulty:"상",
+   intent:"시간-전기 에너지 그래프에서 직선의 기울기로 소비 전력을 읽어 내고(㉮ 60 W, ㉯ 30 W), 조건을 바꿔(㉮ 5초 대 ㉯ 20초) 소비 전력×시간으로 사용량을 비교하는지 평가한다. ㄴ은 '소비 전력이 크면 무조건 전기 에너지를 많이 쓴다'는 오해 ②를 정면 배치해 걸러 내며, ㄷ이 그 반례 계산이 된다.",
+   svg:"<svg viewBox=\"0 0 560 300\" role=\"img\" aria-label=\"전구 ㉮와 ㉯를 각각 켰을 때 시간에 따라 사용한 전기 에너지를 나타낸 그래프. 가로축은 시간으로 0초부터 10초까지, 세로축은 전기 에너지로 0줄부터 600줄까지이다. 두 직선 모두 원점에서 시작하며, 10초일 때 ㉮는 600줄, ㉯는 300줄의 전기 에너지를 사용했다.\"><text x=\"300\" y=\"22\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#4a3a26\">전구 ㉮, ㉯가 사용한 전기 에너지</text><line x1=\"90\" y1=\"40\" x2=\"510\" y2=\"40\" stroke=\"#cbb894\" stroke-width=\"1.4\" opacity=\"0.55\"/><line x1=\"90\" y1=\"75\" x2=\"510\" y2=\"75\" stroke=\"#cbb894\" stroke-width=\"1.4\" opacity=\"0.55\"/><line x1=\"90\" y1=\"110\" x2=\"510\" y2=\"110\" stroke=\"#cbb894\" stroke-width=\"1.4\" opacity=\"0.55\"/><line x1=\"90\" y1=\"145\" x2=\"510\" y2=\"145\" stroke=\"#cbb894\" stroke-width=\"1.4\" opacity=\"0.55\"/><line x1=\"90\" y1=\"180\" x2=\"510\" y2=\"180\" stroke=\"#cbb894\" stroke-width=\"1.4\" opacity=\"0.55\"/><line x1=\"90\" y1=\"215\" x2=\"510\" y2=\"215\" stroke=\"#cbb894\" stroke-width=\"1.4\" opacity=\"0.55\"/><line x1=\"490\" y1=\"250\" x2=\"490\" y2=\"40\" stroke=\"#a08b64\" stroke-width=\"1.4\" stroke-dasharray=\"4 4\"/><line x1=\"90\" y1=\"250\" x2=\"512\" y2=\"250\" stroke=\"#a08b64\" stroke-width=\"2\"/><line x1=\"90\" y1=\"38\" x2=\"90\" y2=\"250\" stroke=\"#a08b64\" stroke-width=\"2\"/><polygon points=\"518,250 508,245 508,255\" fill=\"#a08b64\"/><polygon points=\"90,32 85,42 95,42\" fill=\"#a08b64\"/><line x1=\"90\" y1=\"250\" x2=\"490\" y2=\"40\" stroke=\"#f0a63e\" stroke-width=\"3\"/><circle cx=\"490\" cy=\"40\" r=\"4.5\" fill=\"#f0a63e\"/><text x=\"500\" y=\"46\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"17\" font-weight=\"800\" fill=\"#4a3a26\">㉮</text><line x1=\"90\" y1=\"250\" x2=\"490\" y2=\"145\" stroke=\"#7d5ba6\" stroke-width=\"3\"/><circle cx=\"490\" cy=\"145\" r=\"4.5\" fill=\"#7d5ba6\"/><text x=\"500\" y=\"151\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"17\" font-weight=\"800\" fill=\"#4a3a26\">㉯</text><text x=\"82\" y=\"45\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">600</text><text x=\"82\" y=\"80\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">500</text><text x=\"82\" y=\"115\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">400</text><text x=\"82\" y=\"150\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">300</text><text x=\"82\" y=\"185\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">200</text><text x=\"82\" y=\"220\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">100</text><text x=\"82\" y=\"255\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">0</text><line x1=\"170\" y1=\"250\" x2=\"170\" y2=\"256\" stroke=\"#a08b64\" stroke-width=\"1.4\"/><line x1=\"250\" y1=\"250\" x2=\"250\" y2=\"256\" stroke=\"#a08b64\" stroke-width=\"1.4\"/><line x1=\"330\" y1=\"250\" x2=\"330\" y2=\"256\" stroke=\"#a08b64\" stroke-width=\"1.4\"/><line x1=\"410\" y1=\"250\" x2=\"410\" y2=\"256\" stroke=\"#a08b64\" stroke-width=\"1.4\"/><line x1=\"490\" y1=\"250\" x2=\"490\" y2=\"256\" stroke=\"#a08b64\" stroke-width=\"1.4\"/><text x=\"170\" y=\"272\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">2</text><text x=\"250\" y=\"272\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">4</text><text x=\"330\" y=\"272\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">6</text><text x=\"410\" y=\"272\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">8</text><text x=\"490\" y=\"272\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">10</text><text x=\"300\" y=\"292\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">시간(초)</text><text x=\"26\" y=\"145\" transform=\"rotate(-90 26 145)\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">전기 에너지(J)</text></svg>",
+   stem:"그래프는 전구 ㉮와 ㉯를 각각 켰을 때 시간에 따라 사용한 전기 에너지의 양을 나타낸 것이다. 이에 대한 설명으로 옳은 것만을 &lt;보기&gt;에서 있는 대로 고른 것은?",
+   boxes:["㉮의 소비 전력은 60 W이다.", "두 전구의 사용 시간이 서로 달라도, 소비 전력이 큰 ㉮가 사용한 전기 에너지의 양이 항상 더 많다.", "㉮를 5초, ㉯를 20초 동안 켜면 사용한 전기 에너지의 양은 ㉯가 ㉮의 2배이다."],
+   boxVerdicts:[true, false, true],
+   ch:[{t:"ㄱ",ok:0},{t:"ㄷ",ok:0},{t:"ㄱ, ㄴ",ok:0},{t:"ㄱ, ㄷ",ok:1},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+   why:"그래프에서 직선의 기울기, 곧 <b>1초당 사용한 전기 에너지</b>가 소비 전력이다.<br><b>ㄱ. 옳다.</b> ㉮는 10초 동안 600 J을 사용했으므로 소비 전력은 600 ÷ 10 = <b>60 W</b>다. (㉯는 300 ÷ 10 = 30 W)<br><b>ㄴ. 옳지 않다.</b> 사용한 전기 에너지의 양은 <b>소비 전력 × 시간</b>이므로 사용 시간이 서로 다르면 결과가 뒤집힐 수 있다. 소비 전력은 '속도'일 뿐, 크다고 무조건 많이 쓰는 것이 아니다 — ㄷ이 바로 그 반례다.<br><b>ㄷ. 옳다.</b> ㉮: 60 W × 5초 = <b>300 J</b>, ㉯: 30 W × 20초 = <b>600 J</b>. ㉯가 ㉮의 정확히 <b>2배</b>를 사용한다.<br>따라서 정답은 <b>ㄱ, ㄷ</b>."},
+
+  {id:"q5",
+   difficulty:"상",
+   intent:"사용 기록 표에서 1 kW=1000 W로 환산한 뒤 소비 전력×시간을 각각 계산해(1000×6분=6000, 50×120분=6000으로 같음) 비교하는지 평가한다. 오답은 소비 전력만 보고 판단하는 오해 ②, 사용 시간만 보고 판단하는 같은 계열의 오류, 기준 시간(1초) 혼동, 주된 전환 에너지 오분류(선풍기=열)에서 파생했다.",
+   svg:"<svg viewBox=\"0 0 560 210\" role=\"img\" aria-label=\"어느 날 두 전기 기구를 사용한 기록 표. 전기난로는 소비 전력 1킬로와트로 6분 동안 사용했고, 선풍기는 소비 전력 50와트로 120분 동안 사용했다. 1킬로와트는 1000와트와 같다.\"><rect x=\"60\" y=\"30\" width=\"440\" height=\"142\" rx=\"10\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"2\"/><rect x=\"60\" y=\"30\" width=\"440\" height=\"38\" rx=\"10\" fill=\"#f2e8d2\"/><rect x=\"60\" y=\"50\" width=\"440\" height=\"18\" fill=\"#f2e8d2\"/><line x1=\"60\" y1=\"68\" x2=\"500\" y2=\"68\" stroke=\"#a08b64\" stroke-width=\"1.6\"/><line x1=\"220\" y1=\"30\" x2=\"220\" y2=\"172\" stroke=\"#a08b64\" stroke-width=\"1.4\"/><line x1=\"360\" y1=\"30\" x2=\"360\" y2=\"172\" stroke=\"#a08b64\" stroke-width=\"1.4\"/><line x1=\"60\" y1=\"120\" x2=\"500\" y2=\"120\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><text x=\"140\" y=\"54\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#6b573f\">전기 기구</text><text x=\"290\" y=\"54\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#6b573f\">소비 전력</text><text x=\"430\" y=\"54\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#6b573f\">사용 시간</text><text x=\"140\" y=\"99\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">전기난로</text><text x=\"290\" y=\"99\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#8a5f24\">1 kW</text><text x=\"430\" y=\"99\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#4a3a26\">6분</text><text x=\"140\" y=\"151\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">선풍기</text><text x=\"290\" y=\"151\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#8a5f24\">50 W</text><text x=\"430\" y=\"151\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#4a3a26\">120분</text><text x=\"280\" y=\"196\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">※ 1 kW = 1000 W이다.</text></svg>",
+   stem:"표는 어느 날 두 전기 기구를 사용한 기록을 나타낸 것이다. 이에 대한 설명으로 옳은 것은?",
+   ch:[{t:"소비 전력이 큰 전기난로가 이날 전기 에너지를 더 많이 사용했다.",ok:0},{t:"사용 시간이 긴 선풍기가 이날 전기 에너지를 더 많이 사용했다.",ok:0},{t:"전기난로는 1시간 동안 1000 J의 전기 에너지를 사용한다.",ok:0},{t:"두 기구 모두 전기 에너지를 주로 열에너지로 전환하여 사용한다.",ok:0},{t:"이날 두 기구가 사용한 전기 에너지의 양은 서로 같다.",ok:1}],
+   why:"사용한 전기 에너지의 양은 <b>소비 전력 × 사용 시간</b>으로 비교한다. 1 kW = 1000 W이므로<br>· 전기난로: 1000 × 6분 = <b>6000</b> · 선풍기: 50 × 120분 = <b>6000</b> → 곱한 값이 <b>같다</b>. ⑤가 정답.<br>① 소비 전력(속도)만 보면 안 된다. 전기난로는 빨리 먹었지만 <b>짧게</b> 썼다.<br>② 사용 시간만 보아도 안 된다. 선풍기는 오래 썼지만 <b>천천히</b> 먹었다. 곱한 값은 서로 같다.<br>③ 소비 전력의 기준 시간은 <b>1초</b>다. 1 kW인 전기난로는 <b>1초마다 1000 J</b>씩 사용한다.<br>④ 선풍기는 바람을 일으키는 기구로, 전기 에너지를 주로 <b>운동 에너지</b>로 전환하여 사용한다. (모터에서 나는 열은 손실이다.)"}
+];
+
+/* ── 엔진 ── */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TAU=Math.PI*2;
+const TABS=['meet','read','calc','apply','check','beyond'];
+const CS=getComputedStyle(document.documentElement);
+const CV=k=>CS.getPropertyValue('--'+k).trim();
+const C={accent:CV('accent'),accent2:CV('accent2'),c1:CV('c1'),c2:CV('c2'),c3:CV('c3'),c4:CV('c4'),c5:CV('c5'),
+  line:CV('line'),linesoft:CV('line-soft'),ink:CV('ink'),inkdim:CV('ink-dim'),inkmute:CV('ink-mute'),
+  ok:CV('ok'),danger:CV('danger'),gold:CV('gold')};
+
+function setBg(tab){
+  const L=$('#bgLayer'); if(!L)return;
+  const img=BG_IMAGES[tab]||(tab==='cover'?BG_IMAGES.meet:'');
+  L.style.opacity='0';
+  setTimeout(()=>{L.style.backgroundImage=img?`url("${img}")`:(BG_FALLBACK[tab]||BG_FALLBACK.meet);L.style.opacity='1';},150);
+}
+function fit(cv){
+  const dpr=Math.min(devicePixelRatio||1,2.5);
+  const w=cv.clientWidth||cv.parentElement.clientWidth||320;
+  const h=parseInt(cv.getAttribute('height'))||300;
+  cv.style.height=h+'px';cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+  const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w,h};
+}
+const A={ctx:null,
+  ensure(){if(!this.ctx){try{this.ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+    if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume();return this.ctx;},
+  blip(f=600,d=.08,type='sine',vol=.15){const c=this.ensure();if(!c)return;
+    const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=f;o.connect(g);g.connect(c.destination);
+    const t=c.currentTime;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.03);},
+  correct(){this.blip(660,.11);setTimeout(()=>this.blip(880,.13),85);setTimeout(()=>this.blip(1170,.18),190);},
+  wrong(){this.blip(200,.2,'sawtooth',.1);setTimeout(()=>this.blip(150,.24,'sawtooth',.08),130);},
+  pop(){this.blip(440,.05,'triangle',.13);},
+  win(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>this.blip(f,.22,'sine',.15),i*110));}};
+['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>A.ensure(),{once:true}));
+
+let S=load()||{tab:'meet',visited:{},match:{},cloze:{},mini:{},essay:'',best:0,medals:{}};
+S.visited=S.visited||{};S.match=S.match||{};S.cloze=S.cloze||{};S.mini=S.mini||{};
+S.medals=S.medals||{};S.essay=S.essay||'';
+let CLOZE_TOTAL=0;
+function save(){try{localStorage.setItem(SAVE,JSON.stringify(S));}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(SAVE));}catch(e){return null;}}
+
+function progChecks(){
+  return [
+    {label:'1단계 · 에너지 전환 짝짓기 8개', ok:Object.keys(S.match||{}).length>=MATCH.length},
+    {label:'2단계 · 표 읽기 확인 퀴즈',      ok:!!S.mini.read},
+    {label:'3단계 · 빈칸 모두 채우기',       ok:CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL},
+    {label:'3단계 · 따져 보기 확인 퀴즈',    ok:!!S.mini.calc},
+    {label:'4단계 · 블록 질문 최종 답 쓰기', ok:(S.essay||'').trim().length>=15},
+    {label:'5단계 · 확인 문제 완주',         ok:S.best>0}
+  ];
+}
+function updateProgress(){
+  const c=progChecks(), pct=Math.round(c.filter(x=>x.ok).length/c.length*100);
+  $('#progBar').style.width=pct+'%';$('#progPct').textContent=pct+'%';
+  const _pn=$('#progNeedle'); if(_pn)_pn.style.transform='rotate('+(pct*1.8-90)+'deg)';
+  const ul=$('#progItems');
+  if(ul)ul.innerHTML=c.map(x=>`<li class="${x.ok?'on':''}"><span class="mk">${x.ok?'✔':'○'}</span>${x.label}</li>`).join('');
+  const done={meet:Object.keys(S.match||{}).length>=MATCH.length,
+    read:!!S.mini.read,
+    calc:!!S.mini.calc&&CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL,
+    apply:(S.essay||'').trim().length>=15, check:S.best>0, beyond:!!S.visited.beyond};
+  $$('#tabNav button').forEach(b=>b.classList.toggle('done',!!done[b.dataset.tab]));
+}
+let toastT;
+function toast(msg,kind=''){const el=$('#toast');el.innerHTML=msg;el.className='show '+kind;
+  clearTimeout(toastT);toastT=setTimeout(()=>el.className='',2300);}
+
+function showTab(id,noScroll){
+  if(!TABS.includes(id))return;
+  $$('.panel').forEach(p=>p.classList.remove('show'));
+  $('#panel-'+id).classList.add('show');
+  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  setBg(id);S.tab=id;S.visited[id]=true;save();updateProgress();
+  if(!noScroll)scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
+}
+$('#tabNav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.tab);});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){A.ensure();showTab(b.dataset.go);}});
+
+function refreshCover(){
+  const any=progChecks().some(x=>x.ok);
+  $('#coverSaved').style.display=any?'inline-flex':'none';
+  $('#coverGo').textContent=any?`이어서 하기 (${$('#progPct').textContent}) 🌀`:'자료 만나러 가기 🌀';
+}
+$('#coverGo').addEventListener('click',()=>{$('#cover').classList.add('hide');
+  document.body.classList.remove('cover-on');A.ensure();A.pop();showTab(S.tab||'meet',true);});
+$('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classList.remove('hide');
+  document.body.classList.add('cover-on');setBg('cover');});
+
+(function(){const KEY='teacherMode';
+  document.body.classList.toggle('teacher',localStorage.getItem(KEY)==='1');
+  $('#tmodeBtn').addEventListener('click',()=>{
+    const on=!document.body.classList.contains('teacher');
+    document.body.classList.toggle('teacher',on);localStorage.setItem(KEY,on?'1':'0');
+    toast(on?'교사 모드 ON — 교실 연결 노트가 보입니다 🧑‍🏫':'교사 모드 OFF — 학생 화면입니다 🎒');});})();
+
+(function(){const wrap=$('#progWrap'),list=$('#progList');
+  wrap.addEventListener('click',()=>list.classList.toggle('show'));
+  document.addEventListener('click',e=>{if(!list.contains(e.target)&&!wrap.contains(e.target))list.classList.remove('show');});})();
+
+/* 그림 슬롯 */
+(function(){
+  $$('[data-fig]').forEach(el=>{
+    const key=el.dataset.fig,src=FIGS[key]||'',alt=el.dataset.alt||'',cap=el.dataset.cap||'';
+    const slot=()=>{el.classList.add('slot');
+      el.innerHTML=`<div class="fe">🖼️</div><div class="fn">${FIGS[key]||'img/'+key+'.jpg'}</div><div class="fd">${alt}</div>`;};
+    if(!src){slot();return;}
+    const im=new Image();
+    im.onload=()=>{el.classList.remove('slot');
+      el.innerHTML=`<img src="${src}" alt="${alt.replace(/"/g,'&quot;')}" loading="lazy">`+(cap?`<figcaption>${cap}</figcaption>`:'');};
+    im.onerror=slot;im.src=src;
+  });
+})();
+
+/* ═══════ 🧩 1단계 · 에너지 전환 짝짓기 ═══════ */
+(function(){
+  const wrap=$('#matchList');if(!wrap)return;
+  const msg=$('#matchMsg');
+  MATCH.forEach(m=>{
+    const row=document.createElement('div');row.className='checkline';row.style.cursor='default';
+    row.innerHTML=`<span style="flex:none;font-size:24px;line-height:1.2">${m.e}</span>`
+      +`<span style="flex:1;min-width:96px;padding-top:5px"><b class="k">${m.n}</b></span>`
+      +`<span class="btn-row" style="margin:0;flex:none;align-items:center" data-mid="${m.id}">`
+      +Object.keys(MATCH_CAT).map(k=>`<button class="btn ghost sm" data-cat="${k}">${MATCH_CAT[k].e} ${MATCH_CAT[k].t}</button>`).join('')
+      +`</span>`;
+    wrap.appendChild(row);
+  });
+  function paintRow(id){
+    const box=wrap.querySelector(`[data-mid="${id}"]`);if(!box)return;
+    const m=MATCH.find(x=>x.id===id);
+    $$('button',box).forEach(b=>{
+      const hit=b.dataset.cat===m.a;
+      b.disabled=true;b.style.cursor='default';
+      if(hit){b.style.background=MATCH_CAT[m.a].col;b.style.color='#f6f1e6';
+        b.style.borderColor='transparent';b.style.fontWeight='800';}
+      else{b.style.opacity='.35';}
+    });
+    box.closest('.checkline').classList.add('on');
+  }
+  function refresh(){
+    const n=Object.keys(S.match||{}).length;
+    if(!msg)return;
+    msg.className='verdict'+(n>=MATCH.length?' hit':'');
+    msg.innerHTML = n===0
+      ? '기구마다 <b>주된 용도</b>를 떠올리고 버튼을 눌러 보세요.'
+      : (n<MATCH.length
+        ? `<b>${n} / ${MATCH.length}</b> 완료. 헷갈리면 "이 기구를 <b>왜</b> 쓰지?"를 먼저 물어 보세요.`
+        : `✅ 8개 모두 완료! 세탁기·청소기·선풍기는 <b>돌리려고</b>, 난로·주전자·밥솥은 <b>데우려고</b>, 전등·모니터는 <b>비추려고</b> 씁니다.<br>한 기구 안에서도 전기 에너지는 여러 에너지로 바뀌지만, 분류할 때는 <b>사용 목적에 맞는 주된 에너지</b>로 봅니다.`);
+  }
+  wrap.addEventListener('click',e=>{
+    const b=e.target.closest('button[data-cat]');if(!b)return;
+    const id=b.closest('[data-mid]').dataset.mid;
+    if(S.match[id])return;
+    const m=MATCH.find(x=>x.id===id);
+    if(b.dataset.cat===m.a){
+      S.match[id]=1;save();paintRow(id);refresh();updateProgress();
+      if(Object.keys(S.match).length>=MATCH.length){A.correct();toast('에너지 전환 짝짓기 완료! 🌀🔥💡','good');}
+      else A.pop();
+    }else{
+      A.wrong();toast(`<b>${m.n}</b>의 주된 용도를 다시 생각해 보세요`,'bad');
+    }
+  });
+  Object.keys(S.match||{}).forEach(paintRow);refresh();
+})();
+
+/* 빈칸 */
+(function(){
+  const all=$$('.cloze');CLOZE_TOTAL=all.length;
+  all.forEach((cz,i)=>{
+    const reveal=silent=>{
+      if(cz.classList.contains('revealed'))return;
+      cz.textContent=cz.dataset.ans;
+      const col=CV(cz.dataset.c||'accent');cz.style.color=col;cz.style.borderColor=col;
+      cz.classList.add('revealed');if(!silent)A.blip(720,.08);
+      S.cloze[i]=1;save();
+      const set=cz.closest('.cloze-set');
+      if(set&&$$('.cloze',set).every(x=>x.classList.contains('revealed'))){set.classList.add('complete');if(!silent)A.pop();}
+      updateProgress();};
+    cz.addEventListener('click',()=>reveal(false));
+    if(S.cloze[i])reveal(true);
+  });
+})();
+
+/* 미니 퀴즈 */
+(function(){
+  function build(host,key){
+    const set=QUIZ_SETS[key];if(!set)return;
+    let done=0;const total=set.qs.length;
+    host.innerHTML=`<div class="mq-head"><span class="mq-badge">✅ 개념 확인</span>
+      <span style="font-weight:700">${set.title}</span><span class="mq-prog" data-prog>0/${total}</span></div>`;
+    set.qs.forEach((q,qi)=>{
+      const qEl=document.createElement('div');qEl.className='mq-q';
+      qEl.innerHTML=`<div class="mq-text"><span class="qn">Q${qi+1}.</span>${q.q}</div><div class="mq-choices"></div><div class="mq-fb"></div>`;
+      const cw=$('.mq-choices',qEl),fb=$('.mq-fb',qEl);
+      let answered=false,solved=false;
+      q.ch.map((c,i)=>i).sort(()=>Math.random()-.5).forEach((idx,n)=>{
+        const c=q.ch[idx];
+        const b=document.createElement('button');b.className='mq-opt';b.dataset.ok=c.ok?'1':'0';
+        b.innerHTML=`<span class="k">${'①②③④⑤'[n]}</span>${c.t}`;
+        b.addEventListener('click',()=>{
+          if(answered||solved)return;answered=true;
+          if(c.ok){solved=true;b.classList.add('correct');
+            $$('.mq-opt',cw).forEach(x=>x.classList.add('locked'));
+            A.correct();fb.className='mq-fb show ok';fb.innerHTML=`<b>정답!</b> ${q.why}`;done++;upd();}
+          else{b.classList.add('wrong');A.wrong();
+            fb.className='mq-fb show no';fb.innerHTML=`<b>다시 생각해 볼까요.</b> ${q.why}`;
+            setTimeout(()=>{answered=false;b.classList.remove('wrong');},1600);}});
+        cw.appendChild(b);});
+      host.appendChild(qEl);});
+    const d=document.createElement('div');d.className='mq-done';d.innerHTML='🏅 개념 확인 완료!';host.appendChild(d);
+    function upd(){const p=host.querySelector('[data-prog]');if(p)p.textContent=done+'/'+total;
+      if(done>=total){host.classList.add('alldone');
+        if(!S.mini[key]){S.mini[key]=1;save();updateProgress();toast('개념 확인 완료! ✅','good');}}}
+  }
+  $$('.miniquiz').forEach(h=>build(h,h.dataset.quiz));
+})();
+
+/* 서술형 */
+(function(){
+  const ta=$('#essay'),mark=$('#essaySaved');let t;
+  ta.value=S.essay||'';
+  ta.addEventListener('input',()=>{S.essay=ta.value;save();updateProgress();
+    mark.classList.add('on');clearTimeout(t);t=setTimeout(()=>mark.classList.remove('on'),1400);});
+  $('#ansBtn').addEventListener('click',()=>{
+    const box=$('#modelAns'),open=box.classList.toggle('show');
+    $('#ansBtn').textContent=open?'모범 답안 접기':'모범 답안 확인하기';
+    if(open){A.pop();if((S.essay||'').trim().length<15)toast('먼저 <b>내 문장으로 써 본 뒤</b>에 보면 훨씬 남아요 ✍️');}});
+})();
+
+/* 확인 문제 */
+(function(){
+  const body=$('#gameBody');let i=0,score=0,lives=3,order=[];
+  function medal(k){if(S.medals[k])return;S.medals[k]=1;save();
+    const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');}
+  function paint(){Object.keys(S.medals).forEach(k=>{const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');});}
+  function hud(){$('#score').textContent=score;
+    $('#qno').textContent=Math.min(i+1,GAME_QS.length)+'/'+GAME_QS.length;
+    $$('#lives .h').forEach((h,n)=>h.classList.toggle('gone',n>=lives));}
+  function start(){i=0;score=0;lives=3;order=GAME_QS.map((_,n)=>n).sort(()=>Math.random()-.5);hud();next();}
+  function next(){
+    if(i>=order.length||lives<=0)return end();
+    hud();const q=GAME_QS[order[i]];
+    const bg=(q.boxes&&q.boxes.length)
+      ? '<div class="bogi" id="bogiBox"><div class="bogi-t">보 기</div><ul>'
+        + q.boxes.map(function(b,n){return '<li data-bi="'+n+'"><span class="bk">'+'\u3131\u3134\u3137\u3139'[n]+'</span><span>'+b+'</span><span class="bv"></span></li>';}).join('')
+        + '</ul></div>'
+      : '';
+    body.innerHTML='<div class="mq-q" style="margin-top:0">'
+      + '<div class="mq-meta"><span class="mq-lv" data-lv="'+(q.difficulty||'중')+'">난이도 '+(q.difficulty||'중')+'</span>'
+      + (q.boxes&&q.boxes.length?'<span class="mq-lv" style="color:var(--accent2)">&lt;보기&gt;형</span>':'')
+      + (q.svg?'<span class="mq-lv" style="color:var(--ink-mute)">자료 해석</span>':'') + '</div>'
+      + (q.svg?'<div class="qfig">'+q.svg+'</div>':'')
+      + '<div class="mq-text" style="font-size:18px"><span class="qn">Q'+(i+1)+'.</span>'+(q.stem||q.q)+'</div>'
+      + bg
+      + '<div class="mq-choices"></div><div class="mq-fb"></div>'
+      + '<div class="mq-next"><button class="btn primary sm" id="qNext">다음 문항 →</button></div></div>';
+    const cw=$('.mq-choices',body),fb=$('.mq-fb',body);let locked=false;
+    q.ch.map((c,n)=>n).sort(()=>Math.random()-.5).forEach((idx,n)=>{
+      const c=q.ch[idx];
+      const b=document.createElement('button');b.className='mq-opt';b.dataset.ok=c.ok?'1':'0';
+      b.innerHTML=`<span class="k">${'①②③④⑤'[n]}</span>${c.t}`;
+      b.addEventListener('click',()=>{
+        if(locked)return;locked=true;
+        $$('.mq-opt',cw).forEach(x=>x.classList.add('locked'));
+        if(c.ok){b.classList.add('correct');A.correct();score+=20;medal('first');
+          if(i+1>=Math.ceil(GAME_QS.length/2))medal('half');
+          fb.className='mq-fb show ok';fb.innerHTML=`<b>정답!</b> ${q.why}`;}
+        else{b.classList.add('wrong');A.wrong();lives--;
+          $$('.mq-opt',cw).forEach(x=>{if(x.dataset.ok==='1')x.classList.add('correct');});
+          fb.className='mq-fb show no';fb.innerHTML=`<b>아쉬워요.</b> ${q.why}`;}
+        const bx=$('#bogiBox');
+        if(bx&&q.boxVerdicts){$$('li',bx).forEach(function(li,n){
+          const t=!!q.boxVerdicts[n];li.classList.add(t?'t':'f');
+          const v=$('.bv',li);if(v)v.textContent=t?'옳음':'옳지 않음';});bx.classList.add('reveal');}
+        const nx=$('.mq-next',body);if(nx){nx.classList.add('show');
+          const nb=$('#qNext');if(nb){nb.textContent=(i+1>=order.length||lives<=0)?'결과 보기 →':'다음 문항 →';
+            nb.addEventListener('click',function(){A.pop();i++;next();
+              scrollTo({top:document.querySelector('#panel-check').offsetTop-70,behavior:reduceMotion?'auto':'smooth'});});}}
+        hud();});
+      cw.appendChild(b);});}
+  function end(){
+    const perfect=score===GAME_QS.length*20;
+    if(perfect)medal('perfect');
+    if(score>(S.best||0)){S.best=score;save();}
+    updateProgress();perfect?A.win():A.pop();
+    body.innerHTML=`<div style="text-align:center;padding:26px 10px">
+      <div style="font-size:44px">${perfect?'🏆':(lives>0?'🎉':'💪')}</div>
+      <h3 class="card-t" style="margin:10px 0 6px">${perfect?'전부 정답! 완벽해요':(lives>0?'끝까지 풀었어요':'다시 한 번 풀어 볼까요?')}</h3>
+      <p class="lead" style="margin:0 auto 16px">점수 <b class="k">${score}</b> / ${GAME_QS.length*20} · 최고 기록 <b class="k">${S.best||0}</b></p>
+      <button class="btn primary" id="gameAgain">다시 풀기</button></div>`;
+    $('#gameAgain').addEventListener('click',start);}
+  $('#gameStart').addEventListener('click',start);paint();
+})();
+
+/* 별 배경 */
+(function(){
+  const cv=$('#stars'),ctx=cv.getContext('2d');
+  let stars=[],w=0,h=0,t=0;
+  function build(){
+    const dpr=Math.min(devicePixelRatio||1,2);
+    w=innerWidth;h=innerHeight;cv.width=w*dpr;cv.height=h*dpr;cv.style.width=w+'px';cv.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const n=Math.round(Math.min(130,w*h/10500));
+    stars=Array.from({length:n},(_,i)=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+.3,
+      p:Math.random()*Math.PI*2,s:.6+Math.random()*1.1,c:['#ffffff','#4a3a26','#b9873c','#218c84'][i%4]}));}
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    stars.forEach(st=>{ctx.globalAlpha=reduceMotion?.6:(.35+.4*Math.sin(t*st.s+st.p));
+      ctx.fillStyle=st.c;ctx.shadowColor=st.c;ctx.shadowBlur=st.r*3.3;
+      ctx.beginPath();ctx.arc(st.x,st.y,st.r,0,TAU);ctx.fill();});
+    ctx.globalAlpha=1;ctx.shadowBlur=0;
+    if(!reduceMotion){t+=.013;requestAnimationFrame(draw);}}
+  let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{build();if(reduceMotion)draw();},200);});
+  build();draw();
+})();
+
+(function init(){
+  updateProgress();
+  const start=TABS.includes(S.tab)?S.tab:'meet';
+  $$('.panel').forEach(p=>p.classList.remove('show'));
+  $('#panel-'+start).classList.add('show');
+  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===start));
+  S.tab=start;document.body.classList.add('cover-on');refreshCover();setBg('cover');
+})();
+</script>
+</body>
+</html>

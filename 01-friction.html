@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2eade">
+<title>지지직의 정체 · 마찰 전기와 전기력</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --abyss:#f2eade; --deep:#f3ece1; --surface:#f3ede3; --surface2:#f4efe5;
+  --line:#c1ac82; --line-soft:#dccfae;
+  --ink:#2e2315; --ink-dim:#5c4a33; --ink-mute:#96805c;
+  --accent:#a05c2c; --accent2:#a05c2c; --on-accent:#21328c;
+  --c1:#8a5f24;  /* 마찰 전기 */
+  --c2:#7d5ba6;  /* 전기력 */
+  --c3:#3a7a3f;  /* 전자 */
+  --c4:#b23a30;  /* (+)전하 · 대전 */
+  --c5:#2e5f8f;  /* (-)전하 */
+  --gold:#8a5f24; --ok:#2c7a44; --danger:#b3362e;
+  --disp:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:var(--disp); --mono:"JetBrains Mono",ui-monospace,monospace; --jua:"Jua",var(--disp);
+  --header-h:60px; --r:16px; --shadow:0 18px 50px -22px rgba(0,0,0,.8); --scrim:.82;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);line-height:1.62;
+  background:radial-gradient(1150px 600px at 78% -8%, rgba(160,92,44,.14), transparent 60%),
+    radial-gradient(820px 520px at 10% 10%, rgba(125,91,166,.07), transparent 58%), var(--abyss);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+::selection{background:rgba(160,92,44,.32);color:#fff}
+#bgLayer{position:fixed;inset:0;z-index:-3;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .45s}
+#bgScrim{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:linear-gradient(180deg,rgba(250,244,230,calc(var(--scrim)*.84)),rgba(250,244,230,var(--scrim)) 58%,rgba(250,244,230,calc(var(--scrim)*1.12)))}
+#stars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+@media print{#bgLayer,#bgScrim,#stars{display:none}}
+
+#cover{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:26px 18px;overflow-y:auto;
+  background:linear-gradient(180deg,rgba(250,244,230,.5),rgba(250,244,230,.86))}
+#cover.hide{display:none}
+body.cover-on header.top,body.cover-on main,body.cover-on #app-credit,
+body.cover-on .prog-list,body.cover-on #toast{display:none!important}
+.cover-in{width:100%;max-width:720px;text-align:center;animation:coverUp .6s cubic-bezier(.22,1,.36,1)}
+@keyframes coverUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.cover-emoji{font-size:clamp(30px,7vw,44px);letter-spacing:.18em;line-height:1;filter:drop-shadow(0 0 18px rgba(160,92,44,.7))}
+.cover-title{font-family:var(--disp);font-weight:800;font-size:clamp(28px,5.8vw,50px);line-height:1.16;margin:18px 0 10px;
+  letter-spacing:-.6px;text-shadow:0 0 26px rgba(160,92,44,.4),0 2px 20px rgba(0,0,0,.75)}
+.cover-sub{color:var(--ink-dim);font-size:clamp(14px,2.6vw,17px)}
+.cover-meta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.steps-card{background:rgba(242,232,210,.85);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;
+  margin:26px auto 0;max-width:540px;text-align:left;backdrop-filter:blur(8px);box-shadow:var(--shadow)}
+.steps-card h3{font-family:var(--jua);font-size:18px;text-align:center;color:var(--gold);margin-bottom:14px}
+.steps-card ol{list-style:none;display:grid;gap:11px}
+.steps-card li{display:flex;gap:11px;align-items:flex-start;font-size:15px;color:var(--ink-dim);line-height:1.5}
+.steps-card li .sn{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;
+  font-weight:800;background:var(--ok);color:#f2f7ea;margin-top:2px}
+.steps-card li.opt .sn{background:#b09a6e;color:#b9873c}
+.steps-card li b{color:var(--ink)}
+.cover-cta{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:26px}
+.btn.xl{font-size:18px;padding:16px 34px;border-radius:16px}
+.cover-hint{font-size:12.5px;color:var(--ink-mute)}
+
+header.top{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(246,238,219,.96),rgba(246,238,219,.8) 70%,rgba(246,238,219,0));
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
+.top-bar{max-width:1180px;margin:0 auto;height:var(--header-h);display:flex;align-items:center;gap:12px;padding:0 16px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;background:none;border:0;cursor:pointer;font-family:var(--body);color:inherit;text-align:left;padding:0}
+.brand .logo{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;font-size:18px;
+  background:radial-gradient(circle at 30% 30%,#f6f1e9,#f3ece1);border:1px solid var(--line)}
+.brand b{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:-.2px;white-space:nowrap}
+.brand b span{color:var(--accent2)}
+.brand .sub{font-size:11px;color:var(--ink-mute);white-space:nowrap}
+@media(max-width:560px){.brand .sub{display:none}}
+.head-right{margin-left:auto;display:flex;align-items:center;gap:9px}
+.hbtn{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:15px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--ink-dim);cursor:pointer;transition:.18s;text-decoration:none}
+.hbtn:hover{border-color:var(--accent);color:var(--ink)}
+body.teacher #tmodeBtn{background:rgba(138,95,36,.14);border-color:var(--gold)}
+.progress-mini{display:flex;align-items:center;gap:9px;cursor:help}
+.progress-mini .bar{width:92px;height:7px;border-radius:99px;background:#f3ede3;overflow:hidden;border:1px solid var(--line)}
+.progress-mini .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .5s cubic-bezier(.22,1,.36,1);box-shadow:0 0 12px var(--accent)}
+.progress-mini .pct{font-family:var(--mono);font-size:12px;color:var(--accent2);min-width:34px;text-align:right}
+@media(max-width:520px){.progress-mini .bar{width:48px}}
+
+nav.tabs{max-width:1180px;margin:0 auto;padding:0 8px 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:none;display:flex;align-items:center;gap:7px;font-family:var(--body);font-size:14px;font-weight:700;
+  color:var(--ink-dim);background:transparent;border:1px solid transparent;padding:8px 13px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:.2s}
+nav.tabs button .sn{flex:none;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);
+  font-size:11px;font-weight:700;background:#efe4c9;border:1px solid var(--line);color:var(--ink-mute)}
+nav.tabs button:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+nav.tabs button.active{color:#fff;background:linear-gradient(180deg,#b9873c,var(--accent));box-shadow:0 6px 18px -6px var(--accent)}
+nav.tabs button.active .sn{background:#f4eee4;color:var(--accent2);border-color:transparent}
+nav.tabs button.done .sn{background:var(--ok);color:#f2f7ea;border-color:transparent}
+nav.tabs button.done .sn i{display:none}
+nav.tabs button.done .sn::after{content:"✓"}
+nav.tabs .tab-sep{flex:none;width:1px;height:20px;background:var(--line);margin:0 4px}
+nav.tabs button.optional{color:#b9873c;border-color:#f6f1e8;background:rgba(176,154,110,.18)}
+nav.tabs button.optional.active{background:linear-gradient(180deg,#7d5ba6,#7d5ba6);color:#fff}
+
+main{max-width:1180px;margin:0 auto;padding:20px 16px 90px}
+.panel{display:none;animation:fade .45s cubic-bezier(.22,1,.36,1)}
+.panel.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.stepline{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.stepline .sbadge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;letter-spacing:1px;
+  color:#fff;background:linear-gradient(180deg,#b9873c,var(--accent));padding:4px 12px;border-radius:999px;font-weight:700}
+.stepline .swhat{font-size:13px;color:var(--ink-mute)}
+.stepline.opt .sbadge{background:linear-gradient(180deg,#7d5ba6,#7d5ba6)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--accent2);margin-bottom:12px}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--accent)}
+h1.big{font-family:var(--disp);font-weight:800;font-size:clamp(28px,6vw,52px);line-height:1.1;letter-spacing:-.6px;text-shadow:0 2px 24px rgba(0,0,0,.65)}
+h2.sec{font-family:var(--disp);font-weight:800;font-size:clamp(22px,4.2vw,34px);letter-spacing:-.3px;line-height:1.16;margin:0 0 6px;text-shadow:0 2px 16px rgba(0,0,0,.5)}
+h3.card-t{font-family:var(--jua);font-size:20px;letter-spacing:.2px;color:var(--ink)}
+.lead{font-size:clamp(15px,2.4vw,18px);color:var(--ink-dim);max-width:64ch;text-shadow:0 1px 12px rgba(0,0,0,.4)}
+.muted{color:var(--ink-mute)}
+.help{font-size:13px;color:var(--ink-mute);margin-top:8px;line-height:1.55}
+b.k{color:var(--ink);font-weight:800}
+.t1{color:var(--c1)}.t2{color:var(--c2)}.t3{color:var(--c3)}.t4{color:var(--c4)}.t5{color:var(--c5)}
+.card{background:linear-gradient(180deg,var(--surface),var(--deep));border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.card+.card{margin-top:18px}
+.grid{display:grid;gap:18px}
+@media(min-width:760px){.grid.c2{grid-template-columns:1fr 1fr}}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink-dim)}
+.badge.gold{background:rgba(138,95,36,.1);border-color:#c9ae7c;color:var(--gold)}
+.pill-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pill{font-size:13px;padding:6px 12px;border-radius:99px;background:#efe4c9;border:1px solid var(--line);color:var(--ink-dim)}
+.pill b{color:var(--ink)}
+.note{display:flex;gap:12px;align-items:flex-start;border-left:3px solid var(--accent);background:rgba(160,92,44,.08);
+  padding:13px 15px;border-radius:0 12px 12px 0;margin-top:14px;font-size:14.5px;color:var(--ink-dim)}
+.note .ic{flex:none;font-size:17px;line-height:1.4}
+.note.myth{border-color:var(--danger);background:rgba(179,54,46,.07)}
+.note.myth b{color:#8c212b}
+.note.class{display:none;border-color:var(--gold);background:rgba(138,95,36,.07)}
+.note.class b{color:var(--gold)}
+body.teacher .note.class{display:flex}
+.honest{font-size:12px;color:var(--ink-mute);margin-top:8px;display:flex;gap:6px;align-items:flex-start}
+.btn{font-family:var(--body);font-weight:800;font-size:15px;cursor:pointer;padding:12px 20px;border-radius:12px;border:1px solid transparent;
+  display:inline-flex;align-items:center;gap:9px;transition:.18s;user-select:none}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn.primary{background:linear-gradient(180deg,#a05c2c,var(--accent));color:#fff;box-shadow:0 10px 24px -10px var(--accent)}
+.btn.ghost{background:rgba(255,255,255,.04);border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{background:rgba(255,255,255,.08);border-color:var(--accent)}
+.btn.sm{padding:8px 14px;font-size:13.5px;border-radius:10px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;align-items:center}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.choices{display:grid;gap:10px;margin-top:14px}
+.choice{text-align:left;font-family:var(--body);font-size:15.5px;color:var(--ink);background:var(--surface2);border:1.5px solid var(--line);
+  border-radius:13px;padding:14px 16px;cursor:pointer;transition:.16s;display:flex;gap:12px;align-items:center;line-height:1.4}
+.choice .key{flex:none;width:27px;height:27px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;
+  font-size:14px;background:#efe4c9;border:1px solid var(--line);color:var(--ink-dim)}
+.choice:hover:not(.done){border-color:var(--accent);background:#efe0c2;transform:translateX(3px)}
+.choice.correct{border-color:var(--ok);background:rgba(44,122,68,.13)}
+.choice.correct .key{background:var(--ok);color:#f2f7ea}
+.choice.wrong{border-color:var(--danger);background:rgba(179,54,46,.12)}
+.choice.wrong .key{background:var(--danger);color:#fdf1ef}
+.choice.dim{opacity:.5}.choice.done{cursor:default}
+.explain{margin-top:14px;border-radius:13px;padding:15px 17px;font-size:14.5px;line-height:1.6;border:1px solid var(--line);
+  background:rgba(160,92,44,.08);color:var(--ink-dim);display:none;animation:fade .35s}
+.explain.show{display:block}
+.explain.ok{border-color:#7fae83;background:rgba(44,122,68,.09)}
+.explain.no{border-color:#c99a94;background:rgba(179,54,46,.09)}
+.explain b{color:var(--ink)}
+.explain .why{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:13px;color:var(--accent2);margin-bottom:5px}
+
+/* 🎈 풍선 실험실 */
+.lab{background:linear-gradient(180deg,#f3ede3,#f3ece1);border:1.5px solid #b09a6e;border-radius:15px;padding:20px 22px;margin-top:16px}
+.lab h3{font-family:var(--jua);font-size:18px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.simgrid{display:grid;gap:16px;grid-template-columns:1fr;margin-top:14px}
+@media(min-width:900px){.simgrid{grid-template-columns:minmax(0,1fr) 268px;align-items:start}}
+.simstage{background:#faf4e6;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.simstage canvas{display:block;width:100%;height:auto}
+.simctl{background:#efe4c9;border:1px solid var(--line);border-radius:13px;padding:16px}
+.simctl h4{font-family:var(--jua);font-size:15px;margin-bottom:4px}
+.ctl{margin-top:14px}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--ink-dim);font-weight:600;margin-bottom:7px}
+.ctl label .val{font-family:var(--mono);font-size:14px;color:var(--accent2)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;
+  background:linear-gradient(90deg,var(--accent) 0%,var(--accent) var(--p,0%),#f4eee4 var(--p,0%));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#2e2315;
+  border:3px solid var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.5),0 0 10px var(--accent);cursor:grab}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#2e2315;border:3px solid var(--accent);cursor:grab}
+.readout{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.readout .r{flex:1;min-width:112px;background:#f4ecda;border:1px solid var(--line);border-radius:11px;padding:10px 12px;text-align:center}
+.readout .r .lab2{font-size:11px;color:var(--ink-mute)}
+.readout .r .v{font-family:var(--mono);font-size:18px;font-weight:700;line-height:1.25}
+.readout .r.near .v{color:var(--c1)} .readout .r.far .v{color:var(--c5)}
+.readout .r .v small{font-size:11px;color:var(--ink-mute);font-weight:400}
+.dl-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.dl-head h4{font-family:var(--jua);font-size:16px}
+.dl-head .btn-row{margin:0;margin-left:auto;flex:none}
+.dl-head .btn-row .btn{flex:none}
+.dtable-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#efe4c9;margin-top:12px}
+table.dtable{width:100%;border-collapse:collapse;font-size:13.5px;min-width:420px}
+.dtable th{background:rgba(255,255,255,.05);color:var(--ink-dim);font-weight:700;font-size:12px;padding:9px 10px;
+  text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+.dtable td{padding:9px 10px;text-align:center;font-family:var(--mono);border-bottom:1px solid var(--line-soft);white-space:nowrap}
+.dtable td:first-child{font-family:var(--body)}
+.dtable tr:last-child td{border-bottom:0}
+.dtable tr.fresh td{animation:rowIn .5s}
+@keyframes rowIn{from{background:rgba(160,92,44,.22)}to{background:transparent}}
+.dtable td.del{cursor:pointer;color:var(--ink-mute);font-family:var(--body)}
+.dtable td.del:hover{color:var(--danger)}
+.dtable .empty{color:var(--ink-mute);font-family:var(--body);padding:16px;font-size:13px}
+.graph-wrap{margin-top:12px;background:#efe4c9;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.graph-wrap canvas{display:block;width:100%;height:auto}
+.legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:12.5px;color:var(--ink-mute)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:6px}
+
+/* ⚡ 이 페이지 전용 — 체크 목록 · 실험 순서 · SVG 무대 · 단서 카드 */
+.checkgrid{display:grid;gap:10px;margin-top:14px}
+.checkline{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--ink-dim);line-height:1.45;
+  background:var(--surface2);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.16s}
+.checkline:hover{border-color:var(--accent)}
+.checkline input{flex:none;width:20px;height:20px;accent-color:var(--c1);margin-top:2px;cursor:pointer}
+.checkline.on{border-color:var(--c1);background:rgba(138,95,36,.09);color:var(--ink)}
+.doit{list-style:none;display:grid;gap:10px;margin-top:12px;counter-reset:d}
+.doit li{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--ink-dim);line-height:1.55}
+.doit li::before{counter-increment:d;content:counter(d);flex:none;width:24px;height:24px;border-radius:50%;
+  display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:700;
+  background:#efe4c9;border:1px solid var(--line);color:var(--accent2)}
+.svgstage{background:#faf4e6;border:1px solid var(--line);border-radius:13px;padding:10px;margin-top:14px;overflow-x:auto}
+.svgstage svg{display:block;width:100%;height:auto;max-width:660px;margin:0 auto}
+.modebar{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.modebar .btn.on{background:linear-gradient(180deg,#21338c,var(--accent));color:#fff;border-color:transparent}
+.verdict{margin-top:14px;border-radius:12px;padding:13px 15px;font-size:15.5px;line-height:1.6;
+  border:1px solid var(--line);background:#f2e8d2;color:var(--ink-dim)}
+.verdict b{color:var(--ink)}
+.verdict.hit{border-color:#7fae83;background:rgba(44,122,68,.09)}
+.forcegrid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:16px}
+@media(min-width:700px){.forcegrid{grid-template-columns:repeat(3,1fr)}}
+.forcecard{background:var(--surface2);border:1px solid var(--line);border-radius:13px;padding:12px 12px 10px}
+.forcecard svg{display:block;width:100%;height:auto}
+.forcecard .fc-t{font-family:var(--jua);font-size:16.5px;text-align:center;margin-top:4px}
+.forcecard .fc-d{font-size:13.5px;color:var(--ink-mute);text-align:center;line-height:1.5;margin-top:3px}
+.clue{border:1.5px solid var(--c2);background:rgba(125,91,166,.07);border-radius:14px;padding:17px 19px;margin-top:18px}
+.clue .cl-h{font-family:var(--jua);font-size:18.5px;color:var(--c2);display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.clue p{font-size:15.5px;color:var(--ink-dim);line-height:1.65}
+.linkcard{display:flex;gap:14px;align-items:center;text-decoration:none;color:inherit;background:var(--surface2);
+  border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px;transition:.18s}
+.linkcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+.linkcard .lc-e{font-size:30px;flex:none}
+.linkcard .lc-t{display:block;font-family:var(--jua);font-size:17.5px}
+.linkcard .lc-d{display:block;font-size:13.5px;color:var(--ink-mute);line-height:1.5;margin-top:2px}
+#fsSwing{transition:transform .95s cubic-bezier(.34,1.15,.5,1)}
+#fsProbe{transition:transform 1.05s ease-in-out}
+.fe{transition:transform .75s cubic-bezier(.42,0,.35,1)}
+
+/* 그림 슬롯 */
+.fig{margin:14px 0 0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#efe4c9;position:relative}
+.fig img{display:block;width:100%;height:auto}
+.fig figcaption{font-size:12.5px;color:var(--ink-mute);padding:10px 14px;line-height:1.5;text-align:center;border-top:1px solid var(--line-soft)}
+.fig.slot{display:none;border-style:dashed;border-color:#b09a6e;background:rgba(160,92,44,.05);padding:18px 14px;text-align:center}
+body.teacher .fig.slot{display:block}
+.fig.slot .fe{font-size:24px;opacity:.6}
+.fig.slot .fn{font-family:var(--mono);font-size:11.5px;color:var(--accent2);margin-top:7px;word-break:break-all}
+.fig.slot .fd{font-size:12px;color:var(--ink-mute);margin-top:5px;line-height:1.5}
+.use .fig{margin:0 0 4px}
+
+.terms{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(min-width:760px){.terms{grid-template-columns:repeat(4,1fr)}}
+.term{background:var(--surface2);border:1px solid var(--line);border-radius:13px;padding:14px;border-top:3px solid var(--c,var(--accent))}
+.term .nm{font-family:var(--jua);font-size:17px;margin-bottom:3px}
+.term .de{font-size:13px;color:var(--ink-mute);line-height:1.5}
+.use-grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:680px){.use-grid{grid-template-columns:1fr 1fr}}
+.use{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.use .u-t{font-family:var(--jua);font-size:17px;display:flex;align-items:center;gap:8px}
+.use .u-d{font-size:13.5px;color:var(--ink-dim);line-height:1.55}
+
+.cloze-line{font-size:15.5px;line-height:2.05;color:var(--ink-dim)}
+.cloze-line+.cloze-line{margin-top:6px}
+.cloze{display:inline-block;min-width:52px;text-align:center;padding:2px 11px;margin:0 2px;border-radius:8px;background:#efe4c9;
+  border:1.5px dashed var(--line);color:transparent;cursor:pointer;font-weight:800;transition:.16s;user-select:none;line-height:1.3}
+.cloze::after{content:"❓";font-size:12px}
+.cloze:hover{border-color:var(--accent);background:#efe4c9}
+.cloze.revealed{border-style:solid;cursor:default;animation:clozePop .42s}
+.cloze.revealed::after{content:none}
+@keyframes clozePop{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
+.cloze-done{display:none;align-items:center;gap:6px;margin-top:12px;font-size:13px;font-weight:700;color:var(--ok)}
+.cloze-set.complete .cloze-done{display:inline-flex;animation:fade .4s}
+.cloze-hint{font-size:12.5px;color:var(--ink-mute);margin-top:10px}
+
+.miniquiz{background:linear-gradient(180deg,#f4eee3,#f2e8d2);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:16px}
+.miniquiz .mq-head{display:flex;align-items:center;gap:9px;margin-bottom:4px;flex-wrap:wrap}
+.miniquiz .mq-badge{font-size:12px;font-weight:800;color:#fff;background:linear-gradient(180deg,#a05c2c,var(--accent));padding:4px 10px;border-radius:99px}
+.miniquiz .mq-prog{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink-mute)}
+.mq-q{margin-top:14px}
+.mq-q .mq-text{font-size:15px;font-weight:600;margin-bottom:9px}
+.mq-q .mq-text .qn{font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-right:6px}
+.mq-choices{display:grid;gap:8px}
+.mq-opt{text-align:left;font-family:var(--body);font-size:14.5px;color:var(--ink);background:var(--surface2);border:1.5px solid var(--line);
+  border-radius:11px;padding:11px 14px;cursor:pointer;transition:.15s;display:flex;gap:10px;align-items:center}
+.mq-opt .k{flex:none;width:23px;height:23px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;
+  font-size:12px;background:#efe4c9;border:1px solid var(--line);color:var(--ink-dim)}
+.mq-opt:hover:not(.locked){border-color:var(--accent);background:#efe0c2}
+.mq-opt.correct{border-color:var(--ok);background:rgba(44,122,68,.13)}
+.mq-opt.correct .k{background:var(--ok);color:#f2f7ea}
+.mq-opt.wrong{border-color:var(--danger);background:rgba(179,54,46,.12)}
+.mq-opt.wrong .k{background:var(--danger);color:#fdf1ef}
+.mq-opt.locked{cursor:default}
+.mq-fb{margin-top:9px;font-size:13.5px;line-height:1.55;border-radius:10px;padding:11px 13px;display:none}
+.mq-fb.show{display:block;animation:fade .3s}
+.mq-fb.ok{background:rgba(44,122,68,.09);border:1px solid #7fae83;color:var(--ink-dim)}
+.mq-fb.no{background:rgba(179,54,46,.09);border:1px solid #c99a94;color:var(--ink-dim)}
+.mq-fb b{color:var(--ink)}
+.mq-done{display:none;align-items:center;gap:8px;margin-top:14px;padding:11px 14px;border-radius:11px;background:rgba(138,95,36,.08);
+  border:1px solid #c9ae7c;color:var(--gold);font-weight:700;font-size:14px}
+.miniquiz.alldone .mq-done{display:flex;animation:fade .4s}
+
+.game-hud{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.lives{display:flex;gap:5px}.lives .h{font-size:22px;transition:.3s}
+.lives .h.gone{filter:grayscale(1) brightness(.5);transform:scale(.85)}
+.score-box{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;background:#efe4c9;border:1px solid var(--line);padding:7px 13px;border-radius:11px}
+.score-box .lab2{font-size:11px;color:var(--ink-mute);font-weight:400;font-family:var(--body)}
+.score-box .num{font-size:18px;color:var(--gold)}
+.earned{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.medal{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;padding:8px 13px;border-radius:11px;
+  background:linear-gradient(180deg,#f2ece0,#f2eade);border:1px solid #c9ae7c;color:var(--gold);opacity:.3;filter:grayscale(.6);transition:.4s}
+.medal.got{opacity:1;filter:none;box-shadow:0 0 16px -4px var(--gold)}
+.medal .e{font-size:18px}
+textarea{width:100%;font-family:var(--body);font-size:14.5px;color:var(--ink);background:#efe4c9;border:1.5px solid var(--line);
+  border-radius:12px;padding:12px 14px;min-height:88px;resize:vertical;outline:none;margin-top:8px;line-height:1.55;transition:.18s}
+textarea:focus{border-color:var(--accent);background:#efe4c9}
+textarea::placeholder{color:var(--ink-mute)}
+.savemark{font-size:12px;color:var(--ok);margin-top:6px;display:inline-block;opacity:0;transition:.3s}
+.savemark.on{opacity:1}
+.prog-list{position:fixed;right:14px;top:calc(var(--header-h) + 8px);z-index:60;width:264px;background:rgba(249,242,227,.97);
+  border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);display:none}
+.prog-list.show{display:block;animation:fade .3s}
+.prog-list h4{font-family:var(--jua);font-size:15px;margin-bottom:10px}
+.prog-list li{list-style:none;display:flex;gap:8px;font-size:13px;color:var(--ink-mute);padding:4px 0;line-height:1.45}
+.prog-list li.on{color:var(--ink-dim)}
+.prog-list li .mk{flex:none;color:var(--ink-mute)}
+.prog-list li.on .mk{color:var(--ok)}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);z-index:200;background:rgba(249,242,227,.96);
+  border:1px solid var(--accent);color:var(--ink);padding:12px 20px;border-radius:13px;font-weight:700;font-size:14.5px;
+  box-shadow:0 16px 40px -12px rgba(0,0,0,.8);opacity:0;pointer-events:none;transition:.3s;max-width:90vw}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.good{border-color:var(--ok)}#toast.bad{border-color:var(--danger)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.08s!important;scroll-behavior:auto}}
+@media print{
+  #cover,header.top,nav.tabs,#toast,.prog-list,.cta-row,.btn{display:none!important}
+  body{background:#fff;color:#111}
+  .panel{display:block!important;page-break-after:always}
+  .card,.lab{background:#fff;border-color:#ccc;box-shadow:none}
+  .lead,.muted,.note{color:#333}
+  h1.big,h2.sec,h3.card-t{color:#111}
+  .note.class{display:flex!important}
+  .cloze{color:#111!important;border-style:solid}.cloze::after{content:none}
+}
+</style>
+
+<style id="board-v2">
+/* ═══════════════════════════════════════════════════════════
+   전자칠판 판 v2 — 글자 크기·명암비 상향
+   교실 앞 화면에서 뒷자리까지 읽히도록 본문을 키우고,
+   배경과 붙어 보이던 회색 계열 글자색의 명암비를 올렸습니다.
+   (--ink-mute 4.0:1 → 7.7:1 / --ink-dim 8.6:1 → 12.0:1)
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --line:#cbb894; --line-soft:#d5c5a2;
+  --ink:#2a2013; --ink-dim:#4a3a26; --ink-mute:#6b573f;
+  --ok:#2c7a44; --danger:#b3362e;
+}
+body{line-height:1.68}
+b.k{color:#fff}
+
+/* 본문 계열 */
+.lead{font-size:clamp(17px,2.5vw,20px)}
+.help{font-size:15px;line-height:1.6}
+.honest{font-size:14px;line-height:1.6}
+.note{font-size:16px;line-height:1.65;padding:15px 17px;border-left-width:4px}
+.note .ic{font-size:19px}
+.badge{font-size:14px;padding:6px 13px}
+.pill{font-size:15px;padding:7px 14px}
+.term .nm{font-size:19px}
+.term .de{font-size:15px;line-height:1.6}
+.use .u-t{font-size:19px}
+.use .u-d{font-size:15.5px;line-height:1.6}
+h3.card-t{font-size:22px}
+.stepline .swhat{font-size:14.5px}
+.stepline .sbadge{font-size:13px}
+.eyebrow{font-size:13px}
+.fig figcaption{font-size:14.5px;line-height:1.6}
+.fig.slot .fn{font-size:13px}
+.fig.slot .fd{font-size:14px}
+
+/* 상호작용 */
+.btn{font-size:16.5px;padding:13px 22px}
+.btn.sm{font-size:15px;padding:9px 16px}
+nav.tabs button{font-size:15.5px;padding:9px 15px}
+nav.tabs button .sn{width:21px;height:21px;font-size:12px}
+.brand b{font-size:18px}
+.brand .sub{font-size:12.5px}
+.progress-mini .pct{font-size:13.5px}
+.choice{font-size:17px;border-width:2px;padding:15px 17px}
+.choice .key{width:30px;height:30px;font-size:15px}
+.explain{font-size:16px;line-height:1.68}
+.explain .why{font-size:14.5px}
+.cloze-line{font-size:17.5px;line-height:2.1}
+.cloze{border-width:2px;padding:3px 12px;min-width:56px}
+.cloze-hint{font-size:14.5px}
+.cloze-done{font-size:15px}
+textarea{font-size:16.5px;border-width:2px}
+.savemark{font-size:14px}
+.checkline{font-size:16.5px}
+.doit li{font-size:16.5px;line-height:1.6}
+.dtable{font-size:15.5px}
+.dtable th{font-size:14px;padding:11px 12px}
+.dtable td{padding:10px 12px}
+.dtable .empty{font-size:15px}
+.prog-list{width:290px}
+.prog-list li{font-size:14.5px}
+.prog-list h4{font-size:17px}
+#toast{font-size:16px;padding:14px 22px;border-width:2px}
+.medal{font-size:14.5px}
+.medal .e{font-size:20px}
+.score-box .num{font-size:20px}
+.score-box .lab2{font-size:13px}
+.lives .h{font-size:24px}
+.steps-card li{font-size:16.5px}
+.steps-card h3{font-size:20px}
+.cover-sub{font-size:clamp(16px,2.7vw,19px)}
+.cover-hint{font-size:14px}
+
+/* 실험실 조작판 */
+.simctl h4,.lab h3,.simlab h3{font-size:18px}
+.ctl label{font-size:15px}
+.ctl label .val{font-size:16px}
+.readout .r .lab2{font-size:13px}
+.readout .r .v{font-size:22px}
+.readout .r .v small{font-size:13px}
+.dl-head h4{font-size:18px}
+input[type=range]{height:8px}
+input[type=range]::-webkit-slider-thumb{width:24px;height:24px;border-width:4px}
+
+/* 문항 */
+.miniquiz .mq-badge{font-size:13.5px;padding:5px 12px}
+.miniquiz .mq-prog{font-size:13.5px}
+.mq-q .mq-text{font-size:17px;line-height:1.6}
+.mq-q .mq-text .qn{font-size:12.5px}
+.mq-opt{font-size:16.5px;padding:13px 16px;border-width:2px;line-height:1.5}
+.mq-opt .k{width:26px;height:26px;font-size:13.5px}
+.mq-fb{font-size:15.5px;line-height:1.65;padding:13px 15px}
+.mq-done{font-size:16px}
+
+/* ── 수능형 문항 — 자료 · <보기> · 다음 버튼 ── */
+.qfig{background:#faf4e6;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:14px;overflow-x:auto}
+.qfig svg{width:100%;height:auto;display:block;max-width:600px;margin:0 auto}
+.bogi{background:#f2e8d2;border:1.5px solid var(--line);border-radius:12px;padding:15px 18px;margin:0 0 14px}
+.bogi-t{display:inline-block;font-weight:800;font-size:14px;color:var(--ink-dim);border:1px solid var(--line);
+  border-radius:7px;padding:2px 14px;margin-bottom:11px;letter-spacing:3px}
+.bogi ul{list-style:none;display:grid;gap:10px;margin:0;padding:0}
+.bogi li{display:flex;gap:11px;align-items:flex-start;font-size:16.5px;line-height:1.62;color:var(--ink)}
+.bogi li .bk{flex:none;width:25px;height:25px;border-radius:7px;display:grid;place-items:center;font-size:14px;
+  font-weight:800;background:#e2d3b2;border:1px solid var(--line);color:var(--ink-dim);margin-top:2px;transition:.25s}
+.bogi li .bv{display:none;margin-left:auto;flex:none;font-size:13.5px;font-weight:800;padding:2px 9px;border-radius:99px}
+.bogi.reveal li.t .bk{background:var(--ok);color:#f2f7ea;border-color:transparent}
+.bogi.reveal li.f .bk{background:var(--danger);color:#fdf1ef;border-color:transparent}
+.bogi.reveal li .bv{display:inline-block;animation:fade .3s}
+.bogi.reveal li.t .bv{background:rgba(44,122,68,.16);color:var(--ok)}
+.bogi.reveal li.f .bv{background:rgba(179,54,46,.16);color:var(--danger)}
+.mq-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.mq-lv{font-size:13px;font-weight:800;padding:4px 11px;border-radius:99px;border:1px solid var(--line);background:#f2e8d2}
+.mq-lv[data-lv="하"]{color:#2c7a44;border-color:#2c7a44}
+.mq-lv[data-lv="중"]{color:#8a5f24;border-color:#c9ae7c}
+.mq-lv[data-lv="상"]{color:#8c2144;border-color:#c99a94}
+.mq-next{display:none;margin-top:18px;justify-content:flex-end}
+.mq-next.show{display:flex;animation:fade .3s}
+@media print{
+  .mq-next{display:none!important}
+  .qfig{background:#fff}
+  .bogi{background:#fff;border-color:#ccc}
+  .bogi li{color:#111}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Nanum+Gothic+Coding&display=swap">
+<style id="edison-lab">
+/* ═══════════════════════════════════════════════════════════
+   에디슨 연구실 판 v1 — 종이·원목·황동 라이트 테마
+   구조(탭·저장·진행도·교사 모드)는 그대로, 시각만 갈아입힘.
+   전자칠판(밝은 교실)에서 라이트 테마가 더 잘 보이고,
+   종이 배경이라 인쇄·학습지 변환이 자연스럽다.
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --paper:#f2e8d5; --paper-hi:#f9f2e3; --paper-lo:#e6d7ba;
+  --wood:#6d4b2a; --wood-dk:#4e3216; --wood-hi:#8a6339;
+  --brass:#b9873c; --brass-hi:#e6c17a; --brass-dk:#7d541e;
+  --ink:#2a2013; --ink-dim:#4a3a26; --ink-mute:#6b573f;
+  --line:#cbb894; --line-soft:#dccfae;
+  --surface:#f7f0de; --surface2:#f2e8d2;
+  --accent:#a05c2c; --accent2:#8a5f24; --gold:#8a5f24;
+  --ok:#2c7a44; --danger:#b3362e;
+  --jua:'Gowun Batang',serif;
+  --body:'Gowun Dodum','Pretendard',sans-serif;
+  --mono:'Nanum Gothic Coding',monospace;
+  --shadow:0 12px 26px -16px rgba(96,64,22,.38);
+}
+html,body{background:var(--paper-lo)}
+body{color:var(--ink)}
+/* 종이 결 — 화면 전체에 은은한 입자 */
+body::after{content:"";position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.5;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.045'/></feComponentTransfer></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+#stars{display:none}
+#bgScrim{background:radial-gradient(120% 80% at 50% 0%,rgba(255,244,214,.55),rgba(230,215,186,0) 60%)}
+#bgLayer{opacity:.08;filter:sepia(.55) contrast(.9)}
+
+/* ── 원목 헤더 + 황동 명패 ── */
+header.top{background:
+  repeating-linear-gradient(93deg,rgba(0,0,0,.10) 0 26px,rgba(0,0,0,0) 26px 30px),
+  repeating-linear-gradient(91deg,#6d4b2a 0 9px,#75522e 9px 17px,#5e3f1d 17px 21px,#7f5a34 21px 34px);
+  border-bottom:3px solid var(--brass-dk);box-shadow:0 4px 14px rgba(60,38,15,.35)}
+.brand .logo{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 45%,var(--brass-dk));
+  border:1px solid #5f3f12;box-shadow:inset 0 1px 0 rgba(255,245,215,.7)}
+.brand b,.brand b span{color:#f6ecd2;text-shadow:0 1px 2px rgba(40,24,6,.55)}
+.brand .sub{color:#e2d2ac}
+.hbtn{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));
+  border:1px solid #5f3f12;color:#2c1c06;box-shadow:inset 0 1px 0 rgba(255,245,215,.7)}
+.hbtn:hover{filter:brightness(1.08)}
+.progress-mini .bar{background:#f6eedb;border:1.5px solid var(--brass-dk);box-shadow:inset 0 1px 3px rgba(70,45,10,.35)}
+.progress-mini .bar i{background:linear-gradient(90deg,#a05c2c,#c98237)}
+.progress-mini .pct{color:#f6ecd2;text-shadow:0 1px 2px rgba(40,24,6,.55)}
+
+/* ── 탭 = 나무 서랍 + 황동 명패 ── */
+nav.tabs button{background:linear-gradient(180deg,#8a6339,#6d4b2a);color:#f0e2c4;
+  border:1px solid #4e3216;box-shadow:inset 0 1px 0 rgba(255,235,200,.25),0 2px 4px rgba(40,25,8,.3)}
+nav.tabs button .sn{background:rgba(46,28,8,.5);border-color:rgba(46,28,8,.6);color:#f0e2c4}
+nav.tabs button:hover{filter:brightness(1.12)}
+nav.tabs button.active{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 45%,var(--brass-dk));
+  color:#2c1c06;border-color:#5f3f12;text-shadow:0 1px 0 rgba(255,240,200,.5)}
+nav.tabs button.active .sn{background:#2c1c06;color:#e6c17a;border-color:transparent}
+nav.tabs button.done:not(.active){color:#ffe9b3}
+.tab-sep{background:#4e3216}
+
+/* ── 표지 = 인쇄물 + 상하 원목 띠 ── */
+#cover{background:linear-gradient(180deg,var(--paper-hi),var(--paper))}
+#cover::before,#cover::after{content:"";position:fixed;left:0;right:0;height:16px;z-index:4;
+  background:repeating-linear-gradient(90deg,#6d4b2a 0 30px,#5e3f1d 30px 33px,#7a5631 33px 60px);
+  box-shadow:0 2px 8px rgba(60,38,15,.35)}
+#cover::before{top:0}#cover::after{bottom:0;box-shadow:0 -2px 8px rgba(60,38,15,.35)}
+.cover-title{color:var(--ink)}
+.cover-sub{color:var(--ink-dim)}
+.badge{background:var(--paper-hi);border-color:var(--line);color:var(--ink-dim)}
+.badge.gold{background:#f6edd6;border-color:var(--brass);color:var(--brass-dk)}
+.steps-card{background:var(--paper-hi);border-color:var(--line)}
+.steps-card .sn{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));
+  color:#2c1c06;border:1px solid #5f3f12}
+.cover-hint{color:var(--ink-mute)}
+
+/* ── 버튼 = 황동 ── */
+.btn{background:var(--paper-hi);border-color:var(--line);color:var(--ink)}
+.btn:hover{border-color:var(--accent);background:#f6edd6}
+.btn.primary{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 45%,var(--brass-dk));
+  color:#2c1c06;border:1px solid #5f3f12;text-shadow:0 1px 0 rgba(255,240,200,.45);
+  box-shadow:inset 0 1px 0 rgba(255,245,215,.8),0 3px 7px rgba(60,40,10,.32)}
+.btn.primary:hover{filter:brightness(1.06);transform:translateY(-1px)}
+
+/* ── 면·카드 ── */
+.card,.lab,.miniquiz{box-shadow:var(--shadow)}
+.lab{border:2px solid var(--brass-dk);box-shadow:inset 0 0 0 3px var(--brass),var(--shadow)}
+.stepline .sbadge{background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));
+  color:#2c1c06;border:1px solid #5f3f12}
+.note.class{background:#efe6ce;border:1px dashed var(--accent);border-left:4px solid var(--accent)}
+.pill{background:var(--paper-hi)}
+
+/* ── 빈칸 = 잉크 밑줄 (누르면 만년필 잉크로 스며듦) ── */
+.cloze{background:transparent;border:none;border-bottom:2.5px dashed #8a755c;border-radius:0;min-width:58px}
+.cloze::after{content:"✒️";font-size:12px}
+.cloze:hover{background:rgba(160,92,44,.09);border-bottom-color:var(--accent)}
+.cloze.revealed{border-bottom-style:solid;background:transparent}
+
+/* ── 훈장 = 밀랍 인장 ── */
+.medal{background:var(--paper-hi);border:1.5px solid var(--brass);color:var(--brass-dk)}
+.medal.got{box-shadow:0 0 14px -4px var(--brass)}
+
+/* ── 그림 슬롯 ── */
+.fig{background:var(--paper-hi)}
+.fig.slot{background:rgba(160,92,44,.05);border-color:#b09a6e}
+
+/* ── 계기·입력 ── */
+input[type=range]::-webkit-slider-thumb{background:radial-gradient(circle at 35% 30%,#f0d79c,var(--brass) 55%,var(--brass-dk));
+  border-color:#553a10}
+textarea:focus{background:#faf4e6}
+#toast{border-width:2px}
+:focus-visible{outline-color:var(--accent)}
+
+/* 어두운 배경 전제였던 흰 광택 하이라이트 무력화 */
+ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
+
+@media print{body::after{display:none}}
+</style>
+
+
+<style id="edison-polish">
+/* ── 전압계 진행도 ── */
+.pgauge{width:72px;height:auto;display:block;filter:drop-shadow(0 1px 2px rgba(50,32,8,.35))}
+#progNeedle{transition:transform .7s cubic-bezier(.34,1.2,.45,1)}
+.progress-mini .bar[hidden]{display:none}
+/* ── 표지 전구 점등 ── */
+.cover-bulb{width:74px;margin:6px auto 2px;filter:drop-shadow(0 0 20px rgba(240,166,62,.55))}
+.cover-bulb svg{display:block;width:100%;height:auto}
+.cover-bulb .filament{animation:filaGlow 2.6s ease-in-out infinite}
+.cover-bulb .filament.f2{animation-delay:.35s}
+@keyframes filaGlow{
+  0%,100%{stroke:#e0932e;filter:drop-shadow(0 0 1px rgba(240,166,62,.5))}
+  45%{stroke:#ffd98a;filter:drop-shadow(0 0 6px rgba(255,207,125,.95))}
+  55%{stroke:#ffcf7d;filter:drop-shadow(0 0 7px rgba(255,207,125,1))}
+}
+@media(prefers-reduced-motion:reduce){.cover-bulb .filament{animation:none;stroke:#ffcf7d}}
+</style>
+</head>
+<body><!-- board-v2: inline font bumped -->
+<div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
+
+<div id="cover">
+  <div class="cover-in">
+    <div class="cover-emoji">🎈 🧤 ⚡</div>
+    <div class="cover-bulb" aria-hidden="true"><svg viewBox="0 0 90 128">
+      <circle cx="45" cy="46" r="34" fill="rgba(255,214,140,.30)" stroke="#b9873c" stroke-width="2.4"/>
+      <circle cx="45" cy="46" r="34" fill="none" stroke="#fff6df" stroke-width="1" opacity=".85"/>
+      <path class="filament" d="M38 74 L38 56 L32 48 L40 40 L34 32 M52 74 L52 56 L58 48 L50 40 L56 32"
+        stroke="#f0a63e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path class="filament f2" d="M34 32 Q45 21 56 32" stroke="#ffcf7d" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      <rect x="33" y="78" width="24" height="6" rx="2" fill="#8a5f24"/>
+      <rect x="34" y="84" width="22" height="5" rx="2" fill="#b9873c"/>
+      <rect x="35" y="89" width="20" height="5" rx="2" fill="#8a5f24"/>
+      <rect x="36" y="94" width="18" height="5" rx="2" fill="#b9873c"/>
+      <path d="M38 99 L52 99 L45 110 Z" fill="#5f3f12"/>
+    </svg></div>
+    <h1 class="cover-title">지지직의<br>정체</h1>
+    <p class="cover-sub">문지르면 나타나는 전기 — 마찰 전기와 전기력 ⚡</p>
+    <div class="cover-meta">
+      <span class="badge">⏱️ 45분</span>
+      <span class="badge">📘 VII. 전기와 자기 · 1. 전기의 발생 ① · 230~231쪽</span>
+      <span class="badge gold" id="coverSaved" style="display:none">🔖 이어서 하기</span>
+    </div>
+    <div class="steps-card">
+      <h3>💡 학습 단계 안내</h3>
+      <ol>
+        <li><span class="sn">1</span><div><b>현상 보기</b> — 설명은 잠깐 미뤄 두고 먼저 보기</div></li>
+        <li><span class="sn">2</span><div><b>까닭 묻기</b> — 밀어냈다가 끌어당기는 이유가 뭘까</div></li>
+        <li><span class="sn">3</span><div><b>모형으로 설명하기</b> — 원자 그림으로 풀어 보기</div></li>
+        <li><span class="sn">4</span><div><b>적용하기</b> — 생활 속 마찰 전기, 그리고 첫 번째 단서</div></li>
+        <li><span class="sn">5</span><div><b>확인하기</b> — 배운 것 점검하기</div></li>
+        <li class="opt"><span class="sn">+</span><div><b>더 알아보기</b> — 겨울에 정전기가 더 잘 생기는 까닭</div></li>
+      </ol>
+    </div>
+    <div class="cover-cta">
+      <button class="btn primary xl" id="coverGo">풍선 문지르러 가기 🎈</button>
+      <span class="cover-hint">진행 상황은 이 기기에 자동 저장돼요 · 왼쪽 위 제목을 누르면 이 화면으로 돌아옵니다</span>
+    </div>
+  </div>
+</div>
+
+<header class="top">
+  <div class="top-bar">
+    <button class="brand" id="brandBtn" title="표지로 돌아가기">
+      <div class="logo">🎈</div>
+      <div><b>지지직의 <span>정체</span></b>
+        <div class="sub">VII. 전기와 자기 · 1. 전기의 발생 ① · 중2 과학</div></div>
+    </button>
+    <div class="head-right">
+      <a class="hbtn" href="index.html" title="단원 허브로">⚡</a>
+      <button class="hbtn" id="tmodeBtn" title="교사 모드">🧑‍🏫</button>
+      <div class="progress-mini" id="progWrap" title="진행도 — 누르면 남은 활동이 보여요">
+        <svg class="pgauge" viewBox="0 0 96 56" aria-hidden="true">
+          <path d="M10 50 A38 38 0 0 1 86 50" fill="#f6eedb" stroke="#7d541e" stroke-width="2.5"/>
+          <path d="M10 50 A38 38 0 0 1 86 50" fill="none" stroke="#b9873c" stroke-width="1" opacity=".7"/>
+          <g stroke="#584634" stroke-width="1.5" opacity=".8">
+            <line x1="15" y1="46" x2="20" y2="43"/><line x1="25" y1="33" x2="29" y2="37"/>
+            <line x1="45" y1="24" x2="46" y2="29"/><line x1="63" y1="28" x2="61" y2="33"/>
+            <line x1="78" y1="40" x2="74" y2="43"/>
+          </g>
+          <g id="progNeedle" style="transform-origin:48px 50px;transform:rotate(-90deg)">
+            <line x1="48" y1="50" x2="48" y2="18" stroke="#992f24" stroke-width="2.6" stroke-linecap="round"/>
+          </g>
+          <circle cx="48" cy="50" r="4.5" fill="#b9873c" stroke="#5f3f12"/>
+        </svg>
+        <div class="bar" hidden><i id="progBar"></i></div><div class="pct" id="progPct">0%</div>
+      </div>
+    </div>
+  </div>
+  <nav class="tabs" id="tabNav">
+    <button data-tab="see" class="active"><span class="sn"><i>1</i></span>현상 보기</button>
+    <button data-tab="ask"><span class="sn"><i>2</i></span>까닭 묻기</button>
+    <button data-tab="model"><span class="sn"><i>3</i></span>모형으로 설명하기</button>
+    <button data-tab="apply"><span class="sn"><i>4</i></span>적용하기</button>
+    <button data-tab="check"><span class="sn"><i>5</i></span>확인하기</button>
+    <span class="tab-sep"></span>
+    <button data-tab="beyond" class="optional"><span class="sn"><i>+</i></span>⚡ 더 알아보기</button>
+  </nav>
+</header>
+
+<div class="prog-list" id="progList"><h4>남은 활동</h4><ul id="progItems"></ul></div>
+
+<main>
+
+<!-- 1 -->
+<section class="panel show" id="panel-see">
+  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">현상 보기 · 설명은 잠깐 미뤄 두고</span></div>
+  <h1 class="big">겨울마다 나는 그 소리,<br>'지지직'의 <span class="t1">정체</span>는?</h1>
+  <p class="lead" style="margin-top:16px">
+    겨울에 스웨터를 벗다가 머리카락이 쭈뼛 서 본 적 있나요?
+    <b class="k">그때 전기가 어디선가 새로 생긴 걸까요?</b>
+    오늘 그 소리의 정체를 끝까지 추적해 봅니다.
+    다만 설명은 잠깐 미뤄 두고, <b>일어난 일부터</b> 봅시다.
+  </p>
+  <figure class="fig" data-fig="sweater"
+    data-alt="털실로 짠 스웨터를 벗는 순간 머리카락이 옷 쪽으로 딸려 올라가며 곤두서는 모습"
+    data-cap="옷을 갈아입을 때 스웨터에 머리카락이 달라붙는 까닭은 무엇일까? (교과서 230쪽 도입)"></figure>
+
+  <div class="card" style="margin-top:20px">
+    <h2 class="sec" style="font-size:clamp(19px,3vw,24px)">👀 이런 적, 있나요?</h2>
+    <p class="lead" style="font-size:17px">겨울이면 흔한 일들입니다. <b class="k">내가 직접 겪어 본 것</b>을 눌러 보세요.</p>
+    <div class="checkgrid" id="seenList">
+      <label class="checkline"><input type="checkbox" data-seen="s1"><span>스웨터를 벗을 때 <b class="k">'지지직'</b> 소리가 나고 머리카락이 곤두선다</span></label>
+      <label class="checkline"><input type="checkbox" data-seen="s2"><span>플라스틱 빗으로 머리를 빗으면 머리카락이 <b class="k">빗에 딸려 온다</b></span></label>
+      <label class="checkline"><input type="checkbox" data-seen="s3"><span>문고리나 자동차 손잡이를 잡는 순간 손끝이 <b class="k">찌릿</b>하다</span></label>
+      <label class="checkline"><input type="checkbox" data-seen="s4"><span>비닐봉지나 택배 완충재를 뜯으면 <b class="k">손에 착 달라붙는다</b></span></label>
+    </div>
+    <p class="help" id="seenMsg">하나라도 겪어 봤다면, 오늘 배울 내용을 이미 몸으로 겪어 본 셈입니다.</p>
+    <div class="note class"><span class="ic">💬</span><div><b>도입 들어가기</b> — 손을 들어 개수를 세어 보세요. 거의 전원이 손을 듭니다. <b>여기서 설명을 시작하지 마세요.</b> "왜 그럴까"는 2단계에서 학생이 스스로 묻게 하는 것이 이 차시의 설계입니다.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">🔎 네 가지의 공통점 찾기</h3>
+    <p class="lead" style="font-size:17px;margin-top:8px">
+      네 장면에는 <b class="k">똑같은 조건</b>이 숨어 있습니다. 힌트는 세 가지예요.</p>
+    <div class="pill-list">
+      <span class="pill">① 그 직전에 <b>문지르거나 스치는 일</b>이 있었다</span>
+      <span class="pill">② 대체로 <b>건조한 날</b>이다</span>
+      <span class="pill">③ 결과는 <b>붙거나, 서거나, 찌릿</b>하다</span>
+    </div>
+    <p class="help">이 공통점에 이름을 붙이면 <b class="t1">마찰 전기</b>입니다.
+      종류가 다른 두 물체가 마찰하여 발생하는 전기예요. 이름은 여기까지만 —
+      <b>정작 무슨 일이 일어난 것인지</b>는 2·3단계에서 밝힙니다.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="eyebrow" style="margin-bottom:8px">오늘의 목표</div>
+    <h3 class="card-t" style="margin-bottom:14px">이번 시간이 끝나면 이걸 할 수 있다</h3>
+    <div class="grid c2">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:none;width:30px;height:30px;border-radius:9px;background:var(--c2);color:#f2ede4;display:grid;place-items:center;font-family:var(--mono);font-weight:700">1</div>
+        <div><b class="k">마찰 전기 현상을 관찰하고, 전기력으로 설명할 수 있다.</b><br><span class="muted" style="font-size:16px">언제 밀어내고 언제 끌어당기는지까지.</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:none;width:30px;height:30px;border-radius:9px;background:var(--c3);color:#f2f7ea;display:grid;place-items:center;font-family:var(--mono);font-weight:700">2</div>
+        <div><b class="k">물체가 전기를 띠는 까닭을 원자 모형으로 설명할 수 있다.</b><br><span class="muted" style="font-size:16px">전자가 어디로 갔는지 직접 옮겨 보면서.</span></div>
+      </div>
+    </div>
+    <div class="pill-list">
+      <span class="pill">핵심어 · <b>마찰 전기</b></span><span class="pill"><b>전기력</b></span>
+      <span class="pill"><b>대전 · 대전체</b></span><span class="pill"><b>전자의 이동</b></span>
+    </div>
+  </div>
+  <div class="cta-row"><button class="btn primary" data-go="ask">2단계 · 직접 관찰해 보기 →</button></div>
+</section>
+
+<!-- 2 -->
+<section class="panel" id="panel-ask">
+  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">까닭 묻기 · 무엇이 옮겨 갔을까?</span></div>
+  <h2 class="sec">면장갑으로 고무풍선을 문질러 봅시다</h2>
+  <p class="lead">교과서 230쪽 「해 보기」입니다. 순서대로 해 보고, <b class="k">일어난 일을 그대로 관찰</b>합니다.
+    질문은 그 다음이에요.</p>
+
+  <div class="card" style="margin-top:20px">
+    <div class="badge" style="margin-bottom:12px">🧤 실험 순서</div>
+    <ol class="doit">
+      <li>면장갑으로 고무풍선 <b class="k">두 개</b>를 각각 문지른다.</li>
+      <li>한 고무풍선을 스탠드에 매단 다음, <b class="k">다른 고무풍선</b>을 가까이 한다.</li>
+      <li>이번에는 방금 그 <b class="k">면장갑</b>을 매달린 고무풍선에 가까이 한다.</li>
+    </ol>
+    <figure class="fig" data-fig="balloon"
+      data-alt="면장갑으로 고무풍선을 문지른 뒤, 스탠드에 실로 매단 고무풍선에 가까이 하는 실험 장면"
+      data-cap="준비물: 고무풍선 2개, 면장갑, 스탠드, 실 (교과서 230쪽)"></figure>
+    <div class="note class"><span class="ic">💬</span><div><b>중단원 지도상의 유의점</b> — ① 마찰시킨 고무풍선을 <b>바닥에 내려놓으면 쉽게 중성 상태로 돌아갑니다.</b> 모둠원이 들고 있는 상태로 관찰하게 하세요. ② 면장갑 대신 헝겊·부직포도 됩니다. ③ 전하의 이동은 눈에 보이지 않으므로 <b>실험을 먼저 하고 원자 모형은 3단계에서</b> 다룹니다. 순서를 바꾸지 마세요.</div></div>
+  </div>
+
+  <!-- 관찰대 -->
+  <div class="card" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:12px">🔭 관찰 — 매달린 풍선은 어떻게 움직일까</div>
+    <div class="lab">
+      <h3>🎈 마찰 전기 관찰대</h3>
+      <p class="lead" style="font-size:17px">버튼을 누르면 그 장면이 그대로 재생됩니다.
+        <b class="k">두 장면을 모두</b> 보고, 차이를 눈으로 확인하세요.</p>
+      <div class="svgstage">
+        <svg viewBox="0 0 620 330" role="img" aria-label="스탠드에 실로 매단 고무풍선 옆으로 물체를 가까이 하는 관찰 장치. 다른 고무풍선을 가까이 하면 매달린 풍선이 반대쪽으로 밀려나고, 면장갑을 가까이 하면 매달린 풍선이 면장갑 쪽으로 끌려온다.">
+          <rect x="52" y="288" width="130" height="10" rx="4" fill="#c1ac82"/>
+          <rect x="108" y="52" width="12" height="238" fill="#c1ac82"/>
+          <rect x="108" y="52" width="200" height="10" rx="4" fill="#c1ac82"/>
+          <circle cx="300" cy="62" r="4" fill="#96805c"/>
+          <g id="fsPush" opacity="0">
+            <line x1="272" y1="120" x2="222" y2="120" stroke="#8a5f24" stroke-width="4"/>
+            <polygon points="208,120 226,111 226,129" fill="#8a5f24"/>
+            <text x="252" y="103" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="16" font-weight="700" fill="#8a5f24">밀어냄</text>
+          </g>
+          <g id="fsPull" opacity="0">
+            <line x1="330" y1="120" x2="380" y2="120" stroke="#8a5f24" stroke-width="4"/>
+            <polygon points="394,120 376,111 376,129" fill="#8a5f24"/>
+            <text x="358" y="103" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="16" font-weight="700" fill="#8a5f24">끌어당김</text>
+          </g>
+          <g id="fsSwing" style="transform-origin:300px 62px">
+            <line x1="300" y1="62" x2="300" y2="152" stroke="#96805c" stroke-width="2"/>
+            <polygon points="300,148 292,158 308,158" fill="#a05c2c"/>
+            <ellipse cx="300" cy="192" rx="32" ry="40" fill="#efe0c2" stroke="#a05c2c" stroke-width="2.4"/>
+            <ellipse cx="289" cy="176" rx="7" ry="11" fill="#ffffff" opacity="0.16"/>
+            <text x="300" y="256" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="15" fill="#4a3a26">매단 고무풍선</text>
+          </g>
+          <g id="fsProbe" style="transform:translate(0px,0px)">
+            <g id="fsBall2" opacity="0">
+              <polygon points="520,148 512,158 528,158" fill="#a05c2c"/>
+              <ellipse cx="520" cy="192" rx="32" ry="40" fill="#efe0c2" stroke="#a05c2c" stroke-width="2.4"/>
+              <ellipse cx="509" cy="176" rx="7" ry="11" fill="#ffffff" opacity="0.16"/>
+              <text x="520" y="256" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="15" fill="#4a3a26">다른 고무풍선</text>
+            </g>
+            <g id="fsGlove" opacity="0">
+              <path d="M498 234 L498 178 Q498 158 518 158 Q538 158 538 178 L538 234 Z" fill="#eee3cc" stroke="#6b573f" stroke-width="2"/>
+              <path d="M498 198 Q482 194 480 208 Q478 222 496 226" fill="#eee3cc" stroke="#6b573f" stroke-width="2"/>
+              <line x1="511" y1="172" x2="511" y2="228" stroke="#6b573f" stroke-width="1.4"/>
+              <line x1="525" y1="172" x2="525" y2="228" stroke="#6b573f" stroke-width="1.4"/>
+              <rect x="493" y="230" width="50" height="15" rx="5" fill="#c9b691"/>
+              <text x="518" y="266" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="15" fill="#4a3a26">면장갑</text>
+            </g>
+          </g>
+          <text id="fsCap" x="310" y="318" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="15" fill="#6b573f">아래 버튼을 눌러 장면을 재생해 보세요</text>
+        </svg>
+      </div>
+      <div class="modebar">
+        <button class="btn ghost sm" data-obs="pp">① 문지른 풍선 ↔ 풍선</button>
+        <button class="btn ghost sm" data-obs="pg">② 면장갑 ↔ 풍선</button>
+        <button class="btn ghost sm" data-obs="reset">처음으로</button>
+      </div>
+      <div class="verdict" id="obsMsg">두 버튼을 <b>모두</b> 눌러 두 장면을 비교해 보세요.</div>
+      <p class="honest"><span class="ic">📌</span>화면은 실제 실험을 단순하게 옮긴 것입니다. 실제 풍선은 천천히 흔들리며 움직여요.
+        <b>진짜 실험을 꼭 해 보세요.</b> 이 화면은 예습·복습용입니다.</p>
+      <div class="note class"><span class="ic">💬</span><div><b>해 보기 모범 답안</b> — 다른 고무풍선을 가까이 할 때는 <b>그 풍선에서 먼 방향</b>으로 밀려나고, 면장갑을 가까이 할 때는 <b>면장갑에 가까운 방향</b>으로 끌려옵니다. 두 장면을 칠판에 나란히 그려 두고 다음 카드의 질문으로 넘어가세요.</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">🤔 그래서, 오늘의 질문</h3>
+    <p class="lead" style="font-size:18px;margin-top:10px">
+      같은 면장갑으로 문질렀는데, <b class="k">왜 한 번은 밀어내고 한 번은 끌어당길까요?</b></p>
+    <textarea id="askTa" placeholder="지금 떠오르는 대로 써 보세요. 정답을 맞히는 칸이 아닙니다. 예: 풍선끼리는 서로 같은 무언가를 갖게 되고, 면장갑은 반대인 것 같다…"></textarea>
+    <span class="savemark" id="askSaved">✔ 저장됨</span>
+    <p class="help">이 질문의 답은 <b class="k">3단계에서 원자 그림으로</b> 풀립니다.
+      지금 쓴 문장을 그때 다시 읽어 보세요. 얼마나 가까웠는지 알게 될 거예요.</p>
+    <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — 여기서 <b>설명하지 마세요.</b> 두세 명만 읽게 하고 판단 없이 칠판에 옮겨 적습니다. 3단계 전자 옮기기 장치를 다 돌린 뒤 이 문장들로 돌아오면 학생 스스로 자기 설명을 고칩니다.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">⚡ 여기까지는 이름을 붙이고 갑시다 — 전기력</h3>
+    <p class="lead" style="font-size:17.5px;margin-top:8px">
+      물체를 마찰하여 전기를 띠면 물체 사이에 힘이 작용합니다.
+      이렇게 <b class="k">전기를 띤 두 물체 사이에 작용하는 힘</b>을 <b class="t2">전기력</b>이라고 해요.
+      전기력의 방향에는 규칙이 있습니다.</p>
+    <div class="forcegrid">
+      <div class="forcecard">
+        <svg viewBox="0 0 220 110" role="img" aria-label="플러스 전하를 띤 두 물체가 서로 반대 방향인 바깥쪽으로 밀려나는 모습">
+          <line x1="70" y1="26" x2="30" y2="26" stroke="#8a5f24" stroke-width="3.4"/>
+          <polygon points="18,26 32,19 32,33" fill="#8a5f24"/>
+          <line x1="150" y1="26" x2="190" y2="26" stroke="#8a5f24" stroke-width="3.4"/>
+          <polygon points="202,26 188,19 188,33" fill="#8a5f24"/>
+          <circle cx="70" cy="68" r="26" fill="#fdf1ef" stroke="#b23a30" stroke-width="2.6"/>
+          <text x="70" y="69" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="28" font-weight="800" fill="#b23a30">+</text>
+          <circle cx="150" cy="68" r="26" fill="#fdf1ef" stroke="#b23a30" stroke-width="2.6"/>
+          <text x="150" y="69" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="28" font-weight="800" fill="#b23a30">+</text>
+        </svg>
+        <div class="fc-t"><span class="t4">(+)</span> 와 <span class="t4">(+)</span></div>
+        <div class="fc-d">같은 종류 → <b class="k">밀어낸다</b></div>
+      </div>
+      <div class="forcecard">
+        <svg viewBox="0 0 220 110" role="img" aria-label="마이너스 전하를 띤 두 물체가 서로 반대 방향인 바깥쪽으로 밀려나는 모습">
+          <line x1="70" y1="26" x2="30" y2="26" stroke="#8a5f24" stroke-width="3.4"/>
+          <polygon points="18,26 32,19 32,33" fill="#8a5f24"/>
+          <line x1="150" y1="26" x2="190" y2="26" stroke="#8a5f24" stroke-width="3.4"/>
+          <polygon points="202,26 188,19 188,33" fill="#8a5f24"/>
+          <circle cx="70" cy="68" r="26" fill="#f3ece1" stroke="#2e5f8f" stroke-width="2.6"/>
+          <text x="70" y="69" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="30" font-weight="800" fill="#2e5f8f">−</text>
+          <circle cx="150" cy="68" r="26" fill="#f3ece1" stroke="#2e5f8f" stroke-width="2.6"/>
+          <text x="150" y="69" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="30" font-weight="800" fill="#2e5f8f">−</text>
+        </svg>
+        <div class="fc-t"><span class="t5">(−)</span> 와 <span class="t5">(−)</span></div>
+        <div class="fc-d">같은 종류 → <b class="k">밀어낸다</b></div>
+      </div>
+      <div class="forcecard">
+        <svg viewBox="0 0 220 110" role="img" aria-label="플러스 전하를 띤 물체와 마이너스 전하를 띤 물체가 서로 마주 보는 안쪽 방향으로 끌려오는 모습">
+          <line x1="54" y1="26" x2="94" y2="26" stroke="#8a5f24" stroke-width="3.4"/>
+          <polygon points="106,26 92,19 92,33" fill="#8a5f24"/>
+          <line x1="166" y1="26" x2="126" y2="26" stroke="#8a5f24" stroke-width="3.4"/>
+          <polygon points="114,26 128,19 128,33" fill="#8a5f24"/>
+          <circle cx="70" cy="68" r="26" fill="#fdf1ef" stroke="#b23a30" stroke-width="2.6"/>
+          <text x="70" y="69" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="28" font-weight="800" fill="#b23a30">+</text>
+          <circle cx="150" cy="68" r="26" fill="#f3ece1" stroke="#2e5f8f" stroke-width="2.6"/>
+          <text x="150" y="69" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="30" font-weight="800" fill="#2e5f8f">−</text>
+        </svg>
+        <div class="fc-t"><span class="t4">(+)</span> 와 <span class="t5">(−)</span></div>
+        <div class="fc-d">다른 종류 → <b class="k">끌어당긴다</b></div>
+      </div>
+    </div>
+    <p class="help">이 규칙을 관찰대에 대 보면 —
+      밀어냈던 <b>풍선 ↔ 풍선</b>은 <b class="k">같은 종류</b>의 전하를,
+      끌어당겼던 <b>면장갑 ↔ 풍선</b>은 <b class="k">다른 종류</b>의 전하를 띠고 있었다는 뜻입니다.
+      그런데 무엇이 (+)이고 무엇이 (−)일까요? 그리고 애초에 그 전하는 어디서 왔을까요? → 3단계.</p>
+    <div class="note class"><span class="ic">💬</span><div><b>차시 지도상의 유의점</b> — 전기력·대전·대전체는 학생이 <b>처음 접하는 용어</b>입니다. 용어를 주고 끝내지 말고, 관찰한 두 장면을 이 용어로 <b>말해 보게</b> 하세요. 같은 물체끼리 마찰하는 경우는 다루지 않습니다.</div></div>
+  </div>
+  <div class="cta-row"><button class="btn primary" data-go="model">3단계 · 원자 그림으로 풀어 보기 →</button></div>
+</section>
+
+<!-- 3 -->
+<section class="panel" id="panel-model">
+  <div class="stepline"><span class="sbadge">STEP 3</span><span class="swhat">모형으로 설명하기 · 원자 그림으로 풀어 보기</span></div>
+  <h2 class="sec">옮겨 간 것은 '전자'입니다</h2>
+  <p class="lead">모든 물체는 원자로 되어 있습니다. 원자는 <b class="t4">(+)전하를 띤 원자핵</b>과
+    <b class="t3">(−)전하를 띤 전자</b>로 이루어져 있고, 둘의 양이 같아서
+    <b class="k">원자는 전기를 띠지 않습니다.</b> 그래서 원자로 이루어진 물체도 원래는 전기를 띠지 않아요.
+    그럼 문지르면 무슨 일이 일어날까요? 직접 옮겨 봅시다.</p>
+
+  <div class="card" style="margin-top:20px">
+    <div class="lab">
+      <h3>⚡ 전자 옮기기 — 수건으로 고무풍선 문지르기</h3>
+      <p class="lead" style="font-size:17px">버튼을 누를 때마다 전자가 <b class="t3">한 개씩</b> 수건에서 고무풍선으로 건너갑니다.
+        <b class="k">숫자 세 개</b>를 눈으로 따라가 보세요.</p>
+      <div class="svgstage">
+        <svg viewBox="0 0 640 340" role="img" aria-label="왼쪽에 수건, 오른쪽에 고무풍선을 그린 원자 모형. 각 물체 안에 원자가 네 개씩 있고, 원자마다 고정된 원자핵과 그 둘레를 도는 전자 한 개가 있다. 버튼을 누르면 수건의 전자가 하나씩 고무풍선으로 옮겨 가고 원자핵은 제자리에 남는다.">
+          <g id="emFlow" opacity="0">
+            <line x1="258" y1="32" x2="356" y2="32" stroke="#3a7a3f" stroke-width="3" stroke-dasharray="7 6"/>
+            <polygon points="370,32 354,24 354,40" fill="#3a7a3f"/>
+            <text x="310" y="17" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="14" font-weight="700" fill="#3a7a3f">전자 이동</text>
+          </g>
+          <rect x="24" y="56" width="268" height="230" rx="18" fill="#f3ede2" stroke="#a08b64" stroke-width="2"/>
+          <text x="158" y="46" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="18" font-weight="700" fill="#4a3a26">수건</text>
+          <ellipse cx="482" cy="170" rx="134" ry="118" fill="#f4eee3" stroke="#a05c2c" stroke-width="2.4"/>
+          <polygon points="482,286 470,306 494,306" fill="#a05c2c"/>
+          <text x="482" y="46" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="18" font-weight="700" fill="#4a3a26">고무풍선</text>
+
+          <circle cx="94" cy="124" r="34" fill="none" stroke="#cbb894" stroke-width="1.4" stroke-dasharray="4 5"/>
+          <circle cx="206" cy="124" r="34" fill="none" stroke="#cbb894" stroke-width="1.4" stroke-dasharray="4 5"/>
+          <circle cx="94" cy="226" r="34" fill="none" stroke="#cbb894" stroke-width="1.4" stroke-dasharray="4 5"/>
+          <circle cx="206" cy="226" r="34" fill="none" stroke="#cbb894" stroke-width="1.4" stroke-dasharray="4 5"/>
+          <circle cx="430" cy="120" r="34" fill="none" stroke="#cbb894" stroke-width="1.4" stroke-dasharray="4 5"/>
+          <circle cx="534" cy="120" r="34" fill="none" stroke="#cbb894" stroke-width="1.4" stroke-dasharray="4 5"/>
+          <circle cx="430" cy="222" r="34" fill="none" stroke="#cbb894" stroke-width="1.4" stroke-dasharray="4 5"/>
+          <circle cx="534" cy="222" r="34" fill="none" stroke="#cbb894" stroke-width="1.4" stroke-dasharray="4 5"/>
+
+          <circle id="tg0" cx="94" cy="124" r="42" fill="none" stroke="#b23a30" stroke-width="2" opacity="0"/>
+          <circle id="tg1" cx="206" cy="124" r="42" fill="none" stroke="#b23a30" stroke-width="2" opacity="0"/>
+          <circle id="tg2" cx="94" cy="226" r="42" fill="none" stroke="#b23a30" stroke-width="2" opacity="0"/>
+          <circle id="tg3" cx="206" cy="226" r="42" fill="none" stroke="#b23a30" stroke-width="2" opacity="0"/>
+          <circle id="bg0" cx="430" cy="120" r="42" fill="none" stroke="#2e5f8f" stroke-width="2" opacity="0"/>
+          <circle id="bg1" cx="534" cy="120" r="42" fill="none" stroke="#2e5f8f" stroke-width="2" opacity="0"/>
+          <circle id="bg2" cx="430" cy="222" r="42" fill="none" stroke="#2e5f8f" stroke-width="2" opacity="0"/>
+          <circle id="bg3" cx="534" cy="222" r="42" fill="none" stroke="#2e5f8f" stroke-width="2" opacity="0"/>
+
+          <circle cx="94" cy="124" r="16" fill="#f3ede2" stroke="#b23a30" stroke-width="2.2"/>
+          <text x="94" y="125" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="22" font-weight="800" fill="#b23a30">+</text>
+          <circle cx="206" cy="124" r="16" fill="#f3ede2" stroke="#b23a30" stroke-width="2.2"/>
+          <text x="206" y="125" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="22" font-weight="800" fill="#b23a30">+</text>
+          <circle cx="94" cy="226" r="16" fill="#f3ede2" stroke="#b23a30" stroke-width="2.2"/>
+          <text x="94" y="227" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="22" font-weight="800" fill="#b23a30">+</text>
+          <circle cx="206" cy="226" r="16" fill="#f3ede2" stroke="#b23a30" stroke-width="2.2"/>
+          <text x="206" y="227" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="22" font-weight="800" fill="#b23a30">+</text>
+          <circle cx="430" cy="120" r="16" fill="#f3ede2" stroke="#b23a30" stroke-width="2.2"/>
+          <text x="430" y="121" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="22" font-weight="800" fill="#b23a30">+</text>
+          <circle cx="534" cy="120" r="16" fill="#f3ede2" stroke="#b23a30" stroke-width="2.2"/>
+          <text x="534" y="121" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="22" font-weight="800" fill="#b23a30">+</text>
+          <circle cx="430" cy="222" r="16" fill="#f3ede2" stroke="#b23a30" stroke-width="2.2"/>
+          <text x="430" y="223" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="22" font-weight="800" fill="#b23a30">+</text>
+          <circle cx="534" cy="222" r="16" fill="#f3ede2" stroke="#b23a30" stroke-width="2.2"/>
+          <text x="534" y="223" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="22" font-weight="800" fill="#b23a30">+</text>
+
+          <g class="fe" id="fe-t0" style="transform:translate(0px,0px)">
+            <circle cx="116" cy="98" r="12" fill="#3a7a3f"/>
+            <text x="116" y="99" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="18" font-weight="800" fill="#f2f7ea">−</text></g>
+          <g class="fe" id="fe-t1" style="transform:translate(0px,0px)">
+            <circle cx="228" cy="98" r="12" fill="#3a7a3f"/>
+            <text x="228" y="99" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="18" font-weight="800" fill="#f2f7ea">−</text></g>
+          <g class="fe" id="fe-t2" style="transform:translate(0px,0px)">
+            <circle cx="116" cy="200" r="12" fill="#3a7a3f"/>
+            <text x="116" y="201" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="18" font-weight="800" fill="#f2f7ea">−</text></g>
+          <g class="fe" id="fe-t3" style="transform:translate(0px,0px)">
+            <circle cx="228" cy="200" r="12" fill="#3a7a3f"/>
+            <text x="228" y="201" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="18" font-weight="800" fill="#f2f7ea">−</text></g>
+          <g class="fe">
+            <circle cx="452" cy="94" r="12" fill="#3a7a3f"/>
+            <text x="452" y="95" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="18" font-weight="800" fill="#f2f7ea">−</text></g>
+          <g class="fe">
+            <circle cx="556" cy="94" r="12" fill="#3a7a3f"/>
+            <text x="556" y="95" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="18" font-weight="800" fill="#f2f7ea">−</text></g>
+          <g class="fe">
+            <circle cx="452" cy="196" r="12" fill="#3a7a3f"/>
+            <text x="452" y="197" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="18" font-weight="800" fill="#f2f7ea">−</text></g>
+          <g class="fe">
+            <circle cx="556" cy="196" r="12" fill="#3a7a3f"/>
+            <text x="556" y="197" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="18" font-weight="800" fill="#f2f7ea">−</text></g>
+
+          <circle cx="122" cy="322" r="9" fill="#f3ede2" stroke="#b23a30" stroke-width="2"/>
+          <text x="122" y="323" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="13" font-weight="800" fill="#b23a30">+</text>
+          <text x="138" y="327" font-family="Pretendard, sans-serif" font-size="14" fill="#6b573f">원자핵 — 제자리에 고정</text>
+          <circle cx="366" cy="322" r="9" fill="#3a7a3f"/>
+          <text x="366" y="323" text-anchor="middle" dominant-baseline="central" font-family="Pretendard, sans-serif" font-size="13" font-weight="800" fill="#f2f7ea">−</text>
+          <text x="382" y="327" font-family="Pretendard, sans-serif" font-size="14" fill="#6b573f">전자 — 이것만 옮겨 갑니다</text>
+        </svg>
+      </div>
+      <div class="modebar">
+        <button class="btn primary sm" id="emMove">전자 1개 옮기기 →</button>
+        <button class="btn ghost sm" id="emBack">← 되돌리기</button>
+        <button class="btn ghost sm" id="emReset">처음으로</button>
+      </div>
+      <div class="readout">
+        <div class="r"><div class="lab2">🧻 수건이 띠는 전하</div><div class="v" id="emTowel">중성</div></div>
+        <div class="r"><div class="lab2">🎈 고무풍선이 띠는 전하</div><div class="v" id="emBall">중성</div></div>
+      </div>
+      <div class="readout">
+        <div class="r"><div class="lab2">수건의 전자 수</div><div class="v" id="emTn">4</div></div>
+        <div class="r"><div class="lab2">고무풍선의 전자 수</div><div class="v" id="emBn">4</div></div>
+        <div class="r"><div class="lab2">전자 총 개수</div><div class="v" id="emTot">8</div></div>
+      </div>
+      <div class="verdict" id="emMsg">지금은 둘 다 <b>전기를 띠지 않습니다.</b> 각 물체에서 (+)의 수와 (−)의 수가 같으니까요.</div>
+      <p class="honest"><span class="ic">📌</span>실제 물체에는 원자가 셀 수 없이 많고 전자도 훨씬 많습니다.
+        그림에서는 원자 4개씩만 그렸어요. <b>개수는 실제 값이 아니라 관계를 보기 위한 것</b>입니다.</p>
+      <div class="note class"><span class="ic">💬</span><div><b>여기가 이 차시의 핵심입니다</b> — ① 전자를 옮기는 동안 <b>"원자핵은 움직였나요?"</b>를 계속 물으세요. ② 4번 다 옮긴 뒤 <b>전자 총 개수 8</b>을 손가락으로 짚어 주세요. 제목이 여기서 회수됩니다 — '지지직의 정체'는 새로 생긴 전기가 아니라 <b>옮겨 간 전자</b>입니다. ③ 그다음 2단계에 학생이 쓴 문장으로 돌아가 스스로 고치게 하세요.</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t" style="margin-bottom:6px">⚠️ 여기서 자주 어긋납니다</h3>
+    <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ①</b> — "(−)전하로 대전된 물체 안에는 <b>(−)전하만</b> 있다."<br>
+      → <b class="k">아닙니다.</b> (+)전하를 띤 <b class="t4">원자핵은 그대로 있습니다.</b>
+      전자를 얻어서 (−)의 양이 (+)의 양보다 <b>많아졌을 뿐</b>이에요. 그래서 (−)전하를 띱니다.</div></div>
+    <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ②</b> — "마찰하면 <b>전기가 새로 만들어진다</b>."<br>
+      → <b class="k">아닙니다.</b> 전자는 새로 생기지 않습니다.
+      한 물체에 있던 전자의 일부가 다른 물체로 <b class="t3">옮겨 갈</b> 뿐이에요.
+      위 장치에서 전자 총 개수가 끝까지 <b>8개 그대로</b>였던 것이 그 뜻입니다.</div></div>
+    <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ③</b> — "원자핵도 <b>같이 옮겨 간다</b>."<br>
+      → <b class="k">아닙니다.</b> 움직이는 것은 <b class="t3">전자뿐</b>입니다.
+      원자핵은 제자리에 있어요. 그래서 전자를 잃은 쪽에 (+)가 남는 겁니다.</div></div>
+    <div class="note class"><span class="ic">💬</span><div><b>오개념 지도(교과서 명시)</b> — 마찰 전기는 <b>전자가 만들어져서가 아니라 전자의 일부가 이동해서</b> 생긴다는 점, 그리고 (−)로 대전된 물체도 (+)전하량을 그대로 가지고 있다는 점을 반드시 짚어 주세요. 학생 답안에서 "(-)만 있다", "전기가 생겼다"는 표현이 나오면 위 장치를 다시 켜서 숫자로 반박하게 합니다.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t" style="margin-bottom:14px">오늘의 용어 네 개</h3>
+    <div class="terms">
+      <div class="term" style="--c:var(--c1)"><div class="nm t1">마찰 전기</div><div class="de">종류가 다른 두 물체가 마찰하여 발생하는 전기.</div></div>
+      <div class="term" style="--c:var(--c4)"><div class="nm t4">대전</div><div class="de">물체가 (+)전하나 (−)전하를 띠는 현상.</div></div>
+      <div class="term" style="--c:var(--c4)"><div class="nm t4">대전체</div><div class="de">대전된 물체. 즉 전기를 띤 물체.</div></div>
+      <div class="term" style="--c:var(--c2)"><div class="nm t2">전기력</div><div class="de">전기를 띤 두 물체 사이에 작용하는 힘.</div></div>
+    </div>
+    <div class="dtable-wrap" style="margin-top:16px">
+      <table class="dtable">
+        <tr><th>마찰한 뒤</th><th>전자는</th><th>그래서 띠는 전하</th></tr>
+        <tr><td>고무풍선</td><td class="t3" style="font-weight:800">얻었다</td><td class="t5" style="font-weight:800">(−)전하로 대전</td></tr>
+        <tr><td>수건</td><td class="t3" style="font-weight:800">잃었다</td><td class="t4" style="font-weight:800">(+)전하로 대전</td></tr>
+      </table>
+    </div>
+    <p class="help">2단계의 질문에 이제 답할 수 있습니다. 문지른 <b>두 풍선은 둘 다 (−)</b> — 같은 종류라 밀어냈고,
+      <b>면장갑은 (+), 풍선은 (−)</b> — 다른 종류라 끌어당겼습니다.</p>
+  </div>
+
+  <!-- 빈칸 -->
+  <div class="card cloze-set" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:12px">✍️ 빈칸을 눌러 확인 — 먼저 머릿속으로 답한 뒤에</div>
+    <p class="cloze-line">
+      두 물체를 서로 마찰하면 한 물체에서 다른 물체로 <span class="cloze" data-ans="전자" data-c="c3">　</span>가 이동한다.
+    </p>
+    <p class="cloze-line">
+      전자를 잃은 물체는 <span class="cloze" data-ans="(+)전하" data-c="c4">　</span>를 띠고,
+      전자를 얻은 물체는 <span class="cloze" data-ans="(−)전하" data-c="c5">　</span>를 띤다.
+    </p>
+    <p class="cloze-line">
+      이처럼 물체가 전기를 띠는 현상을 <span class="cloze" data-ans="대전" data-c="c4">　</span>이라 하고,
+      대전된 물체를 <span class="cloze" data-ans="대전체" data-c="c4">　</span>라고 한다.
+    </p>
+    <p class="cloze-line">
+      종류가 다른 두 물체가 마찰하여 발생하는 전기를 <span class="cloze" data-ans="마찰 전기" data-c="c1">　</span>라고 한다.
+    </p>
+    <p class="cloze-line">
+      전기를 띤 두 물체 사이에 작용하는 힘을 <span class="cloze" data-ans="전기력" data-c="c2">　</span>이라고 한다.
+    </p>
+    <p class="cloze-line">
+      전기력은 같은 종류의 전하 사이에는 서로 <span class="cloze" data-ans="밀어 내는" data-c="c2">　</span> 방향으로,
+      다른 종류의 전하 사이에는 서로 <span class="cloze" data-ans="끌어당기는" data-c="c2">　</span> 방향으로 작용한다.
+    </p>
+    <p class="cloze-line">
+      마찰할 때 이동하는 것은 전자뿐이고, <span class="cloze" data-ans="원자핵" data-c="c4">　</span>은 이동하지 않는다.
+    </p>
+    <div class="cloze-done">✅ 이 문단은 다 채웠어요!</div>
+    <p class="cloze-hint">빈칸을 그냥 눌러 답만 보면 남지 않아요. 소리 내어 답해 보고 누르세요.</p>
+  </div>
+
+  <div class="miniquiz" data-quiz="model"></div>
+  <div class="cta-row"><button class="btn primary" data-go="apply">4단계 · 생활 속에서 찾아보기 →</button></div>
+</section>
+
+<!-- 4 -->
+<section class="panel" id="panel-apply">
+  <div class="stepline"><span class="sbadge">STEP 4</span><span class="swhat">적용하기 · 그래서 이런 일이</span></div>
+  <h2 class="sec">이제 1단계의 그 장면들이 풀립니다</h2>
+  <p class="lead">문지르거나 스치면 전자가 옮겨 가고, 두 물체는 서로 다른 전하를 띠게 됩니다.
+    그러면 <b class="k">끌어당기는 전기력</b>이 작용하죠. 생활 속 사례로 확인해 봅시다.</p>
+
+  <h3 class="card-t" style="margin-top:24px">🧲 생활 속 마찰 전기</h3>
+  <div class="use-grid" style="margin-top:14px">
+    <div class="use">
+      <div class="u-t">🧥 패딩을 벗을 때 '지지직'</div>
+      <div class="u-d">벗는 동안 옷과 머리카락이 서로 <b class="k">마찰</b>합니다.
+        그때 한쪽이 전자를 잃고 다른 쪽이 얻어 <b class="k">다른 종류의 전하</b>를 띠게 되고,
+        머리카락이 옷 쪽으로 딸려 올라가요.</div>
+    </div>
+    <div class="use">
+      <div class="u-t">🖥️ 마른 걸레로 닦은 화면에 먼지가 다시</div>
+      <div class="u-d">모니터나 TV 화면을 마른 천으로 닦으면 화면이 <b class="t4">대전체</b>가 됩니다.
+        그래서 방금 닦았는데도 먼지가 금세 다시 달라붙어요. 깨끗해 보이려다 되레 먼지를 부른 셈이죠.
+        <b class="k">그런데 먼지 쪽은 문지른 적이 없죠?</b> 이 한 칸은 아래에서 다시 이야기합니다.</div>
+    </div>
+    <div class="use">
+      <div class="u-t">📦 택배 완충재가 손에 착</div>
+      <div class="u-d">비닐이나 뽁뽁이를 뜯을 때도 두 면이 스치며 전자가 옮겨 갑니다.
+        손과 비닐이 다른 전하를 띠어 <b class="k">끌어당기는 전기력</b>이 작용해요.
+        털어도 잘 안 떨어지는 이유입니다.</div>
+    </div>
+  </div>
+  <p class="help">패딩과 택배 완충재는 구조가 똑같습니다 — <b>① 마찰 → ② 전자 이동 → ③ 서로 다른 전하 → ④ 끌어당기는 전기력.</b>
+    <b class="k">두 물체가 서로 문질러졌을 때</b> 이 네 칸으로 풀립니다.
+    그런데 화면에 다시 붙는 먼지는 <b>①번 칸이 비어 있습니다.</b> 먼지는 아무도 문지르지 않았으니까요. 바로 아래에서 이어집니다.</p>
+
+  <div class="card" style="margin-top:20px">
+    <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">교과서 231쪽 · 사고력</span></h3>
+    <p class="lead" style="font-size:17.5px;margin-top:10px">
+      플라스틱 빗으로 머리를 빗으면 머리카락이 빗에 달라붙습니다.
+      그 까닭을 <b class="k">마찰 전기와 관련지어</b> 설명해 보세요.</p>
+    <textarea id="essay" placeholder="힌트: 무엇과 무엇이 마찰했나요? 그때 무엇이 이동했나요? 두 물체는 각각 어떤 전하를 띠게 되나요? 그래서 어떤 힘이 작용하나요?"></textarea>
+    <span class="savemark" id="essaySaved">✔ 저장됨</span>
+    <div class="btn-row"><button class="btn ghost sm" id="ansBtn">모범 답안 확인하기</button></div>
+    <div class="explain" id="modelAns" style="margin-top:12px">
+      <div class="why">✍️ 모범 답안</div>
+      플라스틱 빗과 머리카락을 서로 마찰하면 <b>한 물체에서 다른 물체로 전자가 이동</b>하여
+      두 물체가 <b>서로 다른 종류의 전하</b>를 띠게 된다.
+      서로 다른 종류의 전하를 띠는 두 물체 사이에는 <b>끌어당기는 전기력</b>이 작용하므로
+      머리카락이 빗에 달라붙는다.
+    </div>
+    <div class="note class"><span class="ic">💬</span><div><b>채점 포인트</b> — ① <b>전자의 이동</b>을 썼는가 ② <b>서로 다른 종류의 전하</b>를 썼는가 ③ <b>끌어당기는 전기력</b>을 썼는가. 세 요소가 다 있어야 완전한 답입니다. "정전기 때문에"만 쓴 답은 ①②③이 모두 빠진 것이니 되돌려 보내세요.</div></div>
+  </div>
+
+  <div class="clue">
+    <div class="cl-h">🧩 첫 번째 블록 · 단서 ①을 얻었다</div>
+    <figure class="fig" data-fig="filter"
+      data-alt="공기 청정기 내부에서 꺼낸 필터에 미세 먼지가 잔뜩 달라붙어 회색으로 변한 모습"></figure>
+    <p style="margin-top:12px">중단원 질문은 이것이었습니다 —
+      <b class="k">"공기 청정기의 필터에 미세 먼지가 달라붙는 까닭은 무엇일까?"</b></p>
+    <p style="margin-top:10px">오늘 얻은 단서는 여기까지입니다.<br>
+      → <b class="t2">대전된 공기 청정기 필터와 미세 먼지 사이에 작용하는 힘은 「전기력」이다.</b></p>
+    <p style="margin-top:10px">그런데 이상하지 않나요? <b class="k">먼지는 아무도 문지른 적이 없습니다.</b>
+      문지르지 않았으면 전기를 안 띠어야 하고, 전기를 안 띠면 전기력도 못 받을 텐데요.
+      이 구멍을 메우는 것이 <b>다음 차시</b>입니다.</p>
+    <div class="note class"><span class="ic">💬</span><div><b>지도 방향</b> — 첫 번째 블록 질문의 <b>첫 번째 단서</b>입니다. "대전된 물체는 주변에 전기력을 작용한다"까지만 확정하고, <b>답을 완성하지 마세요.</b> 2차시(정전기 유도)에서 단서 ②를 얻어 학생이 직접 최종 답을 쓰게 됩니다.</div></div>
+  </div>
+
+  <a class="linkcard" href="02-induction.html">
+    <span class="lc-e">🥫</span>
+    <span><span class="lc-t">2차시 · 문지르지 않은 캔도 움직일까</span>
+      <span class="lc-d">가까이만 해도 나타나는 전기 — 정전기 유도 · 교과서 232~233쪽</span></span>
+  </a>
+
+  <div class="cta-row"><button class="btn primary" data-go="check">5단계 · 얼마나 알게 됐는지 확인 →</button></div>
+</section>
+
+<!-- 5 -->
+<section class="panel" id="panel-check">
+  <div class="stepline"><span class="sbadge">STEP 5</span><span class="swhat">확인하기 · 형성평가</span></div>
+  <h2 class="sec">배운 것을 확인해 봅시다</h2>
+  <p class="lead">점수에 들어가지 않습니다. 어디가 헷갈리는지 찾는 게 목적이에요.</p>
+  <div class="card" style="margin-top:20px">
+    <div class="game-hud">
+      <div class="lives" id="lives"><span class="h">❤️</span><span class="h">❤️</span><span class="h">❤️</span></div>
+      <div class="score-box"><span class="lab2">점수</span><span class="num" id="score">0</span></div>
+      <div class="score-box"><span class="lab2">문항</span><span class="num" id="qno">0/0</span></div>
+    </div>
+    <div id="gameBody">
+      <div style="text-align:center;padding:30px 10px">
+        <p class="lead" style="margin:0 auto 18px">준비됐나요? 5문항입니다.</p>
+        <button class="btn primary" id="gameStart">확인 문제 시작</button>
+      </div>
+    </div>
+    <div class="earned" id="medals">
+      <div class="medal" data-medal="first"><span class="e">🥉</span>첫 정답</div>
+      <div class="medal" data-medal="half"><span class="e">🥈</span>절반 돌파</div>
+      <div class="medal" data-medal="perfect"><span class="e">🥇</span>전부 정답</div>
+    </div>
+  </div>
+  <div class="cta-row"><button class="btn ghost" data-go="beyond">⚡ 더 알아보기 (선택)</button></div>
+</section>
+
+<!-- + -->
+<section class="panel" id="panel-beyond">
+  <div class="stepline opt"><span class="sbadge">선택</span><span class="swhat">더 알아보기 · 시험에 나오지 않습니다</span></div>
+  <h2 class="sec">겨울에 유독 찌릿한 이유, 그리고 못 외워도 되는 이야기</h2>
+  <p class="lead">여기서부터는 <b class="k">교과서 밖 이야기</b>입니다. 시험에 나오지 않아요. 외우지 말고 그냥 읽어 보세요.</p>
+
+  <div class="grid c2" style="margin-top:20px">
+    <div class="card">
+      <h3 class="card-t">❄️ 왜 겨울에 더 잘 생길까 <span class="badge">시험 X</span></h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        마찰로 옮겨 간 전자는 그 자리에 영원히 머무르지 않습니다.
+        공기 중에 <b class="k">물기(수증기)</b>가 많으면 전하가 물기를 타고 슬금슬금 빠져나가요.
+        여름 장마철에 정전기가 잘 안 생기는 이유입니다.<br><br>
+        겨울은 공기가 <b>바짝 건조</b>합니다. 빠져나갈 길이 없으니 대전된 상태가 오래 유지되고,
+        그러다 금속에 손이 닿는 순간 한꺼번에 — 찌릿.</p>
+      <p class="help">그래서 가습기를 켜거나 손에 로션을 바르면 정전기가 눈에 띄게 줄어듭니다.</p>
+    </div>
+    <div class="card">
+      <h3 class="card-t">🛡️ 정전기 덜 생기게 하는 법 <span class="badge">시험 X</span></h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        · <b class="k">섬유 유연제</b>를 쓰면 옷 표면이 매끄러워져 마찰이 줄고, 물기를 머금어 전하가 잘 빠져나갑니다.<br>
+        · 차 문을 열기 전 <b class="k">동전이나 열쇠를 먼저</b> 금속에 대면, 손끝이 아니라 그 금속에서 방전되어 덜 아파요.<br>
+        · 옷을 <b class="k">천천히</b> 벗으면 '지지직'이 줄어듭니다. 빨리 벗을수록 마찰이 세지거든요.<br>
+        · 건조한 날 머리를 빗기 전 빗에 물을 살짝 묻히는 것도 같은 원리입니다.</p>
+    </div>
+  </div>
+
+  <div class="grid c2" style="margin-top:18px">
+    <div class="card">
+      <h3 class="card-t">📋 어떤 물체가 (+)가 될까 — 대전열 <span class="badge">시험 X</span></h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        털가죽과 플라스틱 막대를 문지르면 <b>항상</b> 털가죽의 전자가 플라스틱 쪽으로 갑니다.
+        즉 어느 쪽이 (+)가 되고 어느 쪽이 (−)가 될지는 <b class="k">두 물체의 조합에 따라 정해져</b> 있어요.
+        이 순서를 늘어놓은 것을 <b>대전열</b>이라고 합니다.<br><br>
+        순서에서 <b>멀리 떨어진</b> 두 물체를 문지를수록 대전이 잘 됩니다.</p>
+      <p class="help">중학교 시험에서는 "어느 쪽이 (+)냐"를 외우게 하지 않습니다.
+        문제에 <b>"A는 (−)전하를 띠었다"</b>처럼 조건이 주어지니 걱정 마세요.</p>
+    </div>
+    <div class="card">
+      <h3 class="card-t">🔢 전하의 양을 재는 단위, C <span class="badge">시험 X</span></h3>
+      <p class="lead" style="font-size:17.5px;margin-top:8px">
+        물체가 띠고 있는 전하의 양을 <b>전하량</b>이라 하고, 단위로 <b class="k">C(쿨롱)</b>을 씁니다.
+        전기력을 연구한 프랑스 과학자 <b>샤를 오귀스탱 드 쿨롱</b>(1736~1806)의 이름에서 왔어요.<br><br>
+        쿨롱은 두 대전체 사이의 전기력이 <b>전하량이 클수록 세고, 거리가 멀수록 약해진다</b>는 것을 정밀한 실험으로 밝혔습니다.
+        그 관계식은 고등학교에서 배웁니다.</p>
+      <p class="help">중2 과정에서는 전기력의 <b>방향</b>(밀어냄/끌어당김)까지만 다룹니다. 크기 계산은 하지 않아요.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h3 class="card-t">🎬 다시, 처음 그 문장</h3>
+    <p class="lead" style="font-size:18.5px;margin-top:10px">
+      <b class="k">"지지직의 정체 — 새로 생긴 전기가 아니라, 옮겨 간 전자."</b><br><br>
+      스웨터를 벗을 때 나는 '지지직'은 어디선가 전기가 <b>솟아난</b> 소리가 아닙니다.
+      원래 거기 있던 전자 몇 개가 옷에서 머리카락으로 <b class="t3">건너간</b> 것뿐이에요.
+      잃은 쪽에는 (+)가 남고, 얻은 쪽은 (−)가 되고, 둘은 서로를 끌어당깁니다.
+      전체를 놓고 보면 <b>더해지지도 없어지지도 않았습니다.</b><br><br>
+      과학에는 이런 문장이 자주 나옵니다 — <b class="k">"만들어진 게 아니라 옮겨 간 것이다."</b>
+      에너지도 그렇고, 물질도 그렇습니다.
+      새로 생겼다고 느껴질 때 <b>어디서 왔는지</b>를 묻는 습관, 그게 오늘 배운 것 중 가장 오래 남을 겁니다.
+    </p>
+    <div class="cta-row" style="justify-content:center">
+      <button class="btn ghost" data-go="see">1단계로 돌아가기 ↑</button>
+      <a class="btn ghost" href="02-induction.html">🥫 2차시로 가기</a>
+      <a class="btn ghost" href="index.html">⚡ 단원 허브로</a>
+    </div>
+  </div>
+</section>
+
+</main>
+<div id="toast"></div>
+<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-08-08</span></footer>
+
+<script>
+"use strict";
+const FIGS={
+  sweater:'img/f-sweater.jpg', balloon:'img/f-balloon.jpg', filter:'img/f-filter.jpg'
+};
+const BG_IMAGES={cover:'',see:'',ask:'',model:'',apply:'',check:'',beyond:''};
+const BG_FALLBACK={
+  cover:'radial-gradient(120% 90% at 50% 0%, #f6f1e8, #f4ebd7 68%)',
+  see:'radial-gradient(110% 80% at 50% 0%, #f6f1e8, #f4ebd7 66%)',
+  ask:'radial-gradient(100% 80% at 50% 20%, #f5f0e7, #f4ebd7 70%)',
+  model:'linear-gradient(180deg, #f5efe6, #f4ebd7 74%)',
+  apply:'radial-gradient(90% 80% at 68% 15%, #efe0c2, #f4ebd7 70%)',
+  check:'radial-gradient(100% 85% at 30% 15%, #f5efe6, #f4ebd7 70%)',
+  beyond:'radial-gradient(110% 85% at 50% 0%, #f4efe5, #f4ebd7 66%)'
+};
+const SAVE='elec_friction_v1';
+
+/* 관찰대 — 매달린 풍선의 회전각(도)과 다가오는 물체의 이동량(px)
+   ※ SVG에서 rotate(+각)은 시계 방향이므로, 아래로 매달린 풍선은 (+)일 때 왼쪽으로 간다.
+     다가오는 물체는 오른쪽에 있으므로 밀어냄 = (+)각(왼쪽), 끌어당김 = (−)각(오른쪽). */
+const OBS={
+  pp:{swing:15,  probe:-140, cap:'문지른 두 고무풍선을 가까이 했다 — 매달린 풍선이 밀려난다',
+      msg:'매달린 고무풍선이 <b>밀려납니다.</b> 문지른 두 고무풍선 사이에는 <b>밀어 내는</b> 방향의 힘이 작용했어요.'},
+  pg:{swing:-15, probe:-100, cap:'같은 면장갑을 가까이 했다 — 매달린 풍선이 끌려온다',
+      msg:'이번에는 매달린 고무풍선이 <b>끌려옵니다.</b> 고무풍선과 면장갑 사이에는 <b>끌어당기는</b> 방향의 힘이 작용했어요.'}
+};
+
+/* 전자 옮기기 — 수건 원자 4개 · 풍선 원자 4개, 전자는 모두 8개(끝까지 변하지 않는다) */
+const EM_MAX=4;
+const EM_STEPS=[
+  {e:'fe-t3', dx:284, dy:48, t:'tg3', b:'bg3'},
+  {e:'fe-t2', dx:292, dy:48, t:'tg2', b:'bg2'},
+  {e:'fe-t1', dx:284, dy:48, t:'tg1', b:'bg1'},
+  {e:'fe-t0', dx:292, dy:48, t:'tg0', b:'bg0'}
+];
+
+const QUIZ_SETS={
+  model:{title:'전자의 이동으로 설명하기', qs:[
+    {q:'수건으로 고무풍선을 문질렀더니 고무풍선이 (−)전하를 띠었다. 무엇이 옮겨 간 것일까?',
+     ch:[{t:'전자가 수건에서 고무풍선으로 옮겨 갔다',ok:1},
+         {t:'원자핵이 수건에서 고무풍선으로 옮겨 갔다',ok:0},
+         {t:'옮겨 간 것은 없고 전기가 새로 만들어졌다',ok:0}],
+     why:'움직이는 것은 <b>전자</b>뿐입니다. 원자핵은 제자리에 있고, 전기가 새로 생기지도 않아요.'},
+    {q:'(−)전하로 대전된 고무풍선 안에는 (−)전하만 있을까?',
+     ch:[{t:'아니다 — (+)전하도 그대로 있고, (−)전하가 더 많아진 것이다',ok:1},
+         {t:'그렇다 — (+)전하는 모두 사라지고 (−)전하만 남는다',ok:0}],
+     why:'원자핵은 그대로 있습니다. 전자를 얻어서 <b>(−)의 양이 (+)의 양보다 많아졌기</b> 때문에 (−)전하를 띠는 것입니다.'},
+    {q:'마찰한 뒤 수건이 (+)전하를 띠게 된 까닭은?',
+     ch:[{t:'전자를 잃어서',ok:1},{t:'(+)전하가 새로 생겨서',ok:0},{t:'고무풍선에서 원자핵을 얻어서',ok:0}],
+     why:'전자를 잃으면 남아 있는 (+)전하의 양이 (−)전하의 양보다 많아져 <b>(+)전하를 띱니다.</b>'}
+  ]}
+};
+
+const GAME_QS=[
+  {id:"q1",
+   difficulty:"하",
+   intent:"마찰 전기가 전자의 이동으로 생긴다는 것을 원자 모형 그림(전자 1개가 수건에서 고무풍선으로 이동 중인 장면)에서 확인하는 기본 문항. 오답 네 개는 이 차시 페이지의 오개념 카드에서 그대로 파생 — (−)대전체 안에는 (−)전하만 있다(오해①), 전기가 새로 만들어진다(오해②), 원자핵도 함께 이동한다(오해③), 그리고 마찰한 두 물체가 같은 종류의 전하를 띤다는 착각(교사 노트: 두 물체는 서로 다른 전하를 띤다).",
+   svg:"<svg viewBox=\"0 0 560 250\" role=\"img\" aria-label=\"수건과 고무풍선을 마찰하는 중의 원자 모형. 왼쪽 수건에는 원자핵의 플러스 전하 4개와 전자 3개가, 오른쪽 고무풍선에는 원자핵의 플러스 전하 4개와 전자 4개가 있고, 두 물체 사이에는 수건에서 고무풍선 쪽으로 향하는 초록색 화살표와 함께 이동 중인 전자 1개가 그려져 있다. 마찰하기 전 두 물체는 전기를 띠지 않았다.\"><text x=\"140\" y=\"32\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"17\" font-weight=\"700\" fill=\"#4a3a26\">수건</text><text x=\"420\" y=\"32\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"17\" font-weight=\"700\" fill=\"#4a3a26\">고무풍선</text><rect x=\"30\" y=\"44\" width=\"220\" height=\"140\" rx=\"14\" fill=\"#faf4e6\" stroke=\"#a08b64\" stroke-width=\"2\"/><rect x=\"310\" y=\"44\" width=\"220\" height=\"140\" rx=\"14\" fill=\"#faf4e6\" stroke=\"#a05c2c\" stroke-width=\"2\"/><circle cx=\"65\" cy=\"95\" r=\"13\" fill=\"#fdf1ef\" stroke=\"#b23a30\" stroke-width=\"2\"/><text x=\"65\" y=\"96\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"18\" font-weight=\"800\" fill=\"#b23a30\">+</text><circle cx=\"110\" cy=\"95\" r=\"13\" fill=\"#fdf1ef\" stroke=\"#b23a30\" stroke-width=\"2\"/><text x=\"110\" y=\"96\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"18\" font-weight=\"800\" fill=\"#b23a30\">+</text><circle cx=\"155\" cy=\"95\" r=\"13\" fill=\"#fdf1ef\" stroke=\"#b23a30\" stroke-width=\"2\"/><text x=\"155\" y=\"96\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"18\" font-weight=\"800\" fill=\"#b23a30\">+</text><circle cx=\"200\" cy=\"95\" r=\"13\" fill=\"#fdf1ef\" stroke=\"#b23a30\" stroke-width=\"2\"/><text x=\"200\" y=\"96\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"18\" font-weight=\"800\" fill=\"#b23a30\">+</text><circle cx=\"65\" cy=\"150\" r=\"11\" fill=\"#3a7a3f\"/><text x=\"65\" y=\"151\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#f2f7ea\">−</text><circle cx=\"110\" cy=\"150\" r=\"11\" fill=\"#3a7a3f\"/><text x=\"110\" y=\"151\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#f2f7ea\">−</text><circle cx=\"155\" cy=\"150\" r=\"11\" fill=\"#3a7a3f\"/><text x=\"155\" y=\"151\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#f2f7ea\">−</text><circle cx=\"345\" cy=\"95\" r=\"13\" fill=\"#fdf1ef\" stroke=\"#b23a30\" stroke-width=\"2\"/><text x=\"345\" y=\"96\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"18\" font-weight=\"800\" fill=\"#b23a30\">+</text><circle cx=\"390\" cy=\"95\" r=\"13\" fill=\"#fdf1ef\" stroke=\"#b23a30\" stroke-width=\"2\"/><text x=\"390\" y=\"96\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"18\" font-weight=\"800\" fill=\"#b23a30\">+</text><circle cx=\"435\" cy=\"95\" r=\"13\" fill=\"#fdf1ef\" stroke=\"#b23a30\" stroke-width=\"2\"/><text x=\"435\" y=\"96\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"18\" font-weight=\"800\" fill=\"#b23a30\">+</text><circle cx=\"480\" cy=\"95\" r=\"13\" fill=\"#fdf1ef\" stroke=\"#b23a30\" stroke-width=\"2\"/><text x=\"480\" y=\"96\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"18\" font-weight=\"800\" fill=\"#b23a30\">+</text><circle cx=\"345\" cy=\"150\" r=\"11\" fill=\"#3a7a3f\"/><text x=\"345\" y=\"151\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#f2f7ea\">−</text><circle cx=\"390\" cy=\"150\" r=\"11\" fill=\"#3a7a3f\"/><text x=\"390\" y=\"151\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#f2f7ea\">−</text><circle cx=\"435\" cy=\"150\" r=\"11\" fill=\"#3a7a3f\"/><text x=\"435\" y=\"151\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#f2f7ea\">−</text><circle cx=\"480\" cy=\"150\" r=\"11\" fill=\"#3a7a3f\"/><text x=\"480\" y=\"151\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#f2f7ea\">−</text><line x1=\"254\" y1=\"112\" x2=\"296\" y2=\"112\" stroke=\"#3a7a3f\" stroke-width=\"2\" stroke-dasharray=\"7 5\"/><polygon points=\"308,112 294,105 294,119\" fill=\"#3a7a3f\"/><text x=\"280\" y=\"97\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#3a7a3f\">전자 이동</text><circle cx=\"280\" cy=\"138\" r=\"11\" fill=\"#3a7a3f\"/><text x=\"280\" y=\"139\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#f2f7ea\">−</text><text x=\"280\" y=\"214\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">※ +는 원자핵의 (+)전하, −는 전자를 나타낸다.</text><text x=\"280\" y=\"236\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">※ 마찰하기 전 수건과 고무풍선은 전기를 띠지 않았다.</text></svg>",
+   stem:"그림은 수건으로 고무풍선을 <b>마찰하는 중</b>의 모습을 원자 모형으로 나타낸 것이다. 이에 대한 설명으로 옳은 것은?",
+   ch:[{t:"마찰 후 고무풍선 안에는 (−)전하만 있다.",ok:0},{t:"마찰하는 동안 고무풍선에서 전자가 새로 만들어진다.",ok:0},{t:"전자를 잃은 수건은 (+)전하로 대전된다.",ok:1},{t:"수건의 원자핵도 전자와 함께 고무풍선으로 이동한다.",ok:0},{t:"마찰 후 수건과 고무풍선은 같은 종류의 전하를 띤다.",ok:0}],
+   why:"그림에서 전자 1개가 수건 → 고무풍선으로 건너가는 중이다(수건의 전자 3개 + 이동 중 1개 + 고무풍선 4개 = 총 8개 그대로). 마찰할 때 이동하는 것은 <b>전자뿐</b>이다.<br>① 옳지 않다. 고무풍선 안에는 (+)전하를 띤 <b>원자핵이 그대로</b> 남아 있다. 전자를 얻어 (−)전하의 양이 (+)전하의 양보다 <b>많아졌을 뿐</b>이므로 (−)전하를 띠는 것이다.<br>② 옳지 않다. 전자는 <b>새로 만들어지지 않는다.</b> 원래 수건에 있던 전자의 일부가 <b>옮겨 왔을</b> 뿐이다. 그림에서도 전자의 총 개수는 8개로 변하지 않는다.<br>③ <b>옳다 → 정답.</b> 전자를 잃은 수건은 (+)전하의 양이 (−)전하의 양보다 많아져 <b>(+)전하로 대전</b>된다. 그림에서 수건은 (+) 4개, (−) 3개이다.<br>④ 옳지 않다. <b>원자핵은 제자리</b>에 있다. 원자핵이 움직이지 않기 때문에 전자를 잃은 쪽에 (+)가 남는 것이다.<br>⑤ 옳지 않다. 한쪽은 전자를 잃어 (+), 다른 쪽은 전자를 얻어 (−)가 되므로 마찰한 두 물체는 <b>서로 다른 종류</b>의 전하를 띤다."},
+
+  {id:"q2",
+   difficulty:"중",
+   intent:"교과서 230쪽 해 보기 실험의 두 장면을 전기력의 방향 규칙(같은 종류 척력·다른 종류 인력)으로 해석할 수 있는지 평가하는 보기형. ㄱ은 밀려난 장면을 인력으로 오독하는 학생을 걸러 내고(교사 노트의 해 보기 모범 답안), ㄷ은 오개념 카드 '마찰하면 전기가 새로 만들어진다'(오해②)에서 파생했다.",
+   svg:"<svg viewBox=\"0 0 560 280\" role=\"img\" aria-label=\"마찰 전기 실험의 두 장면. (가)는 스탠드에 실로 매단 고무풍선에 문지른 다른 고무풍선을 가까이 하자 매달린 풍선이 반대쪽으로 밀려난 모습이고, (나)는 같은 면장갑을 가까이 하자 매달린 풍선이 면장갑 쪽으로 끌려온 모습이다. 면장갑으로 고무풍선 두 개를 각각 문지른 뒤 실험하였다.\"><text x=\"144\" y=\"30\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"17\" font-weight=\"700\" fill=\"#8a5f24\">(가)</text><text x=\"416\" y=\"30\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"17\" font-weight=\"700\" fill=\"#8a5f24\">(나)</text><rect x=\"18\" y=\"40\" width=\"252\" height=\"200\" rx=\"14\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"2\"/><rect x=\"290\" y=\"40\" width=\"252\" height=\"200\" rx=\"14\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"2\"/><line x1=\"60\" y1=\"62\" x2=\"170\" y2=\"62\" stroke=\"#a08b64\" stroke-width=\"2\"/><circle cx=\"115\" cy=\"62\" r=\"3.5\" fill=\"#96805c\"/><line x1=\"115\" y1=\"62\" x2=\"86\" y2=\"133\" stroke=\"#96805c\" stroke-width=\"1.6\"/><polygon points=\"84,133 77,142 91,142\" fill=\"#a05c2c\"/><ellipse cx=\"82\" cy=\"164\" rx=\"23\" ry=\"29\" fill=\"#efe0c2\" stroke=\"#a05c2c\" stroke-width=\"2\"/><line x1=\"66\" y1=\"104\" x2=\"40\" y2=\"104\" stroke=\"#8a5f24\" stroke-width=\"3\"/><polygon points=\"30,104 42,97 42,111\" fill=\"#8a5f24\"/><text x=\"56\" y=\"90\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#8a5f24\">밀려남</text><polygon points=\"210,133 203,142 217,142\" fill=\"#a05c2c\"/><ellipse cx=\"210\" cy=\"164\" rx=\"23\" ry=\"29\" fill=\"#efe0c2\" stroke=\"#a05c2c\" stroke-width=\"2\"/><text x=\"82\" y=\"214\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#4a3a26\">매단 고무풍선</text><text x=\"210\" y=\"214\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#4a3a26\">다른 고무풍선</text><line x1=\"332\" y1=\"62\" x2=\"442\" y2=\"62\" stroke=\"#a08b64\" stroke-width=\"2\"/><circle cx=\"387\" cy=\"62\" r=\"3.5\" fill=\"#96805c\"/><line x1=\"387\" y1=\"62\" x2=\"416\" y2=\"133\" stroke=\"#96805c\" stroke-width=\"1.6\"/><polygon points=\"418,133 411,142 425,142\" fill=\"#a05c2c\"/><ellipse cx=\"420\" cy=\"164\" rx=\"23\" ry=\"29\" fill=\"#efe0c2\" stroke=\"#a05c2c\" stroke-width=\"2\"/><line x1=\"446\" y1=\"104\" x2=\"472\" y2=\"104\" stroke=\"#8a5f24\" stroke-width=\"3\"/><polygon points=\"482,104 470,97 470,111\" fill=\"#8a5f24\"/><text x=\"458\" y=\"90\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#8a5f24\">끌려옴</text><path d=\"M488 205 L488 155 Q488 136 507 136 Q526 136 526 155 L526 205 Z\" fill=\"#eee3cc\" stroke=\"#6b573f\" stroke-width=\"2\"/><path d=\"M488 172 Q474 168 472 180 Q470 192 486 196\" fill=\"#eee3cc\" stroke=\"#6b573f\" stroke-width=\"2\"/><line x1=\"500\" y1=\"150\" x2=\"500\" y2=\"200\" stroke=\"#6b573f\" stroke-width=\"1.4\"/><line x1=\"514\" y1=\"150\" x2=\"514\" y2=\"200\" stroke=\"#6b573f\" stroke-width=\"1.4\"/><rect x=\"484\" y=\"201\" width=\"46\" height=\"13\" rx=\"5\" fill=\"#c9b691\"/><text x=\"420\" y=\"214\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#4a3a26\">매단 고무풍선</text><text x=\"507\" y=\"230\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#4a3a26\">면장갑</text><text x=\"280\" y=\"266\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">※ 면장갑으로 고무풍선 두 개를 각각 문지른 뒤 실험하였다.</text></svg>",
+   stem:"그림 (가)는 면장갑으로 각각 문지른 고무풍선 두 개 중 하나를 스탠드에 매달고 다른 하나를 가까이 한 것을, (나)는 같은 면장갑을 매달린 고무풍선에 가까이 한 것을 나타낸 것이다. (가)에서 매달린 고무풍선은 <b>밀려났고</b>, (나)에서는 면장갑 쪽으로 <b>끌려왔다</b>. 이에 대한 설명으로 옳은 것만을 &lt;보기&gt;에서 있는 대로 고른 것은?",
+   boxes:["(가)에서 두 고무풍선은 같은 종류의 전하를 띤다.", "(나)에서 고무풍선과 면장갑 사이에는 끌어당기는 방향의 전기력이 작용한다.", "고무풍선과 면장갑을 마찰하는 동안 전자가 새로 만들어졌다."],
+   boxVerdicts:[true, true, false],
+   ch:[{t:"ㄱ",ok:0},{t:"ㄴ",ok:0},{t:"ㄱ, ㄴ",ok:1},{t:"ㄱ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+   why:"<b>ㄱ. 옳다.</b> (가)에서 매달린 고무풍선이 <b>밀려났으므로</b> 두 풍선 사이에는 밀어 내는 방향의 전기력이 작용했고, 밀어 내는 것은 <b>같은 종류의 전하</b> 사이이다. 같은 면장갑으로 문질렀으므로 두 풍선이 같은 전하를 띠는 것과도 들어맞는다. 밀려난 장면을 끌어당김으로 읽으면 안 된다.<br><b>ㄴ. 옳다.</b> (나)에서 풍선이 면장갑 쪽으로 <b>끌려왔으므로</b> 두 물체 사이에는 <b>끌어당기는</b> 방향의 전기력이 작용한다. 즉 면장갑과 고무풍선은 서로 <b>다른 종류</b>의 전하를 띤다.<br><b>ㄷ. 옳지 않다.</b> 마찰할 때 전자는 <b>새로 만들어지지 않는다.</b> 한 물체에 있던 전자의 일부가 다른 물체로 <b>이동</b>하여 두 물체가 대전된 것이다.<br>따라서 정답은 <b>ㄱ, ㄴ</b>."},
+
+  {id:"q3",
+   difficulty:"중",
+   intent:"교과서 231쪽 사고력 문항(빗과 머리카락)을 객관식으로 옮긴 문항. 정답은 교사 노트 채점 포인트의 3요소(전자의 이동 → 서로 다른 종류의 전하 → 끌어당기는 전기력)를 그대로 담았다. 오답은 오해②(전기가 새로 생김), 오해③(원자핵 이동), 전기력 방향 규칙 오적용(같은 종류인데 달라붙음), '마찰해도 한쪽만 대전된다'는 착각에서 파생했으며, 정답만 길어지지 않도록 다섯 선지를 같은 인과 구조·비슷한 길이로 맞췄다. 자료 없는 유일한 문항.",
+   stem:"건조한 날 플라스틱 빗으로 머리를 빗으면 머리카락이 빗에 달라붙는다. 그 까닭으로 옳은 것은?",
+   ch:[{t:"빗과 머리카락이 마찰하는 동안 전기가 새로 만들어지고, 새로 생긴 전기가 서로를 끌어당기기 때문이다.",ok:0},{t:"마찰로 전자가 이동하여 빗과 머리카락이 서로 다른 종류의 전하를 띠고, 끌어당기는 전기력이 작용하기 때문이다.",ok:1},{t:"마찰하는 동안 머리카락의 원자핵이 빗으로 이동하여 빗과 머리카락이 서로 다른 전하를 띠기 때문이다.",ok:0},{t:"마찰로 전자가 이동하여 빗과 머리카락이 같은 종류의 전하를 띠고, 그 사이에 전기력이 작용하기 때문이다.",ok:0},{t:"마찰한 두 물체 중 빗만 대전되고, 전기를 띠지 않는 머리카락이 빗에 딸려 가기 때문이다.",ok:0}],
+   why:"서술형 채점 기준은 세 가지다 — ① <b>전자의 이동</b>, ② <b>서로 다른 종류의 전하</b>, ③ <b>끌어당기는 전기력</b>.<br>① 옳지 않다. 마찰할 때 전기(전자)가 <b>새로 만들어지는 것이 아니다.</b> 한 물체에 있던 전자의 일부가 다른 물체로 옮겨 갈 뿐이다.<br>② <b>옳다 → 정답.</b> 마찰 → <b>전자의 이동</b> → 두 물체가 <b>서로 다른 종류의 전하</b>로 대전 → 다른 종류의 전하 사이에는 <b>끌어당기는 전기력</b> → 머리카락이 빗에 달라붙는다. 세 요소가 모두 들어 있다.<br>③ 옳지 않다. 마찰할 때 이동하는 것은 <b>전자뿐</b>이고 원자핵은 이동하지 않는다.<br>④ 옳지 않다. 같은 종류의 전하 사이에는 <b>밀어 내는</b> 전기력이 작용하므로, 달라붙는 현상과 모순된다.<br>⑤ 옳지 않다. 마찰한 <b>두 물체가 모두</b> 대전된다. 한쪽이 전자를 잃으면 반드시 다른 쪽이 그 전자를 얻으므로, 머리카락도 빗과 다른 종류의 전하를 띤다."},
+
+  {id:"q4",
+   difficulty:"상",
+   intent:"표에서 원자핵·전자의 개수를 직접 읽어 전자의 이동 방향과 개수, 대전 부호, 전자 총량 보존을 추론하는 상 난이도 보기형. 검산: 마찰 전 전자 합 5+7=12개, 후 3+9=12개로 보존, A는 +5/−3이므로 (+)대전, B는 +7/−9이므로 (−)대전. ㄴ은 전자의 이동 방향을 거꾸로 읽는 오류(교사 노트), ㄷ은 오해②(전기가 새로 생김)의 반박이고, 원자핵 개수가 5·7 그대로인 자료 자체가 오해③(원자핵 이동)을 반박한다.",
+   svg:"<svg viewBox=\"0 0 560 210\" role=\"img\" aria-label=\"물체 A와 B를 서로 마찰하기 전과 후에 두 물체가 가진 원자핵의 플러스 전하 개수와 전자 개수를 나타낸 표. 마찰 전 A는 원자핵의 플러스 전하 5개에 전자 5개, B는 원자핵의 플러스 전하 7개에 전자 7개이다. 마찰 후 A는 원자핵의 플러스 전하 5개에 전자 3개, B는 원자핵의 플러스 전하 7개에 전자 9개이다. 마찰하기 전 A와 B는 모두 전기를 띠지 않았다.\"><rect x=\"30\" y=\"36\" width=\"500\" height=\"66\" fill=\"#f2e8d2\"/><rect x=\"30\" y=\"102\" width=\"500\" height=\"72\" fill=\"#faf4e6\"/><rect x=\"30\" y=\"36\" width=\"500\" height=\"138\" fill=\"none\" stroke=\"#a08b64\" stroke-width=\"2\"/><line x1=\"130\" y1=\"36\" x2=\"130\" y2=\"174\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"330\" y1=\"36\" x2=\"330\" y2=\"174\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"230\" y1=\"68\" x2=\"230\" y2=\"174\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"430\" y1=\"68\" x2=\"430\" y2=\"174\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"130\" y1=\"68\" x2=\"530\" y2=\"68\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"30\" y1=\"102\" x2=\"530\" y2=\"102\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"30\" y1=\"138\" x2=\"530\" y2=\"138\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><text x=\"80\" y=\"74\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">물체</text><text x=\"230\" y=\"58\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#4a3a26\">마찰 전</text><text x=\"430\" y=\"58\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#4a3a26\">마찰 후</text><text x=\"180\" y=\"84\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#4a3a26\">원자핵의</text><text x=\"180\" y=\"99\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#4a3a26\">(+)전하 수</text><text x=\"280\" y=\"92\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#4a3a26\">전자 수</text><text x=\"380\" y=\"84\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#4a3a26\">원자핵의</text><text x=\"380\" y=\"99\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#4a3a26\">(+)전하 수</text><text x=\"480\" y=\"92\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#4a3a26\">전자 수</text><text x=\"80\" y=\"125\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#4a3a26\">A</text><text x=\"180\" y=\"125\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#b23a30\">5</text><text x=\"280\" y=\"125\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#3a7a3f\">5</text><text x=\"380\" y=\"125\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#b23a30\">5</text><text x=\"480\" y=\"125\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#3a7a3f\">3</text><text x=\"80\" y=\"161\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#4a3a26\">B</text><text x=\"180\" y=\"161\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#b23a30\">7</text><text x=\"280\" y=\"161\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#3a7a3f\">7</text><text x=\"380\" y=\"161\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#b23a30\">7</text><text x=\"480\" y=\"161\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#3a7a3f\">9</text><text x=\"280\" y=\"198\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">※ 마찰하기 전 A와 B는 모두 전기를 띠지 않았다.</text></svg>",
+   stem:"표는 전기를 띠지 않은 물체 A와 B를 서로 마찰하기 <b>전과 후</b>에 두 물체가 가진 원자핵의 (+)전하 수와 전자 수를 나타낸 것이다. 이에 대한 설명으로 옳은 것만을 &lt;보기&gt;에서 있는 대로 고른 것은?",
+   boxes:["마찰하는 동안 전자 2개가 A에서 B로 이동하였다.", "마찰 후 A는 (−)전하로 대전된다.", "두 물체가 가진 전자 수의 합은 마찰 전과 후가 같다."],
+   boxVerdicts:[true, false, true],
+   ch:[{t:"ㄱ",ok:0},{t:"ㄴ",ok:0},{t:"ㄱ, ㄷ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+   why:"표에서 원자핵의 (+)전하 수는 A가 5개, B가 7개로 <b>마찰 전과 후가 똑같고</b>(원자핵은 이동하지 않는다), 전자 수만 A는 5→3개, B는 7→9개로 변했다.<br><b>ㄱ. 옳다.</b> A의 전자가 2개 줄고(5→3) B의 전자가 2개 늘었다(7→9). 원자핵 수는 그대로이므로 마찰하는 동안 <b>전자 2개가 A에서 B로 이동</b>한 것이다.<br><b>ㄴ. 옳지 않다.</b> 마찰 후 A는 (+) 5개, (−) 3개로 <b>(+)전하의 양이 더 많다.</b> 전자를 잃은 A는 <b>(+)전하로 대전</b>된다. (−)로 골랐다면 전자의 이동 방향을 거꾸로 읽은 것이다.<br><b>ㄷ. 옳다.</b> 전자 수의 합은 마찰 전 5+7=<b>12개</b>, 마찰 후 3+9=<b>12개</b>로 같다. 전자는 새로 생기거나 없어지지 않고 한 물체에서 다른 물체로 <b>옮겨 갈 뿐</b>이다.<br>따라서 정답은 <b>ㄱ, ㄷ</b>."},
+
+  {id:"q5",
+   difficulty:"상",
+   intent:"한 물체의 대전 결과(A가 −)와 전기력 관찰 결과(B와 C가 밀어 냄)를 결합해 두 단계로 B·C의 전하를 추론하고, 조건을 바꿔 A와 C 사이의 전기력까지 적용하는 상 난이도 문항. 오답은 '마찰한 두 물체는 같은 전하를 띤다'는 착각(B를 −로), 밀어 냄을 다른 종류 사이의 힘으로 오독(C를 −로, 교사 노트의 힘 방향 오독), 전기력 방향 규칙 뒤집기(부호는 맞고 힘만 반대)에서 파생했다. 관찰 결과를 '밀어 냄'으로 둔 것은 의도적 — 밀어 냄은 대전체끼리의 전기력만으로 부호가 확정되므로 다음 차시의 정전기 유도 개념이 전혀 필요 없다.",
+   svg:"<svg viewBox=\"0 0 560 230\" role=\"img\" aria-label=\"두 장면으로 이루어진 그림. (가)는 전기를 띠지 않던 물체 A와 B를 서로 마찰한 뒤의 모습으로, A에는 마이너스 전하로 대전이라고 적혀 있고 B가 띠는 전하는 물음표로 표시되어 있다. (나)는 마찰한 뒤의 B에 전기를 띤 대전체 C를 가까이 한 모습으로, B와 C가 서로 밀어 내는 방향의 화살표가 그려져 있다.\"><text x=\"145\" y=\"30\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#8a5f24\">(가) A와 B를 서로 마찰한 뒤</text><text x=\"415\" y=\"30\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#8a5f24\">(나) B와 대전체 C</text><rect x=\"20\" y=\"42\" width=\"250\" height=\"150\" rx=\"14\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"2\"/><rect x=\"290\" y=\"42\" width=\"250\" height=\"150\" rx=\"14\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"2\"/><rect x=\"45\" y=\"66\" width=\"78\" height=\"64\" rx=\"10\" fill=\"#f3ece1\" stroke=\"#2e5f8f\" stroke-width=\"2\"/><text x=\"84\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"26\" font-weight=\"800\" fill=\"#2e5f8f\">A</text><text x=\"84\" y=\"152\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#2e5f8f\">(−)전하로 대전</text><rect x=\"167\" y=\"66\" width=\"78\" height=\"64\" rx=\"10\" fill=\"#faf4e6\" stroke=\"#a08b64\" stroke-width=\"2\" stroke-dasharray=\"6 5\"/><text x=\"206\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"26\" font-weight=\"800\" fill=\"#4a3a26\">B</text><text x=\"206\" y=\"152\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"18\" font-weight=\"800\" fill=\"#6b573f\">?</text><line x1=\"135\" y1=\"98\" x2=\"155\" y2=\"98\" stroke=\"#6b573f\" stroke-width=\"2\"/><polygon points=\"125,98 137,92 137,104\" fill=\"#6b573f\"/><polygon points=\"165,98 153,92 153,104\" fill=\"#6b573f\"/><text x=\"145\" y=\"84\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">마찰</text><rect x=\"315\" y=\"80\" width=\"78\" height=\"64\" rx=\"10\" fill=\"#faf4e6\" stroke=\"#a08b64\" stroke-width=\"2\" stroke-dasharray=\"6 5\"/><text x=\"354\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"26\" font-weight=\"800\" fill=\"#4a3a26\">B</text><text x=\"354\" y=\"168\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"18\" font-weight=\"800\" fill=\"#6b573f\">?</text><rect x=\"437\" y=\"80\" width=\"78\" height=\"64\" rx=\"10\" fill=\"#efe0c2\" stroke=\"#a08b64\" stroke-width=\"2\"/><text x=\"476\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"26\" font-weight=\"800\" fill=\"#4a3a26\">C</text><text x=\"476\" y=\"168\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">대전체</text><line x1=\"354\" y1=\"62\" x2=\"324\" y2=\"62\" stroke=\"#8a5f24\" stroke-width=\"3\"/><polygon points=\"314,62 326,55 326,69\" fill=\"#8a5f24\"/><line x1=\"476\" y1=\"62\" x2=\"506\" y2=\"62\" stroke=\"#8a5f24\" stroke-width=\"3\"/><polygon points=\"516,62 504,55 504,69\" fill=\"#8a5f24\"/><text x=\"415\" y=\"67\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#8a5f24\">서로 밀어 냄</text><text x=\"280\" y=\"218\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">※ 마찰하기 전 A와 B는 전기를 띠지 않았고, C는 전기를 띤 대전체이다.</text></svg>",
+   stem:"그림 (가)와 같이 전기를 띠지 않던 물체 A와 B를 서로 마찰하였더니 <b>A가 (−)전하로 대전</b>되었다. 그림 (나)와 같이 마찰한 뒤의 B에 대전체 C를 가까이 하였더니 두 물체가 <b>서로 밀어 냈다</b>. B와 C가 띠는 전하의 종류와, A와 C를 가까이 할 때 작용하는 전기력의 방향을 옳게 짝 지은 것은?",
+   ch:[{t:"B: (−)전하, C: (−)전하 — A와 C는 서로 밀어 낸다.",ok:0},{t:"B: (+)전하, C: (−)전하 — A와 C는 서로 밀어 낸다.",ok:0},{t:"B: (+)전하, C: (+)전하 — A와 C는 서로 끌어당긴다.",ok:1},{t:"B: (+)전하, C: (+)전하 — A와 C는 서로 밀어 낸다.",ok:0},{t:"B: (−)전하, C: (+)전하 — A와 C는 서로 끌어당긴다.",ok:0}],
+   why:"세 단계로 추론한다.<br><b>[1단계] B의 전하.</b> 전기를 띠지 않던 A가 (−)전하로 대전되었다는 것은 A가 <b>전자를 얻었다</b>는 뜻이고, 그 전자는 새로 생긴 것이 아니라 <b>B에서 온 것</b>이다. 전자를 잃은 B는 <b>(+)전하로 대전</b>된다. 마찰한 두 물체는 항상 <b>서로 다른 종류</b>의 전하를 띤다 — B를 (−)로 골랐다면 '마찰한 두 물체가 같은 전하를 띤다'고 잘못 생각한 것이다.<br><b>[2단계] C의 전하.</b> (나)에서 B와 C는 서로 <b>밀어 냈다.</b> 밀어 내는 전기력은 <b>같은 종류의 전하</b> 사이에 작용하므로 C는 B와 같은 <b>(+)전하</b>를 띤다. C를 (−)로 골랐다면 밀어 냄을 다른 종류 사이의 힘으로 잘못 읽은 것이다.<br><b>[3단계] A와 C 사이의 전기력.</b> A는 (−), C는 (+)로 <b>서로 다른 종류</b>이므로 둘 사이에는 <b>끌어당기는</b> 방향의 전기력이 작용한다.<br>따라서 정답은 ③."}
+];
+
+/* ── 엔진 ── */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TAU=Math.PI*2;
+const TABS=['see','ask','model','apply','check','beyond'];
+const CS=getComputedStyle(document.documentElement);
+const CV=k=>CS.getPropertyValue('--'+k).trim();
+const C={accent:CV('accent'),accent2:CV('accent2'),c1:CV('c1'),c2:CV('c2'),c3:CV('c3'),c4:CV('c4'),c5:CV('c5'),
+  line:CV('line'),linesoft:CV('line-soft'),ink:CV('ink'),inkdim:CV('ink-dim'),inkmute:CV('ink-mute'),
+  ok:CV('ok'),danger:CV('danger'),gold:CV('gold')};
+
+function setBg(tab){
+  const L=$('#bgLayer'); if(!L)return;
+  const img=BG_IMAGES[tab]||(tab==='cover'?BG_IMAGES.see:'');
+  L.style.opacity='0';
+  setTimeout(()=>{L.style.backgroundImage=img?`url("${img}")`:(BG_FALLBACK[tab]||BG_FALLBACK.see);L.style.opacity='1';},150);
+}
+function fit(cv){
+  const dpr=Math.min(devicePixelRatio||1,2.5);
+  const w=cv.clientWidth||cv.parentElement.clientWidth||320;
+  const h=parseInt(cv.getAttribute('height'))||300;
+  cv.style.height=h+'px';cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+  const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w,h};
+}
+const A={ctx:null,
+  ensure(){if(!this.ctx){try{this.ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+    if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume();return this.ctx;},
+  blip(f=600,d=.08,type='sine',vol=.15){const c=this.ensure();if(!c)return;
+    const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=f;o.connect(g);g.connect(c.destination);
+    const t=c.currentTime;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.03);},
+  correct(){this.blip(660,.11);setTimeout(()=>this.blip(880,.13),85);setTimeout(()=>this.blip(1170,.18),190);},
+  wrong(){this.blip(200,.2,'sawtooth',.1);setTimeout(()=>this.blip(150,.24,'sawtooth',.08),130);},
+  pop(){this.blip(440,.05,'triangle',.13);},
+  win(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>this.blip(f,.22,'sine',.15),i*110));}};
+['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>A.ensure(),{once:true}));
+
+let S=load()||{tab:'see',visited:{},seen:{},obs:{},ask:'',moved:0,cloze:{},mini:{},essay:'',best:0,medals:{}};
+S.visited=S.visited||{};S.seen=S.seen||{};S.obs=S.obs||{};S.cloze=S.cloze||{};S.mini=S.mini||{};
+S.medals=S.medals||{};S.essay=S.essay||'';S.ask=S.ask||'';S.moved=S.moved||0;
+let CLOZE_TOTAL=0;
+function save(){try{localStorage.setItem(SAVE,JSON.stringify(S));}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(SAVE));}catch(e){return null;}}
+
+function progChecks(){
+  return [
+    {label:'1단계 · 겪어 본 현상 고르기', ok:Object.keys(S.seen||{}).length>=1},
+    {label:'2단계 · 두 장면 모두 관찰',   ok:!!(S.obs&&S.obs.pp&&S.obs.pg)},
+    {label:'2단계 · 나의 질문 써 보기',   ok:(S.ask||'').trim().length>=10},
+    {label:'3단계 · 전자 4개 옮기기',     ok:(S.moved||0)>=EM_MAX},
+    {label:'3단계 · 빈칸 모두 채우기',    ok:CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL},
+    {label:'3단계 · 개념 확인 퀴즈',      ok:!!S.mini.model},
+    {label:'4단계 · 사고력 문제 답쓰기',  ok:(S.essay||'').trim().length>=15},
+    {label:'5단계 · 확인 문제 완주',      ok:S.best>0}
+  ];
+}
+function updateProgress(){
+  const c=progChecks(), pct=Math.round(c.filter(x=>x.ok).length/c.length*100);
+  $('#progBar').style.width=pct+'%';$('#progPct').textContent=pct+'%';
+  const _pn=$('#progNeedle'); if(_pn)_pn.style.transform='rotate('+(pct*1.8-90)+'deg)';
+  const ul=$('#progItems');
+  if(ul)ul.innerHTML=c.map(x=>`<li class="${x.ok?'on':''}"><span class="mk">${x.ok?'✔':'○'}</span>${x.label}</li>`).join('');
+  const done={see:Object.keys(S.seen||{}).length>=1,
+    ask:!!(S.obs&&S.obs.pp&&S.obs.pg)&&(S.ask||'').trim().length>=10,
+    model:(S.moved||0)>=EM_MAX&&CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL&&!!S.mini.model,
+    apply:(S.essay||'').trim().length>=15, check:S.best>0, beyond:!!S.visited.beyond};
+  $$('#tabNav button').forEach(b=>b.classList.toggle('done',!!done[b.dataset.tab]));
+}
+let toastT;
+function toast(msg,kind=''){const el=$('#toast');el.innerHTML=msg;el.className='show '+kind;
+  clearTimeout(toastT);toastT=setTimeout(()=>el.className='',2300);}
+
+function showTab(id,noScroll){
+  if(!TABS.includes(id))return;
+  $$('.panel').forEach(p=>p.classList.remove('show'));
+  $('#panel-'+id).classList.add('show');
+  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  setBg(id);S.tab=id;S.visited[id]=true;save();updateProgress();
+  if(!noScroll)scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
+}
+$('#tabNav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.tab);});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){A.ensure();showTab(b.dataset.go);}});
+
+function refreshCover(){
+  const any=progChecks().some(x=>x.ok);
+  $('#coverSaved').style.display=any?'inline-flex':'none';
+  $('#coverGo').textContent=any?`이어서 하기 (${$('#progPct').textContent}) 🎈`:'풍선 문지르러 가기 🎈';
+}
+$('#coverGo').addEventListener('click',()=>{$('#cover').classList.add('hide');
+  document.body.classList.remove('cover-on');A.ensure();A.pop();showTab(S.tab||'see',true);});
+$('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classList.remove('hide');
+  document.body.classList.add('cover-on');setBg('cover');});
+
+(function(){const KEY='teacherMode';
+  document.body.classList.toggle('teacher',localStorage.getItem(KEY)==='1');
+  $('#tmodeBtn').addEventListener('click',()=>{
+    const on=!document.body.classList.contains('teacher');
+    document.body.classList.toggle('teacher',on);localStorage.setItem(KEY,on?'1':'0');
+    toast(on?'교사 모드 ON — 교실 연결 노트가 보입니다 🧑‍🏫':'교사 모드 OFF — 학생 화면입니다 🎒');});})();
+
+(function(){const wrap=$('#progWrap'),list=$('#progList');
+  wrap.addEventListener('click',()=>list.classList.toggle('show'));
+  document.addEventListener('click',e=>{if(!list.contains(e.target)&&!wrap.contains(e.target))list.classList.remove('show');});})();
+
+/* 그림 슬롯 */
+(function(){
+  $$('[data-fig]').forEach(el=>{
+    const key=el.dataset.fig,src=FIGS[key]||'',alt=el.dataset.alt||'',cap=el.dataset.cap||'';
+    const slot=()=>{el.classList.add('slot');
+      el.innerHTML=`<div class="fe">🖼️</div><div class="fn">${FIGS[key]||'img/'+key+'.jpg'}</div><div class="fd">${alt}</div>`;};
+    if(!src){slot();return;}
+    const im=new Image();
+    im.onload=()=>{el.classList.remove('slot');
+      el.innerHTML=`<img src="${src}" alt="${alt.replace(/"/g,'&quot;')}" loading="lazy">`+(cap?`<figcaption>${cap}</figcaption>`:'');};
+    im.onerror=slot;im.src=src;
+  });
+})();
+
+/* 1단계 — 겪어 본 현상 체크 */
+(function(){
+  const wrap=$('#seenList');if(!wrap)return;
+  const msg=$('#seenMsg');
+  function paint(){
+    let n=0;
+    $$('input[data-seen]',wrap).forEach(cb=>{
+      const on=!!S.seen[cb.dataset.seen];cb.checked=on;
+      cb.closest('.checkline').classList.toggle('on',on);if(on)n++;});
+    if(msg)msg.innerHTML = n===0
+      ? '하나라도 겪어 봤다면, 오늘 배울 내용을 이미 몸으로 겪어 본 셈입니다.'
+      : (n>=3 ? `<b>${n}가지</b>나 겪어 봤네요. 그렇다면 이 장면들의 <b>공통점</b>은 무엇일까요?`
+              : `<b>${n}가지</b>를 골랐어요. 나머지도 아마 겪어 봤을 거예요 — 겨울이면 흔한 일이거든요.`);
+  }
+  wrap.addEventListener('change',e=>{
+    const cb=e.target.closest('input[data-seen]');if(!cb)return;
+    if(cb.checked)S.seen[cb.dataset.seen]=1;else delete S.seen[cb.dataset.seen];
+    save();paint();updateProgress();A.pop();});
+  paint();
+})();
+
+/* 2단계 — 마찰 전기 관찰대 */
+(function(){
+  const swing=$('#fsSwing'),probe=$('#fsProbe'),cap=$('#fsCap'),msg=$('#obsMsg');
+  if(!swing)return;
+  const ball2=$('#fsBall2'),glove=$('#fsGlove'),push=$('#fsPush'),pull=$('#fsPull');
+  function reset(){
+    swing.style.transform='rotate(0deg)';probe.style.transform='translate(0px,0px)';
+    ball2.setAttribute('opacity','0');glove.setAttribute('opacity','0');
+    push.setAttribute('opacity','0');pull.setAttribute('opacity','0');
+    cap.textContent='아래 버튼을 눌러 장면을 재생해 보세요';
+    $$('[data-obs]').forEach(b=>b.classList.remove('on'));
+  }
+  function play(k){
+    const o=OBS[k];if(!o)return;
+    reset();
+    const btn=$(`[data-obs="${k}"]`);if(btn)btn.classList.add('on');
+    (k==='pp'?ball2:glove).setAttribute('opacity','1');
+    cap.textContent=o.cap;
+    probe.style.transform=`translate(${o.probe}px,0px)`;
+    swing.style.transform=`rotate(${o.swing}deg)`;
+    setTimeout(()=>{(k==='pp'?push:pull).setAttribute('opacity','1');},reduceMotion?60:700);
+    A.pop();
+    S.obs[k]=1;save();updateProgress();
+    const both=S.obs.pp&&S.obs.pg;
+    msg.className='verdict'+(both?' hit':'');
+    msg.innerHTML=o.msg+(both
+      ? '<br><br>✅ 두 장면을 모두 보았습니다. <b>같은 면장갑</b>으로 문질렀는데 결과는 반대였어요. 아래 칸에 질문을 적어 봅시다.'
+      : '<br><br>다른 버튼도 눌러 <b>나머지 한 장면</b>을 보세요.');
+  }
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-obs]');if(!b)return;
+    if(b.dataset.obs==='reset'){reset();A.pop();
+      msg.className='verdict';msg.innerHTML='두 버튼을 <b>모두</b> 눌러 두 장면을 비교해 보세요.';return;}
+    play(b.dataset.obs);});
+})();
+
+/* 2단계 — 나의 질문 */
+(function(){
+  const ta=$('#askTa'),mark=$('#askSaved');if(!ta)return;let t;
+  ta.value=S.ask||'';
+  ta.addEventListener('input',()=>{S.ask=ta.value;save();updateProgress();
+    mark.classList.add('on');clearTimeout(t);t=setTimeout(()=>mark.classList.remove('on'),1400);});
+})();
+
+/* ═══════ ⚡ 3단계 · 전자 옮기기 ═══════ */
+(function(){
+  const msg=$('#emMsg');if(!msg)return;
+  const flow=$('#emFlow');
+  function apply(n,silent){
+    EM_STEPS.forEach((st,i)=>{
+      const on=i<n;
+      const el=document.getElementById(st.e);
+      if(el)el.style.transform=on?`translate(${st.dx}px,${st.dy}px)`:'translate(0px,0px)';
+      const tg=document.getElementById(st.t),bg=document.getElementById(st.b);
+      if(tg)tg.setAttribute('opacity',on?'1':'0');
+      if(bg)bg.setAttribute('opacity',on?'1':'0');});
+    if(flow)flow.setAttribute('opacity',n>0?'1':'0');
+    const tn=EM_MAX-n,bn=EM_MAX+n;
+    $('#emTn').innerHTML=tn+'<small> 개</small>';
+    $('#emBn').innerHTML=bn+'<small> 개</small>';
+    $('#emTot').innerHTML=(tn+bn)+'<small> 개 · 그대로</small>';
+    const tv=$('#emTowel'),bv=$('#emBall');
+    tv.textContent=n>0?'(+)전하로 대전':'중성';tv.style.color=n>0?CV('c4'):'';
+    bv.textContent=n>0?'(−)전하로 대전':'중성';bv.style.color=n>0?CV('c5'):'';
+    msg.className='verdict'+(n>=EM_MAX?' hit':'');
+    msg.innerHTML = n===0
+      ? '지금은 둘 다 <b>전기를 띠지 않습니다.</b> 각 물체에서 (+)의 수와 (−)의 수가 같으니까요.'
+      : (n<EM_MAX
+        ? `전자 <b>${n}개</b>가 수건에서 고무풍선으로 옮겨 갔습니다. 수건이 잃은 ${n}개를 고무풍선이 그대로 얻었어요. 원자핵은 <b>양쪽 다 제자리</b>입니다.`
+        : '🎈 <b>고무풍선은 (−)전하로 대전</b>, 🧻 <b>수건은 (+)전하로 대전</b>되었습니다.<br>그런데 전자 총 개수는 처음과 똑같은 <b>8개</b>입니다. 새로 만들어진 전자는 하나도 없어요.<br><b>전기가 새로 생긴 게 아니라 — 전자가 옮겨 왔을 뿐입니다.</b>');
+    S.moved=n;save();updateProgress();
+    if(!silent){if(n>=EM_MAX)A.correct();else A.pop();}
+  }
+  $('#emMove').addEventListener('click',()=>{
+    if((S.moved||0)>=EM_MAX)return toast('전자를 더 옮길 수는 없어요. 이미 4개를 다 옮겼습니다','bad');
+    apply((S.moved||0)+1);
+    if(S.moved>=EM_MAX)toast('전자 총 개수는 그대로 8개! 새로 생긴 전자는 없어요 ⚡','good');});
+  $('#emBack').addEventListener('click',()=>{if((S.moved||0)<=0)return;apply(S.moved-1);});
+  $('#emReset').addEventListener('click',()=>{apply(0);});
+  apply(S.moved||0,true);
+})();
+
+/* 빈칸 */
+(function(){
+  const all=$$('.cloze');CLOZE_TOTAL=all.length;
+  all.forEach((cz,i)=>{
+    const reveal=silent=>{
+      if(cz.classList.contains('revealed'))return;
+      cz.textContent=cz.dataset.ans;
+      const col=CV(cz.dataset.c||'accent');cz.style.color=col;cz.style.borderColor=col;
+      cz.classList.add('revealed');if(!silent)A.blip(720,.08);
+      S.cloze[i]=1;save();
+      const set=cz.closest('.cloze-set');
+      if(set&&$$('.cloze',set).every(x=>x.classList.contains('revealed'))){set.classList.add('complete');if(!silent)A.pop();}
+      updateProgress();};
+    cz.addEventListener('click',()=>reveal(false));
+    if(S.cloze[i])reveal(true);
+  });
+})();
+
+/* 미니 퀴즈 */
+(function(){
+  function build(host,key){
+    const set=QUIZ_SETS[key];if(!set)return;
+    let done=0;const total=set.qs.length;
+    host.innerHTML=`<div class="mq-head"><span class="mq-badge">✅ 개념 확인</span>
+      <span style="font-weight:700">${set.title}</span><span class="mq-prog" data-prog>0/${total}</span></div>`;
+    set.qs.forEach((q,qi)=>{
+      const qEl=document.createElement('div');qEl.className='mq-q';
+      qEl.innerHTML=`<div class="mq-text"><span class="qn">Q${qi+1}.</span>${q.q}</div><div class="mq-choices"></div><div class="mq-fb"></div>`;
+      const cw=$('.mq-choices',qEl),fb=$('.mq-fb',qEl);
+      let answered=false,solved=false;
+      q.ch.map((c,i)=>i).sort(()=>Math.random()-.5).forEach((idx,n)=>{
+        const c=q.ch[idx];
+        const b=document.createElement('button');b.className='mq-opt';b.dataset.ok=c.ok?'1':'0';
+        b.innerHTML=`<span class="k">${'①②③④⑤'[n]}</span>${c.t}`;
+        b.addEventListener('click',()=>{
+          if(answered||solved)return;answered=true;
+          if(c.ok){solved=true;b.classList.add('correct');
+            $$('.mq-opt',cw).forEach(x=>x.classList.add('locked'));
+            A.correct();fb.className='mq-fb show ok';fb.innerHTML=`<b>정답!</b> ${q.why}`;done++;upd();}
+          else{b.classList.add('wrong');A.wrong();
+            fb.className='mq-fb show no';fb.innerHTML=`<b>다시 생각해 볼까요.</b> ${q.why}`;
+            setTimeout(()=>{answered=false;b.classList.remove('wrong');},1600);}});
+        cw.appendChild(b);});
+      host.appendChild(qEl);});
+    const d=document.createElement('div');d.className='mq-done';d.innerHTML='🏅 개념 확인 완료!';host.appendChild(d);
+    function upd(){const p=host.querySelector('[data-prog]');if(p)p.textContent=done+'/'+total;
+      if(done>=total){host.classList.add('alldone');
+        if(!S.mini[key]){S.mini[key]=1;save();updateProgress();toast('개념 확인 완료! ✅','good');}}}
+  }
+  $$('.miniquiz').forEach(h=>build(h,h.dataset.quiz));
+})();
+
+/* 서술형 */
+(function(){
+  const ta=$('#essay'),mark=$('#essaySaved');let t;
+  ta.value=S.essay||'';
+  ta.addEventListener('input',()=>{S.essay=ta.value;save();updateProgress();
+    mark.classList.add('on');clearTimeout(t);t=setTimeout(()=>mark.classList.remove('on'),1400);});
+  $('#ansBtn').addEventListener('click',()=>{
+    const box=$('#modelAns'),open=box.classList.toggle('show');
+    $('#ansBtn').textContent=open?'모범 답안 접기':'모범 답안 확인하기';
+    if(open){A.pop();if((S.essay||'').trim().length<15)toast('먼저 <b>내 문장으로 써 본 뒤</b>에 보면 훨씬 남아요 ✍️');}});
+})();
+
+/* 확인 문제 */
+(function(){
+  const body=$('#gameBody');let i=0,score=0,lives=3,order=[];
+  function medal(k){if(S.medals[k])return;S.medals[k]=1;save();
+    const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');}
+  function paint(){Object.keys(S.medals).forEach(k=>{const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');});}
+  function hud(){$('#score').textContent=score;
+    $('#qno').textContent=Math.min(i+1,GAME_QS.length)+'/'+GAME_QS.length;
+    $$('#lives .h').forEach((h,n)=>h.classList.toggle('gone',n>=lives));}
+  function start(){i=0;score=0;lives=3;order=GAME_QS.map((_,n)=>n).sort(()=>Math.random()-.5);hud();next();}
+  function next(){
+    if(i>=order.length||lives<=0)return end();
+    hud();const q=GAME_QS[order[i]];
+    const bg=(q.boxes&&q.boxes.length)
+      ? '<div class="bogi" id="bogiBox"><div class="bogi-t">보 기</div><ul>'
+        + q.boxes.map(function(b,n){return '<li data-bi="'+n+'"><span class="bk">'+'\u3131\u3134\u3137\u3139'[n]+'</span><span>'+b+'</span><span class="bv"></span></li>';}).join('')
+        + '</ul></div>'
+      : '';
+    body.innerHTML='<div class="mq-q" style="margin-top:0">'
+      + '<div class="mq-meta"><span class="mq-lv" data-lv="'+(q.difficulty||'중')+'">난이도 '+(q.difficulty||'중')+'</span>'
+      + (q.boxes&&q.boxes.length?'<span class="mq-lv" style="color:var(--accent2)">&lt;보기&gt;형</span>':'')
+      + (q.svg?'<span class="mq-lv" style="color:var(--ink-mute)">자료 해석</span>':'') + '</div>'
+      + (q.svg?'<div class="qfig">'+q.svg+'</div>':'')
+      + '<div class="mq-text" style="font-size:18px"><span class="qn">Q'+(i+1)+'.</span>'+(q.stem||q.q)+'</div>'
+      + bg
+      + '<div class="mq-choices"></div><div class="mq-fb"></div>'
+      + '<div class="mq-next"><button class="btn primary sm" id="qNext">다음 문항 →</button></div></div>';
+    const cw=$('.mq-choices',body),fb=$('.mq-fb',body);let locked=false;
+    q.ch.map((c,n)=>n).sort(()=>Math.random()-.5).forEach((idx,n)=>{
+      const c=q.ch[idx];
+      const b=document.createElement('button');b.className='mq-opt';b.dataset.ok=c.ok?'1':'0';
+      b.innerHTML=`<span class="k">${'①②③④⑤'[n]}</span>${c.t}`;
+      b.addEventListener('click',()=>{
+        if(locked)return;locked=true;
+        $$('.mq-opt',cw).forEach(x=>x.classList.add('locked'));
+        if(c.ok){b.classList.add('correct');A.correct();score+=20;medal('first');
+          if(i+1>=Math.ceil(GAME_QS.length/2))medal('half');
+          fb.className='mq-fb show ok';fb.innerHTML=`<b>정답!</b> ${q.why}`;}
+        else{b.classList.add('wrong');A.wrong();lives--;
+          $$('.mq-opt',cw).forEach(x=>{if(x.dataset.ok==='1')x.classList.add('correct');});
+          fb.className='mq-fb show no';fb.innerHTML=`<b>아쉬워요.</b> ${q.why}`;}
+        const bx=$('#bogiBox');
+        if(bx&&q.boxVerdicts){$$('li',bx).forEach(function(li,n){
+          const t=!!q.boxVerdicts[n];li.classList.add(t?'t':'f');
+          const v=$('.bv',li);if(v)v.textContent=t?'옳음':'옳지 않음';});bx.classList.add('reveal');}
+        const nx=$('.mq-next',body);if(nx){nx.classList.add('show');
+          const nb=$('#qNext');if(nb){nb.textContent=(i+1>=order.length||lives<=0)?'결과 보기 →':'다음 문항 →';
+            nb.addEventListener('click',function(){A.pop();i++;next();
+              scrollTo({top:document.querySelector('#panel-check').offsetTop-70,behavior:reduceMotion?'auto':'smooth'});});}}
+        hud();});
+      cw.appendChild(b);});}
+  function end(){
+    const perfect=score===GAME_QS.length*20;
+    if(perfect)medal('perfect');
+    if(score>(S.best||0)){S.best=score;save();}
+    updateProgress();perfect?A.win():A.pop();
+    body.innerHTML=`<div style="text-align:center;padding:26px 10px">
+      <div style="font-size:44px">${perfect?'🏆':(lives>0?'🎉':'💪')}</div>
+      <h3 class="card-t" style="margin:10px 0 6px">${perfect?'전부 정답! 완벽해요':(lives>0?'끝까지 풀었어요':'다시 한 번 풀어 볼까요?')}</h3>
+      <p class="lead" style="margin:0 auto 16px">점수 <b class="k">${score}</b> / ${GAME_QS.length*20} · 최고 기록 <b class="k">${S.best||0}</b></p>
+      <button class="btn primary" id="gameAgain">다시 풀기</button></div>`;
+    $('#gameAgain').addEventListener('click',start);}
+  $('#gameStart').addEventListener('click',start);paint();
+})();
+
+/* 별 배경 */
+(function(){
+  const cv=$('#stars'),ctx=cv.getContext('2d');
+  let stars=[],w=0,h=0,t=0;
+  function build(){
+    const dpr=Math.min(devicePixelRatio||1,2);
+    w=innerWidth;h=innerHeight;cv.width=w*dpr;cv.height=h*dpr;cv.style.width=w+'px';cv.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const n=Math.round(Math.min(130,w*h/10500));
+    stars=Array.from({length:n},(_,i)=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+.3,
+      p:Math.random()*Math.PI*2,s:.6+Math.random()*1.1,c:['#ffffff','#4a3a26','#b9873c','#218c84'][i%4]}));}
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    stars.forEach(st=>{ctx.globalAlpha=reduceMotion?.6:(.35+.4*Math.sin(t*st.s+st.p));
+      ctx.fillStyle=st.c;ctx.shadowColor=st.c;ctx.shadowBlur=st.r*3.3;
+      ctx.beginPath();ctx.arc(st.x,st.y,st.r,0,TAU);ctx.fill();});
+    ctx.globalAlpha=1;ctx.shadowBlur=0;
+    if(!reduceMotion){t+=.013;requestAnimationFrame(draw);}}
+  let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{build();if(reduceMotion)draw();},200);});
+  build();draw();
+})();
+
+(function init(){
+  updateProgress();
+  const start=TABS.includes(S.tab)?S.tab:'see';
+  $$('.panel').forEach(p=>p.classList.remove('show'));
+  $('#panel-'+start).classList.add('show');
+  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===start));
+  S.tab=start;document.body.classList.add('cover-on');refreshCover();setBg('cover');
+})();
+</script>
+</body>
+</html>
