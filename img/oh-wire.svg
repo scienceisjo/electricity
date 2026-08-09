@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 240" role="img"
+  aria-label="전선을 잘랐을 때의 단면. 안쪽에는 구리 도선 여러 가닥이 뭉쳐 있고, 그 바깥을 고무 피복이 둥글게 감싸고 있다. 구리는 도체라 전류가 잘 흐르고, 고무 피복은 부도체라 전류가 잘 흐르지 않는다.">
+  <rect x="0" y="0" width="560" height="240" fill="#f9f2e3"/>
+  <!-- 고무 피복 -->
+  <circle cx="168" cy="118" r="94" fill="#6f5f49" stroke="#4c4030" stroke-width="2.5"/>
+  <circle cx="168" cy="118" r="72" fill="#efe6d2" stroke="#8a755c" stroke-width="1.6"/>
+  <!-- 구리 도선 7가닥 -->
+  <g stroke="#7d451e" stroke-width="1.8">
+    <circle cx="168" cy="118" r="21" fill="#a05c2c"/>
+    <circle cx="168" cy="76"  r="21" fill="#a05c2c"/>
+    <circle cx="168" cy="160" r="21" fill="#a05c2c"/>
+    <circle cx="204" cy="97"  r="21" fill="#a05c2c"/>
+    <circle cx="204" cy="139" r="21" fill="#a05c2c"/>
+    <circle cx="132" cy="97"  r="21" fill="#a05c2c"/>
+    <circle cx="132" cy="139" r="21" fill="#a05c2c"/>
+  </g>
+  <!-- 구리 하이라이트 -->
+  <g fill="#c9824a" opacity="0.85">
+    <circle cx="161" cy="111" r="6"/><circle cx="161" cy="69" r="6"/><circle cx="161" cy="153" r="6"/>
+    <circle cx="197" cy="90" r="6"/><circle cx="197" cy="132" r="6"/>
+    <circle cx="125" cy="90" r="6"/><circle cx="125" cy="132" r="6"/>
+  </g>
+  <text x="168" y="226" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">전선을 잘랐을 때의 단면</text>
+
+  <!-- 지시선: 구리 -->
+  <line x1="204" y1="97" x2="322" y2="72" stroke="#a08b64" stroke-width="1.6"/>
+  <circle cx="204" cy="97" r="3.5" fill="#4a3a26"/>
+  <text x="330" y="70" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="800" fill="#a05c2c">구리 (도체)</text>
+  <text x="330" y="94" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#4a3a26">전류가 잘 흐른다</text>
+
+  <!-- 지시선: 고무 -->
+  <line x1="228" y1="176" x2="322" y2="162" stroke="#a08b64" stroke-width="1.6"/>
+  <circle cx="228" cy="176" r="3.5" fill="#4a3a26"/>
+  <text x="330" y="160" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="18" font-weight="800" fill="#4c4030">고무 피복 (부도체)</text>
+  <text x="330" y="184" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#4a3a26">전류가 잘 흐르지 않는다</text>
+</svg>
