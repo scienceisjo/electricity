@@ -373,7 +373,59 @@ h1 em{font-style:normal; color:var(--accent)}
   </div>
 </section>
 
-<!-- ═══ 3. 자철석 ═══ -->
+<!-- ═══ 3. 정전기 유도 ═══ -->
+<section class="scene" data-t="풍선이 캔을 끌고 온다">
+  <div class="txt">
+    <span class="kicker">교실에서 바로 되는 실험</span>
+    <h2 class="title">붙지도 않았는데<br>캔이 <span class="kp">따라온다</span></h2>
+    <p class="lead">풍선을 옷에 문질러 캔 옆에 가져가면, 닿지도 않았는데 캔이 <b>데굴데굴 따라옵니다.</b></p>
+    <p class="sub">물질마다 전자를 <b>빼앗기 쉬운 정도</b>가 다릅니다. 고무 풍선은 전자를 <b>가져오는</b> 쪽이라 문지르면 <span class="kn">(−)</span>를 띠고, 유리나 머리카락은 전자를 <b>빼앗기는</b> 쪽이라 <span class="kp">(+)</span>를 띱니다.</p>
+    <p class="sub">그다음이 핵심입니다. (−)를 띤 풍선을 캔에 가까이 대면, 캔 속 <span class="ke">전자</span>가 밀려서 <b>반대쪽으로</b> 도망갑니다. 그러면 풍선과 가까운 쪽이 <span class="kp">(+)</span>가 되죠. 서로 끌어당기니 캔이 굴러옵니다. 이것이 <b>정전기 유도</b>입니다.</p>
+    <div class="ctl">
+      <button class="pill pe" data-act="rub2">🧽 풍선 문지르기</button>
+      <button class="pill" data-act="showq">🔍 캔 속 전하 보기</button>
+    </div>
+    <div class="script">
+      <b>진행</b> — 실물로 하시면 가장 좋습니다(풍선·빈 캔·옷소매). 예측 먼저 받으세요.
+      <ul>
+        <li>“캔이 풍선에 <b>붙어 있지도 않은데</b> 왜 따라올까?”</li>
+        <li>🔍 버튼으로 캔 속 전하 배치를 보여주고 <b>밀려남 → 반대 전하가 앞으로</b> 순서로 짚기</li>
+        <li>오개념: 캔이 <b>자석처럼</b> 끌린다고 생각합니다. 자석과 무관, <b>전하</b>의 일입니다</li>
+        <li>중2 ‘정전기 유도’ 차시와 바로 이어집니다</li>
+      </ul>
+      <span class="ask">발문: “캔 속 전자는 어디로 갔을까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="balloon"></canvas>
+    <div class="vizcap">닿지 않아도 끌린다 — <b>전하가 자리를 옮겼기</b> 때문입니다</div>
+  </div>
+</section>
+
+<!-- ═══ 4. 정전기와 번개 ═══ -->
+<section class="scene wide" data-t="손끝의 번개, 그리고 예방법">
+  <div class="txt" style="max-width:none">
+    <span class="kicker">겨울마다 겪는 그것</span>
+    <h2 class="title">문고리에서 <span class="kp">따끔</span>한 건<br>아주 작은 <b>번개</b>입니다</h2>
+    <p class="lead" style="max-width:62ch">한쪽에 전하가 잔뜩 쌓이고 다른 쪽과 차이가 아주 커지면, 평소엔 전기가 안 통하는 <b>공기</b>를 뚫고 순간적으로 전기가 건너뜁니다. 하늘의 번개와 <b>똑같은 일</b>이 손끝에서 작게 일어나는 거예요.</p>
+    <div class="cards three" style="margin-top:8px">
+      <div class="card e"><span class="badge e">왜 겨울에</span><h4>건조하면 심해진다</h4><p>공기 중 물기가 전하를 조금씩 흘려보내 줍니다. 건조하면 그러지 못해 계속 쌓입니다.</p></div>
+      <div class="card"><span class="badge m">예방법</span><h4>먼저 닿게 하기</h4><p>동전·열쇠·클립을 쥐고 손잡이를 먼저 톡. 전하가 그쪽으로 빠져나가 따끔함이 사라집니다.</p></div>
+      <div class="card m"><span class="badge l">원리</span><h4>차이를 없애면 끝</h4><p>정전기는 <b>전하의 차이</b>가 만드는 현상입니다. 차이를 미리 없애면 방전도 없습니다.</p></div>
+    </div>
+    <p class="sub" style="max-width:62ch;margin-top:14px">그러니 정전기를 없애는 방법은 간단합니다. <b>차이를 미리 흘려보내면 됩니다.</b></p>
+    <div class="script" style="max-width:60ch">
+      <b>생활 연결</b> — 학생들이 가장 반응하는 대목입니다.
+      <ul>
+        <li>“문고리 잡다가 따끔했던 사람?” 손들기로 시작</li>
+        <li>동전 트릭은 <b>직접 해보게</b> 하면 다음 날 자랑합니다</li>
+        <li>“작은 번개”라는 표현을 반복하세요. 규모만 다를 뿐 같은 현상</li>
+      </ul>
+      <span class="ask">발문: “번개도 결국 무엇의 차이 때문에 생길까?”</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5. 자철석 ═══ -->
 <section class="scene" data-t="목동의 지팡이 — 자석의 발견">
   <div class="txt">
     <span class="kicker">비슷한 시기 · 어느 들판</span>
@@ -477,7 +529,36 @@ h1 em{font-style:normal; color:var(--accent)}
   </div>
 </section>
 
-<!-- ═══ 7. 외르스테드 ═══ -->
+<!-- ═══ 9. 전구는 어떻게 켜지나 ═══ -->
+<section class="scene" data-t="전구는 어떻게 켜지나">
+  <div class="txt">
+    <span class="kicker">거의 모두가 오해하는 것</span>
+    <h2 class="title">전자가 <span class="ke">달려가서</span><br>불을 켜는 게 아닙니다</h2>
+    <p class="lead">스위치를 켜면 불이 <b>즉시</b> 들어옵니다. 그래서 흔히 이렇게 상상하죠. 전자가 배터리에서 출발해 전구까지 <b>달려가</b> 에너지를 전달한다고요.</p>
+    <p class="sub">그런데 전선 속 전자가 밀려가는 속도는 <b>걷는 것보다도 느립니다.</b> 그렇다면 불은 한참 뒤에나 켜져야 하죠.</p>
+    <p class="sub">진짜 주인공은 <b class="kl">전기장</b>입니다. 스위치를 닫는 순간 배터리가 만든 전기장이 <b>회로 전체에 거의 빛의 속도로</b> 퍼집니다. 그러면 <b>원래부터 필라멘트 안에 있던</b> <span class="ke">전자</span>들이 그 자리에서 즉시 세게 흔들리기 시작하고, 주변 입자와 부딪히며 <b>열과 빛</b>을 냅니다.</p>
+    <p class="sub">배터리가 하는 일은 전자를 배달하는 게 아니라, <b>전기장을 계속 유지</b>해 주는 것입니다. 유지할 힘이 다하면 <b>방전</b>됐다고 하죠.</p>
+    <div class="ctl">
+      <button class="pill pe" data-act="sw2">🔌 스위치 켜기</button>
+      <button class="pill" data-act="slow">🐢 전자 속도 보기</button>
+    </div>
+    <div class="script">
+      <b>오개념 정면 대응</b> — 이 장면이 오늘 수업에서 가장 값진 대목입니다.
+      <ul>
+        <li>먼저 학생 생각을 꺼내게: “스위치를 켜면 왜 <b>바로</b> 불이 들어올까?”</li>
+        <li>대부분 “전자가 빨리 달려가서”라고 답합니다. 그때 🐢 버튼으로 <b>실제 전자 속도</b>를 보여주세요</li>
+        <li>비유: 긴 <b>수도관에 물이 이미 가득</b> 차 있으면, 수도꼭지를 열자마자 반대편에서 물이 나옵니다. 물 한 방울이 관을 통과해서가 아니라 <b>압력이 순식간에 전달</b>되기 때문</li>
+        <li>중2 ‘전류’ 개념과 직결됩니다. 전류는 전자의 <b>흐름</b>이지만, 불이 켜지는 건 전기장 덕분</li>
+      </ul>
+      <span class="ask">발문: “전자가 느리게 움직이는데 왜 불은 바로 켜질까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="bulbfield"></canvas>
+    <div class="vizcap"><b class="kl">보라</b> 전기장이 퍼지는 속도 · <b class="ke">초록</b> 전자가 실제로 이동하는 속도</div>
+  </div>
+</section>
+
+<!-- ═══ 10. 외르스테드 ═══ -->
 <section class="scene" data-t="외르스테드 — 전기가 자기를 만든다">
   <div class="txt">
     <span class="kicker">1820년 · 우연한 발견</span>
@@ -502,7 +583,32 @@ h1 em{font-style:normal; color:var(--accent)}
   </div>
 </section>
 
-<!-- ═══ 8. 패러데이 ═══ -->
+<!-- ═══ 11. 앙페르와 전자석 ═══ -->
+<section class="scene" data-t="앙페르 — 감을수록 세지는 자석">
+  <div class="txt">
+    <span class="kicker">외르스테드 다음 이야기</span>
+    <h2 class="title">전선을 <span class="km">돌돌 감으면</span><br>자석이 된다</h2>
+    <p class="lead">외르스테드의 발견을 이어받은 <b>앙페르</b>가 알아냈습니다. 전선을 <b>고리 모양으로 감아</b> 전류를 흘리면, 그 뭉치가 <b>막대자석과 똑같이</b> 행동한다는 것을요.</p>
+    <p class="sub">한 바퀴가 만드는 자기장은 약하지만, <b>여러 번 겹쳐 감으면</b> 그 자기장이 차곡차곡 더해져 훨씬 세집니다. 이렇게 촘촘히 감은 코일을 <span class="km">솔레노이드</span>, 여기에 전류를 흘려 만든 자석을 <span class="km">전자석</span>이라고 합니다.</p>
+    <p class="sub">전자석의 결정적인 장점은 <b>껐다 켤 수 있다</b>는 점입니다. 고철 처리장의 거대한 크레인이 그렇습니다. 전류를 흘려 <b>철만 붙여</b> 들어 올리고, 옮긴 자리에서 <b>전류를 끊으면 툭</b> 떨어뜨립니다. 알루미늄처럼 붙지 않는 금속은 그대로 남으니 분류까지 됩니다.</p>
+    <div class="slab"><span>적게</span><input type="range" data-ctl="turns" min="2" max="18" value="4"><span>많이 감기</span></div>
+    <div class="script">
+      <b>조작 활동</b> — 슬라이더를 학생이 돌리게 하세요.
+      <ul>
+        <li>감는 수를 늘릴수록 <b>자기장 선이 촘촘해지고</b> 붙는 클립이 늘어납니다</li>
+        <li>“왜 많이 감으면 세질까?” → 한 바퀴마다 만드는 자기장이 <b>같은 방향으로 더해지기</b> 때문</li>
+        <li>중2 ‘코일 주위의 자기장’ 차시와 직결 — 그 차시를 배웠다면 여기서 되짚어 주세요</li>
+        <li>실물 실험: 못에 에나멜선을 감고 건전지 연결. <b>발열 주의</b>, 관찰할 때만 연결</li>
+      </ul>
+      <span class="ask">발문: “영구 자석 대신 전자석을 쓰는 이유가 뭘까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="solenoid"></canvas>
+    <div class="vizcap">감은 횟수가 늘수록 자기장이 <b>촘촘하고 세게</b> 만들어집니다</div>
+  </div>
+</section>
+
+<!-- ═══ 12. 패러데이 ═══ -->
 <section class="scene" data-t="패러데이 — 거꾸로 해보면?">
   <div class="txt">
     <span class="kicker">1831년 · 역발상</span>
@@ -610,7 +716,35 @@ h1 em{font-style:normal; color:var(--accent)}
   </div>
 </section>
 
-<!-- ═══ 12. 맥스웰 ═══ -->
+<!-- ═══ 16. 돌려서 만든다 ═══ -->
+<section class="scene" data-t="세상 모든 발전소는 돌린다">
+  <div class="txt">
+    <span class="kicker">패러데이가 바꾼 세상</span>
+    <h2 class="title">발전소가 하는 일은<br>결국 <span class="km">돌리는 것</span></h2>
+    <p class="lead">화력, 수력, 풍력, 원자력. 이름은 달라도 전기를 만드는 <b>마지막 단계는 모두 같습니다.</b> 자석을 돌려 코일에 전류를 만드는 것, 즉 <b>전자기 유도</b>입니다.</p>
+    <p class="sub">화력·원자력은 <b>물을 끓여</b> 수증기로, 수력은 <b>떨어지는 물</b>이, 풍력은 <b>바람</b>이 터빈을 돌립니다. 발전 방식의 차이란 결국 <b>무엇으로 돌리느냐</b>의 차이일 뿐이에요.</p>
+    <div class="cards two" style="margin-top:10px">
+      <div class="card m"><span class="badge m">배터리가 없는데</span><h4>교통카드</h4><p>단말기의 <b>변하는 자기장</b>이 카드 속 코일에 전류를 유도합니다. 그 전기로 칩이 깨어나요.</p></div>
+      <div class="card e"><span class="badge e">선 없이</span><h4>무선 충전</h4><p>충전기 코일의 전류가 자기장을 만들고, 그 자기장이 휴대폰 코일에 다시 전류를 만듭니다.</p></div>
+    </div>
+    <div class="ctl"><button class="pill" data-act="spin">▶ 터빈 돌리기</button></div>
+    <div class="script">
+      <b>회수와 확장</b> — 12장면 패러데이를 여기서 크게 되받습니다.
+      <ul>
+        <li>발전 방식을 하나씩 물어보고 <b>“그래서 마지막엔 뭘 하지?”</b>로 모으기 → 전부 “돌린다”</li>
+        <li>교통카드는 실물을 꺼내 보이며 <b>“여기 건전지 있어?”</b> 하면 반응이 좋습니다</li>
+        <li>무선 충전 위치가 어긋나면 안 되는 경험은 학생들이 이미 갖고 있습니다</li>
+        <li>여기서 오늘 배운 두 방향이 모두 쓰입니다: <b>전기→자기</b>(앙페르)와 <b>자기→전기</b>(패러데이)</li>
+      </ul>
+      <span class="ask">발문: “원자력 발전소는 핵으로 바로 전기를 만들까?” → 아니요, 물을 끓여 돌립니다</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="generator"></canvas>
+    <div class="vizcap">무엇으로 돌리든, 마지막은 <b>자석을 돌려 전기를 얻는 것</b></div>
+  </div>
+</section>
+
+<!-- ═══ 17. 맥스웰 ═══ -->
 <section class="scene" data-t="맥스웰 — 네 문장으로 정리하다">
   <div class="txt">
     <span class="kicker">1860년대 · 이론의 차례</span>
@@ -708,8 +842,10 @@ h1 em{font-style:normal; color:var(--accent)}
     <p class="lead" style="max-width:54ch; margin:22px auto 0">물리학자들은 이때 <b>“이제 세상을 다 이해했다”</b>고 믿었습니다.</p>
     <p class="sub" style="max-width:54ch; margin:12px auto 0">그리고 얼마 지나지 않아 <b>양자역학과 상대성이론</b>이 그 확신을 다시 무너뜨립니다. 과학은 늘 그런 식으로 이어져 왔어요.</p>
     <p class="srcnote" style="max-width:54ch; margin-left:auto; margin-right:auto">
-      이 이야기는 유튜브 <b>〈취미는 과학〉 전자기학 편</b>의 내용을 바탕으로 만들었습니다.<br>
-      출연: KAIST 물리학과 <b>김갑진</b> 교수 · 더 자세한 이야기는 원본 영상에서 확인하세요.
+      이 이야기는 아래 두 영상의 내용을 바탕으로 만들었습니다.<br>
+      <b>〈취미는 과학〉 전자기학 편</b> — 출연: KAIST 물리학과 <b>김갑진</b> 교수<br>
+      <b>〈나의 두 번째 교과서〉 과학 3강 — 전자기학, 당신이 쓰는 전기는 자석에서 온다</b><br>
+      더 자세한 이야기는 원본 영상에서 확인하세요.
     </p>
     <div class="script" style="text-align:left; max-width:60ch; margin-left:auto; margin-right:auto">
       <b>마무리</b> — 제목을 누르면 표지로 돌아갑니다. 1장면 전구를 다시 띄우고 끝내면 수미상관이 완성됩니다.
@@ -740,11 +876,14 @@ h1 em{font-style:normal; color:var(--accent)}
     <div class="cov-unit">중학교 2학년 · 전기와 자기 · 이야기보따리</div>
     <h1>전기와 자기<br><em>이야기</em></h1>
     <p class="cov-sub">문지른 호박 한 조각에서<br>빛의 정체까지, 2천 년</p>
-    <p class="cov-src">유튜브 <b>〈취미는 과학〉 전자기학 편</b>의 내용을 바탕으로 만들었습니다<br>(출연: KAIST 물리학과 김갑진 교수)</p>
+    <p class="cov-src">아래 두 영상의 내용을 바탕으로 만들었습니다<br>
+      <b>〈취미는 과학〉 전자기학 편</b> (출연: KAIST 물리학과 김갑진 교수)<br>
+      <b>〈나의 두 번째 교과서〉 과학 3강 — 전자기학</b></p>
     <div class="cov-list">
-      <span>① 호박과 자철석</span><span>② 지구가 자석이다</span><span>③ 둘은 다르다</span>
-      <span>④ 전류의 방향</span><span>⑤ 전기가 자기를 만든다</span><span>⑥ 자기가 전기를 만든다</span>
-      <span>⑦ 실험 두 가지</span><span>⑧ 맥스웰</span><span>⑨ 그리고 빛</span>
+      <span>① 호박과 자철석</span><span>② 정전기 유도</span><span>③ 지구가 자석이다</span>
+      <span>④ 전류의 방향</span><span>⑤ 전구가 켜지는 진짜 원리</span><span>⑥ 전기가 자기를 만든다</span>
+      <span>⑦ 전자석</span><span>⑧ 자기가 전기를 만든다</span><span>⑨ 실험 두 가지</span>
+      <span>⑩ 발전소와 무선 충전</span><span>⑪ 맥스웰</span><span>⑫ 그리고 빛</span>
     </div>
     <button class="enter" id="enter">이야기 시작하기</button>
     <button class="resume" id="resume" hidden>이어서 보기 →</button>
@@ -1410,6 +1549,219 @@ ANIM.dynamo=function(cv,api){
   });
 };
 
+/* 3) 정전기 유도 — 풍선이 캔을 끌고 온다 */
+ANIM.balloon=function(cv,api){
+  var q=0,qt=0, showQ=0,sqt=0, canX=0;
+  api.rub=function(){ qt=qt>.5?0:1; return qt>.5; };
+  api.showQ=function(){ sqt=sqt>.5?0:1; return sqt>.5; };
+  return loop(cv,function(c,w,h,t){
+    q+=(qt-q)*(RM?1:.05); showQ+=(sqt-showQ)*(RM?1:.08);
+    var pull=Math.max(0,(q-.35)/.65);
+    canX+=((pull*w*.13)-canX)*(RM?1:.06);
+    c.clearRect(0,0,w,h);
+    var cy=h*.52, bx=w*.30, R=Math.min(w,h)*.14;
+    /* 바닥 */
+    c.strokeStyle=LINE; c.lineWidth=1;
+    c.beginPath(); c.moveTo(0,cy+R*1.25); c.lineTo(w,cy+R*1.25); c.stroke();
+    /* 풍선 */
+    c.save(); c.translate(bx,cy); c.scale(.92,1);
+    var g=c.createRadialGradient(-R*.3,-R*.35,R*.1,0,0,R);
+    g.addColorStop(0,'#ff9a8a'); g.addColorStop(1,'#c4453a');
+    c.fillStyle=g; c.beginPath(); c.arc(0,0,R,0,7); c.fill(); c.restore();
+    c.strokeStyle='#8e2f26'; c.lineWidth=1.6;
+    c.beginPath(); c.moveTo(bx,cy+R); c.lineTo(bx-R*.12,cy+R*1.25); c.stroke();
+    /* 풍선 표면 (−) */
+    if(q>.05){ c.globalAlpha=q;
+      for(var i=0;i<8;i++){ var a=Math.PI*(.15+i*.09);
+        label(c,'−', bx+Math.cos(a)*R*.86, cy+Math.sin(a)*R*.86+4, NEG, Math.max(11,R*.30)); }
+      c.globalAlpha=1; }
+    /* 캔 */
+    var cx0=w*.68+canX, cw=Math.min(w,h)*.17, chh=Math.min(w,h)*.30;
+    c.save(); c.translate(cx0,cy);
+    c.fillStyle='#cfd6dc'; c.strokeStyle='#8e99a3'; c.lineWidth=1.6;
+    c.beginPath(); c.rect(-cw/2,-chh/2,cw,chh); c.fill(); c.stroke();
+    c.fillStyle='rgba(255,255,255,.55)'; c.fillRect(-cw*.30,-chh/2+3,cw*.16,chh-6);
+    c.restore();
+    /* 캔 속 전하 재배치 */
+    if(showQ>.05){
+      c.globalAlpha=showQ;
+      var sep=Math.min(1,q*1.2);
+      for(var k=0;k<4;k++){
+        var yy=cy-chh*.28+k*chh*.185;
+        label(c,'+', cx0-cw*(.26-.06*(1-sep)), yy+4, POS, Math.max(11,cw*.30));
+        label(c,'−', cx0+cw*(.26*sep+.02), yy+4, NEG, Math.max(11,cw*.30));
+      }
+      c.globalAlpha=1;
+    }
+    /* 끌리는 화살표 */
+    if(pull>.15){
+      c.globalAlpha=Math.min(1,pull);
+      arrow(c, cx0-cw*.62, cy-chh*.62, bx+R*1.15, cy-chh*.62, POS, 2.4);
+      c.globalAlpha=1;
+    }
+    label(c, q<.4? '문지르기 전 — 아무 일도 없다'
+            : (showQ>.5? '전자가 밀려나 앞쪽이 (+) → 서로 끌어당긴다' : '캔이 끌려온다 — 왜일까?'),
+      w/2, h-14, q<.4?DIM:POS, Math.max(11,w*.016));
+  });
+};
+
+/* 9) 전구는 어떻게 켜지나 — 전기장 vs 전자 속도 */
+ANIM.bulbfield=function(cv,api){
+  var on=0,ont=0, front=-1, slow=0, es=null;
+  api.sw=function(){ ont=ont>.5?0:1; if(ont>.5) front=0; return ont>.5; };
+  api.slow=function(){ slow=slow?0:1; return !!slow; };
+  return loop(cv,function(c,w,h,t){
+    on+=(ont-on)*(RM?1:.12);
+    if(ont>.5 && front>=0 && front<1) front=Math.min(1,front+(RM?1:.045));
+    c.clearRect(0,0,w,h);
+    var L=w*.12, R=w*.88, TP=h*.24, BT=h*.72;
+    if(!es){ es=[]; for(var i=0;i<28;i++) es.push({p:Math.random()}); }
+    /* 회로 */
+    c.strokeStyle=BRASS; c.lineWidth=Math.max(4,h*.018); c.lineCap='round';
+    c.beginPath();
+    c.moveTo(L,BT); c.lineTo(L,TP); c.lineTo(w*.42,TP);
+    c.moveTo(w*.58,TP); c.lineTo(R,TP); c.lineTo(R,BT); c.lineTo(L,BT);
+    c.stroke();
+    /* 배터리 */
+    c.fillStyle=POS; c.fillRect(w*.44,BT-Math.max(9,h*.035),w*.05,Math.max(18,h*.07));
+    c.fillStyle=NEG; c.fillRect(w*.51,BT-Math.max(7,h*.026),w*.05,Math.max(14,h*.052));
+    label(c,'배터리',w*.50,BT+Math.max(18,h*.075),DIM,Math.max(10,w*.013));
+    /* 전기장이 회로에 퍼지는 파면 */
+    if(on>.05 && front<1){
+      var per=(w*.30)+(TP);
+      c.strokeStyle=LIGHT; c.lineWidth=Math.max(5,h*.02); c.globalAlpha=.55;
+      c.beginPath();
+      var fx=w*.42-(w*.30)*front;
+      c.moveTo(w*.42,TP); c.lineTo(Math.max(L,fx),TP); c.stroke();
+      var fx2=w*.58+(w*.30)*front;
+      c.beginPath(); c.moveTo(w*.58,TP); c.lineTo(Math.min(R,fx2),TP); c.stroke();
+      c.globalAlpha=1;
+      label(c,'전기장이 퍼진다 — 거의 빛의 속도',w/2,TP-Math.max(14,h*.055),LIGHT,Math.max(11,w*.015));
+    }
+    /* 전구 */
+    var bx=w*.5, by=TP, Rr=Math.max(16,Math.min(w,h)*.085);
+    var gl=on*(front>=.5?1:0);
+    if(gl>.02){
+      var g=c.createRadialGradient(bx,by,0,bx,by,Rr*3.2);
+      g.addColorStop(0,'rgba(255,214,120,'+(.8*gl)+')'); g.addColorStop(1,'rgba(255,200,90,0)');
+      c.fillStyle=g; c.beginPath(); c.arc(bx,by,Rr*3.2,0,7); c.fill();
+    }
+    c.fillStyle='rgba(255,250,232,'+(.4+.6*gl)+')';
+    c.beginPath(); c.arc(bx,by,Rr,0,7); c.fill();
+    c.strokeStyle='rgba(120,95,55,.8)'; c.lineWidth=2; c.stroke();
+    /* 필라멘트 속 전자 — 제자리에서 진동 */
+    for(var k=0;k<7;k++){
+      var a=k/7*Math.PI*2, jit=gl*Math.sin(t*14+k*2)*Rr*.22;
+      var px=bx+Math.cos(a)*Rr*.45+jit, py=by+Math.sin(a)*Rr*.45+jit*.6;
+      c.fillStyle=EL; c.beginPath(); c.arc(px,py,Math.max(2.5,Rr*.10),0,7); c.fill();
+    }
+    /* 전자의 실제 드리프트 — 아주 느리다 */
+    if(slow){
+      for(var j=0;j<es.length;j++){ var E=es[j];
+        if(!RM && on>.5) E.p=(E.p+0.00035)%1;      /* 의도적으로 매우 느림 */
+        var px2=L+(R-L)*E.p;
+        c.fillStyle=EL; c.globalAlpha=.9;
+        c.beginPath(); c.arc(px2,BT,Math.max(3,h*.012),0,7); c.fill(); c.globalAlpha=1;
+      }
+      label(c,'← 전자가 실제로 밀려가는 속도 (걷는 것보다 느림)',w/2,BT+Math.max(30,h*.12),EL,Math.max(10,w*.014));
+    }
+    label(c, on<.5? '스위치 꺼짐' : (front<1? '전기장이 회로를 채우는 중…' : '불이 켜졌다 — 전자는 제자리에서 흔들릴 뿐'),
+      w/2, h-14, on<.5?DIM:(front<1?LIGHT:POS), Math.max(11,w*.016));
+  });
+};
+
+/* 11) 솔레노이드 — 감을수록 세진다 */
+ANIM.solenoid=function(cv,api){
+  var turns=4, shown=4;
+  api.setTurns=function(v){ turns=v; };
+  return loop(cv,function(c,w,h,t){
+    shown+=(turns-shown)*(RM?1:.15);
+    c.clearRect(0,0,w,h);
+    var cx=w*.5, cy=h*.46, cw=Math.min(w,h)*.62, chh=Math.min(w,h)*.24;
+    var n=Math.round(shown), strength=Math.min(1,shown/18);
+    /* 자기장 고리 */
+    c.strokeStyle=MAG; c.lineWidth=1.6;
+    for(var k=1;k<=4;k++){
+      c.globalAlpha=.16+.42*strength;
+      var sx=cw*.5+k*cw*.16, sy=chh*(.7+k*.34);
+      c.beginPath(); c.ellipse(cx,cy,sx,sy,0,0,7); c.stroke();
+    }
+    c.globalAlpha=1;
+    /* 코일 */
+    c.strokeStyle=BRASS; c.lineWidth=Math.max(3,h*.014);
+    for(var i=0;i<n;i++){
+      var x=cx-cw/2+cw*(n===1?.5:i/(n-1));
+      c.beginPath(); c.ellipse(x,cy,cw*.055,chh*.5,0,0,7); c.stroke();
+    }
+    /* 축 */
+    c.strokeStyle='rgba(120,95,55,.5)'; c.lineWidth=2;
+    c.beginPath(); c.moveTo(cx-cw*.62,cy); c.lineTo(cx+cw*.62,cy); c.stroke();
+    /* 극 표시 */
+    label(c,'N',cx-cw*.70,cy+5,NEG,Math.max(13,w*.019));
+    label(c,'S',cx+cw*.70,cy+5,POS,Math.max(13,w*.019));
+    /* 붙는 클립 */
+    var clips=Math.round(1+strength*7);
+    for(var q=0;q<clips;q++){
+      var qx=cx-cw*.70-14-(q%4)*11, qy=cy+Math.floor(q/4)*13-6;
+      c.strokeStyle='#7b8794'; c.lineWidth=2;
+      c.beginPath(); c.ellipse(qx,qy,4.5,7,0,0,7); c.stroke();
+    }
+    label(c,'감은 횟수 '+n+'번',cx,cy-chh*.95,DIM,Math.max(11,w*.015));
+    label(c, strength>.6? '촘촘히 감을수록 자기장이 세진다 — 전자석'
+                        : '전류가 흐르는 코일은 막대자석처럼 행동한다',
+      w/2, h-14, strength>.6?MAG:DIM, Math.max(11,w*.016));
+  });
+};
+
+/* 16) 발전기 — 돌리면 전기가 나온다 */
+ANIM.generator=function(cv,api){
+  var spin=0, run=false, ang=0;
+  api.play=function(){ run=!run; return run; };
+  return loop(cv,function(c,w,h,t){
+    spin += ((run?1:0)-spin)*(RM?1:.04);
+    if(!RM) ang += spin*0.13;
+    c.clearRect(0,0,w,h);
+    var cx=w*.34, cy=h*.46, R=Math.min(w,h)*.20;
+    /* 터빈 날개 */
+    c.save(); c.translate(cx,cy); c.rotate(ang*.6);
+    for(var b=0;b<3;b++){
+      c.save(); c.rotate(b*Math.PI*2/3);
+      c.fillStyle='rgba(120,95,55,.45)';
+      c.beginPath(); c.moveTo(0,0); c.lineTo(R*1.15,-R*.16); c.lineTo(R*1.15,R*.16); c.closePath(); c.fill();
+      c.restore();
+    }
+    c.restore();
+    c.fillStyle=BRASS; c.beginPath(); c.arc(cx,cy,R*.16,0,7); c.fill();
+    label(c,'터빈',cx,cy+R*1.5,DIM,Math.max(10,w*.014));
+    /* 회전하는 자석 */
+    var mx=w*.66;
+    c.save(); c.translate(mx,cy); c.rotate(ang);
+    bar(c,0,0,R*1.3,R*.42,0,false);
+    c.restore();
+    /* 코일 */
+    c.strokeStyle=BRASS; c.lineWidth=Math.max(3,h*.013);
+    for(var i=0;i<5;i++){
+      var ex=mx-R*.9+i*R*.45;
+      c.beginPath(); c.ellipse(ex,cy,R*.12,R*.86,0,0,7); c.stroke();
+    }
+    /* 전구 */
+    var emf=Math.abs(Math.sin(ang))*spin;
+    var bx=w*.66, by=h*.86, Rr=Math.max(12,Math.min(w,h)*.05);
+    if(emf>.03){
+      var g=c.createRadialGradient(bx,by,0,bx,by,Rr*3);
+      g.addColorStop(0,'rgba(255,214,120,'+(.8*emf)+')'); g.addColorStop(1,'rgba(255,200,90,0)');
+      c.fillStyle=g; c.beginPath(); c.arc(bx,by,Rr*3,0,7); c.fill();
+    }
+    c.fillStyle='rgba(255,250,232,'+(.35+.65*emf)+')';
+    c.beginPath(); c.arc(bx,by,Rr,0,7); c.fill();
+    c.strokeStyle='rgba(120,95,55,.8)'; c.lineWidth=1.8; c.stroke();
+    arrow(c, cx+R*1.25, cy, mx-R*1.0, cy, MAG, 2.2);
+    label(c, run? '자석이 돌면 코일에 전류가 흐른다 — 모든 발전소의 마지막 단계'
+                : '▶ 버튼을 누르면 터빈이 자석을 돌립니다',
+      w/2, h-14, run?MAG:DIM, Math.max(11,w*.016));
+  });
+};
+
 /* ── 장면 엔진 ─────────────────── */
 var scenes=$$('.scene'), N=scenes.length, cur=0, live=[];
 var counter=$('#counter'), dots=$('#dots'), tocgrid=$('#tocgrid');
@@ -1498,6 +1850,8 @@ var tempSl=$('input[data-ctl=temp]');
 if(tempSl) tempSl.addEventListener('input',function(){ var a=apiOf('curie'); a&&a.setT(+this.value); });
 var magSl=$('input[data-ctl=magpos]');
 if(magSl) magSl.addEventListener('input',function(){ var a=apiOf('faraday'); a&&a.setPos(+this.value); });
+var turnSl=$('input[data-ctl=turns]');
+if(turnSl) turnSl.addEventListener('input',function(){ var a=apiOf('solenoid'); a&&a.setTurns(+this.value); });
 
 document.addEventListener('click',function(e){
   var b=e.target.closest('[data-act]'); if(!b) return;
@@ -1513,6 +1867,14 @@ document.addEventListener('click',function(e){
   else if(act==='train'){ a=apiOf('train'); a&&a.play(); }
   else if(act==='drop'){ a=apiOf('drop'); a&&a.play(); }
   else if(act==='wind'){ a=apiOf('dynamo'); if(a) b.classList.toggle('on',a.toggle()); }
+  else if(act==='rub2'){ a=apiOf('balloon');
+    if(a){ var r=a.rub(); b.classList.toggle('on',r); b.textContent= r? '🧽 문지르기 취소':'🧽 풍선 문지르기'; } }
+  else if(act==='showq'){ a=apiOf('balloon'); if(a) b.classList.toggle('on',a.showQ()); }
+  else if(act==='sw2'){ a=apiOf('bulbfield');
+    if(a){ var s2=a.sw(); b.classList.toggle('on',s2); b.textContent= s2? '🔌 스위치 끄기':'🔌 스위치 켜기'; } }
+  else if(act==='slow'){ a=apiOf('bulbfield'); if(a) b.classList.toggle('on',a.slow()); }
+  else if(act==='spin'){ a=apiOf('generator');
+    if(a){ var sp=a.play(); b.classList.toggle('on',sp); b.textContent= sp? '⏸ 멈추기':'▶ 터빈 돌리기'; } }
 });
 
 /* 맥스웰 세그먼트 */

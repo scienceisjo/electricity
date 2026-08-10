@@ -191,6 +191,21 @@ body.teacher .tnote{display:flex}
 .tool b{font-size:14.5px;display:block}
 .tool span{font-size:12.5px;color:var(--ink-mute)}
 
+/* 이야기보따리 카드 — 차시가 아니므로 .lesson 진도 집계에 넣지 않는다 */
+.story{display:grid;gap:14px;margin-top:18px;grid-template-columns:1fr}
+.storycard{position:relative;display:flex;flex-direction:column;gap:9px;text-align:left;overflow:hidden;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px 20px 18px 24px;text-decoration:none;color:inherit;transition:.18s}
+.storycard::after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--k,var(--accent))}
+.storycard:hover{transform:translateY(-3px);border-color:var(--k,var(--accent))}
+.storycard .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.storycard .ic{font-size:22px}
+.storycard .tagline{font-size:11.5px;font-weight:800;letter-spacing:.05em;color:var(--k,var(--accent));
+  border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.storycard h3{font-family:var(--jua);font-size:18px;line-height:1.35;color:var(--ink);margin:0}
+.storycard .why{font-size:13.5px;color:var(--ink-dim);line-height:1.55;margin:0}
+.storycard .src{font-size:12px;color:var(--ink-mute);line-height:1.5;margin:0}
+.storycard .go{font-size:13px;font-weight:800;color:var(--k,var(--accent))}
 h2.sechead{font-family:var(--jua);font-size:20px;margin:38px 0 4px;display:flex;align-items:center;gap:9px}
 .sechead .line{flex:1;height:1px;background:var(--line-soft)}
 
@@ -703,6 +718,18 @@ b.k[style*="color"], .k[style*="color"]{background:none}
  </div>
 
  <!-- ═══════════ 선지식 · 도구 ═══════════ -->
+ <!-- ═══════════ 이야기보따리 ═══════════ -->
+ <h2 class="sechead">이야기보따리<span class="line"></span></h2>
+ <div class="story">
+ <a class="storycard" style="--k:#7a3fa0" href="story.html">
+ <div class="top"><span class="ic">🧲</span><span class="tagline">교사 구두 전달용 · 20장면</span></div>
+ <h3>전기와 자기 이야기<br>— 문지른 호박 한 조각에서 빛의 정체까지</h3>
+ <p class="why">영상을 틀지 않고 선생님이 직접 들려주는 강연용 자료입니다. 화면을 넘기며 이야기하면 장면마다 애니메이션이 받쳐 줍니다. 호박과 자철석에서 시작해 정전기 유도·전구가 켜지는 진짜 원리·외르스테드·앙페르·패러데이를 지나 맥스웰과 빛의 정체까지 이어집니다. 자석 기차, 구리관 낙하, 발전소 원리도 들어 있어요.</p>
+ <p class="src">📺 <b>〈취미는 과학〉 전자기학 편</b>(출연: KAIST 물리학과 김갑진 교수)과 <b>〈나의 두 번째 교과서〉 과학 3강 — 전자기학</b>의 내용을 바탕으로 만들었습니다</p>
+ <div class="go">이야기 열기 →</div>
+ </a>
+ </div>
+
  <h2 class="sechead">이 단원을 배우기 전에<span class="line"></span></h2>
  <div class="info">
  <span class="ic">🎒</span>
