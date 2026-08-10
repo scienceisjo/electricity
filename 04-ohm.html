@@ -690,6 +690,131 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
   #wSvg{min-height:150px}
 }
 </style>
+
+<style id="ink-emphasis-fix">
+/* ── 강조 글씨를 종이 위에서 읽히는 잉크색으로 ──
+   어두운 화면용 규칙(b.k{color:#fff})이 남아 크림색 배경에 흰 글씨가 되던 것을 덮는다.
+   색 배경 위에 얹히는 배지·버튼의 흰 글씨는 그대로 둔다. */
+b.k, .k{color:var(--ink)}
+.doit b.k, .lead b.k, .help b.k, p b.k, li b.k, .u-d b.k, .note b.k, .de b.k{
+  color:var(--ink);
+  background:linear-gradient(transparent 58%, rgba(185,135,60,.34) 58%);
+  padding:0 2px;border-radius:2px;font-weight:800}
+/* 색을 지정해 둔 강조는 그 색을 지킨다 */
+b.k[style*="color"], .k[style*="color"]{background:none}
+.badge b.k, .btn b.k, .sbadge b.k, .mq-badge b.k, .pill b.k{background:none;color:inherit}
+</style>
+
+<style id="board-mode">
+/* ══════════ 판서 모드 ══════════
+   학생 화면 = 키워드만. 글자가 적어야 아이들이 화면을 읽느라 지치지 않고,
+   빈 자리에 선생님이 판서하며 설명을 이어 갈 수 있다.
+   🧑‍🏫 교사 모드를 켜면 원래의 문장형 설명이 나온다. */
+.say{display:none}
+body.teacher .say{display:revert}
+
+/* 키워드 줄 — 크고 시원하게, 아래에 판서 여백 */
+.keyline-s{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 20px}
+body.teacher .keyline-s{display:none}
+.keyline-s .kw{font-family:var(--jua);font-size:clamp(19px,2.6vw,25px);font-weight:800;color:var(--ink);
+  background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;
+  border-radius:12px;padding:9px 18px;line-height:1.35}
+.keyline-s .kw.hi{border-color:var(--accent);background:#f6e8d8;color:var(--accent)}
+.keyline-s .kw.q{border-style:dashed;color:var(--ink-dim)}
+.keyline-s .arw{font-size:22px;color:var(--ink-mute);font-weight:800}
+.keyline-s .memo{flex:1 1 100%;min-height:34px}          /* 판서용 빈 자리 */
+@media(max-width:520px){.keyline-s{gap:8px}.keyline-s .kw{padding:8px 14px}}
+
+/* 인쇄物에서는 둘 다 보이게 — 학습지로 뽑을 때 설명이 사라지면 곤란하다 */
+@media print{.say{display:revert!important}.keyline-s{display:flex!important}}
+</style>
+
+<style id="why-module">
+/* ══════════ '왜 그럴까?' 모듈 ══════════
+   결론을 먼저 말하지 않는다. 아는 것 → 힌트 → 예상 → 조작 → 관찰 → 이유 → 정리. */
+.why-mod{border:2px solid var(--brass);background:linear-gradient(180deg,var(--paper-hi),var(--paper));
+ border-radius:18px;padding:22px 20px;margin-top:22px;box-shadow:var(--shadow)}
+.why-q{display:flex;gap:12px;align-items:flex-start}
+.why-q .qi{font-size:30px;line-height:1.1}
+.why-q .qt{font-family:var(--jua);font-size:clamp(20px,3.1vw,26px);color:var(--ink);line-height:1.45}
+.why-step{margin-top:20px;border-top:1px dashed var(--line);padding-top:18px}
+.why-h{display:flex;align-items:center;gap:9px;font-family:var(--jua);font-size:18.5px;color:var(--accent);margin-bottom:9px}
+.why-h .no{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;
+ background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));color:#fff;font-size:15px;
+ border:1px solid var(--brass-dk);flex:none}
+.why-step>p{font-size:15.5px;color:var(--ink-dim);line-height:1.72}
+
+/* 기억해 보기 — 도선 되짚기 */
+.recall{display:grid;gap:12px;grid-template-columns:1fr;background:#f6efdf;border:1px solid var(--line);
+ border-radius:13px;padding:14px;margin-top:10px}
+@media(min-width:780px){.recall{grid-template-columns:1fr 236px}}
+.recall .rc-svg{background:#faf4e6;border:1px solid var(--line-soft);border-radius:11px;padding:8px}
+.recall svg{display:block;width:100%;height:auto}
+.rbar{height:16px;border-radius:99px;background:#e7dbbe;border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.rbar i{display:block;height:100%;background:linear-gradient(90deg,var(--brass-hi),var(--c1));transition:width .3s}
+
+/* 예상하기 — 채점하지 않는다 */
+.wpick{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+.wpick button{flex:1 1 148px;font-family:var(--body);font-size:15px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;
+ padding:11px 13px;cursor:pointer;transition:.15s}
+.wpick button:hover{border-color:var(--accent);color:var(--ink)}
+.wpick button.sel{border-color:var(--c2);background:rgba(125,91,166,.13);color:var(--ink)}
+.wpick.small button{flex:1 1 108px;font-size:14.5px;padding:9px 11px}
+
+/* 회로 시뮬레이션 */
+.wsim{margin-top:12px}
+.duo{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:700px){.duo{grid-template-columns:1fr 1fr}}
+.wcirc{background:#faf4e6;border:1px solid var(--line);border-radius:13px;padding:10px 10px 8px}
+.wcirc.hi{border-color:var(--accent);box-shadow:0 0 0 2px rgba(160,92,44,.15)}
+.wcirc .ct{font-family:var(--jua);font-size:15.5px;text-align:center;color:var(--ink-dim);margin-bottom:3px}
+.wcirc svg{display:block;width:100%;height:auto}
+.wnum{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:5px}
+.wnum span{font-family:var(--mono);font-size:14px;font-weight:700;background:#f2e8d2;border:1px solid var(--line);
+ border-radius:99px;padding:3px 10px;color:var(--ink)}
+.wnum span.r{color:var(--c1)} .wnum span.i{color:var(--c6)}
+.wbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.wbar .lbl{font-size:14px;font-weight:700;color:var(--ink-dim)}
+.wtog{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-radius:99px;padding:7px 14px;cursor:pointer}
+.wtog input{width:15px;height:15px;accent-color:var(--accent)}
+.wtog.on{border-color:var(--accent);color:var(--ink)}
+
+/* 접이식 — 계산식은 맨 마지막에, 눌러야 펼쳐진다 */
+.wfold{margin-top:16px}
+.wfold>summary{cursor:pointer;list-style:none;font-family:var(--jua);font-size:16.5px;color:var(--c2);
+ background:rgba(125,91,166,.08);border:1.5px solid var(--c2);border-radius:12px;padding:11px 15px}
+.wfold>summary::-webkit-details-marker{display:none}
+.wfold>summary::before{content:"▸ "}
+.wfold[open]>summary::before{content:"▾ "}
+.wfold .fold-in{padding:14px 4px 2px;font-size:15.5px;color:var(--ink-dim);line-height:1.85}
+.eqline{font-family:var(--mono);font-size:17px;color:var(--ink);text-align:center;margin:9px 0;font-weight:700}
+.obs-list{margin:8px 0 0;padding-left:19px}
+.obs-list li{font-size:15.5px;color:var(--ink-dim);margin:7px 0;line-height:1.7}
+.obs-list li b{color:var(--ink)}
+
+/* ══════════ 교과서식 비교표 빈칸 ══════════ */
+.ctab-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:#faf4e6;margin-top:14px}
+.ctab{border-collapse:collapse;width:100%;min-width:660px}
+.ctab th,.ctab td{border:1px solid var(--line-soft);padding:11px 13px;vertical-align:top;
+ font-size:15.5px;line-height:1.95;color:var(--ink-dim)}
+.ctab thead th{background:#efe4c9;text-align:center;font-family:var(--jua);font-size:17.5px;color:var(--ink);vertical-align:middle}
+.ctab thead th .sub{display:block;font-family:var(--body);font-size:12.5px;font-weight:600;
+ color:var(--ink-mute);margin-top:4px;line-height:1.5}
+.ctab thead th.sc{color:var(--accent)} .ctab thead th.pc{color:var(--c2)}
+.ctab th.rh{background:#f2e8d2;width:84px;min-width:84px;text-align:center;font-family:var(--jua);
+ font-size:16.5px;color:var(--ink);vertical-align:middle;line-height:1.4}
+.ctab td.dia{text-align:center;padding:8px}
+.ctab td.dia svg{display:block;width:100%;max-width:300px;height:auto;margin:0 auto}
+.ctab .fx{display:block;text-align:center;font-family:var(--mono);font-size:16.5px;font-weight:700;
+ color:var(--ink);margin:7px 0 3px;letter-spacing:.3px}
+.ctab ul{margin:0;padding-left:17px}
+.ctab li{margin:5px 0}
+.ctab .tip{display:block;font-size:13px;color:var(--ink-mute);margin-top:5px;padding-left:15px;
+ text-indent:-15px;line-height:1.6}
+@media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -743,7 +868,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  </button>
  <div class="head-right">
  <a class="hbtn" href="index.html" title="단원 허브로">⚡</a>
- <button class="hbtn" id="tmodeBtn" title="교사 모드">🧑‍🏫</button>
+ <button class="hbtn" id="tmodeBtn" title="교사 모드 — 문장 설명과 교실 노트 보기">🧑‍🏫</button>
  <div class="progress-mini" id="progWrap" title="진행도 — 누르면 남은 활동이 보여요">
  <svg class="pgauge" viewBox="0 0 96 56" aria-hidden="true">
  <path d="M10 50 A38 38 0 0 1 86 50" fill="#f6eedb" stroke="#7d541e" stroke-width="2.5"/>
@@ -781,39 +906,44 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel show" id="panel-open">
  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">생각 열기 · 전구 밝기를 줄이려면?</span></div>
  <h1 class="big">빛이 너무 밝아!<br>전구 밝기를 <span class="t2">줄이려면</span>?</h1>
- <p class="lead" style="margin-top:16px">
+ <p class="lead say" style="margin-top:16px">
  지난 시간에 배웠죠 — 전구에 불이 켜지는 건 회로에 <b style="color:#a05c2c">전류</b>가 흐르기 때문입니다.
  그런데 스탠드 조명이 너무 밝다면? <b class="k">전류를 줄이면 됩니다.</b>
  문제는 그다음이에요. <b>전류의 세기는 대체 무엇으로 조절할까요?</b>
  </p>
+ <div class="keyline-s"><span class="kw">전구가 켜진다</span><span class="arw">→</span><span class="kw">전류가 흐른다</span><span class="arw">→</span><span class="kw q">전류를 조절하는 것은?</span><span class="memo"></span></div>
  <figure class="fig" data-fig="oh-bright"
  data-alt="너무 밝은 전구 스탠드 앞에서 눈이 부셔 얼굴을 찡그린 학생의 모습"
  data-cap="전구의 밝기를 줄이려면 어떻게 해야 할까? (도입)"></figure>
 
  <div class="card" style="margin-top:20px">
  <h2 class="sec" style="font-size:clamp(19px,3vw,24px)">👀 겪어 본 것, 떠오르는 것</h2>
- <p class="lead" style="font-size:17px">전류의 세기가 달라지는 장면들입니다. <b class="k">겪어 봤거나 들어 본 것</b>을 눌러 보세요.</p>
+ <p class="lead say" style="font-size:17px">전류의 세기가 달라지는 장면들입니다. <b class="k">겪어 봤거나 들어 본 것</b>을 눌러 보세요.</p>
+ <div class="keyline-s"><span class="kw">겪어 본 장면 고르기</span><span class="memo"></span></div>
  <div class="checkgrid" id="seenList">
  <label class="checkline"><input type="checkbox" data-seen="s1"><span>전지 <b class="k">두 개를 한 줄로</b> 연결하면 전지 한 개일 때보다 전구가 <b class="k">더 밝다</b></span></label>
  <label class="checkline"><input type="checkbox" data-seen="s2"><span>전지에 <b class="k">1.5 V, 9 V</b> 같은 숫자가 적혀 있는 것을 본 적 있다</span></label>
  <label class="checkline"><input type="checkbox" data-seen="s3"><span>스탠드나 스피커의 <b class="k">손잡이(다이얼)를 돌리면</b> 밝기나 소리가 서서히 변한다</span></label>
  <label class="checkline"><input type="checkbox" data-seen="s4"><span>같은 전지를 끼워도 <b class="k">기기마다</b> 밝기나 세기가 다르다</span></label>
  </div>
- <p class="help" id="seenMsg">하나라도 겪어 봤다면, 오늘 배울 내용의 절반은 이미 만나 본 셈입니다.</p>
+ <p class="help say" id="seenMsg">하나라도 겪어 봤다면, 오늘 배울 내용의 절반은 이미 만나 본 셈입니다.</p>
+ <div class="keyline-s"><span class="kw">이미 만나 본 현상</span><span class="memo"></span></div>
  <div class="note class"><span class="ic">💬</span><div><b>도입 들어가기</b> — 전지를 직렬로 늘리면 전구가 밝아진다는 초등 경험을 끌어내 "전압이 커지면 전류는 어떻게 될까?"라는 궁금증으로 연결하세요. <b>여기서 옴의 법칙을 미리 말하지 마세요.</b> 2단계 탐구에서 학생이 표와 그래프를 보고 스스로 찾아내게 해 주세요.</div></div>
  </div>
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🔎 손잡이는 두 개다</h3>
- <p class="lead" style="font-size:17px;margin-top:8px">
+ <p class="lead say" style="font-size:17px;margin-top:8px">
  전구 밝기를 줄이는 길, 즉 <b style="color:#a05c2c">전류</b>를 조절하는 손잡이는 <b class="k">두 개</b>가 있습니다.
  오늘 이 둘을 실험으로 확인합니다.</p>
+ <div class="keyline-s"><span class="kw">전류 조절 손잡이</span><span class="kw hi">두 개</span><span class="memo"></span></div>
  <div class="pill-list">
  <span class="pill">🎚️ 손잡이 ① — 전지 쪽 : <b class="t2">전압</b>을 낮춘다</span>
  <span class="pill">📏 손잡이 ② — 전선 쪽 : <b class="t1">니크롬선</b>을 길게 바꾼다</span>
  </div>
- <p class="help">전압을 낮추는 건 그럴듯한데, <b>니크롬선을 길게 하면 왜 어두워질까요?</b>
+ <p class="help say">전압을 낮추는 건 그럴듯한데, <b>니크롬선을 길게 하면 왜 어두워질까요?</b>
  니크롬선이 무엇을 하길래? 이름은 여기까지만 — 답은 2·3단계에서 실험으로 밝힙니다.</p>
+ <div class="keyline-s"><span class="kw q">니크롬선이 하는 일은?</span><span class="arw">→</span><span class="kw">2·3단계에서 확인</span><span class="memo"></span></div>
  </div>
 
  <div class="card" style="margin-top:18px">
@@ -841,15 +971,17 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-explore">
  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">탐구하기 · 예상 먼저, 측정은 그다음</span></div>
  <h2 class="sec">전압과 니크롬선을 바꿔 가며 전류를 재 봅시다</h2>
- <p class="lead">「탐구」입니다. 전원 장치의 <b class="t2">전압</b>과
+ <p class="lead say">「탐구」입니다. 전원 장치의 <b class="t2">전압</b>과
  <b class="t1">니크롬선의 길이</b>를 바꿔 가면서 회로에 흐르는 <b style="color:#a05c2c">전류</b>를 측정합니다.
  단, <b class="k">측정하기 전에 예상부터</b> 합니다.</p>
+ <div class="keyline-s"><span class="kw">전압</span><span class="kw">·</span><span class="kw">니크롬선 길이</span><span class="arw">→</span><span class="kw">전류 측정</span><span class="arw">→</span><span class="kw hi">예상 먼저</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🔮 먼저 예상해 봅시다</h3>
- <p class="lead" style="font-size:17.5px;margin-top:10px">
+ <p class="lead say" style="font-size:17.5px;margin-top:10px">
  전압은 <b class="k">1.5 V 그대로</b> 두고, 짧은 니크롬선을 <b class="k">2배 길이의 긴 니크롬선</b>으로
  바꿔 끼우면 — 회로에 흐르는 전류는 어떻게 될까요?</p>
+ <div class="keyline-s"><span class="kw">전압 그대로</span><span class="kw">+</span><span class="kw hi">길이 2배</span><span class="arw">→</span><span class="kw q">전류는?</span><span class="memo"></span></div>
  <div class="modebar" id="poeBar">
  <button class="btn ghost sm" data-poe="up">① 더 세진다</button>
  <button class="btn ghost sm" data-poe="same">② 변화 없다</button>
@@ -878,9 +1010,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="badge" style="margin-bottom:12px">🎚️ 가상 실험 — 손잡이 두 개를 직접 돌려 보기</div>
  <div class="lab">
  <h3>⚡ 옴의 실험대</h3>
- <p class="lead" style="font-size:17px">전압 슬라이더와 니크롬선 버튼을 바꿔 가며 <b class="k">전류계 눈금</b>을 읽으세요.
+ <p class="lead say" style="font-size:17px">전압 슬라이더와 니크롬선 버튼을 바꿔 가며 <b class="k">전류계 눈금</b>을 읽으세요.
  읽은 값은 <b>📌 기록</b>을 눌러 표와 그래프에 쌓입니다.
  <b class="k">같은 전압에서 두 니크롬선</b>을 꼭 비교해 보세요 — 아까의 예상이 판정됩니다.</p>
+ <div class="keyline-s"><span class="kw">바꾸기</span><span class="arw">→</span><span class="kw">전류 읽기</span><span class="arw">→</span><span class="kw">📌 기록</span><span class="arw">→</span><span class="kw hi">같은 전압에서 비교</span><span class="memo"></span></div>
  <div class="simgrid">
  <div>
  <div class="svgstage">
@@ -937,7 +1070,8 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  </div>
  <div class="simctl">
  <h4>🎛️ 조작판</h4>
- <p class="help" style="margin-top:2px">바꿀 수 있는 것은 딱 두 가지입니다.</p>
+ <p class="help say" style="margin-top:2px">바꿀 수 있는 것은 딱 두 가지입니다.</p>
+ <div class="keyline-s"><span class="kw">바꾸는 것</span><span class="kw hi">전압</span><span class="kw hi">니크롬선 길이</span><span class="memo"></span></div>
  <div class="ctl">
  <label><span>🎚️ 전원 장치 전압</span><span class="val" id="vVal">1.5 V</span></label>
  <input type="range" id="vSlider" min="0" max="6" step="1.5" value="1.5">
@@ -966,7 +1100,8 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🧾 정리해 볼까 — 표에서 두 문장을 캐내기</h3>
- <p class="lead" style="font-size:17px;margin-top:8px">기록표에서 다음 <b class="k">두 쌍</b>을 찾아 견주어 보세요.</p>
+ <p class="lead say" style="font-size:17px;margin-top:8px">기록표에서 다음 <b class="k">두 쌍</b>을 찾아 견주어 보세요.</p>
+ <div class="keyline-s"><span class="kw">두 쌍 견주기</span><span class="memo"></span></div>
  <div class="pill-list">
  <span class="pill">① <b>같은 전압</b>, 니크롬선만 짧다→길다 : 전류는 어떻게 됐나?</span>
  <span class="pill">② <b>같은 니크롬선</b>, 전압만 2배 : 전류는 어떻게 됐나?</span>
@@ -980,7 +1115,8 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  니크롬선이 같을 때 전압을 2배로 하면 전류의 세기도 <b>2배가 되었다</b>.
  즉, 전류의 세기는 <b>전압이 클수록 커지고</b>, 전류의 흐름을 방해하는 정도가 <b>큰 니크롬선일수록 작아진다</b>.
  </div>
- <p class="help">이 두 문장에 이름을 붙이는 것이 <b class="k">3단계</b>입니다. 방해하는 정도의 이름, 그리고 세 양을 한 줄로 묶는 법칙까지.</p>
+ <p class="help say">이 두 문장에 이름을 붙이는 것이 <b class="k">3단계</b>입니다. 방해하는 정도의 이름, 그리고 세 양을 한 줄로 묶는 법칙까지.</p>
+ <div class="keyline-s"><span class="kw">방해하는 정도</span><span class="arw">→</span><span class="kw q">이름은?</span><span class="kw">·</span><span class="kw">세 양을 한 줄로</span><span class="memo"></span></div>
  </div>
  <div class="cta-row"><button class="btn primary" data-go="law">3단계 · 법칙으로 묶기 →</button></div>
 </section>
@@ -989,9 +1125,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-law">
  <div class="stepline"><span class="sbadge">STEP 3</span><span class="swhat">법칙 세우기 · 두 문장에 이름 붙이기</span></div>
  <h2 class="sec">이름을 붙입시다 — 전압, 저항, 그리고 옴의 법칙</h2>
- <p class="lead">실험에서 캐낸 두 문장을 과학의 말로 바꿉니다.
+ <p class="lead say">실험에서 캐낸 두 문장을 과학의 말로 바꿉니다.
  전지가 미는 힘의 크기에는 <b class="t2">전압</b>, 니크롬선이 방해하는 정도에는 <b class="t1">저항</b>이라는
  이름이 붙어 있어요.</p>
+ <div class="keyline-s"><span class="kw">전지가 미는 힘 → 전압</span><span class="kw">방해하는 정도 → 저항</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t" style="margin-bottom:14px">오늘의 용어 — 전류를 조절하는 두 손잡이</h3>
@@ -1007,10 +1144,11 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">⚖️ 옴의 법칙 — 세 양을 한 줄로 묶기</h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  실험 결과를 종합하면 이렇게 됩니다 —
  전기 회로에 흐르는 전류의 세기는 <b class="t2">전압에 비례</b>하고 <b class="t1">저항에 반비례</b>한다.
  이 관계를 <b class="k">옴의 법칙</b>이라고 해요. 식으로 쓰면 한 줄입니다.</p>
+ <div class="keyline-s"><span class="kw">전류 ∝ 전압</span><span class="kw">전류 ∝ 1/저항</span><span class="arw">→</span><span class="kw hi">옴의 법칙</span><span class="memo"></span></div>
  <div style="text-align:center;margin:18px 0 6px">
  <div style="display:inline-block;background:var(--surface2);border:1.5px solid var(--line);border-radius:14px;padding:16px 26px">
  <div style="font-family:var(--jua);font-size:clamp(19px,3.4vw,26px);line-height:1.5">
@@ -1027,8 +1165,9 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <tr><td>긴 니크롬선</td><td class="t2" style="font-weight:800">1.5 V</td><td class="t1" style="font-weight:800">4 Ω</td><td style="font-weight:800;color:#a05c2c">1.5 ÷ 4 = 0.375 A</td></tr>
  </table>
  </div>
- <p class="help">비밀 공개 — 2단계 실험대의 니크롬선은 짧은 것이 <b class="t1">2 Ω</b>, 긴 것이 <b class="t1">4 Ω</b>이었습니다.
+ <p class="help say">비밀 공개 — 2단계 실험대의 니크롬선은 짧은 것이 <b class="t1">2 Ω</b>, 긴 것이 <b class="t1">4 Ω</b>이었습니다.
  기록표의 모든 값이 이 식으로 맞아떨어지는지 돌아가서 검산해 보세요.</p>
+ <div class="keyline-s"><span class="kw">짧은 것 2 Ω · 긴 것 4 Ω</span><span class="arw">→</span><span class="kw hi">기록표 돌아가서 검산</span><span class="memo"></span></div>
  <div class="cloze-set" style="margin-top:14px;border-top:1px dashed var(--line);padding-top:14px">
  <div class="badge" style="margin-bottom:10px">🧮 직접 검산해 보기</div>
  <p class="cloze-line">전압이 3.0 V이고 저항이 2 Ω이면, 전류의 세기는 3.0 ÷ 2 =
@@ -1043,8 +1182,9 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">📈 그래프로 보면 — 원점을 지나는 직선</h3>
- <p class="lead" style="font-size:17px;margin-top:8px">전압과 전류의 세기가 비례하므로,
+ <p class="lead say" style="font-size:17px;margin-top:8px">전압과 전류의 세기가 비례하므로,
  전압-전류 그래프는 <b class="k">원점을 지나는 직선</b>이 됩니다. 두 직선의 기울기 차이가 곧 저항 차이예요.</p>
+ <div class="keyline-s"><span class="kw">전압-전류 그래프</span><span class="arw">→</span><span class="kw">원점을 지나는 직선</span><span class="kw">기울기 차이 = 저항 차이</span><span class="memo"></span></div>
  <div class="svgstage">
  <svg viewBox="0 0 560 270" role="img" aria-label="가로축이 전압, 세로축이 전류의 세기인 그래프. 원점을 지나는 두 직선이 그려져 있고, 기울기가 큰 직선은 저항 2옴인 짧은 니크롬선, 기울기가 작은 직선은 저항 4옴인 긴 니크롬선이다.">
  <line x1="70" y1="215" x2="525" y2="215" stroke="#a08b64" stroke-width="2"/>
@@ -1081,9 +1221,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <!-- ══════════ 저항은 무엇에 의해 달라질까 ══════════ -->
  <div class="card" style="margin-top:18px">
  <h3 class="card-t" style="margin-bottom:6px">🔌 저항은 무엇에 의해 달라질까?</h3>
- <p class="lead" style="font-size:17px;margin-bottom:12px">
+ <p class="lead say" style="font-size:17px;margin-bottom:12px">
  저항은 도선이 <b class="k">원래 가지고 있는 성질</b>입니다.
  무엇을 바꾸면 저항이 달라지는지, <b class="k">하나씩만 바꿔 가며</b> 직접 확인해 보세요.</p>
+ <div class="keyline-s"><span class="kw">저항 = 도선이 원래 가진 성질</span><span class="arw">→</span><span class="kw hi">하나씩만 바꿔 보기</span><span class="memo"></span></div>
 
  <div class="lab">
  <h3>🧪 도선 실험대</h3>
@@ -1227,6 +1368,102 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  </div>
  </div>
 
+
+<!-- ═══════ '왜 그럴까?' — 저항은 왜 길이·굵기에 따라 달라지나 ═══════ -->
+<div class="why-mod" id="whyWire">
+ <div class="why-q"><span class="qi">💡</span><span class="qt">관계는 찾았습니다. 그런데 <span class="t1">왜</span><br>길면 커지고, 굵으면 작아질까?</span></div>
+
+ <div class="why-step" style="border-top:0;padding-top:16px">
+ <div class="why-h"><span class="no">1</span>기억해 보기</div>
+ <p class="say">1차시에서 원자를 들여다봤죠. 금속 도선 속에는 <b class="k">제자리에서 흔들리는 원자</b>가 빽빽하고,
+ 그 사이를 <b class="k">자유롭게 돌아다니는 전자</b>가 있습니다. 전류는 이 전자들이 한쪽으로 밀려 흐르는 것이었어요.</p>
+ <div class="keyline-s"><span class="kw">도선 속</span><span class="arw">→</span><span class="kw">원자는 빽빽</span>
+ <span class="kw">전자는 돌아다님</span><span class="memo"></span></div>
+ </div>
+
+ <div class="why-step">
+ <div class="why-h"><span class="no">2</span>힌트</div>
+ <div class="clue" style="margin-top:4px"><div class="cl-h">🔍 이렇게 보면 보입니다</div>
+ <p>전자가 도선을 지나가려면 <b>원자들 사이를 헤치고</b> 가야 합니다.
+ 헤치고 가야 할 구간이 <b>길어지면</b> 어떻게 될까요? 지나갈 통로가 <b>넓어지면</b>요?</p></div>
+ </div>
+
+ <div class="why-step">
+ <div class="why-h"><span class="no">3</span>먼저 생각해 보기</div>
+ <p>도선을 <b>2배 길게</b> 하면, 1초 동안 어느 한 지점을 지나가는 전자 수는 어떻게 될까요?</p>
+ <div class="wpick small" id="wwPick">
+ <button data-v="up">더 많아진다</button><button data-v="down">더 적어진다</button><button data-v="same">그대로다</button></div>
+ <div class="verdict" id="wwSay" style="display:none"></div>
+ </div>
+
+ <div class="why-step">
+ <div class="why-h"><span class="no">4</span>직접 확인하기 — 도선 속을 들여다보기</div>
+ <p>도선을 잘라 옆에서 본 그림입니다. <span class="t3">초록 점</span>이 전자, <span style="color:var(--ink-mute)">회색 점</span>이 제자리에서 흔들리는 원자예요.
+ 가운데 <b class="k">세로선을 지나가는 전자 수</b>를 세면 그것이 곧 전류입니다. 손잡이를 움직여 보세요.</p>
+ <div class="simwrap" style="margin-top:14px">
+ <div class="simstage"><canvas id="rwCv" width="660" height="230"></canvas></div>
+ <div class="simctl">
+ <h4>🎛️ 도선 바꾸기</h4>
+ <div class="ctl"><label>도선의 길이 <span class="val" id="rwLenV">1배</span></label>
+ <input type="range" id="rwLen" min="1" max="3" step="1" value="1" aria-label="도선의 길이"></div>
+ <div class="ctl"><label>도선의 굵기 <span class="val" id="rwThkV">1배</span></label>
+ <input type="range" id="rwThk" min="1" max="3" step="1" value="1" aria-label="도선의 굵기"></div>
+ <div class="readout">
+ <div class="r"><div class="lab2">1초에 지나간 전자 수 <small>(= 전류)</small></div><div class="v" id="rwI">–</div></div>
+ <div class="r"><div class="lab2">1초에 부딪힌 횟수</div><div class="v" id="rwC">–</div></div>
+ <div class="r"><div class="lab2">전자가 나아가는 빠르기</div><div class="v" id="rwV">–</div></div>
+ <div class="r"><div class="lab2">상대적인 저항</div><div class="v" id="rwR">–</div></div>
+ </div>
+ <div class="btn-row" style="margin-top:12px"><button class="btn sm ghost" id="rwReset">↺ 처음으로</button></div>
+ </div>
+ </div>
+ <div class="verdict" id="rwObs" style="display:none"></div>
+ </div>
+
+ <div class="wlockmsg" id="wwLockMsg">🔒 위 화면에서 <b>길이와 굵기를 모두 바꿔 본 뒤에</b> 나머지가 열립니다.</div>
+
+ <div class="wlock" id="wwAfter">
+ <div class="why-step">
+ <div class="why-h"><span class="no">5</span>무엇이 달라졌나</div>
+ <ul class="obs-list">
+ <li>📏 <b>길게</b> 했더니 — 전자가 <b>더 느리게</b> 나아가고, 1초에 지나가는 전자 수가 <b>줄었다.</b></li>
+ <li>⭕ <b>굵게</b> 했더니 — 전자의 빠르기는 그대로인데, 한꺼번에 지나가는 <b>전자 수가 늘었다.</b></li>
+ <li>둘 다 전자가 부딪히는 것은 똑같은데, <b>줄어드는 방식이 서로 달랐다.</b></li>
+ </ul>
+ </div>
+
+ <div class="why-step">
+ <div class="why-h"><span class="no">6</span>이제 이유를 연결해 보자</div>
+ <p class="wsub">📏 길이 — 밀어 주는 힘이 긴 구간에 나뉜다</p>
+ <p class="say">전지가 만드는 <b class="k">같은 전압</b>을 더 <b class="k">긴 구간에 나눠 걸어야</b> 하니,
+ 전자를 앞으로 미는 힘이 구간마다 약해집니다. 게다가 헤치고 지나가야 할 원자 구간도 그만큼 길어져요.
+ 그래서 전자가 <b class="k">더 느리게</b> 흐르고, 한 지점을 지나가는 전자 수가 줄어듭니다 → <b class="k">저항이 커진 것</b>입니다.</p>
+ <div class="keyline-s"><span class="kw">길이 ↑</span><span class="arw">→</span><span class="kw">전자가 느려짐</span>
+ <span class="arw">→</span><span class="kw hi">저항 ↑</span><span class="memo"></span></div>
+ <p class="wsub">⭕ 굵기 — 한 번에 지나갈 수 있는 전자가 늘어난다</p>
+ <p class="say">굵어져도 전자 하나하나의 <b class="k">빠르기는 그대로</b>입니다. 대신 통로의 단면이 넓어져
+ <b class="k">같은 시간에 지나갈 수 있는 전자 수가 늘어나요.</b> 그래서 전류가 커집니다 → <b class="k">저항이 작아진 것</b>이죠.
+ 넓은 문으로 사람이 한꺼번에 더 많이 빠져나가는 것과 같습니다.</p>
+ <div class="keyline-s"><span class="kw">굵기 ↑</span><span class="arw">→</span><span class="kw">한 번에 더 많이</span>
+ <span class="arw">→</span><span class="kw hi">저항 ↓</span><span class="memo"></span></div>
+ <div class="note class"><span class="ic">💬</span><div><b>모형의 한계</b> — 화면의 전자는 보기 좋게 크고 느리게 그린 것입니다.
+ 실제 도선 속 전자는 훨씬 촘촘하고, 밀려 나아가는 빠르기는 오히려 아주 느려요(1초에 1 mm도 못 갑니다).
+ 그런데도 스위치를 켜면 곧바로 불이 켜지는 것은 <b>도선 속 전자가 모두 동시에 밀리기 때문</b>입니다.</div></div>
+ </div>
+
+ <div class="why-step">
+ <div class="why-h"><span class="no">7</span>한 줄 정리</div>
+ <div class="rulebox"><div class="rb-h">📐 이렇게 정리됩니다</div>
+ <p style="margin-top:8px;font-size:16px;line-height:1.9">
+ 저항은 <b class="t1">전자가 지나가기 어려운 정도</b>다.<br>
+ 📏 길수록 — 밀어 주는 힘이 나뉘고 헤쳐 갈 구간도 길어져 <b class="t1">저항이 커진다</b><br>
+ ⭕ 굵을수록 — 한 번에 지나갈 수 있는 전자가 늘어 <b class="t1">저항이 작아진다</b><br>
+ 🧱 재질이 다르면 — 원자가 놓인 모양이 달라 <b class="t1">저항도 달라진다</b></p>
+ </div>
+ </div>
+ </div>
+</div>
+
  <!-- ══════════ 오개념 방지 ══════════ -->
  <div class="card" style="margin-top:18px">
  <h3 class="card-t" style="margin-bottom:6px">🎚️ 전압을 크게 하면 저항도 커질까?</h3>
@@ -1357,16 +1594,18 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-sort">
  <div class="stepline"><span class="sbadge">STEP 4</span><span class="swhat">가려내기 · 저항이라는 잣대로</span></div>
  <h2 class="sec">물질을 세 무리로 가려냅시다</h2>
- <p class="lead">물질의 종류가 다르면 <b class="t1">저항</b>도 다릅니다.
+ <p class="lead say">물질의 종류가 다르면 <b class="t1">저항</b>도 다릅니다.
  우리 주변의 물질은 저항에 따라 <b class="k">도체 · 부도체 · 반도체</b>로 구분할 수 있어요.
  「해 보기」의 가상 실험을 여기서 해 봅시다.</p>
+ <div class="keyline-s"><span class="kw">물질이 다르면 저항도 다름</span><span class="arw">→</span><span class="kw">도체 · 부도체 · 반도체</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <div class="lab">
  <h3>🔍 도체 · 부도체 · 반도체 가려내기</h3>
- <p class="lead" style="font-size:17px">각 물질을 회로에 연결했다고 상상해 보세요.
+ <p class="lead say" style="font-size:17px">각 물질을 회로에 연결했다고 상상해 보세요.
  전류가 잘 흐를까요, 거의 못 흐를까요, 그 중간일까요?
  <b class="k">여덟 가지 물질</b>을 모두 판정해 봅시다.</p>
+ <div class="keyline-s"><span class="kw">여덟 물질 판정</span><span class="arw">→</span><span class="kw">잘 흐름 · 거의 못 흐름 · 중간</span><span class="memo"></span></div>
  <div class="checkgrid" id="sortGrid" style="margin-top:16px">
  <div class="checkline sort-item" data-mat="m1" data-k="도체" style="cursor:default;flex-wrap:wrap;align-items:center">
  <span style="flex:none;font-size:20px">🔶</span>
@@ -1481,9 +1720,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:10px">
+ <p class="lead say" style="font-size:17.5px;margin-top:10px">
  스피커의 소리를 크게 하려면 스피커에 흐르는 <b style="color:#a05c2c">전류의 세기</b>가 증가해야 합니다.
  스피커의 소리를 크게 할 때 <b class="t1">저항</b>을 어떻게 조절해야 하는지 설명해 보세요.</p>
+ <div class="keyline-s"><span class="kw">소리 크게 = 전류 세게</span><span class="arw">→</span><span class="kw q">저항은 어떻게 해야 하나?</span><span class="memo"></span></div>
  <textarea id="essay" placeholder="힌트: 옴의 법칙을 떠올려 보세요. 전압이 그대로일 때, 전류를 세게 하려면 저항이 어떻게 되어야 할까요?"></textarea>
  <span class="savemark" id="essaySaved">✔ 저장됨</span>
  <div class="btn-row"><button class="btn ghost sm" id="ansBtn">모범 답안 확인하기</button></div>
@@ -1540,50 +1780,54 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="grid c2" style="margin-top:20px">
  <div class="card">
  <h3 class="card-t">👨‍🔬 옴, 무명 교사의 법칙 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  옴(Ohm, 1789~1854)은 독일의 수학 교사였습니다.
  직접 만든 장치로 전류와 전압을 꼼꼼히 재서
  <b class="k">전류의 세기가 전압에 비례하고 저항에 반비례한다</b>는 것을 알아냈어요.<br><br>
  처음에는 인정받지 못했지만, 나중에는 <b>저항의 단위 Ω(옴)</b>에
  이름이 붙을 만큼 중요한 발견으로 남았습니다.
  오늘 여러분이 실험대에서 한 일이 바로 옴이 했던 일입니다.</p>
+ <div class="keyline-s"><span class="kw">옴 — 무명의 수학 교사</span><span class="arw">→</span><span class="kw">직접 만든 장치로 측정</span><span class="arw">→</span><span class="kw hi">단위 Ω</span><span class="memo"></span></div>
  </div>
  <div class="card">
  <h3 class="card-t">🚧 저항은 왜 생길까 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  도선 속을 이동하는 <b class="t3">전자</b>는 텅 빈 길을 달리는 게 아닙니다.
  물질을 이루는 <b class="k">원자들 사이를 비집고</b> 지나가면서
  자꾸 <b class="k">부딪혀요.</b> 이 충돌이 흐름을 방해합니다 — 그것이 저항의 정체예요.<br><br>
  복도가 길수록(긴 니크롬선) 부딪힐 일이 많아지니 저항이 커진다고
  상상하면 얼추 맞습니다.</p>
+ <div class="keyline-s"><span class="kw">전자가 원자 사이를 비집고 감</span><span class="arw">→</span><span class="kw">자꾸 부딪힘</span><span class="arw">→</span><span class="kw hi">그것이 저항의 정체</span><span class="memo"></span></div>
  </div>
  </div>
 
  <div class="grid c2" style="margin-top:18px">
  <div class="card">
  <h3 class="card-t">🔥 뜨거워지면 저항이 커진다 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  실험에서 "값을 읽으면 <b>바로 스위치를 열어라</b>"라고 했던 것, 기억하나요?
  니크롬선에 전류가 오래 흐르면 열이 나는데,
  도체는 <b class="k">온도가 오르면 저항이 커집니다.</b>
  원자들이 더 심하게 흔들려서 전자가 더 자주 부딪히거든요.<br><br>
  그래서 뜨거워진 니크롬선으로 측정하면 값이 어긋납니다.
  스위치를 바로 여는 건 안전 때문이기도 하지만, <b>정확한 측정</b>을 위해서이기도 해요.</p>
+ <div class="keyline-s"><span class="kw">전류가 오래 흐름</span><span class="arw">→</span><span class="kw">열</span><span class="arw">→</span><span class="kw">원자가 더 흔들림</span><span class="arw">→</span><span class="kw hi">저항 ↑</span><span class="memo"></span></div>
  </div>
  <div class="card">
  <h3 class="card-t">🧲 저항이 0이 되는 물질 — 초전도체 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  어떤 물질은 온도를 아주 낮게 하면 <b class="k">저항이 0</b>이 됩니다.
  수은은 약 -269 ℃에서 그렇게 돼요. 이런 물질을 <b>초전도체</b>라고 합니다.<br><br>
  저항이 0이면 전류가 흘러도 에너지가 열로 새지 않습니다.
  게다가 초전도체는 자석을 밀어내는 성질이 있어서 <b>자석 위에 둥둥 뜹니다.</b>
  자기 부상 열차, MRI 같은 곳에서 활약 중이에요.</p>
+ <div class="keyline-s"><span class="kw">아주 낮은 온도</span><span class="arw">→</span><span class="kw">저항 0</span><span class="arw">→</span><span class="kw hi">초전도체</span><span class="memo"></span></div>
  </div>
  </div>
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🎬 다시, 처음 그 질문</h3>
- <p class="lead" style="font-size:18.5px;margin-top:10px">
+ <p class="lead say" style="font-size:18.5px;margin-top:10px">
  <b class="k">"전구의 밝기를 줄이려면 어떻게 해야 할까?"</b><br><br>
  이제 두 개의 손잡이로 답할 수 있습니다 —
  <b class="t2">전압을 낮추거나</b>, <b class="t1">저항을 크게</b> 하면 됩니다.
@@ -1593,6 +1837,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  앞으로 회로 문제가 나올 때마다 이 한 줄로 돌아오세요.
  <b style="color:#a05c2c">전류</b> = <b class="t2">전압</b> ÷ <b class="t1">저항</b>.
  </p>
+ <div class="keyline-s"><span class="kw">전압 낮추기</span><span class="kw">저항 키우기</span><span class="arw">→</span><span class="kw hi">전류 = 전압 ÷ 저항</span><span class="memo"></span></div>
  <div class="cta-row" style="justify-content:center">
  <button class="btn ghost" data-go="open">1단계로 돌아가기 ↑</button>
  <a class="btn ghost" href="05-series-parallel.html">💡 다음 차시로 가기</a>
@@ -1744,6 +1989,7 @@ let S=load()||{tab:'open',visited:{},seen:{},poe:'',rows:[],concl:'',cloze:{},mi
 S.visited=S.visited||{};S.seen=S.seen||{};S.rows=S.rows||[];S.cloze=S.cloze||{};S.mini=S.mini||{};
 S.medals=S.medals||{};S.essay=S.essay||'';S.poe=S.poe||'';S.concl=S.concl||'';S.sortDone=S.sortDone||{};
 let CLOZE_TOTAL=0;
+S.wwPred=S.wwPred||'';S.wwLen=S.wwLen||0;S.wwThk=S.wwThk||0;
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(S));}catch(e){}}
 function load(){try{return JSON.parse(localStorage.getItem(SAVE));}catch(e){return null;}}
 
@@ -1760,6 +2006,7 @@ function progChecks(){
  {label:'2단계 · 나의 결론 써 보기', ok:(S.concl||'').trim().length>=10},
  {label:'3단계 · 빈칸 모두 채우기', ok:CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL},
  {label:'3단계 · 개념 확인 퀴즈', ok:!!S.mini.law},
+ {label:'3단계 · 도선 속을 들여다보고 길이·굵기 바꿔 보기', ok:!!S.wwLen&&!!S.wwThk},
  {label:'3단계 · 도선 실험대에서 세 가지 다 바꿔 보기', ok:Object.keys(S.wireTried||{}).length>=3},
  {label:'3단계 · 전압을 3단계 이상 올려 보기', ok:Object.keys(S.ohmSeen||{}).length>=3},
  {label:'4단계 · 물질 8개 가려내기', ok:Object.keys(S.sortDone||{}).length>=8},
@@ -1811,7 +2058,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  $('#tmodeBtn').addEventListener('click',()=>{
  const on=!document.body.classList.contains('teacher');
  document.body.classList.toggle('teacher',on);localStorage.setItem(KEY,on?'1':'0');
- toast(on?'교사 모드 ON — 교실 연결 노트가 보입니다 🧑‍🏫':'교사 모드 OFF — 학생 화면입니다 🎒');});})();
+ toast(on?'교사 모드 ON — 문장 설명과 교실 노트가 보입니다 🧑‍🏫':'학생 화면 — 키워드만 보입니다 🎒');});})();
 
 (function(){const wrap=$('#progWrap'),list=$('#progList');
  wrap.addEventListener('click',()=>list.classList.toggle('show'));
@@ -2376,6 +2623,119 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  $('#oV').addEventListener('input',e=>{V=+e.target.value;paintO();});
  rows(); paintO();
  if(!reduceMotion)raf=requestAnimationFrame(tickO);
+})();
+
+
+/* ══════ '왜 그럴까?' — 저항의 이유(입자 모형) ══════
+   전자 밀도는 단면적에 비례하고, 같은 전압에서 전자가 밀리는 빠르기는 길이에 반비례한다.
+   그래서 가운데 선을 지나가는 수(전류)는 굵기에 비례하고 길이에 반비례한다. */
+(function(){
+ const cv=$('#rwCv'); if(!cv)return;
+ const ctx=cv.getContext('2d');
+ const X0=70, YC=115, UL=120, UT=24;      /* 기준 도선 : 길이 120 px, 굵기 24 px */
+ let len=1, thk=1, els=[], ions=[], hits=0, cross=0, win=[], tPrev=0;
+
+ function build(){
+  const L=UL*len, H=UT*thk, y0=YC-H/2;
+  ions=[];
+  for(let x=X0+9;x<X0+L-4;x+=15)
+   for(let y=y0+8;y<y0+H-4;y+=15) ions.push({x:x,y:y,p:Math.random()*6.28});
+  const n=Math.round(8*len*thk);          /* 전자 수 ∝ 부피(길이×굵기) — 밀도는 그대로 */
+  els=[];
+  for(let i=0;i<n;i++) els.push({x:X0+Math.random()*L, y:y0+4+Math.random()*(H-8), jy:0});
+  hits=0; cross=0; win=[];
+  $('#rwLenV').textContent=len+'배'; $('#rwThkV').textContent=thk+'배';
+  $('#rwR').innerHTML=(Math.round(len/thk*100)/100)+'<small> 배</small>';
+  $('#rwV').innerHTML=(Math.round(100/len)/100)+'<small> 배</small>';
+ }
+ function step(dt){
+  const L=UL*len, H=UT*thk, y0=YC-H/2, v=120/len, mid=X0+L/2;
+  els.forEach(e=>{
+   const before=e.x;
+   e.x+=v*dt;
+   e.y+=e.jy*dt; e.jy*=0.90;
+   if(e.y<y0+3){e.y=y0+3;e.jy=Math.abs(e.jy);}
+   if(e.y>y0+H-3){e.y=y0+H-3;e.jy=-Math.abs(e.jy);}
+   for(let i=0;i<ions.length;i++){
+    const io=ions[i];
+    if(Math.abs(io.x-e.x)<4.2&&Math.abs(io.y-e.y)<4.2){
+     e.jy=(Math.random()*2-1)*70; hits++; break;
+    }
+   }
+   if(before<mid&&e.x>=mid)cross++;
+   if(e.x>X0+L){e.x-=L;e.y=y0+4+Math.random()*(H-8);}
+  });
+ }
+ function readout(t){
+  win.push({t:t,c:cross,h:hits});
+  while(win.length>2&&t-win[0].t>2)win.shift();
+  const d=t-win[0].t;
+  if(d>0.9){
+   $('#rwI').innerHTML=(Math.round((cross-win[0].c)/d*10)/10)+'<small> 개/초</small>';
+   $('#rwC').innerHTML=Math.round((hits-win[0].h)/d)+'<small> 번/초</small>';
+  }
+ }
+ function draw(){
+  const L=UL*len, H=UT*thk, y0=YC-H/2;
+  ctx.clearRect(0,0,660,230);
+  /* 도선 */
+  ctx.fillStyle='#f0dcbd'; ctx.strokeStyle='#a8763f'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(X0,y0,L,H,5); ctx.fill(); ctx.stroke();
+  /* 양 끝 도선과 전지 표시 */
+  ctx.strokeStyle='#8d7a5c'; ctx.lineWidth=2.4;
+  ctx.beginPath(); ctx.moveTo(12,YC); ctx.lineTo(X0,YC); ctx.moveTo(X0+L,YC); ctx.lineTo(648,YC); ctx.stroke();
+  ctx.fillStyle='#b23a30'; ctx.font='700 14px Pretendard, sans-serif';
+  ctx.fillText('(+)',624,YC-10); ctx.fillStyle='#2e5f8f'; ctx.fillText('(−)',18,YC-10);
+  /* 원자 */
+  ctx.fillStyle='#bda98a';
+  ions.forEach(io=>{ctx.beginPath();ctx.arc(io.x,io.y,3.1,0,6.283);ctx.fill();});
+  /* 재는 자리 */
+  ctx.strokeStyle='#a05c2c'; ctx.lineWidth=1.8; ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(X0+L/2,y0-14); ctx.lineTo(X0+L/2,y0+H+14); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle='#a05c2c'; ctx.font='700 13px Pretendard, sans-serif'; ctx.textAlign='center';
+  ctx.fillText('여기를 지나간 수를 셉니다',X0+L/2,y0+H+32); ctx.textAlign='left';
+  /* 전자 */
+  ctx.fillStyle='#3a7a3f';
+  els.forEach(e=>{ctx.beginPath();ctx.arc(e.x,e.y,3.4,0,6.283);ctx.fill();});
+  /* 전류 방향 */
+  ctx.fillStyle='#96805c'; ctx.font='13px Pretendard, sans-serif';
+  ctx.fillText('전자가 밀려 가는 쪽 →',X0,26);
+ }
+
+ function reset(){len=1;thk=1;$('#rwLen').value=1;$('#rwThk').value=1;build();draw();}
+ ['rwLen','rwThk'].forEach(id=>$('#'+id).addEventListener('input',()=>{
+  len=+$('#rwLen').value; thk=+$('#rwThk').value; build(); draw();
+  if(len>1)S.wwLen=1; if(thk>1)S.wwThk=1;
+  if(S.wwLen&&S.wwThk){
+   $('#wwAfter').classList.add('open'); $('#wwLockMsg').classList.add('gone');
+  }
+  const o=$('#rwObs'); o.style.display='block'; o.classList.add('hit');
+  o.innerHTML='길이 <b>'+len+'배</b> · 굵기 <b>'+thk+'배</b> → 상대적인 저항 <b>'
+   +(Math.round(len/thk*100)/100)+'배</b>. 가운데 선을 지나가는 전자 수를 눈으로 세어 보세요.';
+  save(); updateProgress();
+ }));
+ $('#rwReset').addEventListener('click',reset);
+
+ $('#wwPick').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  S.wwPred=b.dataset.v; save();
+  $$('#wwPick button').forEach(x=>x.classList.toggle('sel',x.dataset.v===S.wwPred));
+  const sy=$('#wwSay'); sy.style.display='block';
+  sy.innerHTML='생각을 남겼어요. 아래에서 <b>직접 세어</b> 확인해 봅시다.';
+  A.pop(); updateProgress();
+ });
+ if(S.wwPred)$$('#wwPick button').forEach(x=>x.classList.toggle('sel',x.dataset.v===S.wwPred));
+ if(S.wwLen&&S.wwThk){$('#wwAfter').classList.add('open');$('#wwLockMsg').classList.add('gone');}
+
+ build(); draw();
+ function frame(t){
+  const now=t/1000, dt=Math.min(.05,now-tPrev||.016); tPrev=now;
+  const vis=$('#panel-law')&&$('#panel-law').classList.contains('show')
+   &&!document.body.classList.contains('cover-on');
+  if(vis&&!reduceMotion){step(dt);readout(now);draw();}
+  requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
 })();
 
 (function init(){

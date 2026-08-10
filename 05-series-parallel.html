@@ -686,6 +686,141 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 }
 @media(prefers-reduced-motion:reduce){.cover-bulb .filament{animation:none;stroke:#ffcf7d}}
 </style>
+
+<style id="ink-emphasis-fix">
+/* ── 강조 글씨를 종이 위에서 읽히는 잉크색으로 ──
+   어두운 화면용 규칙(b.k{color:#fff})이 남아 크림색 배경에 흰 글씨가 되던 것을 덮는다.
+   색 배경 위에 얹히는 배지·버튼의 흰 글씨는 그대로 둔다. */
+b.k, .k{color:var(--ink)}
+.doit b.k, .lead b.k, .help b.k, p b.k, li b.k, .u-d b.k, .note b.k, .de b.k{
+  color:var(--ink);
+  background:linear-gradient(transparent 58%, rgba(185,135,60,.34) 58%);
+  padding:0 2px;border-radius:2px;font-weight:800}
+/* 색을 지정해 둔 강조는 그 색을 지킨다 */
+b.k[style*="color"], .k[style*="color"]{background:none}
+.badge b.k, .btn b.k, .sbadge b.k, .mq-badge b.k, .pill b.k{background:none;color:inherit}
+</style>
+
+<style id="board-mode">
+/* ══════════ 판서 모드 ══════════
+   학생 화면 = 키워드만. 글자가 적어야 아이들이 화면을 읽느라 지치지 않고,
+   빈 자리에 선생님이 판서하며 설명을 이어 갈 수 있다.
+   🧑‍🏫 교사 모드를 켜면 원래의 문장형 설명이 나온다. */
+.say{display:none}
+body.teacher .say{display:revert}
+
+/* 키워드 줄 — 크고 시원하게, 아래에 판서 여백 */
+.keyline-s{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 20px}
+body.teacher .keyline-s{display:none}
+.keyline-s .kw{font-family:var(--jua);font-size:clamp(19px,2.6vw,25px);font-weight:800;color:var(--ink);
+  background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;
+  border-radius:12px;padding:9px 18px;line-height:1.35}
+.keyline-s .kw.hi{border-color:var(--accent);background:#f6e8d8;color:var(--accent)}
+.keyline-s .kw.q{border-style:dashed;color:var(--ink-dim)}
+.keyline-s .arw{font-size:22px;color:var(--ink-mute);font-weight:800}
+.keyline-s .memo{flex:1 1 100%;min-height:34px}          /* 판서용 빈 자리 */
+@media(max-width:520px){.keyline-s{gap:8px}.keyline-s .kw{padding:8px 14px}}
+
+/* 인쇄物에서는 둘 다 보이게 — 학습지로 뽑을 때 설명이 사라지면 곤란하다 */
+@media print{.say{display:revert!important}.keyline-s{display:flex!important}}
+</style>
+
+<style id="why-module">
+/* ══════════ '왜 그럴까?' 모듈 ══════════
+   결론을 먼저 말하지 않는다. 아는 것 → 힌트 → 예상 → 조작 → 관찰 → 이유 → 정리. */
+.why-mod{border:2px solid var(--brass);background:linear-gradient(180deg,var(--paper-hi),var(--paper));
+ border-radius:18px;padding:22px 20px;margin-top:22px;box-shadow:var(--shadow)}
+.why-q{display:flex;gap:12px;align-items:flex-start}
+.why-q .qi{font-size:30px;line-height:1.1}
+.why-q .qt{font-family:var(--jua);font-size:clamp(20px,3.1vw,26px);color:var(--ink);line-height:1.45}
+.why-step{margin-top:20px;border-top:1px dashed var(--line);padding-top:18px}
+.why-h{display:flex;align-items:center;gap:9px;font-family:var(--jua);font-size:18.5px;color:var(--accent);margin-bottom:9px}
+.why-h .no{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;
+ background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));color:#fff;font-size:15px;
+ border:1px solid var(--brass-dk);flex:none}
+.why-step>p{font-size:15.5px;color:var(--ink-dim);line-height:1.72}
+
+/* 기억해 보기 — 도선 되짚기 */
+.recall{display:grid;gap:12px;grid-template-columns:1fr;background:#f6efdf;border:1px solid var(--line);
+ border-radius:13px;padding:14px;margin-top:10px}
+@media(min-width:780px){.recall{grid-template-columns:1fr 236px}}
+.recall .rc-svg{background:#faf4e6;border:1px solid var(--line-soft);border-radius:11px;padding:8px}
+.recall svg{display:block;width:100%;height:auto}
+.rbar{height:16px;border-radius:99px;background:#e7dbbe;border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.rbar i{display:block;height:100%;background:linear-gradient(90deg,var(--brass-hi),var(--c1));transition:width .3s}
+
+/* 예상하기 — 채점하지 않는다 */
+.wpick{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+.wpick button{flex:1 1 148px;font-family:var(--body);font-size:15px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;
+ padding:11px 13px;cursor:pointer;transition:.15s}
+.wpick button:hover{border-color:var(--accent);color:var(--ink)}
+.wpick button.sel{border-color:var(--c2);background:rgba(125,91,166,.13);color:var(--ink)}
+.wpick.small button{flex:1 1 108px;font-size:14.5px;padding:9px 11px}
+
+/* 회로 시뮬레이션 */
+.wsim{margin-top:12px}
+.duo{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:700px){.duo{grid-template-columns:1fr 1fr}}
+.wcirc{background:#faf4e6;border:1px solid var(--line);border-radius:13px;padding:10px 10px 8px}
+.wcirc.hi{border-color:var(--accent);box-shadow:0 0 0 2px rgba(160,92,44,.15)}
+.wcirc .ct{font-family:var(--jua);font-size:15.5px;text-align:center;color:var(--ink-dim);margin-bottom:3px}
+.wcirc svg{display:block;width:100%;height:auto}
+.wnum{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:5px}
+.wnum span{font-family:var(--mono);font-size:14px;font-weight:700;background:#f2e8d2;border:1px solid var(--line);
+ border-radius:99px;padding:3px 10px;color:var(--ink)}
+.wnum span.r{color:var(--c1)} .wnum span.i{color:var(--c6)}
+.wbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.wbar .lbl{font-size:14px;font-weight:700;color:var(--ink-dim)}
+.wtog{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-radius:99px;padding:7px 14px;cursor:pointer}
+.wtog input{width:15px;height:15px;accent-color:var(--accent)}
+.wtog.on{border-color:var(--accent);color:var(--ink)}
+
+/* 접이식 — 계산식은 맨 마지막에, 눌러야 펼쳐진다 */
+.wfold{margin-top:16px}
+.wfold>summary{cursor:pointer;list-style:none;font-family:var(--jua);font-size:16.5px;color:var(--c2);
+ background:rgba(125,91,166,.08);border:1.5px solid var(--c2);border-radius:12px;padding:11px 15px}
+.wfold>summary::-webkit-details-marker{display:none}
+.wfold>summary::before{content:"▸ "}
+.wfold[open]>summary::before{content:"▾ "}
+.wfold .fold-in{padding:14px 4px 2px;font-size:15.5px;color:var(--ink-dim);line-height:1.85}
+.eqline{font-family:var(--mono);font-size:17px;color:var(--ink);text-align:center;margin:9px 0;font-weight:700}
+.obs-list{margin:8px 0 0;padding-left:19px}
+.obs-list li{font-size:15.5px;color:var(--ink-dim);margin:7px 0;line-height:1.7}
+.obs-list li b{color:var(--ink)}
+
+/* ══════════ 교과서식 비교표 빈칸 ══════════ */
+.ctab-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:#faf4e6;margin-top:14px}
+.ctab{border-collapse:collapse;width:100%;min-width:660px}
+.ctab th,.ctab td{border:1px solid var(--line-soft);padding:11px 13px;vertical-align:top;
+ font-size:15.5px;line-height:1.95;color:var(--ink-dim)}
+.ctab thead th{background:#efe4c9;text-align:center;font-family:var(--jua);font-size:17.5px;color:var(--ink);vertical-align:middle}
+.ctab thead th .sub{display:block;font-family:var(--body);font-size:12.5px;font-weight:600;
+ color:var(--ink-mute);margin-top:4px;line-height:1.5}
+.ctab thead th.sc{color:var(--accent)} .ctab thead th.pc{color:var(--c2)}
+.ctab th.rh{background:#f2e8d2;width:84px;min-width:84px;text-align:center;font-family:var(--jua);
+ font-size:16.5px;color:var(--ink);vertical-align:middle;line-height:1.4}
+.ctab td.dia{text-align:center;padding:8px}
+.ctab td.dia svg{display:block;width:100%;max-width:300px;height:auto;margin:0 auto}
+.ctab .fx{display:block;text-align:center;font-family:var(--mono);font-size:16.5px;font-weight:700;
+ color:var(--ink);margin:7px 0 3px;letter-spacing:.3px}
+.ctab ul{margin:0;padding-left:17px}
+.ctab li{margin:5px 0}
+.ctab .tip{display:block;font-size:13px;color:var(--ink-mute);margin-top:5px;padding-left:15px;
+ text-indent:-15px;line-height:1.6}
+@media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
+
+/* 잠금 — 두 시뮬레이션을 조작하기 전에는 결론을 보여 주지 않는다(교사 모드에서는 항상 보임) */
+.wlock{display:none}
+.wlock.open{display:block}
+body.teacher .wlock{display:block}
+.wlockmsg{margin-top:12px;border:1.5px dashed var(--line);border-radius:13px;padding:15px 17px;
+ background:#f6efdf;font-size:15px;color:var(--ink-mute);text-align:center;line-height:1.7}
+.wlockmsg.gone{display:none}
+body.teacher .wlockmsg{display:none}
+.wsub{margin-top:15px;font-size:15.5px;color:var(--ink-dim);font-weight:700}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -740,7 +875,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  </button>
  <div class="head-right">
  <a class="hbtn" href="index.html" title="단원 허브로">⚡</a>
- <button class="hbtn" id="tmodeBtn" title="교사 모드">🧑‍🏫</button>
+ <button class="hbtn" id="tmodeBtn" title="교사 모드 — 문장 설명과 교실 노트 보기">🧑‍🏫</button>
  <div class="progress-mini" id="progWrap" title="진행도 — 누르면 남은 활동이 보여요">
  <svg class="pgauge" viewBox="0 0 96 56" aria-hidden="true">
  <path d="M10 50 A38 38 0 0 1 86 50" fill="#f6eedb" stroke="#7d541e" stroke-width="2.5"/>
@@ -778,11 +913,12 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel show" id="panel-open">
  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">생각 열기 · 조명 하나가 꺼졌는데</span></div>
  <h1 class="big">간판 조명 하나가 꺼졌는데,<br>나머지는 왜 <span class="t6">안 꺼질까?</span></h1>
- <p class="lead" style="margin-top:16px">
+ <p class="lead say" style="margin-top:16px">
  길거리 간판도, 교실 천장 조명도 전구 하나가 나갔다고 전부 꺼지지는 않습니다.
  <b class="k">어떻게 이었길래 그럴까요?</b>
  오늘은 전구를 '잇는 방법' 두 가지가 만드는 차이를 끝까지 파고듭니다.
  </p>
+ <div class="keyline-s"><span class="kw">전구 하나 나가도 안 꺼짐</span><span class="arw">→</span><span class="kw q">어떻게 이었길래?</span><span class="memo"></span></div>
  <figure class="fig" data-fig="sign"
  data-alt="밤거리 간판에서 조명 하나만 꺼져 있고 나머지 글자는 환하게 켜져 있는 모습"
  data-cap="간판 조명 하나가 꺼졌어. 나머지는 왜 안 꺼지지? (도입)"></figure>
@@ -802,9 +938,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🔌 잇는 방법은 딱 두 가지</h3>
- <p class="lead" style="font-size:17px;margin-top:8px">
+ <p class="lead say" style="font-size:17px;margin-top:8px">
  전기 회로에서 전구 두 개를 잇는 방법은 크게 두 가지입니다.
  이름부터 붙이고 시작합시다. <span class="muted">(교과서 그림 7-9)</span></p>
+ <div class="keyline-s"><span class="kw">전구 잇는 방법 두 가지</span><span class="arw">→</span><span class="kw hi">이름부터</span><span class="memo"></span></div>
  <div class="grid c2" style="margin-top:14px">
  <div class="forcecard">
  <svg viewBox="0 0 280 170" role="img" aria-label="전지에 전구 두 개가 하나의 경로에 일렬로 연결된 직렬연결 회로 그림">
@@ -857,9 +994,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="fc-d">전류가 흐르는 경로가 <b class="k">둘 이상으로 갈라지고</b><br>각 경로에 저항을 연결하는 방법</div>
  </div>
  </div>
- <p class="help">그런데 왜 '전구의 연결'이 아니라 <b>저항의 연결</b>이라고 부를까요?
+ <p class="help say">그런데 왜 '전구의 연결'이 아니라 <b>저항의 연결</b>이라고 부를까요?
  전구도 니크롬선처럼 전류의 흐름을 방해하는 <b class="t1">저항</b>이기 때문입니다.
  전기 기구는 모두 저항의 일종으로 볼 수 있어요.</p>
+ <div class="keyline-s"><span class="kw q">왜 '저항의 연결'일까?</span><span class="arw">→</span><span class="kw">전구도 저항</span><span class="kw">전기 기구 = 저항의 일종</span><span class="memo"></span></div>
  <div class="note myth"><span class="ic">⚠️</span><div><b>오해 주의</b> — "직렬로 이으면 더 밝아진다?"<br>
  → 그건 초등학교 때 배운 <b>전지</b>의 직렬연결 이야기입니다.
  오늘 잇는 것은 전지가 아니라 <b class="k">전구(저항)</b>예요.
@@ -891,8 +1029,9 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-predict">
  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">예측하고 관찰하기 · 빼 보면 안다</span></div>
  <h2 class="sec">전구 하나를 빼면, 나머지 전구는 어떻게 될까?</h2>
- <p class="lead">「탐구」입니다. 전구 두 개를 두 가지 방법으로 이어 놓고
+ <p class="lead say">「탐구」입니다. 전구 두 개를 두 가지 방법으로 이어 놓고
  <b class="k">하나를 빼 보는 것</b>이 오늘의 실험이에요. 손대기 전에, 먼저 예측부터.</p>
+ <div class="keyline-s"><span class="kw">전구 둘 · 두 가지 연결</span><span class="arw">→</span><span class="kw">하나 빼 보기</span><span class="arw">→</span><span class="kw hi">예측 먼저</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <div class="badge" style="margin-bottom:12px">🔧 실험 순서</div>
@@ -923,8 +1062,9 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="btn-row"><button class="btn primary sm" id="obsGo1">▶ 전구 ㉮를 빼 보기</button></div>
  <p class="obscap" id="obsCap1"></p>
  </div>
- <p class="help">'㉯는 그대로 켜져 있다'를 고르는 학생이 꽤 많습니다.
+ <p class="help say">'㉯는 그대로 켜져 있다'를 고르는 학생이 꽤 많습니다.
  ㉯는 건드리지도 않았으니까요. 그 생각이 맞는지, 빼 보면 압니다.</p>
+ <div class="keyline-s"><span class="kw">'㉯는 그대로'를 많이 고름</span><span class="arw">→</span><span class="kw q">정말 그럴까</span><span class="memo"></span></div>
  <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — 손을 들어 예측을 <b>집계해 칠판에</b> 적어 두세요. 관찰 뒤 "㉯는 건드리지도 않았는데 왜 꺼졌지?"가 학생 입에서 나오게 하는 것이 목표입니다. 아직 설명하지 말고 바로 예측 ②로 넘어가세요.</div></div>
  </div>
 
@@ -945,27 +1085,30 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="btn-row"><button class="btn primary sm" id="obsGo2">▶ 전구 ㉮를 빼 보기</button></div>
  <p class="obscap" id="obsCap2"></p>
  </div>
- <p class="help">방금 직렬에서 꺼지는 걸 봤으니 "이번에도 꺼지겠지"라고 생각하기 쉽습니다.
+ <p class="help say">방금 직렬에서 꺼지는 걸 봤으니 "이번에도 꺼지겠지"라고 생각하기 쉽습니다.
  병렬은 정말 직렬과 같을까요?</p>
+ <div class="keyline-s"><span class="kw">직렬에선 꺼졌다</span><span class="arw">→</span><span class="kw q">병렬도 같을까?</span><span class="memo"></span></div>
  <div class="note class"><span class="ic">💬</span><div><b>탐구 모범 답안</b> — (가) 직렬에서는 전구 1개의 연결을 끊으면 <b>나머지 전구의 불도 꺼진다.</b> (나) 병렬에서는 전구 1개의 연결을 끊어도 <b>나머지 전구는 불이 켜진 채로 있다.</b> 두 관찰 결과를 칠판에 나란히 적어 두고 3단계로 넘어가세요.</div></div>
  </div>
 
  <div class="card" style="margin-top:18px" id="poeSummary">
  <div class="badge" style="margin-bottom:12px">🧩 두 번의 관찰을 나란히 놓으면</div>
  <h3 class="card-t">갈림길이 있느냐 없느냐, 그게 전부였다</h3>
- <p class="lead" style="font-size:17.5px;margin-top:10px">
+ <p class="lead say" style="font-size:17.5px;margin-top:10px">
  직렬은 전류가 지나갈 길이 <b class="k">하나뿐</b>이라, 한 곳이 끊기면 회로 전체가 끊깁니다.
  병렬은 길이 <b class="k">두 갈래</b>라, 한 갈래가 끊겨도 나머지 갈래로는 전류가 계속 흐르죠.<br><br>
  아래 실험대에서 직렬과 병렬을 오가며 마음껏 빼고 끼워 보세요.
  </p>
+ <div class="keyline-s"><span class="kw">직렬 — 길이 하나</span><span class="arw">→</span><span class="kw">끊기면 전체</span><span class="kw">병렬 — 두 갈래</span><span class="arw">→</span><span class="kw">남은 길로 계속</span><span class="memo"></span></div>
  </div>
 
  <!-- 💡 회로 실험대 -->
  <div class="card" style="margin-top:18px">
  <div class="lab">
  <h3>💡 회로 실험대</h3>
- <p class="lead" style="font-size:17px">연결 방법을 바꾸고, <b class="k">전구를 눌러</b> 빼고 끼워 보세요.
+ <p class="lead say" style="font-size:17px">연결 방법을 바꾸고, <b class="k">전구를 눌러</b> 빼고 끼워 보세요.
  남은 전구의 <b>점등과 밝기</b>, 그리고 <b class="t6">전류의 경로</b>(갈색 점선)를 관찰합니다.</p>
+ <div class="keyline-s"><span class="kw">연결 바꾸기</span><span class="arw">→</span><span class="kw">전구 빼고 끼우기</span><span class="arw">→</span><span class="kw">점등 · 밝기 · 전류의 길</span><span class="memo"></span></div>
  <div class="simwrap">
  <div class="svgstage" id="labStage"></div>
  <div class="simctl">
@@ -997,8 +1140,9 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <h4>📋 기록표 — 연결 방법 × 전구 빼기</h4>
  <div class="btn-row"><button class="btn ghost sm" id="recClear">기록 지우기</button></div>
  </div>
- <p class="help">조건을 하나 만들 때마다 <b>📌 지금 조건 기록하기</b>를 누르세요.
+ <p class="help say">조건을 하나 만들 때마다 <b>📌 지금 조건 기록하기</b>를 누르세요.
  <b class="k">직렬·병렬</b> 각각에 대해 <b class="k">안 뺐을 때 / 하나 뺐을 때</b> — 네 가지 조건을 모두 남기면 규칙이 보입니다.</p>
+ <div class="keyline-s"><span class="kw">직렬·병렬 × 안 뺌·뺌</span><span class="arw">→</span><span class="kw hi">네 조건 📌 기록</span><span class="memo"></span></div>
  <div class="dtable-wrap">
  <table class="dtable" id="recTable">
  <thead><tr><th>연결 방법</th><th>뺀 전구</th><th>전구 ㉮</th><th>전구 ㉯</th><th>회로 전체의 전류</th><th></th></tr></thead>
@@ -1008,7 +1152,8 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="rulebox">
  <div class="rb-h">🔎 표를 보니 어떤 규칙이 보이나요?</div>
- <p class="help" style="margin-top:6px">전구 하나를 뺐을 때 <b>나머지 전구가 어떻게 되는지</b>를 직렬과 병렬로 나누어, 내 문장으로 적어 보세요.</p>
+ <p class="help say" style="margin-top:6px">전구 하나를 뺐을 때 <b>나머지 전구가 어떻게 되는지</b>를 직렬과 병렬로 나누어, 내 문장으로 적어 보세요.</p>
+ <div class="keyline-s"><span class="kw">하나 뺐을 때 나머지는?</span><span class="arw">→</span><span class="kw">직렬·병렬 나눠 쓰기</span><span class="memo"></span></div>
  <textarea id="ruleTxt" placeholder="예) 직렬에서는 전구 하나를 빼면 ○○○. 왜냐하면 전류가 지나갈 길이 ○○이기 때문이다. 병렬에서는 …"></textarea>
  <span class="savemark" id="ruleSaved">✔ 저장됨</span>
  <div class="btn-row"><button class="btn ghost sm" id="ruleBtn">모범 답안 확인하기</button></div>
@@ -1037,8 +1182,163 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-compare">
  <div class="stepline"><span class="sbadge">STEP 3</span><span class="swhat">견주어 보기 · 표를 채우며 정리</span></div>
  <h2 class="sec">직렬과 병렬, 무엇이 어떻게 다른가</h2>
- <p class="lead">실험대에서 본 것을 표로 정리합니다. <b class="k">먼저 내가 고르고</b>, 맞는지 확인하세요.
+ <p class="lead say">실험대에서 본 것을 표로 정리합니다. <b class="k">먼저 내가 고르고</b>, 맞는지 확인하세요.
  다섯 줄을 다 채우면 이 차시의 절반이 끝난 겁니다.</p>
+ <div class="keyline-s"><span class="kw">실험대에서 본 것을 표로</span><span class="arw">→</span><span class="kw hi">먼저 고르고 확인</span><span class="memo"></span></div>
+
+
+<!-- ═══════ '왜 그럴까?' — 저항의 연결 ═══════ -->
+<div class="why-mod" id="whyRes">
+ <div class="why-q"><span class="qi">💡</span><span class="qt">저항을 여러 개 잇는 건 똑같은데,<br>왜 <span class="t6">직렬</span>은 전체 저항이 커지고 <span class="t2">병렬</span>은 오히려 작아질까?</span></div>
+
+ <!-- ① 기억해 보기 -->
+ <div class="why-step" style="border-top:0;padding-top:16px">
+ <div class="why-h"><span class="no">1</span>기억해 보기</div>
+ <p class="say">새로 외울 것을 꺼내기 전에, 이미 알고 있는 것부터 되짚습니다. 지난 시간 도선 하나를 놓고 <b class="k">길이</b>와 <b class="k">굵기</b>를 바꿔 봤죠. 손잡이를 움직여 그때 본 것을 다시 확인해 보세요.</p>
+ <div class="keyline-s"><span class="kw">도선의 길이</span><span class="kw">굵기</span><span class="arw">→</span><span class="kw q">저항은?</span><span class="memo"></span></div>
+ <div class="recall">
+ <div class="rc-svg"><svg viewBox="0 0 300 118" role="img" aria-label="양 끝에 도선이 이어진 저항체. 손잡이로 길이와 굵기를 바꾸면 저항체의 모양이 달라진다.">
+ <line id="rcLead1" x1="8" y1="62" x2="124" y2="62" stroke="#8d7a5c" stroke-width="2.6" stroke-linecap="round"/>
+ <line id="rcLead2" x1="176" y1="62" x2="292" y2="62" stroke="#8d7a5c" stroke-width="2.6" stroke-linecap="round"/>
+ <rect id="rcWire" x="124" y="56" width="52" height="11" rx="3" fill="#c98a4e" stroke="#7d451e" stroke-width="2"/>
+ <path id="rcDim" d="M124 90 v8 M124 94 h52 M176 90 v8" stroke="#8a5f24" stroke-width="1.6" fill="none"/>
+ <text x="150" y="113" text-anchor="middle" font-size="13" fill="#8a5f24" font-weight="700">길이</text>
+ </svg></div>
+ <div>
+ <div class="ctl" style="margin-top:2px"><label>도선의 길이 <span class="val" id="rcLenV">1배</span></label>
+ <input type="range" id="rcLen" min="1" max="3" step="1" value="1" aria-label="도선의 길이"></div>
+ <div class="ctl"><label>도선의 굵기 <span class="val" id="rcThkV">1배</span></label>
+ <input type="range" id="rcThk" min="1" max="3" step="1" value="1" aria-label="도선의 굵기"></div>
+ <div class="ctl"><label>저항의 크기 <span class="val" id="rcRV">1배</span></label>
+ <div class="rbar"><i id="rcBar" style="width:33%"></i></div></div>
+ </div>
+ </div>
+ <div class="verdict" id="rcSay">손잡이를 움직여 보세요.</div>
+ </div>
+
+ <!-- ② 힌트 -->
+ <div class="why-step">
+ <div class="why-h"><span class="no">2</span>힌트</div>
+ <div class="clue" style="margin-top:4px"><div class="cl-h">🔍 이렇게 보면 보입니다</div>
+ <p>저항을 이었을 때 <b>전류가 지나가야 할 길의 길이</b>가 어떻게 되는지,
+ 그리고 <b>전류가 지나갈 수 있는 통로</b>가 몇 개가 되는지를 살펴보세요.</p></div>
+ </div>
+
+ <!-- ③ 먼저 생각해 보기 -->
+ <div class="why-step">
+ <div class="why-h"><span class="no">3</span>먼저 생각해 보기</div>
+ <p>같은 저항을 하나 더 이으면 <b>회로 전체의 저항</b>은 어떻게 될까요?
+ 채점하지 않습니다 — 지금 떠오르는 대로 골라 두고, 아래에서 직접 확인해 봅시다.</p>
+ <p class="wsub">🔗 <b>직렬</b>로 이으면 전체 저항은…</p>
+ <div class="wpick small" id="wpS">
+ <button data-v="up">커질 것 같다</button><button data-v="down">작아질 것 같다</button><button data-v="same">같을 것 같다</button></div>
+ <p class="wsub">🔀 <b>병렬</b>로 이으면 전체 저항은…</p>
+ <div class="wpick small" id="wpP">
+ <button data-v="up">커질 것 같다</button><button data-v="down">작아질 것 같다</button><button data-v="same">같을 것 같다</button></div>
+ <div class="verdict" id="wpSay" style="display:none"></div>
+ </div>
+
+ <!-- ④ 직렬 -->
+ <div class="why-step">
+ <div class="why-h"><span class="no">4</span>직접 확인하기 ① — 한 줄로 잇기(직렬)</div>
+ <p>왼쪽은 저항 하나짜리 <b>기준 회로</b>, 오른쪽은 같은 저항을 한 줄로 더 이은 회로입니다.
+ 움직이는 점은 전류예요 — <b>점이 빠를수록 센 전류</b>입니다. 개수를 바꿔 두 회로를 견주어 보세요.</p>
+ <div class="wsim">
+ <div class="duo">
+ <div class="wcirc"><div class="ct">기준 — 저항 1개</div><div id="cS0"></div><div class="wnum" id="nS0"></div></div>
+ <div class="wcirc hi"><div class="ct" id="ctS">직렬 — 저항 2개</div><div id="cS1"></div><div class="wnum" id="nS1"></div></div>
+ </div>
+ <div class="wbar">
+ <span class="lbl">한 줄로 이을 저항 개수</span>
+ <div class="seg" id="segS" style="flex:1 1 200px;margin-top:0">
+ <button data-n="1">1개</button><button data-n="2" class="on">2개</button><button data-n="3">3개</button></div>
+ <label class="wtog" id="togS"><input type="checkbox" id="wireS"> 🔍 저항을 도선 조각으로 바꿔 보기</label>
+ <button class="btn sm ghost" data-wreset="s">↺ 처음으로</button>
+ </div>
+ <div class="svgstage" id="stageS" hidden style="margin-top:12px"></div>
+ </div>
+ <div class="verdict" id="obsS" style="display:none"></div>
+ </div>
+
+ <!-- ⑤ 병렬 -->
+ <div class="why-step">
+ <div class="why-h"><span class="no">5</span>직접 확인하기 ② — 나란히 잇기(병렬)</div>
+ <p>이번에는 같은 저항을 <b>갈래를 나누어</b> 이었습니다. 갈래마다 흐르는 전류와 회로 전체의 전류를 따로 보세요.
+ <b class="k">갈래 속 점의 빠르기</b>가 기준 회로와 견주어 어떤지가 열쇠입니다.</p>
+ <div class="wsim">
+ <div class="duo">
+ <div class="wcirc"><div class="ct">기준 — 저항 1개</div><div id="cP0"></div><div class="wnum" id="nP0"></div></div>
+ <div class="wcirc hi"><div class="ct" id="ctP">병렬 — 저항 2개</div><div id="cP1"></div><div class="wnum" id="nP1"></div></div>
+ </div>
+ <div class="wbar">
+ <span class="lbl">나란히 이을 저항 개수</span>
+ <div class="seg" id="segP" style="flex:1 1 200px;margin-top:0">
+ <button data-n="1">1개</button><button data-n="2" class="on">2개</button><button data-n="3">3개</button></div>
+ <label class="wtog" id="togP"><input type="checkbox" id="wireP"> 🔍 저항을 도선 조각으로 바꿔 보기</label>
+ <button class="btn sm ghost" data-wreset="p">↺ 처음으로</button>
+ </div>
+ <div class="svgstage" id="stageP" hidden style="margin-top:12px"></div>
+ </div>
+ <div class="verdict" id="obsP" style="display:none"></div>
+ </div>
+
+ <div class="wlockmsg" id="whyLockMsg">🔒 위의 두 시뮬레이션에서 <b>저항 개수를 바꿔 본 뒤에</b> 나머지가 열립니다.</div>
+
+ <div class="wlock" id="whyAfter">
+ <!-- ⑥ 무엇이 달라졌나 -->
+ <div class="why-step">
+ <div class="why-h"><span class="no">6</span>무엇이 달라졌나</div>
+ <ul class="obs-list">
+ <li>🔗 직렬 — 저항을 늘릴수록 점이 <b>느려졌다.</b> 회로 전체의 전류가 작아졌다는 뜻이다.</li>
+ <li>🔀 병렬 — 갈래를 늘려도 <b>각 갈래의 점 빠르기는 기준 회로와 같았다.</b> 그런데 전지 쪽 굵은 줄기의 점은 <b>더 빨라졌다.</b></li>
+ <li>같은 전압인데 전체 전류가 달라졌다 — 그렇다면 달라진 것은 <b>회로 전체의 저항</b>이다.</li>
+ </ul>
+ </div>
+
+ <!-- ⑦ 이유 연결 -->
+ <div class="why-step">
+ <div class="why-h"><span class="no">7</span>이제 이유를 연결해 보자</div>
+ <p class="wsub">🔗 직렬 — 지나가야 할 길이 길어진 셈</p>
+ <p class="say">직렬에서는 전류가 R₁을 지나고 <b class="k">그다음 R₂도 지나야</b> 합니다. 빠져나갈 샛길이 없어요.
+ 저항체를 도선 조각으로 바꿔 보면, 조각들이 <b class="k">한 줄로 이어 붙어 길어진 모습</b>이 됩니다.
+ 도선은 길수록 저항이 컸죠. 그래서 <b class="k">전체 저항이 커지고</b>, 같은 전압에서 전류는 작아집니다.</p>
+ <div class="keyline-s"><span class="kw">차례대로 다 지나야 함</span><span class="arw">→</span><span class="kw">길이가 길어진 효과</span><span class="arw">→</span><span class="kw hi">전체 저항 ↑</span><span class="memo"></span></div>
+ <p class="wsub">🔀 병렬 — 지나갈 통로가 늘어난 셈</p>
+ <p class="say">병렬에서는 전류가 지나갈 <b class="k">길이 하나 더 생깁니다.</b> 각 갈래는 전지에 따로 이어져 있어 걸리는 전압이 그대로고,
+ 그래서 갈래마다 흐르는 전류도 기준 회로와 같아요. 다만 그런 갈래가 여러 개라 <b class="k">모두 합한 전체 전류가 커집니다.</b>
+ 도선 조각으로 바꿔 보면 <b class="k">같은 길이의 통로가 나란히 놓여 전체 통로가 넓어진 모습</b>이죠.
+ 도선은 굵을수록 저항이 작았으니, <b class="k">전체 저항은 작아집니다.</b></p>
+ <div class="keyline-s"><span class="kw">통로가 하나 더</span><span class="arw">→</span><span class="kw">굵어진 효과</span><span class="arw">→</span><span class="kw hi">전체 저항 ↓</span><span class="memo"></span></div>
+ <div class="note class"><span class="ic">💬</span><div><b>비유의 한계</b> — 직렬로 이었다고 저항체의 <b>길이가 실제로 붙어 늘어나는 것</b>이 아니고,
+ 병렬로 이었다고 도선이 <b>실제로 굵어지는 것</b>도 아닙니다. 전류가 겪는 <b>효과가 그와 비슷하다</b>는 뜻이에요.
+ 직렬은 "차례대로 모두 지나야 해서", 병렬은 "지나갈 길이 늘어나서" 그렇게 됩니다.</div></div>
+ </div>
+
+ <!-- ⑧ 한 줄 정리 -->
+ <div class="why-step">
+ <div class="why-h"><span class="no">8</span>한 줄 정리</div>
+ <div class="rulebox"><div class="rb-h">📐 이렇게 정리됩니다</div>
+ <p style="margin-top:8px;font-size:16px;line-height:1.9">
+ 🔗 <b>직렬</b> — 차례대로 다 지나야 한다 → 길이가 길어진 효과 → <b class="t1">전체 저항이 커진다</b> → 전체 전류는 작아진다<br>
+ 🔀 <b>병렬</b> — 지나갈 통로가 늘어난다 → 굵어진 효과 → <b class="t1">전체 저항이 작아진다</b> → 전체 전류는 커진다</p>
+ </div>
+ <details class="wfold"><summary>계산식은 왜 그렇게 되는지 보기 (중3 이후 내용)</summary>
+ <div class="fold-in">
+ <b>직렬</b> — 길이 하나라 전류가 같고, 전압은 나뉘어 걸립니다.
+ <div class="eqline">I = I₁ = I₂ ,  V = V₁ + V₂</div>
+ 각 저항에서 V₁ = I R₁, V₂ = I R₂ 이므로 I R전체 = I R₁ + I R₂ →
+ <div class="eqline">R전체 = R₁ + R₂</div>
+ <b>병렬</b> — 각 갈래에 같은 전압이 걸리고, 갈래 전류를 합하면 전체 전류입니다.
+ <div class="eqline">V = V₁ = V₂ ,  I = I₁ + I₂</div>
+ 각 갈래에서 I₁ = V/R₁, I₂ = V/R₂ 이므로 V/R전체 = V/R₁ + V/R₂ →
+ <div class="eqline">1/R전체 = 1/R₁ + 1/R₂</div>
+ 역수를 쓰는 이유는 규칙을 외운 것이 아니라, <b>더해지는 것이 저항이 아니라 '갈래를 흐르는 전류'</b>이기 때문입니다.
+ <span class="tip" style="display:block;margin-top:10px;font-size:13.5px;color:var(--ink-mute)">※ 중학교 2학년에서는 여기까지 계산하지 않습니다. 커진다·작아진다까지만 알면 충분해요.</span>
+ </div>
+ </details>
+ </div>
+ </div>
+</div>
 
  <div class="card" style="margin-top:20px">
  <div class="badge" style="margin-bottom:6px">🧾 내가 채우는 비교표</div>
@@ -1156,41 +1456,81 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="cloze-done">✅ 용어 두 개 확인 완료!</div>
  </div>
 
- <!-- 빈칸 -->
+
+ <!-- 교과서 비교표 빈칸 -->
  <div class="card cloze-set" style="margin-top:18px">
- <div class="badge" style="margin-bottom:12px">✍️ 빈칸을 눌러 확인 — 먼저 머릿속으로 답한 뒤에</div>
- <p class="cloze-line">
- 전류가 흐르는 하나의 경로에 두 개 이상의 저항을 일렬로 연결하는 방법을 <span class="cloze" data-ans="직렬연결" data-c="accent">　</span>이라 하고,
- 경로가 둘 이상으로 갈라지고 각 경로에 저항을 연결하는 방법을 <span class="cloze" data-ans="병렬연결" data-c="c2">　</span>이라고 한다.
- </p>
- <p class="cloze-line">
- 저항을 직렬연결하면 회로 전체의 저항은 <span class="cloze" data-ans="커지고" data-c="c1">　</span>,
- 회로 전체에 흐르는 <span class="cloze" data-ans="전류" data-c="c6">　</span>의 세기는 감소한다.
- </p>
- <p class="cloze-line">
- 직렬연결한 회로에서 각 전구에 흐르는 전류의 세기는 <span class="cloze" data-ans="같고" data-c="c6">　</span>,
- 전구 한 개의 연결이 끊어지면 모든 전구의 불이 <span class="cloze" data-ans="꺼진다" data-c="accent">　</span>.
- </p>
- <p class="cloze-line">
- 저항을 병렬연결하면 각 저항에 걸리는 <span class="cloze" data-ans="전압" data-c="c2">　</span>이 같고,
- 회로 전체의 저항은 <span class="cloze" data-ans="작아진다" data-c="c1">　</span>.
- </p>
- <p class="cloze-line">
- 병렬연결한 회로에서는 전구 한 개의 연결이 끊어져도 다른 전구는 불이 <span class="cloze" data-ans="꺼지지 않는다" data-c="c2">　</span>.
- </p>
- <p class="cloze-line">
- 직렬연결한 회로에서 전원의 전압은 각 전구에 <span class="cloze" data-ans="나뉘어" data-c="c2">　</span> 걸리고,
- 병렬연결한 회로에서 각 갈래로 나뉘어 흐르는 전류를 모두 합하면 회로 <span class="cloze" data-ans="전체" data-c="c6">　</span>의 전류와 같다.
- </p>
- <p class="cloze-line">
- 전구 두 개를 직렬연결하면 각 전구는 전구 한 개짜리 회로보다 <span class="cloze" data-ans="어둡게" data-c="c1">　</span> 켜지고,
- 병렬연결하면 각 전구의 밝기는 전구 한 개짜리 회로와 <span class="cloze" data-ans="같다" data-c="c2">　</span>.
- </p>
- <div class="cloze-done">✅ 이 문단은 다 채웠어요!</div>
- <p class="cloze-hint">빈칸을 그냥 눌러 답만 보면 남지 않아요. 소리 내어 답해 보고 누르세요.</p>
+ <div class="badge" style="margin-bottom:10px">✍️ 표의 빈칸을 눌러 확인 — 먼저 머릿속으로 답한 뒤에</div>
+ <h3 class="card-t" style="margin-bottom:2px">저항의 연결 — 한 표로 정리</h3>
+ <p class="help say" style="margin-top:4px">칸마다 소리 내어 답해 보고 누르세요. 왼쪽 칸과 오른쪽 칸을 <b>가로로 견주며</b> 읽으면 차이가 또렷해집니다.</p>
+ <div class="keyline-s"><span class="kw">칸마다 소리 내어</span><span class="arw">→</span><span class="kw hi">가로로 견주기</span><span class="memo"></span></div>
+ <div class="ctab-wrap">
+ <table class="ctab">
+ <thead><tr>
+ <th class="rh">구분</th>
+ <th class="sc">🔗 저항의 직렬연결<span class="sub">여러 개의 저항을 일렬로 연결하는 방법</span></th>
+ <th class="pc">🔀 저항의 병렬연결<span class="sub">여러 개의 저항의 양 끝을 나란히 연결하는 방법</span></th>
+ </tr></thead>
+ <tbody>
+ <tr>
+ <th class="rh">전기<br>회로도</th>
+ <td class="dia"><svg viewBox="0 0 300 196" role="img" aria-label="전지 하나에 저항 R1과 R2가 한 줄로 이어진 직렬 회로. 전류 I는 회로 어디에서나 같고, R1에 걸리는 전압 V1과 R2에 걸리는 전압 V2로 전원 전압이 나뉜다."><path d="M58 52 v6 h90 v-6" fill="none" stroke="#7d5ba6" stroke-width="1.8"/><text x="103" y="46" text-anchor="middle" font-size="14" font-weight="700" fill="#7d5ba6" font-family="JetBrains Mono, monospace">V₁</text><path d="M152 52 v6 h90 v-6" fill="none" stroke="#7d5ba6" stroke-width="1.8"/><text x="197" y="46" text-anchor="middle" font-size="14" font-weight="700" fill="#7d5ba6" font-family="JetBrains Mono, monospace">V₂</text><line x1="40" y1="82" x2="88" y2="82" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="122" y1="82" x2="178" y2="82" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="212" y1="82" x2="260" y2="82" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="40" y1="82" x2="40" y2="162" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="260" y1="82" x2="260" y2="162" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="40" y1="162" x2="142" y2="162" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="158" y1="162" x2="260" y2="162" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><rect x="88" y="74" width="34" height="16" rx="2" fill="#f6ead0" stroke="#6b573f" stroke-width="2"/><text x="105" y="68" text-anchor="middle" font-size="14" font-weight="700" fill="#8a5f24" font-family="JetBrains Mono, monospace">R₁</text><rect x="178" y="74" width="34" height="16" rx="2" fill="#f6ead0" stroke="#6b573f" stroke-width="2"/><text x="195" y="68" text-anchor="middle" font-size="14" font-weight="700" fill="#8a5f24" font-family="JetBrains Mono, monospace">R₂</text><line x1="142" y1="147" x2="142" y2="177" stroke="#b23a30" stroke-width="2.4"/><line x1="158" y1="154" x2="158" y2="170" stroke="#2e5f8f" stroke-width="6"/><text x="138" y="192" text-anchor="middle" font-size="13" font-weight="700" fill="#b23a30">(+)</text><text x="164" y="192" text-anchor="middle" font-size="13" font-weight="700" fill="#2e5f8f">(−)</text><line x1="40" y1="133" x2="40" y2="118" stroke="#a05c2c" stroke-width="2"/><path d="M40 117 l-3.4 7 h6.8 z" fill="#a05c2c"/><text x="32" y="127" text-anchor="end" font-size="14" font-weight="700" fill="#a05c2c" font-family="JetBrains Mono, monospace">I</text><line x1="94" y1="100" x2="109" y2="100" stroke="#a05c2c" stroke-width="2"/><path d="M110 100 l-7 -3.4 v6.8 z" fill="#a05c2c"/><text x="102" y="115" text-anchor="middle" font-size="14" font-weight="700" fill="#a05c2c" font-family="JetBrains Mono, monospace">I₁</text><line x1="184" y1="100" x2="199" y2="100" stroke="#a05c2c" stroke-width="2"/><path d="M200 100 l-7 -3.4 v6.8 z" fill="#a05c2c"/><text x="192" y="115" text-anchor="middle" font-size="14" font-weight="700" fill="#a05c2c" font-family="JetBrains Mono, monospace">I₂</text></svg></td>
+ <td class="dia"><svg viewBox="0 0 300 196" role="img" aria-label="전지 하나에 저항 R1과 R2가 두 갈래로 나란히 이어진 병렬 회로. 전체 전류 I가 갈림길에서 I1과 I2로 나뉘어 각 저항을 지난 뒤 다시 합쳐지고, 두 저항에는 같은 전압이 걸린다."><path d="M80 30 v6 h140 v-6" fill="none" stroke="#7d5ba6" stroke-width="1.8"/><text x="150" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="#7d5ba6" font-family="JetBrains Mono, monospace">V₁</text><line x1="80" y1="56" x2="133" y2="56" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="167" y1="56" x2="220" y2="56" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="80" y1="104" x2="133" y2="104" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="167" y1="104" x2="220" y2="104" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="80" y1="56" x2="80" y2="162" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="220" y1="56" x2="220" y2="162" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="80" y1="162" x2="142" y2="162" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><line x1="158" y1="162" x2="220" y2="162" stroke="#8d7a5c" stroke-width="2" stroke-linecap="round"/><circle cx="80" cy="104" r="3.4" fill="#8d7a5c"/><circle cx="220" cy="104" r="3.4" fill="#8d7a5c"/><rect x="133" y="48" width="34" height="16" rx="2" fill="#f6ead0" stroke="#6b573f" stroke-width="2"/><text x="150" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#8a5f24" font-family="JetBrains Mono, monospace">R₁</text><rect x="133" y="96" width="34" height="16" rx="2" fill="#f6ead0" stroke="#6b573f" stroke-width="2"/><text x="150" y="90" text-anchor="middle" font-size="14" font-weight="700" fill="#8a5f24" font-family="JetBrains Mono, monospace">R₂</text><line x1="142" y1="147" x2="142" y2="177" stroke="#b23a30" stroke-width="2.4"/><line x1="158" y1="154" x2="158" y2="170" stroke="#2e5f8f" stroke-width="6"/><text x="138" y="192" text-anchor="middle" font-size="13" font-weight="700" fill="#b23a30">(+)</text><text x="164" y="192" text-anchor="middle" font-size="13" font-weight="700" fill="#2e5f8f">(−)</text><path d="M80 130 v-6 h140 v6" fill="none" stroke="#7d5ba6" stroke-width="1.8"/><text x="150" y="147" text-anchor="middle" font-size="14" font-weight="700" fill="#7d5ba6" font-family="JetBrains Mono, monospace">V₂</text><line x1="80" y1="159" x2="80" y2="144" stroke="#a05c2c" stroke-width="2"/><path d="M80 143 l-3.4 7 h6.8 z" fill="#a05c2c"/><text x="72" y="153" text-anchor="end" font-size="14" font-weight="700" fill="#a05c2c" font-family="JetBrains Mono, monospace">I</text><line x1="101" y1="56" x2="116" y2="56" stroke="#a05c2c" stroke-width="2"/><path d="M117 56 l-7 -3.4 v6.8 z" fill="#a05c2c"/><text x="109" y="47" text-anchor="middle" font-size="14" font-weight="700" fill="#a05c2c" font-family="JetBrains Mono, monospace">I₁</text><line x1="101" y1="104" x2="116" y2="104" stroke="#a05c2c" stroke-width="2"/><path d="M117 104 l-7 -3.4 v6.8 z" fill="#a05c2c"/><text x="109" y="95" text-anchor="middle" font-size="14" font-weight="700" fill="#a05c2c" font-family="JetBrains Mono, monospace">I₂</text></svg></td>
+ </tr>
+ <tr>
+ <th class="rh">전류</th>
+ <td><ul>
+ <li>각 저항에 흐르는 전류의 세기는 전체 전류의 세기와 <span class="cloze" data-ans="같다" data-c="c6">　</span>.
+ <span class="fx">I₁ = I₂ = I</span></li>
+ <li>저항을 많이 연결할수록 전체 전류의 세기는 <span class="cloze" data-ans="작아진다" data-c="c6">　</span>.</li>
+ </ul></td>
+ <td><ul>
+ <li>각 저항에 흐르는 전류의 세기는 저항에 <span class="cloze" data-ans="반비례" data-c="c6">　</span>한다.
+ <span class="fx">I₁ = V / R₁ , I₂ = V / R₂</span></li>
+ <li>저항을 많이 연결할수록 전체 전류의 세기는 <span class="cloze" data-ans="커진다" data-c="c6">　</span>.</li>
+ </ul></td>
+ </tr>
+ <tr>
+ <th class="rh">전압</th>
+ <td>각 저항에 걸리는 전압은 저항에 <span class="cloze" data-ans="비례" data-c="c2">　</span>한다.
+ <span class="fx">V₁ = I R₁ , V₂ = I R₂</span></td>
+ <td>각 저항에 걸리는 전압은 전체 전압과 <span class="cloze" data-ans="같다" data-c="c2">　</span>.
+ <span class="fx">V₁ = V₂ = V</span></td>
+ </tr>
+ <tr>
+ <th class="rh">저항</th>
+ <td>저항을 많이 연결할수록 전체 저항은 <span class="cloze" data-ans="커진다" data-c="c1">　</span>.
+ <span class="tip">└ 저항의 <span class="cloze" data-ans="길이" data-c="c1">　</span>가 길어지는 효과가 나타난다.</span></td>
+ <td>저항을 많이 연결할수록 전체 저항은 <span class="cloze" data-ans="작아진다" data-c="c1">　</span>.
+ <span class="tip">└ 저항의 <span class="cloze" data-ans="굵기" data-c="c1">　</span>가 굵어지는 효과가 나타난다.</span></td>
+ </tr>
+ <tr>
+ <th class="rh">특징</th>
+ <td><ul>
+ <li>저항 중 <span class="cloze" data-ans="하나라도" data-c="accent">　</span> 연결이 끊어지면 회로 전체에 전류가 흐르지 않는다.</li>
+ <li><span class="cloze" data-ans="퓨즈" data-c="accent">　</span>, 장식용 전구 등에 이용한다.
+ <span class="tip">└ 누전 차단기에도 이용한다.</span></li>
+ </ul></td>
+ <td><ul>
+ <li>저항 중 하나의 연결이 끊어져도 나머지 저항에는 전류가 <span class="cloze" data-ans="계속 흐른다" data-c="c2">　</span>.</li>
+ <li><span class="cloze" data-ans="멀티탭" data-c="c2">　</span>, 가로등 등에 이용한다.
+ <span class="tip">└ 건물의 전기 배선에도 이용한다.</span></li>
+ </ul></td>
+ </tr>
+ <tr>
+ <th class="rh">전체<br>전압·<br>전류</th>
+ <td>직렬연결에서의 <b>전체 전압</b>은 각 저항에 걸리는 전압의 <span class="cloze" data-ans="합" data-c="accent">　</span>과 같다.
+ <span class="fx">V₁ + V₂ = V</span></td>
+ <td>병렬연결에서의 <b>전체 전류</b>는 각 저항에 흐르는 전류의 세기의 <span class="cloze" data-ans="합" data-c="c2">　</span>과 같다.
+ <span class="fx">I₁ + I₂ = I</span></td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="cloze-done">✅ 표를 다 채웠어요!</div>
+ <p class="cloze-hint">※ 식은 표를 읽는 데 쓰는 참고용입니다 — 합성 저항 계산과 혼합 연결은 이 단원에서 다루지 않습니다.</p>
  </div>
 
- <div class="card" style="margin-top:18px">
+<div class="card" style="margin-top:18px">
  <h3 class="card-t">🔬 가상실험실에서 더 해 보기</h3>
  <p class="help">직접 조작해 보면 훨씬 잘 보입니다. 새 창에서 열려요.</p>
  <a class="linkcard" href="https://javalab.org/ko/electric_circuits/" target="_blank" rel="noopener">
@@ -1213,8 +1553,9 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-apply">
  <div class="stepline"><span class="sbadge">STEP 4</span><span class="swhat">적용하기 · 그래서 이렇게 씁니다</span></div>
  <h2 class="sec">우리 집 전기는 거의 다 병렬, 그런데 퓨즈는 직렬</h2>
- <p class="lead">직렬과 병렬은 어느 한쪽이 더 좋은 방법이 아닙니다.
+ <p class="lead say">직렬과 병렬은 어느 한쪽이 더 좋은 방법이 아닙니다.
  <b class="k">특징이 다르니 쓰임새도 다를 뿐이에요.</b> 어디에 어떤 연결을 쓰는지 봅시다.</p>
+ <div class="keyline-s"><span class="kw">어느 쪽이 더 좋다 ✕</span><span class="arw">→</span><span class="kw hi">특징이 다르니 쓰임새가 다름</span><span class="memo"></span></div>
 
  <h3 class="card-t" style="margin-top:24px">🏠 생활 속 직렬과 병렬</h3>
  <div class="use-grid" style="margin-top:14px">
@@ -1277,10 +1618,11 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:10px">
+ <p class="lead say" style="font-size:17.5px;margin-top:10px">
  엘이디(LED)를 길게 이어 붙여 <b class="k">원하는 길이만큼 잘라 쓸 수 있는</b> 띠 조명이 있습니다.
  이 조명은 일부를 잘라 내도 <b class="k">나머지 엘이디의 밝기가 변하지 않아요.</b>
  그 까닭을 엘이디의 연결 방법과 관련지어 설명해 보세요.</p>
+ <div class="keyline-s"><span class="kw">LED 띠 조명 — 잘라 써도 밝기 그대로</span><span class="arw">→</span><span class="kw q">연결 방법으로 설명</span><span class="memo"></span></div>
  <textarea id="essay" placeholder="힌트: 엘이디들이 직렬로 이어져 있다면 자르는 순간 어떻게 될까요? 잘라도 밝기가 그대로이려면, 각 엘이디에 걸리는 전압이 어때야 할까요?"></textarea>
  <span class="savemark" id="essaySaved">✔ 저장됨</span>
  <div class="btn-row"><button class="btn ghost sm" id="ansBtn">모범 답안 확인하기</button></div>
@@ -1338,21 +1680,23 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="grid c2" style="margin-top:20px">
  <div class="card">
  <h3 class="card-t">🎄 옛날식 장식 전구줄의 비밀 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  옛날 꼬마전구 장식줄은 전구 수십 개를 <b class="k">직렬</b>로 이었습니다.
  전선이 적게 들어 값이 쌌거든요. 대신 전구 하나만 나가도 <b>줄 전체가 꺼졌고</b>,
  어느 전구가 나갔는지 하나하나 돌려 끼워 보며 찾아야 했습니다.<br><br>
  요즘 LED 장식줄은 병렬을 쓰거나, 전구가 끊어져도 그 자리만 건너뛰게 하는
  보완 장치를 넣습니다. 4단계에서 본 '잘라 쓰는 띠 조명'이 그 후손이에요.</p>
+ <div class="keyline-s"><span class="kw">옛 장식줄 = 직렬</span><span class="arw">→</span><span class="kw">하나 나가면 줄 전체가 꺼짐</span><span class="memo"></span></div>
  </div>
  <div class="card">
  <h3 class="card-t">🧮 전체 저항, 계산은 고등학교에서 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  오늘은 전체 저항이 "커진다/작아진다"까지만 배웠지만,
  고등학교에서는 정확한 값을 계산합니다.
  직렬은 저항을 <b class="k">그대로 더하고</b>,
  병렬은 역수끼리 더하는 식을 써서 전체 저항이 <b class="k">각 저항보다 작아지는 것</b>을 확인하죠.<br><br>
  지금 기억할 것은 방향뿐입니다 — <b>직렬은 커진다, 병렬은 작아진다.</b></p>
+ <div class="keyline-s"><span class="kw">고등학교</span><span class="kw">직렬 — 그냥 더하기</span><span class="kw">병렬 — 역수로 더하기</span><span class="kw hi">지금은 방향만</span><span class="memo"></span></div>
  <p class="help">중2 시험에는 계산 문제가 나오지 않습니다. 교과서도 계산과 혼합 연결은 다루지 않아요.</p>
  </div>
  </div>
@@ -1360,23 +1704,25 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="grid c2" style="margin-top:18px">
  <div class="card">
  <h3 class="card-t">🏠 두꺼비집도 직렬이다 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  현관 근처의 분전함(두꺼비집) 속 누전 차단기는 집 전체 배선의 <b class="k">첫머리에 직렬로</b> 들어 있습니다.
  이상한 전류가 감지되면 스위치가 내려가면서 <b>집 전체의 전기가 한 번에</b> 끊기죠.
  퓨즈와 같은 원리 — 직렬의 '전부 끊김'을 안전에 쓰는 겁니다.</p>
+ <div class="keyline-s"><span class="kw">누전 차단기 = 직렬</span><span class="arw">→</span><span class="kw hi">'전부 끊김'을 안전에</span><span class="memo"></span></div>
  </div>
  <div class="card">
  <h3 class="card-t">📱 휴대전화 속도 병렬이다 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  휴대전화 안의 카메라·스피커·마이크 같은 부품들도 서로 <b class="k">병렬</b>로 연결되어 있습니다.
  그래서 카메라가 고장 나도 스피커는 멀쩡히 작동해요.
  부품 하나의 고장이 전체의 고장이 되지 않도록 설계한 것입니다.</p>
+ <div class="keyline-s"><span class="kw">휴대전화 부품 = 병렬</span><span class="arw">→</span><span class="kw">하나 고장 나도 나머지는 작동</span><span class="memo"></span></div>
  </div>
  </div>
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🎬 다시, 처음 그 질문</h3>
- <p class="lead" style="font-size:18.5px;margin-top:10px">
+ <p class="lead say" style="font-size:18.5px;margin-top:10px">
  <b class="k">"간판 조명 하나가 꺼졌는데, 나머지는 왜 안 꺼질까?"</b><br><br>
  이제 답할 수 있습니다 — 조명들이 <b class="t2">병렬</b>로 이어져 있어서,
  하나가 끊겨도 나머지 갈래에는 여전히 같은 전압이 걸리고 전류가 흐르기 때문입니다.<br><br>
@@ -1385,6 +1731,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  세상의 모든 전기 제품 뒤에는 그 설계의 고민이 숨어 있어요.
  오늘부터는 콘센트와 스위치가 조금 다르게 보일 겁니다.
  </p>
+ <div class="keyline-s"><span class="kw">조명은 병렬</span><span class="arw">→</span><span class="kw">같은 전압 · 전류 계속</span><span class="kw hi">우연이 아니라 선택</span><span class="memo"></span></div>
  <div class="cta-row" style="justify-content:center">
  <button class="btn ghost" data-go="open">1단계로 돌아가기 ↑</button>
  <a class="btn ghost" href="06-power.html">🌀 다음 차시로 가기</a>
@@ -1523,6 +1870,7 @@ let S=load()||{tab:'open',visited:{},seen:{},poe1:null,poe2:null,obs:{},lab:{},c
 S.visited=S.visited||{};S.seen=S.seen||{};S.obs=S.obs||{};S.lab=S.lab||{};S.cmp=S.cmp||{};
 S.cloze=S.cloze||{};S.mini=S.mini||{};S.medals=S.medals||{};S.essay=S.essay||'';
 S.rec=Array.isArray(S.rec)?S.rec:[];S.rule=S.rule||'';
+S.wRecall=S.wRecall||0;S.wPredS=S.wPredS||'';S.wPredP=S.wPredP||'';S.wTriedS=S.wTriedS||0;S.wTriedP=S.wTriedP||0;
 let CLOZE_TOTAL=0;
 const CMP_TOTAL=10;
 /* 기록표에서 채워야 할 네 조건 — 연결 방법 2가지 × (안 뺐을 때 / 하나 뺐을 때) */
@@ -1545,6 +1893,9 @@ function progChecks(){
  {label:'2단계 · 기록표에 네 조건 모두 남기기', ok:recCondsDone()>=REC_CONDS.length},
  {label:'2단계 · 표에서 규칙 찾아 적기', ok:(S.rule||'').trim().length>=15},
  {label:'3단계 · 비교표 10칸 채우기', ok:Object.keys(S.cmp||{}).length>=CMP_TOTAL},
+  {label:'3단계 · 도선의 길이·굵기 되짚어 보기', ok:!!S.wRecall},
+  {label:'3단계 · 직렬·병렬 결과 예상해 보기', ok:!!S.wPredS&&!!S.wPredP},
+  {label:'3단계 · 시뮬레이션에서 저항 개수 바꿔 보기', ok:!!S.wTriedS&&!!S.wTriedP},
  {label:'3단계 · 빈칸 모두 채우기', ok:CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL},
  {label:'3단계 · 개념 확인 퀴즈', ok:!!S.mini.compare},
  {label:'4단계 · 사고력 문제 답쓰기', ok:(S.essay||'').trim().length>=15},
@@ -1560,7 +1911,7 @@ function updateProgress(){
  const done={open:Object.keys(S.seen||{}).length>=1,
  predict:!!S.poe1&&!!S.obs.o1&&!!S.poe2&&!!S.obs.o2&&!!(S.lab.sRem&&S.lab.pRem)
  &&recCondsDone()>=REC_CONDS.length&&(S.rule||'').trim().length>=15,
- compare:Object.keys(S.cmp||{}).length>=CMP_TOTAL&&CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL&&!!S.mini.compare,
+ compare:!!S.wTriedS&&!!S.wTriedP&&Object.keys(S.cmp||{}).length>=CMP_TOTAL&&CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL&&!!S.mini.compare,
  apply:(S.essay||'').trim().length>=15, check:S.best>0, beyond:!!S.visited.beyond};
  $$('#tabNav button').forEach(b=>b.classList.toggle('done',!!done[b.dataset.tab]));
 }
@@ -1594,7 +1945,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  $('#tmodeBtn').addEventListener('click',()=>{
  const on=!document.body.classList.contains('teacher');
  document.body.classList.toggle('teacher',on);localStorage.setItem(KEY,on?'1':'0');
- toast(on?'교사 모드 ON — 교실 연결 노트가 보입니다 🧑‍🏫':'교사 모드 OFF — 학생 화면입니다 🎒');});})();
+ toast(on?'교사 모드 ON — 문장 설명과 교실 노트가 보입니다 🧑‍🏫':'학생 화면 — 키워드만 보입니다 🎒');});})();
 
 (function(){const wrap=$('#progWrap'),list=$('#progList');
  wrap.addEventListener('click',()=>list.classList.toggle('show'));
@@ -2078,6 +2429,248 @@ function circuitAria(mode,remA,remB){
  if(!reduceMotion){t+=.013;requestAnimationFrame(draw);}}
  let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{build();if(reduceMotion)draw();},200);});
  build();draw();
+})();
+
+
+/* ══════ '왜 그럴까?' — 저항의 연결 ══════
+   기준 회로(저항 1개)와 이어 붙인 회로를 한 화면에서 견준다.
+   움직이는 점 = 전류. 점의 빠르기가 전류의 세기를 나타낸다(도선이 같으므로 밀도는 그대로). */
+(function(){
+ const host=$('#whyRes'); if(!host)return;
+ const EMF=3, R1=10;                       /* 전원 3 V, 저항 하나 10 Ω */
+ const NS='http://www.w3.org/2000/svg';
+ const num=x=>{const r=Math.round(x*100)/100;return (r%1===0)?String(r):r.toFixed(r*10%1===0?1:2);};
+
+ /* ── 1. 기억해 보기 — 도선의 길이와 굵기 ── */
+ (function(){
+  const len=$('#rcLen'), thk=$('#rcThk'); if(!len)return;
+  function draw(){
+   const L=+len.value, T=+thk.value, r=L/T;
+   const w=44*L, h=10*T, x=150-w/2, y=62-h/2;
+   const wr=$('#rcWire');
+   wr.setAttribute('x',x); wr.setAttribute('y',y);
+   wr.setAttribute('width',w); wr.setAttribute('height',h);
+   $('#rcLead1').setAttribute('x2',x); $('#rcLead2').setAttribute('x1',x+w);
+   $('#rcDim').setAttribute('d','M'+x+' 90 v8 M'+x+' 94 h'+w+' M'+(x+w)+' 90 v8');
+   $('#rcLenV').textContent=L+'배'; $('#rcThkV').textContent=T+'배'; $('#rcRV').textContent=num(r)+'배';
+   $('#rcBar').style.width=Math.max(7,Math.min(100,r/3*100))+'%';
+   const say=$('#rcSay');
+   say.innerHTML='길이 <b>'+L+'배</b> · 굵기 <b>'+T+'배</b> → 저항 <b>'+num(r)+'배</b>. '
+    +(L>T?'길수록 저항이 <b>커집니다.</b>':T>L?'굵을수록 저항이 <b>작아집니다.</b>':'길이와 굵기를 같은 배로 늘리면 <b>서로 상쇄</b>돼요.');
+   say.classList.toggle('hit',L!==1||T!==1);
+  }
+  [len,thk].forEach(el=>el.addEventListener('input',()=>{draw();if(!S.wRecall){S.wRecall=1;save();updateProgress();}}));
+  draw();
+ })();
+
+ /* ── 2·3. 예상하기 — 채점하지 않는다 ── */
+ const PRED={up:'커진다',down:'작아진다',same:'같다'};
+ function bindPick(sel,key){
+  const box=$(sel); if(!box)return;
+  box.addEventListener('click',e=>{
+   const b=e.target.closest('button'); if(!b)return;
+   S[key]=b.dataset.v; save(); paintPick(); updateProgress(); A.pop();
+   const sy=$('#wpSay');
+   sy.style.display='block';
+   sy.innerHTML=(S.wPredS&&S.wPredP)
+    ? '생각을 남겼어요. 이제 아래에서 <b>직접 확인</b>해 봅시다 — 맞히는 것이 목적이 아니라, 예상과 견주어 보는 것이 목적입니다.'
+    : '좋아요. 나머지 하나도 골라 두세요.';
+  });
+ }
+ function paintPick(){
+  $$('#wpS button').forEach(b=>b.classList.toggle('sel',b.dataset.v===S.wPredS));
+  $$('#wpP button').forEach(b=>b.classList.toggle('sel',b.dataset.v===S.wPredP));
+ }
+ bindPick('#wpS','wPredS'); bindPick('#wpP','wPredP'); paintPick();
+
+ /* ── 4·5. 회로 시뮬레이션 ── */
+ const seg=(x1,y1,x2,y2)=>'<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#8d7a5c" stroke-width="2.2" stroke-linecap="round"/>';
+ function resBox(cx,cy,label){
+  return '<rect x="'+(cx-15)+'" y="'+(cy-7)+'" width="30" height="14" rx="2" fill="#f6ead0" stroke="#6b573f" stroke-width="2"/>'
+   +'<text x="'+cx+'" y="'+(cy-12)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#8a5f24" font-family="JetBrains Mono, monospace">'+label+'</text>';
+ }
+ function battery(cx,cy){
+  return '<line x1="'+(cx-7)+'" y1="'+(cy-14)+'" x2="'+(cx-7)+'" y2="'+(cy+14)+'" stroke="#b23a30" stroke-width="2.2"/>'
+   +'<line x1="'+(cx+7)+'" y1="'+(cy-8)+'" x2="'+(cx+7)+'" y2="'+(cy+8)+'" stroke="#2e5f8f" stroke-width="5.5"/>'
+   +'<text x="'+(cx-13)+'" y="'+(cy+27)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#b23a30">(+)</text>'
+   +'<text x="'+(cx+15)+'" y="'+(cy+27)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#2e5f8f">(−)</text>';
+ }
+
+ /* 직렬 — 저항 n개가 한 줄에 */
+ function specSeries(n){
+  const yT=40,yB=110,xl=24,xr=236,bx=130;
+  const cxs=n===1?[130]:n===2?[92,168]:[70,130,190];
+  let w='';
+  let prev=xl;
+  cxs.forEach(cx=>{w+=seg(prev,yT,cx-15,yT);prev=cx+15;});
+  w+=seg(prev,yT,xr,yT)+seg(xl,yT,xl,yB)+seg(xr,yT,xr,yB)+seg(xl,yB,bx-7,yB)+seg(bx+7,yB,xr,yB);
+  const loop=[[bx+7,yB],[bx-7,yB],[xl,yB],[xl,yT],[xr,yT],[xr,yB],[bx+7,yB]];
+  return {wires:w, res:cxs.map((cx,i)=>[cx,yT,'R'+(i+1)]), bx:bx, by:yB,
+          flows:[{pts:loop,rate:1/n}], junc:[]};
+ }
+ /* 병렬 — 저항 n개가 갈래마다 */
+ function specPara(n){
+  const yB=110,xl=58,xr=202,bx=130;
+  const rows=n===1?[46]:n===2?[36,74]:[30,62,94];
+  const low=rows[rows.length-1];
+  let w='';
+  rows.forEach(y=>{w+=seg(xl,y,115,y)+seg(145,y,xr,y);});
+  w+=seg(xl,rows[0],xl,yB)+seg(xr,rows[0],xr,yB)+seg(xl,yB,bx-7,yB)+seg(bx+7,yB,xr,yB);
+  const flows=[{pts:[[bx+7,yB],[bx-7,yB],[xl,yB],[xl,low]],rate:n},
+               {pts:[[xr,low],[xr,yB],[bx+7,yB]],rate:n}];
+  rows.forEach(y=>flows.push({pts:[[xl,y],[xr,y]],rate:1}));
+  for(let k=n-1;k>=1;k--){
+   flows.push({pts:[[xl,rows[k]],[xl,rows[k-1]]],rate:k});
+   flows.push({pts:[[xr,rows[k-1]],[xr,rows[k]]],rate:k});
+  }
+  const junc=[];
+  rows.forEach((y,i)=>{if(i<n-1||n===1)return;});
+  for(let k=1;k<n;k++){junc.push([xl,rows[k]],[xr,rows[k]]);}
+  return {wires:w, res:rows.map((y,i)=>[130,y,'R'+(i+1)]), bx:bx, by:yB, flows:flows, junc:junc};
+ }
+
+ function render(hostId,spec){
+  const el=document.getElementById(hostId);
+  el.innerHTML='<svg viewBox="0 0 260 150" role="img" aria-label="회로도. 움직이는 점이 전류의 흐름을 나타낸다.">'
+   +spec.wires+'<g class="dots"></g>'
+   +spec.junc.map(j=>'<circle cx="'+j[0]+'" cy="'+j[1]+'" r="3.2" fill="#8d7a5c"/>').join('')
+   +spec.res.map(r=>resBox(r[0],r[1],r[2])).join('')
+   +battery(spec.bx,spec.by)+'</svg>';
+  const g=el.querySelector('.dots'), out=[];
+  spec.flows.forEach(f=>{
+   const pts=f.pts, cum=[0]; let tot=0;
+   for(let i=1;i<pts.length;i++){
+    tot+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]); cum.push(tot);
+   }
+   const nD=Math.max(2,Math.round(tot/21)), dots=[];
+   for(let i=0;i<nD;i++){
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('r','3.1'); c.setAttribute('fill','#a05c2c');
+    g.appendChild(c); dots.push(c);
+   }
+   out.push({pts:pts,cum:cum,len:tot,rate:f.rate,dots:dots,off:0});
+  });
+  return out;
+ }
+ /* 점을 제자리에 놓는다 — 애니메이션이 멈춰 있어도(동작 줄이기 설정) 회로는 제대로 보여야 한다 */
+ function paint(set){
+  set.forEach(f=>{
+   const sp=f.len/f.dots.length;
+   f.dots.forEach((c,i)=>{const p=place(f,f.off+i*sp);c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);});
+  });
+ }
+ function place(f,d){
+  let d2=d%f.len; if(d2<0)d2+=f.len;
+  let i=1; while(i<f.cum.length-1&&f.cum[i]<d2)i++;
+  const t=(d2-f.cum[i-1])/((f.cum[i]-f.cum[i-1])||1);
+  return [f.pts[i-1][0]+(f.pts[i][0]-f.pts[i-1][0])*t, f.pts[i-1][1]+(f.pts[i][1]-f.pts[i-1][1])*t];
+ }
+
+ /* 도선 조각으로 바꿔 보기 — 비유를 눈으로 */
+ function wireView(kind,n){
+  const unit=54,h=15,cx=150;
+  let s='<svg viewBox="0 0 300 128" role="img" aria-label="저항체를 같은 도선 조각으로 바꿔 그린 그림.">';
+  s+='<text x="8" y="20" font-size="12.5" font-weight="700" fill="#96805c">기준 — 저항 1개</text>';
+  s+='<rect x="'+(cx-unit/2)+'" y="28" width="'+unit+'" height="'+h+'" rx="3" fill="#e0b98a" stroke="#a8763f" stroke-width="1.6"/>';
+  if(kind==='s'){
+   s+='<text x="8" y="70" font-size="12.5" font-weight="700" fill="#96805c">한 줄로 이었을 때</text>';
+   const tot=unit*n, x0=cx-tot/2;
+   for(let i=0;i<n;i++){
+    s+='<rect x="'+(x0+i*unit)+'" y="78" width="'+unit+'" height="'+h+'" rx="3" fill="#c98a4e" stroke="#7d451e" stroke-width="1.8"/>';
+   }
+   s+='<path d="M'+x0+' 102 v7 M'+x0+' 105.5 h'+tot+' M'+(x0+tot)+' 102 v7" stroke="#8a5f24" stroke-width="1.5" fill="none"/>';
+   s+='<text x="'+cx+'" y="124" text-anchor="middle" font-size="13" font-weight="700" fill="#8a5f24">길이 '+n+'배 → 저항 '+n+'배</text>';
+  }else{
+   s+='<text x="8" y="70" font-size="12.5" font-weight="700" fill="#96805c">나란히 이었을 때</text>';
+   const gap=3, tot=n*h+(n-1)*gap, y0=94-tot/2;
+   for(let i=0;i<n;i++){
+    s+='<rect x="'+(cx-unit/2)+'" y="'+(y0+i*(h+gap))+'" width="'+unit+'" height="'+h+'" rx="3" fill="#c98a4e" stroke="#7d451e" stroke-width="1.8"/>';
+   }
+   s+='<path d="M'+(cx-unit/2-10)+' '+y0+' h7 M'+(cx-unit/2-6.5)+' '+y0+' v'+tot+' M'+(cx-unit/2-10)+' '+(y0+tot)+' h7" stroke="#8a5f24" stroke-width="1.5" fill="none"/>';
+   s+='<text x="'+cx+'" y="124" text-anchor="middle" font-size="13" font-weight="700" fill="#8a5f24">통로 '+n+'배(굵기 '+n+'배) → 저항 1/'+n+'배</text>';
+  }
+  return s+'</svg>';
+ }
+
+ /* ── 상태와 갱신 ── */
+ const ST={s:2,p:2};
+ let FS0=[],FS1=[],FP0=[],FP1=[];
+ function drawSeries(){
+  const n=ST.s;
+  FS0=render('cS0',specSeries(1)); FS1=render('cS1',specSeries(n));
+  paint(FS0); paint(FS1);
+  $('#ctS').textContent='직렬 — 저항 '+n+'개';
+  $('#nS0').innerHTML='<span class="r">R전체 10 Ω</span><span class="i">I 0.30 A</span>';
+  $('#nS1').innerHTML='<span class="r">R전체 '+num(R1*n)+' Ω</span><span class="i">I '+(EMF/(R1*n)).toFixed(2)+' A</span>';
+  const st=$('#stageS'); st.hidden=!$('#wireS').checked;
+  if(!st.hidden)st.innerHTML=wireView('s',n);
+ }
+ function drawPara(){
+  const n=ST.p;
+  FP0=render('cP0',specPara(1)); FP1=render('cP1',specPara(n));
+  paint(FP0); paint(FP1);
+  $('#ctP').textContent='병렬 — 저항 '+n+'개';
+  $('#nP0').innerHTML='<span class="r">R전체 10 Ω</span><span class="i">I 0.30 A</span>';
+  $('#nP1').innerHTML='<span class="r">R전체 '+num(R1/n)+' Ω</span><span class="i">전체 I '+(EMF/R1*n).toFixed(2)+' A</span>'
+   +'<span class="i">갈래마다 0.30 A</span>';
+  const st=$('#stageP'); st.hidden=!$('#wireP').checked;
+  if(!st.hidden)st.innerHTML=wireView('p',n);
+ }
+
+ function tellS(){
+  const n=ST.s, box=$('#obsS'); box.style.display='block'; box.classList.add('hit');
+  box.innerHTML='저항 '+n+'개를 한 줄로 이었더니 전체 저항 <b>'+num(R1*n)+' Ω</b>, 전류 <b>'+(EMF/(R1*n)).toFixed(2)+' A</b> — '
+   +'기준 회로(10 Ω, 0.30 A)보다 저항이 <b>커지고</b> 점이 <b>느려졌습니다.</b>'
+   +(S.wPredS?(S.wPredS==='up'?' 예상한 대로였네요 👍':' 예상과는 달랐죠? 그게 바로 오늘 챙길 지점입니다.'):'');
+ }
+ function tellP(){
+  const n=ST.p, box=$('#obsP'); box.style.display='block'; box.classList.add('hit');
+  box.innerHTML='저항 '+n+'개를 나란히 이었더니 전체 저항 <b>'+num(R1/n)+' Ω</b>, 전체 전류 <b>'+(EMF/R1*n).toFixed(2)+' A</b> — '
+   +'저항이 <b>작아지고</b> 줄기의 점이 <b>빨라졌습니다.</b> 그런데 <b>갈래마다 흐르는 전류는 0.30 A로 기준 회로와 같아요.</b>'
+   +(S.wPredP?(S.wPredP==='down'?' 예상한 대로였네요 👍':' 예상과는 달랐죠? 그게 바로 오늘 챙길 지점입니다.'):'');
+ }
+ function unlock(){
+  if(S.wTriedS&&S.wTriedP){$('#whyAfter').classList.add('open');$('#whyLockMsg').classList.add('gone');}
+ }
+
+ $('#segS').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  $$('#segS button').forEach(x=>x.classList.toggle('on',x===b));
+  ST.s=+b.dataset.n; drawSeries(); A.pop();
+  if(ST.s>1){tellS(); if(!S.wTriedS){S.wTriedS=1;save();updateProgress();} unlock();}
+ });
+ $('#segP').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  $$('#segP button').forEach(x=>x.classList.toggle('on',x===b));
+  ST.p=+b.dataset.n; drawPara(); A.pop();
+  if(ST.p>1){tellP(); if(!S.wTriedP){S.wTriedP=1;save();updateProgress();} unlock();}
+ });
+ $('#wireS').addEventListener('change',()=>{$('#togS').classList.toggle('on',$('#wireS').checked);drawSeries();});
+ $('#wireP').addEventListener('change',()=>{$('#togP').classList.toggle('on',$('#wireP').checked);drawPara();});
+ host.addEventListener('click',e=>{
+  const b=e.target.closest('[data-wreset]'); if(!b)return;
+  const k=b.dataset.wreset;
+  if(k==='s'){ST.s=2;$$('#segS button').forEach(x=>x.classList.toggle('on',x.dataset.n==='2'));
+   $('#wireS').checked=false;$('#togS').classList.remove('on');drawSeries();}
+  else{ST.p=2;$$('#segP button').forEach(x=>x.classList.toggle('on',x.dataset.n==='2'));
+   $('#wireP').checked=false;$('#togP').classList.remove('on');drawPara();}
+ });
+
+ drawSeries(); drawPara();
+ if(S.wTriedS)tellS(); if(S.wTriedP)tellP(); unlock();
+
+ /* 점 움직이기 — 견주는 화면이 보일 때만 */
+ let last=0;
+ function frame(t){
+  const dt=Math.min(.05,(t-last)/1000); last=t;
+  const vis=$('#panel-compare')&&$('#panel-compare').classList.contains('show')
+   &&!document.body.classList.contains('cover-on');
+  if(vis&&!reduceMotion){
+   [FS0,FS1,FP0,FP1].forEach(set=>{set.forEach(f=>{f.off+=f.rate*26*dt;});paint(set);});
+  }
+  requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
 })();
 
 (function init(){

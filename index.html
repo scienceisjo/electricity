@@ -328,6 +328,107 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 @media print{body::after{display:none}}
 </style>
 
+
+<style id="ink-emphasis-fix">
+/* ── 강조 글씨를 종이 위에서 읽히는 잉크색으로 ──
+   어두운 화면용 규칙(b.k{color:#fff})이 남아 크림색 배경에 흰 글씨가 되던 것을 덮는다.
+   색 배경 위에 얹히는 배지·버튼의 흰 글씨는 그대로 둔다. */
+b.k, .k{color:var(--ink)}
+.doit b.k, .lead b.k, .help b.k, p b.k, li b.k, .u-d b.k, .note b.k, .de b.k{
+  color:var(--ink);
+  background:linear-gradient(transparent 58%, rgba(185,135,60,.34) 58%);
+  padding:0 2px;border-radius:2px;font-weight:800}
+/* 색을 지정해 둔 강조는 그 색을 지킨다 */
+b.k[style*="color"], .k[style*="color"]{background:none}
+.badge b.k, .btn b.k, .sbadge b.k, .mq-badge b.k, .pill b.k{background:none;color:inherit}
+</style>
+
+<style id="why-module">
+/* ══════════ '왜 그럴까?' 모듈 ══════════
+   결론을 먼저 말하지 않는다. 아는 것 → 힌트 → 예상 → 조작 → 관찰 → 이유 → 정리. */
+.why-mod{border:2px solid var(--brass);background:linear-gradient(180deg,var(--paper-hi),var(--paper));
+ border-radius:18px;padding:22px 20px;margin-top:22px;box-shadow:var(--shadow)}
+.why-q{display:flex;gap:12px;align-items:flex-start}
+.why-q .qi{font-size:30px;line-height:1.1}
+.why-q .qt{font-family:var(--jua);font-size:clamp(20px,3.1vw,26px);color:var(--ink);line-height:1.45}
+.why-step{margin-top:20px;border-top:1px dashed var(--line);padding-top:18px}
+.why-h{display:flex;align-items:center;gap:9px;font-family:var(--jua);font-size:18.5px;color:var(--accent);margin-bottom:9px}
+.why-h .no{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;
+ background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));color:#fff;font-size:15px;
+ border:1px solid var(--brass-dk);flex:none}
+.why-step>p{font-size:15.5px;color:var(--ink-dim);line-height:1.72}
+
+/* 기억해 보기 — 도선 되짚기 */
+.recall{display:grid;gap:12px;grid-template-columns:1fr;background:#f6efdf;border:1px solid var(--line);
+ border-radius:13px;padding:14px;margin-top:10px}
+@media(min-width:780px){.recall{grid-template-columns:1fr 236px}}
+.recall .rc-svg{background:#faf4e6;border:1px solid var(--line-soft);border-radius:11px;padding:8px}
+.recall svg{display:block;width:100%;height:auto}
+.rbar{height:16px;border-radius:99px;background:#e7dbbe;border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.rbar i{display:block;height:100%;background:linear-gradient(90deg,var(--brass-hi),var(--c1));transition:width .3s}
+
+/* 예상하기 — 채점하지 않는다 */
+.wpick{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+.wpick button{flex:1 1 148px;font-family:var(--body);font-size:15px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;
+ padding:11px 13px;cursor:pointer;transition:.15s}
+.wpick button:hover{border-color:var(--accent);color:var(--ink)}
+.wpick button.sel{border-color:var(--c2);background:rgba(125,91,166,.13);color:var(--ink)}
+.wpick.small button{flex:1 1 108px;font-size:14.5px;padding:9px 11px}
+
+/* 회로 시뮬레이션 */
+.wsim{margin-top:12px}
+.duo{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:700px){.duo{grid-template-columns:1fr 1fr}}
+.wcirc{background:#faf4e6;border:1px solid var(--line);border-radius:13px;padding:10px 10px 8px}
+.wcirc.hi{border-color:var(--accent);box-shadow:0 0 0 2px rgba(160,92,44,.15)}
+.wcirc .ct{font-family:var(--jua);font-size:15.5px;text-align:center;color:var(--ink-dim);margin-bottom:3px}
+.wcirc svg{display:block;width:100%;height:auto}
+.wnum{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:5px}
+.wnum span{font-family:var(--mono);font-size:14px;font-weight:700;background:#f2e8d2;border:1px solid var(--line);
+ border-radius:99px;padding:3px 10px;color:var(--ink)}
+.wnum span.r{color:var(--c1)} .wnum span.i{color:var(--c6)}
+.wbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.wbar .lbl{font-size:14px;font-weight:700;color:var(--ink-dim)}
+.wtog{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-radius:99px;padding:7px 14px;cursor:pointer}
+.wtog input{width:15px;height:15px;accent-color:var(--accent)}
+.wtog.on{border-color:var(--accent);color:var(--ink)}
+
+/* 접이식 — 계산식은 맨 마지막에, 눌러야 펼쳐진다 */
+.wfold{margin-top:16px}
+.wfold>summary{cursor:pointer;list-style:none;font-family:var(--jua);font-size:16.5px;color:var(--c2);
+ background:rgba(125,91,166,.08);border:1.5px solid var(--c2);border-radius:12px;padding:11px 15px}
+.wfold>summary::-webkit-details-marker{display:none}
+.wfold>summary::before{content:"▸ "}
+.wfold[open]>summary::before{content:"▾ "}
+.wfold .fold-in{padding:14px 4px 2px;font-size:15.5px;color:var(--ink-dim);line-height:1.85}
+.eqline{font-family:var(--mono);font-size:17px;color:var(--ink);text-align:center;margin:9px 0;font-weight:700}
+.obs-list{margin:8px 0 0;padding-left:19px}
+.obs-list li{font-size:15.5px;color:var(--ink-dim);margin:7px 0;line-height:1.7}
+.obs-list li b{color:var(--ink)}
+
+/* ══════════ 교과서식 비교표 빈칸 ══════════ */
+.ctab-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:#faf4e6;margin-top:14px}
+.ctab{border-collapse:collapse;width:100%;min-width:660px}
+.ctab th,.ctab td{border:1px solid var(--line-soft);padding:11px 13px;vertical-align:top;
+ font-size:15.5px;line-height:1.95;color:var(--ink-dim)}
+.ctab thead th{background:#efe4c9;text-align:center;font-family:var(--jua);font-size:17.5px;color:var(--ink);vertical-align:middle}
+.ctab thead th .sub{display:block;font-family:var(--body);font-size:12.5px;font-weight:600;
+ color:var(--ink-mute);margin-top:4px;line-height:1.5}
+.ctab thead th.sc{color:var(--accent)} .ctab thead th.pc{color:var(--c2)}
+.ctab th.rh{background:#f2e8d2;width:84px;min-width:84px;text-align:center;font-family:var(--jua);
+ font-size:16.5px;color:var(--ink);vertical-align:middle;line-height:1.4}
+.ctab td.dia{text-align:center;padding:8px}
+.ctab td.dia svg{display:block;width:100%;max-width:300px;height:auto;margin:0 auto}
+.ctab .fx{display:block;text-align:center;font-family:var(--mono);font-size:16.5px;font-weight:700;
+ color:var(--ink);margin:7px 0 3px;letter-spacing:.3px}
+.ctab ul{margin:0;padding-left:17px}
+.ctab li{margin:5px 0}
+.ctab .tip{display:block;font-size:13px;color:var(--ink-mute);margin-top:5px;padding-left:15px;
+ text-indent:-15px;line-height:1.6}
+@media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
+</style>
 </head>
 <body>
 <div id="bgLayer"></div>
@@ -476,6 +577,17 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  </section>
 
  <div class="lessons">
+
+ <a class="lesson ready" style="--k:#b9873c" data-id="l0" href="00-basics.html">
+ <div class="thumb" data-thumb="l0"></div>
+ <span class="seen">✅</span>
+ <div class="top"><div class="no">0</div><span class="badge ok">들어가기 · 20분</span></div>
+ <h3>회로를 그리기 전에, 기호부터<br>— 기본 다지기</h3>
+ <p class="why">전지·저항·전구·스위치의 전기 기호를 카드로 외우고, 이 중단원을 배우는 데 필요한 선수 지식이 남아 있는지 8문항으로 점검합니다. 차시가 아니라 <b>준비 시간</b>이에요.</p>
+ <div class="tags"><span class="tag">전기 기호</span><span class="tag">카드 암기</span><span class="tag">선수 지식 점검</span></div>
+ <div class="go">준비하러 가기 →</div>
+ <div class="tnote"><span class="ic">💬</span><div><b>쓰는 때</b> — 3차시 도입 5~10분, 또는 결시생·부진 학생의 개별 보충용으로 쓰면 좋습니다. 점검 문항 7번(전지 두 개 직렬 → 밝아진다)은 5차시 <b>저항의 직렬연결</b>과 결과가 반대라 일부러 넣었습니다 — 여기서 미리 갈라 두세요.</div></div>
+ </a>
 
  <a class="lesson ready" style="--k:#a05c2c" data-id="l3" href="03-current.html">
  <div class="thumb" data-thumb="l3"></div>
@@ -665,6 +777,7 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 const HUB_IMG={
   hero:'img/e-hub-hero.jpg',
   page:'img/e-bg-hub.jpg',
+  l0:'img/e-hub-l0.png',  // 기본 다지기 — 전기 기호와 선수 지식
   l1:'img/e-hub-l1.png',  // 마찰 전기와 전기력
   l2:'img/e-hub-l2.png',  // 정전기 유도
   l3:'img/e-hub-l3.png',  // 전하의 이동과 전류

@@ -622,6 +622,131 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 }
 @media(prefers-reduced-motion:reduce){.cover-bulb .filament{animation:none;stroke:#ffcf7d}}
 </style>
+
+<style id="ink-emphasis-fix">
+/* ── 강조 글씨를 종이 위에서 읽히는 잉크색으로 ──
+   어두운 화면용 규칙(b.k{color:#fff})이 남아 크림색 배경에 흰 글씨가 되던 것을 덮는다.
+   색 배경 위에 얹히는 배지·버튼의 흰 글씨는 그대로 둔다. */
+b.k, .k{color:var(--ink)}
+.doit b.k, .lead b.k, .help b.k, p b.k, li b.k, .u-d b.k, .note b.k, .de b.k{
+  color:var(--ink);
+  background:linear-gradient(transparent 58%, rgba(185,135,60,.34) 58%);
+  padding:0 2px;border-radius:2px;font-weight:800}
+/* 색을 지정해 둔 강조는 그 색을 지킨다 */
+b.k[style*="color"], .k[style*="color"]{background:none}
+.badge b.k, .btn b.k, .sbadge b.k, .mq-badge b.k, .pill b.k{background:none;color:inherit}
+</style>
+
+<style id="board-mode">
+/* ══════════ 판서 모드 ══════════
+   학생 화면 = 키워드만. 글자가 적어야 아이들이 화면을 읽느라 지치지 않고,
+   빈 자리에 선생님이 판서하며 설명을 이어 갈 수 있다.
+   🧑‍🏫 교사 모드를 켜면 원래의 문장형 설명이 나온다. */
+.say{display:none}
+body.teacher .say{display:revert}
+
+/* 키워드 줄 — 크고 시원하게, 아래에 판서 여백 */
+.keyline-s{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 20px}
+body.teacher .keyline-s{display:none}
+.keyline-s .kw{font-family:var(--jua);font-size:clamp(19px,2.6vw,25px);font-weight:800;color:var(--ink);
+  background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;
+  border-radius:12px;padding:9px 18px;line-height:1.35}
+.keyline-s .kw.hi{border-color:var(--accent);background:#f6e8d8;color:var(--accent)}
+.keyline-s .kw.q{border-style:dashed;color:var(--ink-dim)}
+.keyline-s .arw{font-size:22px;color:var(--ink-mute);font-weight:800}
+.keyline-s .memo{flex:1 1 100%;min-height:34px}          /* 판서용 빈 자리 */
+@media(max-width:520px){.keyline-s{gap:8px}.keyline-s .kw{padding:8px 14px}}
+
+/* 인쇄物에서는 둘 다 보이게 — 학습지로 뽑을 때 설명이 사라지면 곤란하다 */
+@media print{.say{display:revert!important}.keyline-s{display:flex!important}}
+</style>
+
+<style id="why-module">
+/* ══════════ '왜 그럴까?' 모듈 ══════════
+   결론을 먼저 말하지 않는다. 아는 것 → 힌트 → 예상 → 조작 → 관찰 → 이유 → 정리. */
+.why-mod{border:2px solid var(--brass);background:linear-gradient(180deg,var(--paper-hi),var(--paper));
+ border-radius:18px;padding:22px 20px;margin-top:22px;box-shadow:var(--shadow)}
+.why-q{display:flex;gap:12px;align-items:flex-start}
+.why-q .qi{font-size:30px;line-height:1.1}
+.why-q .qt{font-family:var(--jua);font-size:clamp(20px,3.1vw,26px);color:var(--ink);line-height:1.45}
+.why-step{margin-top:20px;border-top:1px dashed var(--line);padding-top:18px}
+.why-h{display:flex;align-items:center;gap:9px;font-family:var(--jua);font-size:18.5px;color:var(--accent);margin-bottom:9px}
+.why-h .no{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;
+ background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));color:#fff;font-size:15px;
+ border:1px solid var(--brass-dk);flex:none}
+.why-step>p{font-size:15.5px;color:var(--ink-dim);line-height:1.72}
+
+/* 기억해 보기 — 도선 되짚기 */
+.recall{display:grid;gap:12px;grid-template-columns:1fr;background:#f6efdf;border:1px solid var(--line);
+ border-radius:13px;padding:14px;margin-top:10px}
+@media(min-width:780px){.recall{grid-template-columns:1fr 236px}}
+.recall .rc-svg{background:#faf4e6;border:1px solid var(--line-soft);border-radius:11px;padding:8px}
+.recall svg{display:block;width:100%;height:auto}
+.rbar{height:16px;border-radius:99px;background:#e7dbbe;border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.rbar i{display:block;height:100%;background:linear-gradient(90deg,var(--brass-hi),var(--c1));transition:width .3s}
+
+/* 예상하기 — 채점하지 않는다 */
+.wpick{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+.wpick button{flex:1 1 148px;font-family:var(--body);font-size:15px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;
+ padding:11px 13px;cursor:pointer;transition:.15s}
+.wpick button:hover{border-color:var(--accent);color:var(--ink)}
+.wpick button.sel{border-color:var(--c2);background:rgba(125,91,166,.13);color:var(--ink)}
+.wpick.small button{flex:1 1 108px;font-size:14.5px;padding:9px 11px}
+
+/* 회로 시뮬레이션 */
+.wsim{margin-top:12px}
+.duo{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:700px){.duo{grid-template-columns:1fr 1fr}}
+.wcirc{background:#faf4e6;border:1px solid var(--line);border-radius:13px;padding:10px 10px 8px}
+.wcirc.hi{border-color:var(--accent);box-shadow:0 0 0 2px rgba(160,92,44,.15)}
+.wcirc .ct{font-family:var(--jua);font-size:15.5px;text-align:center;color:var(--ink-dim);margin-bottom:3px}
+.wcirc svg{display:block;width:100%;height:auto}
+.wnum{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:5px}
+.wnum span{font-family:var(--mono);font-size:14px;font-weight:700;background:#f2e8d2;border:1px solid var(--line);
+ border-radius:99px;padding:3px 10px;color:var(--ink)}
+.wnum span.r{color:var(--c1)} .wnum span.i{color:var(--c6)}
+.wbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.wbar .lbl{font-size:14px;font-weight:700;color:var(--ink-dim)}
+.wtog{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-radius:99px;padding:7px 14px;cursor:pointer}
+.wtog input{width:15px;height:15px;accent-color:var(--accent)}
+.wtog.on{border-color:var(--accent);color:var(--ink)}
+
+/* 접이식 — 계산식은 맨 마지막에, 눌러야 펼쳐진다 */
+.wfold{margin-top:16px}
+.wfold>summary{cursor:pointer;list-style:none;font-family:var(--jua);font-size:16.5px;color:var(--c2);
+ background:rgba(125,91,166,.08);border:1.5px solid var(--c2);border-radius:12px;padding:11px 15px}
+.wfold>summary::-webkit-details-marker{display:none}
+.wfold>summary::before{content:"▸ "}
+.wfold[open]>summary::before{content:"▾ "}
+.wfold .fold-in{padding:14px 4px 2px;font-size:15.5px;color:var(--ink-dim);line-height:1.85}
+.eqline{font-family:var(--mono);font-size:17px;color:var(--ink);text-align:center;margin:9px 0;font-weight:700}
+.obs-list{margin:8px 0 0;padding-left:19px}
+.obs-list li{font-size:15.5px;color:var(--ink-dim);margin:7px 0;line-height:1.7}
+.obs-list li b{color:var(--ink)}
+
+/* ══════════ 교과서식 비교표 빈칸 ══════════ */
+.ctab-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:#faf4e6;margin-top:14px}
+.ctab{border-collapse:collapse;width:100%;min-width:660px}
+.ctab th,.ctab td{border:1px solid var(--line-soft);padding:11px 13px;vertical-align:top;
+ font-size:15.5px;line-height:1.95;color:var(--ink-dim)}
+.ctab thead th{background:#efe4c9;text-align:center;font-family:var(--jua);font-size:17.5px;color:var(--ink);vertical-align:middle}
+.ctab thead th .sub{display:block;font-family:var(--body);font-size:12.5px;font-weight:600;
+ color:var(--ink-mute);margin-top:4px;line-height:1.5}
+.ctab thead th.sc{color:var(--accent)} .ctab thead th.pc{color:var(--c2)}
+.ctab th.rh{background:#f2e8d2;width:84px;min-width:84px;text-align:center;font-family:var(--jua);
+ font-size:16.5px;color:var(--ink);vertical-align:middle;line-height:1.4}
+.ctab td.dia{text-align:center;padding:8px}
+.ctab td.dia svg{display:block;width:100%;max-width:300px;height:auto;margin:0 auto}
+.ctab .fx{display:block;text-align:center;font-family:var(--mono);font-size:16.5px;font-weight:700;
+ color:var(--ink);margin:7px 0 3px;letter-spacing:.3px}
+.ctab ul{margin:0;padding-left:17px}
+.ctab li{margin:5px 0}
+.ctab .tip{display:block;font-size:13px;color:var(--ink-mute);margin-top:5px;padding-left:15px;
+ text-indent:-15px;line-height:1.6}
+@media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -675,7 +800,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  </button>
  <div class="head-right">
  <a class="hbtn" href="index.html" title="단원 허브로">⚡</a>
- <button class="hbtn" id="tmodeBtn" title="교사 모드">🧑‍🏫</button>
+ <button class="hbtn" id="tmodeBtn" title="교사 모드 — 문장 설명과 교실 노트 보기">🧑‍🏫</button>
  <div class="progress-mini" id="progWrap" title="진행도 — 누르면 남은 활동이 보여요">
  <svg class="pgauge" viewBox="0 0 96 56" aria-hidden="true">
  <path d="M10 50 A38 38 0 0 1 86 50" fill="#f6eedb" stroke="#7d541e" stroke-width="2.5"/>
@@ -713,12 +838,13 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel show" id="panel-open">
  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">생각 열기 · 공중에 뜬 액자의 비밀</span></div>
  <h1 class="big">코일은 어떻게<br>자석을 <span style="color:#2c6e5f">끌어당기는</span> 것일까?</h1>
- <p class="lead" style="margin-top:16px">
+ <p class="lead say" style="margin-top:16px">
  자석이 든 액자가 받침대 위 허공에 <b class="k">둥둥 떠</b> 있습니다.
  액자에는 아래로 당기는 중력이 작용하는데도 떨어지지 않아요.
  그런데 받침대 속에 든 것은 자석이 아니라 <b class="k">도선을 여러 번 감은 코일</b>.
  코일에 무슨 일이 생기길래 자석을 끌어당길 수 있을까요?
  </p>
+ <div class="keyline-s"><span class="kw">액자가 떠 있다</span><span class="kw">받침대 속은 코일</span><span class="arw">→</span><span class="kw q">코일이 어떻게 자석을 당기나?</span><span class="memo"></span></div>
  <figure class="fig" data-fig="co-frame"
  data-alt="받침대 위 허공에 떠 있는 액자 — 받침대 속의 코일이 액자 안의 자석을 끌어당기고 있다"
  data-cap="어떻게 떠 있는 거야? — 받침대 속에는 코일이 있다 (도입)"></figure>
@@ -738,11 +864,12 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🧭 탐구 준비 — 자기장, 그리고 나침반 읽는 법</h3>
- <p class="lead" style="font-size:17px;margin-top:8px">
+ <p class="lead say" style="font-size:17px;margin-top:8px">
  자석에 나침반을 가까이 하면 바늘이 움직입니다. 자석 주위에 <b class="k">자기력</b>이 작용하기 때문이죠.
  자석 주위에 철 가루를 뿌리면 철 가루가 자기력을 받아 늘어서는 것도 같은 까닭입니다.
  이렇게 <b class="k">자기력이 작용하는 공간</b>을 <b style="color:#2c6e5f">자기장</b>이라고 해요.
  그렇다면 눈에 보이지 않는 자기장의 <b>방향</b>은 무엇으로 정할까요?</p>
+ <div class="keyline-s"><span class="kw">자기력이 작용하는 공간</span><span class="arw">→</span><span class="kw hi">자기장</span><span class="arw">→</span><span class="kw q">코일 주위는?</span><span class="memo"></span></div>
  <div class="modebar" id="warmBar">
  <button class="btn ghost sm" data-warm="n">① 나침반 바늘의 N극이 가리키는 방향</button>
  <button class="btn ghost sm" data-warm="s">② 나침반 바늘의 S극이 가리키는 방향</button>
@@ -790,16 +917,18 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-explore">
  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">탐구하기 · 예상 먼저, 관찰은 그다음</span></div>
  <h2 class="sec">스위치를 닫고, 나침반을 지켜봅시다</h2>
- <p class="lead">「탐구」입니다. 코일 주위에 <b class="k">나침반</b>을 놓고 스위치를 닫으면
+ <p class="lead say">「탐구」입니다. 코일 주위에 <b class="k">나침반</b>을 놓고 스위치를 닫으면
  바늘이 어떻게 될까요? <b style="color:#a05c2c">전류의 방향</b>을 바꾸면요?
  단, <b class="k">관찰하기 전에 예상부터</b> 합니다.</p>
+ <div class="keyline-s"><span class="kw">나침반 + 스위치</span><span class="kw">전류 방향 바꾸면?</span><span class="arw">→</span><span class="kw hi">예상 먼저</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🔮 먼저 예상해 봅시다</h3>
- <p class="lead" style="font-size:17.5px;margin-top:10px">
+ <p class="lead say" style="font-size:17.5px;margin-top:10px">
  스위치를 닫았더니 나침반 바늘이 돌아가 멈췄습니다. 이제 전원 장치의
  <b style="color:#b23a30">(+)극</b>과 <b style="color:#2e5f8f">(−)극</b>에 연결된 두 전선을
  <b class="k">서로 바꾸어</b> 연결하면(전류의 방향 반전) — 나침반 바늘은 어떻게 될까요?</p>
+ <div class="keyline-s"><span class="kw">(+)(−)를 바꾸어 연결</span><span class="arw">→</span><span class="kw q">바늘은 어떻게 될까?</span><span class="memo"></span></div>
  <div class="modebar" id="poeBar">
  <button class="btn ghost sm" data-poe="flip">① 반대로 돌아간다</button>
  <button class="btn ghost sm" data-poe="same">② 처음 그대로다</button>
@@ -829,10 +958,11 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="badge" style="margin-bottom:12px">🧲 가상 실험 — 스위치·방향·세기·감은 수를 바꿔 보기</div>
  <div class="lab">
  <h3>🧲 코일 실험대</h3>
- <p class="lead" style="font-size:17px">스위치를 닫고 <b class="k">나침반의 빨간 바늘(N극)</b>을 지켜보세요.
+ <p class="lead say" style="font-size:17px">스위치를 닫고 <b class="k">나침반의 빨간 바늘(N극)</b>을 지켜보세요.
  (+)(−)를 바꾸면? 전류를 세게 하면? 촘촘히 감으면?
  관찰한 상태는 <b>📌 기록</b>을 눌러 표에 쌓입니다.
  <b class="k">(+)(−)를 바꾼 경우까지 꼭 기록</b>해야 아까의 예상이 판정됩니다.</p>
+ <div class="keyline-s"><span class="kw">스위치 닫기 → 빨간 바늘(N극)</span><span class="kw">(+)(−) 바꾸기 · 세게 · 촘촘히</span><span class="arw">→</span><span class="kw hi">📌 기록</span><span class="memo"></span></div>
  <div class="simgrid">
  <div>
  <div class="svgstage">
@@ -965,7 +1095,8 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="r"><div class="lab2">🌫️ 자기장 세기</div><div class="v" id="rMag" style="color:#2c6e5f;font-size:15.5px"><small>자기장 없음</small></div></div>
  <div class="r"><div class="lab2">🧭 나침반 N극</div><div class="v" id="rNeedle" style="color:#4a3a26;font-size:15.5px">북쪽 (남북 방향)</div></div>
  </div>
- <p class="help">전류의 세기와 감은 수를 바꾸면 <b>자기장 세기</b> 칸이 변해요. 방향을 정하는 손잡이와 세기를 정하는 손잡이가 서로 다릅니다 — 갈라서 보세요.</p>
+ <p class="help say">전류의 세기와 감은 수를 바꾸면 <b>자기장 세기</b> 칸이 변해요. 방향을 정하는 손잡이와 세기를 정하는 손잡이가 서로 다릅니다 — 갈라서 보세요.</p>
+ <div class="keyline-s"><span class="kw">방향 손잡이</span><span class="kw">세기 손잡이</span><span class="arw">→</span><span class="kw hi">서로 다르다</span><span class="memo"></span></div>
  </div>
  </div>
  <div class="verdict" id="labMsg">먼저 <b>스위치를 닫은 상태</b>를 기록하고, 이어서 <b>(+)(−)를 바꾸어 연결한 상태</b>도 기록해 보세요.</div>
@@ -992,7 +1123,8 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  또 전류의 세기가 세지면 클립이 <b>더 많이 끌려온다</b> —
  클립이 받는 <b>자기력(자기장의 세기)이 커지기 때문</b>이다.
  </div>
- <p class="help">이 두 문장에 이름과 규칙을 붙이는 것이 <b class="k">3단계</b>입니다. 자기장의 모양, 방향을 찾는 오른손, 그리고 세기의 규칙까지.</p>
+ <p class="help say">이 두 문장에 이름과 규칙을 붙이는 것이 <b class="k">3단계</b>입니다. 자기장의 모양, 방향을 찾는 오른손, 그리고 세기의 규칙까지.</p>
+ <div class="keyline-s"><span class="kw">두 문장에 이름 붙이기</span><span class="arw">→</span><span class="kw">모양 · 방향 · 세기</span><span class="memo"></span></div>
  </div>
  <div class="cta-row"><button class="btn primary" data-go="rule">3단계 · 규칙으로 정리하기 →</button></div>
 </section>
@@ -1001,15 +1133,17 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-rule">
  <div class="stepline"><span class="sbadge">STEP 3</span><span class="swhat">규칙 세우기 · 관찰을 세 개의 규칙으로</span></div>
  <h2 class="sec">관찰한 것을 세 개의 규칙으로 정리합시다</h2>
- <p class="lead">나침반이 돌고, 클립이 끌려왔습니다. 이 관찰을 과학의 말로 바꾸면
+ <p class="lead say">나침반이 돌고, 클립이 끌려왔습니다. 이 관찰을 과학의 말로 바꾸면
  <b class="k">모양 · 방향 · 세기</b>, 딱 세 개의 규칙이 됩니다.</p>
+ <div class="keyline-s"><span class="kw">나침반이 돌고 클립이 끌림</span><span class="arw">→</span><span class="kw hi">세 규칙으로</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">규칙 ① — 전류가 흐르는 코일 주위에는 자기장이 생긴다</h3>
- <p class="lead" style="font-size:17px;margin-top:8px">
+ <p class="lead say" style="font-size:17px;margin-top:8px">
  스위치를 닫는 순간 나침반이 움직였죠. 코일 주위에 <b style="color:#2c6e5f">자기장</b>이 생겼다는 증거입니다.
  그 모양은 <b class="k">막대자석 주위에 생기는 자기장의 모양과 비슷</b>해요.
  그래서 전류가 흐르는 코일에도 자석처럼 <b style="color:#b3362e">N극</b>과 <b style="color:#2e5f8f">S극</b>이 생깁니다.</p>
+ <div class="keyline-s"><span class="kw">코일 주위에 자기장</span><span class="kw">막대자석과 비슷한 모양</span><span class="arw">→</span><span class="kw hi">코일에도 N극 · S극</span><span class="memo"></span></div>
  <div class="svgstage">
  <svg viewBox="0 0 560 250" role="img" aria-label="막대자석 주위의 자기장과 전류가 흐르는 코일 주위의 자기장을 비교한 그림. 두 자기장의 모양이 서로 비슷하다.">
  <text x="280" y="28" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="800" fill="#2c6e5f">모양이 서로 비슷하다!</text>
@@ -1049,9 +1183,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">규칙 ② — 방향은 오른손이 알려 준다</h3>
- <p class="lead" style="font-size:17px;margin-top:8px">
+ <p class="lead say" style="font-size:17px;margin-top:8px">
  코일의 어느 쪽이 N극일까요? <b class="k">오른손 네 손가락을 코일에 흐르는 전류의 방향으로 감아쥐면,
  엄지손가락이 가리키는 방향</b>이 자기장의 방향 — 곧 <b style="color:#b3362e">N극 쪽</b>입니다.</p>
+ <div class="keyline-s"><span class="kw">오른손 네 손가락 = 전류</span><span class="arw">→</span><span class="kw hi">엄지 = N극</span><span class="memo"></span></div>
  <div class="svgstage">
  <svg viewBox="0 0 560 260" role="img" aria-label="오른손으로 코일을 감아쥔 모습을 나타낸 도해. 네 손가락은 코일에 흐르는 전류의 방향을 따라 감아쥐고, 엄지손가락은 자기장의 방향, 즉 코일의 N극 쪽을 가리킨다.">
  <ellipse cx="350" cy="130" rx="7" ry="34" fill="none" stroke="#a05c2c" stroke-width="2.5"/>
@@ -1077,8 +1212,9 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <text x="232" y="164" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="800" fill="#b3362e">이쪽이 N극</text>
  </svg>
  </div>
- <p class="help">전류의 방향이 반대가 되면 감아쥐는 방향도 반대 — 엄지도 반대쪽을 가리킵니다.
+ <p class="help say">전류의 방향이 반대가 되면 감아쥐는 방향도 반대 — 엄지도 반대쪽을 가리킵니다.
  실험대에서 (+)(−)를 바꿨을 때 나침반이 반대로 돌았던 것과 정확히 같은 이야기예요.</p>
+ <div class="keyline-s"><span class="kw">전류가 반대</span><span class="arw">→</span><span class="kw">감아쥐는 방향도 반대</span><span class="arw">→</span><span class="kw hi">엄지도 반대</span><span class="memo"></span></div>
 
  <h3 class="card-t" style="margin-top:22px">🖐️ 연습 — 코일의 N극을 찾아라</h3>
  <p class="lead" style="font-size:16.5px;margin-top:6px">화살표는 코일 <b class="k">앞면</b>에서 전류가 흐르는 방향입니다. 오른손을 감아쥐고 N극을 골라 보세요.</p>
@@ -1128,9 +1264,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">규칙 ③ — 세기는 전류와 감은 수가 정한다</h3>
- <p class="lead" style="font-size:17px;margin-top:8px">
+ <p class="lead say" style="font-size:17px;margin-top:8px">
  전류를 세게 하니 클립이 더 많이 끌려왔죠. <b class="k">전류의 세기가 셀수록</b>,
  그리고 같은 길이에 도선을 <b class="k">촘촘히 많이 감을수록</b> 코일 주위 자기장의 세기가 커집니다.</p>
+ <div class="keyline-s"><span class="kw">전류 세게 · 촘촘히 많이</span><span class="arw">→</span><span class="kw hi">자기장 세기 ↑</span><span class="memo"></span></div>
  <div class="pill-list">
  <span class="pill">🔺 세게 만들기 ① — <b>전류를 세게</b></span>
  <span class="pill">🔺 세게 만들기 ② — <b>도선을 촘촘히 감기</b></span>
@@ -1144,7 +1281,8 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🔬 가상실험실에서 더 해 보기</h3>
- <p class="help">오늘 세운 세 규칙을 다른 화면에서도 확인해 보세요. 직접 조작해 보면 훨씬 잘 보입니다. 새 창에서 열려요.</p>
+ <p class="help say">오늘 세운 세 규칙을 다른 화면에서도 확인해 보세요. 직접 조작해 보면 훨씬 잘 보입니다. 새 창에서 열려요.</p>
+ <div class="keyline-s"><span class="kw">다른 화면에서도 확인해 보기</span><span class="memo"></span></div>
  <a class="linkcard" href="https://javalab.org/ko/magnetic_field_around_a_coil/" target="_blank" rel="noopener">
  <span class="lc-e">🧪</span>
  <span><span class="lc-t">코일 주위의 자기장 <span style="font-size:13px;opacity:.75">(자바실험실)</span></span>
@@ -1210,8 +1348,9 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-apply">
  <div class="stepline"><span class="sbadge">STEP 4</span><span class="swhat">적용하기 · 코일의 자기장이 일하는 곳</span></div>
  <h2 class="sec">코일의 자기장은 이미 우리 곁에서 일하고 있다</h2>
- <p class="lead">전류로 <b class="k">켜고 끌 수 있고</b>, 방향과 세기까지 <b class="k">마음대로 조절</b>되는 자석 —
+ <p class="lead say">전류로 <b class="k">켜고 끌 수 있고</b>, 방향과 세기까지 <b class="k">마음대로 조절</b>되는 자석 —
  그래서 전자석은 쓰임새가 많습니다. 아래 두 사례를 살펴봅시다.</p>
+ <div class="keyline-s"><span class="kw">껐다 켰다 · 방향과 세기 조절</span><span class="arw">→</span><span class="kw hi">전자석</span><span class="memo"></span></div>
 
  <div class="use-grid" style="margin-top:20px">
  <div class="use">
@@ -1232,11 +1371,12 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🍳 불꽃 없이 요리한다 — 인덕션 레인지 <span class="badge" style="vertical-align:middle">과학 이야기</span></h3>
- <p class="lead" style="font-size:17px;margin-top:10px">
+ <p class="lead say" style="font-size:17px;margin-top:10px">
  인덕션 레인지를 켜면 안에 있는 <b class="k">코일에 전류가 흐르면서 자기장</b>이 생깁니다.
  이 자기장이 조리 도구에 에너지를 전달해 조리 도구를 뜨겁게 만들어요.
  직접 불을 피우지 않으니 <b class="k">조리 도구를 올려놓지 않으면 윗면이 뜨거워지지 않고</b>,
  가스레인지보다 화상 피해가 적습니다. 화석 연료가 탈 때 나오는 이산화탄소도 나오지 않아요.</p>
+ <div class="keyline-s"><span class="kw">인덕션 코일 → 자기장</span><span class="arw">→</span><span class="kw">조리 도구만 뜨거워짐</span><span class="memo"></span></div>
  <figure class="fig" data-fig="co-induction"
  data-alt="인덕션 레인지 위에서 냄비가 가열되는 모습 — 상판에는 불꽃이 없다"
  data-cap="인덕션 레인지 속에도 코일이 있다 "></figure>
@@ -1266,10 +1406,11 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:10px">
+ <p class="lead say" style="font-size:17.5px;margin-top:10px">
  그림과 같이 코일 (가)와 (나)가 나란히 놓여 있고, 두 코일 모두에 전류가 흐르고 있습니다.
  (가)에는 화살표 방향으로 전류가 흐르고, 두 코일 사이에는 <b class="k">서로 끌어당기는 방향</b>으로
  자기력이 작용합니다. (나)에는 어느 방향으로 전류가 흐를지 설명해 보세요.</p>
+ <div class="keyline-s"><span class="kw">(가)의 전류 방향 주어짐</span><span class="kw">서로 끌어당김</span><span class="arw">→</span><span class="kw q">(나)의 전류 방향은?</span><span class="memo"></span></div>
  <div class="svgstage">
  <svg viewBox="0 0 560 230" role="img" aria-label="코일 가와 코일 나가 나란히 놓여 있고 두 코일 사이에 서로 끌어당기는 방향으로 자기력이 작용한다. 코일 가의 앞면에는 위쪽 화살표 방향으로 전류가 흐르고, 코일 나의 전류 방향은 물음표로 표시되어 있다.">
  <text x="135" y="36" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="800" fill="#4a3a26">(가)</text>
@@ -1361,13 +1502,14 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="grid c2" style="margin-top:20px">
  <div class="card">
  <h3 class="card-t">👨‍🔬 강의 중에 움찔한 나침반 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  1820년, 덴마크의 과학자 외르스테드는 강의 도중 전선에 전류를 흘렸다가
  옆에 놓여 있던 <b class="k">나침반 바늘이 움찔 움직이는 것</b>을 보았습니다.<br><br>
  그때까지 전기와 자기는 서로 남남인 줄 알았어요.
  <b class="k">전류가 자기장을 만든다</b>는 사실이 처음 드러난 순간이었고,
  이 소식이 퍼지면서 코일과 전자석 연구가 폭발적으로 이어졌습니다.
  오늘 여러분이 실험대에서 본 바로 그 장면이 과학사를 바꾼 장면이에요.</p>
+ <div class="keyline-s"><span class="kw">1820 외르스테드</span><span class="arw">→</span><span class="kw">전선 옆 나침반이 움찔</span><span class="arw">→</span><span class="kw hi">전기와 자기가 이어짐</span><span class="memo"></span></div>
  <a class="linkcard" href="https://javalab.org/ko/oersteds_experiment/" target="_blank" rel="noopener">
  <span class="lc-e">🔬</span>
  <span><span class="lc-t">외르스테드의 실험 <span style="font-size:13px;opacity:.75">(자바실험실)</span></span>
@@ -1376,47 +1518,51 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  </div>
  <div class="card">
  <h3 class="card-t">🌍 지구도 거대한 자석 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  나침반 바늘이 가만히 두면 늘 남북을 가리키는 이유 —
  <b class="k">지구 자체가 커다란 자석</b>이라 지구 주위에도 자기장이 있기 때문입니다.<br><br>
  그래서 코일 실험에서 전류가 약하면 바늘이 코일의 자기장 대신
  <b class="k">지구 자기장을 따라가</b> 버려요. 실험에서 충분히 센 전류를 쓰라고 했던 건
  코일의 자기장이 지구 자기장을 이기게 하기 위해서였습니다.</p>
+ <div class="keyline-s"><span class="kw">지구도 커다란 자석</span><span class="arw">→</span><span class="kw">전류가 약하면 지구 자기장을 따라감</span><span class="memo"></span></div>
  </div>
  </div>
 
  <div class="grid c2" style="margin-top:18px">
  <div class="card">
  <h3 class="card-t">🏗️ 켜고 끄는 자석의 쓸모 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  폐차장의 전자석 기중기를 다시 떠올려 보세요. 영구 자석이었다면
  들어 올린 고철을 <b class="k">내려놓을 방법이 없습니다.</b>
  전자석은 스위치 하나로 자석이 되었다가 보통 쇳덩이가 되죠.<br><br>
  병원의 MRI 장치 속에도 사람이 들어갈 만큼 <b class="k">거대한 코일</b>이 있고,
  스피커·이어폰·전동기 속에도 작은 코일이 숨어 있습니다.
  코일 속은 다음 차시에서 계속 들여다봅니다.</p>
+ <div class="keyline-s"><span class="kw">전자석 기중기 · MRI · 스피커</span><span class="arw">→</span><span class="kw">스위치 하나로 껐다 켰다</span><span class="memo"></span></div>
  </div>
  <div class="card">
  <h3 class="card-t">🎬 다시, 처음 그 질문 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  <b class="k">"코일은 어떻게 자석을 끌어당기는 것일까?"</b><br><br>
  이제 답할 수 있습니다 — 코일에 전류가 흐르면 코일이 <b>전자석이 되어</b>
  액자 속 자석을 끌어당깁니다. 아래로 당기는 중력과 위로 당기는 자기력이
  균형을 이루어 액자가 떠 있는 것이죠.<br><br>
  스위치를 내리면? 자기장이 사라지고, 액자는 떨어집니다.
  전류가 흐르는 <b>동안만</b> 자석 — 오늘 배운 규칙 그대로예요.</p>
+ <div class="keyline-s"><span class="kw">코일이 전자석이 됨</span><span class="arw">→</span><span class="kw">중력 = 자기력</span><span class="arw">→</span><span class="kw hi">떠 있다</span><span class="memo"></span></div>
  </div>
  </div>
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">📜 오늘의 세 규칙, 한 번 더</h3>
- <p class="lead" style="font-size:18px;margin-top:10px">
+ <p class="lead say" style="font-size:18px;margin-top:10px">
  ① 코일에 전류가 흐르면 주위에 <b style="color:#2c6e5f">자기장</b>이 생긴다 — 모양은 막대자석과 비슷.<br>
  ② 방향은 <b class="k">오른손</b>이 알려 준다 — 네 손가락은 전류, 엄지는 <b style="color:#b3362e">N극</b>.
  전류가 반대면 극도 반대.<br>
  ③ 세기는 <b style="color:#a05c2c">전류의 세기</b>와 <b class="k">감은 수</b>가 정한다.<br><br>
  다음 시간에는 이 코일을 <b class="k">진짜 자석 옆</b>에 놓습니다. 무슨 일이 벌어질까요?
  </p>
+ <div class="keyline-s"><span class="kw">① 자기장이 생긴다</span><span class="kw">② 오른손이 방향</span><span class="kw">③ 전류·감은 수가 세기</span><span class="memo"></span></div>
  <div class="cta-row" style="justify-content:center">
  <button class="btn ghost" data-go="open">1단계로 돌아가기 ↑</button>
  <a class="btn ghost" href="08-motor.html">🚁 다음 차시로 가기</a>
@@ -1630,7 +1776,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  $('#tmodeBtn').addEventListener('click',()=>{
  const on=!document.body.classList.contains('teacher');
  document.body.classList.toggle('teacher',on);localStorage.setItem(KEY,on?'1':'0');
- toast(on?'교사 모드 ON — 교실 연결 노트가 보입니다 🧑‍🏫':'교사 모드 OFF — 학생 화면입니다 🎒');});})();
+ toast(on?'교사 모드 ON — 문장 설명과 교실 노트가 보입니다 🧑‍🏫':'학생 화면 — 키워드만 보입니다 🎒');});})();
 
 (function(){const wrap=$('#progWrap'),list=$('#progList');
  wrap.addEventListener('click',()=>list.classList.toggle('show'));

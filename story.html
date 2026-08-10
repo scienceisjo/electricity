@@ -87,8 +87,37 @@ body::after{
   align-items:center; overflow:auto; opacity:0; transform:translateY(14px);
 }
 .scene.wide{grid-template-columns:minmax(0,1fr)}
-.scene.on{display:grid; animation:in .5s cubic-bezier(.2,.8,.3,1) forwards}
-@keyframes in{to{opacity:1; transform:none}}
+/* ── 장면 전환 — 넘긴 방향으로 밀려 들어온다 ── */
+.scene.on{display:grid; animation:sceneIn .54s cubic-bezier(.22,.9,.28,1) forwards}
+body.back .scene.on{animation-name:sceneInBack}
+@keyframes sceneIn{from{opacity:0; transform:translateX(52px)} to{opacity:1; transform:none}}
+@keyframes sceneInBack{from{opacity:0; transform:translateX(-52px)} to{opacity:1; transform:none}}
+/* 본문은 위에서 한 줄씩 차례로 내려앉는다 */
+.scene.on .txt>*{animation:riseIn .52s cubic-bezier(.22,.9,.28,1) backwards}
+.scene.on .txt>*:nth-child(1){animation-delay:.05s}
+.scene.on .txt>*:nth-child(2){animation-delay:.11s}
+.scene.on .txt>*:nth-child(3){animation-delay:.17s}
+.scene.on .txt>*:nth-child(4){animation-delay:.23s}
+.scene.on .txt>*:nth-child(5){animation-delay:.29s}
+.scene.on .txt>*:nth-child(6){animation-delay:.35s}
+.scene.on .txt>*:nth-child(7){animation-delay:.41s}
+.scene.on .txt>*:nth-child(n+8){animation-delay:.46s}
+@keyframes riseIn{from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none}}
+.scene.on .viz{animation:vizIn .62s cubic-bezier(.22,.9,.28,1) backwards; animation-delay:.10s}
+@keyframes vizIn{from{opacity:0; transform:scale(.955)} to{opacity:1; transform:none}}
+
+/* ── 강조 글자 — 개념어에 형광펜이 그어진다 ── */
+.hl{position:relative; white-space:nowrap; z-index:0}
+.hl::before{
+  content:""; position:absolute; left:-.14em; right:-.14em; bottom:-.02em; height:.46em; z-index:-1;
+  background:currentColor; opacity:.20; border-radius:4px;
+  transform:scaleX(0); transform-origin:left center;
+  animation:hlSweep .55s cubic-bezier(.2,.85,.3,1) forwards;
+  animation-delay:var(--d,.5s);
+}
+@keyframes hlSweep{to{transform:scaleX(1)}}
+@keyframes popNum{0%{transform:scale(1)}35%{transform:scale(1.14)}100%{transform:scale(1)}}
+.pop{animation:popNum .42s cubic-bezier(.2,.9,.3,1)}
 .txt{max-width:44ch}
 .kicker{
   display:inline-flex; align-items:center; gap:8px; font-size:clamp(11px,1vw,15px); font-weight:800;
@@ -107,12 +136,18 @@ h2.title{font-family:var(--disp); margin:0 0 clamp(8px,1.6vh,18px);
 .big{font-size:clamp(28px,4vw,64px); font-weight:800; letter-spacing:-.03em; line-height:1;
   font-variant-numeric:tabular-nums; font-family:var(--disp)}
 
-/* 비주얼 */
+/* 비주얼 — 하단에 캡션 전용 띠를 비워 둔다.
+   (캔버스도 바닥에 상태 문구를 그리므로, 겹치면 글자가 포개져 읽히지 않는다) */
 .viz{position:relative; width:100%; height:clamp(240px,58vh,720px); border-radius:20px; overflow:hidden;
-  background:var(--surface); border:1px solid var(--line); box-shadow:0 10px 30px -18px rgba(80,55,20,.55)}
-.viz canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
-.vizcap{position:absolute; left:14px; bottom:12px; right:14px; font-size:clamp(11px,1vw,15px);
-  color:var(--ink-mute); pointer-events:none}
+  background:var(--surface); border:1px solid var(--line); box-shadow:0 10px 30px -18px rgba(80,55,20,.55);
+  --capH:42px}
+.viz canvas{position:absolute; left:0; right:0; top:0; bottom:var(--capH);
+  width:auto; height:auto; display:block}
+.vizcap{position:absolute; left:0; right:0; bottom:0; height:var(--capH); padding:0 16px;
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  font-size:clamp(11px,1vw,15px); line-height:1.35; color:var(--ink-mute); pointer-events:none;
+  border-top:1px solid var(--line); background:var(--surface2)}
+@media (max-width:900px){ .viz{--capH:36px} }
 
 /* 조작 */
 .ctl{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:12px}
@@ -250,7 +285,9 @@ h1 em{font-style:normal; color:var(--accent)}
   .hint{display:none}
 }
 @media (prefers-reduced-motion:reduce){
-  .scene.on{animation:none; opacity:1; transform:none}
+  .scene.on,.scene.on .txt>*,.scene.on .viz{animation:none; opacity:1; transform:none}
+  .hl::before{animation:none; transform:scaleX(1)}
+  .pop{animation:none}
   .vbar i{transition:none}
 }
 
@@ -1393,10 +1430,20 @@ function startScene(i){
     var a=cv._api.ctrl; if(RM) a.once(); a.start(); live.push(a);
   });
 }
+/* 개념어에 형광펜 — 장면이 열릴 때 차례로 그어진다 */
+function markHighlights(sc){
+  $$('.lead .kp,.lead .km,.lead .kl,.lead .ke,.lead .kn,.lead b',sc).forEach(function(el,n){
+    if(el.classList.contains('hl')){ el.style.animation='none'; void el.offsetWidth; el.style.animation=''; }
+    el.classList.add('hl');
+    el.style.setProperty('--d',(0.5+n*0.13)+'s');
+  });
+}
 function go(i){
   i=Math.max(0,Math.min(N-1,i));
+  document.body.classList.toggle('back', i<cur);
   scenes[cur].classList.remove('on');
   cur=i; scenes[cur].classList.add('on');
+  markHighlights(scenes[cur]);
   counter.textContent=(i+1)+' / '+N;
   var sp=$('#scriptPanel');
   sp.innerHTML='<span class="pt">🧑‍🏫 교사 대본 · '+(i+1)+'. '+scenes[i].dataset.t+' (T로 끄기)</span>'+sceneScript(i);

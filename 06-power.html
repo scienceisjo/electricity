@@ -633,6 +633,131 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  .simwrap .simctl{position:sticky;top:calc(var(--header-h) + 12px)}
 }
 </style>
+
+<style id="ink-emphasis-fix">
+/* ── 강조 글씨를 종이 위에서 읽히는 잉크색으로 ──
+   어두운 화면용 규칙(b.k{color:#fff})이 남아 크림색 배경에 흰 글씨가 되던 것을 덮는다.
+   색 배경 위에 얹히는 배지·버튼의 흰 글씨는 그대로 둔다. */
+b.k, .k{color:var(--ink)}
+.doit b.k, .lead b.k, .help b.k, p b.k, li b.k, .u-d b.k, .note b.k, .de b.k{
+  color:var(--ink);
+  background:linear-gradient(transparent 58%, rgba(185,135,60,.34) 58%);
+  padding:0 2px;border-radius:2px;font-weight:800}
+/* 색을 지정해 둔 강조는 그 색을 지킨다 */
+b.k[style*="color"], .k[style*="color"]{background:none}
+.badge b.k, .btn b.k, .sbadge b.k, .mq-badge b.k, .pill b.k{background:none;color:inherit}
+</style>
+
+<style id="board-mode">
+/* ══════════ 판서 모드 ══════════
+   학생 화면 = 키워드만. 글자가 적어야 아이들이 화면을 읽느라 지치지 않고,
+   빈 자리에 선생님이 판서하며 설명을 이어 갈 수 있다.
+   🧑‍🏫 교사 모드를 켜면 원래의 문장형 설명이 나온다. */
+.say{display:none}
+body.teacher .say{display:revert}
+
+/* 키워드 줄 — 크고 시원하게, 아래에 판서 여백 */
+.keyline-s{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 20px}
+body.teacher .keyline-s{display:none}
+.keyline-s .kw{font-family:var(--jua);font-size:clamp(19px,2.6vw,25px);font-weight:800;color:var(--ink);
+  background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;
+  border-radius:12px;padding:9px 18px;line-height:1.35}
+.keyline-s .kw.hi{border-color:var(--accent);background:#f6e8d8;color:var(--accent)}
+.keyline-s .kw.q{border-style:dashed;color:var(--ink-dim)}
+.keyline-s .arw{font-size:22px;color:var(--ink-mute);font-weight:800}
+.keyline-s .memo{flex:1 1 100%;min-height:34px}          /* 판서용 빈 자리 */
+@media(max-width:520px){.keyline-s{gap:8px}.keyline-s .kw{padding:8px 14px}}
+
+/* 인쇄物에서는 둘 다 보이게 — 학습지로 뽑을 때 설명이 사라지면 곤란하다 */
+@media print{.say{display:revert!important}.keyline-s{display:flex!important}}
+</style>
+
+<style id="why-module">
+/* ══════════ '왜 그럴까?' 모듈 ══════════
+   결론을 먼저 말하지 않는다. 아는 것 → 힌트 → 예상 → 조작 → 관찰 → 이유 → 정리. */
+.why-mod{border:2px solid var(--brass);background:linear-gradient(180deg,var(--paper-hi),var(--paper));
+ border-radius:18px;padding:22px 20px;margin-top:22px;box-shadow:var(--shadow)}
+.why-q{display:flex;gap:12px;align-items:flex-start}
+.why-q .qi{font-size:30px;line-height:1.1}
+.why-q .qt{font-family:var(--jua);font-size:clamp(20px,3.1vw,26px);color:var(--ink);line-height:1.45}
+.why-step{margin-top:20px;border-top:1px dashed var(--line);padding-top:18px}
+.why-h{display:flex;align-items:center;gap:9px;font-family:var(--jua);font-size:18.5px;color:var(--accent);margin-bottom:9px}
+.why-h .no{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;
+ background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));color:#fff;font-size:15px;
+ border:1px solid var(--brass-dk);flex:none}
+.why-step>p{font-size:15.5px;color:var(--ink-dim);line-height:1.72}
+
+/* 기억해 보기 — 도선 되짚기 */
+.recall{display:grid;gap:12px;grid-template-columns:1fr;background:#f6efdf;border:1px solid var(--line);
+ border-radius:13px;padding:14px;margin-top:10px}
+@media(min-width:780px){.recall{grid-template-columns:1fr 236px}}
+.recall .rc-svg{background:#faf4e6;border:1px solid var(--line-soft);border-radius:11px;padding:8px}
+.recall svg{display:block;width:100%;height:auto}
+.rbar{height:16px;border-radius:99px;background:#e7dbbe;border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.rbar i{display:block;height:100%;background:linear-gradient(90deg,var(--brass-hi),var(--c1));transition:width .3s}
+
+/* 예상하기 — 채점하지 않는다 */
+.wpick{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+.wpick button{flex:1 1 148px;font-family:var(--body);font-size:15px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;
+ padding:11px 13px;cursor:pointer;transition:.15s}
+.wpick button:hover{border-color:var(--accent);color:var(--ink)}
+.wpick button.sel{border-color:var(--c2);background:rgba(125,91,166,.13);color:var(--ink)}
+.wpick.small button{flex:1 1 108px;font-size:14.5px;padding:9px 11px}
+
+/* 회로 시뮬레이션 */
+.wsim{margin-top:12px}
+.duo{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:700px){.duo{grid-template-columns:1fr 1fr}}
+.wcirc{background:#faf4e6;border:1px solid var(--line);border-radius:13px;padding:10px 10px 8px}
+.wcirc.hi{border-color:var(--accent);box-shadow:0 0 0 2px rgba(160,92,44,.15)}
+.wcirc .ct{font-family:var(--jua);font-size:15.5px;text-align:center;color:var(--ink-dim);margin-bottom:3px}
+.wcirc svg{display:block;width:100%;height:auto}
+.wnum{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:5px}
+.wnum span{font-family:var(--mono);font-size:14px;font-weight:700;background:#f2e8d2;border:1px solid var(--line);
+ border-radius:99px;padding:3px 10px;color:var(--ink)}
+.wnum span.r{color:var(--c1)} .wnum span.i{color:var(--c6)}
+.wbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.wbar .lbl{font-size:14px;font-weight:700;color:var(--ink-dim)}
+.wtog{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-radius:99px;padding:7px 14px;cursor:pointer}
+.wtog input{width:15px;height:15px;accent-color:var(--accent)}
+.wtog.on{border-color:var(--accent);color:var(--ink)}
+
+/* 접이식 — 계산식은 맨 마지막에, 눌러야 펼쳐진다 */
+.wfold{margin-top:16px}
+.wfold>summary{cursor:pointer;list-style:none;font-family:var(--jua);font-size:16.5px;color:var(--c2);
+ background:rgba(125,91,166,.08);border:1.5px solid var(--c2);border-radius:12px;padding:11px 15px}
+.wfold>summary::-webkit-details-marker{display:none}
+.wfold>summary::before{content:"▸ "}
+.wfold[open]>summary::before{content:"▾ "}
+.wfold .fold-in{padding:14px 4px 2px;font-size:15.5px;color:var(--ink-dim);line-height:1.85}
+.eqline{font-family:var(--mono);font-size:17px;color:var(--ink);text-align:center;margin:9px 0;font-weight:700}
+.obs-list{margin:8px 0 0;padding-left:19px}
+.obs-list li{font-size:15.5px;color:var(--ink-dim);margin:7px 0;line-height:1.7}
+.obs-list li b{color:var(--ink)}
+
+/* ══════════ 교과서식 비교표 빈칸 ══════════ */
+.ctab-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:#faf4e6;margin-top:14px}
+.ctab{border-collapse:collapse;width:100%;min-width:660px}
+.ctab th,.ctab td{border:1px solid var(--line-soft);padding:11px 13px;vertical-align:top;
+ font-size:15.5px;line-height:1.95;color:var(--ink-dim)}
+.ctab thead th{background:#efe4c9;text-align:center;font-family:var(--jua);font-size:17.5px;color:var(--ink);vertical-align:middle}
+.ctab thead th .sub{display:block;font-family:var(--body);font-size:12.5px;font-weight:600;
+ color:var(--ink-mute);margin-top:4px;line-height:1.5}
+.ctab thead th.sc{color:var(--accent)} .ctab thead th.pc{color:var(--c2)}
+.ctab th.rh{background:#f2e8d2;width:84px;min-width:84px;text-align:center;font-family:var(--jua);
+ font-size:16.5px;color:var(--ink);vertical-align:middle;line-height:1.4}
+.ctab td.dia{text-align:center;padding:8px}
+.ctab td.dia svg{display:block;width:100%;max-width:300px;height:auto;margin:0 auto}
+.ctab .fx{display:block;text-align:center;font-family:var(--mono);font-size:16.5px;font-weight:700;
+ color:var(--ink);margin:7px 0 3px;letter-spacing:.3px}
+.ctab ul{margin:0;padding-left:17px}
+.ctab li{margin:5px 0}
+.ctab .tip{display:block;font-size:13px;color:var(--ink-mute);margin-top:5px;padding-left:15px;
+ text-indent:-15px;line-height:1.6}
+@media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -686,7 +811,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  </button>
  <div class="head-right">
  <a class="hbtn" href="index.html" title="단원 허브로">⚡</a>
- <button class="hbtn" id="tmodeBtn" title="교사 모드">🧑‍🏫</button>
+ <button class="hbtn" id="tmodeBtn" title="교사 모드 — 문장 설명과 교실 노트 보기">🧑‍🏫</button>
  <div class="progress-mini" id="progWrap" title="진행도 — 누르면 남은 활동이 보여요">
  <svg class="pgauge" viewBox="0 0 96 56" aria-hidden="true">
  <path d="M10 50 A38 38 0 0 1 86 50" fill="#f6eedb" stroke="#7d541e" stroke-width="2.5"/>
@@ -724,32 +849,36 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel show" id="panel-meet">
  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">자료 만나기 · 같은 전기, 다른 쓰임새</span></div>
  <h1 class="big">선풍기는 바람, 전기난로는 열 —<br>같은 전기를 쓰는데 <span class="t1">왜</span> 다를까?</h1>
- <p class="lead" style="margin-top:16px">
+ <p class="lead say" style="margin-top:16px">
  선풍기를 콘센트에 꽂으면 날개가 돌고, 전기난로를 꽂으면 빨갛게 달아오릅니다.
  <b class="k">둘 다 같은 콘센트에서 같은 전기를 받는데, 하나는 바람을 만들고 하나는 열을 냅니다.</b>
  오늘은 전기 기구들이 전기를 <b>무엇으로 바꾸어, 얼마나 빨리</b> 쓰는지 자료로 따져 봅니다.
  </p>
+ <div class="keyline-s"><span class="kw">같은 콘센트 · 같은 전기</span><span class="arw">→</span><span class="kw">바람 vs 열</span><span class="arw">→</span><span class="kw q">무엇으로 · 얼마나 빨리?</span><span class="memo"></span></div>
  <figure class="fig" data-fig="intro"
  data-alt="바람을 일으키는 선풍기와 빨갛게 달아오른 전기난로가 나란히 놓여 있는 모습"
  data-cap="선풍기와 전기난로는 전기 에너지를 어떻게 사용할까? (도입)"></figure>
 
  <div class="card cloze-set" style="margin-top:20px">
  <h3 class="card-t">⚡ 먼저 이름 하나 — 전기 에너지</h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  선풍기의 날개가 돌아가는 것은 선풍기에 <span class="cloze" data-ans="전류" data-c="accent">　</span>가 흐르면서 에너지를 공급하기 때문입니다.
  이렇게 <b class="k">전기 기구에 전류가 흐르면서 공급하는 에너지</b>를 <b class="t1">전기 에너지</b>라고 해요.</p>
- <p class="help">일상생활에서는 전기 에너지를 <b style="color:#2c7a44">운동 에너지</b>,
+ <div class="keyline-s"><span class="kw">기구에 전류가 흐름</span><span class="arw">→</span><span class="kw hi">전기 에너지 공급</span><span class="memo"></span></div>
+ <p class="help say">일상생활에서는 전기 에너지를 <b style="color:#2c7a44">운동 에너지</b>,
  <b style="color:#b3362e">열에너지</b>, <b style="color:#7d541e">빛에너지</b> 등
  다양한 형태의 에너지로 바꾸어 사용합니다. 이것을 에너지의 <span class="cloze" data-ans="전환" data-c="gold">　</span>이라고 해요.
  차시 ①에서 모은 단서가 기억나나요? — "전원을 켜면 회로에 전류가 흐른다." 오늘 그 뒷이야기가 완성됩니다.</p>
+ <div class="keyline-s"><span class="kw">전기 에너지 → 운동 · 열 · 빛</span><span class="arw">→</span><span class="kw hi">에너지 전환</span><span class="memo"></span></div>
  <div class="cloze-done">✅ 이 카드의 빈칸을 다 채웠어요!</div>
  </div>
 
  <div class="card" style="margin-top:18px">
  <div class="badge" style="margin-bottom:12px">🧩 활동 — 에너지 전환 짝짓기 <span class="muted" style="font-weight:400"> </span></div>
  <h3 class="card-t">이 기구는 전기를 무엇으로 바꿀까?</h3>
- <p class="lead" style="font-size:17px;margin-top:8px">기구마다 <b class="k">주된 용도에 맞는 에너지</b>를 골라 보세요.
+ <p class="lead say" style="font-size:17px;margin-top:8px">기구마다 <b class="k">주된 용도에 맞는 에너지</b>를 골라 보세요.
  "이 기구를 <b>왜</b> 쓰지?"를 먼저 떠올리면 쉽습니다.</p>
+ <div class="keyline-s"><span class="kw">기구의 주된 용도</span><span class="arw">→</span><span class="kw q">이걸 왜 쓰지?</span><span class="memo"></span></div>
  <div class="checkgrid" id="matchList"></div>
  <div class="verdict" id="matchMsg">기구마다 <b>주된 용도</b>를 떠올리고 버튼을 눌러 보세요.</div>
  <p class="honest"><span class="ic">📌</span>선풍기에서도 소리가 나고, 모니터에서도 열이 납니다.
@@ -782,8 +911,9 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-read">
  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">읽어 내기 · 전기 기구에 적힌 W의 뜻</span></div>
  <h2 class="sec">전기 기구마다 붙어 있는 숫자, W</h2>
- <p class="lead">세탁기 뒤쪽 라벨을 보면 <b class="k">220 V - 500 W</b> 같은 표시가 있습니다.
+ <p class="lead say">세탁기 뒤쪽 라벨을 보면 <b class="k">220 V - 500 W</b> 같은 표시가 있습니다.
  이 <b class="t1">W(와트)</b>가 오늘의 주인공이에요. 무슨 뜻인지 읽어 봅시다.</p>
+ <div class="keyline-s"><span class="kw">라벨 220 V - 500 W</span><span class="arw">→</span><span class="kw hi">W가 오늘의 주인공</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🔎 라벨 읽는 법</h3>
@@ -804,13 +934,15 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <text x="304" y="186" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="700" fill="#4a3a26">= 이 기구가 전기를 먹는 '속도'</text>
  </svg>
  </div>
- <p class="lead" style="font-size:17.5px;margin-top:12px">
+ <p class="lead say" style="font-size:17.5px;margin-top:12px">
  라벨의 <b style="color:#7d5ba6">220 V</b>는 이 기구에 걸어 주는 <span class="cloze" data-ans="전압" data-c="c2">　</span>을 나타냅니다.
  그리고 <b style="color:#8a5f24">500 W</b> — 전기 기구가 <b class="k">1초 동안 사용하는 전기 에너지의 양</b>을 <b class="t1">소비 전력</b>이라고 하며,
  단위는 <b class="t1">W(와트)</b>를 사용합니다. 1000 W는 <span class="cloze" data-ans="1 kW" data-c="gold">　</span>(킬로와트)라고도 써요.</p>
- <p class="lead" style="font-size:17.5px;margin-top:10px">
+ <div class="keyline-s"><span class="kw">1초 동안 쓰는 전기 에너지</span><span class="arw">→</span><span class="kw hi">소비 전력 (W)</span><span class="kw">1000 W = 1 kW</span><span class="memo"></span></div>
+ <p class="lead say" style="font-size:17.5px;margin-top:10px">
  제목의 뜻이 여기서 풀립니다 — 소비 전력은 그 기구가 <b class="k">전기를 먹는 '<span class="cloze" data-ans="속도" data-c="accent">　</span>'</b>입니다.
  전기난로에 990 W라고 적혀 있다면, 켜져 있는 동안 <b>1초마다 <span class="cloze" data-ans="990" data-c="gold">　</span> J씩</b> 전기 에너지를 먹어 치운다는 뜻이에요.</p>
+ <div class="keyline-s"><span class="kw">소비 전력 = 전기를 먹는 속도</span><span class="kw">990 W → 1초에 990 J</span><span class="memo"></span></div>
  <p class="honest"><span class="ic">📌</span>J(줄)은 에너지의 양을 재는 단위입니다. 자세한 건 나중에 배워요 —
  여기서는 "<b>W가 클수록 1초에 먹는 전기 에너지가 많다</b>"만 챙기면 충분합니다.</p>
  <div class="note class"><span class="ic">💬</span><div><b>차시 지도상의 유의점(교과서 명시)</b> — 소비 전력은 <b>정량적인 계산보다 에너지 전환 관점</b>에서 다루고, 효율적인 전기 기구를 선택하는 근거로 이해하게 하세요. 1 W = 1 J/s 관계식을 외우게 하지 않습니다.</div></div>
@@ -828,8 +960,9 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <tr><td>전기 다리미</td><td style="color:#b3362e;font-weight:800">열에너지</td><td>2200</td></tr>
  </table>
  </div>
- <p class="help">표를 훑어보면 규칙이 하나 보입니다 — 무언가를 <b style="color:#b3362e"><span class="cloze" data-ans="데우는" data-c="danger">　</span> 기구</b>가
+ <p class="help say">표를 훑어보면 규칙이 하나 보입니다 — 무언가를 <b style="color:#b3362e"><span class="cloze" data-ans="데우는" data-c="danger">　</span> 기구</b>가
  유독 전기를 빨리 먹네요. 아래 퀴즈로 표를 직접 읽어 봅시다.</p>
+ <div class="keyline-s"><span class="kw">표에서 규칙 찾기</span><span class="arw">→</span><span class="kw q">어떤 기구가 빨리 먹나</span><span class="memo"></span></div>
  <div class="note class"><span class="ic">💬</span><div><b> 탐구 운영</b> — 실제 수업에서는 학생이 <b>가정의 전기 기구 5가지</b>를 미리 조사해 오고, 공유 스프레드시트에 모아 소비 전력이 큰 순으로 정렬합니다. 위 표는 그 결과 예시(교과서 값)입니다. "소비 전력이 큰 기구는 주로 어떤 에너지로 전환하는가?"의 모범 답안은 <b>열에너지</b>입니다. 같은 용도인데 조사해 온 소비 전력이 서로 다르면 어떤 값을 기록할지 모둠 협의를 거치게 하세요.</div></div>
  </div>
 
@@ -841,9 +974,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-calc">
  <div class="stepline"><span class="sbadge">STEP 3</span><span class="swhat">따져 보기 · 누가 더 많이 먹었을까</span></div>
  <h2 class="sec">전기 에너지를 많이 쓴 쪽은 어디일까?</h2>
- <p class="lead">이제 자료를 놓고 따져 봅니다. 규칙은 두 개뿐이에요 —
+ <p class="lead say">이제 자료를 놓고 따져 봅니다. 규칙은 두 개뿐이에요 —
  <b class="k">같은 시간이면 소비 전력이 큰 쪽</b>이 많이 쓰고,
  시간이 다르면 <b class="k">소비 전력 × 시간</b>을 곱해서 비교합니다.</p>
+ <div class="keyline-s"><span class="kw">같은 시간 → 큰 쪽이 많이</span><span class="kw">시간이 다르면 → 소비 전력 × 시간</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">⏱️ 규칙 1 — 같은 시간이라면</h3>
@@ -859,17 +993,19 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <text x="30" y="182" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">※ 막대 길이는 소비 전력(1초 동안 사용하는 전기 에너지의 양)에 비례한다.</text>
  </svg>
  </div>
- <p class="lead" style="font-size:17.5px;margin-top:12px">
+ <p class="lead say" style="font-size:17.5px;margin-top:12px">
  전기난로와 텔레비전을 <b class="k">같은 1시간</b>씩 켜 두면?
  1초마다 990 J 대 35 J — 매초 <b>약 28배</b>씩 차이가 쌓입니다.
  같은 시간 동안이라면 <b class="k">소비 전력이 <span class="cloze" data-ans="큰" data-c="danger">　</span> 기구가 전기 에너지를 많이 사용</b>합니다.</p>
+ <div class="keyline-s"><span class="kw">1초에 990 J vs 35 J</span><span class="arw">→</span><span class="kw hi">같은 시간이면 큰 쪽이 많이</span><span class="memo"></span></div>
  </div>
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">✖️ 규칙 2 — 시간이 다르면, 곱해 보기</h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  다리미는 잠깐, 텔레비전은 오래 씁니다. 이럴 땐 <b class="k">소비 전력 × <span class="cloze" data-ans="사용 시간" data-c="c2">　</span></b>을 곱한 값으로
  사용한 전기 에너지의 양을 비교해요.</p>
+ <div class="keyline-s"><span class="kw">다리미 잠깐 · TV 오래</span><span class="arw">→</span><span class="kw hi">소비 전력 × 시간으로 비교</span><span class="memo"></span></div>
  <div class="dtable-wrap" style="margin-top:12px">
  <table class="dtable">
  <tr><th>전기 기구</th><th>소비 전력(W)</th><th>사용 시간(분)</th><th>소비 전력 × 시간</th></tr>
@@ -877,15 +1013,17 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <tr><td>텔레비전</td><td>35</td><td>240</td><td><b>8400</b></td></tr>
  </table>
  </div>
- <p class="help">곱한 값이 큰 쪽이 전기 에너지를 많이 쓴 겁니다 —
+ <p class="help say">곱한 값이 큰 쪽이 전기 에너지를 많이 쓴 겁니다 —
  2200 W짜리 다리미(3분)보다 <b class="k">35 W짜리 텔레비전(4시간)이 더 많이</b> 썼어요.
  소비 전력은 '속도'일 뿐, 실제로 쓴 양은 <b><span class="cloze" data-ans="시간" data-c="c2">　</span>까지 곱해야</b> 나옵니다.</p>
+ <div class="keyline-s"><span class="kw">2200 W 3분 < 35 W 4시간</span><span class="arw">→</span><span class="kw hi">속도만으로는 알 수 없다</span><span class="memo"></span></div>
  </div>
 
  <div class="card" id="pcalc" style="margin-top:18px">
  <h3 class="card-t">🧮 직접 따져 보기 — 소비 전력 × 시간 계산기</h3>
- <p class="help">두 기구의 <b>소비 전력(W)</b>과 <b>사용 시간(분)</b>을 넣으면 곱한 값을 바로 비교해 줍니다.
+ <p class="help say">두 기구의 <b>소비 전력(W)</b>과 <b>사용 시간(분)</b>을 넣으면 곱한 값을 바로 비교해 줍니다.
  예시 버튼으로 값을 한 번에 채운 뒤, 숫자를 조금씩 바꿔 가며 <b>언제 결과가 뒤집히는지</b> 찾아보세요.</p>
+ <div class="keyline-s"><span class="kw">W와 분을 넣고 곱하기</span><span class="arw">→</span><span class="kw q">언제 결과가 뒤집히나</span><span class="memo"></span></div>
  <div class="btn-row">
  <button class="btn ghost sm" data-preset="0">예시 ① 다리미 3분 vs 텔레비전 4시간</button>
  <button class="btn ghost sm" data-preset="1">예시 ② 전기난로 6분 vs 선풍기 120분</button>
@@ -938,11 +1076,12 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <text x="280" y="238" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">※ 「전기 기구의 소비 전력 비교하기」의 동영상 자료를 옮긴 것</text>
  </svg>
  </div>
- <p class="lead" style="font-size:17.5px;margin-top:12px">
+ <p class="lead say" style="font-size:17.5px;margin-top:12px">
  물이 <b>동시에</b> 끓기 시작했으니 두 주전자의 성능은 같습니다.
  그런데 (나)는 1초마다 <b class="k"><span class="cloze" data-ans="100" data-c="danger">　</span> J씩 더</b> 먹고 있어요. 그 100 J은 물 끓이기에 쓰인 게 아니라
  다른 에너지로 <b class="k">새어 나간(손실된)</b> 몫입니다.
  그래서 성능이 같다면 <b>소비 전력이 작은 (가)</b>가 전기 에너지를 효율적으로 사용하는, 더 좋은 선택이에요.</p>
+ <div class="keyline-s"><span class="kw">성능은 같은데 1초에 100 J 더</span><span class="arw">→</span><span class="kw hi">그만큼 새어 나감</span><span class="memo"></span></div>
  <div class="note class"><span class="ic">💬</span><div><b>해 보기 예시 답안(교과서)</b> — "(가). 두 제품의 성능이 동일하면 같은 시간 동안 사용했을 때 더 적은 전기 에너지를 사용하는 전기 기구가 더 효율적인 제품이다." 광고 속 '와트 수가 크니 더 세다'는 말을 반박해 보게 하면 토론이 살아납니다.</div></div>
  </div>
 
@@ -1009,26 +1148,29 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-apply">
  <div class="stepline"><span class="sbadge">STEP 4</span><span class="swhat">적용하기 · 효율적인 선택, 블록 질문의 답</span></div>
  <h2 class="sec">아껴 쓰는 것도 실력입니다</h2>
- <p class="lead">전기 기구는 전기 에너지를 다른 에너지로 바꾸며 일합니다. 그런데 그 전환이
+ <p class="lead say">전기 기구는 전기 에너지를 다른 에너지로 바꾸며 일합니다. 그런데 그 전환이
  <b class="k">언제나 깔끔하지는 않아요.</b> 새어 나가는 몫이 있고, 그것이 '효율'과 '절약' 이야기로 이어집니다.</p>
+ <div class="keyline-s"><span class="kw">전환은 깔끔하지 않다</span><span class="arw">→</span><span class="kw">새는 몫</span><span class="arw">→</span><span class="kw">효율 · 절약</span><span class="memo"></span></div>
 
  <div class="grid c2" style="margin-top:20px">
  <div class="card">
  <h3 class="card-t">💨 새어 나가는 전기 — 손실</h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  선풍기를 켜면 바람만 나오는 게 아니라 <b>소리</b>도 나고, 모터에서 <b>열</b>도 납니다.
  이렇게 전기 에너지가 주된 용도가 아닌 <b class="k">다른 에너지로 전환되어 새어 나가는 것</b>을
  <span class="cloze" data-ans="손실" data-c="danger">　</span>이라고 해요.<br><br>
  성능이 같은데 소비 전력이 더 크다면? <b class="k">그 차이만큼 손실이 많다</b>는 뜻입니다.
  3단계의 주전자 (나)가 그랬죠. 그래서 성능이 같을 때는 소비 전력이 <b>작은</b> 기구가
  전기 에너지를 효율적으로 사용하는 기구입니다.</p>
+ <div class="keyline-s"><span class="kw">선풍기 = 바람 + 소리 + 열</span><span class="arw">→</span><span class="kw hi">손실</span><span class="kw">소비 전력 크면 손실 많음</span><span class="memo"></span></div>
  </div>
  <div class="card">
  <h3 class="card-t">🌍 아껴야 하는 진짜 이유</h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  전기 에너지를 생산하는 일부 과정에서는 이산화 탄소 같은 <span class="cloze" data-ans="온실 기체" data-c="ok">　</span>가 나옵니다.
  지구 온난화 같은 환경 문제와 곧장 이어져 있죠.
  전기 에너지를 효율적으로 쓰는 것은 전기 요금 이전에 <b class="k">온실 기체 배출을 줄이는 일</b>입니다.</p>
+ <div class="keyline-s"><span class="kw">전기 생산 → 온실 기체</span><span class="arw">→</span><span class="kw hi">절약 = 배출 줄이기</span><span class="memo"></span></div>
  <div class="pill-list">
  <span class="pill">빈 교실 <b>전등 끄기</b></span>
  <span class="pill">안 쓰는 기구 <b>플러그 뽑기</b></span>
@@ -1105,7 +1247,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="grid c2" style="margin-top:20px">
  <div class="card">
  <h3 class="card-t">🌈 에너지 소비 효율 등급 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  냉장고나 세탁기에 붙어 있는 무지개색 스티커를 본 적 있나요?
  전기 기구에 공급한 전기 에너지 중 <b class="k">필요한 에너지로 전환되는 비율</b>을
  <b>에너지 효율</b>이라 하고, 이를 <b class="k">1~5등급</b>으로 표시한 것이
@@ -1113,17 +1255,19 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <b>1등급에 가까울수록</b> 불필요하게 낭비되는 에너지가 적은, 절약형 기구예요.
  가전 매장에 가면 이 스티커부터 찾아보세요 — 오늘 배운 '성능이 같다면 적게 먹는 쪽'을
  나라가 대신 계산해 붙여 둔 셈입니다.</p>
+ <div class="keyline-s"><span class="kw">무지개 스티커</span><span class="arw">→</span><span class="kw hi">에너지 소비 효율 등급</span><span class="kw">1등급에 가까울수록 덜 낭비</span><span class="memo"></span></div>
  <p class="help">「더 알아보기」에 실린 내용이에요.</p>
  </div>
  <div class="card">
  <h3 class="card-t">💡 백열전구는 왜 퇴장했을까 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  1879년 에디슨과 스완이 발명한 백열전구는 1887년 경복궁에 처음 들어와
  100년 넘게 밤을 밝혔습니다. 그런데 백열전구는 전기 에너지의 <b class="k">약 95 %를 열로</b>
  내보내는, 대표적인 저효율 조명이었어요. 조명인데 사실상 난로였던 거죠.<br><br>
  그래서 2014년부터 우리나라에서는 백열전구를 퇴출하고 LED 등으로 바꿔 왔습니다.
  LED는 백열전구보다 전기 에너지를 <b class="k">약 82 % 절감</b>합니다.
  엘이디등이 오래 켜 놓아도 <b>덜 뜨거운</b> 까닭도 같은 이유 — 열로 손실되는 비율이 낮기 때문이에요.</p>
+ <div class="keyline-s"><span class="kw">백열전구</span><span class="arw">→</span><span class="kw">95 %가 열로</span><span class="arw">→</span><span class="kw hi">조명인데 사실상 난로</span><span class="memo"></span></div>
  <div class="note class"><span class="ic">💬</span><div><b> 사고력 모범 답안</b> — "엘이디등은 오래 사용해도 덜 뜨거워지는 것으로 보아 전기 에너지 중 열에너지로 전환되는 비율이 낮다. 따라서 밝기가 동일한 다른 조명 장치보다 사용하는 전기 에너지의 양이 적으므로 에너지 효율 측면에서 좋다."</div></div>
  </div>
  </div>
@@ -1140,7 +1284,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🎬 다시, 처음 그 문장</h3>
- <p class="lead" style="font-size:18.5px;margin-top:10px">
+ <p class="lead say" style="font-size:18.5px;margin-top:10px">
  <b class="k">"전기난로가 전기를 먹는 속도 — 그것이 소비 전력."</b><br><br>
  전기를 빨리 먹는 게 나쁜 것도, 좋은 것도 아닙니다. 방을 데우려면 원래 많이 필요해요.
  중요한 건 두 가지였습니다 — 실제로 쓴 양은 <b>속도 × 시간</b>이라는 것,
@@ -1149,6 +1293,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  숫자 하나로 그 기구가 전기를 먹는 속도가 보이고,
  그 순간 여러분은 광고 문구보다 자료를 믿는 사람이 됩니다.
  </p>
+ <div class="keyline-s"><span class="kw">쓴 양 = 속도 × 시간</span><span class="kw hi">성능이 같다면 천천히 먹는 쪽</span><span class="memo"></span></div>
  <div class="cta-row" style="justify-content:center">
  <button class="btn ghost" data-go="meet">1단계로 돌아가기 ↑</button>
  <a class="btn ghost" href="index.html">⚡ 단원 허브로</a>
@@ -1363,7 +1508,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
   $('#tmodeBtn').addEventListener('click',()=>{
     const on=!document.body.classList.contains('teacher');
     document.body.classList.toggle('teacher',on);localStorage.setItem(KEY,on?'1':'0');
-    toast(on?'교사 모드 ON — 교실 연결 노트가 보입니다 🧑‍🏫':'교사 모드 OFF — 학생 화면입니다 🎒');});})();
+    toast(on?'교사 모드 ON — 문장 설명과 교실 노트가 보입니다 🧑‍🏫':'학생 화면 — 키워드만 보입니다 🎒');});})();
 
 (function(){const wrap=$('#progWrap'),list=$('#progList');
   wrap.addEventListener('click',()=>list.classList.toggle('show'));

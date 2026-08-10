@@ -628,6 +628,131 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  border-radius:0 12px 12px 0;padding:12px 15px;font-size:15.5px;line-height:1.6;color:var(--ink-dim)}
 .rulehint b{color:var(--ink)}
 </style>
+
+<style id="ink-emphasis-fix">
+/* ── 강조 글씨를 종이 위에서 읽히는 잉크색으로 ──
+   어두운 화면용 규칙(b.k{color:#fff})이 남아 크림색 배경에 흰 글씨가 되던 것을 덮는다.
+   색 배경 위에 얹히는 배지·버튼의 흰 글씨는 그대로 둔다. */
+b.k, .k{color:var(--ink)}
+.doit b.k, .lead b.k, .help b.k, p b.k, li b.k, .u-d b.k, .note b.k, .de b.k{
+  color:var(--ink);
+  background:linear-gradient(transparent 58%, rgba(185,135,60,.34) 58%);
+  padding:0 2px;border-radius:2px;font-weight:800}
+/* 색을 지정해 둔 강조는 그 색을 지킨다 */
+b.k[style*="color"], .k[style*="color"]{background:none}
+.badge b.k, .btn b.k, .sbadge b.k, .mq-badge b.k, .pill b.k{background:none;color:inherit}
+</style>
+
+<style id="board-mode">
+/* ══════════ 판서 모드 ══════════
+   학생 화면 = 키워드만. 글자가 적어야 아이들이 화면을 읽느라 지치지 않고,
+   빈 자리에 선생님이 판서하며 설명을 이어 갈 수 있다.
+   🧑‍🏫 교사 모드를 켜면 원래의 문장형 설명이 나온다. */
+.say{display:none}
+body.teacher .say{display:revert}
+
+/* 키워드 줄 — 크고 시원하게, 아래에 판서 여백 */
+.keyline-s{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 20px}
+body.teacher .keyline-s{display:none}
+.keyline-s .kw{font-family:var(--jua);font-size:clamp(19px,2.6vw,25px);font-weight:800;color:var(--ink);
+  background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;
+  border-radius:12px;padding:9px 18px;line-height:1.35}
+.keyline-s .kw.hi{border-color:var(--accent);background:#f6e8d8;color:var(--accent)}
+.keyline-s .kw.q{border-style:dashed;color:var(--ink-dim)}
+.keyline-s .arw{font-size:22px;color:var(--ink-mute);font-weight:800}
+.keyline-s .memo{flex:1 1 100%;min-height:34px}          /* 판서용 빈 자리 */
+@media(max-width:520px){.keyline-s{gap:8px}.keyline-s .kw{padding:8px 14px}}
+
+/* 인쇄物에서는 둘 다 보이게 — 학습지로 뽑을 때 설명이 사라지면 곤란하다 */
+@media print{.say{display:revert!important}.keyline-s{display:flex!important}}
+</style>
+
+<style id="why-module">
+/* ══════════ '왜 그럴까?' 모듈 ══════════
+   결론을 먼저 말하지 않는다. 아는 것 → 힌트 → 예상 → 조작 → 관찰 → 이유 → 정리. */
+.why-mod{border:2px solid var(--brass);background:linear-gradient(180deg,var(--paper-hi),var(--paper));
+ border-radius:18px;padding:22px 20px;margin-top:22px;box-shadow:var(--shadow)}
+.why-q{display:flex;gap:12px;align-items:flex-start}
+.why-q .qi{font-size:30px;line-height:1.1}
+.why-q .qt{font-family:var(--jua);font-size:clamp(20px,3.1vw,26px);color:var(--ink);line-height:1.45}
+.why-step{margin-top:20px;border-top:1px dashed var(--line);padding-top:18px}
+.why-h{display:flex;align-items:center;gap:9px;font-family:var(--jua);font-size:18.5px;color:var(--accent);margin-bottom:9px}
+.why-h .no{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;
+ background:linear-gradient(178deg,var(--brass-hi),var(--brass) 50%,var(--brass-dk));color:#fff;font-size:15px;
+ border:1px solid var(--brass-dk);flex:none}
+.why-step>p{font-size:15.5px;color:var(--ink-dim);line-height:1.72}
+
+/* 기억해 보기 — 도선 되짚기 */
+.recall{display:grid;gap:12px;grid-template-columns:1fr;background:#f6efdf;border:1px solid var(--line);
+ border-radius:13px;padding:14px;margin-top:10px}
+@media(min-width:780px){.recall{grid-template-columns:1fr 236px}}
+.recall .rc-svg{background:#faf4e6;border:1px solid var(--line-soft);border-radius:11px;padding:8px}
+.recall svg{display:block;width:100%;height:auto}
+.rbar{height:16px;border-radius:99px;background:#e7dbbe;border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.rbar i{display:block;height:100%;background:linear-gradient(90deg,var(--brass-hi),var(--c1));transition:width .3s}
+
+/* 예상하기 — 채점하지 않는다 */
+.wpick{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+.wpick button{flex:1 1 148px;font-family:var(--body);font-size:15px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;
+ padding:11px 13px;cursor:pointer;transition:.15s}
+.wpick button:hover{border-color:var(--accent);color:var(--ink)}
+.wpick button.sel{border-color:var(--c2);background:rgba(125,91,166,.13);color:var(--ink)}
+.wpick.small button{flex:1 1 108px;font-size:14.5px;padding:9px 11px}
+
+/* 회로 시뮬레이션 */
+.wsim{margin-top:12px}
+.duo{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:700px){.duo{grid-template-columns:1fr 1fr}}
+.wcirc{background:#faf4e6;border:1px solid var(--line);border-radius:13px;padding:10px 10px 8px}
+.wcirc.hi{border-color:var(--accent);box-shadow:0 0 0 2px rgba(160,92,44,.15)}
+.wcirc .ct{font-family:var(--jua);font-size:15.5px;text-align:center;color:var(--ink-dim);margin-bottom:3px}
+.wcirc svg{display:block;width:100%;height:auto}
+.wnum{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:5px}
+.wnum span{font-family:var(--mono);font-size:14px;font-weight:700;background:#f2e8d2;border:1px solid var(--line);
+ border-radius:99px;padding:3px 10px;color:var(--ink)}
+.wnum span.r{color:var(--c1)} .wnum span.i{color:var(--c6)}
+.wbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.wbar .lbl{font-size:14px;font-weight:700;color:var(--ink-dim)}
+.wtog{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;font-weight:700;color:var(--ink-dim);
+ background:var(--paper-hi);border:2px solid var(--line);border-radius:99px;padding:7px 14px;cursor:pointer}
+.wtog input{width:15px;height:15px;accent-color:var(--accent)}
+.wtog.on{border-color:var(--accent);color:var(--ink)}
+
+/* 접이식 — 계산식은 맨 마지막에, 눌러야 펼쳐진다 */
+.wfold{margin-top:16px}
+.wfold>summary{cursor:pointer;list-style:none;font-family:var(--jua);font-size:16.5px;color:var(--c2);
+ background:rgba(125,91,166,.08);border:1.5px solid var(--c2);border-radius:12px;padding:11px 15px}
+.wfold>summary::-webkit-details-marker{display:none}
+.wfold>summary::before{content:"▸ "}
+.wfold[open]>summary::before{content:"▾ "}
+.wfold .fold-in{padding:14px 4px 2px;font-size:15.5px;color:var(--ink-dim);line-height:1.85}
+.eqline{font-family:var(--mono);font-size:17px;color:var(--ink);text-align:center;margin:9px 0;font-weight:700}
+.obs-list{margin:8px 0 0;padding-left:19px}
+.obs-list li{font-size:15.5px;color:var(--ink-dim);margin:7px 0;line-height:1.7}
+.obs-list li b{color:var(--ink)}
+
+/* ══════════ 교과서식 비교표 빈칸 ══════════ */
+.ctab-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:#faf4e6;margin-top:14px}
+.ctab{border-collapse:collapse;width:100%;min-width:660px}
+.ctab th,.ctab td{border:1px solid var(--line-soft);padding:11px 13px;vertical-align:top;
+ font-size:15.5px;line-height:1.95;color:var(--ink-dim)}
+.ctab thead th{background:#efe4c9;text-align:center;font-family:var(--jua);font-size:17.5px;color:var(--ink);vertical-align:middle}
+.ctab thead th .sub{display:block;font-family:var(--body);font-size:12.5px;font-weight:600;
+ color:var(--ink-mute);margin-top:4px;line-height:1.5}
+.ctab thead th.sc{color:var(--accent)} .ctab thead th.pc{color:var(--c2)}
+.ctab th.rh{background:#f2e8d2;width:84px;min-width:84px;text-align:center;font-family:var(--jua);
+ font-size:16.5px;color:var(--ink);vertical-align:middle;line-height:1.4}
+.ctab td.dia{text-align:center;padding:8px}
+.ctab td.dia svg{display:block;width:100%;max-width:300px;height:auto;margin:0 auto}
+.ctab .fx{display:block;text-align:center;font-family:var(--mono);font-size:16.5px;font-weight:700;
+ color:var(--ink);margin:7px 0 3px;letter-spacing:.3px}
+.ctab ul{margin:0;padding-left:17px}
+.ctab li{margin:5px 0}
+.ctab .tip{display:block;font-size:13px;color:var(--ink-mute);margin-top:5px;padding-left:15px;
+ text-indent:-15px;line-height:1.6}
+@media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -681,7 +806,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  </button>
  <div class="head-right">
  <a class="hbtn" href="index.html" title="단원 허브로">⚡</a>
- <button class="hbtn" id="tmodeBtn" title="교사 모드">🧑‍🏫</button>
+ <button class="hbtn" id="tmodeBtn" title="교사 모드 — 문장 설명과 교실 노트 보기">🧑‍🏫</button>
  <div class="progress-mini" id="progWrap" title="진행도 — 누르면 남은 활동이 보여요">
  <svg class="pgauge" viewBox="0 0 96 56" aria-hidden="true">
  <path d="M10 50 A38 38 0 0 1 86 50" fill="#f6eedb" stroke="#7d541e" stroke-width="2.5"/>
@@ -719,12 +844,13 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel show" id="panel-open">
  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">생각 열기 · 언덕길이 수월한 까닭은?</span></div>
  <h1 class="big">전동기가 있으면<br>언덕길이 <span style="color:#2c6e5f">수월한</span> 까닭은?</h1>
- <p class="lead" style="margin-top:16px">
+ <p class="lead say" style="margin-top:16px">
  같은 언덕길인데, 전기 자전거를 탄 사람은 페달이 가볍습니다.
  바퀴를 돌려 주는 <b class="k">전동기</b>가 있기 때문이죠.
  전동기 안에는 <b style="color:#a05c2c">전류</b>가 흐르는 <b class="k">코일</b>과 <b class="k">자석</b>이 들어 있습니다.
  이 둘이 만나면 무슨 일이 벌어질까요?
  </p>
+ <div class="keyline-s"><span class="kw">전기 자전거 = 전동기</span><span class="kw">속에는 코일 + 자석</span><span class="arw">→</span><span class="kw q">둘이 만나면?</span><span class="memo"></span></div>
  <figure class="fig" data-fig="mo-bike"
  data-alt="언덕길을 오르는 두 사람 — 일반 자전거를 탄 사람은 힘들어하고, 전기 자전거를 탄 사람은 수월하게 오르는 모습"
  data-cap="전동기가 있으면 언덕길을 수월하게 올라갈 수 있는 까닭은 무엇일까? (도입)"></figure>
@@ -744,10 +870,11 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🔎 지난 시간에서 딱 한 걸음</h3>
- <p class="lead" style="font-size:17px;margin-top:8px">
+ <p class="lead say" style="font-size:17px;margin-top:8px">
  지난 시간에 확인했죠 — 전류가 흐르는 코일은 <b class="k">자석이 됩니다</b>(전자석).
  그렇다면 이 코일을 <b class="k">진짜 자석 옆에</b> 가져다 놓으면 어떻게 될까요?
  자석 두 개를 마주 놓은 것과 같은 일이 벌어질까요?</p>
+ <div class="keyline-s"><span class="kw">전류 흐르는 코일 = 전자석</span><span class="arw">→</span><span class="kw q">진짜 자석 옆에 두면?</span><span class="memo"></span></div>
  <div class="pill-list">
  <span class="pill">🧲 코일 = 전류가 만든 <b>자석</b> (지난 시간)</span>
  <span class="pill">🤝 자석 옆의 자석은? — <b>밀거나 당긴다</b> (초등)</span>
@@ -781,16 +908,18 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-explore">
  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">탐구하기 · 예상 먼저, 관찰은 그다음</span></div>
  <h2 class="sec">자석 앞에서 코일에 전류를 흘려 봅시다</h2>
- <p class="lead">「탐구」입니다. 그네처럼 매달린 코일 앞에 <b class="k">네오디뮴 자석</b>을 두고,
+ <p class="lead say">「탐구」입니다. 그네처럼 매달린 코일 앞에 <b class="k">네오디뮴 자석</b>을 두고,
  <b class="k">자석의 극</b>과 코일에 흐르는 <b style="color:#a05c2c">전류의 방향·세기</b>를 바꿔 가며
  코일의 움직임을 관찰합니다. 단, <b class="k">관찰하기 전에 예상부터</b> 합니다.</p>
+ <div class="keyline-s"><span class="kw">그네 코일 + 자석</span><span class="kw">극 · 전류 방향 · 세기</span><span class="arw">→</span><span class="kw hi">예상 먼저</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🔮 먼저 예상해 봅시다</h3>
- <p class="lead" style="font-size:17.5px;margin-top:10px">
+ <p class="lead say" style="font-size:17.5px;margin-top:10px">
  자석의 <b style="color:#b3362e">N극</b>이 코일을 마주 보고 있습니다.
  코일에 전류를 흘렸더니 코일의 마주 보는 쪽도 <b style="color:#b3362e">N극</b>이 되었어요.
  — 이 순간, 코일은 어떻게 될까요?</p>
+ <div class="keyline-s"><span class="kw">자석 N극 ↔ 코일도 N극</span><span class="arw">→</span><span class="kw q">코일은 어떻게 될까?</span><span class="memo"></span></div>
  <div class="modebar" id="poeBar">
  <button class="btn ghost sm" data-poe="push">① 자석에서 밀려난다</button>
  <button class="btn ghost sm" data-poe="pull">② 자석 쪽으로 끌려간다</button>
@@ -820,9 +949,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="badge" style="margin-bottom:12px">⚙️ 가상 실험 — 자석의 극과 전류를 직접 바꿔 보기</div>
  <div class="lab">
  <h3>⚙️ 힘 실험대</h3>
- <p class="lead" style="font-size:17px">스위치를 닫고, <b class="k">자석의 극</b>과 <b style="color:#a05c2c">전류의 방향·세기</b>를
+ <p class="lead say" style="font-size:17px">스위치를 닫고, <b class="k">자석의 극</b>과 <b style="color:#a05c2c">전류의 방향·세기</b>를
  바꿔 가며 코일의 움직임을 관찰하세요. 관찰한 조합은 <b>📌 기록</b>을 눌러 표에 쌓입니다.
  <b class="k">네 가지 조합</b>(자석 극 2가지 × 전류 방향 2가지)을 모두 모아 보세요 — 아까의 예상이 판정됩니다.</p>
+ <div class="keyline-s"><span class="kw">스위치 닫고 극·방향·세기 바꾸기</span><span class="arw">→</span><span class="kw hi">네 조합 모두 📌 기록</span><span class="memo"></span></div>
  <div class="simgrid">
  <div>
  <div class="svgstage">
@@ -915,7 +1045,8 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="r"><div class="lab2">힘의 방향</div><div class="v" id="rForce" style="color:#2c6e5f;font-size:17px">—</div></div>
  <div class="r"><div class="lab2">힘의 크기</div><div class="v" id="rMag" style="color:#a05c2c;font-size:17px">—</div></div>
  </div>
- <p class="help">코일의 극은 <b>전류의 방향</b>이 정하고(지난 시간의 규칙), 힘의 <b>방향</b>은 마주 보는 두 극이, 힘의 <b>크기</b>는 전류의 세기가 정합니다.</p>
+ <p class="help say">코일의 극은 <b>전류의 방향</b>이 정하고(지난 시간의 규칙), 힘의 <b>방향</b>은 마주 보는 두 극이, 힘의 <b>크기</b>는 전류의 세기가 정합니다.</p>
+ <div class="keyline-s"><span class="kw">코일의 극 = 전류 방향</span><span class="kw">힘의 방향 = 마주 본 두 극</span><span class="kw">힘의 크기 = 전류 세기</span><span class="memo"></span></div>
  </div>
  </div>
  <div class="verdict" id="labMsg">먼저 <b>스위치를 닫아</b> 보세요. 그다음 자석의 극과 전류의 방향을 바꿔 가며 <b>네 가지 조합</b>을 모두 기록해 봅시다.</div>
@@ -954,14 +1085,16 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-mech">
  <div class="stepline"><span class="sbadge">STEP 3</span><span class="swhat">원리 뜯어보기 · 밀고 당기는 힘으로 돌리고 떨리게 하기</span></div>
  <h2 class="sec">이 힘으로 무엇을 만들까 — 전동기, 그리고 스피커</h2>
- <p class="lead">실험에서 캐낸 두 문장이 오늘의 부품입니다.
+ <p class="lead say">실험에서 캐낸 두 문장이 오늘의 부품입니다.
  <b class="k">힘의 방향은 극이 정하고, 힘의 크기는 전류의 세기가 정한다.</b>
  이 부품으로 인류는 <b class="k">도는 기계</b>와 <b class="k">떨리는 기계</b>를 만들었어요.</p>
+ <div class="keyline-s"><span class="kw">힘의 방향 = 극</span><span class="kw">힘의 크기 = 전류</span><span class="arw">→</span><span class="kw hi">도는 기계 · 떨리는 기계</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t" style="margin-bottom:6px">🧲 힘의 규칙 — 자석 두 개와 똑같다 (그림 7-18)</h3>
- <p class="lead" style="font-size:17px">전류가 흐르는 코일은 자석처럼 극이 생기므로,
+ <p class="lead say" style="font-size:17px">전류가 흐르는 코일은 자석처럼 극이 생기므로,
  자석과 코일 사이의 힘도 <b class="k">자석 두 개 사이의 힘과 같은 규칙</b>을 따릅니다.</p>
+ <div class="keyline-s"><span class="kw">코일에도 극이 생김</span><span class="arw">→</span><span class="kw hi">자석 두 개와 같은 규칙</span><span class="memo"></span></div>
  <div class="forcegrid" style="grid-template-columns:1fr;max-width:640px;margin-left:auto;margin-right:auto">
  <div class="forcecard">
  <svg viewBox="0 0 560 150" role="img" aria-label="자석의 엔극과 코일의 엔극이 마주 보고 있고, 자석과 코일이 서로 반대 방향으로 밀려나는 힘의 화살표가 그려져 있다.">
@@ -1028,11 +1161,12 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🚁 도는 기계, 전동기 <span class="badge" style="vertical-align:middle"> </span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  드론의 날개를 돌리는 것이 <b class="k">전동기</b>입니다. 전동기는 자기장 안에서 전류가 흐르는 코일이
  받는 힘을 이용하는 대표적인 예로, <b class="k">자석과 코일</b>로 구성되어 있어요.
  코일에 전류가 흐르면 코일에 <b style="color:#2c6e5f">자기장</b>이 생겨 자석처럼 N극과 S극이 생기고 —
  자석과 <b class="k">같은 극끼리는 밀어 내고 다른 극끼리는 끌어당기며</b> 코일이 회전합니다.</p>
+ <div class="keyline-s"><span class="kw">자기장 속 코일이 받는 힘</span><span class="arw">→</span><span class="kw hi">전동기</span><span class="kw">같은 극 밀고 · 다른 극 당김</span><span class="memo"></span></div>
  <div class="lab" style="margin-top:14px">
  <h3>🚁 전동기 돌리기</h3>
  <p class="lead" style="font-size:16.5px">전류의 세기를 바꿔 보세요. 회전이 어떻게 달라지나요?</p>
@@ -1065,7 +1199,8 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="r"><div class="lab2">코일이 받는 힘</div><div class="v" id="motForce" style="color:#a05c2c;font-size:17px">중간</div></div>
  <div class="r"><div class="lab2">회전 빠르기</div><div class="v" id="motSpeed" style="color:#2c6e5f;font-size:17px">중간</div></div>
  </div>
- <p class="help">전류를 세게 → 코일이 받는 <b>힘이 커짐</b> → 회전이 <b>빨라짐</b>. 두 읽기값이 항상 나란히 움직이는지 확인해 보세요. 0으로 줄이면? 힘이 사라져 멈춰요.</p>
+ <p class="help say">전류를 세게 → 코일이 받는 <b>힘이 커짐</b> → 회전이 <b>빨라짐</b>. 두 읽기값이 항상 나란히 움직이는지 확인해 보세요. 0으로 줄이면? 힘이 사라져 멈춰요.</p>
+ <div class="keyline-s"><span class="kw">전류 세게</span><span class="arw">→</span><span class="kw">힘 커짐</span><span class="arw">→</span><span class="kw">회전 빨라짐</span><span class="kw">0이면 멈춤</span><span class="memo"></span></div>
  </div>
  </div>
  <p class="honest"><span class="ic">📌</span>코일이 반 바퀴 돌 때마다 <b>전류의 방향이 주기적으로 바뀌어야</b> 계속 같은 방향으로 돕니다.
@@ -1082,11 +1217,12 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🔊 떨리는 기계, 스피커 <span class="badge" style="vertical-align:middle"> </span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  스피커 안에는 <b class="k">고정된 자석</b>과 <b class="k">진동판에 연결된 코일</b>이 있습니다.
  코일에 흐르는 전류의 <b style="color:#a05c2c">방향이 바뀌면</b> 코일이 받는 <b style="color:#2c6e5f">힘의 방향이 바뀌고</b>,
  코일에 연결된 <b class="k">진동판이 진동</b>하여 소리가 발생해요.
  전동기가 힘으로 '돌린다'면, 스피커는 힘으로 '떨리게' 합니다.</p>
+ <div class="keyline-s"><span class="kw">전류 방향이 바뀜</span><span class="arw">→</span><span class="kw">힘의 방향이 바뀜</span><span class="arw">→</span><span class="kw hi">진동판이 떨림</span><span class="memo"></span></div>
  <div class="lab" style="margin-top:14px">
  <h3>🔊 스피커 울리기</h3>
  <p class="lead" style="font-size:16.5px">전류의 방향을 교대로 바꿔 보세요. 진동판이 어떻게 되나요?</p>
@@ -1135,7 +1271,8 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="r"><div class="lab2">힘의 방향</div><div class="v" id="spkDir" style="color:#2c6e5f;font-size:17px">—</div></div>
  <div class="r"><div class="lab2">진동판</div><div class="v" id="spkState" style="font-size:17px">정지</div></div>
  </div>
- <p class="help">전류의 방향이 바뀔 때마다 힘의 방향이 바뀝니다. 힘의 방향이 <b>왔다 갔다</b> 하니, 진동판도 왔다 갔다 — 그것이 <b>진동</b>이고, 진동이 소리를 만듭니다.</p>
+ <p class="help say">전류의 방향이 바뀔 때마다 힘의 방향이 바뀝니다. 힘의 방향이 <b>왔다 갔다</b> 하니, 진동판도 왔다 갔다 — 그것이 <b>진동</b>이고, 진동이 소리를 만듭니다.</p>
+ <div class="keyline-s"><span class="kw">힘의 방향이 왔다 갔다</span><span class="arw">→</span><span class="kw hi">진동 → 소리</span><span class="memo"></span></div>
  </div>
  </div>
  </div>
@@ -1222,15 +1359,17 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 <section class="panel" id="panel-apply">
  <div class="stepline"><span class="sbadge">STEP 4</span><span class="swhat">적용하기 · 코일이 받는 힘이 일하는 곳</span></div>
  <h2 class="sec">우리 집에도 전동기가 숨어 있다</h2>
- <p class="lead">물체를 <b class="k">움직이거나 회전시키는 전기 기구</b>의 속을 열어 보면
+ <p class="lead say">물체를 <b class="k">움직이거나 회전시키는 전기 기구</b>의 속을 열어 보면
  거의 어김없이 자석과 코일이 나옵니다(「해 보기」).
  도는 것은 전동기, 떨리는 것은 스피커 방식 — 오늘 배운 힘이 곳곳에서 일하고 있어요.</p>
+ <div class="keyline-s"><span class="kw">도는 것 = 전동기</span><span class="kw">떨리는 것 = 스피커</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
  <div class="lab">
  <h3>🔍 코일이 받는 힘을 활용한 예 찾기</h3>
- <p class="lead" style="font-size:17px">각 기구에서 코일이 받는 힘이 <b class="k">무엇을 하는지</b> 살펴보세요.
+ <p class="lead say" style="font-size:17px">각 기구에서 코일이 받는 힘이 <b class="k">무엇을 하는지</b> 살펴보세요.
  공통점은 하나 — 자기장 안의 코일에 전류를 흘려 <b style="color:#2c6e5f">힘</b>을 얻는다는 것.</p>
+ <div class="keyline-s"><span class="kw">공통점 하나</span><span class="arw">→</span><span class="kw hi">자기장 속 코일에 전류 → 힘</span><span class="memo"></span></div>
  <div class="checkgrid" id="sortGrid" style="margin-top:16px">
  <div class="checkline sort-item" data-mat="m1" data-k="회전" style="cursor:default;flex-wrap:wrap;align-items:center">
  <span style="flex:none;font-size:20px">🧺</span>
@@ -1299,9 +1438,10 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🧩 블록 질문에 답하기 <span class="badge" style="vertical-align:middle">세 번째 블록 찾기</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:10px">
+ <p class="lead say" style="font-size:17.5px;margin-top:10px">
  <b class="k">전동기를 더 빨리 회전하게 하려면 어떻게 해야 할까?</b><br>
  위의 단서 ①과 ②를 이어서, 까닭까지 담아 설명해 보세요.</p>
+ <div class="keyline-s"><span class="kw q">전동기를 더 빨리 돌리려면?</span><span class="arw">→</span><span class="kw">단서 ①②를 이어서</span><span class="memo"></span></div>
  <textarea id="essay" placeholder="힌트: 전동기가 도는 것은 자석과 코일 사이의 힘 때문이었죠. 그 힘을 더 크게 하려면 무엇을 어떻게 하면 될까요?"></textarea>
  <span class="savemark" id="essaySaved">✔ 저장됨</span>
  <div class="btn-row"><button class="btn ghost sm" id="ansBtn">모범 답안 확인하기</button></div>
@@ -1364,49 +1504,53 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  <div class="grid c2" style="margin-top:20px">
  <div class="card">
  <h3 class="card-t">🌀 반 바퀴의 고비를 넘기는 법 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  코일이 반 바퀴 돌면, 아까 밀어 주던 극이 이제는 당기는 자리에 옵니다.
  전류가 그대로면 코일은 그 자리에 <b class="k">멈춰 버려요.</b><br><br>
  그래서 코일이 도는 전동기 속에는 반 바퀴마다 <b class="k">전류의 방향을 저절로 바꿔 주는 부품</b>이
  들어 있습니다(정류자와 브러시라고 불러요). 덕분에 코일의 극이 계속 바뀌면서
  밀고 당기는 힘이 <b>한 방향의 회전</b>으로 이어집니다. 자세한 구조는 고등학교에서 만납니다.</p>
+ <div class="keyline-s"><span class="kw">반 바퀴 돌면 멈출 판</span><span class="arw">→</span><span class="kw hi">정류자·브러시가 전류를 뒤집음</span><span class="memo"></span></div>
  </div>
  <div class="card">
  <h3 class="card-t">🚁 거꾸로, 자석이 도는 전동기 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  전동기 중에는 코일이 돌지 않고 <b class="k">자석이 회전축에 연결되어 도는</b> 종류도 있습니다.
  자석이 돌면 코일에 흐르는 전류의 방향을 기계 부품으로 바꿔 줄 필요가 없어서
  구조가 단순하고 오래갑니다.<br><br>
  완구용·교육용 드론에는 주로 <b>코일이 도는 형태</b>가,
  실용 드론에는 <b>자석이 도는 형태</b>가 쓰여요. 어느 쪽이든 원리는 오늘 배운 그대로 —
  자기장 안의 코일에 전류가 흘러 힘을 주고받는 것입니다.</p>
+ <div class="keyline-s"><span class="kw">코일이 도는 형</span><span class="kw">자석이 도는 형</span><span class="arw">→</span><span class="kw">구조가 단순 · 오래감</span><span class="memo"></span></div>
  </div>
  </div>
 
  <div class="grid c2" style="margin-top:18px">
  <div class="card">
  <h3 class="card-t">📏 코일이 아니라 도선 한 가닥이라면 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  「더 해 보기」 — 말굽자석 사이에 <b class="k">알루미늄 포일</b>을 걸고
  전류를 흘리면, 코일이 아닌 도선 한 가닥도 <b class="k">힘을 받아 휘어집니다.</b>
  전류의 방향을 반대로 바꾸면 휘어지는 방향도 반대가 되고요.<br><br>
  자기장 안에서 전류가 흐르는 것은 코일이든 곧은 도선이든 힘을 받는다 —
  코일은 이 힘을 <b>회전</b>으로 바꾸기 좋게 감아 놓은 모양일 뿐입니다.</p>
+ <div class="keyline-s"><span class="kw">코일이 아니어도</span><span class="arw">→</span><span class="kw hi">곧은 도선도 힘을 받는다</span><span class="memo"></span></div>
  </div>
  <div class="card">
  <h3 class="card-t">💨 드라이어 속 들여다보기 <span class="badge">시험 X</span></h3>
- <p class="lead" style="font-size:17.5px;margin-top:8px">
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
  이 단원의 표지 사진이 드라이어였죠. 드라이어 속 <b class="k">전동기가 회전하면</b>
  전동기에 연결된 <b>날개가 돌며</b> 주변 공기를 빨아들여 앞으로 뿜어냅니다.
  공기 청정기의 팬도 같은 방식이에요.<br><br>
  바람을 더 세게 하고 싶다면? 이제 답할 수 있습니다 —
  전동기를 더 빨리 돌리면 되고, 그 방법은 <b class="k">전류를 더 세게</b> 하는 것.</p>
+ <div class="keyline-s"><span class="kw">드라이어 속 전동기</span><span class="arw">→</span><span class="kw">날개 회전</span><span class="arw">→</span><span class="kw">바람</span><span class="memo"></span></div>
  </div>
  </div>
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🎬 다시, 처음 그 질문</h3>
- <p class="lead" style="font-size:18.5px;margin-top:10px">
+ <p class="lead say" style="font-size:18.5px;margin-top:10px">
  <b class="k">"전동기가 있으면 언덕길을 수월하게 올라갈 수 있는 까닭은 무엇일까?"</b><br><br>
  이제 답할 수 있습니다 — 전동기가 <b class="k">바퀴에 힘을 작용하여 바퀴를 회전시키기 때문</b>입니다.
  그리고 그 전동기가 도는 까닭은, 자기장 안의 코일에 <b style="color:#a05c2c">전류</b>가 흐르면
@@ -1414,6 +1558,7 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
  전류가 만드는 자기장(지난 시간), 자기장이 전류에 주는 힘(오늘) —
  이 둘이 <b class="k">전류의 자기 작용</b>이라는 한 단원의 두 기둥입니다.
  </p>
+ <div class="keyline-s"><span class="kw">전동기가 바퀴에 힘</span><span class="arw">→</span><span class="kw hi">자기장 속 코일에 전류 → 밀고 당김</span><span class="memo"></span></div>
  <div class="cta-row" style="justify-content:center">
  <button class="btn ghost" data-go="open">1단계로 돌아가기 ↑</button>
  <a class="btn ghost" href="07-coil-field.html">🧭 지난 차시 다시 보기</a>
@@ -1633,7 +1778,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
   $('#tmodeBtn').addEventListener('click',()=>{
     const on=!document.body.classList.contains('teacher');
     document.body.classList.toggle('teacher',on);localStorage.setItem(KEY,on?'1':'0');
-    toast(on?'교사 모드 ON — 교실 연결 노트가 보입니다 🧑‍🏫':'교사 모드 OFF — 학생 화면입니다 🎒');});})();
+    toast(on?'교사 모드 ON — 문장 설명과 교실 노트가 보입니다 🧑‍🏫':'학생 화면 — 키워드만 보입니다 🎒');});})();
 
 (function(){const wrap=$('#progWrap'),list=$('#progList');
   wrap.addEventListener('click',()=>list.classList.toggle('show'));
