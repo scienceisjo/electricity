@@ -1,0 +1,1495 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script>
+/* 전자칠판 뷰포트 보정 — 패널 브라우저가 폭을 좁게 잡아 왼쪽으로 몰릴 때만 동작 */
+(function(){
+  try{
+    var iw=window.innerWidth, sw=screen.width;
+    if(sw>=1600 && (sw/iw)>1.15){
+      document.querySelector('meta[name=viewport]')
+        .setAttribute('content','width='+sw+', user-scalable=no, viewport-fit=cover');
+    }
+  }catch(e){}
+})();
+</script>
+<title>전기와 자기 이야기보따리 — 문지른 호박 한 조각에서 빛의 정체까지</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  /* ── 에디슨 연구실 종이·황동 테마 (전기와자기 단원과 동일) ── */
+  --paper:#f2e8d5; --paper-hi:#f9f2e3; --paper-lo:#e6d7ba;
+  --surface:#f7f0de; --surface2:#f2e8d2;
+  --ink:#2a2013; --ink-dim:#4a3a26; --ink-mute:#6b573f;
+  --line:#cbb894; --line-soft:#dccfae;
+  --wood:#6d4b2a; --brass:#b9873c; --brass-dk:#7d541e;
+  --accent:#8a4a1e;   /* 종이 배경에서 작은 글자도 4.5:1을 넘기도록 #a05c2c보다 진하게 */
+  /* ── 개념색 — 단원 전체 고정 ── */
+  --pos:#b23a30;      /* (+)전하 · 전기 대표색 */
+  --neg:#2e5f8f;      /* (−)전하 */
+  --electron:#3a7a3f; /* 전자 */
+  /* ── 이 자료에서 새로 배정 ── */
+  --mag:#1f6f68;      /* 자기 · 자석 · 자기장 */
+  --light:#7a3fa0;    /* 빛 = 전기와 자기가 합쳐진 것 */
+  --disp:'Gowun Batang',Pretendard,system-ui,serif;
+  --body:Pretendard,system-ui,-apple-system,'Malgun Gothic',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+html{background:#efe4cd}
+body{
+  margin:0; color:var(--ink); font-family:var(--body); overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+  background:
+    radial-gradient(1100px 620px at 82% -8%, rgba(160,92,44,.13), transparent 62%),
+    radial-gradient(820px 520px at 6% 10%, rgba(185,135,60,.11), transparent 58%),
+    linear-gradient(180deg,#f6ecd8,#eee2c9);
+}
+/* 종이 결 */
+body::after{
+  content:""; position:fixed; inset:0; z-index:9; pointer-events:none; opacity:.5;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.05'/></feComponentTransfer></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ── 상단 바 ───────────────────────── */
+.topbar{
+  position:fixed; top:0; left:0; right:0; z-index:40; display:flex; align-items:center; gap:10px;
+  padding:10px clamp(12px,2vw,26px);
+  background:linear-gradient(180deg,rgba(246,236,216,.94),rgba(246,236,216,0));
+}
+.brand{
+  font-family:var(--disp); font-weight:700; letter-spacing:-.01em; color:var(--accent);
+  font-size:clamp(14px,1.35vw,20px); background:none; border:0; cursor:pointer; padding:6px 8px; border-radius:10px;
+}
+.brand:hover{background:rgba(160,92,44,.1)}
+.spacer{flex:1}
+.tbtn{
+  background:var(--surface); color:var(--ink-dim); border:1px solid var(--line); border-radius:999px;
+  padding:8px clamp(10px,1vw,16px); font-size:clamp(12px,1.05vw,16px); font-weight:700; cursor:pointer;
+  font-family:inherit; white-space:nowrap;
+}
+.tbtn:hover{background:var(--paper-hi)}
+.tbtn[aria-pressed="true"]{background:#efe2ff; border-color:var(--light); color:#5a2b7c}
+.counter{font-variant-numeric:tabular-nums; color:var(--ink-mute); font-size:clamp(12px,1.05vw,16px); font-weight:700; padding:0 4px}
+
+/* ── 무대 ─────────────────────────── */
+#stage{position:fixed; inset:0; z-index:10;
+  padding:clamp(56px,7vh,84px) clamp(14px,3vw,54px) clamp(74px,10vh,108px)}
+.scene{
+  position:absolute; inset:clamp(56px,7vh,84px) clamp(14px,3vw,54px) clamp(74px,10vh,108px);
+  display:none; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:clamp(14px,2.4vw,42px);
+  align-items:center; overflow:auto; opacity:0; transform:translateY(14px);
+}
+.scene.wide{grid-template-columns:minmax(0,1fr)}
+.scene.on{display:grid; animation:in .5s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes in{to{opacity:1; transform:none}}
+.txt{max-width:44ch}
+.kicker{
+  display:inline-flex; align-items:center; gap:8px; font-size:clamp(11px,1vw,15px); font-weight:800;
+  letter-spacing:.1em; color:var(--accent); border:1px solid rgba(160,92,44,.4);
+  background:rgba(160,92,44,.07); padding:5px 12px; border-radius:999px; margin-bottom:clamp(8px,1.4vh,16px);
+}
+h2.title{font-family:var(--disp); margin:0 0 clamp(8px,1.6vh,18px);
+  font-size:clamp(26px,3.5vw,56px); line-height:1.18; letter-spacing:-.02em; font-weight:700}
+.lead{font-size:clamp(15px,1.45vw,25px); line-height:1.68; color:var(--ink); margin:0 0 clamp(8px,1.4vh,16px)}
+.sub{font-size:clamp(13px,1.2vw,19px); line-height:1.72; color:var(--ink-dim); margin:0 0 12px}
+.kp{color:var(--pos); font-weight:700}      /* 전기 */
+.km{color:var(--mag); font-weight:700}      /* 자기 */
+.kl{color:var(--light); font-weight:700}    /* 빛 */
+.ke{color:var(--electron); font-weight:700} /* 전자 */
+.kn{color:var(--neg); font-weight:700}      /* (−)전하 */
+.big{font-size:clamp(28px,4vw,64px); font-weight:800; letter-spacing:-.03em; line-height:1;
+  font-variant-numeric:tabular-nums; font-family:var(--disp)}
+
+/* 비주얼 */
+.viz{position:relative; width:100%; height:clamp(240px,58vh,720px); border-radius:20px; overflow:hidden;
+  background:var(--surface); border:1px solid var(--line); box-shadow:0 10px 30px -18px rgba(80,55,20,.55)}
+.viz canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
+.vizcap{position:absolute; left:14px; bottom:12px; right:14px; font-size:clamp(11px,1vw,15px);
+  color:var(--ink-mute); pointer-events:none}
+
+/* 조작 */
+.ctl{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:12px}
+.pill{background:var(--surface); border:1px solid var(--line); color:var(--ink-dim); border-radius:999px;
+  padding:9px 16px; font-weight:700; cursor:pointer; font-family:inherit; font-size:clamp(12px,1.1vw,17px)}
+.pill:hover{background:var(--paper-hi)}
+.pill.on{background:rgba(31,111,104,.14); border-color:var(--mag); color:#14514c}
+.pill.pe.on{background:rgba(178,58,48,.12); border-color:var(--pos); color:#8d2c24}
+input[type=range]{width:100%; accent-color:var(--accent); height:26px}
+.slab{display:flex; align-items:center; gap:12px; margin-top:10px; font-size:clamp(12px,1.1vw,17px); font-weight:700; color:var(--ink-dim)}
+.slab .val{font-variant-numeric:tabular-nums; min-width:5.5ch; color:var(--accent)}
+
+/* 카드 */
+.cards{display:grid; gap:clamp(8px,1.2vw,16px)}
+.cards.two{grid-template-columns:1fr 1fr}
+.cards.three{grid-template-columns:repeat(3,1fr)}
+.cards.four{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:clamp(12px,1.5vw,20px)}
+.card h4{font-family:var(--disp); margin:0 0 8px; font-size:clamp(14px,1.35vw,21px)}
+.card p{margin:0; font-size:clamp(12px,1.1vw,17px); line-height:1.62; color:var(--ink-dim)}
+.card.e{border-color:rgba(178,58,48,.45)} .card.m{border-color:rgba(31,111,104,.45)}
+.badge{display:inline-block; font-size:clamp(10px,.95vw,14px); font-weight:800; padding:3px 10px; border-radius:999px; margin-bottom:8px}
+.badge.e{background:rgba(178,58,48,.13); color:#8d2c24}
+.badge.m{background:rgba(31,111,104,.14); color:#14514c}
+.badge.l{background:rgba(122,63,160,.13); color:#5a2b7c}
+
+/* 비교표 */
+table.cmp{width:100%; border-collapse:collapse; font-size:clamp(12px,1.1vw,17px); margin-top:6px}
+table.cmp th,table.cmp td{border:1px solid var(--line); padding:9px 11px; text-align:left}
+table.cmp th{background:var(--paper-lo); font-weight:800; font-size:clamp(11px,1.05vw,16px)}
+table.cmp td.e{color:#8d2c24} table.cmp td.m{color:#14514c}
+
+/* 예측 손들기 */
+.vote{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px}
+.vbox{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px; text-align:center}
+.vnum{font-family:var(--disp); font-size:clamp(26px,3.2vw,50px); font-weight:700; font-variant-numeric:tabular-nums; line-height:1.1}
+.vbar{height:10px; border-radius:99px; background:var(--paper-lo); overflow:hidden; margin:8px 0}
+.vbar i{display:block; height:100%; width:0; border-radius:99px; transition:width .35s}
+.vrow{display:flex; gap:8px; justify-content:center}
+.vrow button{width:44px; height:40px; font-size:19px; font-weight:800; border-radius:11px;
+  border:1px solid var(--line); background:var(--paper-hi); color:var(--ink); cursor:pointer; font-family:inherit}
+.vrow button:hover{background:var(--paper-lo)}
+
+/* 세그먼트 */
+.seg{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px}
+.seg button{flex:1 1 auto; padding:9px 10px; border-radius:11px; border:1px solid var(--line);
+  background:var(--surface); color:var(--ink-dim); font-weight:700; cursor:pointer; font-family:inherit;
+  font-size:clamp(11px,1.02vw,15px)}
+.seg button.on{background:var(--ink); color:var(--paper-hi); border-color:var(--ink)}
+
+/* 교사 대본 */
+.script{display:none}
+#scriptPanel{
+  display:none; position:fixed; right:clamp(10px,1.4vw,20px); bottom:clamp(84px,11vh,112px); z-index:45;
+  width:min(400px,32vw); max-height:46vh; overflow:auto;
+  border:1px solid #c9b1e4; border-left:4px solid var(--light); border-radius:16px;
+  background:#fbf6ff; box-shadow:0 18px 44px -18px rgba(70,40,100,.5);
+  padding:clamp(10px,1.1vw,16px) clamp(12px,1.2vw,18px);
+  font-size:clamp(11px,.95vw,15px); line-height:1.66; color:#3a2b48;
+}
+body.teacher #scriptPanel{display:block; animation:sin .28s ease-out}
+@keyframes sin{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+#scriptPanel .pt{display:block; font-size:10.5px; font-weight:800; letter-spacing:.04em;
+  color:var(--light); margin-bottom:8px}
+#scriptPanel b{color:#5a2b7c}
+#scriptPanel .ask{display:block; margin-top:8px; color:#8d2c24; font-weight:800}
+#scriptPanel ul{margin:6px 0 0; padding-left:1.1em} #scriptPanel li{margin:3px 0}
+
+/* ── 하단 네비 ─────────────────────── */
+.navbar{position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex; flex-direction:column;
+  align-items:center; gap:6px; padding:8px clamp(12px,2vw,26px) 10px;
+  background:linear-gradient(0deg,rgba(240,229,206,.96),rgba(240,229,206,0))}
+.dots{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; max-width:min(760px,92vw)}
+.dot{width:10px; height:10px; border-radius:99px; background:var(--line); border:0; padding:0; cursor:pointer}
+.dot.on{background:var(--accent); width:26px}
+.arrows{display:flex; align-items:center; gap:10px}
+.arrow{background:var(--surface); border:1px solid var(--line); color:var(--ink); border-radius:999px;
+  padding:9px clamp(14px,1.6vw,26px); font-size:clamp(13px,1.25vw,19px); font-weight:800; cursor:pointer; font-family:inherit}
+.arrow:hover{background:var(--paper-hi)}
+.arrow.next{background:var(--accent); color:#fdf4e0; border-color:var(--accent)}
+.arrow.next:hover{background:#6f3a15}
+.arrow[disabled]{opacity:.35; cursor:default}
+.hint{font-size:11px; color:var(--ink-mute)}
+
+/* ── 표지 ─────────────────────────── */
+#cover{position:fixed; inset:0; z-index:30; display:grid; place-items:center; text-align:center; padding:24px;
+  background:radial-gradient(80% 60% at 50% 40%, rgba(255,246,225,.9), rgba(238,226,201,.98) 72%)}
+#cover.hide{display:none}
+.cov-emoji{font-size:clamp(30px,4.6vw,62px); letter-spacing:.16em; margin-bottom:10px}
+.cov-unit{font-size:clamp(12px,1.15vw,18px); font-weight:800; letter-spacing:.18em; color:var(--accent)}
+h1{font-family:var(--disp); margin:.24em 0 .18em; font-size:clamp(30px,6vw,96px); line-height:1.08;
+  letter-spacing:-.02em; font-weight:700; color:var(--ink)}
+h1 em{font-style:normal; color:var(--accent)}
+.cov-sub{font-size:clamp(14px,1.6vw,26px); color:var(--ink-dim); margin:0 auto clamp(10px,1.8vh,20px); max-width:34ch; line-height:1.6}
+.cov-src{font-size:clamp(11px,1.05vw,16px); color:var(--ink-mute); margin:0 auto clamp(14px,2.4vh,26px); max-width:44ch; line-height:1.6}
+.cov-src b{color:var(--accent); font-weight:700}
+.srcnote{margin-top:clamp(14px,2.4vh,26px); padding-top:12px; border-top:1px solid var(--line);
+  font-size:clamp(11px,1.05vw,16px); color:var(--ink-mute); line-height:1.65}
+.srcnote b{color:var(--accent)}
+.cov-list{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:min(880px,92vw); margin:0 auto clamp(16px,3vh,34px)}
+.cov-list span{font-size:clamp(11px,1.05vw,16px); font-weight:700; color:var(--ink-mute);
+  background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:6px 13px}
+.enter{font-size:clamp(15px,1.6vw,24px); font-weight:800; padding:14px clamp(24px,3vw,48px); border-radius:999px;
+  cursor:pointer; border:0; color:#fdf4e0; font-family:inherit; background:var(--accent);
+  box-shadow:0 14px 34px -14px rgba(160,92,44,.85)}
+.enter:hover{background:#6f3a15}
+.resume{display:block; margin:12px auto 0; background:none; border:0; color:var(--ink-mute);
+  font-size:clamp(12px,1.1vw,16px); font-family:inherit; cursor:pointer; text-decoration:underline; text-underline-offset:4px}
+.resume:hover{color:var(--accent)}
+
+/* ── 목차 ─────────────────────────── */
+#toc{position:fixed; inset:0; z-index:50; display:none; place-items:center; background:rgba(60,44,20,.55); padding:24px}
+#toc.on{display:grid}
+.tocbox{width:min(880px,94vw); max-height:82vh; overflow:auto; background:var(--paper-hi);
+  border:1px solid var(--line); border-radius:20px; padding:clamp(14px,2vw,26px);
+  box-shadow:0 30px 70px -30px rgba(60,40,10,.8)}
+.tocbox h3{font-family:var(--disp); margin:0 0 12px; font-size:clamp(16px,1.6vw,24px)}
+.tocgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:8px}
+.tocitem{text-align:left; background:var(--surface); border:1px solid var(--line); border-radius:13px;
+  padding:11px 14px; color:var(--ink); cursor:pointer; font-family:inherit; font-size:clamp(12px,1.1vw,16px); font-weight:700}
+.tocitem:hover{background:rgba(160,92,44,.12)}
+.tocitem b{display:block; font-size:11px; color:var(--accent); letter-spacing:.1em; margin-bottom:3px; font-weight:800}
+
+#app-credit{position:fixed; left:0; right:0; bottom:0; z-index:31; opacity:0; pointer-events:none;
+  margin:0!important; transition:opacity .3s}
+#cover:not(.hide) ~ #app-credit{opacity:1; pointer-events:auto}
+
+@media (max-width:900px){
+  .scene{grid-template-columns:minmax(0,1fr); align-content:start; gap:14px}
+  .viz{height:clamp(200px,38vh,340px)}
+  .cards.three,.cards.four{grid-template-columns:1fr}
+  .txt{max-width:none}
+  #scriptPanel{left:10px; right:10px; width:auto; bottom:78px; max-height:38vh; font-size:13px}
+  .vote{grid-template-columns:1fr}
+  .hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .scene.on{animation:none; opacity:1; transform:none}
+  .vbar i{transition:none}
+}
+
+/* ── 인쇄 = 이야기 + 교사 대본 유인물 ── */
+@media print{
+  html,body{background:#fff!important; height:auto; overflow:visible}
+  body::after{display:none}
+  #sky,.topbar,.navbar,#toc,#cover,#scriptPanel,.viz,.ctl,.slab,.vrow,.seg{display:none!important}
+  #stage{position:static; display:block; padding:0}
+  .scene{position:static!important; display:grid!important; grid-template-columns:1fr!important;
+    opacity:1!important; transform:none!important; animation:none!important; inset:auto;
+    overflow:visible; padding:0 0 8mm; margin-bottom:8mm; break-after:page; page-break-after:always}
+  .txt{max-width:none}
+  h2.title{font-size:19pt} .lead{font-size:11.5pt; color:#1b1710} .sub{font-size:10pt; color:#3d3122}
+  .big{font-size:19pt} .card{background:#f7f4ec; border:1px solid #bbb}
+  .scene .script{display:block!important; position:static!important; width:auto; max-height:none; overflow:visible;
+    background:#f8f3ff; border:1px solid #c9b1e4; border-left:4px solid #7a3fa0; border-radius:10px;
+    padding:8px 12px; margin-top:8px; font-size:10pt; color:#33254a; break-inside:avoid}
+  #app-credit{position:static!important; opacity:1!important; color:#4a4a4a!important; border-top:1px solid #ccc}
+}
+@media (forced-colors: active){
+  .kicker,.badge,.pill,.card,.tbtn,.arrow,.vbox,.seg button{border:1px solid CanvasText}
+  .sub,.vizcap,.hint,.counter{color:CanvasText}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="brand" id="home" title="표지로">⚡ 전기와 자기 이야기보따리</button>
+  <span class="spacer"></span>
+  <span class="counter" id="counter">1 / 15</span>
+  <button class="tbtn" id="btnToc" title="목차 (M)">☰ 목차</button>
+  <button class="tbtn" id="btnTeacher" aria-pressed="false" title="교사 대본 (T)">🧑‍🏫 대본</button>
+  <button class="tbtn" id="btnFull" title="전체화면 (F)">⛶</button>
+</header>
+
+<main id="stage">
+
+<!-- ═══ 1. 여는 장면 ═══ -->
+<section class="scene" data-t="여는 장면 — 이 불빛의 정체">
+  <div class="txt">
+    <span class="kicker">여는 장면</span>
+    <h2 class="title">이 불빛이 무엇인지<br>말할 수 있나요?</h2>
+    <p class="lead">교실 전등, 손에 든 휴대전화, 지금 이 화면. 전부 <span class="kp">전기</span>로 움직입니다. 그런데 전기가 정확히 무엇이냐고 물으면 대답이 막히죠.</p>
+    <p class="sub">오늘 이야기는 <b>문지른 호박 한 조각</b>에서 시작해서, 저 불빛의 정체가 무엇인지까지 갑니다.</p>
+    <p class="sub">그리고 도중에 아주 이상한 결론 하나를 만나게 됩니다. <span class="kp">전기</span>와 <span class="km">자석</span>이 <b>사실은 같은 것</b>이라는 결론이요.</p>
+    <div class="script">
+      <b>여는 말</b> — 교실 전등을 한 번 껐다 켜면서 시작하면 시선이 모입니다.
+      <ul>
+        <li>“전기가 뭐야?”를 진짜로 물어보세요. 대답이 잘 안 나오는 게 정상입니다</li>
+        <li>오늘의 목적지를 미리 알려주기: <b>전기 = 자기 = 빛</b>. 지금은 안 믿겨도 됩니다</li>
+      </ul>
+      <span class="ask">발문: “전기랑 자석이 같은 거라고 하면 믿을 수 있어?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="filament"></canvas>
+    <div class="vizcap">전구 속 필라멘트 — 이 빛이 무엇인지는 <b>맨 마지막 장면</b>에서 밝혀집니다</div>
+  </div>
+</section>
+
+<!-- ═══ 2. 호박 ═══ -->
+<section class="scene" data-t="호박 — 전기의 이름이 태어나다">
+  <div class="txt">
+    <span class="kicker">기원전 그리스</span>
+    <h2 class="title">문질렀더니<br><span class="kp">달라붙었다</span></h2>
+    <p class="lead">탈레스가 보석 <b>호박</b>을 양털로 문질렀더니, 가벼운 먼지와 검불이 달라붙었습니다. 인류가 처음 만난 <span class="kp">전기</span>였죠.</p>
+    <p class="sub">호박을 그리스어로 <b>일렉트론(elektron)</b>이라 불렀습니다. 여기서 <b>electricity(전기)</b>도, <b>electron(전자)</b>도 나왔어요. 전기의 이름은 <b>보석 이름</b>이었던 겁니다.</p>
+    <p class="sub">다만 그때 사람들이 안 것은 딱 하나였습니다. <b>“문지르면 당긴다.”</b> 왜 그런지는 2천 년 넘게 몰랐어요.</p>
+    <div class="ctl"><button class="pill pe" data-act="rub">🧽 양털로 문지르기</button></div>
+    <div class="script">
+      <b>진행</b> — 버튼을 누르기 전에 예상을 받으세요. 실제 정전기 경험과 연결하면 좋습니다.
+      <ul>
+        <li>“겨울에 문고리 잡다가 따끔했던 적?” → 그게 같은 현상</li>
+        <li>이름 이야기를 꼭 짚기: <b>호박 = 일렉트론 → 전기 · 전자</b></li>
+        <li>여기서 “왜?”는 아직 답하지 않습니다. 미해결로 남겨 두는 게 뒤 장면을 살립니다</li>
+      </ul>
+      <span class="ask">발문: “문지르지 않으면? 그럼 안 붙어. 이게 나중에 중요한 단서가 됩니다”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="amber"></canvas>
+    <div class="vizcap">문질러야 생긴다 — 이 조건을 <b>꼭 기억</b>해 두세요</div>
+  </div>
+</section>
+
+<!-- ═══ 3. 자철석 ═══ -->
+<section class="scene" data-t="목동의 지팡이 — 자석의 발견">
+  <div class="txt">
+    <span class="kicker">비슷한 시기 · 어느 들판</span>
+    <h2 class="title">지팡이가<br><span class="km">돌에 붙었다</span></h2>
+    <p class="lead">양치기 목동이 걷다가 쇠를 댄 지팡이 끝이 <b>돌에 척 달라붙는</b> 걸 겪었습니다. 인류가 처음 만난 <span class="km">자석</span>입니다.</p>
+    <p class="sub">그리스의 <b>마그네시아</b> 지역에서 많이 났다고 해서(혹은 그 목동 이름이 마그네스였다고 해서) <b>magnet</b>이라는 이름이 붙었습니다.</p>
+    <p class="sub">이 돌이 <span class="km">자철석</span>입니다. 가공하지 않은 그냥 돌인데 자력이 있어요. 다만 자성을 띤 자철석은 흔치 않습니다. <b>번개를 맞아</b> 급히 달궈졌다 식으면서 자석이 됐다는 설명이 유력해서, 땅속이 아니라 <b>지표에서만</b> 발견되거든요.</p>
+    <div class="ctl"><button class="pill" data-act="filings">✨ 철가루 뿌리기</button></div>
+    <div class="script">
+      <b>진행</b> — 실물 자철석이나 자석 + 철가루가 있으면 여기서 같이 보여주면 최고입니다.
+      <ul>
+        <li>“자석은 사람이 만든 걸까, 원래 있던 걸까?” → <b>원래 있었다</b></li>
+        <li>번개 이야기는 학생들이 좋아합니다. “벼락 맞은 돌”</li>
+        <li>철가루가 그리는 선이 <b>자기장</b>이라는 말만 흘려 두세요. 정의는 나중에</li>
+      </ul>
+      <span class="ask">발문: “이건 문지르지 않았는데도 붙지? 아까 호박이랑 다른 점이야”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="lodestone"></canvas>
+    <div class="vizcap">자철석 주변에 철가루를 뿌리면 <b>보이지 않던 선</b>이 드러납니다</div>
+  </div>
+</section>
+
+<!-- ═══ 4. 길버트 ═══ -->
+<section class="scene" data-t="길버트 — 지구가 자석이다">
+  <div class="txt">
+    <span class="kicker">1600년 · 근대 과학의 출발</span>
+    <h2 class="title">나침반은 왜<br>늘 <span class="km">북쪽</span>을 볼까</h2>
+    <p class="lead">이 질문에 처음 제대로 답한 사람이 <b>윌리엄 길버트</b>입니다. 그의 답은 대담했어요. <b>“지구 자체가 거대한 자석이다.”</b></p>
+    <p class="sub">말로만 하지 않았습니다. 자철석을 깎아 지름 30cm짜리 <b>작은 지구(테렐라)</b>를 만들고, 그 위 여기저기에 나침반을 놓아 실제로 지구와 똑같이 행동하는 걸 보여줬습니다.</p>
+    <p class="sub">더 중요한 건 태도였습니다. 그전까지 자연은 신의 것이라 <b>관찰만 하고 건드리면 안 됐는데</b>, 길버트는 “자석에 마늘을 문지르면 자력이 사라진다” 같은 속설을 하나하나 실험으로 깨부쉈습니다. 아버지에게 물려받은 <b>군함 두 척 값</b>의 유산을 실험에 다 썼다고 해요.</p>
+    <div class="ctl"><button class="pill" data-act="compass">🧭 나침반 놓아 보기</button></div>
+    <div class="script">
+      <b>강조</b> — 오늘 이야기에서 <b>과학의 방법</b>이 태어나는 자리입니다.
+      <ul>
+        <li>“이상하면 해보면 되잖아”가 당시엔 <b>불경한 생각</b>이었다는 점을 짚기</li>
+        <li>마늘 속설 이야기로 웃긴 뒤, “그런데 아무도 안 해봤다”로 정색하면 효과가 큽니다</li>
+        <li>정리: 나침반 <b>N극이 북쪽</b>을 가리킨다 → 지구의 <b>북극은 자석의 S극</b></li>
+      </ul>
+      <span class="ask">발문: “N극이 북쪽을 가리키면, 북극은 무슨 극이어야 할까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="terrella"></canvas>
+    <div class="vizcap">지구의 <b>북극</b>은 자석으로 치면 <b>S극</b>입니다</div>
+  </div>
+</section>
+
+<!-- ═══ 5. 둘은 다르다 ═══ -->
+<section class="scene" data-t="둘은 다르다 — 길버트의 결론">
+  <div class="txt">
+    <span class="kicker">그런데</span>
+    <h2 class="title">전기와 자기는<br><b>다른 것</b>이다</h2>
+    <p class="lead">길버트는 전기 실험도 했습니다. 그리고 내린 결론은 <b>둘은 별개의 힘</b>이라는 것이었어요. 근거도 탄탄했습니다.</p>
+    <table class="cmp">
+      <tr><th>조건</th><th>정전기</th><th>자석</th></tr>
+      <tr><td>언제 생기나</td><td class="e">문질러야 생김</td><td class="m">그냥 붙음</td></tr>
+      <tr><td>뜨겁게 하면</td><td class="e">그대로</td><td class="m">힘을 잃음</td></tr>
+      <tr><td>습도가 높으면</td><td class="e">사라짐</td><td class="m">여름에도 붙음</td></tr>
+    </table>
+    <p class="sub" style="margin-top:12px">자석이 자성을 잃는 온도를 <b>퀴리 온도</b>라고 합니다. 원자 하나하나가 작은 자석인데, 열을 주면 그 <b>정렬이 흐트러지기</b> 때문이에요.</p>
+    <div class="slab"><span>차갑게</span><input type="range" data-ctl="temp" min="0" max="100" value="10"><span>뜨겁게</span></div>
+    <div class="script">
+      <b>조작 활동</b> — 온도 슬라이더를 학생에게 맡겨도 좋습니다.
+      <ul>
+        <li>천천히 올리다가 <b>퀴리 온도를 넘는 순간</b> 화살표가 흐트러지고 자력이 0이 됩니다</li>
+        <li>“원자도 작은 자석”이라는 말이 오늘 처음 나옵니다. 자석을 계속 반으로 잘라도 <b>끝까지 자석</b>이라는 이야기와 연결하세요</li>
+        <li>여기서 학생들은 “역시 둘은 다르구나”라고 납득합니다 — 그게 목적입니다. <b>다음 장면에서 뒤집힙니다</b></li>
+      </ul>
+      <span class="ask">발문: “그럼 전기랑 자기는 완전히 남남인 걸까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="curie"></canvas>
+    <div class="vizcap">원자 자석이 <b>줄을 서면</b> 자석, <b>흐트러지면</b> 그냥 쇠</div>
+  </div>
+</section>
+
+<!-- ═══ 6. 프랭클린 ═══ -->
+<section class="scene" data-t="프랭클린 — 방향을 거꾸로 정하다">
+  <div class="txt">
+    <span class="kicker">1700년대 · 100달러의 그 사람</span>
+    <h2 class="title">전류의 방향은<br><span class="ke">거꾸로</span>입니다</h2>
+    <p class="lead">벤저민 프랭클린이 전기에 <span class="kp">(+)</span>와 <span class="kn">(−)</span>라는 이름을 붙였습니다. 그리고 <b>움직이는 것은 (+)</b>라고 정했어요.</p>
+    <p class="sub">근거는 딱히 없었습니다. 그렇게 정하면 설명이 잘 됐을 뿐이에요. 그런데 <b>150년 뒤</b> 전자가 발견되면서, 실제로 움직이는 건 <span class="ke">(−)를 띤 전자</span>라는 게 밝혀졌습니다.</p>
+    <p class="sub">고치기엔 이미 너무 늦었습니다. 그래서 지금도 이렇게 배웁니다. <b>전류의 방향은 전자가 움직이는 방향의 반대.</b> 여러분이 헷갈리는 건 여러분 잘못이 아니라 <b>300년 전 결정</b> 때문입니다.</p>
+    <div class="ctl">
+      <button class="pill pe on" data-act="show-cur">전류 보기</button>
+      <button class="pill on" data-act="show-el">전자 보기</button>
+    </div>
+    <div class="script">
+      <b>학생이 제일 억울해하는 지점</b> — 여기서 “네 잘못 아니야”라고 말해 주면 반응이 좋습니다.
+      <ul>
+        <li>두 버튼을 껐다 켜며 <b>화살표가 서로 반대</b>인 걸 눈으로 확인시키기</li>
+        <li>“그래도 계산은 다 맞습니다. 방향만 관습일 뿐”</li>
+        <li>시험에서는 <b>전류는 (+)에서 (−)로</b> — 이건 그대로 외워야 한다고 못박기</li>
+      </ul>
+      <span class="ask">발문: “왜 안 고쳤을까?” → 이미 온 세상 책이 그렇게 쓰여서</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="current"></canvas>
+    <div class="vizcap"><span style="color:#b23a30">■</span> 전류(약속) · <span style="color:#3a7a3f">●</span> 전자(진짜 움직이는 것)</div>
+  </div>
+</section>
+
+<!-- ═══ 7. 외르스테드 ═══ -->
+<section class="scene" data-t="외르스테드 — 전기가 자기를 만든다">
+  <div class="txt">
+    <span class="kicker">1820년 · 우연한 발견</span>
+    <h2 class="title">전선 옆 나침반이<br><span class="km">흔들렸다</span></h2>
+    <p class="lead">외르스테드가 실험을 하다가, 전류를 흘린 전선 옆에 놓인 나침반이 <b>움직이는 것</b>을 봤습니다. 주변에 자석은 하나도 없었는데요.</p>
+    <p class="sub">더 이상한 건 방향이었습니다. 나침반이 전류가 흐르는 방향으로 끌려간 게 아니라, <b>전류에 수직으로</b> 홱 돌아갔어요. 전선을 <b>감싸고 도는</b> 방향이었습니다.</p>
+    <p class="sub">이것이 <span class="kp">전기</span>가 <span class="km">자기</span>를 만든다는 첫 증거입니다. 남남인 줄 알았던 둘이 얽혀 있다는 게 드러난 순간이죠.</p>
+    <div class="ctl"><button class="pill pe" data-act="switch">🔌 스위치 켜기</button></div>
+    <div class="script">
+      <b>오늘의 전환점</b> — 5장면에서 “둘은 다르다”로 납득시킨 걸 여기서 뒤집습니다.
+      <ul>
+        <li>스위치를 켜기 전 예측: “나침반이 어느 쪽으로 돌까?” 손으로 방향을 그려 보게 하기</li>
+        <li>대부분 <b>전류 방향</b>으로 예측합니다 → 실제로는 <b>수직</b>. 이 어긋남이 핵심</li>
+        <li>스위치를 여러 번 껐다 켜세요. 전류가 있어야만 자기가 생깁니다</li>
+        <li>중2 교육과정의 <b>‘전류의 자기 작용’</b>이 바로 이 장면입니다</li>
+      </ul>
+      <span class="ask">발문: “전선을 감싸고 도는 방향이지? 이걸 뭐라고 부르면 좋을까?” → 자기장</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="oersted"></canvas>
+    <div class="vizcap">전류가 흐르면 전선을 <b>감싸고 도는</b> 자기장이 생깁니다</div>
+  </div>
+</section>
+
+<!-- ═══ 8. 패러데이 ═══ -->
+<section class="scene" data-t="패러데이 — 거꾸로 해보면?">
+  <div class="txt">
+    <span class="kicker">1831년 · 역발상</span>
+    <h2 class="title">그럼 반대로도<br>될까?</h2>
+    <p class="lead">패러데이가 물었습니다. <b>“전기가 자기를 만든다면, 자기로 전기를 만들 수도 있지 않을까?”</b></p>
+    <p class="sub">코일 속에 자석을 넣고 <b>움직였더니</b> 정말로 전기가 흘렀습니다. 단, 조건이 하나 있었어요. <b>가만히 두면 아무 일도 없습니다.</b> 반드시 <b>움직여야</b> 전기가 생겨요.</p>
+    <p class="sub">이것이 <span class="km">자기</span>가 <span class="kp">전기</span>를 만드는 현상입니다. 그리고 이 발견 하나로 <b>오늘날 모든 발전소</b>가 돌아갑니다. 화력이든 원자력이든 풍력이든, 결국 하는 일은 똑같아요. <b>자석을 돌리는 것.</b></p>
+    <div class="slab"><span>왼쪽</span><input type="range" data-ctl="magpos" min="0" max="100" value="50"><span>오른쪽</span></div>
+    <div class="script">
+      <b>핵심 조작</b> — 슬라이더를 학생이 직접 잡게 하세요. 손맛으로 배웁니다.
+      <ul>
+        <li><b>천천히</b> 움직이면 약하게, <b>빠르게</b> 움직이면 밝게 → 속도가 중요</li>
+        <li><b>멈추면 꺼집니다.</b> 이걸 꼭 확인시키세요. “자석이 있는데 왜 꺼져?”</li>
+        <li>발전소 이야기로 확장: “댐도 원자력도 결국 <b>터빈으로 자석을 돌리는</b> 것”</li>
+        <li>참고: 전자기 유도는 중2 범위 밖입니다. <b>흥미와 원리 감각</b>까지만</li>
+      </ul>
+      <span class="ask">발문: “자석을 그냥 코일 안에 놓아두면 전기가 계속 나올까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="faraday"></canvas>
+    <div class="vizcap">멈추면 꺼집니다 — <b>변화</b>가 있어야 전기가 생깁니다</div>
+  </div>
+</section>
+
+<!-- ═══ 9. 패러데이라는 사람 ═══ -->
+<section class="scene wide" data-t="제본소 소년, 패러데이">
+  <div class="txt" style="max-width:none">
+    <span class="kicker">사람 이야기</span>
+    <h2 class="title">학교를 못 간 소년이<br>세상을 바꾼 방법</h2>
+    <p class="lead" style="max-width:60ch">패러데이는 너무 가난해서 정규 교육을 받지 못했습니다. <b>13살에 제본소</b>에 취직해 책을 만들었어요. 그리고 자기가 제본하던 그 책들을 <b>읽으면서 독학</b>했습니다.</p>
+    <div class="cards three" style="margin-top:8px">
+      <div class="card"><span class="badge e">13살</span><h4>제본소 소년</h4><p>책을 만들며 그 책으로 공부했습니다. 수학은 끝내 잘하지 못했어요.</p></div>
+      <div class="card"><span class="badge m">조수</span><h4>강연을 받아적다</h4><p>유명 과학자 험프리 데이비의 조수가 되어 옆에서 기록하는 일부터 시작했습니다.</p></div>
+      <div class="card"><span class="badge l">그리고</span><h4>인류를 바꾸다</h4><p>수식 없이 <b>그림과 직관</b>만으로 전자기 유도를 발견했습니다.</p></div>
+    </div>
+    <p class="lead" style="max-width:60ch; margin-top:20px">사람들이 그 실험을 보고 물었습니다. <b>“그래서 이게 어디에 쓸모가 있습니까?”</b></p>
+    <p class="sub" style="max-width:60ch">패러데이는 갓 태어난 아기에 빗대어 답했다고 전해집니다. 이 아이가 자라서 무엇이 될지 지금 어떻게 아느냐고요. 다만 언젠가 당신들이 여기에 <b>세금을 매기게 될 것</b>이라고 덧붙였습니다.</p>
+    <p class="sub" style="max-width:60ch"><b>그 세금이 지금의 전기요금입니다.</b></p>
+    <div class="script" style="max-width:60ch">
+      <b>여기서 한 박자 쉬어 가세요</b> — 오늘 수업의 정서적 중심입니다.
+      <ul>
+        <li>“학교를 못 갔다”는 부분을 담담하게. 동정이 아니라 <b>경로가 하나가 아니라는</b> 이야기로</li>
+        <li>수학을 못해서 그림으로 표현했고, <b>그 그림을 맥스웰이 수식으로 옮깁니다</b> → 다음 장면 예고</li>
+        <li>“세금” 대답은 천천히 읽어 주세요. 여운이 큽니다</li>
+      </ul>
+      <span class="ask">발문: “당장 쓸모없어 보이는 걸 계속 파고드는 사람, 필요할까?”</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 10. 실험 ① 자석 기차 ═══ -->
+<section class="scene" data-t="실험 ① 자석 기차">
+  <div class="txt">
+    <span class="kicker">실험실 · 예측하고 보기</span>
+    <h2 class="title">건전지가<br><span class="km">스스로 달린다</span></h2>
+    <p class="lead">구리선을 코일처럼 감아 터널을 만들고, 건전지 양 끝에 자석을 붙여 넣기만 합니다. 밀지도 않았는데 <b>쏙 하고 달려나가요.</b></p>
+    <p class="sub">원리는 오늘 배운 것만으로 설명됩니다. 건전지에서 <span class="kp">전류</span>가 흘러 구리 코일을 지나면, 외르스테드가 본 대로 코일 안에 <span class="km">자기장</span>이 생깁니다.</p>
+    <p class="sub">그 자기장이 <b>앞쪽 자석은 밀고, 뒤쪽 자석은 당깁니다.</b> 밀고 당기니 앞으로 갈 수밖에 없죠. 자기부상열차와 같은 원리입니다.</p>
+    <div class="ctl"><button class="pill" data-act="train">▶ 넣어 보기</button></div>
+    <div class="script">
+      <b>예측 먼저</b> — 재생 전에 반드시 물어보세요.
+      <ul>
+        <li>“그냥 넣기만 하면 어떻게 될까?” → 대부분 “가만히 있는다”에 손을 듭니다</li>
+        <li>재생 후 원리 설명: <b>전류 → 자기장 → 앞은 밀고 뒤는 당김</b></li>
+        <li>실물로 하시려면 에나멜선 말고 <b>피복 없는 구리선</b>, 네오디뮴 자석이 필요합니다</li>
+        <li>이 장면은 7장면(외르스테드)을 <b>써먹는</b> 자리입니다. 학생이 스스로 설명하게 하세요</li>
+      </ul>
+      <span class="ask">발문: “앞에서 배운 것 중에 뭘 쓰면 이게 설명될까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="train"></canvas>
+    <div class="vizcap">전류가 만든 자기장이 <b>앞은 밀고 뒤는 당깁니다</b></div>
+  </div>
+</section>
+
+<!-- ═══ 11. 실험 ② 구리관 ═══ -->
+<section class="scene" data-t="실험 ② 구리관 속 자석">
+  <div class="txt">
+    <span class="kicker">실험실 · 예측하고 보기</span>
+    <h2 class="title">자석이<br><span class="km">천천히</span> 떨어진다</h2>
+    <p class="lead">플라스틱 관과 구리 관에 똑같은 자석을 동시에 떨어뜨립니다. 구리 관 쪽 자석은 <b>엘리베이터처럼 느리게</b> 내려옵니다.</p>
+    <p class="sub">구리는 자석에 붙지 않는데도 이렇습니다. 이유는 이렇습니다. 떨어지는 <span class="km">자석</span>이 구리 관에 <span class="kp">전류</span>를 만들고(패러데이), 그 전류가 다시 <span class="km">자석</span>이 되어(외르스테드) 떨어지는 자석을 <b>밀어 올립니다.</b></p>
+    <p class="sub">오늘 배운 두 발견이 <b>동시에</b> 일어나는 장면이에요. 전기와 자기가 서로를 만들며 맞물립니다.</p>
+    <div class="vote">
+      <div class="vbox"><div class="vnum" id="vA">0</div><div class="vbar"><i id="bA" style="background:var(--pos)"></i></div>
+        <div class="sub" style="margin:0 0 8px">똑같이 떨어진다</div>
+        <div class="vrow"><button data-vote="A" data-d="-1">−</button><button data-vote="A" data-d="1">+</button></div></div>
+      <div class="vbox"><div class="vnum" id="vB">0</div><div class="vbar"><i id="bB" style="background:var(--mag)"></i></div>
+        <div class="sub" style="margin:0 0 8px">한쪽이 느리다</div>
+        <div class="vrow"><button data-vote="B" data-d="-1">−</button><button data-vote="B" data-d="1">+</button></div></div>
+    </div>
+    <div class="ctl"><button class="pill" data-act="drop">▶ 동시에 떨어뜨리기</button></div>
+    <div class="script">
+      <b>참여 활동 · 손들기 예측</b> — 결과를 보기 전에 반드시 투표부터.
+      <ul>
+        <li>“구리는 자석에 안 붙지? 그럼 똑같이 떨어질까?” 세어서 <b>+ 버튼</b>으로 입력</li>
+        <li>재생 후 원리를 <b>학생이 이어 말하게</b> 하세요. 두 발견을 합치면 나옵니다</li>
+        <li>이 장면이 오늘의 <b>종합 문제</b>입니다. 여기서 설명이 되면 다 이해한 것</li>
+      </ul>
+      <span class="ask">발문: “밑에 아무것도 없는데 뭐가 자석을 떠받치고 있는 걸까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="drop"></canvas>
+    <div class="vizcap">왼쪽 플라스틱 관 · 오른쪽 <b>구리 관</b></div>
+  </div>
+</section>
+
+<!-- ═══ 12. 맥스웰 ═══ -->
+<section class="scene" data-t="맥스웰 — 네 문장으로 정리하다">
+  <div class="txt">
+    <span class="kicker">1860년대 · 이론의 차례</span>
+    <h2 class="title">그림을<br><span class="kl">수식</span>으로 옮기다</h2>
+    <p class="lead">실험하는 사람들이 관계를 다 찾아냈습니다. 이제 정리할 사람이 필요했죠. <b>맥스웰</b>이 이 모든 것을 <b>네 문장</b>으로 압축했습니다.</p>
+    <p class="sub">아래 버튼으로 하나씩 보세요. 수식을 외울 필요는 전혀 없습니다. <b>무슨 뜻인지만</b> 알면 됩니다.</p>
+    <div class="seg" id="mxSeg">
+      <button class="on" data-mx="0">① 전하</button>
+      <button data-mx="1">② 자석</button>
+      <button data-mx="2">③ 패러데이</button>
+      <button data-mx="3">④ 외르스테드</button>
+    </div>
+    <p class="sub" id="mxText" style="margin-top:12px; min-height:4.6em"></p>
+    <p class="sub">맥스웰이 위대한 이유는 여기서 한 걸음 더 갔기 때문입니다. ③번과 ④번을 보니 <b>모양이 어긋나 있었어요.</b> 그는 “대칭이 안 맞는다”는 이유만으로 ④번에 <b>항을 하나 더 넣었습니다.</b> 실험으로 본 적도 없는 항을요.</p>
+    <div class="script">
+      <b>진행</b> — 네 문장을 앞 장면들과 <b>짝지어</b> 주는 게 핵심입니다.
+      <ul>
+        <li>③번 = 8장면 패러데이, ④번 = 7장면 외르스테드. “아까 본 거지?”</li>
+        <li>①②는 새 내용이니 가볍게. ②번(N극·S극을 못 나눔)은 <b>전기와의 결정적 차이</b>로 짚기</li>
+        <li>“대칭이 안 맞아서 항을 넣었다”를 강조하세요. <b>아름다움을 근거로 삼은</b> 드문 사례</li>
+        <li>수식 자체는 절대 외우게 하지 마세요. 중2 범위 밖입니다</li>
+      </ul>
+      <span class="ask">발문: “실험도 안 해봤는데 식을 고쳐도 될까? 그래도 될 이유가 있을까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="maxwell"></canvas>
+    <div class="vizcap">네 문장 중 지금 보고 있는 것</div>
+  </div>
+</section>
+
+<!-- ═══ 13. 빛 ═══ -->
+<section class="scene" data-t="그리고 빛의 정체">
+  <div class="txt">
+    <span class="kicker">계산의 끝에서</span>
+    <h2 class="title">거기서<br><span class="kl">빛</span>이 나왔다</h2>
+    <p class="lead">맥스웰이 ③번과 ④번 식을 합쳐 보니, <b>파동</b>을 나타내는 식이 튀어나왔습니다. 전기와 자기가 서로를 만들며 <b>물결처럼 퍼져 나간다</b>는 뜻이었죠.</p>
+    <p class="sub">그럼 그 물결은 얼마나 빠를까? 계산해 보니 <b>초속 약 30만 km</b>. 이미 측정되어 있던 <b>빛의 속도</b>와 같았습니다.</p>
+    <p class="sub" style="font-size:clamp(14px,1.3vw,21px)"><b>빛은 전기와 자기가 함께 진동하며 달리는 파동이었습니다.</b> 전깃불도, 자석도, 햇빛도 <b>뿌리가 하나</b>였던 겁니다.</p>
+    <div class="cards three" style="margin-top:10px">
+      <div class="card e"><h4 style="color:var(--pos)">전기</h4><p>세로로 진동</p></div>
+      <div class="card m"><h4 style="color:var(--mag)">자기</h4><p>가로로 진동</p></div>
+      <div class="card"><h4 style="color:var(--light)">= 빛</h4><p>둘이 함께 달림</p></div>
+    </div>
+    <div class="script">
+      <b>오늘의 절정</b> — 여기서 1장면의 전구를 다시 언급하세요.
+      <ul>
+        <li>“맨 처음에 본 저 불빛, 이제 정체를 말할 수 있어” → <b>전기와 자기의 진동</b></li>
+        <li>애니메이션에서 <b>빨강(전기)과 청록(자기)이 수직</b>으로 붙어 가는 걸 손으로 짚어 주기</li>
+        <li>“실험을 안 하고 <b>종이 위 계산만으로</b> 빛의 정체를 알아냈다”는 점을 강조</li>
+        <li>여유가 있으면: 김범준 교수 편의 “빛의 속도는 일정하다”가 여기서 나온 이야기</li>
+      </ul>
+      <span class="ask">발문: “전파, 엑스선, 햇빛… 이것들도 같은 걸까?” → 전부 같은 파동, 파장만 다름</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="emwave"></canvas>
+    <div class="vizcap"><span style="color:#b23a30">전기</span>와 <span style="color:#1f6f68">자기</span>가 수직으로 붙어 함께 달립니다</div>
+  </div>
+</section>
+
+<!-- ═══ 14. 지구 다이나모 ═══ -->
+<section class="scene" data-t="지구는 왜 자석일까">
+  <div class="txt">
+    <span class="kicker">400년 만의 답</span>
+    <h2 class="title">길버트의 질문에<br>이제 답할 수 있다</h2>
+    <p class="lead">“지구는 왜 자석인가?” 길버트는 <b>그렇다는 사실</b>까지만 알아냈습니다. <b>왜</b>인지는 오늘 배운 것으로 답이 됩니다.</p>
+    <p class="sub">지구 속 <b>외핵</b>은 철과 니켈이 녹아 있는 액체입니다. 뜨거워서 계속 <b>대류</b>하며 움직여요. 전하를 띤 것이 움직이면 그게 <span class="kp">전류</span>이고, 전류가 흐르면 <span class="km">자기장</span>이 생깁니다. 외르스테드 그대로죠.</p>
+    <p class="sub">그렇게 만들어진 지구 자기장이 <b>태양에서 날아오는 입자를 막아 주는 방패</b>가 됩니다. 전자기력이 지금 우리를 지키고 있는 셈이에요.</p>
+    <div class="ctl"><button class="pill pe" data-act="wind">☀️ 태양풍 보내기</button></div>
+    <div class="script">
+      <b>회수</b> — 4장면의 질문을 여기서 되받습니다. “기억나? 길버트가 못 푼 거”
+      <ul>
+        <li>순서대로 짚기: <b>액체 외핵 대류 → 전류 → 자기장</b></li>
+        <li>태양풍 버튼을 누르고 입자가 <b>휘어 나가는</b> 것을 보여주기</li>
+        <li>오로라를 아는 학생이 있으면 연결. 막다가 극지방으로 새어든 입자가 만드는 빛</li>
+      </ul>
+      <span class="ask">발문: “지구에 자기장이 없으면 어떻게 될까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="dynamo"></canvas>
+    <div class="vizcap">액체 외핵의 흐름이 만드는 <b>지구라는 거대한 전자석</b></div>
+  </div>
+</section>
+
+<!-- ═══ 15. 닫는 장면 ═══ -->
+<section class="scene" data-t="다시, 그 불빛">
+  <div class="txt" style="max-width:none; text-align:center; margin:0 auto">
+    <span class="kicker">회수 · 오늘의 이야기</span>
+    <h2 class="title" style="font-size:clamp(26px,4.2vw,60px)">이제 저 불빛이<br>무엇인지 말할 수 있습니다</h2>
+    <p class="lead" style="max-width:56ch; margin:0 auto 18px">문지른 <b>호박 조각</b>에서 시작해, 목동의 <b>돌멩이</b>를 지나, 전선 옆에서 흔들린 <b>나침반</b>과 코일 속을 오간 <b>자석</b>을 거쳐, 결국 <span class="kl">빛</span>에 닿았습니다.</p>
+    <div class="cards three" style="margin-top:6px">
+      <div class="card e"><span class="badge e">전기</span><h4>문지르면 당긴다</h4><p>호박에서 시작</p></div>
+      <div class="card m"><span class="badge m">자기</span><h4>그냥 당긴다</h4><p>자철석에서 시작</p></div>
+      <div class="card"><span class="badge l">그리고</span><h4>둘은 한 몸이었다</h4><p>그 진동이 곧 빛</p></div>
+    </div>
+    <p class="lead" style="max-width:54ch; margin:22px auto 0">물리학자들은 이때 <b>“이제 세상을 다 이해했다”</b>고 믿었습니다.</p>
+    <p class="sub" style="max-width:54ch; margin:12px auto 0">그리고 얼마 지나지 않아 <b>양자역학과 상대성이론</b>이 그 확신을 다시 무너뜨립니다. 과학은 늘 그런 식으로 이어져 왔어요.</p>
+    <p class="srcnote" style="max-width:54ch; margin-left:auto; margin-right:auto">
+      이 이야기는 유튜브 <b>〈취미는 과학〉 전자기학 편</b>의 내용을 바탕으로 만들었습니다.<br>
+      출연: KAIST 물리학과 <b>김갑진</b> 교수 · 더 자세한 이야기는 원본 영상에서 확인하세요.
+    </p>
+    <div class="script" style="text-align:left; max-width:60ch; margin-left:auto; margin-right:auto">
+      <b>마무리</b> — 제목을 누르면 표지로 돌아갑니다. 1장면 전구를 다시 띄우고 끝내면 수미상관이 완성됩니다.
+      <ul>
+        <li>“오늘 가장 놀라웠던 것” 한 명씩 말하게 하기</li>
+        <li>마지막 문단이 중요합니다. <b>“다 안다고 믿은 순간이 끝이 아니었다”</b></li>
+        <li>출처를 밝히실 거면: 유튜브 〈취미는 과학〉 전자기학 편(KAIST 김갑진 교수)</li>
+      </ul>
+      <span class="ask">마무리 발문: “지금 우리가 ‘다 안다’고 믿는 것 중에 틀린 게 있을까?”</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<nav class="navbar">
+  <div class="dots" id="dots"></div>
+  <div class="arrows">
+    <button class="arrow" id="prev">‹ 이전</button>
+    <button class="arrow next" id="next">다음 ›</button>
+  </div>
+  <div class="hint">← → 이동 · T 대본 · M 목차 · F 전체화면</div>
+</nav>
+
+<div id="cover">
+  <div>
+    <div class="cov-emoji">🧲 ⚡ 💡</div>
+    <div class="cov-unit">중학교 2학년 · 전기와 자기 · 이야기보따리</div>
+    <h1>전기와 자기<br><em>이야기</em></h1>
+    <p class="cov-sub">문지른 호박 한 조각에서<br>빛의 정체까지, 2천 년</p>
+    <p class="cov-src">유튜브 <b>〈취미는 과학〉 전자기학 편</b>의 내용을 바탕으로 만들었습니다<br>(출연: KAIST 물리학과 김갑진 교수)</p>
+    <div class="cov-list">
+      <span>① 호박과 자철석</span><span>② 지구가 자석이다</span><span>③ 둘은 다르다</span>
+      <span>④ 전류의 방향</span><span>⑤ 전기가 자기를 만든다</span><span>⑥ 자기가 전기를 만든다</span>
+      <span>⑦ 실험 두 가지</span><span>⑧ 맥스웰</span><span>⑨ 그리고 빛</span>
+    </div>
+    <button class="enter" id="enter">이야기 시작하기</button>
+    <button class="resume" id="resume" hidden>이어서 보기 →</button>
+  </div>
+</div>
+
+<aside id="scriptPanel" aria-live="polite"></aside>
+
+<div id="toc"><div class="tocbox">
+  <h3>목차 — 눌러서 이동</h3>
+  <div class="tocgrid" id="tocgrid"></div>
+</div></div>
+
+<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:12.5px;line-height:1.6;color:#8a8f98;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:11px;opacity:.85;">최종 업데이트: 2026-08-10</span></footer>
+
+<script>
+(function(){
+'use strict';
+var SAVE='elec-story-v1';
+var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var rnd=function(a,b){return a+Math.random()*(b-a)};
+var POS='#b23a30', NEG='#2e5f8f', EL='#3a7a3f', MAG='#1f6f68', LIGHT='#7a3fa0',
+    INK='#2a2013', DIM='#6b573f', LINE='#cbb894', BRASS='#b9873c';
+
+/* ── 캔버스 헬퍼 ────────────────── */
+function fit(cv){
+  var dpr=Math.min(window.devicePixelRatio||1,2), r=cv.getBoundingClientRect();
+  var w=Math.max(1,Math.round(r.width)), h=Math.max(1,Math.round(r.height));
+  if(cv._w===w&&cv._h===h&&cv._d===dpr) return false;
+  cv._w=w; cv._h=h; cv._d=dpr; cv.width=w*dpr; cv.height=h*dpr;
+  cv.getContext('2d').setTransform(dpr,0,0,dpr,0,0);
+  return true;
+}
+function loop(cv,draw){
+  var id=null,t0=performance.now(),run=false;
+  function step(now){ if(!run) return; fit(cv); draw(cv.getContext('2d'),cv._w,cv._h,(now-t0)/1000); id=requestAnimationFrame(step); }
+  return { start:function(){ if(run) return; run=true; t0=performance.now(); id=requestAnimationFrame(step); },
+           stop:function(){ run=false; if(id) cancelAnimationFrame(id); id=null; },
+           once:function(){ fit(cv); draw(cv.getContext('2d'),cv._w,cv._h,0); } };
+}
+function label(c,txt,x,y,col,size,align){
+  c.font='700 '+size+'px Pretendard, system-ui'; c.fillStyle=col||DIM;
+  c.textAlign=align||'center'; c.textBaseline='alphabetic'; c.fillText(txt,x,y);
+}
+function arrow(c,x1,y1,x2,y2,col,w){
+  var a=Math.atan2(y2-y1,x2-x1), hl=Math.max(5,(w||2)*3.2);
+  c.strokeStyle=col; c.lineWidth=w||2; c.lineCap='round';
+  c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2-Math.cos(a)*hl*.7,y2-Math.sin(a)*hl*.7); c.stroke();
+  c.fillStyle=col; c.beginPath(); c.moveTo(x2,y2);
+  c.lineTo(x2-Math.cos(a-.42)*hl, y2-Math.sin(a-.42)*hl);
+  c.lineTo(x2-Math.cos(a+.42)*hl, y2-Math.sin(a+.42)*hl);
+  c.closePath(); c.fill();
+}
+/* 막대자석 */
+function bar(c,x,y,w,h,rot,flip){
+  c.save(); c.translate(x,y); c.rotate(rot||0);
+  var n=flip? 1:-1;
+  c.fillStyle=POS; c.fillRect(n<0?-w/2:0,-h/2,w/2,h);
+  c.fillStyle=NEG; c.fillRect(n<0?0:-w/2,-h/2,w/2,h);
+  c.strokeStyle='rgba(0,0,0,.28)'; c.lineWidth=1; c.strokeRect(-w/2,-h/2,w,h);
+  c.fillStyle='#fff'; c.font='800 '+Math.max(9,h*.55)+'px Pretendard, system-ui';
+  c.textAlign='center'; c.textBaseline='middle';
+  c.fillText('N', n<0? -w/4 : w/4, 0); c.fillText('S', n<0? w/4 : -w/4, 0);
+  c.restore();
+}
+/* 쌍극자 자기장 방향 */
+function dipole(px,py,mx,my,mr){
+  var dx=px-mx, dy=py-my, r2=dx*dx+dy*dy+mr*mr*.05, r=Math.sqrt(r2);
+  var ux=dx/r, uy=dy/r, dot=uy; /* 모멘트 = +y 방향 */
+  return {x:(3*dot*ux - 0)/ (r2*r/ (mr*mr*mr)) , y:(3*dot*uy - 1)/(r2*r/(mr*mr*mr))};
+}
+
+var ANIM={};
+
+/* 1·15) 필라멘트 전구 */
+ANIM.filament=function(cv){
+  return loop(cv,function(c,w,h,t){
+    c.clearRect(0,0,w,h);
+    var cx=w/2, cy=h*.46, R=Math.min(w,h)*.24;
+    var glow=RM?.85:(.62+.38*(.5+.5*Math.sin(t*1.1)));
+    var g=c.createRadialGradient(cx,cy,0,cx,cy,R*3.1);
+    g.addColorStop(0,'rgba(255,214,120,'+(.55*glow)+')');
+    g.addColorStop(.45,'rgba(255,190,90,'+(.16*glow)+')');
+    g.addColorStop(1,'rgba(255,180,80,0)');
+    c.fillStyle=g; c.beginPath(); c.arc(cx,cy,R*3.1,0,7); c.fill();
+    /* 유리구 */
+    c.strokeStyle='rgba(120,95,55,.55)'; c.lineWidth=2;
+    c.beginPath(); c.arc(cx,cy,R,0,7); c.stroke();
+    c.fillStyle='rgba(255,250,232,.55)'; c.beginPath(); c.arc(cx,cy,R,0,7); c.fill();
+    /* 소켓 */
+    c.fillStyle=BRASS; c.fillRect(cx-R*.32, cy+R*.86, R*.64, R*.5);
+    c.strokeStyle='rgba(90,65,25,.5)';
+    for(var i=0;i<3;i++){ c.beginPath(); c.moveTo(cx-R*.32, cy+R*.96+i*R*.13);
+      c.lineTo(cx+R*.32, cy+R*.96+i*R*.13); c.stroke(); }
+    /* 지지선 */
+    c.strokeStyle='rgba(110,85,45,.7)'; c.lineWidth=1.6;
+    c.beginPath(); c.moveTo(cx-R*.17,cy+R*.86); c.lineTo(cx-R*.17,cy+R*.12);
+    c.moveTo(cx+R*.17,cy+R*.86); c.lineTo(cx+R*.17,cy+R*.12); c.stroke();
+    /* 필라멘트 */
+    c.strokeStyle='rgba(255,'+Math.round(150+90*glow)+',60,1)';
+    c.lineWidth=2.6; c.shadowColor='rgba(255,190,90,'+glow+')'; c.shadowBlur=16;
+    c.beginPath();
+    for(var k=0;k<=40;k++){
+      var p=k/40, x=cx-R*.17+R*.34*p, y=cy+R*.12-Math.abs(Math.sin(p*Math.PI*6))*R*.3;
+      k?c.lineTo(x,y):c.moveTo(x,y);
+    }
+    c.stroke(); c.shadowBlur=0;
+    label(c,'이 빛은 무엇일까?',cx,h-18,DIM,Math.max(11,w*.015));
+  });
+};
+
+/* 2) 호박 문지르기 */
+ANIM.amber=function(cv,api){
+  var q=0, target=0, bits=null, rubT=0;
+  api.rub=function(){ target = target>.5?0:1; rubT=performance.now(); return target>.5; };
+  return loop(cv,function(c,w,h,t){
+    q += (target-q)*(RM?1:.05);
+    c.clearRect(0,0,w,h);
+    var cx=w*.5, cy=h*.40, R=Math.min(w,h)*.17;
+    if(!bits||bits._w!==w){ bits=[]; bits._w=w;
+      for(var i=0;i<26;i++) bits.push({x:rnd(.2,.8), y0:rnd(.78,.9), ph:Math.random()*6, sz:rnd(3,7)});
+    }
+    /* 탁자 */
+    c.fillStyle='rgba(180,150,100,.25)'; c.fillRect(0,h*.86,w,h*.14);
+    c.strokeStyle=LINE; c.lineWidth=1; c.beginPath(); c.moveTo(0,h*.86); c.lineTo(w,h*.86); c.stroke();
+    /* 호박 */
+    var g=c.createRadialGradient(cx-R*.3,cy-R*.35,R*.1,cx,cy,R*1.15);
+    g.addColorStop(0,'#f6c86a'); g.addColorStop(.6,'#d99a2e'); g.addColorStop(1,'#a86c17');
+    c.save(); c.translate(cx,cy); c.rotate(.2); c.scale(1.25,1);
+    c.fillStyle=g; c.beginPath(); c.arc(0,0,R,0,7); c.fill();
+    c.strokeStyle='rgba(120,75,10,.5)'; c.lineWidth=1.5; c.stroke(); c.restore();
+    /* 양털 */
+    var rubbing = !RM && (performance.now()-rubT)<900 ;
+    var off = rubbing? Math.sin((performance.now()-rubT)/60)*R*.5 : -R*1.5;
+    c.fillStyle='rgba(250,245,235,.95)'; c.strokeStyle='rgba(150,130,100,.6)'; c.lineWidth=1.4;
+    c.beginPath(); c.ellipse(cx+off, cy-R*1.15, R*.5, R*.3, .1, 0, 7); c.fill(); c.stroke();
+    /* 전하 표시 */
+    if(q>.05){
+      for(var j=0;j<9;j++){
+        var a=j/9*Math.PI*2+t*.3, px=cx+Math.cos(a)*R*1.28, py=cy+Math.sin(a)*R*1.06;
+        c.globalAlpha=q; label(c,'−',px,py+4,NEG,Math.max(12,R*.34));
+      }
+      c.globalAlpha=1;
+    }
+    /* 검불 */
+    for(var b=0;b<bits.length;b++){ var B=bits[b];
+      var bx=B.x*w, by;
+      if(q>.3){
+        var tx=cx+Math.cos(B.ph)*R*1.35, ty=cy+Math.sin(B.ph)*R*1.15;
+        var k=Math.min(1,(q-.3)/.5);
+        bx=B.x*w+(tx-B.x*w)*k; by=B.y0*h+(ty-B.y0*h)*k;
+      } else by=B.y0*h;
+      c.fillStyle='rgba(105,80,45,.8)';
+      c.save(); c.translate(bx,by); c.rotate(B.ph); c.fillRect(-B.sz/2,-1.2,B.sz,2.4); c.restore();
+    }
+    label(c, q>.5? '문질렀다 → 달라붙는다' : '가만히 두면 아무 일도 없다',
+      w/2, h-16, q>.5?POS:DIM, Math.max(11,w*.016));
+  });
+};
+
+/* 3) 자철석 + 철가루 */
+ANIM.lodestone=function(cv,api){
+  var show=0, target=0;
+  api.toggle=function(){ target=target>.5?0:1; return target>.5; };
+  return loop(cv,function(c,w,h,t){
+    show += (target-show)*(RM?1:.06);
+    c.clearRect(0,0,w,h);
+    var cx=w/2, cy=h*.48, R=Math.min(w,h)*.13;
+    /* 철가루 = 자기력선 방향 짧은 선분 */
+    if(show>.02){
+      c.globalAlpha=show*.9;
+      var step=Math.max(16, Math.min(w,h)/22);
+      for(var x=step*.6;x<w;x+=step){
+        for(var y=step*.6;y<h*.94;y+=step){
+          var dx=x-cx, dy=y-cy, r=Math.sqrt(dx*dx+dy*dy);
+          if(r<R*1.15) continue;
+          var ux=dx/r, uy=dy/r, dot=uy;
+          var fx=3*dot*ux, fy=3*dot*uy-1;
+          var fl=Math.sqrt(fx*fx+fy*fy)||1; fx/=fl; fy/=fl;
+          var L=step*.36, str=Math.min(1,Math.pow(R/r,1.6)*2.2);
+          c.strokeStyle='rgba(60,72,70,'+(.25+.55*str)+')'; c.lineWidth=1.5; c.lineCap='round';
+          c.beginPath(); c.moveTo(x-fx*L,y-fy*L); c.lineTo(x+fx*L,y+fy*L); c.stroke();
+        }
+      }
+      c.globalAlpha=1;
+    }
+    /* 돌 */
+    c.save(); c.translate(cx,cy);
+    c.fillStyle='#4a4f52'; c.strokeStyle='#2f3335'; c.lineWidth=1.6;
+    c.beginPath();
+    var pts=[[-1,-.55],[-.35,-.95],[.5,-.8],[1.05,-.15],[.8,.7],[-.1,1],[-.85,.6]];
+    pts.forEach(function(p,i){ var X=p[0]*R*1.35, Y=p[1]*R; i?c.lineTo(X,Y):c.moveTo(X,Y); });
+    c.closePath(); c.fill(); c.stroke();
+    c.fillStyle='rgba(255,255,255,.10)';
+    c.beginPath(); c.ellipse(-R*.3,-R*.35,R*.45,R*.22,-.5,0,7); c.fill();
+    c.restore();
+    label(c,'자철석',cx,cy+R*1.55,'#3d4245',Math.max(11,w*.015));
+    label(c, show>.5?'철가루가 그린 선 = 자기장':'✨ 버튼을 누르면 보이지 않던 것이 드러납니다',
+      w/2,h-16, show>.5?MAG:DIM, Math.max(11,w*.016));
+  });
+};
+
+/* 4) 테렐라 */
+ANIM.terrella=function(cv,api){
+  var show=0,target=0;
+  api.toggle=function(){ target=target>.5?0:1; return target>.5; };
+  return loop(cv,function(c,w,h,t){
+    show += (target-show)*(RM?1:.06);
+    c.clearRect(0,0,w,h);
+    var cx=w/2, cy=h*.5, R=Math.min(w,h)*.27;
+    /* 자기력선 */
+    c.strokeStyle='rgba(31,111,104,.45)'; c.lineWidth=1.6;
+    for(var k=1;k<=4;k++){
+      var L=R*(1+k*.42);
+      c.beginPath();
+      for(var a=-Math.PI/2;a<=Math.PI/2;a+=.05){
+        var rr=L*Math.pow(Math.cos(a),2);
+        var x=cx+rr*Math.cos(a)*0+ Math.sin(a)*0; /* 극좌표 재구성 */
+        var px=cx + rr*Math.sin(a+Math.PI/2)*0;
+        /* 쌍극자 곡선: r = L cos^2(lat) */
+        var lat=a, r2=L*Math.cos(lat)*Math.cos(lat);
+        var X=cx + r2*Math.cos(lat), Y=cy - r2*Math.sin(lat);
+        (a===-Math.PI/2)?c.moveTo(X,Y):c.lineTo(X,Y);
+      }
+      c.stroke();
+      c.beginPath();
+      for(var a2=-Math.PI/2;a2<=Math.PI/2;a2+=.05){
+        var lat2=a2, r3=L*Math.cos(lat2)*Math.cos(lat2);
+        var X2=cx - r3*Math.cos(lat2), Y2=cy - r3*Math.sin(lat2);
+        (a2===-Math.PI/2)?c.moveTo(X2,Y2):c.lineTo(X2,Y2);
+      }
+      c.stroke();
+    }
+    /* 구 */
+    var g=c.createRadialGradient(cx-R*.35,cy-R*.4,R*.1,cx,cy,R);
+    g.addColorStop(0,'#6a7a86'); g.addColorStop(1,'#333f49');
+    c.fillStyle=g; c.beginPath(); c.arc(cx,cy,R,0,7); c.fill();
+    c.strokeStyle='rgba(30,40,48,.8)'; c.lineWidth=1.5; c.stroke();
+    label(c,'S',cx,cy-R+18,'#ffd9d4',Math.max(13,R*.2));
+    label(c,'N',cx,cy+R-8,'#d4e6ff',Math.max(13,R*.2));
+    label(c,'북극',cx,cy-R-12,MAG,Math.max(10,w*.013));
+    /* 나침반 */
+    if(show>.02){
+      c.globalAlpha=show;
+      var lats=[-60,-30,0,30,60];
+      for(var i=0;i<lats.length;i++){
+        for(var s=0;s<2;s++){
+          var lat=lats[i]*Math.PI/180, side=s?1:-1;
+          var X=cx+side*(R+16)*Math.cos(lat), Y=cy-(R+16)*Math.sin(lat);
+          var fx=3*Math.sin(lat)*side*Math.cos(lat), fy=3*Math.sin(lat)*Math.sin(lat)-1;
+          var fl=Math.sqrt(fx*fx+fy*fy)||1;
+          var ang=Math.atan2(-fy/fl, fx/fl);
+          c.fillStyle='rgba(255,252,240,.95)'; c.strokeStyle=LINE; c.lineWidth=1.2;
+          c.beginPath(); c.arc(X,Y,9,0,7); c.fill(); c.stroke();
+          c.save(); c.translate(X,Y); c.rotate(ang);
+          c.fillStyle=POS; c.beginPath(); c.moveTo(7,0); c.lineTo(-2,-3); c.lineTo(-2,3); c.closePath(); c.fill();
+          c.fillStyle=NEG; c.beginPath(); c.moveTo(-7,0); c.lineTo(2,-3); c.lineTo(2,3); c.closePath(); c.fill();
+          c.restore();
+        }
+      }
+      c.globalAlpha=1;
+    }
+    label(c, show>.5?'어디에 놓아도 지구 위에서와 똑같이 행동한다':'🧭 버튼을 누르면 나침반을 놓습니다',
+      w/2,h-14, show>.5?MAG:DIM, Math.max(11,w*.015));
+  });
+};
+
+/* 5) 퀴리 온도 */
+ANIM.curie=function(cv,api){
+  var T=10, spins=null;
+  api.setT=function(v){ T=v; };
+  return loop(cv,function(c,w,h,t){
+    c.clearRect(0,0,w,h);
+    var cols=12, rows=7, mx=w*.10, my=h*.16, gw=w*.80, gh=h*.52;
+    if(!spins){ spins=[]; for(var i=0;i<cols*rows;i++) spins.push({p:Math.random()*6,s:rnd(.6,1.5)}); }
+    var Tc=62, dis = T<Tc ? (T/Tc)*0.55 : 1;   /* 흐트러짐 정도 */
+    var order = T<Tc ? 1-(T/Tc)*.55 : 0;
+    for(var r=0;r<rows;r++){
+      for(var q=0;q<cols;q++){
+        var idx=r*cols+q;
+        var X=mx+gw*(q+.5)/cols, Y=my+gh*(r+.5)/rows;
+        var base=-Math.PI/2;
+        var noise = (RM? spins[idx].p : spins[idx].p + t*spins[idx].s*(T/40+.2));
+        var ang = base + Math.sin(noise)*dis*Math.PI + (T>=Tc? Math.cos(noise*1.7)*Math.PI*.7 : 0);
+        var L=Math.min(gw/cols,gh/rows)*.36;
+        arrow(c, X-Math.cos(ang)*L, Y-Math.sin(ang)*L, X+Math.cos(ang)*L, Y+Math.sin(ang)*L,
+          T<Tc? 'rgba(31,111,104,'+(.45+.55*order)+')' : 'rgba(120,105,85,.75)', 2);
+      }
+    }
+    /* 자력 막대 */
+    var by=h*.80, bx=w*.10, bw=w*.80, bh=Math.max(12,h*.05);
+    c.fillStyle='rgba(180,160,120,.35)'; c.fillRect(bx,by,bw,bh);
+    c.fillStyle=MAG; c.fillRect(bx,by,bw*order,bh);
+    c.strokeStyle=LINE; c.lineWidth=1; c.strokeRect(bx,by,bw,bh);
+    label(c,'자력',bx-6,by+bh*.78,DIM,Math.max(10,w*.013),'right');
+    /* 퀴리 온도 표시 */
+    var tx=bx+bw*(Tc/100);
+    c.strokeStyle=POS; c.lineWidth=2; c.setLineDash([4,4]);
+    c.beginPath(); c.moveTo(tx,my*.55); c.lineTo(tx,by-8); c.stroke(); c.setLineDash([]);
+    label(c,'퀴리 온도',tx,my*.45,POS,Math.max(10,w*.013));
+    label(c, T<Tc? '원자 자석이 줄을 서 있다 → 자석' : '정렬이 무너졌다 → 그냥 쇠',
+      w/2, h-12, T<Tc?MAG:DIM, Math.max(11,w*.016));
+  });
+};
+
+/* 6) 전류 vs 전자 */
+ANIM.current=function(cv,api){
+  var showCur=true, showEl=true, es=null;
+  api.cur=function(){ showCur=!showCur; return showCur; };
+  api.el=function(){ showEl=!showEl; return showEl; };
+  return loop(cv,function(c,w,h,t){
+    c.clearRect(0,0,w,h);
+    var y=h*.5, x0=w*.14, x1=w*.86, th=Math.max(26,h*.13);
+    if(!es){ es=[]; for(var i=0;i<22;i++) es.push({p:Math.random(), o:rnd(-.34,.34)}); }
+    /* 도선 */
+    c.fillStyle='rgba(185,135,60,.28)'; c.fillRect(x0,y-th/2,x1-x0,th);
+    c.strokeStyle=BRASS; c.lineWidth=2; c.strokeRect(x0,y-th/2,x1-x0,th);
+    /* 단자 */
+    c.fillStyle=POS; c.fillRect(x0-Math.max(22,w*.035),y-th*.7,Math.max(22,w*.035),th*1.4);
+    c.fillStyle=NEG; c.fillRect(x1,y-th*.7,Math.max(22,w*.035),th*1.4);
+    label(c,'+',x0-Math.max(11,w*.017),y+6,'#fff',Math.max(16,th*.7));
+    label(c,'−',x1+Math.max(11,w*.017),y+6,'#fff',Math.max(16,th*.7));
+    /* 전자 */
+    if(showEl){
+      for(var j=0;j<es.length;j++){ var e=es[j];
+        if(!RM) e.p=(e.p+0.0016)%1;              /* → 오른쪽(−)에서 왼쪽(+)? 아래에서 반전 */
+        var px=x1-(x1-x0)*e.p, py=y+e.o*th;
+        c.fillStyle=EL; c.beginPath(); c.arc(px,py,Math.max(3.5,th*.16),0,7); c.fill();
+        c.fillStyle='#fff'; c.font='800 '+Math.max(7,th*.2)+'px Pretendard, system-ui';
+        c.textAlign='center'; c.textBaseline='middle'; c.fillText('−',px,py+.5);
+      }
+      arrow(c, w*.5+w*.09, y+th*.95+14, w*.5-w*.09, y+th*.95+14, EL, 3);
+      label(c,'전자가 실제로 움직이는 방향',w*.5,y+th*.95+34,EL,Math.max(10,w*.014));
+    }
+    /* 전류 */
+    if(showCur){
+      arrow(c, w*.5-w*.09, y-th*.95-16, w*.5+w*.09, y-th*.95-16, POS, 3);
+      label(c,'전류의 방향 (약속)',w*.5,y-th*.95-26,POS,Math.max(10,w*.014));
+    }
+    if(showCur&&showEl) label(c,'두 화살표가 정반대입니다',w/2,h-12,INK,Math.max(11,w*.016));
+  });
+};
+
+/* 7) 외르스테드 */
+ANIM.oersted=function(cv,api){
+  var on=0,target=0,dots=null;
+  api.toggle=function(){ target=target>.5?0:1; return target>.5; };
+  return loop(cv,function(c,w,h,t){
+    on += (target-on)*(RM?1:.10);
+    c.clearRect(0,0,w,h);
+    var y=h*.48, x0=w*.08, x1=w*.92;
+    if(!dots){ dots=[]; for(var i=0;i<16;i++) dots.push({p:i/16}); }
+    /* 자기장 원 */
+    if(on>.02){
+      c.globalAlpha=on*.5; c.strokeStyle=MAG; c.lineWidth=1.5;
+      for(var k=1;k<=4;k++){
+        var rr=k*Math.min(w,h)*.075;
+        c.beginPath(); c.ellipse(w*.5,y,rr*1.5,rr,0,0,7); c.stroke();
+      }
+      c.globalAlpha=1;
+    }
+    /* 전선 */
+    c.strokeStyle=BRASS; c.lineWidth=Math.max(6,h*.028); c.lineCap='round';
+    c.beginPath(); c.moveTo(x0,y); c.lineTo(x1,y); c.stroke();
+    /* 전류 알갱이 */
+    if(on>.3){
+      for(var d=0;d<dots.length;d++){ var D=dots[d];
+        if(!RM) D.p=(D.p+0.004)%1;
+        var px=x0+(x1-x0)*D.p;
+        c.globalAlpha=on; c.fillStyle=POS;
+        c.beginPath(); c.arc(px,y,Math.max(3,h*.012),0,7); c.fill(); c.globalAlpha=1;
+      }
+    }
+    /* 나침반 6개 */
+    var poss=[[.22,-1],[.5,-1],[.78,-1],[.22,1],[.5,1],[.78,1]];
+    for(var i2=0;i2<poss.length;i2++){
+      var X=w*poss[i2][0], side=poss[i2][1], Y=y+side*Math.min(w,h)*.19;
+      var Rr=Math.max(14,Math.min(w,h)*.055);
+      c.fillStyle='rgba(255,252,240,.97)'; c.strokeStyle=LINE; c.lineWidth=1.4;
+      c.beginPath(); c.arc(X,Y,Rr,0,7); c.fill(); c.stroke();
+      /* 꺼짐 = 위쪽(북) / 켜짐 = 전선 감싸는 방향 */
+      var offA=-Math.PI/2;
+      var onA = side<0 ? 0 : Math.PI;      /* 위쪽 나침반은 오른쪽, 아래쪽은 왼쪽 */
+      var ang = offA + (onA-offA)*on;
+      c.save(); c.translate(X,Y); c.rotate(ang);
+      c.fillStyle=POS; c.beginPath(); c.moveTo(Rr*.78,0); c.lineTo(-Rr*.2,-Rr*.26); c.lineTo(-Rr*.2,Rr*.26); c.closePath(); c.fill();
+      c.fillStyle=NEG; c.beginPath(); c.moveTo(-Rr*.78,0); c.lineTo(Rr*.2,-Rr*.26); c.lineTo(Rr*.2,Rr*.26); c.closePath(); c.fill();
+      c.restore();
+    }
+    label(c, on>.5? '전류에 수직! 전선을 감싸고 도는 방향' : '스위치 꺼짐 — 모두 북쪽을 가리킨다',
+      w/2, h-14, on>.5?MAG:DIM, Math.max(11,w*.016));
+  });
+};
+
+/* 8) 패러데이 유도 */
+ANIM.faraday=function(cv,api){
+  var pos=50, last=50, lastT=performance.now(), v=0;
+  api.setPos=function(p){
+    var now=performance.now(), dt=Math.max(16,now-lastT);
+    v = v*.45 + ((p-last)/dt*1000)*.55;
+    last=p; lastT=now; pos=p;
+  };
+  return loop(cv,function(c,w,h,t){
+    var now=performance.now();
+    if(now-lastT>120) v*=0.80;               /* 멈추면 사그라듦 */
+    c.clearRect(0,0,w,h);
+    var cy=h*.45, coilX=w*.5, coilW=Math.min(w,h)*.34, coilH=Math.min(w,h)*.26;
+    var speed=Math.min(1,Math.abs(v)/220);
+    /* 코일 */
+    c.strokeStyle=BRASS; c.lineWidth=Math.max(3,h*.014);
+    for(var i=0;i<7;i++){
+      var x=coilX-coilW/2+coilW*i/6;
+      c.beginPath(); c.ellipse(x,cy,coilW*.07,coilH*.5,0,0,7); c.stroke();
+    }
+    /* 자석 */
+    var mx=w*.14+ (w*.72)*(pos/100);
+    bar(c,mx,cy,Math.min(w,h)*.20,Math.min(w,h)*.085,0,false);
+    /* 도선 + 전구 */
+    var bulbX=w*.5, bulbY=h*.83, R=Math.max(14,Math.min(w,h)*.055);
+    c.strokeStyle=BRASS; c.lineWidth=2.4;
+    c.beginPath();
+    c.moveTo(coilX-coilW/2, cy+coilH*.5); c.lineTo(coilX-coilW/2, bulbY); c.lineTo(bulbX-R, bulbY);
+    c.moveTo(coilX+coilW/2, cy+coilH*.5); c.lineTo(coilX+coilW/2, bulbY); c.lineTo(bulbX+R, bulbY);
+    c.stroke();
+    var gl=speed;
+    if(gl>.02){
+      var g=c.createRadialGradient(bulbX,bulbY,0,bulbX,bulbY,R*3);
+      g.addColorStop(0,'rgba(255,215,120,'+(.75*gl)+')'); g.addColorStop(1,'rgba(255,200,90,0)');
+      c.fillStyle=g; c.beginPath(); c.arc(bulbX,bulbY,R*3,0,7); c.fill();
+    }
+    c.fillStyle='rgba(255,'+Math.round(240-60*(1-gl))+','+Math.round(205-120*(1-gl))+','+(0.35+0.65*gl)+')';
+    c.beginPath(); c.arc(bulbX,bulbY,R,0,7); c.fill();
+    c.strokeStyle='rgba(120,95,55,.75)'; c.lineWidth=1.8; c.stroke();
+    /* 유도 전류 화살표 */
+    if(gl>.06){
+      var dir = v>0? 1:-1;
+      c.globalAlpha=Math.min(1,gl*1.4);
+      arrow(c, bulbX-R*2.6*dir, bulbY-R*1.5, bulbX+R*2.6*dir, bulbY-R*1.5, POS, 2.6);
+      c.globalAlpha=1;
+    }
+    label(c, speed>.06? '유도 전류가 흐른다 — 빠를수록 밝다' : '멈춰 있으면 아무 일도 없다',
+      w/2, h-12, speed>.06?POS:DIM, Math.max(11,w*.016));
+  });
+};
+
+/* 10) 자석 기차 */
+ANIM.train=function(cv,api){
+  var x=0, vx=0, run=false, done=0;
+  api.play=function(){ x=0; vx=0; run=true; done=0; };
+  return loop(cv,function(c,w,h,t){
+    c.clearRect(0,0,w,h);
+    var cy=h*.5, x0=w*.10, x1=w*.90, R=Math.min(w,h)*.15;
+    /* 코일 터널 */
+    c.strokeStyle=BRASS; c.lineWidth=Math.max(2.5,h*.011);
+    var turns=Math.max(14,Math.round(w/34));
+    for(var i=0;i<turns;i++){
+      var X=x0+(x1-x0)*i/(turns-1);
+      c.beginPath(); c.ellipse(X,cy,R*.28,R,0,0,7); c.stroke();
+    }
+    if(run && !RM){ vx += 0.55; x += vx*0.016; if(x0+x> x1+R) { run=false; done=1; } }
+    var px=x0+x;
+    /* 기차 = 자석+건전지+자석 */
+    var uw=Math.min(w,h)*.10, uh=Math.min(w,h)*.115;
+    c.fillStyle=NEG; c.fillRect(px-uw*1.5,cy-uh/2,uw,uh);
+    c.fillStyle='#d8cdb5'; c.fillRect(px-uw*.5,cy-uh*.42,uw,uh*.84);
+    c.strokeStyle='rgba(90,70,40,.6)'; c.lineWidth=1.2; c.strokeRect(px-uw*.5,cy-uh*.42,uw,uh*.84);
+    label(c,'전지',px,cy+4,'#5a4a2c',Math.max(8,uw*.34));
+    c.fillStyle=POS; c.fillRect(px+uw*.5,cy-uh/2,uw,uh);
+    /* 밀고 당김 화살표 */
+    if(run){
+      arrow(c, px+uw*1.7, cy-uh*1.15, px+uw*3.0, cy-uh*1.15, MAG, 2.4);
+      label(c,'밀어냄',px+uw*2.4,cy-uh*1.55,MAG,Math.max(9,w*.012));
+      arrow(c, px-uw*3.0, cy+uh*1.15, px-uw*1.7, cy+uh*1.15, MAG, 2.4);
+      label(c,'당김',px-uw*2.4,cy+uh*1.85,MAG,Math.max(9,w*.012));
+    }
+    label(c, done? '전류 → 자기장 → 앞은 밀고 뒤는 당긴다' : (run? '달린다!' : '▶ 버튼을 누르면 넣습니다'),
+      w/2, h-14, done?MAG:DIM, Math.max(11,w*.016));
+  });
+};
+
+/* 11) 구리관 낙하 */
+ANIM.drop=function(cv,api){
+  var yA=0,vA=0,yB=0,run=false,T=0;
+  api.play=function(){ yA=0;vA=0;yB=0;run=true;T=0; };
+  return loop(cv,function(c,w,h,t){
+    c.clearRect(0,0,w,h);
+    var topY=h*.12, botY=h*.86, tubeH=botY-topY;
+    var ax=w*.30, bx=w*.70, tw=Math.min(w,h)*.13;
+    /* 관 */
+    c.fillStyle='rgba(200,215,225,.35)'; c.fillRect(ax-tw/2,topY,tw,tubeH);
+    c.strokeStyle='rgba(120,140,155,.8)'; c.lineWidth=2; c.strokeRect(ax-tw/2,topY,tw,tubeH);
+    c.fillStyle='rgba(196,120,50,.30)'; c.fillRect(bx-tw/2,topY,tw,tubeH);
+    c.strokeStyle=BRASS; c.lineWidth=2.4; c.strokeRect(bx-tw/2,topY,tw,tubeH);
+    label(c,'플라스틱 관',ax,topY-10,DIM,Math.max(10,w*.014));
+    label(c,'구리 관',bx,topY-10,'#8a5320',Math.max(10,w*.014));
+    if(run && !RM){
+      vA+=0.42; yA+=vA*0.02;                    /* 자유낙하 */
+      yB+=1.05;                                  /* 거의 등속 */
+      T+=0.016;
+      if(yA>tubeH-24 && yB>tubeH-24) run=false;
+    }
+    var mh=Math.min(w,h)*.055, mw=tw*.72;
+    var ayy=topY+12+Math.min(yA,tubeH-24), byy=topY+12+Math.min(yB,tubeH-24);
+    bar(c,ax,ayy,mw,mh,Math.PI/2,false);
+    /* 구리관 쪽 유도전류 고리 */
+    if(run && yB<tubeH-26){
+      c.strokeStyle='rgba(178,58,48,.75)'; c.lineWidth=2;
+      c.beginPath(); c.ellipse(bx,byy-mh*1.5,tw*.52,tw*.16,0,0,7); c.stroke();
+      c.beginPath(); c.ellipse(bx,byy+mh*1.5,tw*.52,tw*.16,0,0,7); c.stroke();
+      arrow(c,bx,byy+mh*2.4,bx,byy+mh*1.1,MAG,2.4);
+    }
+    bar(c,bx,byy,mw,mh,Math.PI/2,false);
+    label(c, run? '보세요 — 오른쪽이 느립니다'
+                : (T>0? '유도 전류가 만든 자기장이 자석을 떠받칩니다' : '▶ 버튼을 누르면 동시에 떨어뜨립니다'),
+      w/2, h-12, T>0?MAG:DIM, Math.max(11,w*.016));
+  });
+};
+
+/* 12) 맥스웰 네 문장 */
+var MX=[
+  {t:'① 전하가 있으면 전기장이 뻗어 나간다', d:'(+)전하에서는 나가고 (−)전하로는 들어옵니다. 전기는 (+)와 (−)를 따로 떼어 놓을 수 있어요.'},
+  {t:'② 자석은 N극과 S극을 뗄 수 없다', d:'자석을 아무리 잘라도 언제나 N극과 S극이 함께 생깁니다. 전기와 결정적으로 다른 점입니다.'},
+  {t:'③ 자기장이 변하면 전기가 돈다', d:'8장면 패러데이가 본 것입니다. 자석을 움직이면 둘레에 전류가 생깁니다.'},
+  {t:'④ 전류가 흐르면 자기가 돈다', d:'7장면 외르스테드가 본 것입니다. 전선 둘레를 자기장이 감쌉니다.'}
+];
+ANIM.maxwell=function(cv,api){
+  var cur=0;
+  api.set=function(i){ cur=i; };
+  return loop(cv,function(c,w,h,t){
+    c.clearRect(0,0,w,h);
+    var cx=w/2, cy=h*.46, S=Math.min(w,h)*.30;
+    if(cur===0){
+      c.fillStyle=POS; c.beginPath(); c.arc(cx,cy,S*.24,0,7); c.fill();
+      label(c,'+',cx,cy+S*.10,'#fff',S*.30);
+      for(var i=0;i<10;i++){ var a=i/10*Math.PI*2;
+        arrow(c,cx+Math.cos(a)*S*.34,cy+Math.sin(a)*S*.34,cx+Math.cos(a)*S*.92,cy+Math.sin(a)*S*.92,POS,2.2); }
+    } else if(cur===1){
+      bar(c,cx,cy-S*.42,S*1.1,S*.30,0,false);
+      label(c,'자르면',cx,cy+S*.02,DIM,Math.max(11,w*.015));
+      bar(c,cx-S*.32,cy+S*.42,S*.52,S*.26,0,false);
+      bar(c,cx+S*.32,cy+S*.42,S*.52,S*.26,0,false);
+      label(c,'또 N극과 S극',cx,cy+S*.86,MAG,Math.max(11,w*.015));
+    } else if(cur===2){
+      var pul=RM?1:(1+.16*Math.sin(t*3));
+      bar(c,cx,cy-S*.06,S*.62*pul,S*.22*pul,0,false);
+      c.strokeStyle=POS; c.lineWidth=2.6;
+      c.beginPath(); c.ellipse(cx,cy,S*.85,S*.55,0,0,7); c.stroke();
+      var a2=t*1.6, ex=cx+Math.cos(a2)*S*.85, ey=cy+Math.sin(a2)*S*.55;
+      c.fillStyle=POS; c.beginPath(); c.arc(ex,ey,5.5,0,7); c.fill();
+      label(c,'자석을 움직이면 → 전기가 돈다',cx,cy+S*1.0,POS,Math.max(11,w*.015));
+    } else {
+      c.strokeStyle=BRASS; c.lineWidth=Math.max(5,S*.10); c.lineCap='round';
+      c.beginPath(); c.moveTo(cx-S*.95,cy); c.lineTo(cx+S*.95,cy); c.stroke();
+      c.strokeStyle=MAG; c.lineWidth=2.4;
+      for(var k=1;k<=3;k++){ c.beginPath(); c.ellipse(cx,cy,S*.30*k,S*.20*k,0,0,7); c.stroke(); }
+      var a3=t*1.6, bxp=cx+Math.cos(a3)*S*.60, byp=cy+Math.sin(a3)*S*.40;
+      c.fillStyle=MAG; c.beginPath(); c.arc(bxp,byp,5.5,0,7); c.fill();
+      label(c,'전류가 흐르면 → 자기가 돈다',cx,cy+S*1.0,MAG,Math.max(11,w*.015));
+    }
+    label(c,MX[cur].t,w/2,h*.94,INK,Math.max(12,w*.017));
+  });
+};
+
+/* 13) 전자기파 */
+ANIM.emwave=function(cv){
+  return loop(cv,function(c,w,h,t){
+    c.clearRect(0,0,w,h);
+    var y0=h*.5, x0=w*.08, x1=w*.92, A=Math.min(w,h)*.20, ph=RM?0:t*2.4;
+    /* 진행축 */
+    c.strokeStyle='rgba(107,87,63,.55)'; c.lineWidth=1.4; c.setLineDash([5,5]);
+    c.beginPath(); c.moveTo(x0,y0); c.lineTo(x1,y0); c.stroke(); c.setLineDash([]);
+    arrow(c,x1-30,y0,x1+6,y0,DIM,2);
+    label(c,'진행 방향',x1-8,y0-12,DIM,Math.max(10,w*.013),'right');
+    /* 전기장(세로) */
+    c.strokeStyle=POS; c.lineWidth=2.6; c.beginPath();
+    for(var i=0;i<=140;i++){
+      var p=i/140, X=x0+(x1-x0)*p, Y=y0-Math.sin(p*Math.PI*4-ph)*A;
+      i?c.lineTo(X,Y):c.moveTo(X,Y);
+    }
+    c.stroke();
+    /* 자기장(가로·원근) */
+    c.strokeStyle=MAG; c.lineWidth=2.6; c.beginPath();
+    for(var j=0;j<=140;j++){
+      var p2=j/140, X2=x0+(x1-x0)*p2;
+      var s=Math.sin(p2*Math.PI*4-ph);
+      var Y2=y0+s*A*.34, X2b=X2+s*A*.52;
+      j?c.lineTo(X2b,Y2):c.moveTo(X2b,Y2);
+    }
+    c.stroke();
+    /* 막대 */
+    for(var k=0;k<=14;k++){
+      var p3=k/14, X3=x0+(x1-x0)*p3, s3=Math.sin(p3*Math.PI*4-ph);
+      c.globalAlpha=.5;
+      c.strokeStyle=POS; c.lineWidth=1.4;
+      c.beginPath(); c.moveTo(X3,y0); c.lineTo(X3,y0-s3*A); c.stroke();
+      c.strokeStyle=MAG;
+      c.beginPath(); c.moveTo(X3,y0); c.lineTo(X3+s3*A*.52,y0+s3*A*.34); c.stroke();
+      c.globalAlpha=1;
+    }
+    label(c,'전기',x0+6,y0-A-10,POS,Math.max(11,w*.016),'left');
+    label(c,'자기',x0+6,y0+A*.55,MAG,Math.max(11,w*.016),'left');
+    label(c,'초속 약 30만 km — 빛의 속도',w/2,h-14,LIGHT,Math.max(12,w*.017));
+  });
+};
+
+/* 14) 지구 다이나모 */
+ANIM.dynamo=function(cv,api){
+  var wind=0,target=0,ps=null;
+  api.toggle=function(){ target=target>.5?0:1; return target>.5; };
+  return loop(cv,function(c,w,h,t){
+    wind += (target-wind)*(RM?1:.06);
+    c.clearRect(0,0,w,h);
+    var cx=w*.56, cy=h*.5, R=Math.min(w,h)*.24;
+    /* 자기력선 */
+    c.strokeStyle='rgba(31,111,104,.5)'; c.lineWidth=1.6;
+    for(var k=1;k<=3;k++){
+      var L=R*(1+k*.5);
+      for(var side=-1;side<=1;side+=2){
+        c.beginPath();
+        for(var a=-Math.PI/2;a<=Math.PI/2;a+=.06){
+          var r=L*Math.cos(a)*Math.cos(a);
+          var X=cx+side*r*Math.cos(a), Y=cy-r*Math.sin(a);
+          (a===-Math.PI/2)?c.moveTo(X,Y):c.lineTo(X,Y);
+        }
+        c.stroke();
+      }
+    }
+    /* 지구 */
+    c.fillStyle='#5c7a5a'; c.beginPath(); c.arc(cx,cy,R,0,7); c.fill();
+    c.strokeStyle='rgba(40,60,40,.75)'; c.lineWidth=1.5; c.stroke();
+    /* 외핵 */
+    c.save(); c.beginPath(); c.arc(cx,cy,R*.62,0,7); c.clip();
+    var g=c.createRadialGradient(cx,cy,0,cx,cy,R*.62);
+    g.addColorStop(0,'#ffd88a'); g.addColorStop(1,'#d8721f');
+    c.fillStyle=g; c.fillRect(cx-R,cy-R,R*2,R*2);
+    /* 대류 화살표 */
+    for(var i=0;i<5;i++){
+      var a2=i/5*Math.PI*2 + (RM?0:t*.5);
+      var rr=R*.40;
+      var X1=cx+Math.cos(a2)*rr, Y1=cy+Math.sin(a2)*rr;
+      var X2=cx+Math.cos(a2+.7)*rr, Y2=cy+Math.sin(a2+.7)*rr;
+      arrow(c,X1,Y1,X2,Y2,'rgba(120,50,0,.85)',2.2);
+    }
+    c.restore();
+    c.strokeStyle='rgba(150,80,10,.7)'; c.lineWidth=1.2;
+    c.beginPath(); c.arc(cx,cy,R*.62,0,7); c.stroke();
+    label(c,'외핵',cx,cy+4,'#6a3200',Math.max(10,w*.014));
+    /* 태양풍 */
+    if(!ps){ ps=[]; for(var p=0;p<26;p++) ps.push({y:Math.random(), p:Math.random()}); }
+    if(wind>.02){
+      for(var q=0;q<ps.length;q++){ var P=ps[q];
+        if(!RM) P.p=(P.p+0.0045)%1;
+        var sx=-w*.05+ (w*1.1)*P.p, sy=h*.08+h*.84*P.y;
+        var dx=sx-cx, dy=sy-cy, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<R*2.0){ var push=(R*2.0-d)/(R*2.0); sy += (dy>0?1:-1)*push*R*.85; }
+        c.globalAlpha=wind*.85; c.fillStyle=POS;
+        c.beginPath(); c.arc(sx,sy,2.8,0,7); c.fill(); c.globalAlpha=1;
+      }
+      label(c,'태양풍이 휘어 나갑니다',w/2,h-14,POS,Math.max(11,w*.016));
+    } else label(c,'☀️ 버튼을 누르면 태양풍을 보냅니다',w/2,h-14,DIM,Math.max(11,w*.016));
+  });
+};
+
+/* ── 장면 엔진 ─────────────────── */
+var scenes=$$('.scene'), N=scenes.length, cur=0, live=[];
+var counter=$('#counter'), dots=$('#dots'), tocgrid=$('#tocgrid');
+
+scenes.forEach(function(sc,i){
+  var d=document.createElement('button'); d.className='dot'; d.title=(i+1)+'. '+sc.dataset.t;
+  d.addEventListener('click',function(){ go(i) }); dots.appendChild(d);
+  var it=document.createElement('button'); it.className='tocitem';
+  it.innerHTML='<b>'+String(i+1).padStart(2,'0')+'</b>'+sc.dataset.t;
+  it.addEventListener('click',function(){ $('#toc').classList.remove('on'); go(i) }); tocgrid.appendChild(it);
+});
+function sceneScript(i){ var s=scenes[i].querySelector('.script'); return s?s.innerHTML:'<i>이 장면은 대본이 없습니다.</i>'; }
+function stopAll(){ live.forEach(function(a){ a.stop&&a.stop() }); live=[]; }
+function startScene(i){
+  stopAll();
+  $$('canvas[data-anim]',scenes[i]).forEach(function(cv){
+    if(!cv._api){ var api={}; api.ctrl=ANIM[cv.dataset.anim](cv,api); cv._api=api; }
+    var a=cv._api.ctrl; if(RM) a.once(); a.start(); live.push(a);
+  });
+}
+function go(i){
+  i=Math.max(0,Math.min(N-1,i));
+  scenes[cur].classList.remove('on');
+  cur=i; scenes[cur].classList.add('on');
+  counter.textContent=(i+1)+' / '+N;
+  var sp=$('#scriptPanel');
+  sp.innerHTML='<span class="pt">🧑‍🏫 교사 대본 · '+(i+1)+'. '+scenes[i].dataset.t+' (T로 끄기)</span>'+sceneScript(i);
+  sp.scrollTop=0;
+  $$('.dot').forEach(function(d,k){ d.classList.toggle('on',k===i) });
+  $('#prev').disabled=(i===0); $('#next').disabled=(i===N-1);
+  try{ localStorage.setItem(SAVE,String(i)); }catch(e){}
+  startScene(i);
+}
+$('#next').addEventListener('click',function(){ go(cur+1) });
+$('#prev').addEventListener('click',function(){ go(cur-1) });
+
+document.addEventListener('keydown',function(e){
+  if(!$('#cover').classList.contains('hide')){
+    if(e.key==='Enter'||e.key===' '){ $('#enter').click(); e.preventDefault(); }
+    return;
+  }
+  var k=e.key;
+  if(k==='ArrowRight'||k===' '||k==='PageDown'){ go(cur+1); e.preventDefault(); }
+  else if(k==='ArrowLeft'||k==='PageUp'){ go(cur-1); e.preventDefault(); }
+  else if(k==='Home'){ go(0); } else if(k==='End'){ go(N-1); }
+  else if(k==='t'||k==='T'||k==='ㅆ'){ $('#btnTeacher').click(); }
+  else if(k==='m'||k==='M'||k==='ㅡ'){ $('#btnToc').click(); }
+  else if(k==='f'||k==='F'||k==='ㄹ'){ $('#btnFull').click(); }
+  else if(k==='Escape'){ $('#toc').classList.remove('on'); }
+});
+
+var cover=$('#cover');
+try{ var last=parseInt(localStorage.getItem(SAVE)||'0',10);
+  if(last>0 && last<N){ var r=$('#resume'); r.hidden=false;
+    r.textContent='이어서 보기 → '+(last+1)+'. '+scenes[last].dataset.t;
+    r.addEventListener('click',function(){ cover.classList.add('hide'); go(last); }); }
+}catch(e){}
+$('#enter').addEventListener('click',function(){ cover.classList.add('hide'); go(0); });
+$('#home').addEventListener('click',function(){ stopAll(); cover.classList.remove('hide'); });
+
+$('#btnTeacher').addEventListener('click',function(){
+  var on=document.body.classList.toggle('teacher');
+  this.setAttribute('aria-pressed',on?'true':'false');
+});
+$('#btnToc').addEventListener('click',function(){ $('#toc').classList.toggle('on') });
+$('#toc').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('on') });
+$('#btnFull').addEventListener('click',function(){
+  if(!document.fullscreenElement){ (document.documentElement.requestFullscreen||function(){}).call(document.documentElement); }
+  else if(document.exitFullscreen) document.exitFullscreen();
+});
+
+/* ── 위젯 ─────────────────────── */
+function apiOf(name){ var cv=$('canvas[data-anim='+name+']'); return cv&&cv._api; }
+
+var tempSl=$('input[data-ctl=temp]');
+if(tempSl) tempSl.addEventListener('input',function(){ var a=apiOf('curie'); a&&a.setT(+this.value); });
+var magSl=$('input[data-ctl=magpos]');
+if(magSl) magSl.addEventListener('input',function(){ var a=apiOf('faraday'); a&&a.setPos(+this.value); });
+
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]'); if(!b) return;
+  var act=b.dataset.act, a;
+  if(act==='rub'){ a=apiOf('amber');
+    if(a){ var on=a.rub(); b.classList.toggle('on',on); b.textContent= on? '🧽 다시 내려놓기':'🧽 양털로 문지르기'; } }
+  else if(act==='filings'){ a=apiOf('lodestone'); if(a) b.classList.toggle('on',a.toggle()); }
+  else if(act==='compass'){ a=apiOf('terrella'); if(a) b.classList.toggle('on',a.toggle()); }
+  else if(act==='show-cur'){ a=apiOf('current'); if(a) b.classList.toggle('on',a.cur()); }
+  else if(act==='show-el'){ a=apiOf('current'); if(a) b.classList.toggle('on',a.el()); }
+  else if(act==='switch'){ a=apiOf('oersted');
+    if(a){ var s=a.toggle(); b.classList.toggle('on',s); b.textContent= s? '🔌 스위치 끄기':'🔌 스위치 켜기'; } }
+  else if(act==='train'){ a=apiOf('train'); a&&a.play(); }
+  else if(act==='drop'){ a=apiOf('drop'); a&&a.play(); }
+  else if(act==='wind'){ a=apiOf('dynamo'); if(a) b.classList.toggle('on',a.toggle()); }
+});
+
+/* 맥스웰 세그먼트 */
+var mxText=$('#mxText');
+function setMx(i){
+  var a=apiOf('maxwell'); a&&a.set(i);
+  $$('#mxSeg button').forEach(function(x,k){ x.classList.toggle('on',k===i) });
+  mxText.innerHTML='<b>'+MX[i].t+'</b><br>'+MX[i].d;
+}
+$$('#mxSeg button').forEach(function(x){ x.addEventListener('click',function(){ setMx(+this.dataset.mx) }) });
+setMx(0);
+
+/* 투표 */
+var votes={A:0,B:0};
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-vote]'); if(!b) return;
+  var k=b.dataset.vote; votes[k]=Math.max(0,votes[k]+parseInt(b.dataset.d,10));
+  $('#vA').textContent=votes.A; $('#vB').textContent=votes.B;
+  var mx=Math.max(1,votes.A,votes.B);
+  $('#bA').style.width=(votes.A/mx*100)+'%'; $('#bB').style.width=(votes.B/mx*100)+'%';
+});
+
+window.addEventListener('resize',function(){ $$('canvas').forEach(function(cv){ cv._w=null; }); });
+})();
+</script>
+</body>
+</html>
