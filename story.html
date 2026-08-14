@@ -63,11 +63,22 @@ body::after{
   padding:10px clamp(12px,2vw,26px);
   background:linear-gradient(180deg,rgba(246,236,216,.94),rgba(246,236,216,0));
 }
-.brand{
-  font-family:var(--disp); font-weight:700; letter-spacing:-.01em; color:var(--accent);
-  font-size:clamp(14px,1.35vw,20px); background:none; border:0; cursor:pointer; padding:6px 8px; border-radius:10px;
+/* 단원 허브로 가는 버튼 — 눌러서 다른 페이지로 나간다는 게 느껴지도록 채운 버튼 */
+.hubbtn{
+  display:inline-flex; align-items:center; gap:7px; text-decoration:none; white-space:nowrap;
+  background:var(--accent); color:#fdf4e0; border:1px solid var(--accent); border-radius:999px;
+  padding:8px clamp(13px,1.15vw,19px); font-family:inherit; font-weight:800;
+  font-size:clamp(12px,1.05vw,16px); box-shadow:0 6px 16px -9px rgba(138,74,30,.95); transition:.16s;
 }
-.brand:hover{background:rgba(160,92,44,.1)}
+.hubbtn:hover{background:#6f3a15; border-color:#6f3a15; transform:translateY(-1px);
+  box-shadow:0 11px 22px -10px rgba(138,74,30,1)}
+.hubbtn:active{transform:translateY(0); box-shadow:0 4px 10px -7px rgba(138,74,30,1)}
+.hubbtn .ar{font-size:1.15em; line-height:1; transition:transform .16s}
+.hubbtn:hover .ar{transform:translateX(-3px)}
+/* 제목은 이제 누르는 것이 아니라 그냥 이름표 */
+.brandtxt{font-family:var(--disp); font-weight:700; color:var(--ink-dim); letter-spacing:-.01em;
+  font-size:clamp(13px,1.2vw,19px); white-space:nowrap; padding-left:4px}
+@media (max-width:900px){ .brandtxt{display:none} }
 .spacer{flex:1}
 .tbtn{
   background:var(--surface); color:var(--ink-dim); border:1px solid var(--line); border-radius:999px;
@@ -234,8 +245,14 @@ body.teacher #scriptPanel{display:block; animation:sin .28s ease-out}
 
 /* ── 표지 ─────────────────────────── */
 #cover{position:fixed; inset:0; z-index:30; display:grid; place-items:center; text-align:center; padding:24px;
-  background:radial-gradient(80% 60% at 50% 40%, rgba(255,246,225,.9), rgba(238,226,201,.98) 72%)}
+  background:radial-gradient(80% 60% at 50% 40%, #fff8e9 0%, #f2e7ce 62%, #e9dcc0 100%)}
 #cover.hide{display:none}
+/* 표지가 떠 있는 동안에는 이야기 화면과 조작부를 완전히 감춘다
+   (표지 뒤로 장면 내용이 비쳐 보이지 않게 — 표지와 이야기를 분리) */
+body.cover-on #stage,
+body.cover-on .topbar,
+body.cover-on .navbar,
+body.cover-on #scriptPanel{display:none !important}
 .cov-emoji{font-size:clamp(30px,4.6vw,62px); letter-spacing:.16em; margin-bottom:10px}
 .cov-unit{font-size:clamp(12px,1.15vw,18px); font-weight:800; letter-spacing:.18em; color:var(--accent)}
 h1{font-family:var(--disp); margin:.24em 0 .18em; font-size:clamp(30px,6vw,96px); line-height:1.08;
@@ -257,6 +274,17 @@ h1 em{font-style:normal; color:var(--accent)}
 .resume{display:block; margin:12px auto 0; background:none; border:0; color:var(--ink-mute);
   font-size:clamp(12px,1.1vw,16px); font-family:inherit; cursor:pointer; text-decoration:underline; text-underline-offset:4px}
 .resume:hover{color:var(--accent)}
+/* 표지에서도 단원 허브로 나갈 수 있게 (표지에서는 상단바가 감춰져 있으므로) */
+.cov-hub{
+  display:inline-flex; align-items:center; gap:8px; margin:clamp(16px,2.6vh,28px) auto 0;
+  text-decoration:none; color:var(--accent); background:var(--surface);
+  border:1.5px solid var(--accent); border-radius:999px;
+  padding:10px clamp(18px,1.7vw,26px); font-family:inherit; font-weight:800;
+  font-size:clamp(12px,1.15vw,17px); transition:.16s;
+}
+.cov-hub:hover{background:var(--accent); color:#fdf4e0; transform:translateY(-1px)}
+.cov-hub .ar{font-size:1.15em; line-height:1; transition:transform .16s}
+.cov-hub:hover .ar{transform:translateX(-3px)}
 
 /* ── 목차 ─────────────────────────── */
 #toc{position:fixed; inset:0; z-index:50; display:none; place-items:center; background:rgba(60,44,20,.55); padding:24px}
@@ -317,7 +345,9 @@ h1 em{font-style:normal; color:var(--accent)}
 <body>
 
 <header class="topbar">
-  <button class="brand" id="home" title="표지로">⚡ 전기와 자기 이야기보따리</button>
+  <a class="hubbtn" href="index.html" title="VII. 전기와 자기 단원 허브로 이동"><span class="ar">←</span>단원 허브</a>
+  <button class="tbtn" id="home" title="이 자료의 표지로">⌂ 표지</button>
+  <span class="brandtxt">⚡ 전기와 자기 이야기보따리</span>
   <span class="spacer"></span>
   <span class="counter" id="counter">1 / 15</span>
   <button class="tbtn" id="btnToc" title="목차 (M)">☰ 목차</button>
@@ -887,6 +917,7 @@ h1 em{font-style:normal; color:var(--accent)}
     </div>
     <button class="enter" id="enter">이야기 시작하기</button>
     <button class="resume" id="resume" hidden>이어서 보기 →</button>
+    <div><a class="cov-hub" href="index.html"><span class="ar">←</span>VII. 전기와 자기 단원 허브로</a></div>
   </div>
 </div>
 
@@ -1824,13 +1855,20 @@ document.addEventListener('keydown',function(e){
 });
 
 var cover=$('#cover');
+document.body.classList.add('cover-on');   /* 처음엔 표지 화면 */
+function hideCover(){ cover.classList.add('hide'); document.body.classList.remove('cover-on'); }
+function showCover(){
+  stopAll();
+  scenes.forEach(function(s){ s.classList.remove('on') });  /* 뒤에 남아 비치지 않도록 */
+  cover.classList.remove('hide'); document.body.classList.add('cover-on');
+}
 try{ var last=parseInt(localStorage.getItem(SAVE)||'0',10);
   if(last>0 && last<N){ var r=$('#resume'); r.hidden=false;
     r.textContent='이어서 보기 → '+(last+1)+'. '+scenes[last].dataset.t;
-    r.addEventListener('click',function(){ cover.classList.add('hide'); go(last); }); }
+    r.addEventListener('click',function(){ hideCover(); go(last); }); }
 }catch(e){}
-$('#enter').addEventListener('click',function(){ cover.classList.add('hide'); go(0); });
-$('#home').addEventListener('click',function(){ stopAll(); cover.classList.remove('hide'); });
+$('#enter').addEventListener('click',function(){ hideCover(); go(0); });
+$('#home').addEventListener('click',showCover);
 
 $('#btnTeacher').addEventListener('click',function(){
   var on=document.body.classList.toggle('teacher');
