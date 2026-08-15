@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>엄지가 가리키는 곳 · 오른손 규칙 3D 트레이너</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{
+ --abyss:#f2eade; --surface:#f3ede3; --line:#c1ac82; --line-soft:#dccfae;
+ --ink:#2e2315; --ink-dim:#5c4a33; --ink-mute:#96805c;
+ --accent:#a05c2c; --gold:#8a5f24; --ok:#2c7a44; --danger:#b3362e; --mag:#2c6e5f;
+ --disp:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+ --jua:"Jua",var(--disp); --gowun:"Gowun Dodum",var(--disp);
+ --r:16px; --shadow:0 18px 50px -22px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--disp);color:var(--ink);background:
+ radial-gradient(900px 560px at 8% 6%, rgba(44,110,95,.09), transparent 60%),
+ radial-gradient(700px 480px at 92% 90%, rgba(160,92,44,.08), transparent 55%),
+ var(--abyss); min-height:100vh; -webkit-font-smoothing:antialiased}
+header{padding:26px 20px 8px; text-align:center}
+header h1{font-family:var(--jua); font-size:clamp(22px,4.5vw,34px)}
+header h1 .em{color:var(--mag)}
+header p{color:var(--ink-dim); margin-top:6px; font-size:clamp(13px,2.4vw,15.5px); font-family:var(--gowun)}
+.wrap{max-width:1180px; margin:0 auto; padding:14px 16px 40px}
+.modes{display:flex; gap:10px; justify-content:center; margin:14px 0 18px; flex-wrap:wrap}
+.mode-btn{font-family:var(--jua); font-size:16.5px; padding:11px 22px; border-radius:999px;
+ border:2px solid var(--line); background:rgba(255,252,244,.8); color:var(--ink-dim); cursor:pointer; transition:.18s}
+.mode-btn.on{background:var(--mag); border-color:var(--mag); color:#eefaf4; box-shadow:var(--shadow)}
+.stage-card{background:rgba(255,252,244,.75); border:1.5px solid var(--line); border-radius:var(--r);
+ overflow:hidden; box-shadow:var(--shadow)}
+.stage-head{display:flex; align-items:center; gap:10px; padding:12px 18px; border-bottom:1px dashed var(--line-soft); flex-wrap:wrap}
+.stage-head .dot{width:10px;height:10px;border-radius:50%;background:var(--mag)}
+.stage-head h2{font-family:var(--jua); font-size:18px; color:var(--gold)}
+.stage-head .hint{margin-left:auto; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun)}
+.stage{position:relative; height:min(56vh,520px); background:linear-gradient(180deg,#efe6d3,#e7dcc4)}
+.stage canvas{display:block}
+.hud{position:absolute; left:14px; top:12px; display:flex; flex-direction:column; gap:8px; pointer-events:none; max-width:min(380px,60%)}
+.tag{background:rgba(46,35,21,.85); color:#f6eeda; font-size:13px; padding:7px 13px; border-radius:9px;
+ font-family:var(--gowun); line-height:1.55}
+.tag b{color:#ffd166}
+.hand{position:absolute; right:14px; top:12px; background:rgba(255,252,244,.94); border:1.5px solid var(--line);
+ border-radius:12px; padding:10px 14px; max-width:210px; text-align:center}
+.hand .he{font-size:34px; line-height:1}
+.hand .ht{font-family:var(--jua); font-size:13px; color:var(--ink-dim); margin-top:6px; line-height:1.55}
+.hand .ht b{color:var(--accent)}
+.panel{display:flex; gap:14px; flex-wrap:wrap; align-items:center; padding:14px 18px; border-top:1px dashed var(--line-soft)}
+.btn{font-family:var(--jua); font-size:14px; padding:8px 16px; border-radius:10px; cursor:pointer;
+ border:1.5px solid var(--line); background:#fffcf4; color:var(--ink-dim); transition:.15s}
+.btn:hover{border-color:var(--mag); color:var(--mag)}
+.btn.primary{background:var(--mag); color:#eefaf4; border-color:var(--mag)}
+.btn.warn{background:#fbf3ea; border-color:var(--accent); color:var(--accent)}
+.note-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin-top:16px}
+.note{background:rgba(255,252,244,.7); border:1px solid var(--line-soft); border-radius:12px; padding:13px 16px;
+ font-size:14px; color:var(--ink-dim); line-height:1.6; font-family:var(--gowun)}
+.note b{color:var(--ink)} .note .k{color:var(--mag); font-family:var(--jua); font-size:13.5px}
+#app-credit{margin:34px auto 18px; text-align:center; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun)}
+@media (max-width:640px){ .hand{max-width:150px} .hand .he{font-size:26px} }
+</style>
+</head>
+<body>
+<header>
+ <h1>✋ 엄지가 가리키는 곳 — <span class="em">오른손 규칙 3D</span></h1>
+ <p>나침반을 끌고 다니며 자기장의 방향을 직접 확인해 보세요</p>
+</header>
+
+<div class="wrap">
+ <div class="modes">
+  <button class="mode-btn on" data-mode="wire">┃ 곧은 도선 주위의 자기장</button>
+  <button class="mode-btn" data-mode="coil">〇 코일(전자석)의 자기장</button>
+ </div>
+
+ <section class="stage-card">
+  <div class="stage-head"><span class="dot"></span><h2 id="stage-title">곧은 도선에 전류가 흐르면?</h2>
+   <span class="hint">🧭 나침반을 드래그해 옮기기 · 빈 곳 드래그 = 시점 회전</span></div>
+  <div class="stage" id="stage">
+   <div class="hud"><div class="tag" id="msg">나침반 바늘(빨강 = N극)이 그 자리의 <b>자기장 방향</b>을 가리킵니다. 도선 둘레를 한 바퀴 돌려 보세요!</div></div>
+   <div class="hand" id="hand-card">
+    <div class="he">👍</div>
+    <div class="ht" id="hand-text"><b>엄지</b> = 전류의 방향<br><b>감아쥔 네 손가락</b> = 자기장의 방향</div>
+   </div>
+  </div>
+  <div class="panel">
+   <button class="btn primary" id="flip-btn">🔄 전류 방향 바꾸기 (지금: <b id="cur-dir">위쪽 ↑</b>)</button>
+   <button class="btn warn" id="predict-btn">🙈 자기장 숨기고 예상해 보기</button>
+   <span class="ctl" style="font-family:var(--gowun);font-size:13.5px;color:var(--ink-mute)" id="mode-tip">
+    도선 가까이일수록 자기장이 셉니다 — 나침반을 가까이/멀리 옮겨 보세요.</span>
+  </div>
+ </section>
+
+ <div class="note-row">
+  <div class="note"><span class="k">① 곧은 도선 — 감아쥐기</span><br>
+   오른손 <b>엄지</b>를 전류 방향으로 향하게 하고 도선을 감아쥐면, <b>네 손가락이 감기는 방향</b>이 자기장의 방향.
+   자기장은 도선을 중심으로 한 <b>동심원</b> 모양입니다.</div>
+  <div class="note"><span class="k">② 코일 — 거꾸로 잡기</span><br>
+   코일은 반대로 — <b>네 손가락</b>을 전류가 흐르는 방향으로 감고, 이때 <b>엄지가 가리키는 쪽이 N극</b>.
+   전류 방향을 뒤집으면 N극과 S극도 뒤바뀝니다.</div>
+  <div class="note"><span class="k">③ 예상 → 확인</span><br>
+   「자기장 숨기기」를 누르고, 나침반이 어디를 가리킬지 <b>먼저 말한 다음</b> 옮겨서 확인해 보세요.
+   교과서 2D 그림에서 헷갈렸던 ⊙(나오는 방향)·⊗(들어가는 방향)이 3D에서는 그냥 보입니다.</div>
+ </div>
+</div>
+
+<footer id="app-credit">© 2026 승재쌤의 과학실 · 오른손 규칙 3D · 최종 업데이트 2026-08-16</footer>
+
+<script src="lib/three.min.js"></script>
+<script src="lib/OrbitControls.js"></script>
+<script>
+'use strict';
+const COPPER = 0xb0713a;
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(stage.clientWidth, stage.clientHeight);
+stage.insertBefore(renderer.domElement, stage.firstChild);
+const scene = new THREE.Scene();
+scene.add(new THREE.AmbientLight(0xfff4e0,.8));
+const dl = new THREE.DirectionalLight(0xffffff,.7); dl.position.set(6,10,8); scene.add(dl);
+const cam = new THREE.PerspectiveCamera(46, 2, .1, 200);
+cam.position.set(7,7.5,10);
+const ctl = new THREE.OrbitControls(cam, renderer.domElement);
+ctl.enableDamping = true; ctl.maxPolarAngle = Math.PI*.5;
+/* 책상 */
+const desk = new THREE.Mesh(new THREE.BoxGeometry(26,.4,18),
+  new THREE.MeshStandardMaterial({color:0xc9a86a, roughness:.85}));
+desk.position.y = -.25; scene.add(desk);
+
+let dirSign = 1;           // 도선: +1=전류 위쪽 / 코일: +1=N극이 +x쪽
+let mode = 'wire';
+let showField = true;
+
+/* ══ 곧은 도선 그룹 ══ */
+const wireG = new THREE.Group(); scene.add(wireG);
+const wire = new THREE.Mesh(new THREE.CylinderGeometry(.16,.16,10,14),
+  new THREE.MeshStandardMaterial({color:COPPER, metalness:.5, roughness:.35}));
+wire.position.y = 4.5; wireG.add(wire);
+const curArrowW = new THREE.ArrowHelper(new THREE.Vector3(0,1,0), new THREE.Vector3(1.1,2.2,0), 4.2, 0xa05c2c, .8, .45);
+wireG.add(curArrowW);
+/* 자기장 동심원 고리 (화살촉 포함) */
+const wireRings = new THREE.Group(); wireG.add(wireRings);
+[1.6, 2.7, 3.9].forEach(R=>{
+  [1.6, 4.2, 6.8].forEach(h=>{
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(R,.045,8,52),
+      new THREE.MeshBasicMaterial({color:0x2c6e5f, transparent:true, opacity: .62 - R*.09}));
+    ring.rotation.x = Math.PI/2; ring.position.y = h; wireRings.add(ring);
+    for(let k=0;k<3;k++){
+      const a = k/3*Math.PI*2 + R;
+      const cone = new THREE.Mesh(new THREE.ConeGeometry(.14,.4,8),
+        new THREE.MeshBasicMaterial({color:0x2c6e5f, transparent:true, opacity:.85 - R*.1}));
+      cone.position.set(Math.cos(a)*R, h, Math.sin(a)*R);
+      cone.userData = {a, R};
+      wireRings.add(cone);
+    }
+  });
+});
+function orientWireCones(){
+  wireRings.children.forEach(o=>{
+    if (!o.userData.R) return;
+    const {a, R} = o.userData;
+    /* 전류 +y → B는 위에서 볼 때 반시계(오른손) */
+    const t = new THREE.Vector3(-Math.sin(a), 0, Math.cos(a)).multiplyScalar(-dirSign);
+    o.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), t.normalize());
+  });
+}
+
+/* ══ 코일 그룹 ══ */
+const coilG = new THREE.Group(); coilG.visible = false; scene.add(coilG);
+(function(){
+  const turns = 9, R = 1.3, len = 4.6;
+  class Spiral extends THREE.Curve{
+    getPoint(t){ const a = turns*Math.PI*2*t;
+      return new THREE.Vector3(-len/2+len*t, Math.cos(a)*R+2.1, Math.sin(a)*R); }
+  }
+  const coil = new THREE.Mesh(new THREE.TubeGeometry(new Spiral(), 480, .09, 10, false),
+    new THREE.MeshStandardMaterial({color:COPPER, metalness:.55, roughness:.35}));
+  coilG.add(coil);
+  const core = new THREE.Mesh(new THREE.CylinderGeometry(.7,.7,5.4,16),
+    new THREE.MeshStandardMaterial({color:0x9a9a9a, metalness:.6, roughness:.4}));
+  core.rotation.z = Math.PI/2; core.position.y = 2.1; coilG.add(core);
+})();
+/* N/S 라벨 스프라이트 */
+function textSprite(txt, color){
+  const cv = document.createElement('canvas'); cv.width = cv.height = 96;
+  const c = cv.getContext('2d'); c.fillStyle = color; c.font = 'bold 64px sans-serif';
+  c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, 48, 52);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv), transparent:true, depthWrite:false}));
+  sp.scale.set(1.5,1.5,1); return sp;
+}
+const nLab = textSprite('N', '#b23a30'); const sLab = textSprite('S', '#2e5f8f');
+nLab.position.set(3.6, 3.6, 0); sLab.position.set(-3.6, 3.6, 0);
+coilG.add(nLab); coilG.add(sLab);
+/* 코일 자기력선: 축 방향 + 바깥 곡선 고리 */
+const coilField = new THREE.Group(); coilG.add(coilField);
+(function(){
+  const mat = ()=>new THREE.MeshBasicMaterial({color:0x2c6e5f, transparent:true, opacity:.6});
+  /* 축 화살표 (안쪽: S→N 방향으로 나감) */
+  [[-1,0],[1,0]].forEach(()=>{});
+  const axisAr = new THREE.ArrowHelper(new THREE.Vector3(1,0,0), new THREE.Vector3(-4.7,2.1,0), 9.4, 0x2c6e5f, .9, .5);
+  axisAr.userData.axis = true; coilField.add(axisAr);
+  /* 바깥 고리 4개 (xz·xy 평면 타원) */
+  [[0,1],[0,-1],[1,0],[-1,0]].forEach(([uy,uz])=>{
+    class Loop extends THREE.Curve{
+      getPoint(t){ const a = t*Math.PI*2;
+        const x = Math.sin(a)*4.4;
+        const r = 2.2 + Math.cos(a)*-2.0;      /* 코일 근처에서 좁고 밖에서 넓게 */
+        return new THREE.Vector3(x, 2.1 + uy*Math.max(.4,r), uz*Math.max(.4,r)); }
+    }
+    const tube = new THREE.Mesh(new THREE.TubeGeometry(new Loop(), 90, .04, 8, true), mat());
+    coilField.add(tube);
+    for(let k=0;k<4;k++){
+      const cone = new THREE.Mesh(new THREE.ConeGeometry(.13,.38,8), mat());
+      cone.userData = {loop:{uy,uz}, t0:k/4};
+      coilField.add(cone);
+    }
+  });
+})();
+function orientCoilField(dtAnim){
+  coilField.children.forEach(o=>{
+    if (o.userData.axis){ o.setDirection(new THREE.Vector3(dirSign,0,0)); return; }
+    if (!o.userData.loop) return;
+    const {uy,uz} = o.userData.loop;
+    o.userData.t0 = (o.userData.t0 + dirSign*dtAnim*.06 + 1) % 1;
+    const a = o.userData.t0 * Math.PI*2;
+    const x = Math.sin(a)*4.4, r = 2.2 + Math.cos(a)*-2.0;
+    o.position.set(x, 2.1 + uy*Math.max(.4,r), uz*Math.max(.4,r));
+    const da = .02;
+    const x2 = Math.sin(a+da)*4.4, r2 = 2.2 + Math.cos(a+da)*-2.0;
+    const nxt = new THREE.Vector3(x2, 2.1 + uy*Math.max(.4,r2), uz*Math.max(.4,r2));
+    const dir = nxt.sub(o.position).normalize().multiplyScalar(dirSign);
+    o.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir);
+  });
+}
+
+/* ══ 나침반 ══ */
+const compass = new THREE.Group(); scene.add(compass);
+const base = new THREE.Mesh(new THREE.CylinderGeometry(.75,.85,.3,24),
+  new THREE.MeshStandardMaterial({color:0xf3ede3, roughness:.4}));
+base.position.y = .35; compass.add(base);
+const rim = new THREE.Mesh(new THREE.TorusGeometry(.78,.08,8,28),
+  new THREE.MeshStandardMaterial({color:0x8a5f24, roughness:.5}));
+rim.rotation.x = Math.PI/2; rim.position.y = .5; compass.add(rim);
+const needle = new THREE.Group(); needle.position.y = .56; compass.add(needle);
+const nCone = new THREE.Mesh(new THREE.ConeGeometry(.13,.62,10),
+  new THREE.MeshStandardMaterial({color:0xb23a30}));
+nCone.rotation.z = -Math.PI/2; nCone.position.x = .31; needle.add(nCone);
+const sCone = new THREE.Mesh(new THREE.ConeGeometry(.13,.62,10),
+  new THREE.MeshStandardMaterial({color:0xe8e0d0}));
+sCone.rotation.z = Math.PI/2; sCone.position.x = -.31; needle.add(sCone);
+compass.position.set(2.6, 0, 2.2);
+
+/* 자기장 계산 — 나침반 위치에서 */
+function fieldAt(p){
+  if (mode === 'wire'){
+    /* 전류 dirSign·ŷ, 도선은 원점 y축: B ∝ (Î×r)/|r|² */
+    const r = new THREE.Vector3(p.x, 0, p.z);
+    const d2 = Math.max(.3, r.lengthSq());
+    return new THREE.Vector3(0, dirSign, 0).cross(r).divideScalar(d2);
+  }
+  /* 코일: x축 쌍극자 m = dirSign·x̂ (중심 y=2.1이지만 책상 위 나침반은 수평 성분만 필요) */
+  const c = new THREE.Vector3(p.x, 0, p.z);
+  const d = Math.max(1.2, c.length());
+  const rhat = c.clone().normalize();
+  const m = new THREE.Vector3(dirSign, 0, 0);
+  const B = rhat.clone().multiplyScalar(3*m.dot(rhat)).sub(m).divideScalar(d*d*d);
+  return B;
+}
+
+/* 나침반 드래그 */
+(function(){
+  const ray = new THREE.Raycaster(), v2 = new THREE.Vector2();
+  const plane = new THREE.Plane(new THREE.Vector3(0,1,0), 0);
+  let drag = false;
+  function pt(e){ const r = renderer.domElement.getBoundingClientRect();
+    v2.set(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1); }
+  renderer.domElement.addEventListener('pointerdown', e=>{
+    pt(e); ray.setFromCamera(v2, cam);
+    if (ray.intersectObject(compass, true).length){ drag = true; ctl.enabled = false; }
+  });
+  addEventListener('pointermove', e=>{
+    if(!drag) return; pt(e); ray.setFromCamera(v2, cam);
+    const hit = new THREE.Vector3();
+    if (ray.ray.intersectPlane(plane, hit)){
+      hit.x = Math.max(-11, Math.min(11, hit.x));
+      hit.z = Math.max(-7.5, Math.min(7.5, hit.z));
+      if (mode==='wire' && Math.hypot(hit.x,hit.z) < 1.1){ const s=1.1/Math.hypot(hit.x,hit.z); hit.x*=s; hit.z*=s; }
+      compass.position.set(hit.x, 0, hit.z);
+    }
+  });
+  addEventListener('pointerup', ()=>{ drag = false; ctl.enabled = true; });
+})();
+
+/* ══ UI ══ */
+const msg = document.getElementById('msg');
+document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click', ()=>{
+  document.querySelectorAll('.mode-btn').forEach(x=>x.classList.toggle('on', x===b));
+  mode = b.dataset.mode;
+  wireG.visible = mode==='wire'; coilG.visible = mode==='coil';
+  document.getElementById('stage-title').textContent =
+    mode==='wire' ? '곧은 도선에 전류가 흐르면?' : '코일에 전류가 흐르면? — 전자석의 탄생';
+  document.getElementById('hand-text').innerHTML = mode==='wire'
+    ? '<b>엄지</b> = 전류의 방향<br><b>감아쥔 네 손가락</b> = 자기장의 방향'
+    : '<b>네 손가락</b> = 전류가 감기는 방향<br><b>엄지</b> = N극';
+  document.getElementById('hand-card').querySelector('.he').textContent = mode==='wire' ? '👍' : '🤜';
+  document.getElementById('mode-tip').textContent = mode==='wire'
+    ? '도선 가까이일수록 자기장이 셉니다 — 나침반을 가까이/멀리 옮겨 보세요.'
+    : '코일의 양 끝(N·S극)과 옆면에서 나침반이 어디를 가리키는지 비교해 보세요.';
+  updateDirLabel();
+  msg.innerHTML = mode==='wire'
+    ? '나침반 바늘(빨강 = N극)이 그 자리의 <b>자기장 방향</b>을 가리킵니다. 도선 둘레를 한 바퀴 돌려 보세요!'
+    : '코일도 막대자석처럼 <b>N극과 S극</b>이 생깁니다. 전류를 뒤집으면 극도 뒤집혀요!';
+}));
+function updateDirLabel(){
+  document.getElementById('cur-dir').textContent = mode==='wire'
+    ? (dirSign>0 ? '위쪽 ↑' : '아래쪽 ↓')
+    : (dirSign>0 ? 'N극이 오른쪽' : 'N극이 왼쪽');
+}
+document.getElementById('flip-btn').addEventListener('click', ()=>{
+  dirSign *= -1;
+  curArrowW.setDirection(new THREE.Vector3(0,dirSign,0));
+  curArrowW.position.set(1.1, dirSign>0?2.2:6.6, 0);
+  orientWireCones();
+  nLab.position.x = 3.6*dirSign; sLab.position.x = -3.6*dirSign;
+  updateDirLabel();
+});
+document.getElementById('predict-btn').addEventListener('click', function(){
+  showField = !showField;
+  wireRings.visible = showField; coilField.visible = showField;
+  this.textContent = showField ? '🙈 자기장 숨기고 예상해 보기' : '👀 자기장 다시 보기';
+  this.classList.toggle('primary', !showField);
+  if(!showField) msg.innerHTML = '자, 이제 나침반이 어디를 가리킬지 <b>먼저 예상</b>하고 옮겨서 확인해 보세요!';
+});
+orientWireCones(); updateDirLabel();
+
+function resize(){
+  renderer.setSize(stage.clientWidth, stage.clientHeight);
+  cam.aspect = stage.clientWidth/stage.clientHeight; cam.updateProjectionMatrix();
+  render();
+}
+addEventListener('resize', resize);
+let last = performance.now(), needleAng = 0;
+function render(){
+  const now = performance.now(); const dt = Math.min(.05,(now-last)/1000)||.016; last = now;
+  const B = fieldAt(compass.position);
+  if (B.lengthSq() > 1e-6){
+    const target = Math.atan2(-B.z, B.x);
+    let diff = target - needleAng;
+    while(diff > Math.PI) diff -= Math.PI*2;
+    while(diff < -Math.PI) diff += Math.PI*2;
+    needleAng += diff * Math.min(1, dt*7);
+    needle.rotation.y = needleAng;
+  }
+  orientCoilField(mode==='coil' ? dt*60 : 0);
+  ctl.update(); renderer.render(scene, cam);
+  requestAnimationFrame(render);
+}
+resize(); requestAnimationFrame(render);
+</script>
+</body>
+</html>
