@@ -2760,5 +2760,60 @@ function circuitAria(mode,remA,remB){
   scan(); setInterval(scan, 1500);
 })();
 </script>
+
+<script id="sim-quiz">
+/* 시뮬 개념확인 카드 — 시뮬 조작 후 바로 답해 보는 1~2문항, 정답 시 해설 공개 */
+(function(){
+  var CFG = [{"at": {"h3": "회로 실험대"}, "qs": [{"q": "직렬 회로에서 전구 하나를 빼면 나머지는?", "c": ["모두 꺼진다", "그대로 켜져 있다", "더 밝아진다"], "ok": 0, "w": "길이 <b>하나뿐</b>이라 한 곳이 끊기면 전체가 끊깁니다. 병렬이라면 다른 갈래로 계속 흐르죠."}, {"q": "병렬 회로에서 각 갈래에 걸리는 전압은?", "c": ["전원 전압이 그대로", "갈래 수만큼 나뉜다", "거의 0"], "ok": 0, "w": "병렬의 모든 갈래는 전원에 <b>직접</b> 연결된 셈 — 그래서 몇 갈래든 각각 전원 전압을 그대로 받습니다."}]}];
+  var st = document.createElement('style');
+  st.textContent = '.sq-card{margin:16px 0 4px;border-radius:14px;padding:14px 17px;'+
+    'border:1.5px solid rgba(128,128,128,.35);background:rgba(127,127,127,.09)}'+
+    '.sq-h{font-weight:800;font-size:14.5px;margin-bottom:2px;opacity:.85}'+
+    '.sq-q{font-size:14.5px;margin:12px 0 8px;line-height:1.55;font-weight:600}'+
+    '.sq-row{display:flex;gap:8px;flex-wrap:wrap}'+
+    '.sq-c{font-size:13.5px;padding:7px 14px;border-radius:99px;border:1.5px solid rgba(128,128,128,.45);'+
+    'background:rgba(255,255,255,.06);color:inherit;cursor:pointer;font-family:inherit;transition:.15s}'+
+    '.sq-c:hover{border-color:currentColor}'+
+    '.sq-c.ok{background:#2c7a44;border-color:#2c7a44;color:#fff}'+
+    '.sq-c.no{background:#b3362e;border-color:#b3362e;color:#fff;animation:sqsh .35s}'+
+    '@keyframes sqsh{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}'+
+    '.sq-why{display:none;margin-top:10px;font-size:13.5px;line-height:1.6;opacity:.92;'+
+    'border-top:1px dashed rgba(128,128,128,.35);padding-top:9px}';
+  document.head.appendChild(st);
+  function host(a){
+    var el = a.cv ? document.getElementById(a.cv) : null;
+    if (!el && a.id) el = document.getElementById(a.id);
+    if (!el && a.h3){
+      var hs = document.querySelectorAll('h3');
+      for (var i=0;i<hs.length;i++) if (hs[i].textContent.indexOf(a.h3)>=0){ el = hs[i]; break; }
+    }
+    if (!el) return null;
+    return el.closest('.card,.simlab,.lab,.stage-card,.obs,section') || el.parentElement;
+  }
+  CFG.forEach(function(grp){
+    var h = host(grp.at); if (!h || h.dataset.sq) return; h.dataset.sq = 1;
+    var card = document.createElement('div'); card.className = 'sq-card';
+    var hd = document.createElement('div'); hd.className = 'sq-h';
+    hd.textContent = '🧪 개념 확인 — 시뮬에서 답을 찾았나요?'; card.appendChild(hd);
+    grp.qs.forEach(function(q){
+      var qd = document.createElement('div'); qd.className = 'sq-q'; qd.textContent = 'Q. ' + q.q; card.appendChild(qd);
+      var row = document.createElement('div'); row.className = 'sq-row';
+      var why = document.createElement('div'); why.className = 'sq-why'; why.innerHTML = '💡 ' + q.w;
+      q.c.forEach(function(t, i){
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'sq-c'; b.textContent = t;
+        b.addEventListener('click', function(){
+          if (i === q.ok){
+            row.querySelectorAll('.sq-c').forEach(function(x){ x.disabled = true; x.classList.remove('no'); });
+            b.classList.add('ok'); why.style.display = 'block';
+          } else { b.classList.add('no'); setTimeout(function(){ b.classList.remove('no'); }, 650); }
+        });
+        row.appendChild(b);
+      });
+      card.appendChild(row); card.appendChild(why);
+    });
+    h.insertAdjacentElement('afterend', card);
+  });
+})();
+</script>
 </body>
 </html>
