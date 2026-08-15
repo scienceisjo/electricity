@@ -1629,7 +1629,7 @@ const QUIZ_SETS={
 };
 
 const GAME_QS=[
-  {id:"q1",
+ {id:"q1",
    difficulty:"하",
    intent:"자기장 안에서 전류가 흐르는 코일이 받는 힘의 기본 규칙(같은 극끼리 반발)을 그림 7-18 상황으로 확인한다. 오답은 페이지의 실제 오개념에서 파생 — '다른 극이 민다'(극 규칙 맞바꿈), '코일은 진짜 자석이 아니라 힘을 안 받는다', '전류를 끊어도 자석으로 남는다', '전류 방향을 바꿔도 힘은 그대로'.",
    svg:"<svg viewBox=\"0 0 560 170\" role=\"img\" aria-label=\"왼쪽에 에스극과 엔극으로 이루어진 자석이 있고, 자석의 엔극이 오른쪽의 전류가 흐르는 코일 피와 마주 보고 있다. 코일 피의 자석 쪽 극은 엔극이다.\"><text x=\"280\" y=\"28\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" fill=\"#4a3a26\">자석의 N극과 코일 P의 N극이 마주 보고 있다</text><rect x=\"70\" y=\"52\" width=\"70\" height=\"64\" rx=\"3\" fill=\"#2e5f8f\"/><rect x=\"140\" y=\"52\" width=\"70\" height=\"64\" rx=\"3\" fill=\"#b3362e\"/><text x=\"105\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"21\" font-weight=\"800\" fill=\"#fdf6e8\">S</text><text x=\"175\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"21\" font-weight=\"800\" fill=\"#fdf6e8\">N</text><text x=\"140\" y=\"142\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" fill=\"#6b573f\">자석</text><ellipse cx=\"400\" cy=\"84\" rx=\"19\" ry=\"46\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"7\"/><ellipse cx=\"400\" cy=\"84\" rx=\"19\" ry=\"46\" fill=\"none\" stroke=\"#a08b64\" stroke-width=\"2.4\" stroke-dasharray=\"7 5\"/><text x=\"358\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"20\" font-weight=\"800\" fill=\"#b3362e\">N</text><text x=\"400\" y=\"152\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" fill=\"#6b573f\">전류가 흐르는 코일 P</text></svg>",
@@ -1637,7 +1637,19 @@ const GAME_QS=[
    ch:[{t:"P는 자석 쪽으로 끌려가는 힘을 받는다.",ok:0},{t:"P는 자석에서 밀려나는 힘을 받는다.",ok:1},{t:"P는 진짜 자석이 아니므로 자석과 힘을 주고받지 않는다.",ok:0},{t:"전류를 끊어도 P는 자석으로 남아 있어 같은 힘을 계속 받는다.",ok:0},{t:"P에 흐르는 전류의 방향을 반대로 바꾸어도 P가 받는 힘의 방향은 변하지 않는다.",ok:0}],
  why:"<b>정답 판정.</b> 전류가 흐르는 코일 P에는 자석처럼 극이 생긴다. N극과 N극 — <b>같은 극끼리 마주 보면 서로 밀어 내는 힘</b>이 작용한다(그림 7-18).<br><b>오답 판정.</b> '끌려간다' — 끌어당김은 <b>다른 극끼리</b> 마주 볼 때다. · '힘을 주고받지 않는다' — 전류가 흐르는 코일은 자기장을 만들어 자석과 <b>상호작용</b> 한다(그네형 코일이 움직인 까닭). · '전류를 끊어도 자석으로 남는다' — 코일은 <b>전자석</b>이라 전류를 끊으면 극이 사라진다. · '방향을 바꿔도 그대로' — 전류의 방향이 바뀌면 코일의 극이 바뀌어 힘의 방향도 <b>반대</b>가 된다."},
 
-  {id:"q2",
+ {id:"o3",difficulty:"하",
+ intent:"자기장 속 코일이 받는 힘을 이용한 장치 판별(창작 — 보기 소재를 세탁기·엘리베이터·진동 모터 등으로 교체).",
+ stem:"자기장에서 전류가 흐르는 코일이 받는 힘을 이용한 장치만을 &lt;보기&gt;에서 모두 고른 것은?",
+ boxes:["세탁기",
+ "전기난로",
+ "엘리베이터",
+ "휴대전화의 진동 장치",
+ "전기다리미"],
+ boxVerdicts:[true,false,true,true,false],
+ ch:[{t:"ㄱ, ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄷ, ㄹ",ok:1},{t:"ㄴ, ㄷ, ㄹ",ok:0},{t:"ㄱ, ㄹ, ㅁ",ok:0},{t:"ㄷ, ㄹ, ㅁ",ok:0}],
+ why:"<b>돌리거나 떨게 하는 것들</b> — 세탁기 통(ㄱ), 엘리베이터를 끌어올리는 모터(ㄷ), 휴대전화 진동 모터(ㄹ). 모두 속에 전동기가 있습니다.<br><b>ㄴ·ㅁ.</b> 전기난로와 다리미는 전류의 <b>열 작용</b> — 코일이 힘을 받아 움직이는 게 아니에요.<br>따라서 정답은 <b>ㄱ, ㄷ, ㄹ</b>."},
+
+ {id:"q2",
    difficulty:"중",
    intent:"그네형 코일 실험의 관찰 기록표를 해석해 빈칸 ㉠·㉡을 추론한다. 전류 방향만 뒤집으면 힘의 방향 반대(㉠), 자석 극과 전류 방향을 둘 다 뒤집으면 원래대로(㉡). ㄷ은 '움직임이 같으면 코일의 극도 같다'는 착각을 걸러 낸다 — 코일의 극은 전류의 방향이 정한다.",
    svg:"<svg viewBox=\"0 0 560 220\" role=\"img\" aria-label=\"그네형 코일 장치 실험의 관찰 기록표. 실험 일: 자석의 코일 쪽 극은 엔극, 전류는 방향 일, 코일은 자석에서 밀려남. 실험 이: 엔극, 방향 이, 코일의 움직임은 빈칸 ㉠. 실험 삼: 에스극, 방향 이, 코일의 움직임은 빈칸 ㉡.\"><rect x=\"30\" y=\"12\" width=\"500\" height=\"194\" rx=\"8\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"1.6\"/><text x=\"280\" y=\"40\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">관찰 기록표 — 그네형 코일 장치와 자석</text><line x1=\"48\" y1=\"54\" x2=\"512\" y2=\"54\" stroke=\"#a08b64\" stroke-width=\"2\"/><line x1=\"48\" y1=\"88\" x2=\"512\" y2=\"88\" stroke=\"#a08b64\" stroke-width=\"2\"/><line x1=\"48\" y1=\"124\" x2=\"512\" y2=\"124\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"48\" y1=\"160\" x2=\"512\" y2=\"160\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"48\" y1=\"196\" x2=\"512\" y2=\"196\" stroke=\"#a08b64\" stroke-width=\"2\"/><line x1=\"120\" y1=\"54\" x2=\"120\" y2=\"196\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"256\" y1=\"54\" x2=\"256\" y2=\"196\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><line x1=\"378\" y1=\"54\" x2=\"378\" y2=\"196\" stroke=\"#cbb894\" stroke-width=\"1.4\"/><text x=\"84\" y=\"76\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#4a3a26\">실험</text><text x=\"188\" y=\"76\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#4a3a26\">자석의 극(코일 쪽)</text><text x=\"317\" y=\"76\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#4a3a26\">전류의 방향</text><text x=\"445\" y=\"76\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#4a3a26\">코일의 움직임</text><text x=\"84\" y=\"111\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">Ⅰ</text><text x=\"188\" y=\"111\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#b3362e\">N극</text><text x=\"317\" y=\"111\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#a05c2c\">방향 ①</text><text x=\"445\" y=\"111\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">자석에서 밀려남</text><text x=\"84\" y=\"147\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">Ⅱ</text><text x=\"188\" y=\"147\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#b3362e\">N극</text><text x=\"317\" y=\"147\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#a05c2c\">방향 ②</text><text x=\"445\" y=\"147\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#a05c2c\">㉠</text><text x=\"84\" y=\"183\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">Ⅲ</text><text x=\"188\" y=\"183\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#2e5f8f\">S극</text><text x=\"317\" y=\"183\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#a05c2c\">방향 ②</text><text x=\"445\" y=\"183\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#a05c2c\">㉡</text></svg>",
@@ -1647,14 +1659,44 @@ const GAME_QS=[
    ch:[{t:"ㄱ",ok:0},{t:"ㄷ",ok:0},{t:"ㄱ, ㄴ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
    why:"<b>공통 판정 근거</b> — 실험 Ⅰ에서 자석의 N극과 마주 본 코일이 밀려났으므로, 방향 ①일 때 코일의 자석 쪽 극은 <b>N극</b>이다.<br><b>ㄱ. 옳다.</b> 실험 Ⅱ는 전류의 방향만 반대(방향 ②) → 코일의 극이 <b>S극</b>으로 바뀌어 N극 자석과 <b>끌어당긴다</b>. ㉠은 '자석 쪽으로 끌려옴'.<br><b>ㄴ. 옳다.</b> 실험 Ⅲ은 Ⅰ에서 자석의 극과 전류의 방향을 <b>둘 다</b> 뒤집은 것 — 힘의 방향이 두 번 뒤집혀 <b>원래대로</b>. S극과 S극이 마주 보며 밀어 내므로 ㉡은 '자석에서 밀려남'.<br><b>ㄷ. 옳지 않다.</b> 코일의 극은 <b>전류의 방향</b>이 정한다. Ⅰ(방향 ①)은 N극, Ⅲ(방향 ②)은 S극 — 움직임이 같다고 극까지 같은 것은 아니다.<br>따라서 정답은 <b>ㄱ, ㄴ</b>."},
 
-  {id:"q3",
-   difficulty:"중",
-   intent:"전동기(회전)와 스피커(진동)의 원리를 통합 점검한다. 오답 네 개는 모두 페이지의 오해 주의 카드에서 가져온 실제 오개념 — '코일이 자석에 달라붙어 돈다', '전류를 세게 하면 느려진다'(세기-힘 관계 혼동), '소리가 들어와 진동판을 민다'(인과 역전), '전류 방향이 한 방향으로 유지되어야 진동한다'.",
-   stem:"전동기와 스피커에 대한 설명으로 옳은 것은?",
-   ch:[{t:"전동기 속 코일은 자석에 달라붙는 힘이 점점 세지면서 회전한다.",ok:0},{t:"전동기의 코일에 흐르는 전류의 세기를 세게 하면 회전이 느려진다.",ok:0},{t:"스피커는 소리가 스피커에 들어와 진동판을 직접 밀어 진동시킨다.",ok:0},{t:"스피커의 코일에 흐르는 전류의 방향이 한 방향으로 유지될 때 진동판이 진동한다.",ok:0},{t:"전동기 속 코일은 자석과 같은 극끼리 밀고 다른 극끼리 당기는 힘을 주고받으며 회전한다.",ok:1}],
- why:"<b>정답 판정.</b> 코일에 전류가 흐르면 자석처럼 극이 생기고, 자석과 <b>같은 극끼리는 밀어 내고 다른 극끼리는 끌어당기며</b> 코일이 회전한다(그림 7-20).<br><b>오답 판정.</b> '달라붙는 힘으로 회전' — 달라붙기만 하면 코일은 자석 앞에서 <b>멈춘다</b>. 밀고 당김이 번갈아 이어져야 돈다. · '세게 하면 느려진다' — 전류가 셀수록 자석과 코일 사이의 힘이 커져 <b>더 빨리</b> 회전한다(세 번째 블록 질문의 답). · '소리가 진동판을 민다' — 순서가 반대다. <b>전류의 방향 변화 → 힘의 방향 변화 → 진동판 진동 → 소리 발생</b>. 소리는 결과다. · '한 방향으로 유지될 때 진동' — 전류의 방향이 <b>계속 바뀌어야</b> 힘의 방향이 왔다 갔다 하며 진동이 생긴다."},
+ {id:"o1",difficulty:"중",
+ intent:"그네형 코일 실험 종합 판단(창작). 정답(옳지 않은 것)은 '전류를 끊어도 계속 움직인다'로 교체 — 힘의 근원이 전류임을 확인.",
+ stem:"자석 앞에 코일을 그네처럼 매달고 전류를 흐르게 하는 실험에 대한 설명으로 옳지 <u>않은</u> 것은?",
+ ch:[{t:"코일에 전류가 흐르면 코일이 힘을 받아 움직인다.",ok:0},
+ {t:"전류의 방향을 반대로 하면 코일이 움직이는 방향도 반대가 된다.",ok:0},
+ {t:"전류의 세기를 세게 하면 코일이 더 크게 움직인다.",ok:0},
+ {t:"코일에 흐르는 전류를 끊어도 코일은 계속 힘을 받아 움직인다.",ok:1},
+ {t:"자석의 극을 반대로 놓으면 코일이 움직이는 방향이 반대가 된다.",ok:0}],
+ why:"힘의 근원은 <b>자기장 속에서 흐르는 전류</b> — 전류를 끊으면 힘도 사라져 코일은 제자리로 돌아옵니다(④가 옳지 않음).<br>방향을 정하는 두 손잡이는 전류의 방향(②)과 자기장의 방향(⑤), 크기를 정하는 것은 전류의 세기(③)."},
 
-  {id:"q4",
+ {id:"o2",difficulty:"중",
+ intent:"스피커의 원리 보기형(창작 — ㄷ에 '회전 운동' 함정으로 전동기와의 차이를 확인).",
+ stem:"스피커에 대한 설명으로 옳은 것만을 &lt;보기&gt;에서 모두 고른 것은?",
+ boxes:["자기장 속 코일이 받는 힘으로 진동판을 떨게 해 소리를 만든다",
+ "코일에 흐르는 전류의 방향이 주기적으로 바뀌면 힘의 방향도 주기적으로 바뀐다",
+ "스피커 속 코일은 전동기처럼 한 방향으로 회전한다"],
+ boxVerdicts:[true,true,false],
+ ch:[{t:"ㄱ",ok:0},{t:"ㄴ",ok:0},{t:"ㄱ, ㄴ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+ why:"<b>ㄱ·ㄴ. 옳다.</b> 전류의 방향이 바뀔 때마다 힘의 방향이 바뀌고, 그 <b>왕복</b>이 진동판을 떨게 해 소리가 됩니다.<br><b>ㄷ. 옳지 않다.</b> 원리(자기장 속 코일이 받는 힘)는 전동기와 같지만, 전동기는 <b>돌리고</b> 스피커는 <b>떨게</b> 합니다 — 회전이 아니라 진동.<br>따라서 정답은 <b>ㄱ, ㄴ</b>."},
+
+ {id:"q6",
+ difficulty:"중",
+ intent:"[보강 · 9과14-04] 기존 5문항은 힘의 방향(극 조합)만 다뤄, 2단계 실험의 두 번째 결론인 힘의 크기(전류의 세기)와 15번 사고력 문항(전동기를 더 빨리 돌리려면)이 확인 문제에 없었다. 전류 세기→힘 크기→회전 빠르기의 연결을 묻고, 오답은 '전류 방향을 바꾸면 빨라진다'(방향·크기 혼동), '자석을 빼면 빨라진다'(자기장 필요성 부정), '전류와 무관' 등 페이지 오개념에서 구성.",
+ stem:"전동기를 더 빠르게 회전시키는 방법으로 옳은 것은?",
+ ch:[{t:"코일에 흐르는 전류의 세기를 더 세게 한다.",ok:1},{t:"코일에 흐르는 전류의 방향을 반대로 바꾼다.",ok:0},{t:"자석을 치워 코일이 자유롭게 돌게 한다.",ok:0},{t:"코일에 흐르는 전류를 끊는다.",ok:0},{t:"회전 빠르기는 전류의 세기와 관계없다.",ok:0}],
+ why:"전류가 셀수록 자기장 안의 코일이 받는 <b>힘이 커지고</b>, 힘이 클수록 <b>회전이 빨라집니다</b> — 2단계 실험에서 확인한 두 번째 결론.<br>② 전류의 <b>방향</b>을 바꾸면 힘의 방향이 바뀌어 <b>회전 방향이 반대</b>가 될 뿐, 빨라지지 않습니다.<br>③ 자석이 없으면 자기장이 없어 코일이 힘을 <b>아예 받지 못합니다.</b> 전동기는 자석과 코일이 함께 있어야 돌아요.<br>④ 전류가 없으면 힘도 없습니다 — 멈춥니다."},
+
+ {id:"s1",difficulty:"상",
+ intent:"[실력탄탄급 · 창작] 드론이 뜨는 원리를 전동기의 구조(자석+코일)·힘의 크기(전류)와 통합해 추론. ㄷ은 '코일만 있으면 돈다'는 자기장 필요성 부정 오개념.",
+ stem:"드론은 전동기로 날개를 돌려 하늘에 뜬다. 이에 대한 설명으로 옳은 것만을 &lt;보기&gt;에서 있는 대로 고른 것은?",
+ boxes:["날개를 돌리는 힘은 자기장 속에서 전류가 흐르는 코일이 받는 힘이다",
+ "코일에 흐르는 전류를 더 세게 하면 날개가 더 빨리 돌아 높이 떠오를 수 있다",
+ "전동기 안에 자석이 없어도 코일에 전류만 흐르면 날개는 돌아간다"],
+ boxVerdicts:[true,true,false],
+ ch:[{t:"ㄱ",ok:0},{t:"ㄴ",ok:0},{t:"ㄱ, ㄴ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+ why:"<b>ㄱ·ㄴ. 옳다.</b> 전동기의 회전력은 자기장 속 코일이 받는 힘이고, 전류가 셀수록 힘이 커져 회전이 빨라집니다 — 드론의 고도 조절이 바로 이것.<br><b>ㄷ. 옳지 않다.</b> 힘은 <b>자석(자기장)과 전류가 함께</b> 있어야 생깁니다. 자석 없는 전동기는 헛도는 게 아니라 <b>아예 돌지 않아요.</b><br>따라서 정답은 <b>ㄱ, ㄴ</b>."},
+
+ {id:"q4",
    difficulty:"상",
    intent:"[2단계 추론] 앞쪽 도선의 전류 방향(아래쪽)에 오른손 규칙을 적용해 코일 P의 ㉠ 쪽 끝이 N극임을 판정한 뒤(1단계), 마주 보는 자석의 N극과 같은 극이므로 밀어 내는 힘까지 잇는다(2단계). 오른손 검증: 앞쪽 전류 ↓ → 엄지 오른쪽 → ㉠=N극. 오답은 오른손 규칙 반대 적용(S극 판정)과 '코일에는 극이 안 생긴다'는 오개념에서 파생.",
    svg:"<svg viewBox=\"0 0 560 210\" role=\"img\" aria-label=\"전류가 흐르는 코일 피. 코일의 앞쪽 도선에서 전류가 위에서 아래로 흐른다. 코일의 왼쪽 끝 지점은 ㉡, 오른쪽 끝 지점은 ㉠이고, ㉠ 쪽에서 자석의 엔극이 코일을 마주 보고 있다.\"><text x=\"280\" y=\"26\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" fill=\"#4a3a26\">코일 P의 앞쪽 도선에는 화살표 방향으로 전류가 흐른다</text><rect x=\"150\" y=\"64\" width=\"160\" height=\"88\" rx=\"10\" fill=\"#f6ecd6\" stroke=\"#cbb894\" stroke-width=\"1.6\"/><line x1=\"158\" y1=\"64\" x2=\"172\" y2=\"152\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"64\" x2=\"204\" y2=\"152\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"222\" y1=\"64\" x2=\"236\" y2=\"152\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"254\" y1=\"64\" x2=\"268\" y2=\"152\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"286\" y1=\"64\" x2=\"300\" y2=\"152\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><polygon points=\"200,128 204.5,111 190.7,113\" fill=\"#a05c2c\"/><polygon points=\"264,128 268.5,111 254.7,113\" fill=\"#a05c2c\"/><text x=\"232\" y=\"52\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#a05c2c\">전류</text><text x=\"133\" y=\"114\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#4a3a26\">㉡</text><text x=\"330\" y=\"114\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"800\" fill=\"#4a3a26\">㉠</text><rect x=\"396\" y=\"80\" width=\"56\" height=\"56\" rx=\"3\" fill=\"#b3362e\"/><rect x=\"452\" y=\"80\" width=\"56\" height=\"56\" rx=\"3\" fill=\"#2e5f8f\"/><text x=\"424\" y=\"108\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"19\" font-weight=\"800\" fill=\"#fdf6e8\">N</text><text x=\"480\" y=\"108\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"19\" font-weight=\"800\" fill=\"#fdf6e8\">S</text><text x=\"452\" y=\"162\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">자석</text><text x=\"230\" y=\"180\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" font-weight=\"700\" fill=\"#6b573f\">전류가 흐르는 코일 P</text></svg>",
@@ -1662,7 +1704,7 @@ const GAME_QS=[
    ch:[{t:"㉠ 쪽 끝은 N극이고, P는 자석에서 밀려나는 힘을 받는다.",ok:1},{t:"㉠ 쪽 끝은 N극이고, P는 자석 쪽으로 끌려가는 힘을 받는다.",ok:0},{t:"㉠ 쪽 끝은 S극이고, P는 자석에서 밀려나는 힘을 받는다.",ok:0},{t:"㉠ 쪽 끝은 S극이고, P는 자석 쪽으로 끌려가는 힘을 받는다.",ok:0},{t:"P에는 극이 생기지 않으므로 P와 자석 사이에는 힘이 작용하지 않는다.",ok:0}],
  why:"<b>채점 기준 ① (1단계 · 극 판정)</b> — 오른손 네 손가락을 앞쪽 도선의 전류 방향(아래쪽)으로 감아쥐면 엄지손가락이 <b>㉠ 쪽(오른쪽)</b>을 가리킨다 → ㉠ 쪽 끝은 <b>N극</b>(오른손 규칙).<br><b>채점 기준 ② (2단계 · 힘 판정)</b> — ㉠ 쪽 N극이 자석의 <b>N극</b>과 마주 보므로 같은 극끼리 <b>서로 밀어 내는 힘</b>이 작용한다(그림 7-18). 두 단계가 모두 맞아야 정답.<br><b>오답 판정.</b> ㉠을 'S극'으로 판정했다면 오른손 규칙을 반대로 적용한 것 — 엄지가 가리키는 쪽이 N극이다. 극은 맞게 판정하고 '끌려간다'를 골랐다면 극 규칙을 맞바꾼 것. '극이 생기지 않는다'는 코일이 전자석이 됨을 놓친 오개념 — 극이 안 생긴다면 전동기 자체가 돌 수 없다."},
 
-  {id:"q5",
+ {id:"q5",
    difficulty:"상",
    intent:"[2단계 추론] 오른손 규칙으로 코일 Q의 극을 판정(앞쪽 도선 전류 위쪽 → 엄지 왼쪽 → (가) 쪽 끝 N극)한 뒤, S극 쪽 나침반 (나)의 바늘 방향(코일 쪽으로 끌림)까지 잇는다. ㄷ은 '전류를 끊어도 자석으로 남는다'는 오개념을 정면으로 걸러 낸다 — 전자석은 전류가 흐를 때만 극이 생긴다.",
    svg:"<svg viewBox=\"0 0 560 200\" role=\"img\" aria-label=\"전류가 흐르는 코일 큐. 코일의 앞쪽 도선에서 전류가 아래에서 위로 흐른다. 코일 왼쪽 축 위에 나침반 가, 오른쪽 축 위에 나침반 나가 놓여 있으며 두 나침반의 바늘은 그려져 있지 않다.\"><text x=\"280\" y=\"24\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" fill=\"#4a3a26\">Q의 앞쪽 도선에는 화살표 방향으로 전류가 흐른다 · 나침반 바늘은 그리지 않았다</text><circle cx=\"100\" cy=\"104\" r=\"30\" fill=\"#faf4e6\" stroke=\"#a08b64\" stroke-width=\"2\"/><circle cx=\"100\" cy=\"104\" r=\"2.5\" fill=\"#6b573f\"/><text x=\"100\" y=\"158\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" font-weight=\"700\" fill=\"#4a3a26\">나침반 (가)</text><rect x=\"200\" y=\"60\" width=\"160\" height=\"88\" rx=\"10\" fill=\"#f6ecd6\" stroke=\"#cbb894\" stroke-width=\"1.6\"/><line x1=\"208\" y1=\"60\" x2=\"222\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"240\" y1=\"60\" x2=\"254\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"272\" y1=\"60\" x2=\"286\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"304\" y1=\"60\" x2=\"318\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><polygon points=\"244,84 253.3,99 239.5,101\" fill=\"#a05c2c\"/><polygon points=\"308,84 317.3,99 303.5,101\" fill=\"#a05c2c\"/><text x=\"247\" y=\"50\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\"#a05c2c\">전류</text><circle cx=\"460\" cy=\"104\" r=\"30\" fill=\"#faf4e6\" stroke=\"#a08b64\" stroke-width=\"2\"/><circle cx=\"460\" cy=\"104\" r=\"2.5\" fill=\"#6b573f\"/><text x=\"460\" y=\"158\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" font-weight=\"700\" fill=\"#4a3a26\">나침반 (나)</text><text x=\"280\" y=\"184\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" font-weight=\"700\" fill=\"#6b573f\">전류가 흐르는 코일 Q</text></svg>",
@@ -1670,13 +1712,7 @@ const GAME_QS=[
    boxes:["Q의 (가) 쪽 끝은 N극이다.", "나침반 (나)의 N극은 Q를 향하는 쪽을 가리킨다.", "스위치를 열어 전류를 끊어도 Q는 자석으로 남아, (가)의 바늘은 계속 같은 방향을 가리킨다."],
    boxVerdicts:[true, true, false],
    ch:[{t:"ㄱ",ok:0},{t:"ㄷ",ok:0},{t:"ㄱ, ㄴ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
-   why:"<b>채점 기준 ① (1단계 · 오른손 규칙)</b> — 앞쪽 도선의 전류가 <b>위쪽</b>이므로 오른손으로 감아쥐면 엄지는 <b>(가) 쪽(왼쪽)</b>을 가리킨다 → (가) 쪽 끝 <b>N극</b>, (나) 쪽 끝 <b>S극</b>. → <b>ㄱ. 옳다.</b><br><b>채점 기준 ② (2단계 · 나침반 판정)</b> — (나)는 코일의 <b>S극</b> 옆에 있다. 바늘의 <b>N극이 S극에 끌려</b> Q를 향하는 쪽을 가리킨다. → <b>ㄴ. 옳다.</b><br><b>ㄷ. 옳지 않다.</b> 코일은 <b>전자석</b>이다. 전류를 끊으면 자기장이 사라져 극도 함께 사라지고, 바늘은 원래 가리키던 방향(북쪽)으로 되돌아간다 — '전류를 끊어도 자석으로 남는다'는 오개념.<br>따라서 정답은 <b>ㄱ, ㄴ</b>."},
-{id:"q6",
- difficulty:"중",
- intent:"[보강 · 9과14-04] 기존 5문항은 힘의 방향(극 조합)만 다뤄, 2단계 실험의 두 번째 결론인 힘의 크기(전류의 세기)와 15번 사고력 문항(전동기를 더 빨리 돌리려면)이 확인 문제에 없었다. 전류 세기→힘 크기→회전 빠르기의 연결을 묻고, 오답은 '전류 방향을 바꾸면 빨라진다'(방향·크기 혼동), '자석을 빼면 빨라진다'(자기장 필요성 부정), '전류와 무관' 등 페이지 오개념에서 구성.",
- stem:"전동기를 더 빠르게 회전시키는 방법으로 옳은 것은?",
- ch:[{t:"코일에 흐르는 전류의 세기를 더 세게 한다.",ok:1},{t:"코일에 흐르는 전류의 방향을 반대로 바꾼다.",ok:0},{t:"자석을 치워 코일이 자유롭게 돌게 한다.",ok:0},{t:"코일에 흐르는 전류를 끊는다.",ok:0},{t:"회전 빠르기는 전류의 세기와 관계없다.",ok:0}],
- why:"전류가 셀수록 자기장 안의 코일이 받는 <b>힘이 커지고</b>, 힘이 클수록 <b>회전이 빨라집니다</b> — 2단계 실험에서 확인한 두 번째 결론.<br>② 전류의 <b>방향</b>을 바꾸면 힘의 방향이 바뀌어 <b>회전 방향이 반대</b>가 될 뿐, 빨라지지 않습니다.<br>③ 자석이 없으면 자기장이 없어 코일이 힘을 <b>아예 받지 못합니다.</b> 전동기는 자석과 코일이 함께 있어야 돌아요.<br>④ 전류가 없으면 힘도 없습니다 — 멈춥니다."}
+   why:"<b>채점 기준 ① (1단계 · 오른손 규칙)</b> — 앞쪽 도선의 전류가 <b>위쪽</b>이므로 오른손으로 감아쥐면 엄지는 <b>(가) 쪽(왼쪽)</b>을 가리킨다 → (가) 쪽 끝 <b>N극</b>, (나) 쪽 끝 <b>S극</b>. → <b>ㄱ. 옳다.</b><br><b>채점 기준 ② (2단계 · 나침반 판정)</b> — (나)는 코일의 <b>S극</b> 옆에 있다. 바늘의 <b>N극이 S극에 끌려</b> Q를 향하는 쪽을 가리킨다. → <b>ㄴ. 옳다.</b><br><b>ㄷ. 옳지 않다.</b> 코일은 <b>전자석</b>이다. 전류를 끊으면 자기장이 사라져 극도 함께 사라지고, 바늘은 원래 가리키던 방향(북쪽)으로 되돌아간다 — '전류를 끊어도 자석으로 남는다'는 오개념.<br>따라서 정답은 <b>ㄱ, ㄴ</b>."}
 ];
 
 /* ── 엔진 ── */
