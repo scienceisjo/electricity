@@ -1935,6 +1935,9 @@ document.addEventListener('click',function(e){
   $('#bA').style.width=(votes.A/mx*100)+'%'; $('#bB').style.width=(votes.B/mx*100)+'%';
 });
 
+/* 캡션 안의 <b> 가 flex 항목이 되어 조각나는 것 방지 — 한 덩어리로 감싼다 */
+$$('.vizcap').forEach(function(c){ if(!c.firstElementChild || c.childNodes.length>1) c.innerHTML='<span>'+c.innerHTML+'</span>'; });
+
 window.addEventListener('resize',function(){ $$('canvas').forEach(function(cv){ cv._w=null; }); });
 })();
 </script>

@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>자석을 움직이자 전류가 생겼다 · 전자기 유도와 발전기 3D 실험실</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{
+ --abyss:#f2eade; --surface:#f3ede3; --line:#c1ac82; --line-soft:#dccfae;
+ --ink:#2e2315; --ink-dim:#5c4a33; --ink-mute:#96805c;
+ --accent:#a05c2c; --gold:#8a5f24; --ok:#2c7a44; --danger:#b3362e;
+ --c-plus:#b23a30; --c-minus:#2e5f8f; --c-e:#3a7a3f; --c-mag:#2c6e5f; --c-v:#7d5ba6;
+ --disp:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+ --jua:"Jua",var(--disp); --gowun:"Gowun Dodum",var(--disp);
+ --r:16px; --shadow:0 18px 50px -22px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--disp);color:var(--ink);background:
+ radial-gradient(900px 560px at 8% 6%, rgba(160,92,44,.08), transparent 60%),
+ radial-gradient(700px 480px at 92% 90%, rgba(44,110,95,.07), transparent 55%),
+ var(--abyss); min-height:100vh; -webkit-font-smoothing:antialiased}
+header{padding:26px 20px 8px; text-align:center}
+header h1{font-family:var(--jua); font-size:clamp(22px,4.5vw,34px); color:var(--ink)}
+header h1 .em{color:var(--accent)}
+header p{color:var(--ink-dim); margin-top:6px; font-size:clamp(13px,2.4vw,15.5px); font-family:var(--gowun)}
+.wrap{max-width:1180px; margin:0 auto; padding:14px 16px 40px}
+.modes{display:flex; gap:10px; justify-content:center; margin:14px 0 18px; flex-wrap:wrap}
+.mode-btn{font-family:var(--jua); font-size:16.5px; padding:11px 22px; border-radius:999px;
+ border:2px solid var(--line); background:rgba(255,252,244,.8); color:var(--ink-dim); cursor:pointer;
+ transition:.18s}
+.mode-btn.on{background:var(--accent); border-color:var(--accent); color:#fdf6e8; box-shadow:var(--shadow)}
+.stage-card{background:rgba(255,252,244,.75); border:1.5px solid var(--line); border-radius:var(--r);
+ overflow:hidden; box-shadow:var(--shadow)}
+.stage-head{display:flex; align-items:center; gap:10px; padding:12px 18px; border-bottom:1px dashed var(--line-soft)}
+.stage-head .dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.stage-head h2{font-family:var(--jua); font-size:18px; color:var(--gold)}
+.stage-head .hint{margin-left:auto; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun)}
+.stage{position:relative; height:min(56vh,520px); background:linear-gradient(180deg,#efe6d3,#e7dcc4)}
+.stage canvas{display:block}
+.hud{position:absolute; left:14px; top:12px; display:flex; flex-direction:column; gap:8px; pointer-events:none}
+.hud .tag{background:rgba(46,35,21,.82); color:#f6eeda; font-size:13px; padding:6px 12px; border-radius:9px;
+ font-family:var(--gowun); max-width:340px; line-height:1.5}
+.hud .tag b{color:#ffd166}
+.meter{position:absolute; right:14px; top:12px; width:150px; background:rgba(255,252,244,.92);
+ border:1.5px solid var(--line); border-radius:12px; padding:8px 10px 6px; text-align:center}
+.meter .mlabel{font-family:var(--jua); font-size:12.5px; color:var(--ink-dim)}
+.panel{display:flex; gap:16px; flex-wrap:wrap; align-items:center; padding:14px 18px; border-top:1px dashed var(--line-soft)}
+.ctl{display:flex; align-items:center; gap:9px; font-size:14px; color:var(--ink-dim); font-family:var(--gowun)}
+.ctl label{font-family:var(--jua); font-size:13.5px; color:var(--ink)}
+input[type=range]{accent-color:var(--accent); width:160px}
+.btn{font-family:var(--jua); font-size:14px; padding:8px 16px; border-radius:10px; cursor:pointer;
+ border:1.5px solid var(--line); background:#fffcf4; color:var(--ink-dim); transition:.15s}
+.btn:hover{border-color:var(--accent); color:var(--accent)}
+.btn.primary{background:var(--accent); color:#fdf6e8; border-color:var(--accent)}
+.btn.on{background:var(--ok); color:#f2f7ea; border-color:var(--ok)}
+.note-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin-top:16px}
+.note{background:rgba(255,252,244,.7); border:1px solid var(--line-soft); border-radius:12px; padding:13px 16px;
+ font-size:14px; color:var(--ink-dim); line-height:1.6; font-family:var(--gowun)}
+.note b{color:var(--ink)} .note .k{color:var(--accent); font-family:var(--jua); font-size:13.5px}
+.graph-wrap{position:absolute; left:14px; bottom:12px; background:rgba(255,252,244,.92); border:1.5px solid var(--line);
+ border-radius:12px; padding:8px 10px 4px}
+.graph-wrap .glabel{font-family:var(--jua); font-size:12px; color:var(--ink-dim); text-align:center}
+#app-credit{margin:34px auto 18px; text-align:center; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun)}
+@media (max-width:640px){ .meter{width:120px} input[type=range]{width:120px} }
+</style>
+</head>
+<body>
+<header>
+ <h1>⚡ 자석을 움직이자 <span class="em">전류가 생겼다</span></h1>
+ <p>전동기를 거꾸로 돌리면 발전기 — 전자기 유도 3D 실험실 (다음 학년 예고편)</p>
+</header>
+
+<div class="wrap">
+ <div class="modes">
+  <button class="mode-btn on" data-mode="induction">🧲 자석과 코일 — 전자기 유도</button>
+  <button class="mode-btn" data-mode="generator">💡 돌려서 만드는 전기 — 발전기</button>
+ </div>
+
+ <!-- ═══ 모드 A: 전자기 유도 ═══ -->
+ <section class="stage-card" id="sec-induction">
+  <div class="stage-head"><span class="dot"></span><h2>자석을 코일에 넣었다 뺐다 해 보자</h2>
+   <span class="hint">🖱️ 자석을 드래그하거나 아래 슬라이더를 움직여 보세요 · 화면 드래그 = 시점 회전</span></div>
+  <div class="stage" id="stage-ind">
+   <div class="hud"><div class="tag" id="ind-msg">자석이 <b>움직이는 동안에만</b> 검류계 바늘이 움직입니다.</div></div>
+   <div class="meter"><div class="mlabel">검류계 (유도 전류)</div>
+    <svg viewBox="0 0 130 76" width="130" height="76" aria-label="검류계">
+     <path d="M10 66 A58 58 0 0 1 120 66" fill="none" stroke="#c1ac82" stroke-width="2"/>
+     <line x1="65" y1="66" x2="65" y2="16" stroke="#dccfae" stroke-width="1" stroke-dasharray="3 3"/>
+     <text x="18" y="60" font-size="10" fill="#96805c">−</text><text x="106" y="60" font-size="10" fill="#96805c">+</text>
+     <text x="61" y="14" font-size="9" fill="#96805c">0</text>
+     <line id="ind-needle" x1="65" y1="66" x2="65" y2="18" stroke="#b3362e" stroke-width="3" stroke-linecap="round"/>
+     <circle cx="65" cy="66" r="4.5" fill="#2e2315"/>
+    </svg></div>
+  </div>
+  <div class="panel">
+   <div class="ctl"><label>자석 위치</label><input type="range" id="ind-pos" min="-100" max="100" value="-100"></div>
+   <button class="btn" id="ind-flip">🔄 자석 극 뒤집기 (지금: <b id="ind-pole">N극이 코일 쪽</b>)</button>
+   <button class="btn" id="ind-auto-slow">🐢 천천히 왕복</button>
+   <button class="btn" id="ind-auto-fast">🐇 빠르게 왕복</button>
+   <button class="btn" id="ind-stop">✋ 멈춤</button>
+  </div>
+ </section>
+
+ <!-- ═══ 모드 B: 발전기 ═══ -->
+ <section class="stage-card" id="sec-generator" style="display:none">
+  <div class="stage-head"><span class="dot"></span><h2>자기장 속에서 코일을 돌리면 전기가 나온다</h2>
+   <span class="hint">🖱️ 속도 슬라이더로 코일을 돌려 보세요 · 화면 드래그 = 시점 회전</span></div>
+  <div class="stage" id="stage-gen">
+   <div class="hud"><div class="tag" id="gen-msg">코일이 <b>회전하는 동안</b> 전구가 켜집니다. 빠를수록 밝아요!</div></div>
+   <div class="meter"><div class="mlabel">전류의 방향과 세기</div>
+    <svg viewBox="0 0 130 76" width="130" height="76" aria-label="전류계">
+     <path d="M10 66 A58 58 0 0 1 120 66" fill="none" stroke="#c1ac82" stroke-width="2"/>
+     <line x1="65" y1="66" x2="65" y2="16" stroke="#dccfae" stroke-width="1" stroke-dasharray="3 3"/>
+     <text x="18" y="60" font-size="10" fill="#96805c">−</text><text x="106" y="60" font-size="10" fill="#96805c">+</text>
+     <text x="61" y="14" font-size="9" fill="#96805c">0</text>
+     <line id="gen-needle" x1="65" y1="66" x2="65" y2="18" stroke="#b3362e" stroke-width="3" stroke-linecap="round"/>
+     <circle cx="65" cy="66" r="4.5" fill="#2e2315"/>
+    </svg></div>
+   <div class="graph-wrap"><div class="glabel">전류–시간 그래프 (교류!)</div>
+    <canvas id="gen-graph" width="260" height="86"></canvas></div>
+  </div>
+  <div class="panel">
+   <div class="ctl"><label>회전 속도</label><input type="range" id="gen-speed" min="0" max="100" value="0"></div>
+   <button class="btn" id="gen-crank">🌀 한 바퀴만 천천히</button>
+   <button class="btn" id="gen-stop">✋ 멈춤</button>
+   <span class="ctl" style="margin-left:auto">💡 전구 밝기 = 전류의 세기</span>
+  </div>
+ </section>
+
+ <div class="note-row">
+  <div class="note"><span class="k">① 왜 전류가 생길까?</span><br>
+   코일을 지나는 <b>자기장이 변할 때</b>, 코일에는 전류가 유도됩니다.
+   자석이 멈추면 — 자기장이 변하지 않으니 — 전류도 <b>0</b>. '자석이 있다'가 아니라 <b>'자기장이 변한다'</b>가 핵심!</div>
+  <div class="note"><span class="k">② 세기와 방향의 규칙</span><br>
+   <b>빠르게</b> 움직일수록 전류가 세고, <b>다가올 때와 멀어질 때</b>, <b>N극과 S극</b>일 때 전류의 방향이 서로 반대입니다.
+   검류계 바늘이 좌우로 갈리는 이유예요.</div>
+  <div class="note"><span class="k">③ 전동기와 발전기는 쌍둥이</span><br>
+   전동기: 전류를 넣으면 → 코일이 돈다.<br>발전기: 코일을 돌리면 → 전류가 나온다.
+   같은 장치를 <b>거꾸로</b> 쓰는 것! 발전소의 터빈이 하는 일이 바로 이것입니다.</div>
+ </div>
+</div>
+
+<footer id="app-credit">© 2026 승재쌤의 과학실 · 전자기 유도 3D 실험실 · 최종 업데이트 2026-08-16</footer>
+
+<script src="lib/three.min.js"></script>
+<script src="lib/OrbitControls.js"></script>
+<script>
+'use strict';
+/* ══════════════ 공통 ══════════════ */
+const PAPER = 0xefe6d3, INKC = 0x2e2315, COPPER = 0xb0713a, WOODC = 0xc9a86a;
+function makeRenderer(stage){
+  const r = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  r.setPixelRatio(Math.min(devicePixelRatio,2));
+  r.setSize(stage.clientWidth, stage.clientHeight);
+  stage.insertBefore(r.domElement, stage.firstChild);
+  return r;
+}
+function baseLights(scene){
+  scene.add(new THREE.AmbientLight(0xfff4e0, .75));
+  const d = new THREE.DirectionalLight(0xffffff, .75); d.position.set(6,10,8); scene.add(d);
+  const d2 = new THREE.DirectionalLight(0xffe9c9, .3); d2.position.set(-8,4,-6); scene.add(d2);
+}
+function deskMesh(){
+  const g = new THREE.Group();
+  const top = new THREE.Mesh(new THREE.BoxGeometry(30,.5,16),
+    new THREE.MeshStandardMaterial({color:WOODC, roughness:.85}));
+  top.position.y = -2.3; g.add(top);
+  return g;
+}
+/* 막대자석: 절반 빨강(N)·절반 파랑(S) */
+function barMagnet(len=4, r=.55){
+  const g = new THREE.Group();
+  const matN = new THREE.MeshStandardMaterial({color:0xb23a30, roughness:.5});
+  const matS = new THREE.MeshStandardMaterial({color:0x2e5f8f, roughness:.5});
+  const half = len/2;
+  const nM = new THREE.Mesh(new THREE.CylinderGeometry(r,r,half,24), matN);
+  nM.rotation.z = Math.PI/2; nM.position.x = -half/2; g.add(nM);
+  const sM = new THREE.Mesh(new THREE.CylinderGeometry(r,r,half,24), matS);
+  sM.rotation.z = Math.PI/2; sM.position.x =  half/2; g.add(sM);
+  function label(txt, color, x){
+    const cv = document.createElement('canvas'); cv.width = cv.height = 64;
+    const c = cv.getContext('2d'); c.fillStyle = color; c.font = 'bold 46px sans-serif';
+    c.textAlign='center'; c.textBaseline='middle'; c.fillText(txt,32,36);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv), transparent:true}));
+    sp.scale.set(1,1,1); sp.position.set(x, .95, 0); g.add(sp);
+  }
+  label('N', '#ffd7d2', -half+0.4); label('S', '#cfe3ff', half-0.4);
+  return g;
+}
+/* 나선 코일 (축 = x축) */
+function coilMesh(turns=8, R=1.15, len=3.2, tube=.09){
+  class Spiral extends THREE.Curve{
+    getPoint(t){
+      const ang = turns * Math.PI*2 * t;
+      return new THREE.Vector3(-len/2 + len*t, Math.cos(ang)*R, Math.sin(ang)*R);
+    }
+  }
+  return new THREE.Mesh(new THREE.TubeGeometry(new Spiral(), 420, tube, 10, false),
+    new THREE.MeshStandardMaterial({color:COPPER, roughness:.35, metalness:.55}));
+}
+function setNeedle(el, val){ // val -1~1
+  const a = Math.max(-1, Math.min(1, val)) * 55;
+  el.setAttribute('transform', `rotate(${a} 65 66)`);
+}
+
+/* ══════════════ 모드 A: 전자기 유도 ══════════════ */
+const indStage = document.getElementById('stage-ind');
+const indR = makeRenderer(indStage);
+const indScene = new THREE.Scene();
+const indCam = new THREE.PerspectiveCamera(46, indStage.clientWidth/indStage.clientHeight, .1, 200);
+indCam.position.set(4.5, 5.2, 11);
+const indCtl = new THREE.OrbitControls(indCam, indR.domElement);
+indCtl.target.set(0,0,0); indCtl.enableDamping = true; indCtl.maxPolarAngle = Math.PI*0.52;
+baseLights(indScene); indScene.add(deskMesh());
+indScene.add(coilMesh());
+/* 코일 받침 */
+const stand = new THREE.Mesh(new THREE.BoxGeometry(4.2,.3,3.4),
+  new THREE.MeshStandardMaterial({color:0x8a5f24, roughness:.8}));
+stand.position.y = -1.75; indScene.add(stand);
+const magnet = barMagnet(); magnet.position.x = -7; indScene.add(magnet);
+/* 유도 전류 표시용 화살 고리 (코일 양 끝) */
+const arrowMat = new THREE.MeshBasicMaterial({color:0x3a7a3f, transparent:true, opacity:0});
+const ringA = new THREE.Mesh(new THREE.TorusGeometry(1.45,.05,8,40), arrowMat);
+ringA.rotation.y = Math.PI/2; ringA.position.x = -1.9; indScene.add(ringA);
+const ringB = ringA.clone(); ringB.position.x = 1.9; indScene.add(ringB);
+
+let indPole = 1;           // +1: N극이 코일 쪽(오른쪽 향함)
+let magX = -7, magPrevX = -7;
+let indAuto = 0;           // 0 없음, 진폭·속도 객체
+let indCurrent = 0, needleSm = 0;
+const indPosEl = document.getElementById('ind-pos');
+const indNeedleEl = document.getElementById('ind-needle');
+const indMsg = document.getElementById('ind-msg');
+
+function fluxAt(x){ // 코일(원점) 기준 자속 — 축 위 쌍극자 근사(부드럽게)
+  return indPole / Math.pow(1 + (x/2.2)*(x/2.2), 1.5);
+}
+indPosEl.addEventListener('input', ()=>{ indAuto = 0; magX = indPosEl.value/100*7; });
+document.getElementById('ind-flip').addEventListener('click', ()=>{
+  indPole *= -1; magnet.rotation.y += Math.PI;
+  document.getElementById('ind-pole').textContent = indPole>0 ? 'N극이 코일 쪽' : 'S극이 코일 쪽';
+});
+document.getElementById('ind-auto-slow').addEventListener('click', ()=>{ indAuto = {w:1.1} });
+document.getElementById('ind-auto-fast').addEventListener('click', ()=>{ indAuto = {w:3.2} });
+document.getElementById('ind-stop').addEventListener('click', ()=>{ indAuto = 0 });
+
+/* 자석 드래그 */
+(function(){
+  const ray = new THREE.Raycaster(), v2 = new THREE.Vector2();
+  const plane = new THREE.Plane(new THREE.Vector3(0,0,1), 0);
+  let drag = false;
+  function pt(e){ const r = indR.domElement.getBoundingClientRect();
+    v2.set(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1); }
+  indR.domElement.addEventListener('pointerdown', e=>{
+    pt(e); ray.setFromCamera(v2, indCam);
+    if (ray.intersectObject(magnet, true).length){ drag = true; indAuto = 0; indCtl.enabled = false; }
+  });
+  addEventListener('pointermove', e=>{
+    if(!drag) return; pt(e); ray.setFromCamera(v2, indCam);
+    const hit = new THREE.Vector3();
+    if (ray.ray.intersectPlane(plane, hit)) magX = Math.max(-7.5, Math.min(7.5, hit.x));
+  });
+  addEventListener('pointerup', ()=>{ drag = false; indCtl.enabled = true; });
+})();
+
+/* ══════════════ 모드 B: 발전기 ══════════════ */
+const genStage = document.getElementById('stage-gen');
+const genR = makeRenderer(genStage);
+const genScene = new THREE.Scene();
+const genCam = new THREE.PerspectiveCamera(46, 2, .1, 200);
+genCam.position.set(6.5, 4.6, 9.5);
+const genCtl = new THREE.OrbitControls(genCam, genR.domElement);
+genCtl.target.set(0,.4,0); genCtl.enableDamping = true; genCtl.maxPolarAngle = Math.PI*0.52;
+baseLights(genScene); genScene.add(deskMesh());
+/* 말굽형: 좌 N(빨강)·우 S(파랑) 자극판 */
+function pole(color, x, txt, tcol){
+  const m = new THREE.Mesh(new THREE.BoxGeometry(.8,3.4,3.4),
+    new THREE.MeshStandardMaterial({color, roughness:.55}));
+  m.position.set(x,.4,0); genScene.add(m);
+  const cv = document.createElement('canvas'); cv.width=cv.height=64;
+  const c = cv.getContext('2d'); c.fillStyle=tcol; c.font='bold 44px sans-serif';
+  c.textAlign='center'; c.textBaseline='middle'; c.fillText(txt,32,36);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv), transparent:true}));
+  sp.position.set(x, 2.6, 0); genScene.add(sp);
+}
+pole(0xb23a30, -3.1, 'N', '#ffd7d2'); pole(0x2e5f8f, 3.1, 'S', '#cfe3ff');
+/* 자기장 화살표 (N→S, +x 방향) */
+for (let i=0;i<3;i++){
+  const ar = new THREE.ArrowHelper(new THREE.Vector3(1,0,0), new THREE.Vector3(-2.4, -.5+i*1.0, -1.1+i*1.1), 4.8, 0x2c6e5f, .5, .3);
+  genScene.add(ar);
+}
+/* 회전 코일(직사각 고리) + 축 */
+const rotor = new THREE.Group();
+(function(){
+  const w=1.9, h=2.4, t=.08;
+  const mat = new THREE.MeshStandardMaterial({color:COPPER, roughness:.35, metalness:.55});
+  const mk = (sx,sy,sz,x,y,z)=>{ const m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),mat); m.position.set(x,y,z); rotor.add(m); };
+  mk(t,h,t, -w/2,0,0); mk(t,h,t, w/2,0,0); mk(w+t,t,t, 0,h/2,0); mk(w+t,t,t, 0,-h/2,0);
+  const axle = new THREE.Mesh(new THREE.CylinderGeometry(.07,.07,5.6,10),
+    new THREE.MeshStandardMaterial({color:0x777777, metalness:.7, roughness:.35}));
+  axle.rotation.x = Math.PI/2; rotor.add(axle);
+})();
+rotor.position.y = .4; genScene.add(rotor);
+/* 전구 */
+const bulb = new THREE.Mesh(new THREE.SphereGeometry(.5,20,16),
+  new THREE.MeshStandardMaterial({color:0xfdeeb9, emissive:0xffd166, emissiveIntensity:0, roughness:.3, transparent:true, opacity:.95}));
+bulb.position.set(0, 2.6, -3.6); genScene.add(bulb);
+const bulbLight = new THREE.PointLight(0xffd166, 0, 9); bulbLight.position.copy(bulb.position); genScene.add(bulbLight);
+const socket = new THREE.Mesh(new THREE.CylinderGeometry(.22,.28,.5,12),
+  new THREE.MeshStandardMaterial({color:0x8a5f24})); socket.position.set(0,2.05,-3.6); genScene.add(socket);
+
+let genSpeedTarget = 0, genSpeed = 0, genAngle = 0, crankLeft = 0;
+const genSpeedEl = document.getElementById('gen-speed');
+genSpeedEl.addEventListener('input', ()=>{ genSpeedTarget = genSpeedEl.value/100*5.5; crankLeft = 0; });
+document.getElementById('gen-crank').addEventListener('click', ()=>{ crankLeft = Math.PI*2; genSpeedTarget = 0; genSpeedEl.value = 0; });
+document.getElementById('gen-stop').addEventListener('click', ()=>{ genSpeedTarget = 0; genSpeedEl.value = 0; crankLeft = 0; });
+const genNeedleEl = document.getElementById('gen-needle');
+const genMsg = document.getElementById('gen-msg');
+const gCv = document.getElementById('gen-graph'), gCx = gCv.getContext('2d');
+const gData = new Array(130).fill(0);
+
+/* ══════════════ 모드 전환·루프 ══════════════ */
+let mode = 'induction';
+document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click', ()=>{
+  document.querySelectorAll('.mode-btn').forEach(x=>x.classList.toggle('on', x===b));
+  mode = b.dataset.mode;
+  document.getElementById('sec-induction').style.display = mode==='induction' ? '' : 'none';
+  document.getElementById('sec-generator').style.display = mode==='generator' ? '' : 'none';
+  resize();
+}));
+function resize(){
+  const s = mode==='induction' ? indStage : genStage;
+  const r = mode==='induction' ? indR : genR;
+  const cam = mode==='induction' ? indCam : genCam;
+  r.setSize(s.clientWidth, s.clientHeight);
+  cam.aspect = s.clientWidth/s.clientHeight; cam.updateProjectionMatrix();
+  render(); // rAF가 잠든 환경에서도 1프레임은 그린다
+}
+addEventListener('resize', resize);
+
+let last = performance.now();
+function render(){
+  const now = performance.now(); let dt = Math.min(.05, (now-last)/1000) || .016; last = now;
+  if (mode === 'induction'){
+    if (indAuto) magX = -3.4 + 3.3*Math.sin(now/1000*indAuto.w) - 1.2;
+    magnet.position.x = magX;
+    indPosEl.value = Math.round(magX/7*100);
+    const v = (magX - magPrevX)/dt; magPrevX = magX;
+    const dPhi = (fluxAt(magX) - fluxAt(magX - v*dt*0.999))/ (dt*0.999);
+    indCurrent = -dPhi * 1.15;
+    needleSm += (Math.max(-1,Math.min(1, indCurrent)) - needleSm) * Math.min(1, dt*12);
+    setNeedle(indNeedleEl, needleSm);
+    const mag = Math.abs(needleSm);
+    arrowMat.opacity = Math.min(.9, mag*2.2);
+    arrowMat.color.set(needleSm >= 0 ? 0x3a7a3f : 0x7d5ba6);
+    ringA.rotation.x += needleSm * dt * 9; ringB.rotation.x += needleSm * dt * 9;
+    indMsg.innerHTML = mag < .04
+      ? '자석이 <b>멈추면</b> — 자기장이 변하지 않아 — 전류도 <b>0</b>입니다.'
+      : (mag > .55 ? '<b>빠르게</b> 움직이니 전류가 <b>세게</b> 흐릅니다!' :
+         '자석이 움직이는 동안 <b>유도 전류</b>가 흐릅니다. 방향도 잘 보세요.');
+    indCtl.update(); indR.render(indScene, indCam);
+  } else {
+    if (crankLeft > 0){ const w = 1.6; rotor.rotation.z += w*dt; genAngle += w*dt; crankLeft -= w*dt; genSpeed = w; if (crankLeft<=0){ genSpeed = 0; } }
+    else { genSpeed += (genSpeedTarget - genSpeed)*Math.min(1, dt*3); rotor.rotation.z += genSpeed*dt; genAngle += genSpeed*dt; }
+    const I = Math.sin(genAngle) * genSpeed/5.5;          // I ∝ ω·sin(θ)
+    setNeedle(genNeedleEl, I*1.4);
+    const bright = Math.min(1, Math.abs(I)*1.6);
+    bulb.material.emissiveIntensity = bright*1.5; bulbLight.intensity = bright*1.3;
+    gData.push(I); gData.shift();
+    gCx.clearRect(0,0,gCv.width,gCv.height);
+    gCx.strokeStyle = '#dccfae'; gCx.beginPath(); gCx.moveTo(0,43); gCx.lineTo(260,43); gCx.stroke();
+    gCx.strokeStyle = '#b3362e'; gCx.lineWidth = 2; gCx.beginPath();
+    gData.forEach((y,i)=>{ const px = i*2, py = 43 - y*34; i? gCx.lineTo(px,py) : gCx.moveTo(px,py); });
+    gCx.stroke(); gCx.lineWidth = 1;
+    genMsg.innerHTML = genSpeed < .05
+      ? '멈춰 있으면 전기가 나오지 않아요. <b>돌려야</b> 전기!'
+      : (genSpeed > 3.4 ? '<b>빠르게</b> 돌수록 전구가 <b>밝게</b> 켜집니다!'
+        : '반 바퀴마다 전류의 <b>방향이 뒤집히는</b> 것을 그래프에서 확인하세요 — 이것이 <b>교류</b>!');
+    genCtl.update(); genR.render(genScene, genCam);
+  }
+  requestAnimationFrame(render);
+}
+resize(); requestAnimationFrame(render);
+</script>
+</body>
+</html>
