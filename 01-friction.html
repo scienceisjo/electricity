@@ -678,6 +678,9 @@ body.teacher .keyline-s{display:none}
 
 /* 인쇄物에서는 둘 다 보이게 — 학습지로 뽑을 때 설명이 사라지면 곤란하다 */
 @media print{.say{display:revert!important}.keyline-s{display:flex!important}}
+/* 전자 옮기기 — 문지르기 애니메이션 */
+@keyframes emrub{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-7px) rotate(-.5deg)}75%{transform:translateX(7px) rotate(.5deg)}}
+svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
 </style>
 
 <style id="why-module">
@@ -1097,6 +1100,37 @@ body.teacher .keyline-s{display:none}
 
  <div class="card" style="margin-top:20px">
  <div class="lab">
+ <h3>🔬 그 전에 — 원자 속을 들여다봅시다</h3>
+ <p class="lead say" style="font-size:17px">전자가 <b class="t3">왜</b> 옮겨 갈 수 있는지 알려면, 원자 하나를 크게 키워 봐야 합니다.
+ 가운데 <b class="t4">원자핵</b>은 무겁고 <b>제자리</b>, 둘레의 <b class="t3">전자</b>는 가볍고 <b>자유롭게 돌아다닙니다.</b>
+ 둘 사이에는 서로 <b class="k">잡아당기는 힘</b>이 있어요.</p>
+ <div class="keyline-s"><span class="kw">원자핵 — 무겁다 · 고정</span><span class="kw t3">전자 — 가볍다 · 자유</span><span class="arw">→</span><span class="kw hi">둘 사이 잡아당기는 힘</span><span class="memo"></span></div>
+ <div class="simwrap">
+  <div class="svgstage"><canvas id="atomCv" height="330" aria-label="원자 모형 — 가운데 원자핵과 둘레를 자유롭게 돌아다니는 전자"></canvas></div>
+  <div class="simctl">
+   <h4>🎛️ 원자 관측기</h4>
+   <div class="modebar">
+    <button class="btn primary sm" id="atomOne">① 원자 하나 보기</button>
+    <button class="btn ghost sm" id="atomTwo">② 이웃 원자 데려오기</button>
+   </div>
+   <div class="readout">
+    <div class="r"><div class="lab2">원자핵의 질량</div><div class="v" style="color:var(--c4)">약 1837<small> 배</small></div></div>
+    <div class="r"><div class="lab2">전자의 질량</div><div class="v" style="color:var(--c3)">1<small> (기준)</small></div></div>
+   </div>
+   <p class="honest" style="margin:6px 0 10px"><span class="ic">⚖️</span>수소 원자 기준 — 원자핵(양성자)이 전자보다 약 <b>1837배</b> 무겁습니다.
+   씨름 선수와 좁쌀 한 알 정도의 차이예요. 그래서 <b>무거운 원자핵은 못 움직이고, 가벼운 전자만 옮겨 다닙니다.</b></p>
+   <div class="modebar" id="atomPullRow" style="display:none">
+    <button class="btn sm" id="atomPull">💘 오른쪽 원자핵을 더 매력적으로!</button>
+   </div>
+   <div class="verdict" id="atomMsg">전자가 원자핵 둘레를 <b>자유롭게</b> 돌아다닙니다. 하지만 멀리 도망가지는 못해요 — <b>잡아당기는 힘</b>에 붙잡혀 있거든요.</div>
+  </div>
+ </div>
+ <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① "전자는 이렇게 <b>자유롭게</b> 돌아다닙니다." ② "그런데 원자핵과 전자 사이엔 <b>서로 잡아당기는 힘</b>이 있어요. 그래서 멀리는 못 가죠." ③ 「이웃 원자 데려오기」 → "전자 입장에선 옆에 다른 원자핵이 나타난 겁니다. <b>언제든 바람필 준비</b>가 돼 있어요." ④ 「더 매력적으로」 → "조금이라도 <b>더 세게 잡아당기는</b> 원자핵을 만나면 미련 없이 갈아탑니다." ⑤ 그대로 아래 전자 옮기기로 연결 — 문지르는 건 두 물체를 <b>바짝 만나게</b> 해 주는 일입니다.</div></div>
+ </div>
+ </div>
+
+ <div class="card" style="margin-top:18px">
+ <div class="lab">
  <h3>⚡ 전자 옮기기 — 수건으로 고무풍선 문지르기</h3>
  <p class="lead say" style="font-size:17px">버튼을 누를 때마다 전자가 <b class="t3">한 개씩</b> 수건에서 고무풍선으로 건너갑니다.
  <b class="k">숫자 세 개</b>를 눈으로 따라가 보세요.</p>
@@ -1190,6 +1224,14 @@ body.teacher .keyline-s{display:none}
  <button class="btn ghost sm" id="emBack">← 되돌리기</button>
  <button class="btn ghost sm" id="emReset">처음으로</button>
  </div>
+ <div id="emChoice" style="display:none;margin:10px 0;padding:12px 14px;border:1.5px dashed var(--accent);border-radius:12px;background:rgba(160,92,44,.06)">
+  <div style="font-family:var(--jua);font-size:14.5px;margin-bottom:9px">🤔 전자를 옮기려면, 두 물체를 어떻게 해야 할까요?</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+   <button class="btn ghost sm" id="emChoiceFar">1️⃣ 멀리 떨어뜨린다</button>
+   <button class="btn ghost sm" id="emChoiceRub">2️⃣ 서로 문지른다</button>
+  </div>
+  <div id="emChoiceMsg" style="display:none;margin-top:9px;font-size:13.5px;line-height:1.55;color:var(--ink-dim)"></div>
+ </div>
  <div class="readout">
  <div class="r"><div class="lab2">🧻 수건이 띠는 전하</div><div class="v" id="emTowel">중성</div></div>
  <div class="r"><div class="lab2">🎈 고무풍선이 띠는 전하</div><div class="v" id="emBall">중성</div></div>
@@ -1239,6 +1281,51 @@ body.teacher .keyline-s{display:none}
  그림에서는 원자 4개씩만 그렸어요. <b>개수는 실제 값이 아니라 관계를 보기 위한 것</b>입니다.</p>
  <div class="note class"><span class="ic">💬</span><div><b>여기가 이 차시의 핵심입니다</b> — ① 전자를 옮기는 동안 <b>"원자핵은 움직였나요?"</b>를 계속 물으세요. ② 4번 다 옮긴 뒤 <b>전자 총 개수 8</b>을 손가락으로 짚어 주세요. 제목이 여기서 회수됩니다 — '지지직의 정체'는 새로 생긴 전기가 아니라 <b>옮겨 간 전자</b>입니다. ③ 그다음 2단계에 학생이 쓴 문장으로 돌아가 스스로 고치게 하세요.</div></div>
  </div>
+ </div>
+
+ <div class="card" style="margin-top:18px" id="qna-card">
+ <h3 class="card-t" style="margin-bottom:6px">🙋 더 궁금해요 — 이런 질문, 훌륭합니다</h3>
+ <p class="lead say">답을 먼저 보지 말고, 위의 전자 옮기기 장치와 오늘 배운 것으로 <b>먼저 추리해 보세요.</b> 모둠에서 이야기한 뒤 답을 열어 보는 겁니다.</p>
+ <div class="keyline-s"><span class="kw">먼저 추리</span><span class="arw">→</span><span class="kw">모둠 이야기</span><span class="arw">→</span><span class="kw hi">답 열어 보기</span><span class="memo"></span></div>
+
+ <div class="qna-item" style="border:1.5px solid var(--line-soft);border-radius:12px;padding:13px 16px;margin:12px 0">
+  <div style="font-family:var(--jua);font-size:15.5px">Q1. 대전된 전하는 계속 그대로일까?</div>
+  <div style="font-size:13.5px;color:var(--ink-mute);margin-top:5px">💭 힌트 — 풍선을 벽에 붙여 두면 며칠 뒤에도 붙어 있을까요? 겨울과 여름의 정전기 차이도 떠올려 보세요.</div>
+  <button class="btn ghost sm qna-btn" style="margin-top:9px">답 보기</button>
+  <div class="qna-ans" style="display:none;margin-top:10px;font-size:14.5px;line-height:1.65;border-top:1px dashed var(--line-soft);padding-top:9px">
+   <b>아니요 — 시간이 지나면 사라집니다.</b> 공기 중의 수분(습기)이나 맞닿은 물체를 통해 전자가 조금씩 이동해서,
+   두 물체 모두 결국 다시 <b>중성</b>으로 돌아가요. 그래서 건조한 <b>겨울</b>에는 정전기가 잘 생기고 오래가지만,
+   습한 <b>여름</b>에는 생기기도 어렵고 금방 사라집니다. 벽에 붙인 풍선이 며칠 못 가 떨어지는 이유이기도 해요.
+  </div>
+ </div>
+
+ <div class="qna-item" style="border:1.5px solid var(--line-soft);border-radius:12px;padding:13px 16px;margin:12px 0">
+  <div style="font-family:var(--jua);font-size:15.5px">Q2. 왜 전자를 빼앗기는 애와 뺏어가는 애가 정해져 있을까?</div>
+  <div style="font-size:13.5px;color:var(--ink-mute);margin-top:5px">💭 힌트 — 줄다리기에서 이기는 쪽이 정해져 있다면, 두 팀의 무엇이 달랐던 걸까요?</div>
+  <button class="btn ghost sm qna-btn" style="margin-top:9px">답 보기</button>
+  <div class="qna-ans" style="display:none;margin-top:10px;font-size:14.5px;line-height:1.65;border-top:1px dashed var(--line-soft);padding-top:9px">
+   물질마다 <b>전자를 붙잡는 힘의 세기가 다르기 때문</b>입니다. 털가죽·유리처럼 전자를 잘 놓아주는 물질이 있고,
+   고무·플라스틱처럼 전자를 세게 붙잡는 물질이 있어요. 두 물체를 문지르면 언제나 <b>붙잡는 힘이 센 쪽이 전자를 데려갑니다</b> —
+   그래서 같은 짝이라면 결과가 늘 같아요. 이 힘의 순서를 한 줄로 세워 놓은 것을 <b>대전열</b>이라고 부릅니다.
+   (전자를 왜 붙잡는 힘이 다른지는 원자의 구조를 더 배우면 알게 됩니다 — 고등학교 화학의 예고편!)
+  </div>
+ </div>
+
+ <div class="qna-item" style="border:1.5px solid var(--line-soft);border-radius:12px;padding:13px 16px;margin:12px 0">
+  <div style="font-family:var(--jua);font-size:15.5px">Q3. 수건에서 고무풍선으로 전자가 이동하면, 수건 속 원자는 양이온이 되고 고무풍선 원자는 음이온이 되는 걸까?</div>
+  <div style="font-size:13.5px;color:var(--ink-mute);margin-top:5px">💭 힌트 — 전자 옮기기 그림에서 전자를 잃은 원자 하나만 확대해서 본다면?</div>
+  <button class="btn ghost sm qna-btn" style="margin-top:9px">답 보기</button>
+  <div class="qna-ans" style="display:none;margin-top:10px;font-size:14.5px;line-height:1.65;border-top:1px dashed var(--line-soft);padding-top:9px">
+   <b>거의 정확한 추리입니다!</b> 전자를 잃은 <b>그 원자 하나</b>만 보면 (+)를 띠니 양이온과 같은 상태이고,
+   전자를 얻은 원자는 (−)를 띠니 음이온과 같은 상태가 맞아요. 다만 두 가지가 달라서 과학에서는 말을 구별합니다.<br><br>
+   ① 마찰로 전자를 주고받는 원자는 물체 <b>표면의 극히 일부</b>뿐이에요. 수건 속 수많은 원자 대부분은 그대로 중성입니다.
+   그래서 물체 <b>전체</b>를 두고는 "이온이 되었다" 대신 <b>"대전되었다"</b>라고 말해요.<br>
+   ② 소금이 물에 녹아 생기는 이온은 낱개로 <b>떨어져 나와 돌아다니지만</b>, 여기서는 원자들이 <b>제자리에 그대로</b> 있고
+   전자만 몇 개 건너간 것입니다.<br><br>
+   요약 — "표면의 일부 원자는 이온과 같은 상태가 된다. 하지만 물체 전체로는 <b>대전체</b>라고 부른다." 3학년 화학에서 이온을 배울 때 이 질문을 다시 꺼내 보세요. 훨씬 깊게 보일 거예요.
+  </div>
+ </div>
+ <div class="note class"><span class="ic">💬</span><div><b>운영</b> — 이 세 질문은 학생 입에서 실제로 나오는 질문들입니다. 질문이 나오면 그 자리에서 이 카드를 열고, 안 나오면 마무리 전에 "혹시 이런 게 궁금하지 않았어?"로 던져 주세요. Q3은 <b>훌륭한 직관을 칭찬</b>하는 게 포인트입니다.</div></div>
  </div>
 
  <div class="card" style="margin-top:18px">
@@ -1857,6 +1944,135 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     mark.classList.add('on');clearTimeout(t);t=setTimeout(()=>mark.classList.remove('on'),1400);});
 })();
 
+/* ═══════ 🔬 원자 관측기 — 자유 전자와 잡아당기는 힘 ═══════ */
+(function(){
+  const cv=$('#atomCv'); if(!cv) return;
+  const cx2=cv.getContext('2d');
+  const msg=$('#atomMsg'), pullRow=$('#atomPullRow');
+  let W=600,H=330;
+  function fit(){
+    const box=cv.parentElement;
+    W=Math.max(320,box.clientWidth||600); H=330;
+    const dpr=Math.min(devicePixelRatio||1,2);
+    cv.width=W*dpr; cv.height=H*dpr; cv.style.width='100%'; cv.style.height=H+'px';
+    cx2.setTransform(dpr,0,0,dpr,0,0);
+  }
+  /* 상태: 원자핵 1~2개, 전자 3개(자유롭게 궤도 운동) */
+  let two=false, pulled=false, jumping=false;
+  const els=[];                       // {ang, r, sp, home, x, y, jt}
+  function reset(){
+    els.length=0;
+    for(let i=0;i<3;i++) els.push({ang:i*2.1, r:62+i*13, sp:.9+i*.22, home:0, jt:0, x:0, y:0});
+    two=false; pulled=false; jumping=false;
+    pullRow.style.display='none';
+    msg.innerHTML='전자가 원자핵 둘레를 <b>자유롭게</b> 돌아다닙니다. 하지만 멀리 도망가지는 못해요 — <b>잡아당기는 힘</b>에 붙잡혀 있거든요.';
+  }
+  function nucPos(i){
+    const y=H*.52;
+    if(!two) return {x:W*.5, y};
+    return i===0 ? {x:W*.34, y} : {x:W*.68, y};
+  }
+  function drawNucleus(p,strong,label){
+    const R=strong?30:26;
+    const g=cx2.createRadialGradient(p.x-6,p.y-8,4,p.x,p.y,R);
+    g.addColorStop(0,'#e07a6a'); g.addColorStop(1,'#b23a30');
+    cx2.fillStyle=g; cx2.beginPath(); cx2.arc(p.x,p.y,R,0,Math.PI*2); cx2.fill();
+    if(strong){
+      cx2.strokeStyle='rgba(178,58,48,.35)'; cx2.lineWidth=2;
+      const t=performance.now()/380;
+      for(let k=0;k<2;k++){ const rr=R+8+k*9+Math.sin(t+k)*3;
+        cx2.beginPath(); cx2.arc(p.x,p.y,rr,0,Math.PI*2); cx2.stroke(); }
+    }
+    cx2.fillStyle='#fff6ee'; cx2.font='800 21px Pretendard, sans-serif';
+    cx2.textAlign='center'; cx2.textBaseline='middle'; cx2.fillText('+',p.x,p.y+1);
+    cx2.fillStyle='#6b573f'; cx2.font='13px Pretendard, sans-serif';
+    cx2.fillText(label,p.x,p.y+R+16);
+    if(strong){ cx2.fillStyle='#b23a30'; cx2.font='700 12.5px Jua, Pretendard, sans-serif';
+      cx2.fillText('더 세게 잡아당김 💘',p.x,p.y+R+34); }
+  }
+  let last=0;
+  function loop(t){ render(t); requestAnimationFrame(loop); }
+  function render(t){
+    t=t||performance.now();
+    const dt=Math.min(.05,(t-last)/1000)||.016; last=t;
+    const vis=$('#panel-model')&&$('#panel-model').classList.contains('show')
+      &&!document.body.classList.contains('cover-on');
+    /* 패널이 열리며 폭이 잡히면 캔버스 해상도를 다시 맞춘다 */
+    const bw=cv.parentElement.clientWidth;
+    if(bw>10 && Math.abs(bw-W)>2) fit();
+    cx2.clearRect(0,0,W,H);
+    /* 배경 */
+    cx2.fillStyle='rgba(243,237,226,.55)'; cx2.fillRect(0,0,W,H);
+    const n0=nucPos(0), n1=nucPos(1);
+    /* 인력 표시선 */
+    els.forEach(e=>{
+      const home=e.home===0?n0:n1;
+      cx2.strokeStyle='rgba(178,58,48,.22)'; cx2.setLineDash([4,5]); cx2.lineWidth=1.4;
+      cx2.beginPath(); cx2.moveTo(home.x,home.y); cx2.lineTo(e.x||home.x,e.y||home.y); cx2.stroke();
+      cx2.setLineDash([]);
+    });
+    drawNucleus(n0,false,'원자핵 (무겁다 · 제자리)');
+    if(two) drawNucleus(n1,pulled,'이웃 원자핵');
+    /* 전자 */
+    els.forEach((e,i)=>{
+      if(vis && !reduceMotion) e.ang += e.sp*dt*(1.15);
+      const home=e.home===0?n0:n1;
+      let tx=home.x+Math.cos(e.ang)*e.r, ty=home.y+Math.sin(e.ang)*e.r*.62;
+      if(e.jt>0){ e.jt=Math.max(0,e.jt-dt*1.6); }
+      e.x=e.x?e.x+(tx-e.x)*Math.min(1,dt*(e.jt>0?3.2:14)):tx;
+      e.y=e.y?e.y+(ty-e.y)*Math.min(1,dt*(e.jt>0?3.2:14)):ty;
+      cx2.fillStyle='#3a7a3f';
+      cx2.beginPath(); cx2.arc(e.x,e.y,11,0,Math.PI*2); cx2.fill();
+      cx2.fillStyle='#f2f7ea'; cx2.font='800 15px Pretendard, sans-serif';
+      cx2.textAlign='center'; cx2.textBaseline='middle'; cx2.fillText('−',e.x,e.y+1);
+    });
+    /* 질량 비교 막대 */
+    cx2.textAlign='left'; cx2.textBaseline='alphabetic';
+    cx2.fillStyle='#6b573f'; cx2.font='12.5px Pretendard, sans-serif';
+    cx2.fillText('질량 견주기', 14, 24);
+    cx2.fillStyle='#b23a30'; cx2.fillRect(14,32,150,11);
+    cx2.fillStyle='#fff'; cx2.font='700 10px Pretendard, sans-serif';
+    cx2.fillText('원자핵 1837', 20, 41);
+    cx2.fillStyle='#3a7a3f'; cx2.fillRect(14,47,2,9);
+    cx2.fillStyle='#3a7a3f'; cx2.font='700 10.5px Pretendard, sans-serif';
+    cx2.fillText('전자 1 (거의 안 보일 만큼 가볍다)', 22, 56);
+  }
+  $('#atomOne').addEventListener('click',()=>{ reset(); render(); A.pop&&A.pop(); });
+  $('#atomTwo').addEventListener('click',()=>{
+    two=true; pulled=false; pullRow.style.display='';
+    els.forEach(e=>{e.home=0;});
+    msg.innerHTML='이웃 원자가 <b>바짝 다가왔습니다.</b> 전자 입장에서는 잡아당기는 원자핵이 <b>두 개</b>가 된 셈 — 언제든 <b>옮겨 갈 준비</b>가 돼 있어요!';
+    render(); A.pop&&A.pop();
+  });
+  $('#atomPull').addEventListener('click',()=>{
+    if(!two) return;
+    if(!pulled){
+      pulled=true;
+      els[2].home=1; els[2].jt=1; els[1].home=1; els[1].jt=1;
+      msg.className='verdict hit';
+      msg.innerHTML='💘 오른쪽 원자핵이 <b>더 세게</b> 잡아당기자 전자가 <b>미련 없이 갈아탔습니다.</b><br>이제 왼쪽 원자는 전자를 잃어 <b class="t4">(+)</b>, 오른쪽 원자는 전자를 얻어 <b class="t5">(−)</b>를 띱니다. — 이것이 아래에서 볼 <b>마찰 전기</b>의 정체!';
+      A.correct&&A.correct();
+      toast('전자는 더 매력적인 원자핵으로 갈아탑니다 💘','good');
+    } else {
+      pulled=false; els.forEach(e=>{e.home=0;e.jt=1;});
+      msg.className='verdict';
+      msg.innerHTML='매력을 원래대로 되돌리니 전자가 <b>제자리로</b> 돌아왔습니다. 다시 눌러 보세요.';
+    }
+    render();
+  });
+  addEventListener('resize',()=>{fit();render();});
+  reset(); fit(); render(); requestAnimationFrame(loop);
+})();
+
+/* ═══════ 🙋 더 궁금해요 — 답 열기 ═══════ */
+document.querySelectorAll('.qna-btn').forEach(b=>b.addEventListener('click',()=>{
+  const ans=b.parentElement.querySelector('.qna-ans');
+  const open=ans.style.display==='none';
+  ans.style.display=open?'block':'none';
+  b.textContent=open?'답 접기':'답 보기';
+  if(open&&window.A&&A.pop)A.pop();
+}));
+
 /* ═══════ ⚡ 3단계 · 전자 옮기기 ═══════ */
 (function(){
   const msg=$('#emMsg');if(!msg)return;
@@ -1886,10 +2102,60 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     S.moved=n;save();updateProgress();
     if(!silent){if(n>=EM_MAX)A.correct();else A.pop();}
   }
+  /* ── 문지르기 선택·소리·애니메이션 ── */
+  const simSvg=flow?flow.ownerSVGElement:null;
+  const chBox=$('#emChoice'),chMsg=$('#emChoiceMsg');
+  let emChosen=(S.moved||0)>0, emBusy=false;   // 이미 옮긴 적 있으면 선택은 건너뜀
+  function rubSound(){
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;
+      const ac=window.__emAC||(window.__emAC=new AC());
+      if(ac.state==='suspended')ac.resume();
+      for(let k=0;k<3;k++){
+        const t0=ac.currentTime+k*.26, dur=.17;
+        const buf=ac.createBuffer(1,Math.floor(ac.sampleRate*dur),ac.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let i=0;i<d.length;i++){const env=Math.sin(Math.PI*i/d.length);d[i]=(Math.random()*2-1)*env;}
+        const src=ac.createBufferSource();src.buffer=buf;
+        const bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.value=2400+k*300;bp.Q.value=.9;
+        const g=ac.createGain();g.gain.value=.2;
+        src.connect(bp);bp.connect(g);g.connect(ac.destination);src.start(t0);
+      }
+    }catch(e){}
+  }
+  function rubThenMove(){
+    if(emBusy)return;emBusy=true;
+    rubSound();
+    let lbl=null;
+    if(simSvg){
+      simSvg.classList.add('em-rubbing');
+      lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+      lbl.setAttribute('x','320');lbl.setAttribute('y','320');lbl.setAttribute('text-anchor','middle');
+      lbl.setAttribute('font-family','Jua, Pretendard, sans-serif');lbl.setAttribute('font-size','24');
+      lbl.setAttribute('fill','#a05c2c');lbl.textContent='✋ 쓱싹쓱싹…';
+      simSvg.appendChild(lbl);
+    }
+    setTimeout(()=>{
+      if(simSvg){simSvg.classList.remove('em-rubbing');if(lbl)lbl.remove();}
+      apply((S.moved||0)+1);
+      if(S.moved>=EM_MAX)toast('전자 총 개수는 그대로 8개! 새로 생긴 전자는 없어요 ⚡','good');
+      emBusy=false;
+    },900);
+  }
+  $('#emChoiceFar').addEventListener('click',()=>{
+    chMsg.style.display='block';
+    chMsg.innerHTML='🙅 멀리 떨어뜨리면 <b>아무 일도 일어나지 않아요</b> — 전자가 건너갈 만큼 두 물체가 바짝 만나야 합니다. 다시 골라 볼까요?';
+    A.pop&&A.pop();
+  });
+  $('#emChoiceRub').addEventListener('click',()=>{
+    emChosen=true;chBox.style.display='none';
+    toast('정답! 문질러야 전자가 건너갑니다 ✋','good');
+    rubThenMove();
+  });
   $('#emMove').addEventListener('click',()=>{
     if((S.moved||0)>=EM_MAX)return toast('전자를 더 옮길 수는 없어요. 이미 4개를 다 옮겼습니다','bad');
-    apply((S.moved||0)+1);
-    if(S.moved>=EM_MAX)toast('전자 총 개수는 그대로 8개! 새로 생긴 전자는 없어요 ⚡','good');});
+    if(!emChosen){chBox.style.display='block';chMsg.style.display='none';chBox.scrollIntoView({block:'nearest',behavior:'smooth'});return;}
+    rubThenMove();});
   $('#emBack').addEventListener('click',()=>{if((S.moved||0)<=0)return;apply(S.moved-1);});
   $('#emReset').addEventListener('click',()=>{apply(0);});
 
@@ -2202,6 +2468,65 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     });
     h.insertAdjacentElement('afterend', card);
   });
+})();
+</script>
+
+<script id="ui-extras">
+/* ① 학생용 키워드 줄을 누르면 바로 위의 교사용 설명 문장을 펼쳐 본다
+   ② 헤더 아이콘(허브 이동 / 교사용 on-off)에 글자 라벨을 붙인다 */
+(function(){
+  var st = document.createElement('style');
+  st.textContent =
+    /* ① 키워드 → 설명 펼치기 */
+    '.keyline-s .kw{cursor:pointer;position:relative}'+
+    '.keyline-s .kw:hover{filter:brightness(.97)}'+
+    '.kw-peek{display:block;margin:-8px 0 18px;padding:12px 15px;border-radius:12px;font-size:15px;line-height:1.7;'+
+    'border:1.5px dashed rgba(128,128,128,.45);background:rgba(127,127,127,.08)}'+
+    '.kw-peek .kw-peek-h{font-size:12.5px;opacity:.7;margin-bottom:5px}'+
+    'body.teacher .kw-peek{display:none}'+
+    /* ② 헤더 아이콘 라벨 */
+    '.hbtn{position:relative}'+
+    '.hb-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}'+
+    '.hb-lab{font-size:9.5px;line-height:1.1;opacity:.75;white-space:nowrap;letter-spacing:-.02em}'+
+    '@media(max-width:520px){.hb-lab{display:none}}';
+  document.head.appendChild(st);
+
+  /* ── ① 키워드 클릭 → 바로 위 .say 문단 펼치기 ── */
+  document.querySelectorAll('.keyline-s').forEach(function(line){
+    /* 이 키워드 줄 바로 앞에 오는 교사용 설명(.say)들을 모은다 */
+    var says = [], p = line.previousElementSibling;
+    while (p && (p.classList.contains('say') || p.tagName === 'BR')){
+      if (p.classList.contains('say')) says.unshift(p);
+      p = p.previousElementSibling;
+    }
+    if (!says.length) return;
+    var peek = null;
+    line.querySelectorAll('.kw').forEach(function(kw){
+      kw.setAttribute('title', '눌러서 자세한 설명 보기');
+      kw.addEventListener('click', function(){
+        if (peek){ peek.remove(); peek = null; line.querySelectorAll('.kw').forEach(function(x){x.style.outline='';}); return; }
+        peek = document.createElement('div');
+        peek.className = 'kw-peek';
+        peek.innerHTML = '<div class="kw-peek-h">📖 자세한 설명</div>' +
+          says.map(function(s){ return s.innerHTML; }).join('<br>');
+        line.insertAdjacentElement('afterend', peek);
+        kw.style.outline = '2px solid currentColor';
+        peek.scrollIntoView({block:'nearest', behavior:'smooth'});
+      });
+    });
+  });
+
+  /* ── ② 헤더 아이콘 라벨 ── */
+  function label(el, text){
+    if (!el || el.dataset.hbl) return; el.dataset.hbl = 1;
+    var w = document.createElement('span'); w.className = 'hb-wrap';
+    el.parentNode.insertBefore(w, el); w.appendChild(el);
+    var l = document.createElement('span'); l.className = 'hb-lab'; l.textContent = text;
+    w.appendChild(l);
+  }
+  var hubBtn = document.querySelector('a.hbtn[href$="허브.html"], a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
+  label(hubBtn, '허브페이지로 이동');
+  label(document.getElementById('tmodeBtn'), '교사용 on/off');
 })();
 </script>
 </body>
