@@ -758,6 +758,38 @@ body.teacher .keyline-s{display:none}
  text-indent:-15px;line-height:1.6}
 @media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
 </style>
+
+<style id="xsim-css">
+.xsim{margin-top:14px}
+.xsim-stage{position:relative;border:1.5px solid rgba(128,128,128,.35);border-radius:14px;
+ overflow:hidden;background:rgba(127,127,127,.07)}
+.xsim-stage canvas{display:block;width:100%;height:auto}
+.xsim-ctl{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.xsim-btn{font-family:inherit;font-size:14px;font-weight:700;padding:8px 15px;border-radius:10px;cursor:pointer;
+ border:1.5px solid rgba(128,128,128,.45);background:rgba(127,127,127,.08);color:inherit;transition:.15s}
+.xsim-btn:hover{border-color:currentColor}
+.xsim-btn.on{background:#2c7a44;border-color:#2c7a44;color:#fff}
+.xsim-btn.warn.on{background:#a05c2c;border-color:#a05c2c}
+.xsim-lab{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.xsim-lab b{font-size:13.5px}
+.xsim-ctl input[type=range]{width:150px;accent-color:#2c7a44}
+.xsim-read{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.xsim-r{flex:1 1 118px;border:1px solid rgba(128,128,128,.3);border-radius:11px;padding:8px 11px;text-align:center;
+ background:rgba(127,127,127,.07)}
+.xsim-r .k{font-size:12px;opacity:.72;line-height:1.35}
+.xsim-r .v{font-size:19px;font-weight:800;margin-top:3px;line-height:1.2}
+.xsim-r .v small{font-size:12px;font-weight:600;opacity:.75}
+.xsim-msg{margin-top:12px;padding:11px 14px;border-radius:11px;font-size:14.5px;line-height:1.62;
+ border:1.5px dashed rgba(128,128,128,.4);background:rgba(127,127,127,.05)}
+.xsim-msg.hit{border-style:solid;border-color:#2c7a44;background:rgba(44,122,68,.1)}
+.xsim-scope{display:inline-block;font-size:12px;font-weight:700;padding:2px 11px;border-radius:99px;
+ border:1.5px solid #7d5ba6;color:#7d5ba6;background:rgba(125,91,166,.09);margin-bottom:8px}
+.xsim-why{margin-top:12px;padding:12px 15px;border-radius:12px;border:1px solid rgba(128,128,128,.3);
+ background:rgba(127,127,127,.05);font-size:14px;line-height:1.68}
+.xsim-why b{font-weight:800}
+.xsim-why .h{font-weight:800;font-size:14.5px;margin-bottom:5px}
+.xsim-why+.xsim-why{margin-top:9px}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1051,6 +1083,159 @@ body.teacher .keyline-s{display:none}
  <p class="honest"><span class="ic">📌</span>곱한 값은 <b>비교하기 위한 값</b>입니다(단위 W×분).
  두 기구를 같은 방식으로 곱해서 견주어 보는 것이 핵심이에요.</p>
  </div>
+
+<div class="card xsim" id="enflow-card">
+ <span class="xsim-scope">🔎 왜 그럴까 · 성취기준 밖 보조 자료</span>
+ <h3 class="card-t">📦 전기 100이 들어가면, 무엇이 되어 나올까?</h3>
+ <p class="lead say">전기 기구에 들어간 전기 에너지는 <b>사라지지 않고</b> 여러 갈래로 나뉘어 나옵니다.
+ 그중 <b class="k">우리가 필요로 하는 갈래</b>의 비율이 바로 <b>효율</b>이에요.
+ 기구를 고르고, <b>그 기구를 쓰는 목적</b>이 무엇인지 직접 골라 보세요.</p>
+ <div class="keyline-s"><span class="kw">전기 100 투입</span><span class="arw">→</span><span class="kw">여러 갈래로 갈라짐</span><span class="arw">→</span><span class="kw hi">필요한 갈래의 비율 = 효율</span><span class="memo"></span></div>
+
+ <div class="xsim-ctl">
+  <span class="xsim-lab"><b>기구 고르기:</b></span>
+  <button class="xsim-btn on" data-ef="bulb">💡 백열전구</button>
+  <button class="xsim-btn" data-ef="led">🔆 LED 전구</button>
+  <button class="xsim-btn" data-ef="fan">🌀 선풍기</button>
+  <button class="xsim-btn" data-ef="heater">🔥 전기난로</button>
+  <button class="xsim-btn" data-ef="speaker">🔊 스피커</button>
+ </div>
+
+ <div class="xsim-stage"><canvas id="efCv" height="230" aria-label="전기 에너지 100이 기구에 들어가 빛·열·소리·운동 에너지로 갈라져 나오는 흐름 그림."></canvas></div>
+
+ <div class="xsim-ctl" id="efPick">
+  <span class="xsim-lab"><b>이 기구를 쓰는 목적은? →</b></span>
+  <button class="xsim-btn" data-pick="빛">💡 빛에너지</button>
+  <button class="xsim-btn" data-pick="열">🔥 열에너지</button>
+  <button class="xsim-btn" data-pick="소리">🔊 소리 에너지</button>
+  <button class="xsim-btn" data-pick="운동">🌀 운동 에너지</button>
+ </div>
+
+ <div class="xsim-read">
+  <div class="xsim-r"><div class="k">필요한 에너지</div><div class="v" id="efUse">?</div></div>
+  <div class="xsim-r"><div class="k">그 갈래로 간 비율</div><div class="v" id="efEff">—</div></div>
+  <div class="xsim-r"><div class="k">손실(다른 갈래)</div><div class="v" id="efLoss">—</div></div>
+ </div>
+ <div class="xsim-msg" id="efMsg">기구를 고른 뒤, <b>그 기구를 왜 쓰는지</b>(필요한 에너지)를 골라 보세요. 효율이 계산됩니다.</div>
+
+ <div class="xsim-why"><div class="h">🤔 전기난로는 효율이 95%인데, 왜 '아껴 써야 하는 기구'일까?</div>
+ 효율이 높다는 건 <b>목적한 에너지로 잘 바뀐다</b>는 뜻이지, <b>전기를 적게 쓴다</b>는 뜻이 아닙니다.
+ 전기난로는 목적이 <b>열</b>이라 거의 다 열이 되니 효율은 높지만, <b>소비 전력 자체가 매우 커서</b>(1500~2000 W)
+ 같은 시간에 쓰는 전기 에너지의 양이 어마어마해요.<br>
+ <b>효율</b>은 "들어온 것 중 얼마나 목적대로 쓰였나", <b>소비 전력</b>은 "1초에 얼마나 쓰나" — 서로 다른 이야기입니다.</div>
+
+ <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① 백열전구 → "목적이 뭐죠?" → 빛 클릭 → "10%! 나머지 90은 열로 샜습니다." ② LED로 바꿔 같은 질문 → "85%. 같은 밝기인데 전기는 훨씬 적게." ③ <b>전기난로</b> → 열 클릭 → "95%?! 효율이 제일 높네요?" 여기서 위 설명 카드로 <b>효율 ≠ 절약</b>을 정리. ④ 스피커에서 "소리"를 고르면 40% — 나머지 60은 열. 만져 보면 따뜻한 이유.</div></div>
+</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('efCv'); if(!cv) return;
+  var cx=cv.getContext('2d'), W=640, H=230;
+  var DEV={
+    bulb:{n:'백열전구', ic:'💡', use:'빛', f:[['빛',10,'#e8b400'],['열',90,'#b23a30']]},
+    led:{n:'LED 전구', ic:'🔆', use:'빛', f:[['빛',85,'#e8b400'],['열',15,'#b23a30']]},
+    fan:{n:'선풍기', ic:'🌀', use:'운동', f:[['운동',80,'#2c6e5f'],['열',15,'#b23a30'],['소리',5,'#7d5ba6']]},
+    heater:{n:'전기난로', ic:'🔥', use:'열', f:[['열',95,'#b23a30'],['빛',5,'#e8b400']]},
+    speaker:{n:'스피커', ic:'🔊', use:'소리', f:[['소리',40,'#7d5ba6'],['열',60,'#b23a30']]}
+  };
+  var cur='bulb', picked=null, anim=0;
+  function fit(){var b=cv.parentElement.clientWidth||640; if(b<10)b=640; W=b;
+    var d=Math.min(devicePixelRatio||1,2); cv.width=W*d; cv.height=H*d;
+    cv.style.height=H+'px'; cx.setTransform(d,0,0,d,0,0);}
+  document.querySelectorAll('[data-ef]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('[data-ef]').forEach(function(x){x.classList.toggle('on',x===b);});
+      cur=b.dataset.ef; picked=null; anim=0;
+      document.querySelectorAll('[data-pick]').forEach(function(x){x.classList.remove('on');});
+      document.getElementById('efUse').textContent='?';
+      document.getElementById('efEff').textContent='—';
+      document.getElementById('efLoss').textContent='—';
+      var m=document.getElementById('efMsg'); m.className='xsim-msg';
+      m.innerHTML='<b>'+DEV[cur].n+'</b> — 이 기구를 쓰는 목적은 무엇인가요? 아래에서 골라 보세요.';
+      render();
+    });
+  });
+  document.querySelectorAll('[data-pick]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var p=b.dataset.pick, d=DEV[cur];
+      document.querySelectorAll('[data-pick]').forEach(function(x){x.classList.toggle('on',x===b);});
+      var found=null; for(var i=0;i<d.f.length;i++) if(d.f[i][0]===p) found=d.f[i];
+      var m=document.getElementById('efMsg');
+      if(p!==d.use){
+        m.className='xsim-msg';
+        m.innerHTML='🤔 <b>'+d.n+'</b>을(를) 쓰는 목적이 <b>'+p+'에너지</b>일까요? 다시 생각해 보세요 — 이 기구를 왜 켜는지 떠올려 보면 됩니다.';
+        picked=null; render(); return;
+      }
+      picked=p; anim=0;
+      var eff=found?found[1]:0;
+      document.getElementById('efUse').textContent=p+'에너지';
+      document.getElementById('efEff').innerHTML=eff+'<small> %</small>';
+      document.getElementById('efLoss').innerHTML=(100-eff)+'<small> %</small>';
+      m.className='xsim-msg hit';
+      m.innerHTML='<b>'+d.n+'</b>의 효율은 <b>'+eff+'%</b>입니다. 들어온 전기 100 중 '+eff+'만 '+p+'이 되고, '
+        +'나머지 <b>'+(100-eff)+'</b>은 목적이 아닌 곳으로 새어 나갔어요.'
+        +(eff<30?' 생각보다 많이 버려지죠?':(eff>80?' 아주 알뜰하게 쓰이고 있네요.':''));
+      render();
+    });
+  });
+  var last=0;
+  function render(t){
+    t=t||performance.now();
+    var dt=Math.min(.05,(t-last)/1000)||.016; last=t;
+    var bw=cv.parentElement.clientWidth; if(bw>10&&Math.abs(bw-W)>2) fit();
+    if(anim<1) anim=Math.min(1,anim+dt*1.2);
+    cx.clearRect(0,0,W,H);
+    var d=DEV[cur];
+    var boxX=W*0.40, boxW=W*0.2, boxY=64, boxH=100;
+    /* 투입 막대 */
+    cx.fillStyle='#a05c2c';
+    cx.fillRect(20, boxY+22, boxX-20, 56);
+    cx.fillStyle='#fff'; cx.font='800 15px Pretendard, sans-serif'; cx.textAlign='center'; cx.textBaseline='middle';
+    cx.fillText('전기 에너지 100', (20+boxX)/2, boxY+50);
+    /* 기구 상자 */
+    cx.fillStyle='rgba(127,127,127,.16)'; cx.strokeStyle='rgba(120,120,130,.8)'; cx.lineWidth=2;
+    cx.beginPath(); cx.roundRect?cx.roundRect(boxX,boxY,boxW,boxH,12):cx.rect(boxX,boxY,boxW,boxH); cx.fill(); cx.stroke();
+    cx.font='30px Pretendard, sans-serif'; cx.fillStyle='#333';
+    cx.fillText(d.ic, boxX+boxW/2, boxY+42);
+    cx.font='700 14px Pretendard, sans-serif'; cx.fillStyle='#555';
+    cx.fillText(d.n, boxX+boxW/2, boxY+76);
+    /* 갈래 */
+    var ox=boxX+boxW, avail=W-ox-24, y=boxY, gap=6;
+    var totalH=boxH-(d.f.length-1)*gap;
+    for(var i=0;i<d.f.length;i++){
+      var name=d.f[i][0], pct=d.f[i][1], col=d.f[i][2];
+      var h=totalH*pct/100;
+      var isUse=(picked && name===picked);
+      var dim=(picked && !isUse);
+      cx.globalAlpha=dim?0.3:1;
+      cx.fillStyle=col;
+      var w=avail*(0.45+0.55*anim);
+      cx.fillRect(ox, y, w, h);
+      cx.fillStyle='#fff'; cx.font='800 '+Math.max(11,Math.min(15,h*0.5))+'px Pretendard, sans-serif';
+      cx.textAlign='left';
+      if(h>15) cx.fillText(name+' '+pct, ox+10, y+h/2);
+      if(isUse){
+        cx.globalAlpha=1;
+        cx.strokeStyle='#2c7a44'; cx.lineWidth=3;
+        cx.strokeRect(ox-1, y-1, w+2, h+2);
+        cx.fillStyle='#2c7a44'; cx.font='800 12px Pretendard, sans-serif'; cx.textAlign='left';
+        cx.fillText('← 필요한 에너지', ox+w+6, y+h/2);
+      }
+      cx.globalAlpha=1;
+      y+=h+gap;
+    }
+    cx.textAlign='center'; cx.textBaseline='alphabetic';
+    cx.fillStyle='rgba(127,127,127,.85)'; cx.font='12.5px Pretendard, sans-serif';
+    cx.fillText('들어온 100은 사라지지 않고, 갈래의 합도 언제나 100입니다 (에너지 보존)', W/2, H-14);
+    requestAnimationFrame(render);
+  }
+  addEventListener('resize',fit);
+  cv.__tick=render;
+  fit(); requestAnimationFrame(render);
+})();
+</script>
+
+
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">⚖️ 규칙 3 — 성능이 같다면 <span class="badge" style="vertical-align:middle">해 보기</span></h3>
@@ -1945,7 +2130,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     /* ② 헤더 아이콘 라벨 */
     '.hbtn{position:relative}'+
     '.hb-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}'+
-    '.hb-lab{font-size:9.5px;line-height:1.1;opacity:.75;white-space:nowrap;letter-spacing:-.02em}'+
+    '.hb-lab{font-size:10px;line-height:1.15;white-space:nowrap;letter-spacing:-.02em;font-weight:700;'+'color:#fff;background:rgba(28,22,14,.62);padding:2px 7px;border-radius:7px;'+'text-shadow:0 1px 2px rgba(0,0,0,.65);backdrop-filter:blur(2px)}'+
     '@media(max-width:520px){.hb-lab{display:none}}';
   document.head.appendChild(st);
 
@@ -1982,7 +2167,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     var l = document.createElement('span'); l.className = 'hb-lab'; l.textContent = text;
     w.appendChild(l);
   }
-  var hubBtn = document.querySelector('a.hbtn[href$="허브.html"], a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
+  var hubBtn = document.querySelector('a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
   label(hubBtn, '허브페이지로 이동');
   label(document.getElementById('tmodeBtn'), '교사용 on/off');
 })();

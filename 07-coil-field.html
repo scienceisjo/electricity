@@ -747,6 +747,38 @@ body.teacher .keyline-s{display:none}
  text-indent:-15px;line-height:1.6}
 @media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
 </style>
+
+<style id="xsim-css">
+.xsim{margin-top:14px}
+.xsim-stage{position:relative;border:1.5px solid rgba(128,128,128,.35);border-radius:14px;
+ overflow:hidden;background:rgba(127,127,127,.07)}
+.xsim-stage canvas{display:block;width:100%;height:auto}
+.xsim-ctl{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.xsim-btn{font-family:inherit;font-size:14px;font-weight:700;padding:8px 15px;border-radius:10px;cursor:pointer;
+ border:1.5px solid rgba(128,128,128,.45);background:rgba(127,127,127,.08);color:inherit;transition:.15s}
+.xsim-btn:hover{border-color:currentColor}
+.xsim-btn.on{background:#2c7a44;border-color:#2c7a44;color:#fff}
+.xsim-btn.warn.on{background:#a05c2c;border-color:#a05c2c}
+.xsim-lab{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.xsim-lab b{font-size:13.5px}
+.xsim-ctl input[type=range]{width:150px;accent-color:#2c7a44}
+.xsim-read{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.xsim-r{flex:1 1 118px;border:1px solid rgba(128,128,128,.3);border-radius:11px;padding:8px 11px;text-align:center;
+ background:rgba(127,127,127,.07)}
+.xsim-r .k{font-size:12px;opacity:.72;line-height:1.35}
+.xsim-r .v{font-size:19px;font-weight:800;margin-top:3px;line-height:1.2}
+.xsim-r .v small{font-size:12px;font-weight:600;opacity:.75}
+.xsim-msg{margin-top:12px;padding:11px 14px;border-radius:11px;font-size:14.5px;line-height:1.62;
+ border:1.5px dashed rgba(128,128,128,.4);background:rgba(127,127,127,.05)}
+.xsim-msg.hit{border-style:solid;border-color:#2c7a44;background:rgba(44,122,68,.1)}
+.xsim-scope{display:inline-block;font-size:12px;font-weight:700;padding:2px 11px;border-radius:99px;
+ border:1.5px solid #7d5ba6;color:#7d5ba6;background:rgba(125,91,166,.09);margin-bottom:8px}
+.xsim-why{margin-top:12px;padding:12px 15px;border-radius:12px;border:1px solid rgba(128,128,128,.3);
+ background:rgba(127,127,127,.05);font-size:14px;line-height:1.68}
+.xsim-why b{font-weight:800}
+.xsim-why .h{font-weight:800;font-size:14.5px;margin-bottom:5px}
+.xsim-why+.xsim-why{margin-top:9px}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1105,6 +1137,165 @@ body.teacher .keyline-s{display:none}
  <div class="note class"><span class="ic">💬</span><div><b>탐구 모범 답안</b> — ① 전류의 방향이 바뀌면 나침반 바늘이 가리키는 방향이 <b>반대로</b> 바뀐다 → 코일 주위의 <b>자기장 방향이 바뀐다</b>. ② 전류의 세기를 세게 하면 클립이 <b>더 많이 끌려온다</b> → 전류의 세기가 증가하면 클립이 받는 <b>자기력의 크기도 증가</b>한다. 「다르게 해 보기」(자기 센서) 정리 — 전류의 방향이 바뀌면 자기장의 방향도 바뀌고, 전류의 세기가 증가하면 자기장의 세기도 증가한다. 결과 해석 때 지구 자기장의 영향이 있음을 함께 짚어 주세요.</div></div>
  </div>
  </div>
+
+<div class="card xsim" id="dom-card">
+ <span class="xsim-scope">🔎 왜 그럴까 · 성취기준 밖 보조 자료</span>
+ <h3 class="card-t">🧭 철 속에는 이미 작은 자석들이 있다 — 자기 구역</h3>
+ <p class="lead say">철은 원래 자석이 아닌데 왜 자석에 <b>붙을까요?</b> 그리고 전자석은 왜 전류를 끊으면 <b>자석이 아니게</b> 될까요?
+ 답은 철 안에 있는 <b class="k">자기 구역</b>에 있습니다. 아래 작은 화살표 하나하나가 <b>아주 작은 자석</b>이에요.</p>
+ <div class="keyline-s"><span class="kw">철 속 작은 자석들</span><span class="kw">평소엔 제멋대로 → 상쇄</span><span class="arw">→</span><span class="kw hi">정렬되면 하나의 큰 자석</span><span class="memo"></span></div>
+
+ <div class="xsim-stage"><canvas id="domCv" height="240" aria-label="철 조각 속 작은 자석(자기 구역)들이 제멋대로 있다가, 외부 자기장을 걸면 한 방향으로 정렬되어 전체가 자석이 되는 모습."></canvas></div>
+
+ <div class="xsim-ctl">
+  <button class="xsim-btn" id="domField">🔋 전류 켜기 (외부 자기장 걸기)</button>
+  <span class="xsim-lab" style="margin-left:14px"><b>재료:</b></span>
+  <button class="xsim-btn on" data-mat="soft">🔩 연철 (전자석 심)</button>
+  <button class="xsim-btn" data-mat="hard">🧲 강철 (영구자석 재료)</button>
+  <button class="xsim-btn" id="domShake" style="margin-left:auto">🔨 두들기기</button>
+ </div>
+
+ <div class="xsim-read">
+  <div class="xsim-r"><div class="k">정렬된 정도</div><div class="v" id="domAlign">0<small> %</small></div></div>
+  <div class="xsim-r"><div class="k">전체 자기력</div><div class="v" id="domForce">없음</div></div>
+  <div class="xsim-r"><div class="k">지금 이 물체는</div><div class="v" id="domIs">그냥 철</div></div>
+ </div>
+ <div class="xsim-msg" id="domMsg">지금은 작은 자석들이 <b>제멋대로</b>입니다. 서로 방향이 달라 효과가 <b>상쇄</b>되어, 전체로는 자석이 아니에요.</div>
+
+ <div class="xsim-why"><div class="h">🤔 정렬되면 왜 자석이 될까?</div>
+ 작은 자석 하나하나는 <b>원래부터</b> N극과 S극을 가지고 있습니다. 그런데 방향이 제각각이면
+ 어떤 것은 오른쪽, 어떤 것은 왼쪽을 향해 <b>서로의 효과를 지워 버립니다.</b> 전체로 보면 0이 되는 거죠.<br>
+ 외부 자기장이 걸리면 이 작은 자석들이 <b>같은 방향으로 돌아섭니다.</b> 그러면 효과가 지워지지 않고
+ <b>모두 더해져서</b>, 물체의 한쪽 끝에는 N극이, 반대쪽 끝에는 S극이 나타나요.
+ <b>작은 자석들의 합 = 전체 자석</b> — 이것이 자석이 되는 원리입니다.</div>
+
+ <div class="xsim-why"><div class="h">🧲 영구자석과 철 속 작은 자석은 뭐가 다를까?</div>
+ <b>둘 다 작은 자석(자기 구역)을 가지고 있다는 점은 똑같습니다.</b> 차이는 <b>정렬을 유지하는 능력</b>이에요.<br>
+ · <b>연철(전자석의 심)</b> — 작은 자석들이 <b>쉽게 돌아서고, 쉽게 흐트러집니다.</b> 그래서 전류를 켜면 곧바로 세게 정렬되어 강한 자석이 되고,
+ 전류를 끊으면 열운동 때문에 금방 제멋대로로 돌아가 자석이 아니게 됩니다. <b>껐다 켰다 할 수 있어야 하는</b> 전자석에 딱 맞죠.<br>
+ · <b>강철·영구자석</b> — 작은 자석들이 <b>한 번 정렬되면 그 자리에 고정</b>됩니다. 그래서 외부 자기장을 없애도 자석으로 남아요.
+ 대신 껐다 켰다 할 수 없습니다.<br>
+ <b>「두들기기」를 눌러 보세요</b> — 강한 충격을 주면 영구자석도 정렬이 흐트러져 자기력이 약해집니다. 자석을 떨어뜨리면 안 되는 이유예요.</div>
+
+ <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① 연철 상태로 "지금은 그냥 철입니다. 화살표가 제멋대로죠?" ② 전류 켜기 → "정렬! 이제 자석입니다." ③ 전류 끄기 → "다시 흐트러집니다 — <b>오해①의 답</b>." ④ 강철로 바꿔 같은 실험 → "이번엔 꺼도 남아 있죠? 이게 영구자석." ⑤ 「두들기기」 → "영구자석도 흐트러뜨릴 수 있습니다."</div></div>
+</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('domCv'); if(!cv) return;
+  var cx=cv.getContext('2d'), W=640, H=240;
+  var doms=[], field=false, mat='soft';
+  function fit(){var b=cv.parentElement.clientWidth||640; if(b<10)b=640; W=b;
+    var d=Math.min(devicePixelRatio||1,2); cv.width=W*d; cv.height=H*d;
+    cv.style.height=H+'px'; cx.setTransform(d,0,0,d,0,0);}
+  function box(){ return {x0:W*0.13,x1:W*0.87,y0:56,y1:186}; }
+  function build(){
+    doms=[];
+    var b=box(), cols=10, rows=4;
+    for(var r=0;r<rows;r++) for(var c=0;c<cols;c++){
+      doms.push({x:b.x0+(c+.5)*(b.x1-b.x0)/cols, y:b.y0+(r+.5)*(b.y1-b.y0)/rows,
+        a:Math.random()*6.2832, ta:Math.random()*6.2832});
+    }
+  }
+  function scramble(){ for(var i=0;i<doms.length;i++) doms[i].ta=Math.random()*6.2832; }
+  function alignAll(){ for(var i=0;i<doms.length;i++) doms[i].ta=(Math.random()-.5)*0.25; }
+  document.getElementById('domField').addEventListener('click',function(){
+    field=!field; this.classList.toggle('on',field);
+    this.textContent=field?'🔌 전류 끄기':'🔋 전류 켜기 (외부 자기장 걸기)';
+    if(field) alignAll();
+    else if(mat==='soft') scramble();      /* 연철 — 흐트러짐 */
+    render();
+  });
+  document.querySelectorAll('[data-mat]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('[data-mat]').forEach(function(x){x.classList.toggle('on',x===b);});
+      mat=b.dataset.mat;
+      render();
+    });
+  });
+  document.getElementById('domShake').addEventListener('click',function(){
+    scramble(); field=false;
+    var f=document.getElementById('domField');
+    f.classList.remove('on'); f.textContent='🔋 전류 켜기 (외부 자기장 걸기)';
+    render();
+  });
+  var last=0;
+  function render(t){
+    t=t||performance.now();
+    var dt=Math.min(.05,(t-last)/1000)||.016; last=t;
+    var bw=cv.parentElement.clientWidth; if(bw>10&&Math.abs(bw-W)>2){fit(); build();}
+    var sx=0, n=doms.length;
+    for(var i=0;i<n;i++){
+      var d=doms[i];
+      var diff=d.ta-d.a;
+      while(diff>Math.PI)diff-=6.2832; while(diff<-Math.PI)diff+=6.2832;
+      d.a+=diff*Math.min(1,dt*3.4);
+      sx+=Math.cos(d.a);
+    }
+    var align=Math.max(0,sx/n);
+    cx.clearRect(0,0,W,H);
+    var b=box();
+    /* 철 조각 */
+    cx.fillStyle='rgba(140,140,150,.2)'; cx.strokeStyle='rgba(110,110,120,.8)'; cx.lineWidth=2;
+    cx.fillRect(b.x0,b.y0,b.x1-b.x0,b.y1-b.y0); cx.strokeRect(b.x0,b.y0,b.x1-b.x0,b.y1-b.y0);
+    /* 외부 자기장 화살표 */
+    if(field){
+      cx.strokeStyle='rgba(44,110,95,.5)'; cx.lineWidth=2.4;
+      for(var k=0;k<3;k++){
+        var yy=b.y0+30+k*40;
+        cx.beginPath(); cx.moveTo(10,yy); cx.lineTo(b.x0-8,yy);
+        cx.lineTo(b.x0-15,yy-5); cx.moveTo(b.x0-8,yy); cx.lineTo(b.x0-15,yy+5); cx.stroke();
+      }
+      cx.fillStyle='#2c6e5f'; cx.font='700 12px Pretendard, sans-serif'; cx.textAlign='left';
+      cx.fillText('외부 자기장', 10, b.y0+16);
+    }
+    /* 자기 구역 화살표 */
+    for(var j=0;j<doms.length;j++){
+      var D=doms[j], len=17;
+      var ex=D.x+Math.cos(D.a)*len, ey=D.y+Math.sin(D.a)*len;
+      var bx=D.x-Math.cos(D.a)*len, by=D.y-Math.sin(D.a)*len;
+      cx.strokeStyle='#2e5f8f'; cx.lineWidth=4; cx.lineCap='round';
+      cx.beginPath(); cx.moveTo(bx,by); cx.lineTo(D.x,D.y); cx.stroke();
+      cx.strokeStyle='#b23a30';
+      cx.beginPath(); cx.moveTo(D.x,D.y); cx.lineTo(ex,ey); cx.stroke();
+      cx.fillStyle='#b23a30'; cx.beginPath(); cx.arc(ex,ey,3.6,0,6.2832); cx.fill();
+    }
+    cx.lineCap='butt';
+    /* 극 표시 */
+    if(align>0.55){
+      cx.fillStyle='#2e5f8f'; cx.font='800 22px Pretendard, sans-serif'; cx.textAlign='center';
+      cx.fillText('S', b.x0-24, (b.y0+b.y1)/2+8);
+      cx.fillStyle='#b23a30'; cx.fillText('N', b.x1+24, (b.y0+b.y1)/2+8);
+    }
+    cx.fillStyle='rgba(127,127,127,.85)'; cx.font='12.5px Pretendard, sans-serif'; cx.textAlign='center';
+    cx.fillText('화살표 하나 = 아주 작은 자석(자기 구역) · 빨강이 N극 쪽', W/2, H-12);
+    /* readout */
+    var pct=Math.round(align*100);
+    document.getElementById('domAlign').innerHTML=pct+'<small> %</small>';
+    var F=document.getElementById('domForce'), I=document.getElementById('domIs');
+    if(pct<25){F.textContent='없음'; F.style.color=''; I.textContent='그냥 철'; I.style.color='';}
+    else if(pct<60){F.textContent='약함'; F.style.color='#a05c2c'; I.textContent='조금 자석'; I.style.color='#a05c2c';}
+    else {F.textContent='강함'; F.style.color='#2c7a44'; I.textContent='🧲 자석!'; I.style.color='#2c7a44';}
+    var m=document.getElementById('domMsg');
+    if(pct>60){
+      m.className='xsim-msg hit';
+      m.innerHTML='작은 자석들이 <b>한 방향으로 정렬</b>되었습니다! 효과가 모두 더해져 왼쪽 끝은 S극, 오른쪽 끝은 N극 — <b>전체가 하나의 자석</b>이 되었어요.'
+        + (mat==='hard'&&!field ? ' 강철이라 전류를 꺼도 <b>정렬이 유지</b>됩니다 — 이것이 영구자석.' : '');
+    } else if(pct<25){
+      m.className='xsim-msg';
+      m.innerHTML= field ? '정렬되는 중…' :
+        (mat==='soft' ? '전류를 끊자 작은 자석들이 <b>제멋대로로 되돌아갔습니다.</b> 그래서 연철 전자석은 스위치를 끄면 자석이 아니게 되죠 — 기중기가 고철을 <b>내려놓을 수 있는</b> 이유!'
+                      : '지금은 작은 자석들이 <b>제멋대로</b>입니다. 서로 상쇄되어 전체로는 자석이 아니에요.');
+    }
+    requestAnimationFrame(render);
+  }
+  addEventListener('resize',function(){fit(); build();});
+  cv.__tick=render;
+  fit(); build(); requestAnimationFrame(render);
+})();
+</script>
+
+
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🧾 정리해 볼까 — 관찰에서 두 문장을 캐내기</h3>
@@ -2366,7 +2557,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     /* ② 헤더 아이콘 라벨 */
     '.hbtn{position:relative}'+
     '.hb-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}'+
-    '.hb-lab{font-size:9.5px;line-height:1.1;opacity:.75;white-space:nowrap;letter-spacing:-.02em}'+
+    '.hb-lab{font-size:10px;line-height:1.15;white-space:nowrap;letter-spacing:-.02em;font-weight:700;'+'color:#fff;background:rgba(28,22,14,.62);padding:2px 7px;border-radius:7px;'+'text-shadow:0 1px 2px rgba(0,0,0,.65);backdrop-filter:blur(2px)}'+
     '@media(max-width:520px){.hb-lab{display:none}}';
   document.head.appendChild(st);
 
@@ -2403,7 +2594,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     var l = document.createElement('span'); l.className = 'hb-lab'; l.textContent = text;
     w.appendChild(l);
   }
-  var hubBtn = document.querySelector('a.hbtn[href$="허브.html"], a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
+  var hubBtn = document.querySelector('a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
   label(hubBtn, '허브페이지로 이동');
   label(document.getElementById('tmodeBtn'), '교사용 on/off');
 })();

@@ -65,6 +65,48 @@ input[type=range]{accent-color:var(--accent); width:160px}
 #app-credit{margin:34px auto 18px; text-align:center; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun)}
 @media (max-width:640px){ .meter{width:120px} input[type=range]{width:120px} }
 </style>
+
+<style id="vid-css">
+.vwrap{margin:16px 0 4px}
+.vwrap.pair{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.vwrap.pair{grid-template-columns:1fr 1fr}}
+.vbox{border:2px solid var(--line);border-radius:16px;overflow:hidden;background:#000;position:relative}
+.vbox::before{content:"";display:block;padding-top:56.25%}
+.vbox.tall::before{padding-top:130%}
+.vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vcap{font-size:14px;color:var(--ink-mute);margin-top:7px;line-height:1.6}
+.vcap b{color:var(--ink)}
+.vcap a{color:var(--accent)}
+.vlead{font-family:var(--jua);font-size:clamp(16px,2vw,19px);color:var(--gold);margin:2px 0 8px;
+ display:flex;align-items:center;gap:8px}
+.vwatch{display:inline-block;margin-top:5px;font-size:13.5px;padding:4px 12px;border-radius:99px;
+ border:1.5px dashed var(--line);color:var(--ink-dim);text-decoration:none}
+.vwatch:hover{border-color:var(--accent);color:var(--accent)}
+</style>
+
+<style id="up3d-css">
+/* 검류계 방향 해설판 */
+.dirbox{position:absolute;right:14px;top:150px;width:196px;background:rgba(255,252,244,.95);
+ border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font-family:var(--gowun)}
+.dirbox h4{font-family:var(--jua);font-size:12.5px;color:var(--gold);margin-bottom:7px;text-align:center}
+.dirtab{width:100%;border-collapse:collapse;font-size:11.5px}
+.dirtab th,.dirtab td{border:1px solid var(--line-soft);padding:4px 3px;text-align:center;line-height:1.3}
+.dirtab th{background:rgba(160,92,44,.1);font-weight:700;color:var(--ink-dim)}
+.dirtab td.hit{background:#ffe9a8;font-weight:800;box-shadow:inset 0 0 0 2px var(--accent)}
+.dirtab td.L{color:#2e5f8f} .dirtab td.R{color:#b23a30}
+.dirnote{font-size:11px;color:var(--ink-mute);margin-top:6px;line-height:1.45}
+/* 밝기 게이지 */
+.brbar{height:14px;border-radius:99px;background:#e4d9c2;border:1.5px solid var(--line);
+ overflow:hidden;margin-top:6px}
+.brbar i{display:block;height:100%;width:0;border-radius:99px;
+ background:linear-gradient(90deg,#c9a227,#ffd166,#fff3c4);transition:width .1s}
+.brnum{font-family:var(--jua);font-size:15px;color:var(--gold);text-align:center;margin-top:3px}
+/* 상태 배지 */
+.stbadge{display:inline-block;font-size:12px;font-weight:800;padding:2px 10px;border-radius:99px;margin-right:6px}
+.stbadge.near{background:#2c7a44;color:#fff} .stbadge.far{background:#7d5ba6;color:#fff}
+.stbadge.stop{background:#96805c;color:#fff}
+@media(max-width:760px){.dirbox{display:none}}
+</style>
 </head>
 <body>
 <header>
@@ -88,11 +130,20 @@ input[type=range]{accent-color:var(--accent); width:160px}
     <svg viewBox="0 0 130 76" width="130" height="76" aria-label="검류계">
      <path d="M10 66 A58 58 0 0 1 120 66" fill="none" stroke="#c1ac82" stroke-width="2"/>
      <line x1="65" y1="66" x2="65" y2="16" stroke="#dccfae" stroke-width="1" stroke-dasharray="3 3"/>
-     <text x="18" y="60" font-size="10" fill="#96805c">−</text><text x="106" y="60" font-size="10" fill="#96805c">+</text>
-     <text x="61" y="14" font-size="9" fill="#96805c">0</text>
+     <text x="16" y="60" font-size="10" fill="#2e5f8f" font-weight="700">◀ 왼쪽</text><text x="98" y="60" font-size="10" fill="#b23a30" font-weight="700">오른쪽 ▶</text>
+     <text x="61" y="14" font-size="9" fill="#96805c">0 (안 흐름)</text>
      <line id="ind-needle" x1="65" y1="66" x2="65" y2="18" stroke="#b3362e" stroke-width="3" stroke-linecap="round"/>
      <circle cx="65" cy="66" r="4.5" fill="#2e2315"/>
     </svg></div>
+   <div class="dirbox" id="dirBox">
+    <h4>바늘이 어느 쪽으로?</h4>
+    <table class="dirtab">
+     <tr><th></th><th>다가올 때</th><th>멀어질 때</th></tr>
+     <tr><th>N극이<br>코일 쪽</th><td class="L" id="c-N-in">◀ 왼쪽</td><td class="R" id="c-N-out">오른쪽 ▶</td></tr>
+     <tr><th>S극이<br>코일 쪽</th><td class="R" id="c-S-in">오른쪽 ▶</td><td class="L" id="c-S-out">◀ 왼쪽</td></tr>
+    </table>
+    <div class="dirnote" id="dirNote">자석을 움직이면 지금 어느 칸인지 <b>노랗게</b> 표시됩니다.</div>
+   </div>
   </div>
   <div class="panel">
    <div class="ctl"><label>자석 위치</label><input type="range" id="ind-pos" min="-100" max="100" value="-100"></div>
@@ -117,7 +168,10 @@ input[type=range]{accent-color:var(--accent); width:160px}
      <text x="61" y="14" font-size="9" fill="#96805c">0</text>
      <line id="gen-needle" x1="65" y1="66" x2="65" y2="18" stroke="#b3362e" stroke-width="3" stroke-linecap="round"/>
      <circle cx="65" cy="66" r="4.5" fill="#2e2315"/>
-    </svg></div>
+    </svg>
+    <div class="mlabel" style="margin-top:8px">💡 전구 밝기</div>
+    <div class="brbar"><i id="brFill"></i></div>
+    <div class="brnum" id="brNum">0 %</div></div>
    <div class="graph-wrap"><div class="glabel">전류–시간 그래프 (교류!)</div>
     <canvas id="gen-graph" width="260" height="86"></canvas></div>
   </div>
@@ -142,6 +196,8 @@ input[type=range]{accent-color:var(--accent); width:160px}
  </div>
 </div>
 
+<div class="wrap" style="padding-top:0"><div class="vwrap pair"><div><div class="vlead">🎬 선이 닿지 않았는데 전구가 켜진다</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/Y9-SvCg-CIk" title="무선 충전 원리 실험 — 전구에 불이 들어온다" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>두 코일 사이에 아무것도 없습니다. 무엇이 건너간 걸까?</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtube.com/shorts/Y9-SvCg-CIk" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div><div><div class="vlead">🎬 그래서 무선 충전이 됩니다</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/E1x6CiHAHC0" title="무선충전기는 어떻게 선 없이 전기를 보낼까" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>방금 본 실험이 여러분 휴대폰 충전기 안에서 매일 일어나고 있습니다.</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtube.com/shorts/E1x6CiHAHC0" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div></div></div>
+<div class="wrap" style="padding-top:0"><div class="note" style="border:2px solid var(--line);border-radius:16px;padding:16px 18px;background:rgba(255,252,244,.8)"><h3 style="font-family:var(--jua);font-size:clamp(18px,2.4vw,23px);color:var(--gold);margin-bottom:8px">🏭 발전소는 결국 <span style="color:var(--accent)">코일을 돌린다</span></h3><p style="font-size:15px;line-height:1.7;color:var(--ink-dim)">풍력·수력·원자력·화력 — 이름은 다 다르지만 하는 일은 <b>똑같습니다.</b> 방금 여러분이 손으로 돌린 그 코일을, <b>무엇으로 돌리느냐</b>만 다를 뿐이에요.<br>바람으로 돌리면 풍력, 물로 돌리면 수력, 물을 끓인 <b>수증기</b>로 돌리면 화력·원자력·태양열입니다.</p></div><div class="vwrap pair" style="margin-top:14px"><div><div class="vlead">🎬 먼저 — 발전기는 이렇게 생겼습니다</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/btLVvLfa-HE" title="발전기 원리" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>방금 3D에서 본 것과 무엇이 같고 무엇이 다른가?</b><br><a href="https://youtube.com/shorts/btLVvLfa-HE" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div><div><div class="vlead">🎬 ① 바람으로 돌리면 — 풍력</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/m5HQoh7bgwo" title="풍력 발전 원리" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>바람은 무엇을 돌리고, 그 끝에는 무엇이 있을까?</b><br><a href="https://youtube.com/shorts/m5HQoh7bgwo" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div></div><div class="vwrap pair" style="margin-top:6px"><div><div class="vlead">🎬 ② 물로 돌리면 — 수력 (직접 만들기)</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/cy6xkJ390f0" title="개울물 물레방아 셀프 발전기" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>개울물만으로도 전기가 됩니다. 무엇이 코일을 돌리고 있나?</b><br><a href="https://youtube.com/shorts/cy6xkJ390f0" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div><div><div class="vlead">🎬 ③ 수증기로 돌리면 — 원자력</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/2PIMTVR0B4I" title="원자력 발전 원리" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>핵분열의 열이 곧바로 전기가 되는 게 아닙니다. 중간에 무엇이 끼어 있을까?</b><br><a href="https://youtube.com/shorts/2PIMTVR0B4I" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div></div><div class="vwrap pair" style="margin-top:6px"><div><div class="vlead">🎬 ④ 햇빛의 열로 돌리면 — 태양열</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/eqRBrDa7Sow" title="태양열 발전소 원리" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>거울로 모은 햇빛이 무엇을 끓이고, 그 수증기는 무엇을 돌릴까?</b><br><a href="https://youtube.com/shorts/eqRBrDa7Sow" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div><div style="display:flex;align-items:center"><div class="note" style="border:2px dashed var(--line);border-radius:16px;padding:16px 18px;background:rgba(255,252,244,.7);font-size:14.5px;line-height:1.75;color:var(--ink-dim)"><b style="font-family:var(--jua);font-size:16px;color:var(--accent)">🤔 네 영상의 공통점 찾기</b><br><br>· 네 발전소 모두 마지막에 <b>같은 장치</b>가 있습니다. 무엇일까요?<br>· 태양광(태양전지)은 이 무리에 낄까요, 안 낄까요? <span style="opacity:.75">— 태양광은 <b>빛이 곧바로</b> 전기가 되어 코일을 돌리지 않습니다. 유일한 예외예요.</span><br>· 그렇다면 <b>전기를 아껴 쓰는 일</b>이 왜 환경과 이어질까요?</div></div></div></div>
 <footer id="app-credit">© 2026 승재쌤의 과학실 · 전자기 유도 3D 실험실 · 최종 업데이트 2026-08-16</footer>
 
 <script src="lib/three.min.js"></script>
@@ -230,6 +286,7 @@ let indPole = 1;           // +1: N극이 코일 쪽(오른쪽 향함)
 let magX = -7, magPrevX = -7;
 let indAuto = 0;           // 0 없음, 진폭·속도 객체
 let indCurrent = 0, needleSm = 0;
+let msgKey = "", msgAt = 0, magPrev2 = -7;
 const indPosEl = document.getElementById('ind-pos');
 const indNeedleEl = document.getElementById('ind-needle');
 const indMsg = document.getElementById('ind-msg');
@@ -308,6 +365,14 @@ const bulb = new THREE.Mesh(new THREE.SphereGeometry(.5,20,16),
   new THREE.MeshStandardMaterial({color:0xfdeeb9, emissive:0xffd166, emissiveIntensity:0, roughness:.3, transparent:true, opacity:.95}));
 bulb.position.set(0, 2.6, -3.6); genScene.add(bulb);
 const bulbLight = new THREE.PointLight(0xffd166, 0, 9); bulbLight.position.copy(bulb.position); genScene.add(bulbLight);
+const bulbGlow = new THREE.Sprite(new THREE.SpriteMaterial({
+  map:(function(){ const cv=document.createElement('canvas'); cv.width=cv.height=128;
+    const c=cv.getContext('2d'); const g=c.createRadialGradient(64,64,4,64,64,64);
+    g.addColorStop(0,'rgba(255,243,196,.95)'); g.addColorStop(.35,'rgba(255,209,102,.45)');
+    g.addColorStop(1,'rgba(255,209,102,0)'); c.fillStyle=g; c.fillRect(0,0,128,128);
+    return new THREE.CanvasTexture(cv); })(),
+  transparent:true, depthWrite:false, opacity:0}));
+bulbGlow.scale.set(1,1,1); bulbGlow.position.copy(bulb.position); genScene.add(bulbGlow);
 const socket = new THREE.Mesh(new THREE.CylinderGeometry(.22,.28,.5,12),
   new THREE.MeshStandardMaterial({color:0x8a5f24})); socket.position.set(0,2.05,-3.6); genScene.add(socket);
 
@@ -356,10 +421,36 @@ function render(){
     arrowMat.opacity = Math.min(.9, mag*2.2);
     arrowMat.color.set(needleSm >= 0 ? 0x3a7a3f : 0x7d5ba6);
     ringA.rotation.x += needleSm * dt * 9; ringB.rotation.x += needleSm * dt * 9;
-    indMsg.innerHTML = mag < .04
-      ? '자석이 <b>멈추면</b> — 자기장이 변하지 않아 — 전류도 <b>0</b>입니다.'
-      : (mag > .55 ? '<b>빠르게</b> 움직이니 전류가 <b>세게</b> 흐릅니다!' :
-         '자석이 움직이는 동안 <b>유도 전류</b>가 흐릅니다. 방향도 잘 보세요.');
+    /* ── 상태 판정 — 메시지는 최소 1.8초 유지해 읽을 시간을 준다 ── */
+    const moving = Math.abs(v) > 0.25;
+    const near = moving ? (Math.abs(magX) > Math.abs(magPrev2) ? 'out' : 'in') : 'stop';
+    magPrev2 = magX;
+    const poleKey = indPole > 0 ? 'N' : 'S';
+    const key = (mag < .04) ? 'stop' : (poleKey + '-' + near + (mag > .55 ? '-fast' : ''));
+    const hold = (msgKey && msgKey !== 'stop' && key !== 'stop') ? 1500 : 260;
+    if (key !== msgKey && (now - msgAt) > hold){
+      msgKey = key; msgAt = now;
+      if (mag < .04){
+        indMsg.innerHTML = '<span class="stbadge stop">멈춤</span>자석이 <b>멈추면</b> 코일을 지나는 자기장이 <b>변하지 않습니다.</b> 그래서 전류도 <b>0</b> — 바늘이 가운데.';
+      } else {
+        const dirWord = needleSm < 0 ? '◀ 왼쪽' : '오른쪽 ▶';
+        const inout = near === 'in' ? '다가오는' : '멀어지는';
+        const badge = near === 'in' ? '<span class="stbadge near">다가옴</span>' : '<span class="stbadge far">멀어짐</span>';
+        indMsg.innerHTML = badge + '<b>' + poleKey + '극</b>이 <b>' + inout + '</b> 중 — 바늘이 <b>' + dirWord + '</b>으로 갑니다.'
+          + (mag > .55 ? ' 빠르게 움직이니 전류도 <b>셉니다.</b>' : '');
+      }
+      /* 해설판 하이라이트 */
+      ['c-N-in','c-N-out','c-S-in','c-S-out'].forEach(id=>{
+        const el = document.getElementById(id); if (el) el.classList.remove('hit');
+      });
+      if (mag >= .04){
+        const cell = document.getElementById('c-' + poleKey + '-' + (near === 'in' ? 'in' : 'out'));
+        if (cell) cell.classList.add('hit');
+        const dn = document.getElementById('dirNote');
+        if (dn) dn.innerHTML = '지금은 <b>' + poleKey + '극 · ' + (near==='in'?'다가옴':'멀어짐') + '</b> 칸입니다. '
+          + '네 칸 중 <b>둘씩 짝지어</b> 방향이 같은 것을 찾아보세요.';
+      }
+    }
     indCtl.update(); indR.render(indScene, indCam);
   } else {
     if (crankLeft > 0){ const w = 1.6; rotor.rotation.z += w*dt; genAngle += w*dt; crankLeft -= w*dt; genSpeed = w; if (crankLeft<=0){ genSpeed = 0; } }
@@ -367,7 +458,14 @@ function render(){
     const I = Math.sin(genAngle) * genSpeed/5.5;          // I ∝ ω·sin(θ)
     setNeedle(genNeedleEl, I*1.4);
     const bright = Math.min(1, Math.abs(I)*1.6);
-    bulb.material.emissiveIntensity = bright*1.5; bulbLight.intensity = bright*1.3;
+    bulb.material.emissiveIntensity = bright*2.2; bulbLight.intensity = bright*2.6;
+    bulbGlow.material.opacity = bright*0.95;
+    const gs = 1.1 + bright*2.6; bulbGlow.scale.set(gs, gs, 1);
+    bulb.material.color.setRGB(1, 0.93 - (1-bright)*0.12, 0.72 - (1-bright)*0.25);
+    const brPct = Math.round(bright*100);
+    const bf = document.getElementById('brFill'), bn = document.getElementById('brNum');
+    if (bf) bf.style.width = brPct + '%';
+    if (bn) bn.textContent = brPct + ' %';
     gData.push(I); gData.shift();
     gCx.clearRect(0,0,gCv.width,gCv.height);
     gCx.strokeStyle = '#dccfae'; gCx.beginPath(); gCx.moveTo(0,43); gCx.lineTo(260,43); gCx.stroke();

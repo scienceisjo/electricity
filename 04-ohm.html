@@ -815,6 +815,38 @@ body.teacher .keyline-s{display:none}
  text-indent:-15px;line-height:1.6}
 @media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
 </style>
+
+<style id="xsim-css">
+.xsim{margin-top:14px}
+.xsim-stage{position:relative;border:1.5px solid rgba(128,128,128,.35);border-radius:14px;
+ overflow:hidden;background:rgba(127,127,127,.07)}
+.xsim-stage canvas{display:block;width:100%;height:auto}
+.xsim-ctl{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.xsim-btn{font-family:inherit;font-size:14px;font-weight:700;padding:8px 15px;border-radius:10px;cursor:pointer;
+ border:1.5px solid rgba(128,128,128,.45);background:rgba(127,127,127,.08);color:inherit;transition:.15s}
+.xsim-btn:hover{border-color:currentColor}
+.xsim-btn.on{background:#2c7a44;border-color:#2c7a44;color:#fff}
+.xsim-btn.warn.on{background:#a05c2c;border-color:#a05c2c}
+.xsim-lab{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.xsim-lab b{font-size:13.5px}
+.xsim-ctl input[type=range]{width:150px;accent-color:#2c7a44}
+.xsim-read{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.xsim-r{flex:1 1 118px;border:1px solid rgba(128,128,128,.3);border-radius:11px;padding:8px 11px;text-align:center;
+ background:rgba(127,127,127,.07)}
+.xsim-r .k{font-size:12px;opacity:.72;line-height:1.35}
+.xsim-r .v{font-size:19px;font-weight:800;margin-top:3px;line-height:1.2}
+.xsim-r .v small{font-size:12px;font-weight:600;opacity:.75}
+.xsim-msg{margin-top:12px;padding:11px 14px;border-radius:11px;font-size:14.5px;line-height:1.62;
+ border:1.5px dashed rgba(128,128,128,.4);background:rgba(127,127,127,.05)}
+.xsim-msg.hit{border-style:solid;border-color:#2c7a44;background:rgba(44,122,68,.1)}
+.xsim-scope{display:inline-block;font-size:12px;font-weight:700;padding:2px 11px;border-radius:99px;
+ border:1.5px solid #7d5ba6;color:#7d5ba6;background:rgba(125,91,166,.09);margin-bottom:8px}
+.xsim-why{margin-top:12px;padding:12px 15px;border-radius:12px;border:1px solid rgba(128,128,128,.3);
+ background:rgba(127,127,127,.05);font-size:14px;line-height:1.68}
+.xsim-why b{font-weight:800}
+.xsim-why .h{font-weight:800;font-size:14.5px;margin-bottom:5px}
+.xsim-why+.xsim-why{margin-top:9px}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1097,6 +1129,160 @@ body.teacher .keyline-s{display:none}
  <div class="note class"><span class="ic">💬</span><div><b>탐구 모범 답안</b> — ① 저항과 전류: 저항이 클수록 전류의 세기는 작아진다(반비례). ② 전압과 전류: 전압이 커질수록 전류의 세기도 커지고, 그래프는 <b>원점을 지나는 직선</b>이므로 비례 관계다. ③ 종합: <b>전류의 세기는 전압이 클수록, 저항이 작을수록 커진다.</b> "어느 쪽의 저항이 더 큰가?"의 답은 <b>긴 니크롬선</b> — 같은 전압에서 전류가 더 적게 흐르기 때문입니다. 그래프에서는 <b>기울기가 작은 쪽</b>이 저항이 큰 쪽임을 짚어 주세요.</div></div>
  </div>
  </div>
+
+<div class="card xsim" id="rwhy-card">
+ <span class="xsim-scope">🔎 왜 그럴까 · 성취기준 밖 보조 자료</span>
+ <h3 class="card-t">🚧 저항의 정체 — 전자의 길을 얼마나 막느냐</h3>
+ <p class="lead say">저항은 눈에 보이지 않는 신비한 힘이 아닙니다. 도선 속에는 <b class="t4">금속 원자</b>가 제자리에서 떨고 있고,
+ 전자는 그 사이를 지나며 <b>계속 부딪힙니다.</b> 이 <b class="k">부딪히는 정도</b>가 곧 저항이에요.
+ 아래에서 <b>도착한 전자 수</b>를 지켜보세요 — 그것이 전류입니다.</p>
+ <div class="keyline-s"><span class="kw">전자가 원자에 부딪힘</span><span class="arw">→</span><span class="kw hi">그 방해가 곧 저항</span><span class="kw q">길이·굵기를 바꾸면?</span><span class="memo"></span></div>
+
+ <div class="xsim-stage"><canvas id="rwCv2" height="250" aria-label="도선 속에서 전자가 금속 원자와 부딪히며 지그재그로 나아가는 모습. 도선이 길수록 더 많이 부딪히고, 굵을수록 나란히 갈 수 있는 통로가 늘어난다."></canvas></div>
+
+ <div class="xsim-ctl">
+  <span class="xsim-lab"><b>도선의 길이</b> <span id="rwLenV">보통</span></span>
+  <input type="range" id="rwLenS" min="1" max="3" step="1" value="2">
+  <span class="xsim-lab" style="margin-left:14px"><b>도선의 굵기</b> <span id="rwThkV">보통</span></span>
+  <input type="range" id="rwThkS" min="1" max="3" step="1" value="2">
+  <button class="xsim-btn" id="rwReset" style="margin-left:auto">↺ 세어 보기 다시</button>
+ </div>
+
+ <div class="xsim-read">
+  <div class="xsim-r"><div class="k">10초 동안 도착한 전자<br><small>= 전류</small></div><div class="v" id="rwArr">0<small> 개</small></div></div>
+  <div class="xsim-r"><div class="k">부딪힌 횟수</div><div class="v" id="rwHit">0<small> 회</small></div></div>
+  <div class="xsim-r"><div class="k">나란히 갈 수 있는 통로</div><div class="v" id="rwLane">2<small> 줄</small></div></div>
+  <div class="xsim-r"><div class="k">저항(상대값)</div><div class="v" id="rwR" style="color:#8a5f24">1.0<small> 배</small></div></div>
+ </div>
+ <div class="xsim-msg" id="rwMsg">길이와 굵기를 바꿔 가며, <b>같은 시간에 도착하는 전자 수</b>가 어떻게 달라지는지 세어 보세요.</div>
+
+ <div class="xsim-why"><div class="h">📏 길게 하면 왜 저항이 커질까</div>
+ 도선이 길어지면 전자가 <b>지나가야 할 원자의 줄이 늘어납니다.</b> 부딪히는 횟수가 늘어나니 그만큼 오래 걸리고,
+ 같은 시간에 반대편에 도착하는 전자 수가 줄어들죠. <b>도착이 적다 = 전류가 작다 = 저항이 크다.</b></div>
+ <div class="xsim-why"><div class="h">🚗 굵게 하면 왜 저항이 작아질까</div>
+ 굵어진다는 건 <b>차선이 늘어나는 것</b>과 같습니다. 한 줄로만 가던 전자들이 두 줄, 세 줄로 <b>나란히</b> 갈 수 있게 되죠.
+ 한 전자가 겪는 방해는 비슷하지만 <b>동시에 통과하는 전자 수가 늘어나</b>, 같은 시간에 도착하는 전자가 많아집니다.
+ 좁은 골목보다 넓은 도로에 차가 더 많이 지나가는 것과 똑같아요.</div>
+
+ <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① 기본값에서 10초 세기 → 도착 수를 칠판에 적습니다. ② 길이만 최대로 → 다시 세기 → "줄었죠? 부딪힘 횟수를 보세요." ③ 길이 되돌리고 굵기만 최대로 → "통로가 3줄이 됐고 도착이 늘었습니다." ④ 정리 — <b>길이는 방해를 늘리고, 굵기는 통로를 늘린다.</b> 4차시 실험대의 결과가 여기서 설명됩니다.</div></div>
+</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('rwCv2'); if(!cv) return;
+  var cx=cv.getContext('2d'), W=640, H=250;
+  var LEN=2, THK=2, hits=0, arrived=0, tAcc=0;
+  var atoms=[], els=[];
+  var NAME=['짧다','보통','길다'], TNAME=['얇다','보통','굵다'];
+  function fit(){var b=cv.parentElement.clientWidth||640; if(b<10)b=640; W=b;
+    var d=Math.min(devicePixelRatio||1,2); cv.width=W*d; cv.height=H*d;
+    cv.style.height=H+'px'; cx.setTransform(d,0,0,d,0,0);}
+  function geom(){
+    var w=[0.42,0.62,0.86][LEN-1];
+    var x0=24, x1=24+(W-48)*w;
+    var lanes=THK;                      /* 굵기 = 나란한 통로 수 */
+    var laneH=26, totalH=lanes*laneH+(lanes-1)*8;
+    var y0=(H-58)/2-totalH/2+16;
+    return {x0:x0,x1:x1,lanes:lanes,laneH:laneH,y0:y0,totalH:totalH};
+  }
+  function build(){
+    var g=geom();
+    atoms=[];
+    var cols=Math.round((g.x1-g.x0)/34);
+    for(var l=0;l<g.lanes;l++){
+      var cy=g.y0+l*(g.laneH+8)+g.laneH/2;
+      for(var c=0;c<cols;c++){
+        atoms.push({x:g.x0+18+c*34+(l%2?17:0), y:cy, ph:Math.random()*6.28});
+      }
+    }
+    els=[];
+    for(var i=0;i<g.lanes*3;i++) spawn(i%g.lanes, Math.random());
+    hits=0; arrived=0; tAcc=0;
+  }
+  function spawn(lane, prog){
+    var g=geom();
+    els.push({lane:lane, x:g.x0+6+(g.x1-g.x0-12)*(prog||0),
+      y:g.y0+lane*(g.laneH+8)+g.laneH/2, vy:0, flash:0});
+  }
+  function upd(v){
+    document.getElementById('rwLenV').textContent=NAME[LEN-1];
+    document.getElementById('rwThkV').textContent=TNAME[THK-1];
+    document.getElementById('rwLane').innerHTML=THK+'<small> 줄</small>';
+    var R=([0.6,1,1.5][LEN-1])/([0.55,1,1.6][THK-1]);
+    document.getElementById('rwR').innerHTML=R.toFixed(1)+'<small> 배</small>';
+  }
+  document.getElementById('rwLenS').addEventListener('input',function(){LEN=+this.value; build(); upd(); render();});
+  document.getElementById('rwThkS').addEventListener('input',function(){THK=+this.value; build(); upd(); render();});
+  document.getElementById('rwReset').addEventListener('click',function(){build(); render();});
+  var last=0;
+  function render(t){
+    t=t||performance.now();
+    var dt=Math.min(.045,(t-last)/1000)||.016; last=t;
+    var bw=cv.parentElement.clientWidth; if(bw>10&&Math.abs(bw-W)>2){fit(); build();}
+    var g=geom();
+    tAcc+=dt;
+    if(tAcc>10){ tAcc=0; hits=0; arrived=0; }
+    /* 이동 */
+    for(var i=els.length-1;i>=0;i--){
+      var e=els[i];
+      e.x+=64*dt;
+      e.y+=e.vy*dt; e.vy*=Math.max(0,1-6*dt);
+      var cy=g.y0+e.lane*(g.laneH+8)+g.laneH/2;
+      e.y+=(cy-e.y)*Math.min(1,dt*4);
+      if(e.flash>0) e.flash-=dt*3;
+      /* 원자와 충돌 */
+      for(var a=0;a<atoms.length;a++){
+        var at=atoms[a];
+        if(Math.abs(at.x-e.x)<9 && Math.abs(at.y-e.y)<11){
+          e.x=at.x-9; e.vy=(Math.random()<.5?-1:1)*54; e.flash=1; hits++;
+          break;
+        }
+      }
+      if(e.x>g.x1-8){ els.splice(i,1); arrived++; spawn(Math.floor(Math.random()*g.lanes),0); }
+    }
+    while(els.length<g.lanes*3) spawn(Math.floor(Math.random()*g.lanes),0);
+    cx.clearRect(0,0,W,H);
+    /* 도선 */
+    cx.fillStyle='rgba(176,113,58,.14)'; cx.strokeStyle='rgba(176,113,58,.75)'; cx.lineWidth=2;
+    cx.fillRect(g.x0,g.y0-10,g.x1-g.x0,g.totalH+20);
+    cx.strokeRect(g.x0,g.y0-10,g.x1-g.x0,g.totalH+20);
+    /* 통로 구분선 */
+    cx.strokeStyle='rgba(176,113,58,.3)'; cx.setLineDash([4,4]); cx.lineWidth=1;
+    for(var l=1;l<g.lanes;l++){
+      var yy=g.y0+l*(g.laneH+8)-4;
+      cx.beginPath(); cx.moveTo(g.x0,yy); cx.lineTo(g.x1,yy); cx.stroke();
+    }
+    cx.setLineDash([]);
+    /* 원자 (제자리 진동) */
+    for(var a2=0;a2<atoms.length;a2++){
+      var A=atoms[a2];
+      var jx=Math.cos(t/170+A.ph)*1.8, jy=Math.sin(t/140+A.ph)*1.8;
+      cx.fillStyle='#8a5f24'; cx.beginPath(); cx.arc(A.x+jx,A.y+jy,7.5,0,6.2832); cx.fill();
+    }
+    /* 전자 */
+    for(var k=0;k<els.length;k++){
+      var E=els[k];
+      if(E.flash>0){ cx.fillStyle='rgba(178,58,48,'+(E.flash*.5)+')';
+        cx.beginPath(); cx.arc(E.x,E.y,13,0,6.2832); cx.fill(); }
+      cx.fillStyle='#3a7a3f'; cx.beginPath(); cx.arc(E.x,E.y,6.5,0,6.2832); cx.fill();
+    }
+    /* 라벨 */
+    cx.font='12.5px Pretendard, sans-serif'; cx.textAlign='center'; cx.fillStyle='#8a7a68';
+    cx.fillText('전자 →', g.x0+30, g.y0-20);
+    cx.fillText('도착!', g.x1-24, g.y0+g.totalH+34);
+    cx.fillStyle='#8a5f24';
+    cx.fillText('갈색 = 제자리에서 떨고 있는 금속 원자', W/2, H-10);
+    document.getElementById('rwArr').innerHTML=arrived+'<small> 개</small>';
+    document.getElementById('rwHit').innerHTML=hits+'<small> 회</small>';
+    requestAnimationFrame(render);
+  }
+  addEventListener('resize',function(){fit(); build();});
+  cv.__tick=render;
+  fit(); build(); upd(); requestAnimationFrame(render);
+})();
+</script>
+
+
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🧾 정리해 볼까 — 표에서 두 문장을 캐내기</h3>
@@ -2915,7 +3101,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     /* ② 헤더 아이콘 라벨 */
     '.hbtn{position:relative}'+
     '.hb-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}'+
-    '.hb-lab{font-size:9.5px;line-height:1.1;opacity:.75;white-space:nowrap;letter-spacing:-.02em}'+
+    '.hb-lab{font-size:10px;line-height:1.15;white-space:nowrap;letter-spacing:-.02em;font-weight:700;'+'color:#fff;background:rgba(28,22,14,.62);padding:2px 7px;border-radius:7px;'+'text-shadow:0 1px 2px rgba(0,0,0,.65);backdrop-filter:blur(2px)}'+
     '@media(max-width:520px){.hb-lab{display:none}}';
   document.head.appendChild(st);
 
@@ -2952,7 +3138,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     var l = document.createElement('span'); l.className = 'hb-lab'; l.textContent = text;
     w.appendChild(l);
   }
-  var hubBtn = document.querySelector('a.hbtn[href$="허브.html"], a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
+  var hubBtn = document.querySelector('a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
   label(hubBtn, '허브페이지로 이동');
   label(document.getElementById('tmodeBtn'), '교사용 on/off');
 })();

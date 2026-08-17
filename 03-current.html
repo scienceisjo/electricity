@@ -760,6 +760,56 @@ body.teacher .keyline-s{display:none}
  text-indent:-15px;line-height:1.6}
 @media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
 </style>
+
+<style id="xsim-css">
+.xsim{margin-top:14px}
+.xsim-stage{position:relative;border:1.5px solid rgba(128,128,128,.35);border-radius:14px;
+ overflow:hidden;background:rgba(127,127,127,.07)}
+.xsim-stage canvas{display:block;width:100%;height:auto}
+.xsim-ctl{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.xsim-btn{font-family:inherit;font-size:14px;font-weight:700;padding:8px 15px;border-radius:10px;cursor:pointer;
+ border:1.5px solid rgba(128,128,128,.45);background:rgba(127,127,127,.08);color:inherit;transition:.15s}
+.xsim-btn:hover{border-color:currentColor}
+.xsim-btn.on{background:#2c7a44;border-color:#2c7a44;color:#fff}
+.xsim-btn.warn.on{background:#a05c2c;border-color:#a05c2c}
+.xsim-lab{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.xsim-lab b{font-size:13.5px}
+.xsim-ctl input[type=range]{width:150px;accent-color:#2c7a44}
+.xsim-read{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.xsim-r{flex:1 1 118px;border:1px solid rgba(128,128,128,.3);border-radius:11px;padding:8px 11px;text-align:center;
+ background:rgba(127,127,127,.07)}
+.xsim-r .k{font-size:12px;opacity:.72;line-height:1.35}
+.xsim-r .v{font-size:19px;font-weight:800;margin-top:3px;line-height:1.2}
+.xsim-r .v small{font-size:12px;font-weight:600;opacity:.75}
+.xsim-msg{margin-top:12px;padding:11px 14px;border-radius:11px;font-size:14.5px;line-height:1.62;
+ border:1.5px dashed rgba(128,128,128,.4);background:rgba(127,127,127,.05)}
+.xsim-msg.hit{border-style:solid;border-color:#2c7a44;background:rgba(44,122,68,.1)}
+.xsim-scope{display:inline-block;font-size:12px;font-weight:700;padding:2px 11px;border-radius:99px;
+ border:1.5px solid #7d5ba6;color:#7d5ba6;background:rgba(125,91,166,.09);margin-bottom:8px}
+.xsim-why{margin-top:12px;padding:12px 15px;border-radius:12px;border:1px solid rgba(128,128,128,.3);
+ background:rgba(127,127,127,.05);font-size:14px;line-height:1.68}
+.xsim-why b{font-weight:800}
+.xsim-why .h{font-weight:800;font-size:14.5px;margin-bottom:5px}
+.xsim-why+.xsim-why{margin-top:9px}
+</style>
+
+<style id="vid-css">
+.vwrap{margin:16px 0 4px}
+.vwrap.pair{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.vwrap.pair{grid-template-columns:1fr 1fr}}
+.vbox{border:2px solid var(--line);border-radius:16px;overflow:hidden;background:#000;position:relative}
+.vbox::before{content:"";display:block;padding-top:56.25%}
+.vbox.tall::before{padding-top:130%}
+.vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vcap{font-size:14px;color:var(--ink-mute);margin-top:7px;line-height:1.6}
+.vcap b{color:var(--ink)}
+.vcap a{color:var(--accent)}
+.vlead{font-family:var(--jua);font-size:clamp(16px,2vw,19px);color:var(--gold);margin:2px 0 8px;
+ display:flex;align-items:center;gap:8px}
+.vwatch{display:inline-block;margin-top:5px;font-size:13.5px;padding:4px 12px;border-radius:99px;
+ border:1.5px dashed var(--line);color:var(--ink-dim);text-decoration:none}
+.vwatch:hover{border-color:var(--accent);color:var(--accent)}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -862,6 +912,7 @@ body.teacher .keyline-s{display:none}
  data-alt="털가죽으로 문질러 대전한 고무풍선을 알루미늄 컵에 대고, 네온전구를 컵에 가까이 하는 실험 장면"
  data-cap="마찰 전기로 네온전구에 불을 켤 수 있을까? (해 보기)"></figure>
 
+ <div class="vwrap"><div class="vlead">🎬 정전기를 모아 두었다가 한꺼번에</div><div class="vbox"><iframe src="https://www.youtube.com/embed/R0yrun2BDII" title="플라스틱 컵과 은박지로 만드는 고농축 정전기" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>모으는 동안에는 아무 일도 없다가, 어느 순간 한꺼번에 터집니다. 그 "한꺼번에"가 오늘의 주제.</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtu.be/R0yrun2BDII" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div>
  <div class="card" style="margin-top:20px">
  <div class="badge" style="margin-bottom:12px">🧪 실험 순서 <span style="font-weight:400">— 「해 보기」</span></div>
  <ol class="doit">
@@ -1051,6 +1102,145 @@ body.teacher .keyline-s{display:none}
  전류는 물 같은 액체가 아니라, <b class="t3">(−)전하를 띤 전자</b>가 지속적으로 이동하면서 생기는 현상이기 때문입니다.</div></div>
  </div>
 
+<div class="card xsim" id="drift-card">
+ <span class="xsim-scope">🔎 왜 그럴까 · 성취기준 밖 보조 자료</span>
+ <h3 class="card-t">🐢 스위치를 켜면 전구는 즉시 켜지는데, 전자는 얼마나 빠를까?</h3>
+ <p class="lead say">도선 속 전자는 <b>세 가지 속도</b>를 동시에 가지고 있습니다. 이 셋을 구별하지 못하면
+ "전자가 빛의 속도로 달려가 전구를 켠다"는 <b class="k">잘못된 그림</b>이 만들어져요.</p>
+ <div class="keyline-s"><span class="kw">열운동 — 엄청 빠름</span><span class="kw">전류(드리프트) — 매우 느림</span><span class="kw hi">신호 — 거의 빛의 속도</span><span class="memo"></span></div>
+
+ <div class="xsim-stage"><canvas id="drCv" height="238" aria-label="도선 속을 확대한 그림. 전자들이 제멋대로 빠르게 움직이다가, 스위치를 켜면 전체가 아주 조금씩 한 방향으로 치우쳐 이동한다."></canvas></div>
+
+ <div class="xsim-ctl">
+  <button class="xsim-btn" id="drSw">🔌 스위치 켜기</button>
+  <button class="xsim-btn" id="drTh">🌡️ 열운동 숨기기</button>
+  <span class="xsim-lab" style="margin-left:auto">노란 전자 하나를 눈으로 따라가 보세요</span>
+ </div>
+
+ <div class="xsim-read">
+  <div class="xsim-r"><div class="k">전구</div><div class="v" id="drBulb">꺼짐</div></div>
+  <div class="xsim-r"><div class="k">신호가 도착하기까지</div><div class="v" id="drSig">—</div></div>
+  <div class="xsim-r"><div class="k">노란 전자가 간 거리<br><small>(실제 도선 기준)</small></div><div class="v" id="drDist">0<small> mm</small></div></div>
+  <div class="xsim-r"><div class="k">흐른 시간</div><div class="v" id="drTime">0<small> 초</small></div></div>
+ </div>
+ <div class="xsim-msg" id="drMsg">스위치가 꺼져 있어도 전자는 <b>이미 도선 안에 가득</b> 차 있고, 제멋대로 매우 빠르게 움직이고 있습니다. 다만 방향이 뒤죽박죽이라 <b>전체로는 제자리걸음</b>이에요.</div>
+
+ <div class="xsim-why"><div class="h">📏 실제 숫자는 이렇습니다 (구리 도선, 1 A, 단면적 1 mm²)</div>
+ · <b>열운동 속도</b> 약 <b>1,000,000 m/s</b> — 총알보다 훨씬 빠릅니다. 하지만 사방팔방이라 이동은 0.<br>
+ · <b>드리프트 속도(전류)</b> 약 <b>0.00007 m/s</b> — <b>1분에 4 mm</b>, 한 시간에 26 cm. 걸음마보다 느려요.<br>
+ · <b>신호 전달 속도</b> 약 <b>200,000,000 m/s</b> — 빛의 3분의 2. 그래서 스위치를 켜는 <b>순간</b> 전구가 켜집니다.<br>
+ <span style="opacity:.75">※ 화면에서는 보이도록 드리프트를 수백만 배 <b>과장</b>했습니다.</span></div>
+
+ <div class="xsim-why"><div class="h">🚰 왜 즉시 켜질까 — 물이 가득 찬 호스</div>
+ 긴 호스에 물이 이미 <b>가득</b> 차 있다면, 한쪽 끝에 물을 밀어 넣는 순간 반대쪽 끝에서 물이 <b>바로</b> 나옵니다.
+ 방금 밀어 넣은 그 물이 호스를 관통해 온 것이 아니라, <b>밀림이 전달된</b> 것이죠.<br>
+ 도선도 똑같습니다. 전자는 이미 가득 차 있고, 스위치를 켜면 <b>밀어 주는 신호(전기장)</b>가 거의 빛의 속도로 퍼져
+ 도선 <b>모든 곳의 전자가 동시에</b> 움직이기 시작합니다. 전구 속 전자도 즉시 움직이니 바로 켜지는 거예요.</div>
+
+ <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① 스위치 OFF 상태로 "전자가 이미 있고, 엄청 빠르게 떨고 있죠?" ② 「열운동 숨기기」 → "이제 진짜 이동만 봅시다. 거의 안 움직이죠." ③ 스위치 ON → "전구는 <b>즉시</b> 켜졌는데 노란 전자는 아직도 저기 있어요." ④ 호스 비유로 마무리. ⑤ "그래서 '전자가 달려가서 켠다'는 말은 <b>틀린 그림</b>입니다."</div></div>
+</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('drCv'); if(!cv) return;
+  var cx=cv.getContext('2d'), W=640, H=238;
+  function fit(){var b=cv.parentElement.clientWidth||640; if(b<10)b=640; W=b;
+    var d=Math.min(devicePixelRatio||1,2); cv.width=W*d; cv.height=H*d;
+    cv.style.height=H+'px'; cx.setTransform(d,0,0,d,0,0);}
+  var X0=52, X1=0, Y0=64, Y1=170;
+  var els=[], on=false, showTh=true, t0=0, elapsed=0, tagDist=0;
+  function build(){
+    X1=W-52; els=[];
+    for(var i=0;i<70;i++){
+      els.push({x:X0+Math.random()*(X1-X0), y:Y0+8+Math.random()*(Y1-Y0-16),
+        a:Math.random()*6.2832, tag:false});
+    }
+    els[0].tag=true; els[0].x=X0+30; els[0].y=(Y0+Y1)/2;
+  }
+  document.getElementById('drSw').addEventListener('click',function(){
+    on=!on; this.classList.toggle('on',on); this.textContent=on?'🔌 스위치 끄기':'🔌 스위치 켜기';
+    if(on){ t0=performance.now(); elapsed=0; tagDist=0;
+      document.getElementById('drSig').innerHTML='0.000001<small> 초 미만</small>';
+      document.getElementById('drBulb').textContent='🔆 즉시 켜짐';
+      document.getElementById('drBulb').style.color='#c9a227';
+      document.getElementById('drMsg').className='xsim-msg hit';
+      document.getElementById('drMsg').innerHTML='전구는 <b>즉시</b> 켜졌습니다. 그런데 노란 전자를 보세요 — 아직 거의 제자리죠? 달려간 것은 전자가 아니라 <b>밀어 주는 신호</b>였습니다.';
+    } else {
+      document.getElementById('drSig').textContent='—';
+      document.getElementById('drBulb').textContent='꺼짐';
+      document.getElementById('drBulb').style.color='';
+      document.getElementById('drMsg').className='xsim-msg';
+      document.getElementById('drMsg').innerHTML='스위치가 꺼져 있어도 전자는 <b>이미 도선 안에 가득</b> 차 있고, 제멋대로 매우 빠르게 움직이고 있습니다. 다만 방향이 뒤죽박죽이라 <b>전체로는 제자리걸음</b>이에요.';
+    }
+    render();
+  });
+  document.getElementById('drTh').addEventListener('click',function(){
+    showTh=!showTh; this.classList.toggle('on',!showTh);
+    this.textContent=showTh?'🌡️ 열운동 숨기기':'🌡️ 열운동 보기';
+    render();
+  });
+  var last=0;
+  function render(t){
+    t=t||performance.now();
+    var dt=Math.min(.045,(t-last)/1000)||.016; last=t;
+    var bw=cv.parentElement.clientWidth;
+    if(bw>10 && Math.abs(bw-W)>2){fit(); build();}
+    /* 이동 */
+    var drift=on?26:0;                  /* 화면상 드리프트(과장) */
+    for(var i=0;i<els.length;i++){
+      var e=els[i];
+      if(showTh){
+        e.a+=(Math.random()-.5)*3.4;
+        e.x+=Math.cos(e.a)*82*dt; e.y+=Math.sin(e.a)*82*dt;
+      }
+      e.x+=drift*dt;
+      if(e.y<Y0+7){e.y=Y0+7; e.a=-e.a;} if(e.y>Y1-7){e.y=Y1-7; e.a=-e.a;}
+      if(e.x>X1-7){e.x=X0+7;} if(e.x<X0+7){e.x=X1-7;}
+    }
+    if(on){ elapsed+=dt; tagDist+=drift*dt; }
+    cx.clearRect(0,0,W,H);
+    /* 도선 */
+    cx.fillStyle='rgba(176,113,58,.16)'; cx.strokeStyle='rgba(176,113,58,.8)'; cx.lineWidth=2.4;
+    cx.beginPath(); cx.rect(X0,Y0,X1-X0,Y1-Y0); cx.fill(); cx.stroke();
+    cx.font='12.5px Pretendard, sans-serif'; cx.textAlign='center'; cx.fillStyle='#8a7a68';
+    cx.fillText('도선 속을 크게 확대한 모습', W/2, Y0-14);
+    /* 전지·전구 */
+    cx.textAlign='center';
+    cx.fillStyle=on?'#c9a227':'#9a9a9a'; cx.beginPath(); cx.arc(X1+26,(Y0+Y1)/2,15,0,6.2832); cx.fill();
+    cx.fillStyle='#fff'; cx.font='15px Pretendard, sans-serif'; cx.fillText('💡',X1+26,(Y0+Y1)/2+5);
+    cx.fillStyle=on?'#3a7a3f':'#9a9a9a'; cx.fillRect(X0-38,(Y0+Y1)/2-16,22,32);
+    cx.fillStyle='#fff'; cx.font='700 12px Pretendard, sans-serif'; cx.fillText(on?'ON':'OFF',X0-27,(Y0+Y1)/2+4);
+    /* 전자 */
+    for(var j=0;j<els.length;j++){
+      var e2=els[j];
+      cx.fillStyle=e2.tag?'#e8b400':'#3a7a3f';
+      cx.beginPath(); cx.arc(e2.x,e2.y,e2.tag?8:6,0,6.2832); cx.fill();
+      if(e2.tag){ cx.strokeStyle='#7a5f00'; cx.lineWidth=2; cx.stroke();
+        cx.fillStyle='#7a5f00'; cx.font='700 11px Pretendard, sans-serif';
+        cx.fillText('표시', e2.x, e2.y-13); }
+    }
+    /* 드리프트 방향 화살표 */
+    if(on){
+      cx.strokeStyle='rgba(160,92,44,.7)'; cx.lineWidth=2.4;
+      cx.beginPath(); cx.moveTo(W/2-40,Y1+22); cx.lineTo(W/2+40,Y1+22);
+      cx.lineTo(W/2+32,Y1+17); cx.moveTo(W/2+40,Y1+22); cx.lineTo(W/2+32,Y1+27); cx.stroke();
+      cx.fillStyle='#a05c2c'; cx.font='700 12.5px Pretendard, sans-serif';
+      cx.fillText('전자의 아주 느린 이동(드리프트)', W/2, Y1+44);
+    }
+    /* 실제 환산 표시 — 화면 26px/s ↔ 실제 0.073 mm/s */
+    var realMM=(elapsed*0.073).toFixed(3);
+    document.getElementById('drDist').innerHTML=realMM+'<small> mm</small>';
+    document.getElementById('drTime').innerHTML=elapsed.toFixed(1)+'<small> 초</small>';
+    requestAnimationFrame(render);
+  }
+  addEventListener('resize',function(){fit(); build();});
+  cv.__tick=render;
+  fit(); build(); requestAnimationFrame(render);
+})();
+</script>
+
+
+
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🔬 가상실험실에서 더 해 보기</h3>
  <p class="help">직접 조작해 보면 훨씬 잘 보입니다. 새 창에서 열려요.</p>
@@ -1171,7 +1361,9 @@ body.teacher .keyline-s{display:none}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t" style="margin-bottom:6px">⚠️ 여기서 자주 어긋납니다</h3>
- <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ①</b> — "전류의 방향 = 전자가 움직이는 방향이다."<br>
+ 
+<div class="vwrap"><div class="vlead">🎬 교과서가 말해 주지 않은 것</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/5XKbwj9F2bI" title="전류 방향의 진실" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>전자는 (−)에서 (+)로 가는데 전류는 왜 반대일까? 누가, 언제 그렇게 정했을까?</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtube.com/shorts/5XKbwj9F2bI" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div>
+<div class="note myth"><span class="ic">⚠️</span><div><b>오해 ①</b> — "전류의 방향 = 전자가 움직이는 방향이다."<br>
  → <b class="k">반대입니다.</b> 전자는 <b class="t5">(−)극</b>→<b class="t4">(+)극</b>으로 이동하지만,
  전류의 방향은 <b class="t4">(+)극</b>→<b class="t5">(−)극</b>으로 <b>정해서</b> 씁니다.
  전자를 알기 전에 정한 약속을 지금도 그대로 쓰고 있기 때문이에요.</div></div>
@@ -2225,7 +2417,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     /* ② 헤더 아이콘 라벨 */
     '.hbtn{position:relative}'+
     '.hb-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}'+
-    '.hb-lab{font-size:9.5px;line-height:1.1;opacity:.75;white-space:nowrap;letter-spacing:-.02em}'+
+    '.hb-lab{font-size:10px;line-height:1.15;white-space:nowrap;letter-spacing:-.02em;font-weight:700;'+'color:#fff;background:rgba(28,22,14,.62);padding:2px 7px;border-radius:7px;'+'text-shadow:0 1px 2px rgba(0,0,0,.65);backdrop-filter:blur(2px)}'+
     '@media(max-width:520px){.hb-lab{display:none}}';
   document.head.appendChild(st);
 
@@ -2262,7 +2454,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     var l = document.createElement('span'); l.className = 'hb-lab'; l.textContent = text;
     w.appendChild(l);
   }
-  var hubBtn = document.querySelector('a.hbtn[href$="허브.html"], a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
+  var hubBtn = document.querySelector('a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
   label(hubBtn, '허브페이지로 이동');
   label(document.getElementById('tmodeBtn'), '교사용 on/off');
 })();

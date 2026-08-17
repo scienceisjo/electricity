@@ -776,6 +776,38 @@ body.teacher .keyline-s{display:none}
  text-indent:-15px;line-height:1.6}
 @media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
 </style>
+
+<style id="xsim-css">
+.xsim{margin-top:14px}
+.xsim-stage{position:relative;border:1.5px solid rgba(128,128,128,.35);border-radius:14px;
+ overflow:hidden;background:rgba(127,127,127,.07)}
+.xsim-stage canvas{display:block;width:100%;height:auto}
+.xsim-ctl{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.xsim-btn{font-family:inherit;font-size:14px;font-weight:700;padding:8px 15px;border-radius:10px;cursor:pointer;
+ border:1.5px solid rgba(128,128,128,.45);background:rgba(127,127,127,.08);color:inherit;transition:.15s}
+.xsim-btn:hover{border-color:currentColor}
+.xsim-btn.on{background:#2c7a44;border-color:#2c7a44;color:#fff}
+.xsim-btn.warn.on{background:#a05c2c;border-color:#a05c2c}
+.xsim-lab{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.xsim-lab b{font-size:13.5px}
+.xsim-ctl input[type=range]{width:150px;accent-color:#2c7a44}
+.xsim-read{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.xsim-r{flex:1 1 118px;border:1px solid rgba(128,128,128,.3);border-radius:11px;padding:8px 11px;text-align:center;
+ background:rgba(127,127,127,.07)}
+.xsim-r .k{font-size:12px;opacity:.72;line-height:1.35}
+.xsim-r .v{font-size:19px;font-weight:800;margin-top:3px;line-height:1.2}
+.xsim-r .v small{font-size:12px;font-weight:600;opacity:.75}
+.xsim-msg{margin-top:12px;padding:11px 14px;border-radius:11px;font-size:14.5px;line-height:1.62;
+ border:1.5px dashed rgba(128,128,128,.4);background:rgba(127,127,127,.05)}
+.xsim-msg.hit{border-style:solid;border-color:#2c7a44;background:rgba(44,122,68,.1)}
+.xsim-scope{display:inline-block;font-size:12px;font-weight:700;padding:2px 11px;border-radius:99px;
+ border:1.5px solid #7d5ba6;color:#7d5ba6;background:rgba(125,91,166,.09);margin-bottom:8px}
+.xsim-why{margin-top:12px;padding:12px 15px;border-radius:12px;border:1px solid rgba(128,128,128,.3);
+ background:rgba(127,127,127,.05);font-size:14px;line-height:1.68}
+.xsim-why b{font-weight:800}
+.xsim-why .h{font-weight:800;font-size:14.5px;margin-bottom:5px}
+.xsim-why+.xsim-why{margin-top:9px}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1041,7 +1073,182 @@ body.teacher .keyline-s{display:none}
     바뀐 건 <b class="t3">전자가 어디에 모여 있는가</b> 하나뿐이에요. 직접 움직여 봅시다.</p>
  <div class="keyline-s"><span class="kw">캔 전체 전하 = 0</span><span class="kw hi">전자의 위치만 바뀜</span><span class="memo"></span></div>
 
-  <div class="card" style="margin-top:20px">
+  
+
+<div class="card xsim" id="fes-card">
+ <span class="xsim-scope">🔎 왜 그럴까 · 성취기준 밖 보조 자료</span>
+ <h3 class="card-t">🌊 금속 속을 들여다보면 — 자유 전자 바다</h3>
+ <p class="lead say">금속 안에는 <b class="t3">자유 전자</b>가 바다처럼 채워져 있습니다. 원자핵은 격자에 <b>단단히 묶여</b> 꼼짝도 못 하지만,
+ 전자는 금속 전체를 돌아다닐 수 있어요. 대전체를 가까이 가져가면 <b>전자만</b> 우르르 움직입니다.</p>
+ <div class="keyline-s"><span class="kw">원자핵 — 격자에 고정</span><span class="kw t3">자유 전자 — 돌아다님</span><span class="arw">→</span><span class="kw hi">대전체가 오면 전자만 이동</span><span class="memo"></span></div>
+
+ <div class="xsim-stage"><canvas id="fesCv" height="250" aria-label="금속 막대 속 원자핵 격자와 자유 전자. 대전체를 가까이 하면 자유 전자만 한쪽으로 몰리고 원자핵은 제자리에 있다."></canvas></div>
+
+ <div class="xsim-ctl">
+  <span class="xsim-lab"><b>대전체:</b></span>
+  <button class="xsim-btn" id="fesMinus">➖ (−)로 대전된 막대</button>
+  <button class="xsim-btn" id="fesPlus">➕ (+)로 대전된 막대</button>
+  <button class="xsim-btn" id="fesAway">🚫 대전체 치우기</button>
+  <span class="xsim-lab" style="margin-left:auto">🖱️ 대전체를 좌우로 <b>드래그</b>해 거리도 바꿔 보세요</span>
+ </div>
+
+ <div class="xsim-read">
+  <div class="xsim-r"><div class="k">왼쪽 끝이 띠는 전하</div><div class="v" id="fesL">중성</div></div>
+  <div class="xsim-r"><div class="k">오른쪽 끝이 띠는 전하</div><div class="v" id="fesR">중성</div></div>
+  <div class="xsim-r"><div class="k">움직인 전자</div><div class="v" id="fesMoved">0<small> 개</small></div></div>
+  <div class="xsim-r"><div class="k">움직인 원자핵</div><div class="v" id="fesNuc" style="color:#b23a30">0<small> 개</small></div></div>
+ </div>
+ <div class="xsim-msg" id="fesMsg">대전체가 없으면 자유 전자는 금속 전체에 <b>고르게</b> 퍼져 있습니다. 어느 쪽도 전기를 띠지 않아요.</div>
+
+ <div class="xsim-why"><div class="h">🤔 왜 전자가 다 몰려가지 않을까?</div>
+ 전자가 한쪽으로 밀려나면 그 반대쪽에는 (+)가 드러납니다. 그러면 <b>금속 안에서도</b> 전자를 되돌리려는 힘이 생겨요.
+ 대전체가 미는 힘과 이 되돌리는 힘이 <b>균형</b>을 이루는 지점에서 전자들이 멈춥니다.
+ 그래서 대전체가 <b>가까울수록 더 많이</b>, 멀수록 조금만 치우치는 것 — 전부 몰려가 버리지 않는 이유입니다.</div>
+ <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① "금속 안은 전자 바다입니다." ② (−)막대를 가까이 → "전자가 <b>도망갑니다.</b> 그런데 원자핵 카운터를 보세요, 0입니다." ③ 드래그로 거리 조절 → "가까울수록 많이 치우치죠? 전부 도망가지 않는 이유는 아래 설명." ④ (+)막대로 바꿔 → "이번엔 <b>몰려옵니다.</b> 방향만 반대." ⑤ 「치우기」 → "천천히 <b>제자리로</b>. 잠깐 빌려 쓴 것뿐, 금속은 여전히 중성입니다."</div></div>
+</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('fesCv'); if(!cv) return;
+  var cx=cv.getContext('2d'), W=640, H=250;
+  function fit(){var b=cv.parentElement.clientWidth||640; if(b<10)b=640; W=b; H=250;
+    var d=Math.min(devicePixelRatio||1,2); cv.width=W*d; cv.height=H*d;
+    cv.style.height=H+'px'; cx.setTransform(d,0,0,d,0,0);}
+  /* 금속 막대 영역 */
+  function bar(){ return {x0:W*0.16, x1:W*0.84, y0:78, y1:186}; }
+  var cores=[], els=[];
+  function build(){
+    cores=[]; els=[];
+    var b=bar(), colN=10, rowN=3;
+    for(var r=0;r<rowN;r++) for(var c=0;c<colN;c++){
+      var x=b.x0+(c+.5)*(b.x1-b.x0)/colN, y=b.y0+(r+.5)*(b.y1-b.y0)/rowN;
+      cores.push({x:x,y:y});
+      els.push({hx:x, hy:y, x:x, y:y, vx:0, vy:0, ph:Math.random()*6.28});
+    }
+    var bb=bar(), mm=(bb.x0+bb.x1)/2;
+    baseLeft=0; for(var q=0;q<els.length;q++) if(els[q].x<mm) baseLeft++;
+  }
+  var baseLeft=0;        /* 중립일 때 왼쪽 절반의 전자 수 — 이 값을 기준으로 판정 */
+  var qs=0;              /* 대전체 부호: 0 없음, +1, -1 */
+  var qx=0, qy=132;      /* 대전체 위치 */
+  var moved=0;
+  function setQ(s){
+    qs=s;
+    if(s!==0 && qx===0) qx=W*0.06;
+    paintBtn();
+    var m=document.getElementById('fesMsg');
+    m.className='xsim-msg'+(s!==0?' hit':'');
+    m.innerHTML = s===0
+      ? '대전체를 치웠습니다. 전자들이 <b>천천히 제자리로</b> 돌아갑니다 — 금속은 원래대로 중성이 됩니다.'
+      : (s<0 ? '(−)대전체가 자유 전자를 <b>밀어냅니다.</b> 전자가 먼 쪽으로 몰려가 가까운 쪽에는 (+)가 드러나요.'
+             : '(+)대전체가 자유 전자를 <b>끌어당깁니다.</b> 전자가 가까운 쪽으로 몰려와 (−)를 띱니다.');
+    render();
+  }
+  function paintBtn(){
+    document.getElementById('fesMinus').classList.toggle('on', qs<0);
+    document.getElementById('fesPlus').classList.toggle('on', qs>0);
+    document.getElementById('fesAway').classList.toggle('on', qs===0);
+  }
+  document.getElementById('fesMinus').addEventListener('click',function(){setQ(-1);});
+  document.getElementById('fesPlus').addEventListener('click',function(){setQ(1);});
+  document.getElementById('fesAway').addEventListener('click',function(){setQ(0);});
+  /* 대전체 드래그 */
+  (function(){
+    var drag=false;
+    function pos(e){var r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*(W/r.width), y:(e.clientY-r.top)*(H/r.height)};}
+    cv.addEventListener('pointerdown',function(e){ if(qs===0) return;
+      var p=pos(e); if(Math.abs(p.x-qx)<46 && Math.abs(p.y-qy)<62){drag=true; cv.setPointerCapture(e.pointerId);} });
+    cv.addEventListener('pointermove',function(e){ if(!drag) return;
+      var p=pos(e), b=bar(); qx=Math.max(16, Math.min(b.x0-34, p.x)); render(); });
+    addEventListener('pointerup',function(){drag=false;});
+  })();
+
+  var last=0;
+  function step(dt){
+    var b=bar(), K=190, SPR=26, DMP=7.2;
+    moved=0;
+    for(var i=0;i<els.length;i++){
+      var e=els[i];
+      var fx=0, fy=0;
+      if(qs!==0){
+        var dx=e.x-qx, dy=e.y-qy, r2=dx*dx+dy*dy, r=Math.sqrt(r2);
+        r2=Math.max(r2, 900);
+        /* 전자 전하는 (−) → (+)대전체엔 끌리고 (−)대전체엔 밀린다 */
+        var f=K*qs/r2*1200;
+        fx += -f*dx/r; fy += -f*dy/r;
+      }
+      /* 되돌리는 힘(내부 전기장) — 균형점이 생겨 전부 몰리지 않는다 */
+      fx += (e.hx-e.x)*SPR; fy += (e.hy-e.y)*SPR;
+      e.vx=(e.vx+fx*dt)*Math.max(0,1-DMP*dt);
+      e.vy=(e.vy+fy*dt)*Math.max(0,1-DMP*dt);
+      e.x+=e.vx*dt; e.y+=e.vy*dt;
+      /* 금속 밖으로는 못 나간다 */
+      e.x=Math.max(b.x0+9, Math.min(b.x1-9, e.x));
+      e.y=Math.max(b.y0+9, Math.min(b.y1-9, e.y));
+      if(Math.abs(e.x-e.hx)>3) moved++;
+    }
+  }
+  function readout(){
+    var b=bar(), mid=(b.x0+b.x1)/2;
+    var left=0; for(var i=0;i<els.length;i++) if(els[i].x<mid) left++;
+    var diff=left-baseLeft;
+    var L=document.getElementById('fesL'), R=document.getElementById('fesR');
+    function put(el,d){
+      if(Math.abs(d)<1.2){el.textContent='중성'; el.style.color='';}
+      else if(d>0){el.textContent='(−)전하'; el.style.color='#2e5f8f';}
+      else {el.textContent='(+)전하'; el.style.color='#b23a30';}
+    }
+    put(L,diff); put(R,-diff);
+    document.getElementById('fesMoved').innerHTML=moved+'<small> 개</small>';
+  }
+  function render(t){
+    t=t||performance.now();
+    var dt=Math.min(.045,(t-last)/1000)||.016; last=t;
+    var bw=cv.parentElement.clientWidth;
+    if(bw>10 && Math.abs(bw-W)>2){fit(); build();}
+    step(dt);
+    cx.clearRect(0,0,W,H);
+    var b=bar();
+    /* 금속 막대 */
+    cx.fillStyle='rgba(150,150,160,.22)'; cx.strokeStyle='rgba(120,120,130,.75)'; cx.lineWidth=2;
+    cx.beginPath(); cx.rect(b.x0,b.y0,b.x1-b.x0,b.y1-b.y0); cx.fill(); cx.stroke();
+    cx.font='13px Pretendard, sans-serif'; cx.textAlign='center'; cx.fillStyle='#7a7a86';
+    cx.fillText('금속 막대', (b.x0+b.x1)/2, b.y0-12);
+    /* 원자핵 */
+    for(var i=0;i<cores.length;i++){
+      var c=cores[i];
+      cx.fillStyle='#b23a30'; cx.beginPath(); cx.arc(c.x,c.y,10,0,6.2832); cx.fill();
+      cx.fillStyle='#fff6ee'; cx.font='800 13px Pretendard, sans-serif'; cx.textBaseline='middle';
+      cx.fillText('+', c.x, c.y+1);
+    }
+    /* 자유 전자 */
+    for(var j=0;j<els.length;j++){
+      var e=els[j];
+      cx.fillStyle='#3a7a3f'; cx.beginPath(); cx.arc(e.x,e.y,7.5,0,6.2832); cx.fill();
+      cx.fillStyle='#f2f7ea'; cx.font='800 11px Pretendard, sans-serif';
+      cx.fillText('−', e.x, e.y+1);
+    }
+    /* 대전체 */
+    if(qs!==0){
+      var col = qs>0 ? '#b23a30' : '#2e5f8f';
+      cx.fillStyle=col; cx.globalAlpha=.9;
+      cx.fillRect(qx-15, qy-52, 30, 104); cx.globalAlpha=1;
+      cx.fillStyle='#fff'; cx.font='800 17px Pretendard, sans-serif';
+      for(var k=0;k<4;k++) cx.fillText(qs>0?'+':'−', qx, qy-34+k*23);
+      cx.fillStyle=col; cx.font='700 13px Pretendard, sans-serif';
+      cx.fillText(qs>0?'(+)대전체':'(−)대전체', qx, qy+70);
+    }
+    cx.textBaseline='alphabetic';
+    readout();
+  }
+  function loop(t){ render(t); requestAnimationFrame(loop); }
+  addEventListener('resize',function(){fit(); build(); render();});
+  cv.__tick=render;
+  fit(); build(); paintBtn(); render(); requestAnimationFrame(loop);
+})();
+</script>
+
+<div class="card" style="margin-top:20px">
     <div class="lab">
       <h3>⚡ 정전기 유도 실험실</h3>
       <p class="lead say" style="font-size:17px">대전체의 <b class="t4">전하 종류</b>, <b>거리</b>, 물체의 <b>재질</b>을 바꿔 보세요.
@@ -2265,7 +2472,7 @@ const OBSV={};
     /* ② 헤더 아이콘 라벨 */
     '.hbtn{position:relative}'+
     '.hb-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}'+
-    '.hb-lab{font-size:9.5px;line-height:1.1;opacity:.75;white-space:nowrap;letter-spacing:-.02em}'+
+    '.hb-lab{font-size:10px;line-height:1.15;white-space:nowrap;letter-spacing:-.02em;font-weight:700;'+'color:#fff;background:rgba(28,22,14,.62);padding:2px 7px;border-radius:7px;'+'text-shadow:0 1px 2px rgba(0,0,0,.65);backdrop-filter:blur(2px)}'+
     '@media(max-width:520px){.hb-lab{display:none}}';
   document.head.appendChild(st);
 
@@ -2302,7 +2509,7 @@ const OBSV={};
     var l = document.createElement('span'); l.className = 'hb-lab'; l.textContent = text;
     w.appendChild(l);
   }
-  var hubBtn = document.querySelector('a.hbtn[href$="허브.html"], a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
+  var hubBtn = document.querySelector('a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
   label(hubBtn, '허브페이지로 이동');
   label(document.getElementById('tmodeBtn'), '교사용 on/off');
 })();

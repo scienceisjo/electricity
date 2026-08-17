@@ -769,6 +769,57 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  text-indent:-15px;line-height:1.6}
 @media(max-width:560px){.ctab th,.ctab td{padding:9px 10px;font-size:15px}}
 </style>
+
+<style id="sum-css">
+.sumwrap{margin-top:16px}
+.sblk{border:2px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:14px;background:var(--surface2)}
+.sblk.done{border-color:var(--ok);background:#f2f7ea}
+.sblk-h{display:flex;align-items:center;gap:9px;font-family:var(--jua);font-size:clamp(17px,2.2vw,21px);
+ color:var(--gold);margin-bottom:10px}
+.sblk-h .no{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;
+ background:var(--gold);color:#fdf6e8}
+.sline{font-size:clamp(16px,2.1vw,19.5px);line-height:2.1;color:var(--ink-dim)}
+.sline b{color:var(--ink)}
+.bl{display:inline-block;min-width:88px;padding:2px 12px;margin:0 3px;border-bottom:2.5px solid var(--accent);
+ font-family:var(--jua);font-size:1.02em;text-align:center;color:transparent;cursor:pointer;transition:.18s;
+ background:rgba(160,92,44,.07);border-radius:6px 6px 0 0}
+.bl:hover{background:rgba(160,92,44,.15)}
+.bl.on{color:var(--accent);background:rgba(44,122,68,.12);border-color:var(--ok)}
+.bl.cur{background:rgba(255,209,102,.35);box-shadow:0 0 0 3px rgba(255,209,102,.5)}
+.bl.miss{animation:blsh .35s}
+@keyframes blsh{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.sumbar{position:sticky;top:calc(var(--header-h) + 6px);z-index:20;display:flex;gap:10px;flex-wrap:wrap;
+ align-items:center;padding:12px 15px;border:2px solid var(--line);border-radius:14px;background:var(--paper-hi,#f6efdf);
+ margin-bottom:16px;box-shadow:0 6px 18px -10px rgba(0,0,0,.35)}
+.mic{font-family:var(--jua);font-size:15px;padding:9px 18px;border-radius:99px;cursor:pointer;
+ border:2px solid var(--line);background:#fffcf4;color:var(--ink-dim);transition:.15s}
+.mic.on{background:var(--danger);border-color:var(--danger);color:#fff;animation:mpulse 1.3s infinite}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(179,54,46,.5)}50%{box-shadow:0 0 0 10px rgba(179,54,46,0)}}
+.heard{flex:1 1 200px;font-size:14.5px;color:var(--ink-mute);min-height:22px}
+.heard b{color:var(--accent)}
+.sprog{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink-dim)}
+.styped{font-size:15px;border:1.5px solid var(--line);border-radius:10px;padding:7px 12px;width:150px;
+ background:var(--paper,#faf4e6);color:var(--ink)}
+.micwarn{font-size:13px;color:var(--danger);flex:1 1 100%}
+</style>
+
+<style id="vid-css">
+.vwrap{margin:16px 0 4px}
+.vwrap.pair{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.vwrap.pair{grid-template-columns:1fr 1fr}}
+.vbox{border:2px solid var(--line);border-radius:16px;overflow:hidden;background:#000;position:relative}
+.vbox::before{content:"";display:block;padding-top:56.25%}
+.vbox.tall::before{padding-top:130%}
+.vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vcap{font-size:14px;color:var(--ink-mute);margin-top:7px;line-height:1.6}
+.vcap b{color:var(--ink)}
+.vcap a{color:var(--accent)}
+.vlead{font-family:var(--jua);font-size:clamp(16px,2vw,19px);color:var(--gold);margin:2px 0 8px;
+ display:flex;align-items:center;gap:8px}
+.vwatch{display:inline-block;margin-top:5px;font-size:13.5px;padding:4px 12px;border-radius:99px;
+ border:1.5px dashed var(--line);color:var(--ink-dim);text-decoration:none}
+.vwatch:hover{border-color:var(--accent);color:var(--accent)}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -848,6 +899,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  <button data-tab="apply"><span class="sn"><i>4</i></span>적용하기</button>
  <button data-tab="check"><span class="sn"><i>5</i></span>확인하기</button>
  <span class="tab-sep"></span>
+ <button data-tab="sum" class="optional"><span class="sn"><i>+</i></span>📝 개념 정리하기</button>
  <button data-tab="beyond" class="optional"><span class="sn"><i>+</i></span>⚡ 더 알아보기</button>
  </nav>
 </header>
@@ -867,7 +919,9 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  다만 설명은 잠깐 미뤄 두고, <b>일어난 일부터</b> 봅시다.
  </p>
  <div class="keyline-s"><span class="kw">스웨터 벗을 때 지지직</span><span class="arw">→</span><span class="kw q">전기가 새로 생겼나?</span><span class="kw">일어난 일부터</span><span class="memo"></span></div>
- <figure class="fig" data-fig="sweater"
+ 
+<div class="vwrap"><div class="vlead">🎬 오늘의 시작 — 빨대로 염력을 써 봅시다</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/yLvg-CetgAs" title="빨대로 염력 쓰는 방법" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>손을 대지 않았는데 왜 움직일까? 마술이 아니라면, 무엇이 밀고 당긴 걸까?</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtube.com/shorts/yLvg-CetgAs" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div>
+<figure class="fig" data-fig="sweater"
  data-alt="털실로 짠 스웨터를 벗는 순간 머리카락이 옷 쪽으로 딸려 올라가며 곤두서는 모습"
  data-cap="옷을 갈아입을 때 스웨터에 머리카락이 달라붙는 까닭은 무엇일까? (도입)"></figure>
 
@@ -886,6 +940,8 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🔎 네 가지의 공통점 찾기</h3>
+<div class="vwrap pair"><div><div class="vlead">🎬 이런 것도 마찰 전기</div><div class="vbox tall"><iframe src="https://www.instagram.com/reel/DVJZKLaj3Do/embed" title="마찰 전기 현상" loading="lazy" allowtransparency="true" allowfullscreen></iframe></div><p class="vcap">👀 <b>무엇을 무엇에 문질렀을까? 그리고 그 뒤에 무슨 일이 일어났을까?</b><br>인스타그램이 막혀 있으면 화면이 비어 보입니다 · <a href="https://www.instagram.com/reel/DVJZKLaj3Do/" target="_blank" rel="noopener">인스타그램에서 바로 보기 →</a></p></div><div><div class="vlead">🎬 고양이도 피카츄가 된다</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/3AnUNXS_ekQ" title="고양이와 인간 피카츄로 알아보는 정전기" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>털을 문지르면 왜 이렇게 될까? 겨울에 더 심한 까닭도 생각해 보자.</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtube.com/shorts/3AnUNXS_ekQ" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div></div>
+
  <p class="lead" style="font-size:17px;margin-top:8px">
  네 장면에는 <b class="k">똑같은 조건</b>이 숨어 있습니다. 힌트는 세 가지예요.</p>
  <div class="pill-list">
@@ -1283,6 +1339,47 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  </div>
  </div>
 
+ <div class="card" id="shop-card" style="margin-top:18px">
+ <h3 class="card-t">🍽️ 비유로 다시 보기 — 두 음식점과 손님</h3>
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
+ 방금 본 것을 조금 다른 그림으로 옮겨 볼까요? <b class="k">나란히 붙어 있는 두 음식점</b>을 떠올려 봅시다.
+ A식당보다 B식당이 <b>손님을 더 잘 붙잡는</b> 가게라면, 두 가게가 이어졌을 때 손님 일부가 B식당 쪽으로 옮겨 갈 수 있어요.
+ 마찰 전기도 똑같습니다. 두 물질은 <b class="t3">전자를 붙잡는 정도</b>가 서로 달라서, 맞닿으면 전자 일부가 한쪽으로 옮겨 갑니다.</p>
+ <div class="keyline-s"><span class="kw">붙잡는 정도가 다르다</span><span class="arw">→</span><span class="kw">맞닿으면 일부가 이동</span><span class="arw">→</span><span class="kw hi">마찰은 이동 기회를 늘린다</span><span class="memo"></span></div>
+
+ <figure class="fig" data-fig="shop"
+ data-alt="두 음식점을 물질에, 손님을 전자에 빗댄 그림. 손님을 더 잘 붙잡는 B식당 쪽으로 손님 일부가 옮겨 가며, 마찰은 접촉 기회를 늘려 이동을 크게 만든다."
+ data-cap="식당 = 물질 · 손님 = 전자 · 손님을 붙잡는 정도 = 전자를 붙잡는 정도"></figure>
+
+ <div class="dtable-wrap" style="margin-top:14px">
+ <table class="dtable">
+ <thead><tr><th>비유 속 표현</th><th>실제 과학 개념</th></tr></thead>
+ <tbody>
+ <tr><td>식당</td><td>물질(물체)</td></tr>
+ <tr><td>손님</td><td>전자 — (−)전하를 띤다</td></tr>
+ <tr><td>손님을 붙잡아 두는 정도</td><td>전자를 붙잡는 정도 — 물질마다 다르다</td></tr>
+ <tr><td>손님이 A식당에서 B식당으로 이동</td><td>전자가 한 물질에서 다른 물질로 이동</td></tr>
+ <tr><td>손님을 잃은 A식당 → '(+) 분위기'</td><td>전자를 잃은 물체 → <b class="t4">(+)전하로 대전</b></td></tr>
+ <tr><td>손님이 늘어난 B식당 → '(−) 분위기'</td><td>전자를 얻은 물체 → <b class="t5">(−)전하로 대전</b></td></tr>
+ </tbody>
+ </table>
+ </div>
+
+ <p class="lead say" style="font-size:17.5px">가장 중요한 대목은 이것입니다 —
+ <b class="k">가게를 문지른다고 손님이 새로 생기지는 않습니다.</b> 원래 있던 손님이 옆 가게로 옮겨 갔을 뿐이에요.
+ 마찰은 손님을 <b>만들어 내는 일</b>이 아니라, 두 가게가 <b>여러 번, 넓게 맞닿게</b> 해서 옮겨 갈 기회를 늘리는 일입니다.</p>
+
+ <div class="note myth"><span class="ic">⚠️</span><div><b>이렇게 생각하면 곤란해요</b> —
+ "B식당이 <b>더 맛있어서</b> 손님이 스스로 골라 간다"는 식으로 읽으면 안 됩니다.
+ 그러면 전자가 <b>목적을 가지고</b> 움직인다고 오해하게 돼요.
+ 손님은 <b>가고 싶어서</b> 가는 것이 아니라, <b class="k">더 세게 붙잡는 쪽에 붙들리는</b> 것입니다.</div></div>
+
+ <p class="honest"><span class="ic">📌</span>비유는 이해를 돕는 사다리일 뿐, 실제 현상과 완전히 같지는 않습니다.
+ 답을 쓸 때는 반드시 <b>전자·대전·전하</b>라는 과학 용어로 쓰세요.</p>
+
+ <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① 그림 ①을 가리키며 "손님은 <b>원래부터</b> 두 가게에 있었어요." ② ②를 보며 "두 가게가 붙으면? 더 잘 붙잡는 쪽으로 일부가 넘어갑니다." ③ ③에서 "그럼 문지르는 건 뭘 하는 걸까요?" → <b>"손님을 만드는 게 아니라 만날 기회를 늘리는 것"</b> ④ 대응표로 과학 용어 환산 ⑤ 마지막에 <b>의인화 주의</b>를 꼭 짚어 주세요 — "가고 싶어서 가는 게 아니라 <b>붙들리는</b> 겁니다."</div></div>
+ </div>
+
  <div class="card" style="margin-top:18px" id="qna-card">
  <h3 class="card-t" style="margin-bottom:6px">🙋 더 궁금해요 — 이런 질문, 훌륭합니다</h3>
  <p class="lead say">답을 먼저 보지 말고, 위의 전자 옮기기 장치와 오늘 배운 것으로 <b>먼저 추리해 보세요.</b> 모둠에서 이야기한 뒤 답을 열어 보는 겁니다.</p>
@@ -1452,6 +1549,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  <b class="k">두 물체가 서로 문질러졌을 때</b> 이 네 칸으로 풀립니다.
  그런데 화면에 다시 붙는 먼지는 <b>①번 칸이 비어 있습니다.</b> 먼지는 아무도 문지르지 않았으니까요. 바로 아래에서 이어집니다.</p>
 
+ <div class="vwrap"><div class="vlead">🎬 정전기를 아주 많이 모으면?</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/CrsgaZ_1ZeQ" title="정전기가 많이 모이면 번개도 만들 수 있을까" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>번개도 결국 같은 원리입니다. 규모만 어마어마하게 커진 것.</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtube.com/shorts/CrsgaZ_1ZeQ" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div>
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:10px">
@@ -1521,6 +1619,35 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
 </section>
 
 <!-- + -->
+
+<!-- + 개념 정리하기 -->
+<section class="panel" id="panel-sum">
+ <div class="stepline"><span class="sbadge">정리</span><span class="swhat">학습지 순서대로 · 빈칸 채우기</span></div>
+ <h2 class="sec">오늘 배운 개념, <span class="k">빈칸으로 확인</span></h2>
+ <p class="lead">학습지에 적은 순서 그대로입니다. 빈칸을 <b>눌러서</b> 답을 확인하거나,
+ <b>🎤 음성으로 답하기</b>를 켜고 <b>소리 내어 말하면</b> 저절로 채워집니다.</p>
+
+ <div class="sumbar">
+  <button class="mic" id="micBtn">🎤 음성으로 답하기</button>
+  <input class="styped" id="typeIn" placeholder="또는 여기에 입력 후 Enter" aria-label="답 입력">
+  <span class="heard" id="heard">마이크를 켜면 여기에 들린 말이 표시됩니다</span>
+  <span class="sprog" id="sprog">0 / 0</span>
+  <button class="btn ghost sm" id="sumReset">↺ 다시</button>
+  <button class="btn ghost sm" id="sumAll">전부 보기</button>
+  <span class="micwarn" id="micWarn" style="display:none"></span>
+ </div>
+
+ <div class="sumwrap" id="sumWrap"></div>
+ <div id="sumVid1"><div class="vwrap"><div class="vlead">🎬 2600년 전에도 이걸 알고 있었다</div><div class="vbox"><iframe src="https://www.youtube.com/embed/4TFD4llllaI" title="인류 최초의 정전기 발견" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>호박(보석)을 문지르면 무슨 일이 일어났을까? 그때 사람들은 이걸 무엇이라 불렀을까?</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtu.be/4TFD4llllaI" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div></div>
+ <div id="sumVid2"><div class="vwrap"><div class="vlead">🎬 수천 년 동안 아무도 몰랐던 것</div><div class="vbox"><iframe src="https://www.youtube.com/embed/lXvdwUTkYuo" title="마찰전기의 비밀이 밝혀졌다" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>왜 어떤 물체가 전자를 더 잘 빼앗는지 — 그 답은 최근에야 밝혀졌습니다.</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtu.be/lXvdwUTkYuo" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div></div>
+
+ <div class="note class"><span class="ic">💬</span><div><b>이렇게 쓰세요</b> —
+ ① 학습지를 덮게 하고 이 탭을 띄웁니다. ② 한 명씩 지목해 <b>소리 내어</b> 답하게 하면 마이크가 알아듣고 칸이 채워집니다.
+ ③ 못 알아들으면 옆의 입력칸에 타이핑하거나 빈칸을 눌러 넘어가세요.<br>
+ <b>마이크는 크롬·엣지에서만</b> 되고 인터넷이 필요합니다. 안 되는 환경이면 <b>빈칸 클릭</b>만으로도 수업이 굴러갑니다.</div></div>
+ <p class="honest"><span class="ic">📌</span>말하기가 어려운 학생에게 억지로 시키지 마세요. 입력칸과 클릭이 언제나 대안입니다.</p>
+</section>
+
 <section class="panel" id="panel-beyond">
  <div class="stepline opt"><span class="sbadge">선택</span><span class="swhat">더 알아보기 · 시험에 나오지 않습니다</span></div>
  <h2 class="sec">겨울에 유독 찌릿한 이유, 그리고 못 외워도 되는 이야기</h2>
@@ -1547,11 +1674,43 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  · 건조한 날 머리를 빗기 전 빗에 물을 살짝 묻히는 것도 같은 원리입니다.</p>
  <div class="keyline-s"><span class="kw">섬유 유연제</span><span class="kw">동전 먼저 대기</span><span class="kw">천천히 벗기</span><span class="memo"></span></div>
  </div>
+
+ 
+
  </div>
+
+ <div class="card" id="key-card" style="margin-top:18px">
+ <h3 class="card-t">🔑 잠깐 — 열쇠에서 방전됐는데, 왜 손은 안 아플까? <span class="badge">시험 X</span></h3>
+ <p class="lead say" style="font-size:17.5px;margin-top:8px">
+ 좋은 질문입니다. 사실 <b class="k">전기는 손으로도 옵니다.</b> 전류는 분명히 열쇠를 지나 손으로, 몸으로 들어와요.
+ 달라진 건 전기가 오느냐 마느냐가 아니라 — <b>아프냐 안 아프냐</b>입니다.</p>
+ <div class="keyline-s"><span class="kw">전기는 손으로도 온다</span><span class="arw">→</span><span class="kw hi">다만 아프지 않을 뿐</span><span class="kw q">왜?</span><span class="memo"></span></div>
+
+ <div style="margin:14px 0;border:1px solid var(--line-soft);border-radius:12px;overflow:hidden"><svg style="display:block;width:100%;height:auto" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="손끝으로 바로 차 문을 만지면 손끝 한 점에서 방전이 일어나 따끔하지만, 열쇠를 쥐고 대면 방전은 열쇠와 차 문 사이에서 일어나고 손과 열쇠는 넓은 면적으로 닿아 있어 통증을 거의 느끼지 않는다."><rect width="700" height="400" fill="#faf4e6"/><text x="350" y="30" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="17.5" font-weight="800" fill="#b23a30">① 손끝으로 바로 만질 때 — 따끔!</text><rect x="470" y="32" width="200" height="144" rx="10" fill="#dfe6ee" stroke="#2e5f8f" stroke-width="2.4"/><rect x="492" y="52" width="120" height="46" rx="7" fill="#eef3f8" stroke="#2e5f8f" stroke-width="1.6"/><rect x="500" y="122" width="54" height="13" rx="6" fill="#c4d1de" stroke="#2e5f8f" stroke-width="1.6"/><text x="570" y="162" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#2e5f8f">차 문 (금속)</text><g transform="translate(60,104) scale(1.0,1.0)"><rect x="0" y="-16" width="52" height="46" rx="16" fill="#f0d9c4" stroke="#a05c2c" stroke-width="2"/><rect x="44" y="-8" width="40" height="17" rx="8" fill="#f0d9c4" stroke="#a05c2c" stroke-width="2"/></g><text x="86" y="156" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#a05c2c">손</text><line x1="150" y1="104" x2="462" y2="104" stroke="#a05c2c" stroke-width="2" stroke-dasharray="7 6"/><polygon points="150,78 157,97 174,100 159,110 164,130 150,114 136,130 141,110 126,100 143,97" fill="#ffd166" stroke="#b23a30" stroke-width="2.2"/><text x="150" y="64" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="800" fill="#b23a30">손끝 한 점에서 방전!</text><circle cx="150" cy="104" r="30" fill="none" stroke="#b23a30" stroke-width="2" stroke-dasharray="5 4"/><text x="205" y="180" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" fill="#b23a30">좁은 한 점에 에너지가 몰려 — 따끔!</text><line x1="40" y1="196" x2="660" y2="196" stroke="#a08b64" stroke-width="1.4" stroke-dasharray="7 6"/><text x="350" y="226" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="17.5" font-weight="800" fill="#3a7a3f">② 열쇠를 쥐고 댈 때 — 덜 아픔</text><rect x="470" y="228" width="200" height="144" rx="10" fill="#dfe6ee" stroke="#2e5f8f" stroke-width="2.4"/><rect x="492" y="248" width="120" height="46" rx="7" fill="#eef3f8" stroke="#2e5f8f" stroke-width="1.6"/><rect x="500" y="318" width="54" height="13" rx="6" fill="#c4d1de" stroke="#2e5f8f" stroke-width="1.6"/><text x="570" y="358" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#2e5f8f">차 문 (금속)</text><g transform="translate(60,300) scale(1.0,1.0)"><rect x="0" y="-16" width="52" height="46" rx="16" fill="#f0d9c4" stroke="#a05c2c" stroke-width="2"/><rect x="44" y="-8" width="40" height="17" rx="8" fill="#f0d9c4" stroke="#a05c2c" stroke-width="2"/></g><text x="86" y="352" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#a05c2c">손</text><rect x="150" y="291" width="120" height="18" rx="5" fill="#cfcfd6" stroke="#6b6b76" stroke-width="2"/><circle cx="163" cy="300" r="15" fill="#cfcfd6" stroke="#6b6b76" stroke-width="2"/><circle cx="163" cy="300" r="6" fill="#faf4e6" stroke="#6b6b76" stroke-width="1.6"/><rect x="256" y="307" width="8" height="12" fill="#cfcfd6" stroke="#6b6b76" stroke-width="1.6"/><text x="205" y="352" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b6b76">열쇠</text><rect x="140" y="278" width="26" height="44" rx="8" fill="none" stroke="#3a7a3f" stroke-width="3" stroke-dasharray="6 4"/><text x="153" y="270" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13" font-weight="800" fill="#3a7a3f">넓게 닿음</text><line x1="272" y1="300" x2="462" y2="300" stroke="#a05c2c" stroke-width="2" stroke-dasharray="7 6"/><polygon points="368,274 375,293 392,296 377,306 382,326 368,310 354,326 359,306 344,296 361,293" fill="#ffd166" stroke="#b23a30" stroke-width="2.2"/><text x="368" y="260" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="800" fill="#b23a30">여기서 방전!</text><text x="205" y="376" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" fill="#3a7a3f">전류는 손으로도 흐르지만 넓게 퍼져 흘러 — 거의 못 느낌</text></svg></div>
+
+ <p class="lead say" style="font-size:17px"><b class="k">① 면적의 차이 — 압력과 똑같은 원리</b><br>
+ 손끝으로 바로 만지면, 차에 모여 있던 전하가 손가락 끝 <b>아주 좁은 한 점</b>으로 한꺼번에 쏟아집니다.
+ 에너지가 한곳에 몰리니 바늘로 찌르는 듯한 통증이 느껴져요.<br>
+ 열쇠를 쥐고 대면 어떨까요? 손과 열쇠가 닿아 있는 면적은 <b>손가락 전체로 아주 넓습니다.</b>
+ 같은 양의 전기가 넓은 면적으로 <b>분산되어</b> 흘러가니, 피부가 자극을 거의 느끼지 못합니다.</p>
+ <div class="keyline-s"><span class="kw">좁은 면적 → 집중 → 따끔</span><span class="kw hi">넓은 면적 → 분산 → 못 느낌</span><span class="memo"></span></div>
+
+ <p class="lead say" style="font-size:17px"><b class="k">② 나와 열쇠는 이미 '한 덩어리'</b><br>
+ 열쇠를 꽉 쥐는 순간, 나와 열쇠는 전기적으로 <b>하나의 큰 금속 덩어리</b>처럼 연결됩니다.
+ 이 상태로 차에 대면 불꽃(스파크)은 <b>열쇠와 차 사이에서만</b> 튀어요.
+ 손과 열쇠 사이에는 이미 빈틈없이 <b>길이 열려 있어</b> 스파크가 생기지 않고, 전류만 부드럽게 넘어갑니다.</p>
+
+ <div class="note myth"><span class="ic">💡</span><div><b>한 줄 정리</b> —
+ <b>뾰족한 송곳으로 찔리는 것</b>과 <b>넓은 판으로 살짝 눌리는 것</b>의 차이입니다.
+ 전기가 몸에 들어오는 것은 똑같고, <b>통증만 사라진</b> 거예요.</div></div>
+ <p class="honest"><span class="ic">📌</span>같은 힘이라도 닿는 면적이 좁으면 세게 눌린다 — 중1에서 배운 <b>압력(힘 ÷ 면적)</b>과 똑같은 원리입니다.</p>
+ <div class="note class"><span class="ic">💬</span><div><b>이 질문이 나오면</b> — "열쇠에서 방전됐으니 손엔 안 오는 거 아니에요?"는 <b>아주 좋은 오개념</b>입니다. 바로 답하지 말고 <b>"전기가 정말 안 올까?"</b>로 되물어 보세요. 열쇠와 손이 <b>붙어 있다</b>는 것을 짚어 주면 학생 스스로 "아, 오긴 오는구나"에 도달합니다. 그다음에 면적 이야기로 넘어가면 압력 단원과도 이어집니다.</div></div>
+ </div>
+
 
  <div class="grid c2" style="margin-top:18px">
  <div class="card">
- <h3 class="card-t">📋 어떤 물체가 (+)가 될까 — 대전열 <span class="badge">시험 X</span></h3>
+ <h3 class="card-t">📋 어떤 물체가 (+)가 될까 — 대전열 <span class="badge" style="background:var(--gold);color:#fdf6e8">⭐ 학습지 개념</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:8px">
  털가죽과 플라스틱 막대를 문지르면 <b>항상</b> 털가죽의 전자가 플라스틱 쪽으로 갑니다.
  즉 어느 쪽이 (+)가 되고 어느 쪽이 (−)가 될지는 <b class="k">두 물체의 조합에 따라 정해져</b> 있어요.
@@ -1613,7 +1772,8 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
 <script>
 "use strict";
 const FIGS={
-  sweater:'img/f-sweater.jpg', balloon:'img/f-balloon.jpg', filter:'img/f-filter.jpg'
+  sweater:'img/f-sweater.jpg', balloon:'img/f-balloon.jpg', filter:'img/f-filter.jpg',
+  shop:'img/f-shop.webp'
 };
 const BG_IMAGES={cover:'',see:'',ask:'',model:'',apply:'',check:'',beyond:''};
 const BG_FALLBACK={
@@ -2487,7 +2647,7 @@ document.querySelectorAll('.qna-btn').forEach(b=>b.addEventListener('click',()=>
     /* ② 헤더 아이콘 라벨 */
     '.hbtn{position:relative}'+
     '.hb-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}'+
-    '.hb-lab{font-size:9.5px;line-height:1.1;opacity:.75;white-space:nowrap;letter-spacing:-.02em}'+
+    '.hb-lab{font-size:10px;line-height:1.15;white-space:nowrap;letter-spacing:-.02em;font-weight:700;'+'color:#fff;background:rgba(28,22,14,.62);padding:2px 7px;border-radius:7px;'+'text-shadow:0 1px 2px rgba(0,0,0,.65);backdrop-filter:blur(2px)}'+
     '@media(max-width:520px){.hb-lab{display:none}}';
   document.head.appendChild(st);
 
@@ -2524,9 +2684,171 @@ document.querySelectorAll('.qna-btn').forEach(b=>b.addEventListener('click',()=>
     var l = document.createElement('span'); l.className = 'hb-lab'; l.textContent = text;
     w.appendChild(l);
   }
-  var hubBtn = document.querySelector('a.hbtn[href$="허브.html"], a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
+  var hubBtn = document.querySelector('a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
   label(hubBtn, '허브페이지로 이동');
   label(document.getElementById('tmodeBtn'), '교사용 on/off');
+})();
+</script>
+
+<script id="sum-js">
+(function(){
+  /* 학습지(전기자기1차시.pdf) 순서 그대로 — 개념 5블록 */
+  var SUM=[
+   {t:'마찰 전기', lines:[
+     ['종류가 ', {a:'다른', alt:['다른','서로 다른']}, ' 두 물체가 ', {a:'마찰', alt:['마찰','문지르','비비']}, '하여 발생하는 전기'],
+     ['<b>비벼! 전기 발생!</b> — 마찰하면 생기는 전기라서 마찰 전기']]},
+   {t:'전기력', lines:[
+     ['(1) 전기를 띤 두 물체 사이에 작용하는 ', {a:'힘', alt:['힘']}],
+     ['(2) 같은 종류의 전하끼리 → ', {a:'척력', alt:['척력','미는 힘','밀어내는 힘','밀어내']}, ' (밀어낸다)'],
+     ['     다른 종류의 전하끼리 → ', {a:'인력', alt:['인력','끌어당기는 힘','끌어당기','당기는 힘']}, ' (끌어당긴다)'],
+     ['자석에 N극·S극이 있듯이, 전기에는 ', {a:'(+)전하', alt:['플러스','양전하','플러스전하','+전하']}, '와 ', {a:'(−)전하', alt:['마이너스','음전하','마이너스전하','-전하']}, '가 있다']]},
+   {t:'대전', lines:[
+     ['(1) ', {a:'대전', alt:['대전']}, ' : 물체가 전기를 띠는 현상'],
+     ['(2) ', {a:'대전체', alt:['대전체']}, ' : 대전된 물체'],
+     ["'띨 대(帶)'와 '번개 전(電)' — 글자 그대로 <b>전기를 띠다</b>"]]},
+   {t:'마찰로 인한 대전', lines:[
+     ['두 물체를 마찰하면 한 물체에서 다른 물체로 ', {a:'전자', alt:['전자']}, '가 이동한다'],
+     ['전자를 <b>얻은</b> 물체 → ', {a:'(−)전하', alt:['마이너스','음전하','마이너스전하','-전하']}, '로 대전'],
+     ['전자를 <b>잃은</b> 물체 → ', {a:'(+)전하', alt:['플러스','양전하','플러스전하','+전하']}, '로 대전'],
+     ['이동하는 것은 ', {a:'전자', alt:['전자']}, '뿐이고, ', {a:'원자핵', alt:['원자핵','핵']}, '은 제자리에 있다']]},
+   {t:'대전열', lines:[
+     ['물체마다 ', {a:'전자', alt:['전자']}, '를 잃기 쉬운 정도에 따라 물체를 한 줄로 늘어놓은 것'],
+     ['털가죽과 고무풍선을 마찰 → ', {a:'털가죽', alt:['털가죽']}, '이 (+), ', {a:'고무풍선', alt:['고무풍선','풍선']}, '이 (−)'],
+     ['<b>순서는 외울 필요 없습니다</b> — 두 물체의 <b>짝</b>만 보면 됩니다']]}
+  ];
+
+  var wrap=document.getElementById('sumWrap'); if(!wrap) return;
+  var blanks=[], cur=0;
+
+  function build(){
+    var html='', bi=0;
+    SUM.forEach(function(b,k){
+      html+='<div class="sblk" data-blk="'+k+'"><div class="sblk-h"><span class="no">'+(k+1)+'</span>'+b.t+'</div>';
+      b.lines.forEach(function(ln){
+        html+='<div class="sline">';
+        if(typeof ln==='string'){ html+=ln; }
+        else ln.forEach(function(p){
+          if(typeof p==='string') html+=p;
+          else { html+='<span class="bl" data-b="'+bi+'">'+p.a+'</span>'; blanks.push({a:p.a,alt:p.alt,blk:k,on:false}); bi++; }
+        });
+        html+='</div>';
+      });
+      html+='</div>';
+    });
+    wrap.innerHTML=html;
+    wrap.querySelectorAll('.bl').forEach(function(el){
+      el.addEventListener('click',function(){ reveal(+el.dataset.b); });
+    });
+    paint();
+  }
+  function paint(){
+    var done=0;
+    blanks.forEach(function(b,i){
+      var el=wrap.querySelector('[data-b="'+i+'"]');
+      if(!el) return;
+      el.classList.toggle('on',b.on);
+      el.classList.toggle('cur',i===cur && !b.on);
+      if(b.on) done++;
+    });
+    document.getElementById('sprog').textContent=done+' / '+blanks.length;
+    SUM.forEach(function(_,k){
+      var all=blanks.filter(function(b){return b.blk===k;}).every(function(b){return b.on;});
+      var el=wrap.querySelector('[data-blk="'+k+'"]');
+      if(el) el.classList.toggle('done',all);
+    });
+    if(done===blanks.length && blanks.length){
+      if(typeof toast==='function') toast('개념 정리 완료! 학습지와 견주어 보세요 📝','good');
+    }
+  }
+  function nextCur(){
+    for(var i=0;i<blanks.length;i++){ var j=(cur+i)%blanks.length; if(!blanks[j].on){cur=j; return;} }
+  }
+  function reveal(i){
+    if(i<0||i>=blanks.length) return;
+    blanks[i].on=true;
+    if(i===cur) nextCur();
+    paint();
+  }
+  function norm(t){ return String(t||'').toLowerCase().replace(/[\s.,!?~·'"()]/g,''); }
+  /* 들린 말이 어느 빈칸의 답인지 — 현재 칸 우선, 없으면 전체에서 탐색 */
+  function match(text){
+    var n=norm(text); if(!n) return -1;
+    function hit(b){ return b.alt.some(function(a){ return n.indexOf(norm(a))>=0; }); }
+    if(blanks[cur] && !blanks[cur].on && hit(blanks[cur])) return cur;
+    for(var i=0;i<blanks.length;i++) if(!blanks[i].on && hit(blanks[i])) return i;
+    return -1;
+  }
+  function tryAnswer(text){
+    var i=match(text);
+    if(i>=0){ reveal(i); return true; }
+    var el=wrap.querySelector('[data-b="'+cur+'"]');
+    if(el){ el.classList.add('miss'); setTimeout(function(){el.classList.remove('miss');},400); }
+    return false;
+  }
+
+  /* ── 타이핑 대안 ── */
+  var typeIn=document.getElementById('typeIn');
+  typeIn.addEventListener('keydown',function(e){
+    if(e.key!=='Enter') return;
+    if(tryAnswer(typeIn.value)) typeIn.value='';
+  });
+
+  /* ── 음성 인식 ── */
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  var micBtn=document.getElementById('micBtn'), heard=document.getElementById('heard'), rec=null, want=false;
+  if(!SR){
+    micBtn.disabled=true; micBtn.style.opacity=.5;
+    var w=document.getElementById('micWarn'); w.style.display='block';
+    w.textContent='이 브라우저는 음성 인식을 지원하지 않습니다 — 크롬이나 엣지에서 열면 됩니다. (빈칸 클릭·입력은 그대로 됩니다)';
+  } else {
+    micBtn.addEventListener('click',function(){ want=!want; want?start():stop(); });
+  }
+  function start(){
+    try{
+      rec=new SR(); rec.lang='ko-KR'; rec.continuous=true; rec.interimResults=true;
+      rec.onresult=function(e){
+        var txt='';
+        for(var i=e.resultIndex;i<e.results.length;i++){
+          txt=e.results[i][0].transcript;
+          heard.innerHTML='들린 말: <b>'+txt+'</b>';
+          if(e.results[i].isFinal) tryAnswer(txt);
+          else if(match(txt)>=0) tryAnswer(txt);   /* 중간 결과라도 맞으면 바로 */
+        }
+      };
+      rec.onerror=function(ev){
+        var w2=document.getElementById('micWarn'); w2.style.display='block';
+        w2.textContent = ev.error==='not-allowed'
+          ? '마이크 사용이 차단되었습니다 — 주소창의 자물쇠를 눌러 마이크를 허용해 주세요.'
+          : (ev.error==='network' ? '인터넷 연결이 필요합니다(크롬 음성 인식). 입력칸이나 빈칸 클릭을 쓰세요.'
+                                  : '음성 인식 오류: '+ev.error);
+        want=false; micBtn.classList.remove('on'); micBtn.textContent='🎤 음성으로 답하기';
+      };
+      rec.onend=function(){ if(want){ try{rec.start();}catch(e){} } };  /* 끊기면 자동 재시작 */
+      rec.start();
+      micBtn.classList.add('on'); micBtn.textContent='⏹ 듣는 중… (누르면 멈춤)';
+      heard.textContent='듣고 있습니다 — 답을 또박또박 말해 보세요';
+      document.getElementById('micWarn').style.display='none';
+    }catch(e){ want=false; }
+  }
+  function stop(){
+    want=false; if(rec){ try{rec.stop();}catch(e){} }
+    micBtn.classList.remove('on'); micBtn.textContent='🎤 음성으로 답하기';
+    heard.textContent='마이크를 껐습니다';
+  }
+  /* 탭을 벗어나면 마이크 끄기 */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-tab]');
+    if(b && b.dataset.tab!=='sum' && want) stop();
+  });
+
+  document.getElementById('sumReset').addEventListener('click',function(){
+    blanks.forEach(function(b){b.on=false;}); cur=0; paint();
+  });
+  document.getElementById('sumAll').addEventListener('click',function(){
+    blanks.forEach(function(b){b.on=true;}); paint();
+  });
+
+  build();
 })();
 </script>
 </body>
