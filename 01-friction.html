@@ -1775,7 +1775,7 @@ const FIGS={
   sweater:'img/f-sweater.jpg', balloon:'img/f-balloon.jpg', filter:'img/f-filter.jpg',
   shop:'img/f-shop.webp'
 };
-const BG_IMAGES={cover:'',see:'',ask:'',model:'',apply:'',check:'',beyond:''};
+const BG_IMAGES={cover:'',see:'',ask:'',model:'',apply:'',check:'',sum:'',beyond:''};
 const BG_FALLBACK={
   cover:'radial-gradient(120% 90% at 50% 0%, #f6f1e8, #f4ebd7 68%)',
   see:'radial-gradient(110% 80% at 50% 0%, #f6f1e8, #f4ebd7 66%)',
@@ -1783,6 +1783,7 @@ const BG_FALLBACK={
   model:'linear-gradient(180deg, #f5efe6, #f4ebd7 74%)',
   apply:'radial-gradient(90% 80% at 68% 15%, #efe0c2, #f4ebd7 70%)',
   check:'radial-gradient(100% 85% at 30% 15%, #f5efe6, #f4ebd7 70%)',
+  sum:'radial-gradient(105% 85% at 50% 10%, #f6f1e6, #f4ebd7 68%)',
   beyond:'radial-gradient(110% 85% at 50% 0%, #f4efe5, #f4ebd7 66%)'
 };
 const SAVE='elec_friction_v1';
@@ -1910,7 +1911,7 @@ const GAME_QS=[
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const TAU=Math.PI*2;
-const TABS=['see','ask','model','apply','check','beyond'];
+const TABS=['see','ask','model','apply','check','sum','beyond'];
 const CS=getComputedStyle(document.documentElement);
 const CV=k=>CS.getPropertyValue('--'+k).trim();
 const C={accent:CV('accent'),accent2:CV('accent2'),c1:CV('c1'),c2:CV('c2'),c3:CV('c3'),c4:CV('c4'),c5:CV('c5'),
