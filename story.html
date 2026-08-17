@@ -152,8 +152,10 @@ h2.title{font-family:var(--disp); margin:0 0 clamp(8px,1.6vh,18px);
 .viz{position:relative; width:100%; height:clamp(240px,58vh,720px); border-radius:20px; overflow:hidden;
   background:var(--surface); border:1px solid var(--line); box-shadow:0 10px 30px -18px rgba(80,55,20,.55);
   --capH:42px}
-.viz canvas{position:absolute; left:0; right:0; top:0; bottom:var(--capH);
-  width:auto; height:auto; display:block}
+/* 캔버스는 replaced element라 width:auto면 좌우를 채우지 않고 고유 크기로 줄어든다.
+   반드시 명시적 100% / calc 로 크기를 준다. */
+.viz canvas{position:absolute; left:0; top:0;
+  width:100%; height:calc(100% - var(--capH)); display:block}
 .vizcap{position:absolute; left:0; right:0; bottom:0; height:var(--capH); padding:0 16px;
   display:flex; align-items:center; justify-content:center; text-align:center;
   font-size:clamp(11px,1vw,15px); line-height:1.35; color:var(--ink-mute); pointer-events:none;
@@ -312,6 +314,7 @@ h1 em{font-style:normal; color:var(--accent)}
   .vote{grid-template-columns:1fr}
   .hint{display:none}
 }
+
 @media (prefers-reduced-motion:reduce){
   .scene.on,.scene.on .txt>*,.scene.on .viz{animation:none; opacity:1; transform:none}
   .hl::before{animation:none; transform:scaleX(1)}
@@ -339,6 +342,24 @@ h1 em{font-style:normal; color:var(--accent)}
 @media (forced-colors: active){
   .kicker,.badge,.pill,.card,.tbtn,.arrow,.vbox,.seg button{border:1px solid CanvasText}
   .sub,.vizcap,.hint,.counter{color:CanvasText}
+}
+
+/* 세로가 낮은 화면(1600x900 등)에서는 글자·여백을 줄여 한 화면에 담는다.
+   ※ 반드시 스타일 맨 끝에 두어야 앞의 기본 규칙을 이긴다 */
+@media (max-height:960px){
+  h2.title{font-size:clamp(22px,2.7vw,42px); margin-bottom:clamp(5px,1vh,11px)}
+  .lead{font-size:clamp(13px,1.20vw,20px); line-height:1.55; margin-bottom:clamp(5px,0.9vh,10px)}
+  .sub{font-size:clamp(11.5px,1.02vw,16px); line-height:1.58; margin-bottom:8px}
+  .kicker{margin-bottom:clamp(4px,0.8vh,9px); padding:4px 10px}
+  .card{padding:clamp(9px,1.1vw,14px)}
+  .card h4{font-size:clamp(13px,1.2vw,18px); margin-bottom:6px}
+  .card p{font-size:clamp(11px,0.98vw,14.5px); line-height:1.48}
+  .ctl,.seg,.slab{margin-top:7px}
+  .pill,.seg button{padding:7px 13px}
+  table.cmp th,table.cmp td{padding:6px 9px}
+  .vote{margin-top:8px; gap:10px}
+  .vbox{padding:9px}
+  .viz{height:clamp(210px,50vh,600px)}
 }
 </style>
 </head>

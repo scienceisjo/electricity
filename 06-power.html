@@ -790,6 +790,39 @@ body.teacher .keyline-s{display:none}
 .xsim-why .h{font-weight:800;font-size:14.5px;margin-bottom:5px}
 .xsim-why+.xsim-why{margin-top:9px}
 </style>
+
+<style id="sum-css">
+.sumwrap{margin-top:16px}
+.sblk{border:2px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:14px;background:var(--surface2)}
+.sblk.done{border-color:var(--ok);background:#f2f7ea}
+.sblk-h{display:flex;align-items:center;gap:9px;font-family:var(--jua);font-size:clamp(17px,2.2vw,21px);
+ color:var(--gold);margin-bottom:10px}
+.sblk-h .no{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;
+ background:var(--gold);color:#fdf6e8}
+.sline{font-size:clamp(16px,2.1vw,19.5px);line-height:2.1;color:var(--ink-dim)}
+.sline b{color:var(--ink)}
+.bl{display:inline-block;min-width:88px;padding:2px 12px;margin:0 3px;border-bottom:2.5px solid var(--accent);
+ font-family:var(--jua);font-size:1.02em;text-align:center;color:transparent;cursor:pointer;transition:.18s;
+ background:rgba(160,92,44,.07);border-radius:6px 6px 0 0}
+.bl:hover{background:rgba(160,92,44,.15)}
+.bl.on{color:var(--accent);background:rgba(44,122,68,.12);border-color:var(--ok)}
+.bl.cur{background:rgba(255,209,102,.35);box-shadow:0 0 0 3px rgba(255,209,102,.5)}
+.bl.miss{animation:blsh .35s}
+@keyframes blsh{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.sumbar{position:sticky;top:calc(var(--header-h) + 6px);z-index:20;display:flex;gap:10px;flex-wrap:wrap;
+ align-items:center;padding:12px 15px;border:2px solid var(--line);border-radius:14px;background:var(--paper-hi,#f6efdf);
+ margin-bottom:16px;box-shadow:0 6px 18px -10px rgba(0,0,0,.35)}
+.mic{font-family:var(--jua);font-size:15px;padding:9px 18px;border-radius:99px;cursor:pointer;
+ border:2px solid var(--line);background:#fffcf4;color:var(--ink-dim);transition:.15s}
+.mic.on{background:var(--danger);border-color:var(--danger);color:#fff;animation:mpulse 1.3s infinite}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(179,54,46,.5)}50%{box-shadow:0 0 0 10px rgba(179,54,46,0)}}
+.heard{flex:1 1 200px;font-size:14.5px;color:var(--ink-mute);min-height:22px}
+.heard b{color:var(--accent)}
+.sprog{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink-dim)}
+.styped{font-size:15px;border:1.5px solid var(--line);border-radius:10px;padding:7px 12px;width:150px;
+ background:var(--paper,#faf4e6);color:var(--ink)}
+.micwarn{font-size:13px;color:var(--danger);flex:1 1 100%}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -869,6 +902,7 @@ body.teacher .keyline-s{display:none}
  <button data-tab="apply"><span class="sn"><i>4</i></span>적용하기</button>
  <button data-tab="check"><span class="sn"><i>5</i></span>확인하기</button>
  <span class="tab-sep"></span>
+ <button data-tab="sum" class="optional"><span class="sn"><i>+</i></span>📝 개념 정리하기</button>
  <button data-tab="beyond" class="optional"><span class="sn"><i>+</i></span>⚡ 더 알아보기</button>
  </nav>
 </header>
@@ -1424,6 +1458,33 @@ body.teacher .keyline-s{display:none}
 </section>
 
 <!-- + -->
+
+<!-- + 개념 정리하기 -->
+<section class="panel" id="panel-sum">
+ <div class="stepline"><span class="sbadge">정리</span><span class="swhat">학습지 순서대로 · 빈칸 채우기</span></div>
+ <h2 class="sec">오늘 배운 개념, <span class="k">빈칸으로 확인</span></h2>
+ <p class="lead">학습지에 적은 순서 그대로입니다. 빈칸을 <b>눌러서</b> 답을 확인하거나,
+ <b>🎤 음성으로 답하기</b>를 켜고 <b>소리 내어 말하면</b> 저절로 채워집니다.</p>
+
+ <div class="sumbar">
+  <button class="mic" id="micBtn">🎤 음성으로 답하기</button>
+  <input class="styped" id="typeIn" placeholder="또는 여기에 입력 후 Enter" aria-label="답 입력">
+  <span class="heard" id="heard">마이크를 켜면 여기에 들린 말이 표시됩니다</span>
+  <span class="sprog" id="sprog">0 / 0</span>
+  <button class="btn ghost sm" id="sumReset">↺ 다시</button>
+  <button class="btn ghost sm" id="sumAll">전부 보기</button>
+  <span class="micwarn" id="micWarn" style="display:none"></span>
+ </div>
+
+ <div class="sumwrap" id="sumWrap"></div>
+
+ <div class="note class"><span class="ic">💬</span><div><b>이렇게 쓰세요</b> —
+ ① 학습지를 덮게 하고 이 탭을 띄웁니다. ② 한 명씩 지목해 <b>소리 내어</b> 답하게 하면 마이크가 알아듣고 칸이 채워집니다.
+ ③ 못 알아들으면 옆의 입력칸에 타이핑하거나 빈칸을 눌러 넘어가세요.<br>
+ <b>마이크는 크롬·엣지에서만</b> 되고 인터넷이 필요합니다. 안 되는 환경이면 <b>빈칸 클릭</b>만으로도 수업이 굴러갑니다.</div></div>
+ <p class="honest"><span class="ic">📌</span>말하기가 어려운 학생에게 억지로 시키지 마세요. 입력칸과 클릭이 언제나 대안입니다.</p>
+</section>
+
 <section class="panel" id="panel-beyond">
  <div class="stepline opt"><span class="sbadge">선택</span><span class="swhat">더 알아보기 · 시험에 나오지 않습니다</span></div>
  <h2 class="sec">냉장고의 무지개 스티커, 그리고 전구 이야기</h2>
@@ -1495,7 +1556,7 @@ body.teacher .keyline-s{display:none}
 const FIGS={
  intro:'img/pw-intro.jpg', cleaner:'img/pw-cleaner.jpg'
 };
-const BG_IMAGES={cover:'',meet:'',read:'',calc:'',apply:'',check:'',beyond:''};
+const BG_IMAGES={cover:'',meet:'',read:'',calc:'',apply:'',check:'',sum:'',beyond:''};
 const BG_FALLBACK={
  cover:'radial-gradient(120% 90% at 50% 0%, #f6f1e8, #f4ebd7 68%)',
  meet:'radial-gradient(110% 80% at 50% 0%, #f6f1e8, #f4ebd7 66%)',
@@ -1503,6 +1564,7 @@ const BG_FALLBACK={
  calc:'linear-gradient(180deg, #f5efe6, #f4ebd7 74%)',
  apply:'radial-gradient(90% 80% at 68% 15%, #efe0c2, #f4ebd7 70%)',
  check:'radial-gradient(100% 85% at 30% 15%, #f5efe6, #f4ebd7 70%)',
+  sum:'radial-gradient(105% 85% at 50% 10%, #f6f1e6, #f4ebd7 68%)',
  beyond:'radial-gradient(110% 85% at 50% 0%, #f4efe5, #f4ebd7 66%)'
 };
 const SAVE='elec_power_v1';
@@ -1642,7 +1704,7 @@ const GAME_QS=[
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const TAU=Math.PI*2;
-const TABS=['meet','read','calc','apply','check','beyond'];
+const TABS=['meet','read','calc','apply','check','sum','beyond'];
 const CS=getComputedStyle(document.documentElement);
 const CV=k=>CS.getPropertyValue('--'+k).trim();
 const C={accent:CV('accent'),accent2:CV('accent2'),c1:CV('c1'),c2:CV('c2'),c3:CV('c3'),c4:CV('c4'),c5:CV('c5'),
@@ -2170,6 +2232,151 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
   var hubBtn = document.querySelector('a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
   label(hubBtn, '허브페이지로 이동');
   label(document.getElementById('tmodeBtn'), '교사용 on/off');
+})();
+</script>
+
+<script id="sum-js">
+(function(){
+  var SUM=[
+ {t:'전기 에너지', lines:[
+  ['전류가 공급하는 에너지 — 빛·열·소리·운동 에너지로 ', {a:'전환', alt:['전환','바뀐','변환']}, '되어 쓰인다']]},
+ {t:'소비 전력', lines:[
+  ['전기 기구가 ', {a:'1초', alt:['1초','일초','일 초']}, ' 동안 소비하는 전기 에너지'],
+  ['단위 : ', {a:'W', alt:['와트','더블유']}, ' (와트) · 1 kW = ', {a:'1000', alt:['1000','천']}, ' W'],
+  ['소비 전력이 클수록 같은 시간에 전기 에너지를 ', {a:'많이', alt:['많이','더 많이']}, ' 쓴다']]},
+ {t:'전력량', lines:[
+  ['전력량 = 소비 전력 × ', {a:'시간', alt:['시간']}, ''],
+  ['단위 : ', {a:'Wh', alt:['와트시','와트아워']}, ' (와트시) — 전기 요금 고지서의 그 단위!']]}
+];
+
+  var wrap=document.getElementById('sumWrap'); if(!wrap) return;
+  var blanks=[], cur=0;
+
+  function build(){
+    var html='', bi=0;
+    SUM.forEach(function(b,k){
+      html+='<div class="sblk" data-blk="'+k+'"><div class="sblk-h"><span class="no">'+(k+1)+'</span>'+b.t+'</div>';
+      b.lines.forEach(function(ln){
+        html+='<div class="sline">';
+        if(typeof ln==='string'){ html+=ln; }
+        else ln.forEach(function(p){
+          if(typeof p==='string') html+=p;
+          else { html+='<span class="bl" data-b="'+bi+'">'+p.a+'</span>'; blanks.push({a:p.a,alt:p.alt,blk:k,on:false}); bi++; }
+        });
+        html+='</div>';
+      });
+      html+='</div>';
+    });
+    wrap.innerHTML=html;
+    wrap.querySelectorAll('.bl').forEach(function(el){
+      el.addEventListener('click',function(){ reveal(+el.dataset.b); });
+    });
+    paint();
+  }
+  function paint(){
+    var done=0;
+    blanks.forEach(function(b,i){
+      var el=wrap.querySelector('[data-b="'+i+'"]');
+      if(!el) return;
+      el.classList.toggle('on',b.on);
+      el.classList.toggle('cur',i===cur && !b.on);
+      if(b.on) done++;
+    });
+    document.getElementById('sprog').textContent=done+' / '+blanks.length;
+    SUM.forEach(function(_,k){
+      var all=blanks.filter(function(b){return b.blk===k;}).every(function(b){return b.on;});
+      var el=wrap.querySelector('[data-blk="'+k+'"]');
+      if(el) el.classList.toggle('done',all);
+    });
+    if(done===blanks.length && blanks.length){
+      if(typeof toast==='function') toast('개념 정리 완료! 학습지와 견주어 보세요 📝','good');
+    }
+  }
+  function nextCur(){
+    for(var i=0;i<blanks.length;i++){ var j=(cur+i)%blanks.length; if(!blanks[j].on){cur=j; return;} }
+  }
+  function reveal(i){
+    if(i<0||i>=blanks.length) return;
+    blanks[i].on=true;
+    if(i===cur) nextCur();
+    paint();
+  }
+  function norm(t){ return String(t||'').toLowerCase().replace(/[\s.,!?~·'"()]/g,''); }
+  function match(text){
+    var n=norm(text); if(!n) return -1;
+    function hit(b){ return b.alt.some(function(a){ return n.indexOf(norm(a))>=0; }); }
+    if(blanks[cur] && !blanks[cur].on && hit(blanks[cur])) return cur;
+    for(var i=0;i<blanks.length;i++) if(!blanks[i].on && hit(blanks[i])) return i;
+    return -1;
+  }
+  function tryAnswer(text){
+    var i=match(text);
+    if(i>=0){ reveal(i); return true; }
+    var el=wrap.querySelector('[data-b="'+cur+'"]');
+    if(el){ el.classList.add('miss'); setTimeout(function(){el.classList.remove('miss');},400); }
+    return false;
+  }
+
+  var typeIn=document.getElementById('typeIn');
+  typeIn.addEventListener('keydown',function(e){
+    if(e.key!=='Enter') return;
+    if(tryAnswer(typeIn.value)) typeIn.value='';
+  });
+
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  var micBtn=document.getElementById('micBtn'), heard=document.getElementById('heard'), rec=null, want=false;
+  if(!SR){
+    micBtn.disabled=true; micBtn.style.opacity=.5;
+    var w=document.getElementById('micWarn'); w.style.display='block';
+    w.textContent='이 브라우저는 음성 인식을 지원하지 않습니다 — 크롬이나 엣지에서 열면 됩니다. (빈칸 클릭·입력은 그대로 됩니다)';
+  } else {
+    micBtn.addEventListener('click',function(){ want=!want; want?start():stop(); });
+  }
+  function start(){
+    try{
+      rec=new SR(); rec.lang='ko-KR'; rec.continuous=true; rec.interimResults=true;
+      rec.onresult=function(e){
+        var txt='';
+        for(var i=e.resultIndex;i<e.results.length;i++){
+          txt=e.results[i][0].transcript;
+          heard.innerHTML='들린 말: <b>'+txt+'</b>';
+          if(e.results[i].isFinal) tryAnswer(txt);
+          else if(match(txt)>=0) tryAnswer(txt);
+        }
+      };
+      rec.onerror=function(ev){
+        var w2=document.getElementById('micWarn'); w2.style.display='block';
+        w2.textContent = ev.error==='not-allowed'
+          ? '마이크 사용이 차단되었습니다 — 주소창의 자물쇠를 눌러 마이크를 허용해 주세요.'
+          : (ev.error==='network' ? '인터넷 연결이 필요합니다(크롬 음성 인식). 입력칸이나 빈칸 클릭을 쓰세요.'
+                                  : '음성 인식 오류: '+ev.error);
+        want=false; micBtn.classList.remove('on'); micBtn.textContent='🎤 음성으로 답하기';
+      };
+      rec.onend=function(){ if(want){ try{rec.start();}catch(e){} } };
+      rec.start();
+      micBtn.classList.add('on'); micBtn.textContent='⏹ 듣는 중… (누르면 멈춤)';
+      heard.textContent='듣고 있습니다 — 답을 또박또박 말해 보세요';
+      document.getElementById('micWarn').style.display='none';
+    }catch(e){ want=false; }
+  }
+  function stop(){
+    want=false; if(rec){ try{rec.stop();}catch(e){} }
+    micBtn.classList.remove('on'); micBtn.textContent='🎤 음성으로 답하기';
+    heard.textContent='마이크를 껐습니다';
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-tab]');
+    if(b && b.dataset.tab!=='sum' && want) stop();
+  });
+
+  document.getElementById('sumReset').addEventListener('click',function(){
+    blanks.forEach(function(b){b.on=false;}); cur=0; paint();
+  });
+  document.getElementById('sumAll').addEventListener('click',function(){
+    blanks.forEach(function(b){b.on=true;}); paint();
+  });
+
+  build();
 })();
 </script>
 </body>
