@@ -880,6 +880,51 @@ body.teacher .keyline-s{display:none}
  background:var(--paper,#faf4e6);color:var(--ink)}
 .micwarn{font-size:13px;color:var(--danger);flex:1 1 100%}
 </style>
+
+<style id="exp-css">
+.expc{border:2px solid var(--brass,#b99b5e);border-radius:18px;
+ background:var(--paper-hi,var(--surface,#f9f2e3));
+ padding:20px 20px 16px;margin-top:18px;box-shadow:0 14px 34px -20px rgba(0,0,0,.42)}
+.expc-t{font-family:var(--jua,var(--disp,inherit));font-weight:800;
+ font-size:clamp(17px,2.4vw,21px);color:var(--gold,#8a5f24);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.expc-s{font-size:13.5px;color:var(--ink-dim,#5c4a33);margin-top:6px;line-height:1.65}
+.expc .exp{border-top:1px dashed var(--line,#c9b68e);padding-top:15px;margin-top:15px}
+.expc .exp:first-of-type{border-top:0;padding-top:2px;margin-top:12px}
+.exp-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+.exp-h .n{width:27px;height:27px;border-radius:50%;background:var(--accent,#a05c2c);color:#fff;
+ display:grid;place-items:center;font-size:14px;font-weight:800;flex:none}
+.exp-h h4{font-family:var(--jua,var(--disp,inherit));font-size:clamp(16px,2.1vw,18.5px);
+ font-weight:800;color:var(--ink,#2e2315);margin:0}
+.exp-tag{font-size:11.5px;padding:3px 10px;border-radius:99px;border:1px solid var(--line,#c9b68e);
+ color:var(--ink-mute,#96805c);white-space:nowrap}
+.exp-tag.live{background:rgba(44,122,68,.13);border-color:#2c7a44;color:#2c7a44}
+.exp-tag.vid{background:rgba(160,92,44,.13);border-color:var(--accent,#a05c2c);color:var(--accent,#a05c2c)}
+.exp-prep{font-size:13.5px;color:var(--ink-dim,#5c4a33);background:rgba(138,95,36,.08);
+ border-radius:10px;padding:9px 13px;margin-bottom:10px;line-height:1.65}
+.exp-prep b{color:var(--ink,#2e2315)}
+.expc .exp ol{margin:0 0 10px 21px;padding:0}
+.expc .exp ol li{font-size:14.5px;color:var(--ink-dim,#5c4a33);line-height:1.75;margin:4px 0}
+.exp-eye{font-size:14.5px;color:var(--ink-dim,#5c4a33);border-left:3px solid var(--gold,#8a5f24);
+ background:rgba(138,95,36,.09);padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0;line-height:1.7}
+.exp-eye b{color:var(--gold,#8a5f24)}
+.exp-why{margin-top:9px;border:1px dashed var(--line,#c9b68e);border-radius:11px;overflow:hidden}
+.exp-why>summary{cursor:pointer;padding:10px 14px;font-size:14px;font-weight:800;
+ color:var(--accent,#a05c2c);list-style:none;user-select:none}
+.exp-why>summary::-webkit-details-marker{display:none}
+.exp-why>summary::before{content:"▸ "}
+.exp-why[open]>summary::before{content:"▾ "}
+.exp-why .in{padding:0 14px 13px;font-size:14px;color:var(--ink-dim,#5c4a33);line-height:1.8}
+.exp-why .in b{color:var(--ink,#2e2315)}
+.exp-tip,.exp-warn{display:flex;gap:8px;font-size:13px;margin-top:9px;line-height:1.7;align-items:flex-start}
+.exp-tip{color:var(--ink-dim,#5c4a33)}
+.exp-warn{color:#8c212b;background:rgba(179,54,46,.08);border-left:3px solid var(--danger,#b3362e);
+ padding:9px 13px;border-radius:0 10px 10px 0}
+.exp-warn b{color:#8c212b}
+.exp-yt{display:inline-flex;align-items:center;gap:7px;margin-top:4px;font-size:13.5px;font-weight:700;
+ padding:7px 15px;border-radius:99px;border:1.5px dashed var(--accent,#a05c2c);
+ color:var(--accent,#a05c2c);text-decoration:none;transition:.16s}
+.exp-yt:hover{background:rgba(160,92,44,.1)}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1746,6 +1791,7 @@ body.teacher .keyline-s{display:none}
  저항은 도선의 재질·길이·굵기가 정하는 값이에요.</p>
  </div>
 
+ <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 연필로 그리는 저항</h3><p class="expc-s">방금 시뮬레이션에서 본 <b>길이와 굵기</b>를 종이 위에서 확인합니다</p><div class="exp"><div class="exp-h"><span class="n">1</span><h4>연필 그림 회로</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 4B 이상 진한 연필, 도화지, LED, 건전지 2~3개, 집게 전선, (있으면) 저항계·전압계</div><ol><li>도화지에 <b>10 cm 길이, 1 cm 폭</b>의 띠를 아주 진하게 여러 번 덧칠합니다. 흑연이 종이에 두껍게 얹히도록요.</li><li>띠의 양 끝을 집게로 물고, 건전지와 LED를 연결합니다.</li><li>집게 하나를 띠를 따라 <b>움직여</b> 간격을 넓혔다 좁혔다 해 봅니다.</li><li>같은 간격에서 띠를 <b>더 진하고 굵게</b> 덧칠한 뒤 다시 봅니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 집게 간격을 <b>넓히면 어두워지고</b>, 띠를 <b>덧칠하면 밝아집니다</b>. 저항계가 있다면 숫자로도 확인해 보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">흑연은 전기가 통하지만 금속만큼 잘 통하지는 않습니다 — 그래서 <b>저항</b> 역할을 하죠.<br><b>간격을 넓힌다</b> = 전자가 지나야 할 길이 <b>길어진다</b> → 저항 커짐 → 전류 줄어듦 → 어두워짐.<br><b>덧칠한다</b> = 흑연 층이 <b>두꺼워진다</b> = 길이 <b>넓어진다</b> → 저항 작아짐 → 밝아짐.<br>저항은 <b>길이에 비례하고 단면적에 반비례한다</b> — 방금 시뮬레이션에서 슬라이더로 움직였던 그 관계를 연필로 다시 그린 겁니다.</div></details><p class="exp-tip"><span>💡</span><span>잘 안 되면 연필을 눕혀 칠하세요. 그래도 안 되면 <b>연필심 자체</b>(샤프심 여러 개)를 회로에 물리면 확실합니다.</span></p></div></div>
  <div class="card" style="margin-top:18px">
  <h3 class="card-t" style="margin-bottom:6px">⚠️ 여기서 자주 어긋납니다</h3>
  <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ①</b> — "I = V/R 이니까, <b>전압을 높이면 저항도 같이 커진다</b>."<br>
@@ -1938,6 +1984,7 @@ body.teacher .keyline-s{display:none}
  data-alt="전선의 단면 — 안쪽의 구리 도체와 바깥쪽의 고무 피복이 드러난 사진"
  data-cap="일상생활에서 활용되는 도체, 부도체, 반도체 "></figure>
 
+ <div class="expc"><h3 class="expc-t">🧪 더 알아보기 — 저항이 0이 되면</h3><p class="expc-s">오늘 배운 식에 <b>R = 0</b>을 넣으면 무슨 일이 일어날까요</p><div class="exp"><div class="exp-h"><span class="n">2</span><h4>자석이 공중에 멈춰 서는 초전도체</h4><span class="exp-tag vid">영상으로</span></div><p class="exp-eye">👀 <b>여기를 보세요</b> — 액체 질소로 차갑게 식힌 물체 위에서 자석이 <b>공중에 뜬 채로 멈춰</b> 있습니다.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EC%B4%88%EC%A0%84%EB%8F%84%EC%B2%B4%20%EB%A7%88%EC%9D%B4%EC%8A%A4%EB%84%88%20%EA%B3%B5%EC%A4%91%EB%B6%80%EC%96%91" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «초전도체 마이스너 공중부양»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">어떤 물질은 아주 낮은 온도에서 <b>저항이 정확히 0</b>이 됩니다. 이런 물질을 <b>초전도체</b>라고 해요.<br>저항이 0이면 어떻게 될까요? 한 번 흐르기 시작한 전류가 <b>줄어들지 않고 계속</b> 돕니다. 그 전류가 만든 자기장이 자석을 밀어내면서 공중에 붙잡아 두는 거예요.<br>전선에서 열로 새어 나가는 전기가 하나도 없다는 뜻이라, 실용화되면 세상이 바뀝니다. 문제는 <b>너무 차가워야 한다</b>는 것 — 지금도 전 세계가 "덜 차가워도 되는 초전도체"를 찾고 있습니다.</div></details><p class="exp-warn"><span>⚠️</span><span>액체 질소는 <b>학교에서 다루지 않습니다</b>. 영하 196 ℃라 살에 닿으면 심한 동상을 입어요. 영상으로만 봅니다.</span></p></div></div>
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:10px">

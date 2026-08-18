@@ -854,6 +854,51 @@ body.teacher .wlockmsg{display:none}
  background:var(--paper,#faf4e6);color:var(--ink)}
 .micwarn{font-size:13px;color:var(--danger);flex:1 1 100%}
 </style>
+
+<style id="exp-css">
+.expc{border:2px solid var(--brass,#b99b5e);border-radius:18px;
+ background:var(--paper-hi,var(--surface,#f9f2e3));
+ padding:20px 20px 16px;margin-top:18px;box-shadow:0 14px 34px -20px rgba(0,0,0,.42)}
+.expc-t{font-family:var(--jua,var(--disp,inherit));font-weight:800;
+ font-size:clamp(17px,2.4vw,21px);color:var(--gold,#8a5f24);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.expc-s{font-size:13.5px;color:var(--ink-dim,#5c4a33);margin-top:6px;line-height:1.65}
+.expc .exp{border-top:1px dashed var(--line,#c9b68e);padding-top:15px;margin-top:15px}
+.expc .exp:first-of-type{border-top:0;padding-top:2px;margin-top:12px}
+.exp-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+.exp-h .n{width:27px;height:27px;border-radius:50%;background:var(--accent,#a05c2c);color:#fff;
+ display:grid;place-items:center;font-size:14px;font-weight:800;flex:none}
+.exp-h h4{font-family:var(--jua,var(--disp,inherit));font-size:clamp(16px,2.1vw,18.5px);
+ font-weight:800;color:var(--ink,#2e2315);margin:0}
+.exp-tag{font-size:11.5px;padding:3px 10px;border-radius:99px;border:1px solid var(--line,#c9b68e);
+ color:var(--ink-mute,#96805c);white-space:nowrap}
+.exp-tag.live{background:rgba(44,122,68,.13);border-color:#2c7a44;color:#2c7a44}
+.exp-tag.vid{background:rgba(160,92,44,.13);border-color:var(--accent,#a05c2c);color:var(--accent,#a05c2c)}
+.exp-prep{font-size:13.5px;color:var(--ink-dim,#5c4a33);background:rgba(138,95,36,.08);
+ border-radius:10px;padding:9px 13px;margin-bottom:10px;line-height:1.65}
+.exp-prep b{color:var(--ink,#2e2315)}
+.expc .exp ol{margin:0 0 10px 21px;padding:0}
+.expc .exp ol li{font-size:14.5px;color:var(--ink-dim,#5c4a33);line-height:1.75;margin:4px 0}
+.exp-eye{font-size:14.5px;color:var(--ink-dim,#5c4a33);border-left:3px solid var(--gold,#8a5f24);
+ background:rgba(138,95,36,.09);padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0;line-height:1.7}
+.exp-eye b{color:var(--gold,#8a5f24)}
+.exp-why{margin-top:9px;border:1px dashed var(--line,#c9b68e);border-radius:11px;overflow:hidden}
+.exp-why>summary{cursor:pointer;padding:10px 14px;font-size:14px;font-weight:800;
+ color:var(--accent,#a05c2c);list-style:none;user-select:none}
+.exp-why>summary::-webkit-details-marker{display:none}
+.exp-why>summary::before{content:"▸ "}
+.exp-why[open]>summary::before{content:"▾ "}
+.exp-why .in{padding:0 14px 13px;font-size:14px;color:var(--ink-dim,#5c4a33);line-height:1.8}
+.exp-why .in b{color:var(--ink,#2e2315)}
+.exp-tip,.exp-warn{display:flex;gap:8px;font-size:13px;margin-top:9px;line-height:1.7;align-items:flex-start}
+.exp-tip{color:var(--ink-dim,#5c4a33)}
+.exp-warn{color:#8c212b;background:rgba(179,54,46,.08);border-left:3px solid var(--danger,#b3362e);
+ padding:9px 13px;border-radius:0 10px 10px 0}
+.exp-warn b{color:#8c212b}
+.exp-yt{display:inline-flex;align-items:center;gap:7px;margin-top:4px;font-size:13.5px;font-weight:700;
+ padding:7px 15px;border-radius:99px;border:1.5px dashed var(--accent,#a05c2c);
+ color:var(--accent,#a05c2c);text-decoration:none;transition:.16s}
+.exp-yt:hover{background:rgba(160,92,44,.1)}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1125,6 +1170,7 @@ body.teacher .wlockmsg{display:none}
  <div class="note class"><span class="ic">💬</span><div><b>탐구 모범 답안</b> — (가) 직렬에서는 전구 1개의 연결을 끊으면 <b>나머지 전구의 불도 꺼진다.</b> (나) 병렬에서는 전구 1개의 연결을 끊어도 <b>나머지 전구는 불이 켜진 채로 있다.</b> 두 관찰 결과를 칠판에 나란히 적어 두고 3단계로 넘어가세요.</div></div>
  </div>
 
+ <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 하나를 빼 보면 안다</h3><p class="expc-s">예상한 대로였는지, <b>직접 빼서</b> 확인합니다</p><div class="exp"><div class="exp-h"><span class="n">1</span><h4>전구 하나 빼기</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 꼬마전구 2개와 소켓, 건전지 2개와 홀더, 집게 전선 4개</div><ol><li>먼저 <b>직렬</b>로 잇습니다 — 전지에서 나온 선이 전구 ㉮를 지나 ㉯로, 다시 전지로.</li><li>전구 ㉮를 소켓에서 <b>살짝 돌려 뺍니다</b>. ㉯는 어떻게 될까요?</li><li>이번엔 <b>병렬</b>로 다시 잇습니다 — 전구마다 자기 길을 갖도록.</li><li>똑같이 ㉮를 빼 봅니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 직렬에서는 <b>둘 다 꺼지고</b>, 병렬에서는 <b>㉯만 그대로 켜져</b> 있습니다. 밝기 차이도 함께 보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">직렬은 길이 <b>하나뿐</b>입니다. 그 길 위 어디가 끊기든 전체가 멈춰요.<br>병렬은 <b>갈림길</b>이 있습니다. 한쪽이 끊겨도 다른 길은 멀쩡하니 남은 전구는 그대로 켜져 있죠.<br>차이는 딱 이것 하나 — <b>갈림길이 있느냐 없느냐</b>입니다.</div></details><p class="exp-tip"><span>💡</span><span>옛날 크리스마스 장식 전구줄이 <b>직렬</b>이었습니다. 전구 하나만 나가도 줄 전체가 안 켜져서, 어느 전구가 범인인지 하나씩 갈아 끼우며 찾아야 했죠. 요즘 LED 줄은 병렬이라 그런 고생이 없습니다.</span></p><p class="exp-warn"><span>⚠️</span><span><b>220 V 콘센트에 꽂는 장식 전구줄로는 하지 않습니다.</b> 반드시 건전지용 꼬마전구로 하세요.</span></p></div></div>
  <div class="card" style="margin-top:18px" id="poeSummary">
  <div class="badge" style="margin-bottom:12px">🧩 두 번의 관찰을 나란히 놓으면</div>
  <h3 class="card-t">갈림길이 있느냐 없느냐, 그게 전부였다</h3>
@@ -1650,6 +1696,7 @@ body.teacher .wlockmsg{display:none}
  </a>
  </div>
 
+ <div class="expc"><h3 class="expc-t">🧪 찾아보기 — 우리 주변의 직렬</h3><p class="expc-s">가방 속에도 <b>직렬 연결</b>이 들어 있습니다</p><div class="exp"><div class="exp-h"><span class="n">2</span><h4>리모컨 건전지 칸 들여다보기</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · TV 리모컨, 손전등, 무선 마우스 — 건전지 2개 이상 쓰는 아무 물건</div><ol><li>건전지 뚜껑을 열고 <b>+ 와 − 표시</b>가 어떻게 그려져 있는지 봅니다.</li><li>건전지 하나를 <b>거꾸로</b> 끼워 보세요. 작동할까요?</li><li>건전지 하나를 <b>빼고</b> 작동시켜 봅니다.</li><li>이 기구는 1.5 V 건전지 2개를 쓰는데, 실제로는 <b>몇 V</b>로 작동하는 걸까요?</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 대부분 <b>+−+−</b> 로 엇갈려 있습니다. 하나만 거꾸로 끼거나 빼도 <b>전혀 작동하지 않아요</b>.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">엇갈려 놓는 건 <b>직렬로 잇기 위해서</b>입니다. 한 전지의 (+)가 다음 전지의 (−)에 닿아야 전압이 더해지거든요.<br>1.5 V 건전지 2개를 직렬로 이으면 <b>3 V</b>가 됩니다. 리모컨은 3 V로 작동하도록 만들어진 거예요.<br>하나를 빼면 길이 끊기고, 거꾸로 끼우면 서로 밀어내는 방향이 되어 <b>0 V</b>가 됩니다. 전기뱀장어가 0.15 V 세포를 수천 개 쌓아 600 V를 만든 것과 완전히 같은 방법이죠.</div></details></div></div>
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:10px">

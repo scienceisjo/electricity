@@ -812,6 +812,51 @@ body.teacher .keyline-s{display:none}
  background:var(--paper,#faf4e6);color:var(--ink)}
 .micwarn{font-size:13px;color:var(--danger);flex:1 1 100%}
 </style>
+
+<style id="exp-css">
+.expc{border:2px solid var(--brass,#b99b5e);border-radius:18px;
+ background:var(--paper-hi,var(--surface,#f9f2e3));
+ padding:20px 20px 16px;margin-top:18px;box-shadow:0 14px 34px -20px rgba(0,0,0,.42)}
+.expc-t{font-family:var(--jua,var(--disp,inherit));font-weight:800;
+ font-size:clamp(17px,2.4vw,21px);color:var(--gold,#8a5f24);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.expc-s{font-size:13.5px;color:var(--ink-dim,#5c4a33);margin-top:6px;line-height:1.65}
+.expc .exp{border-top:1px dashed var(--line,#c9b68e);padding-top:15px;margin-top:15px}
+.expc .exp:first-of-type{border-top:0;padding-top:2px;margin-top:12px}
+.exp-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+.exp-h .n{width:27px;height:27px;border-radius:50%;background:var(--accent,#a05c2c);color:#fff;
+ display:grid;place-items:center;font-size:14px;font-weight:800;flex:none}
+.exp-h h4{font-family:var(--jua,var(--disp,inherit));font-size:clamp(16px,2.1vw,18.5px);
+ font-weight:800;color:var(--ink,#2e2315);margin:0}
+.exp-tag{font-size:11.5px;padding:3px 10px;border-radius:99px;border:1px solid var(--line,#c9b68e);
+ color:var(--ink-mute,#96805c);white-space:nowrap}
+.exp-tag.live{background:rgba(44,122,68,.13);border-color:#2c7a44;color:#2c7a44}
+.exp-tag.vid{background:rgba(160,92,44,.13);border-color:var(--accent,#a05c2c);color:var(--accent,#a05c2c)}
+.exp-prep{font-size:13.5px;color:var(--ink-dim,#5c4a33);background:rgba(138,95,36,.08);
+ border-radius:10px;padding:9px 13px;margin-bottom:10px;line-height:1.65}
+.exp-prep b{color:var(--ink,#2e2315)}
+.expc .exp ol{margin:0 0 10px 21px;padding:0}
+.expc .exp ol li{font-size:14.5px;color:var(--ink-dim,#5c4a33);line-height:1.75;margin:4px 0}
+.exp-eye{font-size:14.5px;color:var(--ink-dim,#5c4a33);border-left:3px solid var(--gold,#8a5f24);
+ background:rgba(138,95,36,.09);padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0;line-height:1.7}
+.exp-eye b{color:var(--gold,#8a5f24)}
+.exp-why{margin-top:9px;border:1px dashed var(--line,#c9b68e);border-radius:11px;overflow:hidden}
+.exp-why>summary{cursor:pointer;padding:10px 14px;font-size:14px;font-weight:800;
+ color:var(--accent,#a05c2c);list-style:none;user-select:none}
+.exp-why>summary::-webkit-details-marker{display:none}
+.exp-why>summary::before{content:"▸ "}
+.exp-why[open]>summary::before{content:"▾ "}
+.exp-why .in{padding:0 14px 13px;font-size:14px;color:var(--ink-dim,#5c4a33);line-height:1.8}
+.exp-why .in b{color:var(--ink,#2e2315)}
+.exp-tip,.exp-warn{display:flex;gap:8px;font-size:13px;margin-top:9px;line-height:1.7;align-items:flex-start}
+.exp-tip{color:var(--ink-dim,#5c4a33)}
+.exp-warn{color:#8c212b;background:rgba(179,54,46,.08);border-left:3px solid var(--danger,#b3362e);
+ padding:9px 13px;border-radius:0 10px 10px 0}
+.exp-warn b{color:#8c212b}
+.exp-yt{display:inline-flex;align-items:center;gap:7px;margin-top:4px;font-size:13.5px;font-weight:700;
+ padding:7px 15px;border-radius:99px;border:1.5px dashed var(--accent,#a05c2c);
+ color:var(--accent,#a05c2c);text-decoration:none;transition:.16s}
+.exp-yt:hover{background:rgba(160,92,44,.1)}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1331,6 +1376,7 @@ body.teacher .keyline-s{display:none}
 
 
 
+ <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 어느 모둠 전자석이 제일 셀까</h3><p class="expc-s">변인을 <b>하나만</b> 바꿔 가며 겨루는 모둠 대항전</p><div class="exp"><div class="exp-h"><span class="n">1</span><h4>클립 낚시 대회</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 굵은 쇠못(10 cm), 에나멜선 또는 피복 전선 3 m, 건전지·홀더, 클립 한 봉지, 스위치, 사포</div><ol><li>못에 전선을 <b>촘촘히</b> 감습니다. 에나멜선이면 양 끝을 사포로 문질러 피복을 벗기세요.</li><li>모둠마다 조건을 <b>하나만</b> 다르게 정합니다 — 감은 수(50 / 100 / 150회) 또는 건전지 수(1 / 2개).</li><li>스위치를 켜고 <b>30초 동안</b> 클립을 몇 개나 붙일 수 있는지 셉니다.</li><li>스위치를 끄면 어떻게 되는지도 꼭 확인합니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 감은 수가 많을수록, 건전지가 많을수록 <b>더 많이</b> 붙습니다. 그리고 스위치를 끄면 <b>즉시</b> 우수수 떨어져요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">코일이 만드는 자기장의 세기는 <b>전류의 세기 × 감은 수</b>로 정해집니다. 둘 중 어느 것을 키워도 세지죠.<br>못(철심)이 들어가면 훨씬 세지는데, 못 속의 <b>자기 구역</b>들이 코일의 자기장을 따라 나란히 정렬해 자기 힘을 보태기 때문입니다.<br>스위치를 끄면 즉시 떨어지는 것 — 이게 <b>전자석의 값어치</b>입니다. 영구자석은 이걸 못 하죠.</div></details><p class="exp-tip"><span>💡</span><span><b>변인 통제</b>가 이 실험의 진짜 공부입니다. 감은 수만 비교하려면 전선 <b>길이는 똑같이</b> 하고 남는 부분을 늘어뜨려 두세요. 전선이 길어지면 저항이 달라져 전류까지 바뀌어 버립니다.</span></p><p class="exp-warn"><span>⚠️</span><span>오래 켜 두면 전선과 건전지가 <b>뜨거워집니다</b>. 10초 켜고 쉬기를 지키세요. 전지의 두 극을 전선으로 <b>곧바로</b> 잇는 것(합선)은 절대 금지입니다.</span></p></div></div>
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🧾 정리해 볼까 — 관찰에서 두 문장을 캐내기</h3>
  <p class="lead" style="font-size:17px;margin-top:8px">기록표에서 다음 <b class="k">두 쌍</b>을 찾아 견주어 보세요.</p>
@@ -1634,6 +1680,7 @@ body.teacher .keyline-s{display:none}
  <p class="cloze-hint">이름만 외우는 게 아니라, <b>왜 전자석이라야 하는지</b>를 말할 수 있으면 진짜 아는 것입니다.</p>
  </div>
 
+ <div class="expc"><h3 class="expc-t">🧪 더 알아보기 — 껐다 켤 수 있다는 것</h3><p class="expc-s">고철장 크레인이 <b>영구자석을 쓰지 않는</b> 이유</p><div class="exp"><div class="exp-h"><span class="n">2</span><h4>고철을 들어 올리는 전자석 크레인</h4><span class="exp-tag vid">영상으로</span></div><p class="exp-eye">👀 <b>여기를 보세요</b> — 크레인이 고철 더미를 <b>한 번에</b> 들어 올렸다가, 옮긴 자리에서 <b>툭 떨어뜨립니다</b>.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EA%B3%A0%EC%B2%A0%EC%9E%A5%20%EC%A0%84%EC%9E%90%EC%84%9D%20%ED%81%AC%EB%A0%88%EC%9D%B8" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «고철장 전자석 크레인»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">질문 하나 — 왜 그냥 <b>센 영구자석</b>을 쓰지 않을까요?<br>들어 올리는 건 영구자석도 할 수 있습니다. 문제는 <b>놓는 것</b>이에요. 한 번 붙으면 뗄 방법이 없죠.<br>전자석은 <b>스위치 하나로</b> 자석이 됐다 안 됐다 합니다. 세기도 전류로 조절할 수 있고요. 방금 클립 낚시에서 스위치를 껐을 때 우수수 떨어지던 그 장면이, 저 크레인이 하는 일 전부입니다.<br>전자석이 쓰이는 곳을 이 기준으로 찾아보세요 — <b>껐다 켜야 하는 곳</b>에 어김없이 있습니다.</div></details></div></div>
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:10px">

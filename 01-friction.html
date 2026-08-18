@@ -820,6 +820,51 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  border:1.5px dashed var(--line);color:var(--ink-dim);text-decoration:none}
 .vwatch:hover{border-color:var(--accent);color:var(--accent)}
 </style>
+
+<style id="exp-css">
+.expc{border:2px solid var(--brass,#b99b5e);border-radius:18px;
+ background:var(--paper-hi,var(--surface,#f9f2e3));
+ padding:20px 20px 16px;margin-top:18px;box-shadow:0 14px 34px -20px rgba(0,0,0,.42)}
+.expc-t{font-family:var(--jua,var(--disp,inherit));font-weight:800;
+ font-size:clamp(17px,2.4vw,21px);color:var(--gold,#8a5f24);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.expc-s{font-size:13.5px;color:var(--ink-dim,#5c4a33);margin-top:6px;line-height:1.65}
+.expc .exp{border-top:1px dashed var(--line,#c9b68e);padding-top:15px;margin-top:15px}
+.expc .exp:first-of-type{border-top:0;padding-top:2px;margin-top:12px}
+.exp-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+.exp-h .n{width:27px;height:27px;border-radius:50%;background:var(--accent,#a05c2c);color:#fff;
+ display:grid;place-items:center;font-size:14px;font-weight:800;flex:none}
+.exp-h h4{font-family:var(--jua,var(--disp,inherit));font-size:clamp(16px,2.1vw,18.5px);
+ font-weight:800;color:var(--ink,#2e2315);margin:0}
+.exp-tag{font-size:11.5px;padding:3px 10px;border-radius:99px;border:1px solid var(--line,#c9b68e);
+ color:var(--ink-mute,#96805c);white-space:nowrap}
+.exp-tag.live{background:rgba(44,122,68,.13);border-color:#2c7a44;color:#2c7a44}
+.exp-tag.vid{background:rgba(160,92,44,.13);border-color:var(--accent,#a05c2c);color:var(--accent,#a05c2c)}
+.exp-prep{font-size:13.5px;color:var(--ink-dim,#5c4a33);background:rgba(138,95,36,.08);
+ border-radius:10px;padding:9px 13px;margin-bottom:10px;line-height:1.65}
+.exp-prep b{color:var(--ink,#2e2315)}
+.expc .exp ol{margin:0 0 10px 21px;padding:0}
+.expc .exp ol li{font-size:14.5px;color:var(--ink-dim,#5c4a33);line-height:1.75;margin:4px 0}
+.exp-eye{font-size:14.5px;color:var(--ink-dim,#5c4a33);border-left:3px solid var(--gold,#8a5f24);
+ background:rgba(138,95,36,.09);padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0;line-height:1.7}
+.exp-eye b{color:var(--gold,#8a5f24)}
+.exp-why{margin-top:9px;border:1px dashed var(--line,#c9b68e);border-radius:11px;overflow:hidden}
+.exp-why>summary{cursor:pointer;padding:10px 14px;font-size:14px;font-weight:800;
+ color:var(--accent,#a05c2c);list-style:none;user-select:none}
+.exp-why>summary::-webkit-details-marker{display:none}
+.exp-why>summary::before{content:"▸ "}
+.exp-why[open]>summary::before{content:"▾ "}
+.exp-why .in{padding:0 14px 13px;font-size:14px;color:var(--ink-dim,#5c4a33);line-height:1.8}
+.exp-why .in b{color:var(--ink,#2e2315)}
+.exp-tip,.exp-warn{display:flex;gap:8px;font-size:13px;margin-top:9px;line-height:1.7;align-items:flex-start}
+.exp-tip{color:var(--ink-dim,#5c4a33)}
+.exp-warn{color:#8c212b;background:rgba(179,54,46,.08);border-left:3px solid var(--danger,#b3362e);
+ padding:9px 13px;border-radius:0 10px 10px 0}
+.exp-warn b{color:#8c212b}
+.exp-yt{display:inline-flex;align-items:center;gap:7px;margin-top:4px;font-size:13.5px;font-weight:700;
+ padding:7px 15px;border-radius:99px;border:1.5px dashed var(--accent,#a05c2c);
+ color:var(--accent,#a05c2c);text-decoration:none;transition:.16s}
+.exp-yt:hover{background:rgba(160,92,44,.1)}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -955,6 +1000,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  <div class="keyline-s"><span class="kw">다른 두 물체 마찰</span><span class="arw">→</span><span class="kw hi">마찰 전기</span><span class="kw q">무슨 일이 일어났나 → 2·3단계</span><span class="memo"></span></div>
  </div>
 
+ <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 밀어내는 힘을 눈으로</h3><p class="expc-s">준비물은 문구점에서 다 구합니다 · <b>건조한 날</b>일수록 잘 됩니다</p><div class="exp"><div class="exp-h"><span class="n">1</span><h4>공중에 뜨는 비닐끈 해파리</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 얇은 비닐 끈(농사용) 30cm, PVC 파이프 또는 긴 풍선, 털옷·모직 천</div><ol><li>비닐 끈을 <b>여러 가닥으로 잘게 찢어</b> 한쪽 끝을 묶습니다. 술 모양이 될수록 좋아요.</li><li>파이프를 털옷에 <b>30번쯤</b> 세게 문지릅니다.</li><li>끈 뭉치도 파이프로 여러 번 훑어 <b>같은 전하</b>를 줍니다.</li><li>뭉치를 위로 던지고, 그 아래에서 파이프를 이리저리 움직여 보세요.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 뭉치가 <b>활짝 펼쳐진 채</b> 공중에 떠서 파이프를 피해 다닙니다. 가닥이 오므라들지 않는 것도 눈여겨보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">파이프와 끈 뭉치가 <b>같은 종류의 전하</b>를 띠고 있어 서로 밀어냅니다. 이 미는 힘이 중력과 맞서기 때문에 뭉치가 떠 있는 거예요.<br>가닥이 활짝 펼쳐지는 것도 같은 이유입니다 — <b>가닥끼리도 서로 같은 전하</b>라 최대한 멀어지려 하죠. 해파리 모양 자체가 "같은 전하는 밀어낸다"의 증거인 셈입니다.</div></details><p class="exp-tip"><span>💡</span><span>실패하면 십중팔구 <b>습도</b> 탓입니다. 드라이기로 끈과 파이프를 데워 말린 뒤 다시 해 보세요.</span></p></div><div class="exp"><div class="exp-h"><span class="n">2</span><h4>휘어지는 물줄기</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 플라스틱 자 또는 빗, 수도꼭지(과학실 싱크대면 충분)</div><ol><li>물을 <b>실처럼 가늘게</b>, 끊기지 않을 만큼만 틉니다.</li><li>자를 머리카락이나 털옷에 20번쯤 문지릅니다.</li><li>물줄기 옆 <b>1~2 cm</b>까지 천천히 가까이 가져갑니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 물줄기가 자 <b>쪽으로</b> 휘어집니다. 자가 물에 닿는 순간 효과가 사라지는 것도 확인해 보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">여기서 중요한 건 <b>물은 대전되지 않았다</b>는 점입니다. 그런데도 끌려왔어요.<br>물 분자는 한쪽이 (+)를 띠고 반대쪽이 (−)를 띤 모양입니다. 대전체가 가까이 오면 물 분자들이 <b>방향을 돌려</b> 반대 전하 쪽을 대전체로 향하게 하죠. 그러면 끌어당기는 힘이 미는 힘보다 조금 더 커서, 전체적으로 끌려옵니다.<br><b>중성인 물체도 끌려온다</b> — 이게 바로 다음 시간에 배울 정전기 유도의 예고편입니다.</div></details><p class="exp-tip"><span>💡</span><span>물줄기가 굵으면 잘 안 휩니다. "실"이라고 부를 수 있을 만큼 가늘게 트는 게 성공의 열쇠.</span></p></div></div>
  <div class="card" style="margin-top:18px">
  <div class="eyebrow" style="margin-bottom:8px">오늘의 목표</div>
  <h3 class="card-t" style="margin-bottom:14px">이번 시간이 끝나면 이걸 할 수 있다</h3>
@@ -1550,6 +1596,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  그런데 화면에 다시 붙는 먼지는 <b>①번 칸이 비어 있습니다.</b> 먼지는 아무도 문지르지 않았으니까요. 바로 아래에서 이어집니다.</p>
 
  <div class="vwrap"><div class="vlead">🎬 정전기를 아주 많이 모으면?</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/CrsgaZ_1ZeQ" title="정전기가 많이 모이면 번개도 만들 수 있을까" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>번개도 결국 같은 원리입니다. 규모만 어마어마하게 커진 것.</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtube.com/shorts/CrsgaZ_1ZeQ" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div>
+ <div class="expc"><h3 class="expc-t">🧪 더 해 보기 — 전기력으로 골라내기</h3><p class="expc-s">오늘 배운 힘이 <b>공장에서도 똑같이</b> 쓰입니다</p><div class="exp"><div class="exp-h"><span class="n">3</span><h4>후추와 소금 골라내기</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 소금, 후춧가루, 플라스틱 숟가락(또는 풍선), 접시</div><ol><li>접시에 소금과 후춧가루를 <b>골고루 섞습니다</b>.</li><li>숟가락을 털옷에 문지릅니다.</li><li>섞인 가루 <b>3 cm 위</b>에서 천천히 지나가 보세요.</li><li>높이를 조금씩 <b>낮추면서</b> 다시 지나갑니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 가벼운 <b>후추가 먼저</b> 튀어 올라 붙습니다. 더 낮추면 그제야 소금도 붙기 시작해요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">전기력은 후추에도 소금에도 똑같이 작용합니다. 그런데 후추 알갱이가 훨씬 <b>가볍기</b> 때문에 중력을 먼저 이기는 거예요.<br>높이를 낮출수록 무거운 소금까지 붙는다는 건, <b>가까울수록 전기력이 세다</b>는 뜻이기도 합니다. 거리와 힘의 관계를 눈으로 확인한 셈이죠.<br>공장 굴뚝의 <b>전기 집진기</b>가 바로 이 원리로 매연 속 먼지만 골라 붙잡습니다.</div></details></div><div class="exp"><div class="exp-h"><span class="n">4</span><h4>테이프를 떼면 X선이 나온다</h4><span class="exp-tag vid">영상으로</span></div><p class="exp-eye">👀 <b>여기를 보세요</b> — 진공 속에서 테이프를 빠르게 떼자 <b>X선</b>이 나와, 그 빛으로 손가락 사진이 찍혔습니다.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EC%8A%A4%EC%B9%B4%EC%B9%98%ED%85%8C%EC%9D%B4%ED%94%84%20X%EC%84%A0" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «스카치테이프 X선»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">테이프를 떼는 것도 결국 <b>마찰(박리)에 의한 대전</b>입니다. 두 면이 갈라질 때 전하가 나뉘는데, 진공에서는 이 전하가 중화되지 못하고 쌓여 <b>어마어마한 전압</b>이 됩니다. 이때 튀어나온 전자가 부딪히며 X선이 나오는 거예요. 2008년에 실제로 학술지에 발표된 연구입니다.<br><b>안심하세요</b> — 공기 중에서 평범하게 테이프를 떼는 것으로는 X선이 나오지 않습니다. 진공이어야만 일어나는 일이에요.</div></details></div></div>
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:10px">

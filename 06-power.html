@@ -823,6 +823,51 @@ body.teacher .keyline-s{display:none}
  background:var(--paper,#faf4e6);color:var(--ink)}
 .micwarn{font-size:13px;color:var(--danger);flex:1 1 100%}
 </style>
+
+<style id="exp-css">
+.expc{border:2px solid var(--brass,#b99b5e);border-radius:18px;
+ background:var(--paper-hi,var(--surface,#f9f2e3));
+ padding:20px 20px 16px;margin-top:18px;box-shadow:0 14px 34px -20px rgba(0,0,0,.42)}
+.expc-t{font-family:var(--jua,var(--disp,inherit));font-weight:800;
+ font-size:clamp(17px,2.4vw,21px);color:var(--gold,#8a5f24);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.expc-s{font-size:13.5px;color:var(--ink-dim,#5c4a33);margin-top:6px;line-height:1.65}
+.expc .exp{border-top:1px dashed var(--line,#c9b68e);padding-top:15px;margin-top:15px}
+.expc .exp:first-of-type{border-top:0;padding-top:2px;margin-top:12px}
+.exp-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+.exp-h .n{width:27px;height:27px;border-radius:50%;background:var(--accent,#a05c2c);color:#fff;
+ display:grid;place-items:center;font-size:14px;font-weight:800;flex:none}
+.exp-h h4{font-family:var(--jua,var(--disp,inherit));font-size:clamp(16px,2.1vw,18.5px);
+ font-weight:800;color:var(--ink,#2e2315);margin:0}
+.exp-tag{font-size:11.5px;padding:3px 10px;border-radius:99px;border:1px solid var(--line,#c9b68e);
+ color:var(--ink-mute,#96805c);white-space:nowrap}
+.exp-tag.live{background:rgba(44,122,68,.13);border-color:#2c7a44;color:#2c7a44}
+.exp-tag.vid{background:rgba(160,92,44,.13);border-color:var(--accent,#a05c2c);color:var(--accent,#a05c2c)}
+.exp-prep{font-size:13.5px;color:var(--ink-dim,#5c4a33);background:rgba(138,95,36,.08);
+ border-radius:10px;padding:9px 13px;margin-bottom:10px;line-height:1.65}
+.exp-prep b{color:var(--ink,#2e2315)}
+.expc .exp ol{margin:0 0 10px 21px;padding:0}
+.expc .exp ol li{font-size:14.5px;color:var(--ink-dim,#5c4a33);line-height:1.75;margin:4px 0}
+.exp-eye{font-size:14.5px;color:var(--ink-dim,#5c4a33);border-left:3px solid var(--gold,#8a5f24);
+ background:rgba(138,95,36,.09);padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0;line-height:1.7}
+.exp-eye b{color:var(--gold,#8a5f24)}
+.exp-why{margin-top:9px;border:1px dashed var(--line,#c9b68e);border-radius:11px;overflow:hidden}
+.exp-why>summary{cursor:pointer;padding:10px 14px;font-size:14px;font-weight:800;
+ color:var(--accent,#a05c2c);list-style:none;user-select:none}
+.exp-why>summary::-webkit-details-marker{display:none}
+.exp-why>summary::before{content:"▸ "}
+.exp-why[open]>summary::before{content:"▾ "}
+.exp-why .in{padding:0 14px 13px;font-size:14px;color:var(--ink-dim,#5c4a33);line-height:1.8}
+.exp-why .in b{color:var(--ink,#2e2315)}
+.exp-tip,.exp-warn{display:flex;gap:8px;font-size:13px;margin-top:9px;line-height:1.7;align-items:flex-start}
+.exp-tip{color:var(--ink-dim,#5c4a33)}
+.exp-warn{color:#8c212b;background:rgba(179,54,46,.08);border-left:3px solid var(--danger,#b3362e);
+ padding:9px 13px;border-radius:0 10px 10px 0}
+.exp-warn b{color:#8c212b}
+.exp-yt{display:inline-flex;align-items:center;gap:7px;margin-top:4px;font-size:13.5px;font-weight:700;
+ padding:7px 15px;border-radius:99px;border:1.5px dashed var(--accent,#a05c2c);
+ color:var(--accent,#a05c2c);text-decoration:none;transition:.16s}
+.exp-yt:hover{background:rgba(160,92,44,.1)}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1383,6 +1428,7 @@ body.teacher .keyline-s{display:none}
  전기 에너지를 효율적으로 사용하는 기구입니다.</p>
  <div class="keyline-s"><span class="kw">선풍기 = 바람 + 소리 + 열</span><span class="arw">→</span><span class="kw hi">손실</span><span class="kw">소비 전력 크면 손실 많음</span><span class="memo"></span></div>
  </div>
+ <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 문어발은 왜 위험한가</h3><p class="expc-s">오늘 배운 <b>소비 전력</b>으로 화재 뉴스를 설명해 봅시다</p><div class="exp"><div class="exp-h"><span class="n">1</span><h4>멀티탭 한계 계산하기</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 멀티탭 1개(정격 표시가 보이는 것), 교실·집 전기 기구 사진이나 라벨, 계산기</div><ol><li>멀티탭 몸통이나 플러그에 적힌 <b>정격</b>을 찾습니다 — 보통 <b>250 V 15 A</b>, 즉 약 <b>3300 W</b>.</li><li>전기난로·전기주전자·헤어드라이어·전자레인지의 소비 전력을 라벨에서 찾아 적습니다.</li><li>이 중 <b>세 개</b>를 골라 한 멀티탭에 꽂았다고 하고, 소비 전력을 <b>모두 더합니다</b>.</li><li>3300 W를 넘는 조합을 <b>몇 가지나</b> 만들 수 있는지 세어 보세요.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 전기난로(1500 W) <b>두 개</b>만으로 벌써 3000 W입니다. 여기에 드라이어 하나만 더 꽂으면 한계를 넘어요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">멀티탭에 꽂은 기구들은 모두 <b>병렬</b>입니다. 병렬이니 각 기구에는 똑같이 220 V가 걸리고, <b>전류는 각각 흐르는 만큼 모두 더해집니다</b>.<br>전류가 커지면 멀티탭 <b>전선 자체가 뜨거워집니다</b>. 전선에도 (작지만) 저항이 있으니까요. 견딜 수 있는 한계를 넘으면 피복이 녹고, 불이 납니다.<br>핵심은 <b>"몇 개를 꽂았느냐"가 아니라 "합이 얼마냐"</b>입니다. 휴대폰 충전기 열 개(50 W)보다 전기난로 <b>하나</b>(1500 W)가 훨씬 위험해요.</div></details><p class="exp-tip"><span>💡</span><span>전기 기구 라벨 사진을 미리 찍어 두면 수업이 빨라집니다. 학생들에게 집에서 찍어 오라고 해도 좋아요.</span></p></div><div class="exp"><div class="exp-h"><span class="n">2</span><h4>문어발 멀티탭에 정말 불이 붙을까</h4><span class="exp-tag vid">영상으로</span></div><p class="exp-eye">👀 <b>여기를 보세요</b> — 소방 실험에서 한계를 넘긴 멀티탭의 <b>전선 부분</b>이 먼저 뜨거워지다가 불이 붙습니다.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EB%A9%80%ED%8B%B0%ED%83%AD%20%EB%AC%B8%EC%96%B4%EB%B0%9C%20%ED%99%94%EC%9E%AC%20%EC%8B%A4%ED%97%98" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «멀티탭 문어발 화재 실험»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">불이 붙는 곳이 기구가 아니라 <b>전선과 콘센트</b>라는 점을 눈여겨보세요. 전류가 지나는 길 전체가 뜨거워지고, 그중 가장 약한 곳에서 먼저 사고가 납니다.<br>먼지가 쌓인 콘센트나 <b>돌돌 말아 둔 멀티탭</b>이 특히 위험합니다. 열이 빠져나가지 못하니까요.</div></details><p class="exp-warn"><span>⚠️</span><span><b>학교에서 재현하지 않습니다.</b> 실제 화재 실험은 소방 훈련 시설에서만 이루어집니다.</span></p></div></div>
  <div class="card">
  <h3 class="card-t">🌍 아껴야 하는 진짜 이유</h3>
  <p class="lead say" style="font-size:17.5px;margin-top:8px">
