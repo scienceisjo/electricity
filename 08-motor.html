@@ -354,6 +354,25 @@ textarea::placeholder{color:var(--ink-mute)}
  .note.class{display:flex!important}
  .cloze{color:#111!important;border-style:solid}.cloze::after{content:none}
 }
+
+/* 실험 하나하나를 접었다 편다 — 제목만 보이고, 눌러야 준비물·방법이 나온다 */
+details.exp{border-top:1px dashed var(--line,#c9b68e);margin-top:0;padding-top:0}
+details.exp:first-of-type{border-top:0}
+details.exp > summary.exp-h{cursor:pointer;list-style:none;user-select:none;
+ margin:0;padding:13px 8px 13px 0;border-radius:9px;transition:background .13s}
+details.exp > summary.exp-h::-webkit-details-marker{display:none}
+details.exp > summary.exp-h::after{content:"펼치기 ▾";margin-left:auto;flex:none;
+ font-size:11.5px;font-weight:700;color:var(--accent,#a05c2c);white-space:nowrap}
+details.exp[open] > summary.exp-h::after{content:"접기 ▴"}
+details.exp > summary.exp-h:hover{background:rgba(160,92,44,.07)}
+details.exp > summary.exp-h:hover h4{color:var(--accent,#a05c2c)}
+details.exp > summary.exp-h:focus-visible{outline:2px solid var(--accent,#a05c2c);outline-offset:2px}
+details.exp > .exp-in{padding:2px 0 15px}
+@media (prefers-reduced-motion:no-preference){
+ details.exp[open] > .exp-in{animation:expOpen .18s ease both}
+ @keyframes expOpen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+}
+.expc-s .toghint{display:block;margin-top:5px;font-size:12.5px;color:var(--ink-dim,#5c4a33)}
 </style>
 
 <style id="board-v2">
@@ -980,7 +999,7 @@ body.teacher .keyline-s{display:none}
  <p class="help">답이 뻔해 보인다면, 좋은 신호입니다. 2단계에서 예상을 걸고 실험으로 확인해 봅시다.</p>
  </div>
 
- <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 세상에서 가장 간단한 전동기</h3><p class="expc-s">부품 <b>세 개</b>로 만드는 진짜 모터</p><div class="exp"><div class="exp-h"><span class="n">1</span><h4>호모폴라 모터</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · AA 건전지 1개, 원판형 네오디뮴 자석 1~2개, 굵은 구리선(에나멜 없는 단선) 20 cm, 니퍼</div><ol><li>건전지의 <b>(−)극</b>에 네오디뮴 자석을 붙입니다.</li><li>구리선을 <b>하트 모양</b>으로 구부립니다 — 위쪽 가운데가 오목하고, 양 끝이 아래로 벌어지게.</li><li>오목한 부분을 건전지 <b>(+)극 꼭지</b>에 살짝 얹습니다. 양 끝은 <b>자석 옆면에 살짝</b> 닿게 하세요.</li><li>자석을 <b>뒤집어</b> 붙이고 다시 해 봅니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 구리선이 <b>혼자서 빙글빙글</b> 돕니다. 자석을 뒤집으면 <b>반대 방향</b>으로 돌아요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">전류는 (+)극 → 구리선 → 자석 → 건전지로 흐릅니다. 그런데 그 구리선이 <b>자석의 자기장 속</b>에 있죠.<br>자기장 속에서 전류가 흐르는 도선은 <b>힘을 받습니다</b>. 그 힘의 방향이 전류에도 자기장에도 <b>수직</b>이라, 구리선을 옆으로 밀어내는 방향이 되어 <b>돌게</b> 되는 거예요.<br>자석을 뒤집으면 자기장 방향이 반대 → 힘의 방향도 반대 → <b>반대로 돕니다</b>. 오늘 배운 규칙이 그대로 눈앞에서 돌아가는 셈이죠.</div></details><p class="exp-tip"><span>💡</span><span>잘 안 돌면 구리선 양 끝이 자석에 <b>너무 세게</b> 눌렸거나 <b>안 닿은</b> 겁니다. 살짝 스치는 정도가 딱 좋아요.</span></p><p class="exp-warn"><span>⚠️</span><span>이 상태는 사실상 <b>합선</b>이라 건전지와 자석이 <b>뜨거워집니다</b>. 20~30초만 돌리고 바로 분리하세요.<br>네오디뮴 자석은 손가락이 끼면 크게 다치고, <b>삼키면 매우 위험</b>합니다. 수업 전후로 개수를 세어 회수하세요.</span></p></div></div>
+ <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 세상에서 가장 간단한 전동기</h3><p class="expc-s">부품 <b>세 개</b>로 만드는 진짜 모터<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">1</span><h4>호모폴라 모터</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · AA 건전지 1개, 원판형 네오디뮴 자석 1~2개, 굵은 구리선(에나멜 없는 단선) 20 cm, 니퍼</div><ol><li>건전지의 <b>(−)극</b>에 네오디뮴 자석을 붙입니다.</li><li>구리선을 <b>하트 모양</b>으로 구부립니다 — 위쪽 가운데가 오목하고, 양 끝이 아래로 벌어지게.</li><li>오목한 부분을 건전지 <b>(+)극 꼭지</b>에 살짝 얹습니다. 양 끝은 <b>자석 옆면에 살짝</b> 닿게 하세요.</li><li>자석을 <b>뒤집어</b> 붙이고 다시 해 봅니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 구리선이 <b>혼자서 빙글빙글</b> 돕니다. 자석을 뒤집으면 <b>반대 방향</b>으로 돌아요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">전류는 (+)극 → 구리선 → 자석 → 건전지로 흐릅니다. 그런데 그 구리선이 <b>자석의 자기장 속</b>에 있죠.<br>자기장 속에서 전류가 흐르는 도선은 <b>힘을 받습니다</b>. 그 힘의 방향이 전류에도 자기장에도 <b>수직</b>이라, 구리선을 옆으로 밀어내는 방향이 되어 <b>돌게</b> 되는 거예요.<br>자석을 뒤집으면 자기장 방향이 반대 → 힘의 방향도 반대 → <b>반대로 돕니다</b>. 오늘 배운 규칙이 그대로 눈앞에서 돌아가는 셈이죠.</div></details><p class="exp-tip"><span>💡</span><span>잘 안 돌면 구리선 양 끝이 자석에 <b>너무 세게</b> 눌렸거나 <b>안 닿은</b> 겁니다. 살짝 스치는 정도가 딱 좋아요.</span></p><p class="exp-warn"><span>⚠️</span><span>이 상태는 사실상 <b>합선</b>이라 건전지와 자석이 <b>뜨거워집니다</b>. 20~30초만 돌리고 바로 분리하세요.<br>네오디뮴 자석은 손가락이 끼면 크게 다치고, <b>삼키면 매우 위험</b>합니다. 수업 전후로 개수를 세어 회수하세요.</span></p></div></details></div>
  <div class="card" style="margin-top:18px">
  <div class="eyebrow" style="margin-bottom:8px">오늘의 목표</div>
  <h3 class="card-t" style="margin-bottom:14px">이번 시간이 끝나면 이걸 할 수 있다</h3>
@@ -1446,7 +1465,7 @@ body.teacher .keyline-s{display:none}
  </div>
 
  <!-- 🔬 외부 가상실험실 -->
- <div class="expc"><h3 class="expc-t">🧪 해부해 보기 — 소리를 만드는 그 힘</h3><p class="expc-s">스피커 안에 <b>전동기와 같은 것</b>이 들어 있습니다</p><div class="exp"><div class="exp-h"><span class="n">2</span><h4>폐스피커 해부</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 못 쓰는 스피커(이어폰도 가능), 드라이버, 건전지 1개, 집게 전선</div><ol><li>뒷판을 열고 안을 들여다봅니다 — <b>영구자석</b>, 그 둘레에 감긴 <b>코일</b>, 코일이 붙은 <b>종이 진동판</b>을 찾으세요.</li><li>자석이 움직이는지, 코일이 움직이는지 손으로 살짝 밀어 확인합니다.</li><li>전선 두 가닥에 건전지를 <b>1초만</b> 물렸다 뗍니다.</li><li>건전지의 <b>극을 바꿔</b> 다시 1초만 물려 봅니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 진동판이 <b>톡</b> 하고 움직입니다. 극을 바꾸면 <b>반대 방향</b>으로 움직여요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">자석은 고정되어 있고, <b>코일이 붙은 진동판</b>이 움직입니다. 자기장 속 코일에 전류가 흐르면 힘을 받는다 — 전동기와 <b>완전히 같은 원리</b>죠.<br>다른 점은 딱 하나, <b>돌지 않고 앞뒤로 떨린다</b>는 것뿐입니다. 전류의 방향이 1초에 수백 번 바뀌면 진동판도 그만큼 떨리고, 그 떨림이 공기를 흔들어 <b>소리</b>가 됩니다.<br>여러분 이어폰 속에도 지금 이것과 똑같은 게 들어 있어요.</div></details><p class="exp-warn"><span>⚠️</span><span>건전지 연결은 <b>1초를 넘기지 마세요</b>. 오래 대면 코일이 타서 스피커가 완전히 망가집니다.</span></p></div></div>
+ <div class="expc"><h3 class="expc-t">🧪 해부해 보기 — 소리를 만드는 그 힘</h3><p class="expc-s">스피커 안에 <b>전동기와 같은 것</b>이 들어 있습니다<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">2</span><h4>폐스피커 해부</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · 못 쓰는 스피커(이어폰도 가능), 드라이버, 건전지 1개, 집게 전선</div><ol><li>뒷판을 열고 안을 들여다봅니다 — <b>영구자석</b>, 그 둘레에 감긴 <b>코일</b>, 코일이 붙은 <b>종이 진동판</b>을 찾으세요.</li><li>자석이 움직이는지, 코일이 움직이는지 손으로 살짝 밀어 확인합니다.</li><li>전선 두 가닥에 건전지를 <b>1초만</b> 물렸다 뗍니다.</li><li>건전지의 <b>극을 바꿔</b> 다시 1초만 물려 봅니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 진동판이 <b>톡</b> 하고 움직입니다. 극을 바꾸면 <b>반대 방향</b>으로 움직여요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">자석은 고정되어 있고, <b>코일이 붙은 진동판</b>이 움직입니다. 자기장 속 코일에 전류가 흐르면 힘을 받는다 — 전동기와 <b>완전히 같은 원리</b>죠.<br>다른 점은 딱 하나, <b>돌지 않고 앞뒤로 떨린다</b>는 것뿐입니다. 전류의 방향이 1초에 수백 번 바뀌면 진동판도 그만큼 떨리고, 그 떨림이 공기를 흔들어 <b>소리</b>가 됩니다.<br>여러분 이어폰 속에도 지금 이것과 똑같은 게 들어 있어요.</div></details><p class="exp-warn"><span>⚠️</span><span>건전지 연결은 <b>1초를 넘기지 마세요</b>. 오래 대면 코일이 타서 스피커가 완전히 망가집니다.</span></p></div></details></div>
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🔬 가상실험실에서 더 해 보기</h3>
  <p class="help">직접 조작해 보면 훨씬 잘 보입니다. 새 창에서 열려요.</p>
@@ -1817,6 +1836,7 @@ const GAME_QS=[
 
  {id:"o1",difficulty:"중",
  intent:"그네형 코일 실험 종합 판단(창작). 정답(옳지 않은 것)은 '전류를 끊어도 계속 움직인다'로 교체 — 힘의 근원이 전류임을 확인.",
+ svg:"<svg viewBox=\"0 0 560 215\" role=\"img\" aria-label=\"철제 스탠드에 코일을 그네처럼 매달고, 코일 앞에 말굽자석을 둔 실험 장치. 코일은 전지에 연결되어 있다.\"><line x1=\"150\" y1=\"36\" x2=\"440\" y2=\"36\" stroke=\"#8a7a5e\" stroke-width=\"4\"/><line x1=\"150\" y1=\"36\" x2=\"150\" y2=\"188\" stroke=\"#8a7a5e\" stroke-width=\"4\"/><rect x=\"116\" y=\"188\" width=\"68\" height=\"9\" rx=\"4\" fill=\"#c9b691\" stroke=\"#8a7a5e\" stroke-width=\"1.6\"/><line x1=\"308\" y1=\"36\" x2=\"308\" y2=\"96\" stroke=\"#a05c2c\" stroke-width=\"2\"/><line x1=\"352\" y1=\"36\" x2=\"352\" y2=\"96\" stroke=\"#a05c2c\" stroke-width=\"2\"/><rect x=\"296\" y=\"96\" width=\"68\" height=\"52\" rx=\"6\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3.4\"/><text x=\"330\" y=\"170\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#4a3a26\">코일</text><path d=\"M200 96 h56 v14 h-38 v24 h38 v14 h-56 z\" fill=\"#b23a30\" stroke=\"#7c221b\" stroke-width=\"2\"/><text x=\"228\" y=\"88\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">자석</text><path d=\"M 308 36 L 308 22 L 470 22 L 470 150 L 455 150\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><path d=\"M 352 36 L 352 14 L 482 14 L 482 150 L 505 150\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><line x1=\"475\" y1=\"134\" x2=\"475\" y2=\"166\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"485\" y1=\"142\"  x2=\"485\" y2=\"158\"  stroke=\"#4a3a26\" stroke-width=\"4.5\"/><text x=\"480\" y=\"190\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">전지</text><text x=\"475\" y=\"128\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">+</text><text x=\"487\" y=\"128\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">−</text><text x=\"330\" y=\"210\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 코일은 앞뒤로 자유롭게 흔들릴 수 있다</text></svg>",
  stem:"자석 앞에 코일을 그네처럼 매달고 전류를 흐르게 하는 실험에 대한 설명으로 옳지 <u>않은</u> 것은?",
  ch:[{t:"코일에 전류가 흐르면 코일이 힘을 받아 움직인다.",ok:0},
  {t:"전류의 방향을 반대로 하면 코일이 움직이는 방향도 반대가 된다.",ok:0},

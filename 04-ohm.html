@@ -354,6 +354,25 @@ textarea::placeholder{color:var(--ink-mute)}
  .note.class{display:flex!important}
  .cloze{color:#111!important;border-style:solid}.cloze::after{content:none}
 }
+
+/* 실험 하나하나를 접었다 편다 — 제목만 보이고, 눌러야 준비물·방법이 나온다 */
+details.exp{border-top:1px dashed var(--line,#c9b68e);margin-top:0;padding-top:0}
+details.exp:first-of-type{border-top:0}
+details.exp > summary.exp-h{cursor:pointer;list-style:none;user-select:none;
+ margin:0;padding:13px 8px 13px 0;border-radius:9px;transition:background .13s}
+details.exp > summary.exp-h::-webkit-details-marker{display:none}
+details.exp > summary.exp-h::after{content:"펼치기 ▾";margin-left:auto;flex:none;
+ font-size:11.5px;font-weight:700;color:var(--accent,#a05c2c);white-space:nowrap}
+details.exp[open] > summary.exp-h::after{content:"접기 ▴"}
+details.exp > summary.exp-h:hover{background:rgba(160,92,44,.07)}
+details.exp > summary.exp-h:hover h4{color:var(--accent,#a05c2c)}
+details.exp > summary.exp-h:focus-visible{outline:2px solid var(--accent,#a05c2c);outline-offset:2px}
+details.exp > .exp-in{padding:2px 0 15px}
+@media (prefers-reduced-motion:no-preference){
+ details.exp[open] > .exp-in{animation:expOpen .18s ease both}
+ @keyframes expOpen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+}
+.expc-s .toghint{display:block;margin-top:5px;font-size:12.5px;color:var(--ink-dim,#5c4a33)}
 </style>
 
 <style id="board-v2">
@@ -1791,7 +1810,7 @@ body.teacher .keyline-s{display:none}
  저항은 도선의 재질·길이·굵기가 정하는 값이에요.</p>
  </div>
 
- <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 연필로 그리는 저항</h3><p class="expc-s">방금 시뮬레이션에서 본 <b>길이와 굵기</b>를 종이 위에서 확인합니다</p><div class="exp"><div class="exp-h"><span class="n">1</span><h4>연필 그림 회로</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 4B 이상 진한 연필, 도화지, LED, 건전지 2~3개, 집게 전선, (있으면) 저항계·전압계</div><ol><li>도화지에 <b>10 cm 길이, 1 cm 폭</b>의 띠를 아주 진하게 여러 번 덧칠합니다. 흑연이 종이에 두껍게 얹히도록요.</li><li>띠의 양 끝을 집게로 물고, 건전지와 LED를 연결합니다.</li><li>집게 하나를 띠를 따라 <b>움직여</b> 간격을 넓혔다 좁혔다 해 봅니다.</li><li>같은 간격에서 띠를 <b>더 진하고 굵게</b> 덧칠한 뒤 다시 봅니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 집게 간격을 <b>넓히면 어두워지고</b>, 띠를 <b>덧칠하면 밝아집니다</b>. 저항계가 있다면 숫자로도 확인해 보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">흑연은 전기가 통하지만 금속만큼 잘 통하지는 않습니다 — 그래서 <b>저항</b> 역할을 하죠.<br><b>간격을 넓힌다</b> = 전자가 지나야 할 길이 <b>길어진다</b> → 저항 커짐 → 전류 줄어듦 → 어두워짐.<br><b>덧칠한다</b> = 흑연 층이 <b>두꺼워진다</b> = 길이 <b>넓어진다</b> → 저항 작아짐 → 밝아짐.<br>저항은 <b>길이에 비례하고 단면적에 반비례한다</b> — 방금 시뮬레이션에서 슬라이더로 움직였던 그 관계를 연필로 다시 그린 겁니다.</div></details><p class="exp-tip"><span>💡</span><span>잘 안 되면 연필을 눕혀 칠하세요. 그래도 안 되면 <b>연필심 자체</b>(샤프심 여러 개)를 회로에 물리면 확실합니다.</span></p></div></div>
+ <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 연필로 그리는 저항</h3><p class="expc-s">방금 시뮬레이션에서 본 <b>길이와 굵기</b>를 종이 위에서 확인합니다<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">1</span><h4>연필 그림 회로</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · 4B 이상 진한 연필, 도화지, LED, 건전지 2~3개, 집게 전선, (있으면) 저항계·전압계</div><ol><li>도화지에 <b>10 cm 길이, 1 cm 폭</b>의 띠를 아주 진하게 여러 번 덧칠합니다. 흑연이 종이에 두껍게 얹히도록요.</li><li>띠의 양 끝을 집게로 물고, 건전지와 LED를 연결합니다.</li><li>집게 하나를 띠를 따라 <b>움직여</b> 간격을 넓혔다 좁혔다 해 봅니다.</li><li>같은 간격에서 띠를 <b>더 진하고 굵게</b> 덧칠한 뒤 다시 봅니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 집게 간격을 <b>넓히면 어두워지고</b>, 띠를 <b>덧칠하면 밝아집니다</b>. 저항계가 있다면 숫자로도 확인해 보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">흑연은 전기가 통하지만 금속만큼 잘 통하지는 않습니다 — 그래서 <b>저항</b> 역할을 하죠.<br><b>간격을 넓힌다</b> = 전자가 지나야 할 길이 <b>길어진다</b> → 저항 커짐 → 전류 줄어듦 → 어두워짐.<br><b>덧칠한다</b> = 흑연 층이 <b>두꺼워진다</b> = 길이 <b>넓어진다</b> → 저항 작아짐 → 밝아짐.<br>저항은 <b>길이에 비례하고 단면적에 반비례한다</b> — 방금 시뮬레이션에서 슬라이더로 움직였던 그 관계를 연필로 다시 그린 겁니다.</div></details><p class="exp-tip"><span>💡</span><span>잘 안 되면 연필을 눕혀 칠하세요. 그래도 안 되면 <b>연필심 자체</b>(샤프심 여러 개)를 회로에 물리면 확실합니다.</span></p></div></details></div>
  <div class="card" style="margin-top:18px">
  <h3 class="card-t" style="margin-bottom:6px">⚠️ 여기서 자주 어긋납니다</h3>
  <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ①</b> — "I = V/R 이니까, <b>전압을 높이면 저항도 같이 커진다</b>."<br>
@@ -1984,7 +2003,7 @@ body.teacher .keyline-s{display:none}
  data-alt="전선의 단면 — 안쪽의 구리 도체와 바깥쪽의 고무 피복이 드러난 사진"
  data-cap="일상생활에서 활용되는 도체, 부도체, 반도체 "></figure>
 
- <div class="expc"><h3 class="expc-t">🧪 더 알아보기 — 저항이 0이 되면</h3><p class="expc-s">오늘 배운 식에 <b>R = 0</b>을 넣으면 무슨 일이 일어날까요</p><div class="exp"><div class="exp-h"><span class="n">2</span><h4>자석이 공중에 멈춰 서는 초전도체</h4><span class="exp-tag vid">영상으로</span></div><p class="exp-eye">👀 <b>여기를 보세요</b> — 액체 질소로 차갑게 식힌 물체 위에서 자석이 <b>공중에 뜬 채로 멈춰</b> 있습니다.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EC%B4%88%EC%A0%84%EB%8F%84%EC%B2%B4%20%EB%A7%88%EC%9D%B4%EC%8A%A4%EB%84%88%20%EA%B3%B5%EC%A4%91%EB%B6%80%EC%96%91" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «초전도체 마이스너 공중부양»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">어떤 물질은 아주 낮은 온도에서 <b>저항이 정확히 0</b>이 됩니다. 이런 물질을 <b>초전도체</b>라고 해요.<br>저항이 0이면 어떻게 될까요? 한 번 흐르기 시작한 전류가 <b>줄어들지 않고 계속</b> 돕니다. 그 전류가 만든 자기장이 자석을 밀어내면서 공중에 붙잡아 두는 거예요.<br>전선에서 열로 새어 나가는 전기가 하나도 없다는 뜻이라, 실용화되면 세상이 바뀝니다. 문제는 <b>너무 차가워야 한다</b>는 것 — 지금도 전 세계가 "덜 차가워도 되는 초전도체"를 찾고 있습니다.</div></details><p class="exp-warn"><span>⚠️</span><span>액체 질소는 <b>학교에서 다루지 않습니다</b>. 영하 196 ℃라 살에 닿으면 심한 동상을 입어요. 영상으로만 봅니다.</span></p></div></div>
+ 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:10px">
@@ -2070,6 +2089,8 @@ body.teacher .keyline-s{display:none}
  <div class="stepline opt"><span class="sbadge">선택</span><span class="swhat">더 알아보기 · 시험에 나오지 않습니다</span></div>
  <h2 class="sec">법칙에 이름을 남긴 사람, 그리고 저항이 사라지는 세계</h2>
  <p class="lead">여기서부터는 <b class="k">교과서 밖 이야기</b>입니다. 시험에 나오지 않아요. 외우지 말고 그냥 읽어 보세요.</p>
+ <div class="expc"><h3 class="expc-t">🧪 더 알아보기 — 저항이 0이 되면</h3><p class="expc-s">오늘 배운 식에 <b>R = 0</b>을 넣으면 무슨 일이 일어날까요<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">2</span><h4>자석이 공중에 멈춰 서는 초전도체</h4><span class="exp-tag vid">영상으로</span></summary><div class="exp-in"><p class="exp-eye">👀 <b>여기를 보세요</b> — 액체 질소로 차갑게 식힌 물체 위에서 자석이 <b>공중에 뜬 채로 멈춰</b> 있습니다.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EC%B4%88%EC%A0%84%EB%8F%84%EC%B2%B4%20%EB%A7%88%EC%9D%B4%EC%8A%A4%EB%84%88%20%EA%B3%B5%EC%A4%91%EB%B6%80%EC%96%91" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «초전도체 마이스너 공중부양»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">어떤 물질은 아주 낮은 온도에서 <b>저항이 정확히 0</b>이 됩니다. 이런 물질을 <b>초전도체</b>라고 해요.<br>저항이 0이면 어떻게 될까요? 한 번 흐르기 시작한 전류가 <b>줄어들지 않고 계속</b> 돕니다. 그 전류가 만든 자기장이 자석을 밀어내면서 공중에 붙잡아 두는 거예요.<br>전선에서 열로 새어 나가는 전기가 하나도 없다는 뜻이라, 실용화되면 세상이 바뀝니다. 문제는 <b>너무 차가워야 한다</b>는 것 — 지금도 전 세계가 "덜 차가워도 되는 초전도체"를 찾고 있습니다.</div></details><p class="exp-warn"><span>⚠️</span><span>액체 질소는 <b>학교에서 다루지 않습니다</b>. 영하 196 ℃라 살에 닿으면 심한 동상을 입어요. 영상으로만 봅니다.</span></p></div></details></div>
+
 
  <div class="grid c2" style="margin-top:20px">
  <div class="card">
@@ -2211,6 +2232,7 @@ const GAME_QS=[
 
  {id:"o2",difficulty:"하",
  intent:"옴의 법칙 정방향 대입과 mA 환산(창작 — 3V/150Ω=20mA로 수치 구성).",
+ svg:"<svg viewBox=\"0 0 560 175\" role=\"img\" aria-label=\"전압 3볼트 전지에 저항 150옴인 꼬마전구를 도선으로 연결한 회로도.\"><path d=\"M 150 120 L 150 60 L 255 60\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><path d=\"M 305 60 L 410 60 L 410 120 L 285 120\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><path d=\"M 265 120 L 150 120\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><line x1=\"270\" y1=\"104\" x2=\"270\" y2=\"136\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"280\" y1=\"112\"  x2=\"280\" y2=\"128\"  stroke=\"#4a3a26\" stroke-width=\"4.5\"/><text x=\"275\" y=\"154\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">전지 3 V</text><text x=\"270\" y=\"98\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">+</text><text x=\"282\" y=\"98\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">−</text><circle cx=\"280\" cy=\"60\" r=\"15\" fill=\"#fffbe9\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"269.3935\" y1=\"49.3935\" x2=\"290.6065\" y2=\"70.6065\" stroke=\"#4a3a26\" stroke-width=\"1.8\"/><line x1=\"269.3935\" y1=\"70.6065\" x2=\"290.6065\" y2=\"49.3935\" stroke=\"#4a3a26\" stroke-width=\"1.8\"/><text x=\"280\" y=\"30\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">꼬마전구 150 Ω</text><text x=\"280\" y=\"168\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 도선의 저항은 무시한다</text></svg>",
  stem:"전압이 3 V인 전지에 저항이 150 Ω인 꼬마전구를 연결하였다. 이 회로에 흐르는 전류의 세기는?",
  ch:[{t:"2 mA",ok:0},
  {t:"20 mA",ok:1},

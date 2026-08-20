@@ -362,6 +362,25 @@ textarea::placeholder{color:var(--ink-mute)}
  .note.class{display:flex!important}
  .cloze{color:#111!important;border-style:solid}.cloze::after{content:none}
 }
+
+/* 실험 하나하나를 접었다 편다 — 제목만 보이고, 눌러야 준비물·방법이 나온다 */
+details.exp{border-top:1px dashed var(--line,#c9b68e);margin-top:0;padding-top:0}
+details.exp:first-of-type{border-top:0}
+details.exp > summary.exp-h{cursor:pointer;list-style:none;user-select:none;
+ margin:0;padding:13px 8px 13px 0;border-radius:9px;transition:background .13s}
+details.exp > summary.exp-h::-webkit-details-marker{display:none}
+details.exp > summary.exp-h::after{content:"펼치기 ▾";margin-left:auto;flex:none;
+ font-size:11.5px;font-weight:700;color:var(--accent,#a05c2c);white-space:nowrap}
+details.exp[open] > summary.exp-h::after{content:"접기 ▴"}
+details.exp > summary.exp-h:hover{background:rgba(160,92,44,.07)}
+details.exp > summary.exp-h:hover h4{color:var(--accent,#a05c2c)}
+details.exp > summary.exp-h:focus-visible{outline:2px solid var(--accent,#a05c2c);outline-offset:2px}
+details.exp > .exp-in{padding:2px 0 15px}
+@media (prefers-reduced-motion:no-preference){
+ details.exp[open] > .exp-in{animation:expOpen .18s ease both}
+ @keyframes expOpen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+}
+.expc-s .toghint{display:block;margin-top:5px;font-size:12.5px;color:var(--ink-dim,#5c4a33)}
 </style>
 
 <style id="board-v2">
@@ -1376,7 +1395,7 @@ body.teacher .keyline-s{display:none}
 
 
 
- <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 어느 모둠 전자석이 제일 셀까</h3><p class="expc-s">변인을 <b>하나만</b> 바꿔 가며 겨루는 모둠 대항전</p><div class="exp"><div class="exp-h"><span class="n">1</span><h4>클립 낚시 대회</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 굵은 쇠못(10 cm), 에나멜선 또는 피복 전선 3 m, 건전지·홀더, 클립 한 봉지, 스위치, 사포</div><ol><li>못에 전선을 <b>촘촘히</b> 감습니다. 에나멜선이면 양 끝을 사포로 문질러 피복을 벗기세요.</li><li>모둠마다 조건을 <b>하나만</b> 다르게 정합니다 — 감은 수(50 / 100 / 150회) 또는 건전지 수(1 / 2개).</li><li>스위치를 켜고 <b>30초 동안</b> 클립을 몇 개나 붙일 수 있는지 셉니다.</li><li>스위치를 끄면 어떻게 되는지도 꼭 확인합니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 감은 수가 많을수록, 건전지가 많을수록 <b>더 많이</b> 붙습니다. 그리고 스위치를 끄면 <b>즉시</b> 우수수 떨어져요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">코일이 만드는 자기장의 세기는 <b>전류의 세기 × 감은 수</b>로 정해집니다. 둘 중 어느 것을 키워도 세지죠.<br>못(철심)이 들어가면 훨씬 세지는데, 못 속의 <b>자기 구역</b>들이 코일의 자기장을 따라 나란히 정렬해 자기 힘을 보태기 때문입니다.<br>스위치를 끄면 즉시 떨어지는 것 — 이게 <b>전자석의 값어치</b>입니다. 영구자석은 이걸 못 하죠.</div></details><p class="exp-tip"><span>💡</span><span><b>변인 통제</b>가 이 실험의 진짜 공부입니다. 감은 수만 비교하려면 전선 <b>길이는 똑같이</b> 하고 남는 부분을 늘어뜨려 두세요. 전선이 길어지면 저항이 달라져 전류까지 바뀌어 버립니다.</span></p><p class="exp-warn"><span>⚠️</span><span>오래 켜 두면 전선과 건전지가 <b>뜨거워집니다</b>. 10초 켜고 쉬기를 지키세요. 전지의 두 극을 전선으로 <b>곧바로</b> 잇는 것(합선)은 절대 금지입니다.</span></p></div></div>
+ <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 어느 모둠 전자석이 제일 셀까</h3><p class="expc-s">변인을 <b>하나만</b> 바꿔 가며 겨루는 모둠 대항전<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">1</span><h4>클립 낚시 대회</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · 굵은 쇠못(10 cm), 에나멜선 또는 피복 전선 3 m, 건전지·홀더, 클립 한 봉지, 스위치, 사포</div><ol><li>못에 전선을 <b>촘촘히</b> 감습니다. 에나멜선이면 양 끝을 사포로 문질러 피복을 벗기세요.</li><li>모둠마다 조건을 <b>하나만</b> 다르게 정합니다 — 감은 수(50 / 100 / 150회) 또는 건전지 수(1 / 2개).</li><li>스위치를 켜고 <b>30초 동안</b> 클립을 몇 개나 붙일 수 있는지 셉니다.</li><li>스위치를 끄면 어떻게 되는지도 꼭 확인합니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 감은 수가 많을수록, 건전지가 많을수록 <b>더 많이</b> 붙습니다. 그리고 스위치를 끄면 <b>즉시</b> 우수수 떨어져요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">코일이 만드는 자기장의 세기는 <b>전류의 세기 × 감은 수</b>로 정해집니다. 둘 중 어느 것을 키워도 세지죠.<br>못(철심)이 들어가면 훨씬 세지는데, 못 속의 <b>자기 구역</b>들이 코일의 자기장을 따라 나란히 정렬해 자기 힘을 보태기 때문입니다.<br>스위치를 끄면 즉시 떨어지는 것 — 이게 <b>전자석의 값어치</b>입니다. 영구자석은 이걸 못 하죠.</div></details><p class="exp-tip"><span>💡</span><span><b>변인 통제</b>가 이 실험의 진짜 공부입니다. 감은 수만 비교하려면 전선 <b>길이는 똑같이</b> 하고 남는 부분을 늘어뜨려 두세요. 전선이 길어지면 저항이 달라져 전류까지 바뀌어 버립니다.</span></p><p class="exp-warn"><span>⚠️</span><span>오래 켜 두면 전선과 건전지가 <b>뜨거워집니다</b>. 10초 켜고 쉬기를 지키세요. 전지의 두 극을 전선으로 <b>곧바로</b> 잇는 것(합선)은 절대 금지입니다.</span></p></div></details></div>
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🧾 정리해 볼까 — 관찰에서 두 문장을 캐내기</h3>
  <p class="lead" style="font-size:17px;margin-top:8px">기록표에서 다음 <b class="k">두 쌍</b>을 찾아 견주어 보세요.</p>
@@ -1680,7 +1699,7 @@ body.teacher .keyline-s{display:none}
  <p class="cloze-hint">이름만 외우는 게 아니라, <b>왜 전자석이라야 하는지</b>를 말할 수 있으면 진짜 아는 것입니다.</p>
  </div>
 
- <div class="expc"><h3 class="expc-t">🧪 더 알아보기 — 껐다 켤 수 있다는 것</h3><p class="expc-s">고철장 크레인이 <b>영구자석을 쓰지 않는</b> 이유</p><div class="exp"><div class="exp-h"><span class="n">2</span><h4>고철을 들어 올리는 전자석 크레인</h4><span class="exp-tag vid">영상으로</span></div><p class="exp-eye">👀 <b>여기를 보세요</b> — 크레인이 고철 더미를 <b>한 번에</b> 들어 올렸다가, 옮긴 자리에서 <b>툭 떨어뜨립니다</b>.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EA%B3%A0%EC%B2%A0%EC%9E%A5%20%EC%A0%84%EC%9E%90%EC%84%9D%20%ED%81%AC%EB%A0%88%EC%9D%B8" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «고철장 전자석 크레인»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">질문 하나 — 왜 그냥 <b>센 영구자석</b>을 쓰지 않을까요?<br>들어 올리는 건 영구자석도 할 수 있습니다. 문제는 <b>놓는 것</b>이에요. 한 번 붙으면 뗄 방법이 없죠.<br>전자석은 <b>스위치 하나로</b> 자석이 됐다 안 됐다 합니다. 세기도 전류로 조절할 수 있고요. 방금 클립 낚시에서 스위치를 껐을 때 우수수 떨어지던 그 장면이, 저 크레인이 하는 일 전부입니다.<br>전자석이 쓰이는 곳을 이 기준으로 찾아보세요 — <b>껐다 켜야 하는 곳</b>에 어김없이 있습니다.</div></details></div></div>
+ 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:10px">
@@ -1802,6 +1821,8 @@ body.teacher .keyline-s{display:none}
  <div class="stepline opt"><span class="sbadge">선택</span><span class="swhat">더 알아보기 · 시험에 나오지 않습니다</span></div>
  <h2 class="sec">나침반을 움직인 우연, 그리고 켜고 끄는 자석의 세계</h2>
  <p class="lead">여기서부터는 <b class="k">교과서 밖 이야기</b>입니다. 시험에 나오지 않아요. 외우지 말고 그냥 읽어 보세요.</p>
+ <div class="expc"><h3 class="expc-t">🧪 더 알아보기 — 껐다 켤 수 있다는 것</h3><p class="expc-s">고철장 크레인이 <b>영구자석을 쓰지 않는</b> 이유<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">2</span><h4>고철을 들어 올리는 전자석 크레인</h4><span class="exp-tag vid">영상으로</span></summary><div class="exp-in"><p class="exp-eye">👀 <b>여기를 보세요</b> — 크레인이 고철 더미를 <b>한 번에</b> 들어 올렸다가, 옮긴 자리에서 <b>툭 떨어뜨립니다</b>.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EA%B3%A0%EC%B2%A0%EC%9E%A5%20%EC%A0%84%EC%9E%90%EC%84%9D%20%ED%81%AC%EB%A0%88%EC%9D%B8" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «고철장 전자석 크레인»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">질문 하나 — 왜 그냥 <b>센 영구자석</b>을 쓰지 않을까요?<br>들어 올리는 건 영구자석도 할 수 있습니다. 문제는 <b>놓는 것</b>이에요. 한 번 붙으면 뗄 방법이 없죠.<br>전자석은 <b>스위치 하나로</b> 자석이 됐다 안 됐다 합니다. 세기도 전류로 조절할 수 있고요. 방금 클립 낚시에서 스위치를 껐을 때 우수수 떨어지던 그 장면이, 저 크레인이 하는 일 전부입니다.<br>전자석이 쓰이는 곳을 이 기준으로 찾아보세요 — <b>껐다 켜야 하는 곳</b>에 어김없이 있습니다.</div></details></div></details></div>
+
 
  <div class="grid c2" style="margin-top:20px">
  <div class="card">
@@ -1974,6 +1995,7 @@ const GAME_QS=[
  {id:"q6",
  difficulty:"중",
  intent:"[보강 · 9과14-04] 성취기준이 '전류의 세기와 방향에 따른 자기장의 세기와 방향'을 명시하는데 기존 5문항은 방향(q2~q5)만 다뤄 세기 요인이 비어 있었다. 2단계 실험대의 클립 관찰(전류 세기·감은 수 → 자기장 세기)을 기록표 서술형 자료로 옮겨 보기형으로 평가. ㄷ은 '방향을 바꾸면 세기도 변한다'는 방향·세기 손잡이 혼동(2단계 교사 노트)을 겨냥.",
+ svg:"<svg viewBox=\"0 0 560 200\" role=\"img\" aria-label=\"쇠못에 에나멜선을 감아 전지에 연결하고, 못 끝에 클립이 몇 개나 붙는지 세는 실험 장치.\"><rect x=\"150\" y=\"76\" width=\"220\" height=\"18\" rx=\"9\" fill=\"#c9ccd2\" stroke=\"#5c6b78\" stroke-width=\"2.2\"/><path d=\"M370 76 L392 85 L370 94 z\" fill=\"#c9ccd2\" stroke=\"#5c6b78\" stroke-width=\"2\"/><path d=\"M198 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M220 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M242 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M264 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M286 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M308 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M 198 90 L 198 142 L 230 142\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><path d=\"M 290 142 L 320 142 L 320 92\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><line x1=\"255\" y1=\"126\" x2=\"255\" y2=\"158\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"265\" y1=\"134\"  x2=\"265\" y2=\"150\"  stroke=\"#4a3a26\" stroke-width=\"4.5\"/><text x=\"255\" y=\"120\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">+</text><text x=\"267\" y=\"120\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">−</text><text x=\"228\" y=\"172\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#6b573f\">전지</text><text x=\"258\" y=\"40\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">못에 감은 코일</text><rect x=\"378\" y=\"92\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(-14 382 92)\"/><rect x=\"386\" y=\"94\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(6 390 94)\"/><rect x=\"371\" y=\"90\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(-30 375 90)\"/><text x=\"416\" y=\"122\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">클립</text><text x=\"280\" y=\"192\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 전류의 세기, 감은 정도를 바꾸어 가며 클립 수를 센다</text></svg>",
  stem:"코일에 전류를 흘리고 클립이 몇 개나 달라붙는지 세는 실험을 하였다. 전류를 세게 하자 클립이 더 많이 붙었고, 같은 길이에 도선을 더 촘촘히 많이 감은 코일로 바꾸자 클립이 더 많이 붙었다. 이에 대한 설명으로 옳은 것만을 &lt;보기&gt;에서 있는 대로 고른 것은?",
  boxes:["전류의 세기가 셀수록 코일 주위 자기장의 세기가 커진다","같은 길이에 도선을 촘촘히 많이 감을수록 자기장의 세기가 커진다","전류의 방향을 반대로 바꾸면 자기장의 세기가 커진다"],
  boxVerdicts:[true,true,false],

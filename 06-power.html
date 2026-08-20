@@ -354,6 +354,25 @@ textarea::placeholder{color:var(--ink-mute)}
  .note.class{display:flex!important}
  .cloze{color:#111!important;border-style:solid}.cloze::after{content:none}
 }
+
+/* 실험 하나하나를 접었다 편다 — 제목만 보이고, 눌러야 준비물·방법이 나온다 */
+details.exp{border-top:1px dashed var(--line,#c9b68e);margin-top:0;padding-top:0}
+details.exp:first-of-type{border-top:0}
+details.exp > summary.exp-h{cursor:pointer;list-style:none;user-select:none;
+ margin:0;padding:13px 8px 13px 0;border-radius:9px;transition:background .13s}
+details.exp > summary.exp-h::-webkit-details-marker{display:none}
+details.exp > summary.exp-h::after{content:"펼치기 ▾";margin-left:auto;flex:none;
+ font-size:11.5px;font-weight:700;color:var(--accent,#a05c2c);white-space:nowrap}
+details.exp[open] > summary.exp-h::after{content:"접기 ▴"}
+details.exp > summary.exp-h:hover{background:rgba(160,92,44,.07)}
+details.exp > summary.exp-h:hover h4{color:var(--accent,#a05c2c)}
+details.exp > summary.exp-h:focus-visible{outline:2px solid var(--accent,#a05c2c);outline-offset:2px}
+details.exp > .exp-in{padding:2px 0 15px}
+@media (prefers-reduced-motion:no-preference){
+ details.exp[open] > .exp-in{animation:expOpen .18s ease both}
+ @keyframes expOpen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+}
+.expc-s .toghint{display:block;margin-top:5px;font-size:12.5px;color:var(--ink-dim,#5c4a33)}
 </style>
 
 <style id="board-v2">
@@ -1428,7 +1447,7 @@ body.teacher .keyline-s{display:none}
  전기 에너지를 효율적으로 사용하는 기구입니다.</p>
  <div class="keyline-s"><span class="kw">선풍기 = 바람 + 소리 + 열</span><span class="arw">→</span><span class="kw hi">손실</span><span class="kw">소비 전력 크면 손실 많음</span><span class="memo"></span></div>
  </div>
- <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 문어발은 왜 위험한가</h3><p class="expc-s">오늘 배운 <b>소비 전력</b>으로 화재 뉴스를 설명해 봅시다</p><div class="exp"><div class="exp-h"><span class="n">1</span><h4>멀티탭 한계 계산하기</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 멀티탭 1개(정격 표시가 보이는 것), 교실·집 전기 기구 사진이나 라벨, 계산기</div><ol><li>멀티탭 몸통이나 플러그에 적힌 <b>정격</b>을 찾습니다 — 보통 <b>250 V 15 A</b>, 즉 약 <b>3300 W</b>.</li><li>전기난로·전기주전자·헤어드라이어·전자레인지의 소비 전력을 라벨에서 찾아 적습니다.</li><li>이 중 <b>세 개</b>를 골라 한 멀티탭에 꽂았다고 하고, 소비 전력을 <b>모두 더합니다</b>.</li><li>3300 W를 넘는 조합을 <b>몇 가지나</b> 만들 수 있는지 세어 보세요.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 전기난로(1500 W) <b>두 개</b>만으로 벌써 3000 W입니다. 여기에 드라이어 하나만 더 꽂으면 한계를 넘어요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">멀티탭에 꽂은 기구들은 모두 <b>병렬</b>입니다. 병렬이니 각 기구에는 똑같이 220 V가 걸리고, <b>전류는 각각 흐르는 만큼 모두 더해집니다</b>.<br>전류가 커지면 멀티탭 <b>전선 자체가 뜨거워집니다</b>. 전선에도 (작지만) 저항이 있으니까요. 견딜 수 있는 한계를 넘으면 피복이 녹고, 불이 납니다.<br>핵심은 <b>"몇 개를 꽂았느냐"가 아니라 "합이 얼마냐"</b>입니다. 휴대폰 충전기 열 개(50 W)보다 전기난로 <b>하나</b>(1500 W)가 훨씬 위험해요.</div></details><p class="exp-tip"><span>💡</span><span>전기 기구 라벨 사진을 미리 찍어 두면 수업이 빨라집니다. 학생들에게 집에서 찍어 오라고 해도 좋아요.</span></p></div><div class="exp"><div class="exp-h"><span class="n">2</span><h4>문어발 멀티탭에 정말 불이 붙을까</h4><span class="exp-tag vid">영상으로</span></div><p class="exp-eye">👀 <b>여기를 보세요</b> — 소방 실험에서 한계를 넘긴 멀티탭의 <b>전선 부분</b>이 먼저 뜨거워지다가 불이 붙습니다.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EB%A9%80%ED%8B%B0%ED%83%AD%20%EB%AC%B8%EC%96%B4%EB%B0%9C%20%ED%99%94%EC%9E%AC%20%EC%8B%A4%ED%97%98" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «멀티탭 문어발 화재 실험»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">불이 붙는 곳이 기구가 아니라 <b>전선과 콘센트</b>라는 점을 눈여겨보세요. 전류가 지나는 길 전체가 뜨거워지고, 그중 가장 약한 곳에서 먼저 사고가 납니다.<br>먼지가 쌓인 콘센트나 <b>돌돌 말아 둔 멀티탭</b>이 특히 위험합니다. 열이 빠져나가지 못하니까요.</div></details><p class="exp-warn"><span>⚠️</span><span><b>학교에서 재현하지 않습니다.</b> 실제 화재 실험은 소방 훈련 시설에서만 이루어집니다.</span></p></div></div>
+ <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 문어발은 왜 위험한가</h3><p class="expc-s">오늘 배운 <b>소비 전력</b>으로 화재 뉴스를 설명해 봅시다<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">1</span><h4>멀티탭 한계 계산하기</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · 멀티탭 1개(정격 표시가 보이는 것), 교실·집 전기 기구 사진이나 라벨, 계산기</div><ol><li>멀티탭 몸통이나 플러그에 적힌 <b>정격</b>을 찾습니다 — 보통 <b>250 V 15 A</b>, 즉 약 <b>3300 W</b>.</li><li>전기난로·전기주전자·헤어드라이어·전자레인지의 소비 전력을 라벨에서 찾아 적습니다.</li><li>이 중 <b>세 개</b>를 골라 한 멀티탭에 꽂았다고 하고, 소비 전력을 <b>모두 더합니다</b>.</li><li>3300 W를 넘는 조합을 <b>몇 가지나</b> 만들 수 있는지 세어 보세요.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 전기난로(1500 W) <b>두 개</b>만으로 벌써 3000 W입니다. 여기에 드라이어 하나만 더 꽂으면 한계를 넘어요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">멀티탭에 꽂은 기구들은 모두 <b>병렬</b>입니다. 병렬이니 각 기구에는 똑같이 220 V가 걸리고, <b>전류는 각각 흐르는 만큼 모두 더해집니다</b>.<br>전류가 커지면 멀티탭 <b>전선 자체가 뜨거워집니다</b>. 전선에도 (작지만) 저항이 있으니까요. 견딜 수 있는 한계를 넘으면 피복이 녹고, 불이 납니다.<br>핵심은 <b>"몇 개를 꽂았느냐"가 아니라 "합이 얼마냐"</b>입니다. 휴대폰 충전기 열 개(50 W)보다 전기난로 <b>하나</b>(1500 W)가 훨씬 위험해요.</div></details><p class="exp-tip"><span>💡</span><span>전기 기구 라벨 사진을 미리 찍어 두면 수업이 빨라집니다. 학생들에게 집에서 찍어 오라고 해도 좋아요.</span></p></div></details><details class="exp"><summary class="exp-h"><span class="n">2</span><h4>문어발 멀티탭에 정말 불이 붙을까</h4><span class="exp-tag vid">영상으로</span></summary><div class="exp-in"><p class="exp-eye">👀 <b>여기를 보세요</b> — 소방 실험에서 한계를 넘긴 멀티탭의 <b>전선 부분</b>이 먼저 뜨거워지다가 불이 붙습니다.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EB%A9%80%ED%8B%B0%ED%83%AD%20%EB%AC%B8%EC%96%B4%EB%B0%9C%20%ED%99%94%EC%9E%AC%20%EC%8B%A4%ED%97%98" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «멀티탭 문어발 화재 실험»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">불이 붙는 곳이 기구가 아니라 <b>전선과 콘센트</b>라는 점을 눈여겨보세요. 전류가 지나는 길 전체가 뜨거워지고, 그중 가장 약한 곳에서 먼저 사고가 납니다.<br>먼지가 쌓인 콘센트나 <b>돌돌 말아 둔 멀티탭</b>이 특히 위험합니다. 열이 빠져나가지 못하니까요.</div></details><p class="exp-warn"><span>⚠️</span><span><b>학교에서 재현하지 않습니다.</b> 실제 화재 실험은 소방 훈련 시설에서만 이루어집니다.</span></p></div></details></div>
  <div class="card">
  <h3 class="card-t">🌍 아껴야 하는 진짜 이유</h3>
  <p class="lead say" style="font-size:17.5px;margin-top:8px">
