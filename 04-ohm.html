@@ -2045,7 +2045,7 @@ body.teacher .keyline-s{display:none}
  <div id="gameBody">
  <div style="text-align:center;padding:30px 10px">
  <p class="lead" style="margin:0 auto 18px">준비됐나요? 5문항입니다.</p>
- <button class="btn primary" id="gameStart">확인 문제 시작</button>
+ <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center"><button class="btn primary" id="gameStart">📗 필수 문제</button><button class="btn" id="gameStartAdv">📚 심화 문제</button><button class="btn ghost" id="gameStartFull">🔥 도전 모드 — 전체 ❤️×3</button></div><p style="margin:9px 0 0;font-size:13px;line-height:1.7;color:var(--ink-mute,#96805c)">수업 시간에는 <b>필수</b>부터 — 필수·심화는 하트가 닳지 않아요. 도전 모드는 전체 문항을 하트 3개로 달립니다.</p>
  </div>
  </div>
  <div class="earned" id="medals">
@@ -2232,7 +2232,7 @@ const GAME_QS=[
 
  {id:"o2",difficulty:"하",
  intent:"옴의 법칙 정방향 대입과 mA 환산(창작 — 3V/150Ω=20mA로 수치 구성).",
- svg:"<svg viewBox=\"0 0 560 175\" role=\"img\" aria-label=\"전압 3볼트 전지에 저항 150옴인 꼬마전구를 도선으로 연결한 회로도.\"><path d=\"M 150 120 L 150 60 L 255 60\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><path d=\"M 305 60 L 410 60 L 410 120 L 285 120\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><path d=\"M 265 120 L 150 120\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><line x1=\"270\" y1=\"104\" x2=\"270\" y2=\"136\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"280\" y1=\"112\"  x2=\"280\" y2=\"128\"  stroke=\"#4a3a26\" stroke-width=\"4.5\"/><text x=\"275\" y=\"154\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">전지 3 V</text><text x=\"270\" y=\"98\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">+</text><text x=\"282\" y=\"98\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">−</text><circle cx=\"280\" cy=\"60\" r=\"15\" fill=\"#fffbe9\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"269.3935\" y1=\"49.3935\" x2=\"290.6065\" y2=\"70.6065\" stroke=\"#4a3a26\" stroke-width=\"1.8\"/><line x1=\"269.3935\" y1=\"70.6065\" x2=\"290.6065\" y2=\"49.3935\" stroke=\"#4a3a26\" stroke-width=\"1.8\"/><text x=\"280\" y=\"30\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">꼬마전구 150 Ω</text><text x=\"280\" y=\"168\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 도선의 저항은 무시한다</text></svg>",
+ svg:"<svg viewBox=\"0 0 560 175\" role=\"img\" aria-label=\"전압 3볼트 전지에 저항 150옴인 꼬마전구를 도선으로 연결한 회로도. 전구는 원 안에 반원이 솟은 회로 기호로 그려져 있다.\"><path d=\"M 150 120 L 150 60 L 258 60\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><path d=\"M 302 60 L 410 60 L 410 120 L 285 120\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><path d=\"M 265 120 L 150 120\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"270\" y1=\"104\" x2=\"270\" y2=\"136\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"280\" y1=\"112\" x2=\"280\" y2=\"128\" stroke=\"#4a3a26\" stroke-width=\"4.5\"/><text x=\"270\" y=\"98\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">+</text><text x=\"282\" y=\"98\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">−</text><text x=\"275\" y=\"154\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">전지 3 V</text><circle cx=\"280\" cy=\"60\" r=\"22\" fill=\"#fffdf6\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><path d=\"M 258 60 L 266 60 A 14 14 0 0 1 294 60 L 302 60\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><text x=\"280\" y=\"24\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">꼬마전구 150 Ω</text><text x=\"280\" y=\"170\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 도선의 저항은 무시한다</text></svg>",
  stem:"전압이 3 V인 전지에 저항이 150 Ω인 꼬마전구를 연결하였다. 이 회로에 흐르는 전류의 세기는?",
  ch:[{t:"2 mA",ok:0},
  {t:"20 mA",ok:1},
@@ -2274,7 +2274,7 @@ const GAME_QS=[
 
  {id:"o4",difficulty:"중",
  intent:"전압-전류 그래프 해석(창작 — 3V에서 0.6A/0.2A, 저항비 1:3으로 수치 구성). 정답(옳지 않은 것)은 기울기를 저항으로 착각한 진술로 교체.",
- svg:"<svg viewBox=\"0 0 560 240\" role=\"img\" aria-label=\"전압-전류 그래프. 원점을 지나는 두 직선 (가)와 (나). 전압 3볼트에서 (가)는 0.6암페어, (나)는 0.2암페어를 나타낸다.\"><line x1=\"80\" y1=\"200\" x2=\"500\" y2=\"200\" stroke=\"#4a3a26\" stroke-width=\"2\"/><line x1=\"80\" y1=\"200\" x2=\"80\" y2=\"30\" stroke=\"#4a3a26\" stroke-width=\"2\"/><text x=\"290\" y=\"230\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">전압 (V)</text><text x=\"36\" y=\"110\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">전류</text><text x=\"36\" y=\"128\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">(A)</text><line x1=\"80\" y1=\"200\" x2=\"460\" y2=\"40\" stroke=\"#b23a30\" stroke-width=\"3\"/><line x1=\"80\" y1=\"200\" x2=\"470\" y2=\"146\" stroke=\"#2e5f8f\" stroke-width=\"3\"/><text x=\"472\" y=\"42\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#b23a30\">(가)</text><text x=\"482\" y=\"150\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#2e5f8f\">(나)</text><line x1=\"290\" y1=\"200\" x2=\"290\" y2=\"112\" stroke=\"#a08b64\" stroke-width=\"1.3\" stroke-dasharray=\"5 4\"/><line x1=\"80\" y1=\"112\" x2=\"290\" y2=\"112\" stroke=\"#a08b64\" stroke-width=\"1.3\" stroke-dasharray=\"5 4\"/><line x1=\"80\" y1=\"171\" x2=\"290\" y2=\"171\" stroke=\"#a08b64\" stroke-width=\"1.3\" stroke-dasharray=\"5 4\"/><line x1=\"290\" y1=\"171\" x2=\"290\" y2=\"112\" stroke=\"#a08b64\" stroke-width=\"1.3\" stroke-dasharray=\"5 4\"/><text x=\"290\" y=\"216\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">3</text><text x=\"72\" y=\"176\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">0.2</text><text x=\"72\" y=\"117\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">0.6</text><text x=\"84\" y=\"216\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">0</text></svg>",
+ svg:"<svg viewBox=\"0 0 560 240\" role=\"img\" aria-label=\"전압-전류 그래프. 원점을 지나는 두 직선 (가)와 (나). 전압 3볼트에서 (가)는 0.6암페어, (나)는 0.2암페어를 나타낸다.\"><line x1=\"80\" y1=\"200\" x2=\"500\" y2=\"200\" stroke=\"#4a3a26\" stroke-width=\"2\"/><line x1=\"80\" y1=\"200\" x2=\"80\" y2=\"30\" stroke=\"#4a3a26\" stroke-width=\"2\"/><text x=\"546\" y=\"230\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">전압 (V)</text><text x=\"36\" y=\"30\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">전류</text><text x=\"36\" y=\"48\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">(A)</text><line x1=\"80\" y1=\"200\" x2=\"460\" y2=\"40\" stroke=\"#b23a30\" stroke-width=\"3\"/><line x1=\"80\" y1=\"200\" x2=\"470\" y2=\"146\" stroke=\"#2e5f8f\" stroke-width=\"3\"/><text x=\"472\" y=\"42\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#b23a30\">(가)</text><text x=\"482\" y=\"150\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#2e5f8f\">(나)</text><line x1=\"290\" y1=\"200\" x2=\"290\" y2=\"112\" stroke=\"#a08b64\" stroke-width=\"1.3\" stroke-dasharray=\"5 4\"/><line x1=\"80\" y1=\"112\" x2=\"290\" y2=\"112\" stroke=\"#a08b64\" stroke-width=\"1.3\" stroke-dasharray=\"5 4\"/><line x1=\"80\" y1=\"171\" x2=\"290\" y2=\"171\" stroke=\"#a08b64\" stroke-width=\"1.3\" stroke-dasharray=\"5 4\"/><line x1=\"290\" y1=\"171\" x2=\"290\" y2=\"112\" stroke=\"#a08b64\" stroke-width=\"1.3\" stroke-dasharray=\"5 4\"/><text x=\"290\" y=\"216\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">3</text><text x=\"72\" y=\"176\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">0.2</text><text x=\"72\" y=\"117\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">0.6</text><text x=\"84\" y=\"216\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">0</text></svg>",
  stem:"그림은 재질과 굵기가 같은 두 니크롬선 (가), (나)에 걸어 준 전압에 따른 전류의 세기를 나타낸 것이다. 이에 대한 설명으로 옳지 <u>않은</u> 것은?",
  ch:[{t:"그래프의 기울기가 클수록 저항이 크다.",ok:1},
  {t:"(가)의 저항은 5 Ω이다.",ok:0},
@@ -2708,9 +2708,25 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');}
  function paint(){Object.keys(S.medals).forEach(k=>{const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');});}
  function hud(){$('#score').textContent=score;
- $('#qno').textContent=Math.min(i+1,GAME_QS.length)+'/'+GAME_QS.length;
+ $('#qno').textContent=Math.min(i+1,(order.length||GAME_QS.length))+'/'+(order.length||GAME_QS.length);
  $$('#lives .h').forEach((h,n)=>h.classList.toggle('gone',n>=lives));}
- function start(){i=0;score=0;lives=3;order=GAME_QS.map((_,n)=>n).sort(()=>Math.random()-.5);hud();next();}
+ let MODE='full';
+  /* 필수 = 난이도 '하' 전부 + '중'의 앞쪽 절반. 심화 = 나머지. */
+  function pickCore(){const core=[],mid=[];
+    GAME_QS.forEach((q,n)=>{const d=q.difficulty||'중';
+      if(d==='하')core.push(n);else if(d==='중')mid.push(n);});
+    mid.slice(0,Math.ceil(mid.length/2)).forEach(n=>core.push(n));
+    if(core.length<3)GAME_QS.forEach((q,n)=>{if(core.length<3&&core.indexOf(n)<0)core.push(n);});
+    return core.sort((a,b)=>a-b);}
+  function start(mode){MODE=(mode==='core'||mode==='adv')?mode:'full';i=0;score=0;
+    const core=pickCore();
+    if(MODE==='core')order=core.slice();
+    else if(MODE==='adv'){order=GAME_QS.map((_,n)=>n).filter(n=>core.indexOf(n)<0);
+      if(!order.length)order=GAME_QS.map((_,n)=>n);}
+    else order=GAME_QS.map((_,n)=>n).sort(()=>Math.random()-.5);
+    lives=(MODE==='full')?3:Infinity;
+    const lv=$('#lives');if(lv)lv.style.display=(MODE==='full')?'':'none';
+    hud();next();}
  function next(){
  if(i>=order.length||lives<=0)return end();
  hud();const q=GAME_QS[order[i]];
@@ -2739,7 +2755,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  if(c.ok){b.classList.add('correct');A.correct();score+=20;medal('first');
  if(i+1>=Math.ceil(GAME_QS.length/2))medal('half');
  fb.className='mq-fb show ok';fb.innerHTML=`<b>정답!</b> ${q.why}`;}
- else{b.classList.add('wrong');A.wrong();lives--;
+ else{b.classList.add('wrong');A.wrong();if(MODE==='full')lives--;
  $$('.mq-opt',cw).forEach(x=>{if(x.dataset.ok==='1')x.classList.add('correct');});
  fb.className='mq-fb show no';fb.innerHTML=`<b>아쉬워요.</b> ${q.why}`;}
  const bx=$('#bogiBox');
@@ -2753,17 +2769,20 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  hud();});
  cw.appendChild(b);});}
  function end(){
- const perfect=score===GAME_QS.length*20;
+ const perfect=score===order.length*20;
  if(perfect)medal('perfect');
  if(score>(S.best||0)){S.best=score;save();}
  updateProgress();perfect?A.win():A.pop();
  body.innerHTML=`<div style="text-align:center;padding:26px 10px">
  <div style="font-size:44px">${perfect?'🏆':(lives>0?'🎉':'💪')}</div>
  <h3 class="card-t" style="margin:10px 0 6px">${perfect?'전부 정답! 완벽해요':(lives>0?'끝까지 풀었어요':'다시 한 번 풀어 볼까요?')}</h3>
- <p class="lead" style="margin:0 auto 16px">점수 <b class="k">${score}</b> / ${GAME_QS.length*20} · 최고 기록 <b class="k">${S.best||0}</b></p>
+ <p class="lead" style="margin:0 auto 16px">점수 <b class="k">${score}</b> / ${order.length*20} · 최고 기록 <b class="k">${S.best||0}</b></p>
  <button class="btn primary" id="gameAgain">다시 풀기</button></div>`;
- $('#gameAgain').addEventListener('click',start);}
- $('#gameStart').addEventListener('click',start);paint();
+ $('#gameAgain').addEventListener('click',function(){start(MODE);});}
+ $('#gameStart').addEventListener('click',function(){start('core');});
+  var _ba=$('#gameStartAdv');if(_ba)_ba.addEventListener('click',function(){start('adv');});
+  var _bf=$('#gameStartFull');if(_bf)_bf.addEventListener('click',function(){start('full');});
+  paint();
 })();
 
 /* 별 배경 */

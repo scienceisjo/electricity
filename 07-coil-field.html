@@ -1777,7 +1777,7 @@ body.teacher .keyline-s{display:none}
  <div id="gameBody">
  <div style="text-align:center;padding:30px 10px">
  <p class="lead" style="margin:0 auto 18px">준비됐나요? 5문항입니다.</p>
- <button class="btn primary" id="gameStart">확인 문제 시작</button>
+ <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center"><button class="btn primary" id="gameStart">📗 필수 문제</button><button class="btn" id="gameStartAdv">📚 심화 문제</button><button class="btn ghost" id="gameStartFull">🔥 도전 모드 — 전체 ❤️×3</button></div><p style="margin:9px 0 0;font-size:13px;line-height:1.7;color:var(--ink-mute,#96805c)">수업 시간에는 <b>필수</b>부터 — 필수·심화는 하트가 닳지 않아요. 도전 모드는 전체 문항을 하트 3개로 달립니다.</p>
  </div>
  </div>
  <div class="earned" id="medals">
@@ -1988,14 +1988,14 @@ const GAME_QS=[
  {id:"q3",
  difficulty:"중",
  intent:"오른손 규칙으로 코일의 N극을 판정한다. 그림은 앞면 전류가 아래쪽 → 오른손 규칙으로 검증하면 엄지가 ㉡(오른쪽)을 가리켜 ㉡이 N극(페이지 연습②의 감김 약속과 동일). 오답은 엄지·네 손가락을 맞바꾼 규칙, '항상 위쪽이 N극', '코일에는 극이 없다', '전류 방향을 바꿔도 극은 그대로'(오개념 카드 파생).",
- svg:"<svg viewBox=\"0 0 560 200\" role=\"img\" aria-label=\"전원 장치에 연결되어 전류가 흐르는 코일 P. 코일 앞면에서 전류는 아래쪽으로 흐르고, 코일의 왼쪽 끝 지점은 ㉠, 오른쪽 끝 지점은 ㉡으로 표시되어 있다.\"><ellipse cx=\"205\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><ellipse cx=\"229\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><ellipse cx=\"253\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><ellipse cx=\"277\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><ellipse cx=\"301\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><ellipse cx=\"325\" cy=\"100\" rx=\"8\" ry=\"40\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3\"/><line x1=\"265\" y1=\"62\" x2=\"265\" y2=\"132\" stroke=\"#a05c2c\" stroke-width=\"3\"/><polygon points=\"265,144 257,128 273,128\" fill=\"#a05c2c\"/><text x=\"265\" y=\"40\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14.5\" font-weight=\"700\" fill=\"#a05c2c\">전류의 방향(앞면)</text><text x=\"150\" y=\"68\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"20\" font-weight=\"800\" fill=\"#4a3a26\">㉠</text><text x=\"382\" y=\"68\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"20\" font-weight=\"800\" fill=\"#4a3a26\">㉡</text><text x=\"280\" y=\"190\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">코일 P는 전원 장치에 연결되어 전류가 흐르고 있다.</text></svg>",
+ svg:"<svg viewBox=\"0 0 560 230\" role=\"img\" aria-label=\"옆에서 본 코일 P. 앞쪽 도선마다 아래쪽을 향한 화살표가 그려져 있어, 코일 앞면에는 아래 방향으로 전류가 흐른다. 왼쪽 끝이 지점 ㉠, 오른쪽 끝이 지점 ㉡이다.\"><rect x=\"196\" y=\"72\" width=\"220\" height=\"80\" rx=\"12\" fill=\"#f6f1e8\" stroke=\"#c9b68e\" stroke-width=\"2\"/><line x1=\"232\" y1=\"76\" x2=\"224\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M224.6 135.0 L221.1 126.6 L229.9 127.5 z\" fill=\"#a05c2c\"/><line x1=\"272\" y1=\"76\" x2=\"264\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M264.6 135.0 L261.1 126.6 L269.9 127.5 z\" fill=\"#a05c2c\"/><line x1=\"312\" y1=\"76\" x2=\"304\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M304.6 135.0 L301.1 126.6 L309.9 127.5 z\" fill=\"#a05c2c\"/><line x1=\"352\" y1=\"76\" x2=\"344\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M344.6 135.0 L341.1 126.6 L349.9 127.5 z\" fill=\"#a05c2c\"/><text x=\"306\" y=\"44\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#a05c2c\" font-weight=\"700\">전류</text><line x1=\"150\" y1=\"112\" x2=\"196\" y2=\"112\" stroke=\"#8a7a5e\" stroke-width=\"2\" stroke-dasharray=\"5 4\"/><line x1=\"416\" y1=\"112\" x2=\"462\" y2=\"112\" stroke=\"#8a7a5e\" stroke-width=\"2\" stroke-dasharray=\"5 4\"/><circle cx=\"136\" cy=\"112\" r=\"13\" fill=\"#fffdf6\" stroke=\"#4a3a26\" stroke-width=\"1.8\"/><text x=\"136\" y=\"117\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">㉠</text><circle cx=\"476\" cy=\"112\" r=\"13\" fill=\"#fffdf6\" stroke=\"#4a3a26\" stroke-width=\"1.8\"/><text x=\"476\" y=\"117\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">㉡</text><text x=\"306\" y=\"178\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#4a3a26\">전류가 흐르는 코일 P</text><text x=\"306\" y=\"222\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 화살표는 코일 앞쪽 도선에 흐르는 전류의 방향이다</text></svg>",
  stem:"그림은 전원 장치에 연결되어 전류가 흐르는 코일 P를 나타낸 것이다. 코일의 양 끝 지점 ㉠, ㉡에 대한 설명으로 옳은 것은?",
  ch:[{t:"엄지손가락을 전류의 방향으로 향하게 하고 네 손가락으로 감아쥐어 찾으면, ㉠ 쪽이 N극이다.",ok:0},{t:"전류의 방향과 관계없이 코일의 위쪽이 항상 N극이다.",ok:0},{t:"코일 P는 진짜 자석이 아니므로 N극과 S극이 생기지 않는다.",ok:0},{t:"오른손 네 손가락을 전류의 방향으로 감아쥐면 엄지손가락이 ㉡ 쪽을 가리키므로, ㉡ 쪽이 N극이다.",ok:1},{t:"전류의 방향을 반대로 바꾸어도 코일에 생기는 N극의 위치는 변하지 않는다.",ok:0}],
  why:"<b>정답 ④.</b> [채점 기준] ⑴ 감아쥐는 것은 <b>네 손가락(전류의 방향)</b>, 뻗은 <b>엄지가 N극 쪽</b>이라는 규칙을 적용했는가. ⑵ 앞면의 전류가 <b>아래쪽</b>이므로 감아쥔 오른손의 엄지가 <b>㉡(오른쪽)</b>을 가리킴을 찾았는가.<br>① 엄지와 네 손가락의 역할을 맞바꾼 잘못된 규칙이다.<br>② N극의 위치는 전류의 방향이 정한다 — '항상 위쪽' 같은 정해진 자리는 없다.<br>③ 전류가 흐르는 코일에는 막대자석처럼 <b>N극과 S극이 생긴다</b> — 자기장의 모양도 막대자석 주위와 비슷하다.<br>⑤ 전류의 방향을 반대로 하면 감아쥐는 방향이 뒤집혀 <b>N극과 S극의 위치도 서로 바뀐다</b>."},
  {id:"q6",
  difficulty:"중",
  intent:"[보강 · 9과14-04] 성취기준이 '전류의 세기와 방향에 따른 자기장의 세기와 방향'을 명시하는데 기존 5문항은 방향(q2~q5)만 다뤄 세기 요인이 비어 있었다. 2단계 실험대의 클립 관찰(전류 세기·감은 수 → 자기장 세기)을 기록표 서술형 자료로 옮겨 보기형으로 평가. ㄷ은 '방향을 바꾸면 세기도 변한다'는 방향·세기 손잡이 혼동(2단계 교사 노트)을 겨냥.",
- svg:"<svg viewBox=\"0 0 560 200\" role=\"img\" aria-label=\"쇠못에 에나멜선을 감아 전지에 연결하고, 못 끝에 클립이 몇 개나 붙는지 세는 실험 장치.\"><rect x=\"150\" y=\"76\" width=\"220\" height=\"18\" rx=\"9\" fill=\"#c9ccd2\" stroke=\"#5c6b78\" stroke-width=\"2.2\"/><path d=\"M370 76 L392 85 L370 94 z\" fill=\"#c9ccd2\" stroke=\"#5c6b78\" stroke-width=\"2\"/><path d=\"M198 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M220 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M242 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M264 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M286 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M308 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M 198 90 L 198 142 L 230 142\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><path d=\"M 290 142 L 320 142 L 320 92\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><line x1=\"255\" y1=\"126\" x2=\"255\" y2=\"158\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"265\" y1=\"134\"  x2=\"265\" y2=\"150\"  stroke=\"#4a3a26\" stroke-width=\"4.5\"/><text x=\"255\" y=\"120\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">+</text><text x=\"267\" y=\"120\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">−</text><text x=\"228\" y=\"172\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#6b573f\">전지</text><text x=\"258\" y=\"40\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">못에 감은 코일</text><rect x=\"378\" y=\"92\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(-14 382 92)\"/><rect x=\"386\" y=\"94\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(6 390 94)\"/><rect x=\"371\" y=\"90\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(-30 375 90)\"/><text x=\"416\" y=\"122\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">클립</text><text x=\"280\" y=\"192\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 전류의 세기, 감은 정도를 바꾸어 가며 클립 수를 센다</text></svg>",
+ svg:"<svg viewBox=\"0 0 560 200\" role=\"img\" aria-label=\"쇠못에 에나멜선을 감아 전지에 연결하고, 못 끝에 클립이 몇 개나 붙는지 세는 실험 장치.\"><rect x=\"150\" y=\"76\" width=\"220\" height=\"18\" rx=\"9\" fill=\"#c9ccd2\" stroke=\"#5c6b78\" stroke-width=\"2.2\"/><path d=\"M370 76 L392 85 L370 94 z\" fill=\"#c9ccd2\" stroke=\"#5c6b78\" stroke-width=\"2\"/><path d=\"M198 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M220 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M242 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M264 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M286 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M308 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M 198 90 L 198 142 L 248 142\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><path d=\"M 272 142 L 320 142 L 320 92\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><line x1=\"255\" y1=\"126\" x2=\"255\" y2=\"158\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"265\" y1=\"134\"  x2=\"265\" y2=\"150\"  stroke=\"#4a3a26\" stroke-width=\"4.5\"/><text x=\"255\" y=\"120\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">+</text><text x=\"267\" y=\"120\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">−</text><text x=\"228\" y=\"172\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#6b573f\">전지</text><text x=\"258\" y=\"40\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">못에 감은 코일</text><rect x=\"378\" y=\"92\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(-14 382 92)\"/><rect x=\"386\" y=\"94\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(6 390 94)\"/><rect x=\"371\" y=\"90\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(-30 375 90)\"/><text x=\"416\" y=\"122\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">클립</text><text x=\"280\" y=\"192\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 전류의 세기, 감은 정도를 바꾸어 가며 클립 수를 센다</text></svg>",
  stem:"코일에 전류를 흘리고 클립이 몇 개나 달라붙는지 세는 실험을 하였다. 전류를 세게 하자 클립이 더 많이 붙었고, 같은 길이에 도선을 더 촘촘히 많이 감은 코일로 바꾸자 클립이 더 많이 붙었다. 이에 대한 설명으로 옳은 것만을 &lt;보기&gt;에서 있는 대로 고른 것은?",
  boxes:["전류의 세기가 셀수록 코일 주위 자기장의 세기가 커진다","같은 길이에 도선을 촘촘히 많이 감을수록 자기장의 세기가 커진다","전류의 방향을 반대로 바꾸면 자기장의 세기가 커진다"],
  boxVerdicts:[true,true,false],
@@ -2474,9 +2474,25 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');}
  function paint(){Object.keys(S.medals).forEach(k=>{const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');});}
  function hud(){$('#score').textContent=score;
- $('#qno').textContent=Math.min(i+1,GAME_QS.length)+'/'+GAME_QS.length;
+ $('#qno').textContent=Math.min(i+1,(order.length||GAME_QS.length))+'/'+(order.length||GAME_QS.length);
  $$('#lives .h').forEach((h,n)=>h.classList.toggle('gone',n>=lives));}
- function start(){i=0;score=0;lives=3;order=GAME_QS.map((_,n)=>n).sort(()=>Math.random()-.5);hud();next();}
+ let MODE='full';
+  /* 필수 = 난이도 '하' 전부 + '중'의 앞쪽 절반. 심화 = 나머지. */
+  function pickCore(){const core=[],mid=[];
+    GAME_QS.forEach((q,n)=>{const d=q.difficulty||'중';
+      if(d==='하')core.push(n);else if(d==='중')mid.push(n);});
+    mid.slice(0,Math.ceil(mid.length/2)).forEach(n=>core.push(n));
+    if(core.length<3)GAME_QS.forEach((q,n)=>{if(core.length<3&&core.indexOf(n)<0)core.push(n);});
+    return core.sort((a,b)=>a-b);}
+  function start(mode){MODE=(mode==='core'||mode==='adv')?mode:'full';i=0;score=0;
+    const core=pickCore();
+    if(MODE==='core')order=core.slice();
+    else if(MODE==='adv'){order=GAME_QS.map((_,n)=>n).filter(n=>core.indexOf(n)<0);
+      if(!order.length)order=GAME_QS.map((_,n)=>n);}
+    else order=GAME_QS.map((_,n)=>n).sort(()=>Math.random()-.5);
+    lives=(MODE==='full')?3:Infinity;
+    const lv=$('#lives');if(lv)lv.style.display=(MODE==='full')?'':'none';
+    hud();next();}
  function next(){
  if(i>=order.length||lives<=0)return end();
  hud();const q=GAME_QS[order[i]];
@@ -2505,7 +2521,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  if(c.ok){b.classList.add('correct');A.correct();score+=20;medal('first');
  if(i+1>=Math.ceil(GAME_QS.length/2))medal('half');
  fb.className='mq-fb show ok';fb.innerHTML=`<b>정답!</b> ${q.why}`;}
- else{b.classList.add('wrong');A.wrong();lives--;
+ else{b.classList.add('wrong');A.wrong();if(MODE==='full')lives--;
  $$('.mq-opt',cw).forEach(x=>{if(x.dataset.ok==='1')x.classList.add('correct');});
  fb.className='mq-fb show no';fb.innerHTML=`<b>아쉬워요.</b> ${q.why}`;}
  const bx=$('#bogiBox');
@@ -2519,17 +2535,20 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  hud();});
  cw.appendChild(b);});}
  function end(){
- const perfect=score===GAME_QS.length*20;
+ const perfect=score===order.length*20;
  if(perfect)medal('perfect');
  if(score>(S.best||0)){S.best=score;save();}
  updateProgress();perfect?A.win():A.pop();
  body.innerHTML=`<div style="text-align:center;padding:26px 10px">
  <div style="font-size:44px">${perfect?'🏆':(lives>0?'🎉':'💪')}</div>
  <h3 class="card-t" style="margin:10px 0 6px">${perfect?'전부 정답! 완벽해요':(lives>0?'끝까지 풀었어요':'다시 한 번 풀어 볼까요?')}</h3>
- <p class="lead" style="margin:0 auto 16px">점수 <b class="k">${score}</b> / ${GAME_QS.length*20} · 최고 기록 <b class="k">${S.best||0}</b></p>
+ <p class="lead" style="margin:0 auto 16px">점수 <b class="k">${score}</b> / ${order.length*20} · 최고 기록 <b class="k">${S.best||0}</b></p>
  <button class="btn primary" id="gameAgain">다시 풀기</button></div>`;
- $('#gameAgain').addEventListener('click',start);}
- $('#gameStart').addEventListener('click',start);paint();
+ $('#gameAgain').addEventListener('click',function(){start(MODE);});}
+ $('#gameStart').addEventListener('click',function(){start('core');});
+  var _ba=$('#gameStartAdv');if(_ba)_ba.addEventListener('click',function(){start('adv');});
+  var _bf=$('#gameStartFull');if(_bf)_bf.addEventListener('click',function(){start('full');});
+  paint();
 })();
 
 /* 별 배경 */
