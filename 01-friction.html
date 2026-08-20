@@ -354,6 +354,25 @@ textarea::placeholder{color:var(--ink-mute)}
  .note.class{display:flex!important}
  .cloze{color:#111!important;border-style:solid}.cloze::after{content:none}
 }
+
+/* 실험 하나하나를 접었다 편다 — 제목만 보이고, 눌러야 준비물·방법이 나온다 */
+details.exp{border-top:1px dashed var(--line,#c9b68e);margin-top:0;padding-top:0}
+details.exp:first-of-type{border-top:0}
+details.exp > summary.exp-h{cursor:pointer;list-style:none;user-select:none;
+ margin:0;padding:13px 8px 13px 0;border-radius:9px;transition:background .13s}
+details.exp > summary.exp-h::-webkit-details-marker{display:none}
+details.exp > summary.exp-h::after{content:"펼치기 ▾";margin-left:auto;flex:none;
+ font-size:11.5px;font-weight:700;color:var(--accent,#a05c2c);white-space:nowrap}
+details.exp[open] > summary.exp-h::after{content:"접기 ▴"}
+details.exp > summary.exp-h:hover{background:rgba(160,92,44,.07)}
+details.exp > summary.exp-h:hover h4{color:var(--accent,#a05c2c)}
+details.exp > summary.exp-h:focus-visible{outline:2px solid var(--accent,#a05c2c);outline-offset:2px}
+details.exp > .exp-in{padding:2px 0 15px}
+@media (prefers-reduced-motion:no-preference){
+ details.exp[open] > .exp-in{animation:expOpen .18s ease both}
+ @keyframes expOpen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+}
+.expc-s .toghint{display:block;margin-top:5px;font-size:12.5px;color:var(--ink-dim,#5c4a33)}
 </style>
 
 <style id="board-v2">
@@ -965,7 +984,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  </p>
  <div class="keyline-s"><span class="kw">스웨터 벗을 때 지지직</span><span class="arw">→</span><span class="kw q">전기가 새로 생겼나?</span><span class="kw">일어난 일부터</span><span class="memo"></span></div>
  
-<div class="vwrap"><div class="vlead">🎬 오늘의 시작 — 빨대로 염력을 써 봅시다</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/yLvg-CetgAs" title="빨대로 염력 쓰는 방법" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>손을 대지 않았는데 왜 움직일까? 마술이 아니라면, 무엇이 밀고 당긴 걸까?</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtube.com/shorts/yLvg-CetgAs" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div>
+<div class="vwrap"><div class="vlead">🎬 오늘의 시작 — 승재쌤이 직접 해 봤습니다</div><div class="vbox"><iframe src="https://www.youtube.com/embed/U1msl2MZhJ8" title="마찰전기 질문자료 — 승재쌤 직접 실험" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>손을 대지 않았는데 왜 움직일까? 마술이 아니라면, 무엇이 밀고 당긴 걸까?</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtu.be/U1msl2MZhJ8" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div>
 <figure class="fig" data-fig="sweater"
  data-alt="털실로 짠 스웨터를 벗는 순간 머리카락이 옷 쪽으로 딸려 올라가며 곤두서는 모습"
  data-cap="옷을 갈아입을 때 스웨터에 머리카락이 달라붙는 까닭은 무엇일까? (도입)"></figure>
@@ -1000,7 +1019,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  <div class="keyline-s"><span class="kw">다른 두 물체 마찰</span><span class="arw">→</span><span class="kw hi">마찰 전기</span><span class="kw q">무슨 일이 일어났나 → 2·3단계</span><span class="memo"></span></div>
  </div>
 
- <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 밀어내는 힘을 눈으로</h3><p class="expc-s">준비물은 문구점에서 다 구합니다 · <b>건조한 날</b>일수록 잘 됩니다</p><div class="exp"><div class="exp-h"><span class="n">1</span><h4>공중에 뜨는 비닐끈 해파리</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 얇은 비닐 끈(농사용) 30cm, PVC 파이프 또는 긴 풍선, 털옷·모직 천</div><ol><li>비닐 끈을 <b>여러 가닥으로 잘게 찢어</b> 한쪽 끝을 묶습니다. 술 모양이 될수록 좋아요.</li><li>파이프를 털옷에 <b>30번쯤</b> 세게 문지릅니다.</li><li>끈 뭉치도 파이프로 여러 번 훑어 <b>같은 전하</b>를 줍니다.</li><li>뭉치를 위로 던지고, 그 아래에서 파이프를 이리저리 움직여 보세요.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 뭉치가 <b>활짝 펼쳐진 채</b> 공중에 떠서 파이프를 피해 다닙니다. 가닥이 오므라들지 않는 것도 눈여겨보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">파이프와 끈 뭉치가 <b>같은 종류의 전하</b>를 띠고 있어 서로 밀어냅니다. 이 미는 힘이 중력과 맞서기 때문에 뭉치가 떠 있는 거예요.<br>가닥이 활짝 펼쳐지는 것도 같은 이유입니다 — <b>가닥끼리도 서로 같은 전하</b>라 최대한 멀어지려 하죠. 해파리 모양 자체가 "같은 전하는 밀어낸다"의 증거인 셈입니다.</div></details><p class="exp-tip"><span>💡</span><span>실패하면 십중팔구 <b>습도</b> 탓입니다. 드라이기로 끈과 파이프를 데워 말린 뒤 다시 해 보세요.</span></p></div><div class="exp"><div class="exp-h"><span class="n">2</span><h4>휘어지는 물줄기</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 플라스틱 자 또는 빗, 수도꼭지(과학실 싱크대면 충분)</div><ol><li>물을 <b>실처럼 가늘게</b>, 끊기지 않을 만큼만 틉니다.</li><li>자를 머리카락이나 털옷에 20번쯤 문지릅니다.</li><li>물줄기 옆 <b>1~2 cm</b>까지 천천히 가까이 가져갑니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 물줄기가 자 <b>쪽으로</b> 휘어집니다. 자가 물에 닿는 순간 효과가 사라지는 것도 확인해 보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">여기서 중요한 건 <b>물은 대전되지 않았다</b>는 점입니다. 그런데도 끌려왔어요.<br>물 분자는 한쪽이 (+)를 띠고 반대쪽이 (−)를 띤 모양입니다. 대전체가 가까이 오면 물 분자들이 <b>방향을 돌려</b> 반대 전하 쪽을 대전체로 향하게 하죠. 그러면 끌어당기는 힘이 미는 힘보다 조금 더 커서, 전체적으로 끌려옵니다.<br><b>중성인 물체도 끌려온다</b> — 이게 바로 다음 시간에 배울 정전기 유도의 예고편입니다.</div></details><p class="exp-tip"><span>💡</span><span>물줄기가 굵으면 잘 안 휩니다. "실"이라고 부를 수 있을 만큼 가늘게 트는 게 성공의 열쇠.</span></p></div></div>
+ <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 밀어내는 힘을 눈으로</h3><p class="expc-s">준비물은 문구점에서 다 구합니다 · <b>건조한 날</b>일수록 잘 됩니다<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">1</span><h4>공중에 뜨는 비닐끈 해파리</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · 얇은 비닐 끈(농사용) 30cm, PVC 파이프 또는 긴 풍선, 털옷·모직 천</div><ol><li>비닐 끈을 <b>여러 가닥으로 잘게 찢어</b> 한쪽 끝을 묶습니다. 술 모양이 될수록 좋아요.</li><li>파이프를 털옷에 <b>30번쯤</b> 세게 문지릅니다.</li><li>끈 뭉치도 파이프로 여러 번 훑어 <b>같은 전하</b>를 줍니다.</li><li>뭉치를 위로 던지고, 그 아래에서 파이프를 이리저리 움직여 보세요.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 뭉치가 <b>활짝 펼쳐진 채</b> 공중에 떠서 파이프를 피해 다닙니다. 가닥이 오므라들지 않는 것도 눈여겨보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">파이프와 끈 뭉치가 <b>같은 종류의 전하</b>를 띠고 있어 서로 밀어냅니다. 이 미는 힘이 중력과 맞서기 때문에 뭉치가 떠 있는 거예요.<br>가닥이 활짝 펼쳐지는 것도 같은 이유입니다 — <b>가닥끼리도 서로 같은 전하</b>라 최대한 멀어지려 하죠. 해파리 모양 자체가 "같은 전하는 밀어낸다"의 증거인 셈입니다.</div></details><p class="exp-tip"><span>💡</span><span>실패하면 십중팔구 <b>습도</b> 탓입니다. 드라이기로 끈과 파이프를 데워 말린 뒤 다시 해 보세요.</span></p></div></details><details class="exp"><summary class="exp-h"><span class="n">2</span><h4>휘어지는 물줄기</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · 플라스틱 자 또는 빗, 수도꼭지(과학실 싱크대면 충분)</div><ol><li>물을 <b>실처럼 가늘게</b>, 끊기지 않을 만큼만 틉니다.</li><li>자를 머리카락이나 털옷에 20번쯤 문지릅니다.</li><li>물줄기 옆 <b>1~2 cm</b>까지 천천히 가까이 가져갑니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 물줄기가 자 <b>쪽으로</b> 휘어집니다. 자가 물에 닿는 순간 효과가 사라지는 것도 확인해 보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">여기서 중요한 건 <b>물은 대전되지 않았다</b>는 점입니다. 그런데도 끌려왔어요.<br>물 분자는 한쪽이 (+)를 띠고 반대쪽이 (−)를 띤 모양입니다. 대전체가 가까이 오면 물 분자들이 <b>방향을 돌려</b> 반대 전하 쪽을 대전체로 향하게 하죠. 그러면 끌어당기는 힘이 미는 힘보다 조금 더 커서, 전체적으로 끌려옵니다.<br><b>중성인 물체도 끌려온다</b> — 이게 바로 다음 시간에 배울 정전기 유도의 예고편입니다.</div></details><p class="exp-tip"><span>💡</span><span>물줄기가 굵으면 잘 안 휩니다. "실"이라고 부를 수 있을 만큼 가늘게 트는 게 성공의 열쇠.</span></p></div></details></div>
  <div class="card" style="margin-top:18px">
  <div class="eyebrow" style="margin-bottom:8px">오늘의 목표</div>
  <h3 class="card-t" style="margin-bottom:14px">이번 시간이 끝나면 이걸 할 수 있다</h3>
@@ -1025,21 +1044,21 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
 <!-- 2 -->
 <section class="panel" id="panel-ask">
  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">까닭 묻기 · 무엇이 옮겨 갔을까?</span></div>
- <h2 class="sec">면장갑으로 고무풍선을 문질러 봅시다</h2>
+ <h2 class="sec">털가죽으로 고무풍선을 문질러 봅시다</h2>
  <p class="lead">「해 보기」입니다. 순서대로 해 보고, <b class="k">일어난 일을 그대로 관찰</b>합니다.
  질문은 그 다음이에요.</p>
 
  <div class="card" style="margin-top:20px">
  <div class="badge" style="margin-bottom:12px">🧤 실험 순서</div>
  <ol class="doit">
- <li>면장갑으로 고무풍선 <b class="k">두 개</b>를 각각 문지른다.</li>
+ <li>털가죽으로 고무풍선 <b class="k">두 개</b>를 각각 문지른다.</li>
  <li>한 고무풍선을 스탠드에 매단 다음, <b class="k">다른 고무풍선</b>을 가까이 한다.</li>
- <li>이번에는 방금 그 <b class="k">면장갑</b>을 매달린 고무풍선에 가까이 한다.</li>
+ <li>이번에는 방금 그 <b class="k">털가죽</b>을 매달린 고무풍선에 가까이 한다.</li>
  </ol>
  <figure class="fig" data-fig="balloon"
- data-alt="면장갑으로 고무풍선을 문지른 뒤, 스탠드에 실로 매단 고무풍선에 가까이 하는 실험 장면"
- data-cap="준비물: 고무풍선 2개, 면장갑, 스탠드, 실 "></figure>
- <div class="note class"><span class="ic">💬</span><div><b>중단원 지도상의 유의점</b> — ① 마찰시킨 고무풍선을 <b>바닥에 내려놓으면 쉽게 중성 상태로 돌아갑니다.</b> 모둠원이 들고 있는 상태로 관찰하게 하세요. ② 면장갑 대신 헝겊·부직포도 됩니다. ③ 전하의 이동은 눈에 보이지 않으므로 <b>실험을 먼저 하고 원자 모형은 3단계에서</b> 다룹니다. 순서를 바꾸지 마세요.</div></div>
+ data-alt="털가죽으로 고무풍선을 문지른 뒤, 스탠드에 실로 매단 고무풍선에 가까이 하는 실험 장면"
+ data-cap="준비물: 고무풍선 2개, 털가죽, 스탠드, 실 "></figure>
+ <div class="note class"><span class="ic">💬</span><div><b>중단원 지도상의 유의점</b> — ① 마찰시킨 고무풍선을 <b>바닥에 내려놓으면 쉽게 중성 상태로 돌아갑니다.</b> 모둠원이 들고 있는 상태로 관찰하게 하세요. ② 털가죽 대신 헝겊·부직포도 됩니다. ③ 전하의 이동은 눈에 보이지 않으므로 <b>실험을 먼저 하고 원자 모형은 3단계에서</b> 다룹니다. 순서를 바꾸지 마세요.</div></div>
  </div>
 
  <!-- 관찰대 -->
@@ -1051,7 +1070,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  <b class="k">두 장면을 모두</b> 보고, 차이를 눈으로 확인하세요.</p>
  <div class="simwrap">
  <div class="svgstage">
- <svg viewBox="0 0 620 330" role="img" aria-label="스탠드에 실로 매단 고무풍선 옆으로 물체를 가까이 하는 관찰 장치. 다른 고무풍선을 가까이 하면 매달린 풍선이 반대쪽으로 밀려나고, 면장갑을 가까이 하면 매달린 풍선이 면장갑 쪽으로 끌려온다.">
+ <svg viewBox="0 0 620 330" role="img" aria-label="스탠드에 실로 매단 고무풍선 옆으로 물체를 가까이 하는 관찰 장치. 다른 고무풍선을 가까이 하면 매달린 풍선이 반대쪽으로 밀려나고, 털가죽을 가까이 하면 매달린 풍선이 털가죽 쪽으로 끌려온다.">
  <rect x="52" y="288" width="130" height="10" rx="4" fill="#c1ac82"/>
  <rect x="108" y="52" width="12" height="238" fill="#c1ac82"/>
  <rect x="108" y="52" width="200" height="10" rx="4" fill="#c1ac82"/>
@@ -1086,7 +1105,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  <line x1="511" y1="172" x2="511" y2="228" stroke="#6b573f" stroke-width="1.4"/>
  <line x1="525" y1="172" x2="525" y2="228" stroke="#6b573f" stroke-width="1.4"/>
  <rect x="493" y="230" width="50" height="15" rx="5" fill="#c9b691"/>
- <text x="518" y="266" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="15" fill="#4a3a26">면장갑</text>
+ <text x="518" y="266" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="15" fill="#4a3a26">털가죽</text>
  </g>
  </g>
  <text id="fsCap" x="310" y="318" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="15" fill="#6b573f">아래 버튼을 눌러 장면을 재생해 보세요</text>
@@ -1095,8 +1114,8 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  <div class="simctl">
  <h4>🎬 장면 고르기</h4>
  <div class="modebar">
- <button class="btn ghost sm" data-obs="pp">① 문지른 풍선 ↔ 풍선</button>
- <button class="btn ghost sm" data-obs="pg">② 면장갑 ↔ 풍선</button>
+ <button class="btn ghost sm" data-obs="pp">① 문지른 두 풍선을 가까이</button>
+ <button class="btn ghost sm" data-obs="pg">② 문지른 털가죽을 풍선에</button>
  <button class="btn ghost sm" data-obs="reset">처음으로</button>
  </div>
  <div class="verdict" id="obsMsg">두 버튼을 <b>모두</b> 눌러 두 장면을 비교해 보세요.</div>
@@ -1109,20 +1128,20 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  <table class="dtable">
  <tr><th>장면</th><th>가까이 한 물체</th><th>매달린 고무풍선은</th><th>두 물체 사이 힘의 방향</th></tr>
  <tr data-obsrow="pp"><td>①</td><td>다른 고무풍선</td><td data-col="move">—</td><td data-col="force">—</td></tr>
- <tr data-obsrow="pg"><td>②</td><td>면장갑</td><td data-col="move">—</td><td data-col="force">—</td></tr>
+ <tr data-obsrow="pg"><td>②</td><td>털가죽 → 풍선</td><td data-col="move">—</td><td data-col="force">—</td></tr>
  </table>
  </div>
  <p class="honest"><span class="ic">📌</span>화면은 실제 실험을 단순하게 옮긴 것입니다. 실제 풍선은 천천히 흔들리며 움직여요.
  <b>진짜 실험을 꼭 해 보세요.</b> 이 화면은 예습·복습용입니다.</p>
- <div class="note class"><span class="ic">💬</span><div><b>해 보기 모범 답안</b> — 다른 고무풍선을 가까이 할 때는 <b>그 풍선에서 먼 방향</b>으로 밀려나고, 면장갑을 가까이 할 때는 <b>면장갑에 가까운 방향</b>으로 끌려옵니다. 두 장면을 칠판에 나란히 그려 두고 다음 카드의 질문으로 넘어가세요.</div></div>
+ <div class="note class"><span class="ic">💬</span><div><b>해 보기 모범 답안</b> — 다른 고무풍선을 가까이 할 때는 <b>그 풍선에서 먼 방향</b>으로 밀려나고, 털가죽을 가까이 할 때는 <b>털가죽에 가까운 방향</b>으로 끌려옵니다. 두 장면을 칠판에 나란히 그려 두고 다음 카드의 질문으로 넘어가세요.</div></div>
  </div>
  </div>
 
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🤔 그래서, 오늘의 질문</h3>
  <p class="lead" style="font-size:18px;margin-top:10px">
- 같은 면장갑으로 문질렀는데, <b class="k">왜 한 번은 밀어내고 한 번은 끌어당길까요?</b></p>
- <textarea id="askTa" placeholder="지금 떠오르는 대로 써 보세요. 정답을 맞히는 칸이 아닙니다. 예: 풍선끼리는 서로 같은 무언가를 갖게 되고, 면장갑은 반대인 것 같다…"></textarea>
+ 같은 털가죽으로 문질렀는데, <b class="k">왜 한 번은 밀어내고 한 번은 끌어당길까요?</b></p>
+ <textarea id="askTa" placeholder="지금 떠오르는 대로 써 보세요. 정답을 맞히는 칸이 아닙니다. 예: 풍선끼리는 서로 같은 무언가를 갖게 되고, 털가죽은 반대인 것 같다…"></textarea>
  <span class="savemark" id="askSaved">✔ 저장됨</span>
  <p class="help say">이 질문의 답은 <b class="k">3단계에서 원자 그림으로</b> 풀립니다.
  지금 쓴 문장을 그때 다시 읽어 보세요. 얼마나 가까웠는지 알게 될 거예요.</p>
@@ -1183,7 +1202,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  </div>
  <p class="help cloze-line" style="line-height:2">이 규칙을 관찰대에 대 보면 —
  밀어냈던 <b>풍선 ↔ 풍선</b>은 <span class="cloze" data-ans="같은 종류" data-c="c2">　</span>의 전하를,
- 끌어당겼던 <b>면장갑 ↔ 풍선</b>은 <span class="cloze" data-ans="다른 종류" data-c="c2">　</span>의 전하를 띠고 있었다는 뜻입니다.
+ 끌어당겼던 <b>털가죽 ↔ 풍선</b>은 <span class="cloze" data-ans="다른 종류" data-c="c2">　</span>의 전하를 띠고 있었다는 뜻입니다.
  그런데 무엇이 (+)이고 무엇이 (−)일까요? 그리고 애초에 그 전하는 어디서 왔을까요? → 3단계.</p>
  <div class="note class"><span class="ic">💬</span><div><b>차시 지도상의 유의점</b> — 전기력·대전·대전체는 학생이 <b>처음 접하는 용어</b>입니다. 용어를 주고 끝내지 말고, 관찰한 두 장면을 이 용어로 <b>말해 보게</b> 하세요. 같은 물체끼리 마찰하는 경우는 다루지 않습니다.</div></div>
  </div>
@@ -1504,8 +1523,8 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  </div>
  <div class="cloze-done">✅ 용어와 정리표를 다 채웠어요!</div>
  <p class="help say">2단계의 질문에 이제 답할 수 있습니다. 문지른 <b>두 풍선은 둘 다 (−)</b> — 같은 종류라 밀어냈고,
- <b>면장갑은 (+), 풍선은 (−)</b> — 다른 종류라 끌어당겼습니다.</p>
- <div class="keyline-s"><span class="kw">풍선 둘 다 (−)</span><span class="arw">→</span><span class="kw">밀어냄</span><span class="kw">면장갑 (+) · 풍선 (−)</span><span class="arw">→</span><span class="kw">끌어당김</span><span class="memo"></span></div>
+ <b>털가죽은 (+), 풍선은 (−)</b> — 다른 종류라 끌어당겼습니다.</p>
+ <div class="keyline-s"><span class="kw">풍선 둘 다 (−)</span><span class="arw">→</span><span class="kw">밀어냄</span><span class="kw">털가죽 (+) · 풍선 (−)</span><span class="arw">→</span><span class="kw">끌어당김</span><span class="memo"></span></div>
  </div>
 
  <div class="card" style="margin-top:18px">
@@ -1596,7 +1615,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  그런데 화면에 다시 붙는 먼지는 <b>①번 칸이 비어 있습니다.</b> 먼지는 아무도 문지르지 않았으니까요. 바로 아래에서 이어집니다.</p>
 
  <div class="vwrap"><div class="vlead">🎬 정전기를 아주 많이 모으면?</div><div class="vbox tall"><iframe src="https://www.youtube.com/embed/CrsgaZ_1ZeQ" title="정전기가 많이 모이면 번개도 만들 수 있을까" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="vcap">👀 <b>번개도 결국 같은 원리입니다. 규모만 어마어마하게 커진 것.</b><br>영상이 안 보이면 인터넷 연결을 확인하세요 · <a href="https://youtube.com/shorts/CrsgaZ_1ZeQ" target="_blank" rel="noopener">유튜브에서 바로 보기 →</a></p></div>
- <div class="expc"><h3 class="expc-t">🧪 더 해 보기 — 전기력으로 골라내기</h3><p class="expc-s">오늘 배운 힘이 <b>공장에서도 똑같이</b> 쓰입니다</p><div class="exp"><div class="exp-h"><span class="n">3</span><h4>후추와 소금 골라내기</h4><span class="exp-tag live">교실에서 직접</span></div><div class="exp-prep">🧰 <b>준비물</b> · 소금, 후춧가루, 플라스틱 숟가락(또는 풍선), 접시</div><ol><li>접시에 소금과 후춧가루를 <b>골고루 섞습니다</b>.</li><li>숟가락을 털옷에 문지릅니다.</li><li>섞인 가루 <b>3 cm 위</b>에서 천천히 지나가 보세요.</li><li>높이를 조금씩 <b>낮추면서</b> 다시 지나갑니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 가벼운 <b>후추가 먼저</b> 튀어 올라 붙습니다. 더 낮추면 그제야 소금도 붙기 시작해요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">전기력은 후추에도 소금에도 똑같이 작용합니다. 그런데 후추 알갱이가 훨씬 <b>가볍기</b> 때문에 중력을 먼저 이기는 거예요.<br>높이를 낮출수록 무거운 소금까지 붙는다는 건, <b>가까울수록 전기력이 세다</b>는 뜻이기도 합니다. 거리와 힘의 관계를 눈으로 확인한 셈이죠.<br>공장 굴뚝의 <b>전기 집진기</b>가 바로 이 원리로 매연 속 먼지만 골라 붙잡습니다.</div></details></div><div class="exp"><div class="exp-h"><span class="n">4</span><h4>테이프를 떼면 X선이 나온다</h4><span class="exp-tag vid">영상으로</span></div><p class="exp-eye">👀 <b>여기를 보세요</b> — 진공 속에서 테이프를 빠르게 떼자 <b>X선</b>이 나와, 그 빛으로 손가락 사진이 찍혔습니다.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EC%8A%A4%EC%B9%B4%EC%B9%98%ED%85%8C%EC%9D%B4%ED%94%84%20X%EC%84%A0" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «스카치테이프 X선»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">테이프를 떼는 것도 결국 <b>마찰(박리)에 의한 대전</b>입니다. 두 면이 갈라질 때 전하가 나뉘는데, 진공에서는 이 전하가 중화되지 못하고 쌓여 <b>어마어마한 전압</b>이 됩니다. 이때 튀어나온 전자가 부딪히며 X선이 나오는 거예요. 2008년에 실제로 학술지에 발표된 연구입니다.<br><b>안심하세요</b> — 공기 중에서 평범하게 테이프를 떼는 것으로는 X선이 나오지 않습니다. 진공이어야만 일어나는 일이에요.</div></details></div></div>
+ 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:10px">
@@ -1699,6 +1718,8 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  <div class="stepline opt"><span class="sbadge">선택</span><span class="swhat">더 알아보기 · 시험에 나오지 않습니다</span></div>
  <h2 class="sec">겨울에 유독 찌릿한 이유, 그리고 못 외워도 되는 이야기</h2>
  <p class="lead">여기서부터는 <b class="k">교과서 밖 이야기</b>입니다. 시험에 나오지 않아요. 외우지 말고 그냥 읽어 보세요.</p>
+<div class="expc"><h3 class="expc-t">🧪 집에서 해 보기 — 전기력으로 골라내기</h3><p class="expc-s">오늘 배운 힘이 <b>공장에서도 똑같이</b> 쓰입니다<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">3</span><h4>후추와 소금 골라내기</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · 소금, 후춧가루, 플라스틱 숟가락(또는 풍선), 접시</div><ol><li>접시에 소금과 후춧가루를 <b>골고루 섞습니다</b>.</li><li>숟가락을 털옷에 문지릅니다.</li><li>섞인 가루 <b>3 cm 위</b>에서 천천히 지나가 보세요.</li><li>높이를 조금씩 <b>낮추면서</b> 다시 지나갑니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 가벼운 <b>후추가 먼저</b> 튀어 올라 붙습니다. 더 낮추면 그제야 소금도 붙기 시작해요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">전기력은 후추에도 소금에도 똑같이 작용합니다. 그런데 후추 알갱이가 훨씬 <b>가볍기</b> 때문에 중력을 먼저 이기는 거예요.<br>높이를 낮출수록 무거운 소금까지 붙는다는 건, <b>가까울수록 전기력이 세다</b>는 뜻이기도 합니다. 거리와 힘의 관계를 눈으로 확인한 셈이죠.<br>공장 굴뚝의 <b>전기 집진기</b>가 바로 이 원리로 매연 속 먼지만 골라 붙잡습니다.</div></details></div></details><details class="exp"><summary class="exp-h"><span class="n">4</span><h4>테이프를 떼면 X선이 나온다</h4><span class="exp-tag vid">영상으로</span></summary><div class="exp-in"><p class="exp-eye">👀 <b>여기를 보세요</b> — 진공 속에서 테이프를 빠르게 떼자 <b>X선</b>이 나와, 그 빛으로 손가락 사진이 찍혔습니다.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EC%8A%A4%EC%B9%B4%EC%B9%98%ED%85%8C%EC%9D%B4%ED%94%84%20X%EC%84%A0" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «스카치테이프 X선»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">테이프를 떼는 것도 결국 <b>마찰(박리)에 의한 대전</b>입니다. 두 면이 갈라질 때 전하가 나뉘는데, 진공에서는 이 전하가 중화되지 못하고 쌓여 <b>어마어마한 전압</b>이 됩니다. 이때 튀어나온 전자가 부딪히며 X선이 나오는 거예요. 2008년에 실제로 학술지에 발표된 연구입니다.<br><b>안심하세요</b> — 공기 중에서 평범하게 테이프를 떼는 것으로는 X선이 나오지 않습니다. 진공이어야만 일어나는 일이에요.</div></details></div></details></div>
+
 
  <div class="grid c2" style="margin-top:20px">
  <div class="card">
@@ -1761,7 +1782,7 @@ svg.em-rubbing{animation:emrub .18s linear 5;transform-origin:center}
  <p class="lead say" style="font-size:17.5px;margin-top:8px">
  털가죽과 플라스틱 막대를 문지르면 <b>항상</b> 털가죽의 전자가 플라스틱 쪽으로 갑니다.
  즉 어느 쪽이 (+)가 되고 어느 쪽이 (−)가 될지는 <b class="k">두 물체의 조합에 따라 정해져</b> 있어요.
- 이 순서를 늘어놓은 것을 <b>대전열</b>이라고 합니다.<br><br>
+ 이 순서를 늘어놓은 것을 <b>대전열</b>이라고 합니다.<br><span style="display:inline-block;background:rgba(138,95,36,.1);border:1.5px solid var(--line);border-radius:10px;padding:9px 14px;margin:10px 0 12px;font-size:15px;line-height:1.9">(+) 쪽 &nbsp;<b>털가죽 · 유리 · 명주 · 나무 · 고무 · 플라스틱 · 에보나이트</b>&nbsp; (−) 쪽</span><br>
  순서에서 <b>멀리 떨어진</b> 두 물체를 문지를수록 대전이 잘 됩니다.</p>
  <div class="keyline-s"><span class="kw">어느 쪽이 (+)인지는 조합이 정함</span><span class="arw">→</span><span class="kw hi">대전열</span><span class="kw">멀수록 세게 대전</span><span class="memo"></span></div>
  <p class="help say">중학교 시험에서는 "어느 쪽이 (+)냐"를 외우게 하지 않습니다.
@@ -1842,9 +1863,9 @@ const OBS={
   pp:{swing:15,  probe:-140, cap:'문지른 두 고무풍선을 가까이 했다 — 매달린 풍선이 밀려난다',
       move:'반대쪽으로 밀려남', force:'밀어 내는 방향',
       msg:'매달린 고무풍선이 <b>밀려납니다.</b> 문지른 두 고무풍선 사이에는 <b>밀어 내는</b> 방향의 힘이 작용했어요.'},
-  pg:{swing:-15, probe:-100, cap:'같은 면장갑을 가까이 했다 — 매달린 풍선이 끌려온다',
-      move:'면장갑 쪽으로 끌려옴', force:'끌어당기는 방향',
-      msg:'이번에는 매달린 고무풍선이 <b>끌려옵니다.</b> 고무풍선과 면장갑 사이에는 <b>끌어당기는</b> 방향의 힘이 작용했어요.'}
+  pg:{swing:-15, probe:-100, cap:'같은 털가죽을 가까이 했다 — 매달린 풍선이 끌려온다',
+      move:'털가죽 쪽으로 끌려옴', force:'끌어당기는 방향',
+      msg:'이번에는 매달린 고무풍선이 <b>끌려옵니다.</b> 고무풍선과 털가죽 사이에는 <b>끌어당기는</b> 방향의 힘이 작용했어요.'}
 };
 
 /* 전자 옮기기 — 수건 원자 4개 · 풍선 원자 4개, 전자는 모두 8개(끝까지 변하지 않는다) */
@@ -2132,7 +2153,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     const both=S.obs.pp&&S.obs.pg;
     msg.className='verdict'+(both?' hit':'');
     msg.innerHTML=o.msg+(both
-      ? '<br><br>✅ 두 장면을 모두 보았습니다. <b>같은 면장갑</b>으로 문질렀는데 결과는 반대였어요. 아래 칸에 질문을 적어 봅시다.'
+      ? '<br><br>✅ 두 장면을 모두 보았습니다. <b>같은 털가죽</b>으로 문질렀는데 결과는 반대였어요. 아래 칸에 질문을 적어 봅시다.'
       : '<br><br>다른 버튼도 눌러 <b>나머지 한 장면</b>을 보세요.');
   }
   document.addEventListener('click',e=>{
@@ -2762,7 +2783,10 @@ document.querySelectorAll('.qna-btn').forEach(b=>b.addEventListener('click',()=>
    {t:'대전열', lines:[
      ['물체마다 ', {a:'전자', alt:['전자']}, '를 잃기 쉬운 정도에 따라 물체를 한 줄로 늘어놓은 것'],
      ['털가죽과 고무풍선을 마찰 → ', {a:'털가죽', alt:['털가죽']}, '이 (+), ', {a:'고무풍선', alt:['고무풍선','풍선']}, '이 (−)'],
-     ['<b>순서는 외울 필요 없습니다</b> — 두 물체의 <b>짝</b>만 보면 됩니다']]}
+     ['순서 — 털가죽 · 유리 · 명주 · 나무 · 고무 · 플라스틱 · 에보나이트'],
+     ['앞쪽일수록 ', {a:'(+)', alt:['플러스','양','양전하','플러스 전하']},
+      '가 되기 쉽고, 뒤쪽일수록 ', {a:'(−)', alt:['마이너스','음','음전하','마이너스 전하']}, '가 되기 쉬움'],
+     ['<b>순서를 외울 필요는 없습니다</b> — 두 물체의 <b>짝</b>에서 앞뒤만 보면 됩니다']]}
   ];
 
   var wrap=document.getElementById('sumWrap'); if(!wrap) return;
