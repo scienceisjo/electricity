@@ -1153,8 +1153,8 @@ body.teacher .keyline-s{display:none}
  <polygon points="60,150 53,164 67,164" fill="#6b573f"/>
  <text x="86" y="176" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" fill="#6b573f">물의 흐름</text>
  <rect x="380" y="66" width="200" height="170" rx="4" fill="none" stroke="#a05c2c" stroke-width="3"/>
- <circle cx="480" cy="66" r="22" fill="#faf4e6" stroke="#a08b64" stroke-width="2.4"/>
- <path d="M470 60 Q476 74 480 60 Q484 74 490 60" fill="none" stroke="#6b573f" stroke-width="2"/>
+ <circle cx="480" cy="66" r="22" fill="#faf4e6" stroke="#a08b64" stroke-width="2.4"/><line x1="458.0" y1="66.0" x2="467.9" y2="66.0" stroke="#6b573f" stroke-width="2.4"/><path d="M 467.9 66.0 A 12.1 12.1 0 0 1 492.1 66.0" fill="none" stroke="#6b573f" stroke-width="2.4"/><line x1="492.1" y1="66.0" x2="502.0" y2="66.0" stroke="#6b573f" stroke-width="2.4"/>
+ 
  <text x="480" y="112" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#4a3a26">전구</text>
  <line x1="452" y1="236" x2="452" y2="214" stroke="#b23a30" stroke-width="3.4"/>
  <line x1="466" y1="236" x2="466" y2="224" stroke="#2e5f8f" stroke-width="6"/>
@@ -2140,8 +2140,9 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     ctx.strokeStyle='#a08b64';ctx.lineWidth=2.4;
     ctx.beginPath();ctx.arc(bx,by,22,0,TAU);ctx.stroke();
     ctx.strokeStyle='#6b573f';ctx.lineWidth=2;
-    ctx.beginPath();ctx.moveTo(bx-9,by+5);ctx.quadraticCurveTo(bx-4,by-9,bx,by+5);
-    ctx.quadraticCurveTo(bx+4,by-9,bx+9,by+5);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(bx-22,by);ctx.lineTo(bx-12,by);
+    ctx.arc(bx,by,12,Math.PI,0,true);
+    ctx.moveTo(bx+12,by);ctx.lineTo(bx+22,by);ctx.stroke();
     ctx.font='14px "Gowun Dodum","Pretendard",sans-serif';ctx.textAlign='center';
     ctx.fillStyle=C.inkdim;ctx.fillText('전구',bx,by-32);
     /* 방향 화살표 — 왼변 안쪽 (전자=초록, 전류=구리) */
