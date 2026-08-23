@@ -1176,8 +1176,9 @@ ANIM.terrella=function(cv,api){
     g.addColorStop(0,'#6a7a86'); g.addColorStop(1,'#333f49');
     c.fillStyle=g; c.beginPath(); c.arc(cx,cy,R,0,7); c.fill();
     c.strokeStyle='rgba(30,40,48,.8)'; c.lineWidth=1.5; c.stroke();
-    label(c,'S',cx,cy-R+18,'#ffd9d4',Math.max(13,R*.2));
-    label(c,'N',cx,cy+R-8,'#d4e6ff',Math.max(13,R*.2));
+    /* 극 위치는 그대로(지구 북극 = 자석의 S극), 색만 교과서 규칙에 맞춤: N=빨강·S=파랑 */
+    label(c,'S',cx,cy-R+18,'#cfe0ff',Math.max(13,R*.2));
+    label(c,'N',cx,cy+R-8,'#ffd2cc',Math.max(13,R*.2));
     label(c,'북극',cx,cy-R-12,MAG,Math.max(10,w*.013));
     /* 나침반 */
     if(show>.02){
