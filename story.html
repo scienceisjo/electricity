@@ -1628,7 +1628,8 @@ ANIM.balloon=function(cv,api){
         label(c,'−', bx+Math.cos(a)*R*.86, cy+Math.sin(a)*R*.86+4, NEG, Math.max(11,R*.30)); }
       c.globalAlpha=1; }
     /* 캔 */
-    var cx0=w*.68+canX, cw=Math.min(w,h)*.17, chh=Math.min(w,h)*.30;
+    /* 풍선이 왼쪽(bx=w*.30)에 있으므로 canX 만큼 '왼쪽으로' 당겨져야 한다 */
+    var cx0=w*.68-canX, cw=Math.min(w,h)*.17, chh=Math.min(w,h)*.30;
     c.save(); c.translate(cx0,cy);
     c.fillStyle='#cfd6dc'; c.strokeStyle='#8e99a3'; c.lineWidth=1.6;
     c.beginPath(); c.rect(-cw/2,-chh/2,cw,chh); c.fill(); c.stroke();
