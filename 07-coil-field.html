@@ -875,6 +875,15 @@ body.teacher .keyline-s{display:none}
  padding:7px 15px;border-radius:99px;border:1.5px dashed var(--accent,#a05c2c);
  color:var(--accent,#a05c2c);text-decoration:none;transition:.16s}
 .exp-yt:hover{background:rgba(160,92,44,.1)}
+.vwrap{margin:16px 0 4px}
+.vbox{border:2px solid var(--line);border-radius:16px;overflow:hidden;background:#000;position:relative}
+.vbox::before{content:"";display:block;padding-top:56.25%}
+.vbox.tall::before{padding-top:130%}
+.vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vcap{font-size:14px;color:var(--ink-mute);margin-top:7px;line-height:1.6}
+.vcap b{color:var(--ink)}
+.vlead{font-family:var(--jua);font-size:clamp(16px,2vw,19px);color:var(--gold);margin:2px 0 8px;
+ display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body><!-- board-v2: inline font bumped -->
@@ -905,7 +914,7 @@ body.teacher .keyline-s{display:none}
  <div class="steps-card">
  <h3>💡 학습 단계 안내</h3>
  <ol>
- <li><span class="sn">1</span><div><b>생각 열기</b> — 코일은 어떻게 자석을 끌어당기는 것일까</div></li>
+ <li><span class="sn">1</span><div><b>생각 열기</b> — 전류를 흘리면 자석이 되고, 끄면 놓아 준다</div></li>
  <li><span class="sn">2</span><div><b>탐구하기</b> — 예상 먼저, 그다음 코일 실험대에서 관찰</div></li>
  <li><span class="sn">3</span><div><b>규칙 세우기</b> — 코일 자기장의 모양·방향·세기</div></li>
  <li><span class="sn">4</span><div><b>적용하기</b> — 전자석이 일하는 곳, 그리고 단서 하나</div></li>
@@ -966,18 +975,25 @@ body.teacher .keyline-s{display:none}
 
 <!-- 1 -->
 <section class="panel show" id="panel-open">
- <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">생각 열기 · 공중에 뜬 액자의 비밀</span></div>
- <h1 class="big">코일은 어떻게<br>자석을 <span style="color:#2c6e5f">끌어당기는</span> 것일까?</h1>
+ <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">생각 열기 · 켜면 붙고 끄면 떨어진다</span></div>
+ <h1 class="big">전류를 흘리면 자석이 되고,<br>전류를 끄면 <span style="color:#2c6e5f">놓아 준다</span></h1>
  <p class="lead say" style="margin-top:16px">
- 자석이 든 액자가 받침대 위 허공에 <b class="k">둥둥 떠</b> 있습니다.
- 액자에는 아래로 당기는 중력이 작용하는데도 떨어지지 않아요.
- 그런데 받침대 속에 든 것은 자석이 아니라 <b class="k">도선을 여러 번 감은 코일</b>.
- 코일에 무슨 일이 생기길래 자석을 끌어당길 수 있을까요?
+ 고철 처리장의 기중기가 무거운 쇳덩이를 <b class="k">한 번에 들어 올립니다.</b>
+ 그런데 옮긴 자리에 <b class="k">툭 떨어뜨릴</b> 수도 있어요.
+ 영구 자석이라면 한 번 붙은 것을 떼어 내기가 여간 어려운 일이 아닐 텐데 말이죠.
+ 기중기 끝에 달린 것은 <b class="k">도선을 여러 번 감은 코일</b>입니다.
+ 코일에 무슨 일이 생기길래 <b>켜면 붙고 끄면 놓아 줄</b> 수 있을까요?
  </p>
- <div class="keyline-s"><span class="kw">액자가 떠 있다</span><span class="kw">받침대 속은 코일</span><span class="arw">→</span><span class="kw q">코일이 어떻게 자석을 당기나?</span><span class="memo"></span></div>
- <figure class="fig" data-fig="co-frame"
- data-alt="받침대 위 허공에 떠 있는 액자 — 받침대 속의 코일이 액자 안의 자석을 끌어당기고 있다"
- data-cap="어떻게 떠 있는 거야? — 받침대 속에는 코일이 있다 (도입)"></figure>
+ <div class="keyline-s"><span class="kw">켜면 쇳덩이가 붙는다</span><span class="kw">끄면 떨어진다</span><span class="arw">→</span><span class="kw q">코일에 무슨 일이?</span><span class="memo"></span></div>
+
+ <div class="vwrap"><div class="vlead">🎬 오늘의 시작 — 전자석 기중기</div>
+ <div class="vbox tall"><iframe src="https://www.youtube.com/embed/t8vxKjESRCA"
+ title="전자석 기중기 — 전류를 흘리면 자석이 되고 끄면 놓아 준다"
+ loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+ referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+ <p class="vcap"><b>보면서 챙길 것</b> — ① 쇳덩이가 <b>언제</b> 붙고 <b>언제</b> 떨어지나요?
+ ② 붙였다 놓았다 할 수 있다는 것은, 자석의 성질을 <b>켜고 끌 수 있다</b>는 뜻입니다.
+ 영구 자석으로는 할 수 없는 일이에요.</p></div>
 
  <div class="card" style="margin-top:20px">
  <h2 class="sec" style="font-size:clamp(19px,3vw,24px)">✅ 이미 알고 있는 것에 표시해 보자</h2>
@@ -998,7 +1014,8 @@ body.teacher .keyline-s{display:none}
  자석에 나침반을 가까이 하면 바늘이 움직입니다. 자석 주위에 <b class="k">자기력</b>이 작용하기 때문이죠.
  자석 주위에 철 가루를 뿌리면 철 가루가 자기력을 받아 늘어서는 것도 같은 까닭입니다.
  이렇게 <b class="k">자기력이 작용하는 공간</b>을 <b style="color:#2c6e5f">자기장</b>이라고 해요.
- 그렇다면 눈에 보이지 않는 자기장의 <b>방향</b>은 무엇으로 정할까요?</p>
+ 자석 주변에서 자기장의 방향은 <b class="k">N극에서 나와 S극으로 들어가는 방향</b>입니다.
+ 그렇다면 눈에 보이지 않는 이 방향을 어떻게 <b>알아낼</b> 수 있을까요?</p>
  <div class="keyline-s"><span class="kw">자기력이 작용하는 공간</span><span class="arw">→</span><span class="kw hi">자기장</span><span class="arw">→</span><span class="kw q">코일 주위는?</span><span class="memo"></span></div>
  <div class="modebar" id="warmBar">
  <button class="btn ghost sm" data-warm="n">① 나침반 바늘의 N극이 가리키는 방향</button>
@@ -1594,8 +1611,10 @@ body.teacher .keyline-s{display:none}
  <div class="card cloze-set" style="margin-top:18px">
  <div class="badge" style="margin-bottom:12px">✍️ 빈칸을 눌러 확인 — 먼저 머릿속으로 답한 뒤에</div>
  <p class="cloze-line">
- 자석 주위와 같이 자기력이 작용하는 공간을 <span class="cloze" data-ans="자기장" data-c="mag">　</span>이라 하고,
- 그 방향은 나침반 바늘의 <span class="cloze" data-ans="N극" data-c="danger">　</span>이 가리키는 방향이다.
+ 자석 주위와 같이 자기력이 작용하는 공간을 <span class="cloze" data-ans="자기장" data-c="mag">　</span>이라 한다.
+ 자기장의 방향은 자석 주변에서는 <span class="cloze" data-ans="N극" data-c="c5">　</span>에서 나와
+ <span class="cloze" data-ans="S극" data-c="accent">　</span>으로 들어가는 방향이며,
+ 자기장 속에 놓인 나침반의 <span class="cloze" data-ans="N극" data-c="danger">　</span>이 가리키는 방향이다.
  </p>
  <p class="cloze-line">
  코일에 <span class="cloze" data-ans="전류" data-c="accent">　</span>가 흐르면 코일 주위에 자기장이 생기며,
@@ -1887,13 +1906,12 @@ body.teacher .keyline-s{display:none}
  <div class="card">
  <h3 class="card-t">🎬 다시, 처음 그 질문 <span class="badge">시험 X</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:8px">
- <b class="k">"코일은 어떻게 자석을 끌어당기는 것일까?"</b><br><br>
- 이제 답할 수 있습니다 — 코일에 전류가 흐르면 코일이 <b>전자석이 되어</b>
- 액자 속 자석을 끌어당깁니다. 아래로 당기는 중력과 위로 당기는 자기력이
- 균형을 이루어 액자가 떠 있는 것이죠.<br><br>
- 스위치를 내리면? 자기장이 사라지고, 액자는 떨어집니다.
+ <b class="k">"전류를 흘리면 자석이 되고, 전류를 끄면 놓아 준다 — 어떻게?"</b><br><br>
+ 이제 답할 수 있습니다 — 코일에 전류가 흐르면 코일 주위에 자기장이 생겨
+ 코일이 <b>전자석이 되고</b>, 그 자기력으로 쇳덩이를 끌어당깁니다.<br><br>
+ 스위치를 내리면? 전류가 끊겨 자기장이 사라지고, 쇳덩이는 <b>툭 떨어집니다.</b>
  전류가 흐르는 <b>동안만</b> 자석 — 오늘 배운 규칙 그대로예요.</p>
- <div class="keyline-s"><span class="kw">코일이 전자석이 됨</span><span class="arw">→</span><span class="kw">중력 = 자기력</span><span class="arw">→</span><span class="kw hi">떠 있다</span><span class="memo"></span></div>
+ <div class="keyline-s"><span class="kw">코일이 전자석이 됨</span><span class="arw">→</span><span class="kw">쇳덩이를 끌어당김</span><span class="arw">→</span><span class="kw hi">떠 있다</span><span class="memo"></span></div>
  </div>
  </div>
 
