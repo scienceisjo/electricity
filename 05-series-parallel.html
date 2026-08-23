@@ -2617,7 +2617,11 @@ function circuitAria(mode,remA,remB){
 
 /* ══════ '왜 그럴까?' — 저항의 연결 ══════
    기준 회로(저항 1개)와 이어 붙인 회로를 한 화면에서 견준다.
-   움직이는 점 = 전류. 점의 빠르기가 전류의 세기를 나타낸다(도선이 같으므로 밀도는 그대로). */
+   움직이는 점 = 전하의 흐름 모형.
+   전류의 세기는 '일정 시간에 한 지점을 지나가는 점의 수'로 나타낸다 —
+   점의 속도는 어디서나 같고, 전류에 비례해 점이 촘촘해진다.
+   그래서 직렬에서는 회로 어디서나 점 간격이 같고(I=I₁=I₂),
+   병렬 갈림길에서는 줄기의 촘촘함이 두 갈래로 정확히 나뉜다(I=I₁+I₂). */
 (function(){
  const host=$('#whyRes'); if(!host)return;
  const EMF=3, R1=10;                       /* 전원 3 V, 저항 하나 10 Ω */
@@ -2688,8 +2692,9 @@ function circuitAria(mode,remA,remB){
   cxs.forEach(cx=>{w+=seg(prev,yT,cx-15,yT);prev=cx+15;});
   w+=seg(prev,yT,xr,yT)+seg(xl,yT,xl,yB)+seg(xr,yT,xr,yB)+seg(xl,yB,bx-7,yB)+seg(bx+7,yB,xr,yB);
   const loop=[[bx+7,yB],[bx-7,yB],[xl,yB],[xl,yT],[xr,yT],[xr,yB],[bx+7,yB]];
+  /* 직렬 — 회로가 한 줄이라 전류는 어디서나 같다. 저항이 n개면 전체 전류는 1/n */
   return {wires:w, res:cxs.map((cx,i)=>[cx,yT,'R'+(i+1)]), bx:bx, by:yB,
-          flows:[{pts:loop,rate:1/n}], junc:[]};
+          flows:[{pts:loop,cur:1/n}], junc:[]};
  }
  /* 병렬 — 저항 n개가 갈래마다 */
  function specPara(n){
@@ -2699,12 +2704,13 @@ function circuitAria(mode,remA,remB){
   let w='';
   rows.forEach(y=>{w+=seg(xl,y,115,y)+seg(145,y,xr,y);});
   w+=seg(xl,rows[0],xl,yB)+seg(xr,rows[0],xr,yB)+seg(xl,yB,bx-7,yB)+seg(bx+7,yB,xr,yB);
-  const flows=[{pts:[[bx+7,yB],[bx-7,yB],[xl,yB],[xl,low]],rate:n},
-               {pts:[[xr,low],[xr,yB],[bx+7,yB]],rate:n}];
-  rows.forEach(y=>flows.push({pts:[[xl,y],[xr,y]],rate:1}));
+  /* 병렬 — 줄기에는 갈래 전류의 합, 각 갈래에는 기준 회로와 같은 전류 */
+  const flows=[{pts:[[bx+7,yB],[bx-7,yB],[xl,yB],[xl,low]],cur:n},
+               {pts:[[xr,low],[xr,yB],[bx+7,yB]],cur:n}];
+  rows.forEach(y=>flows.push({pts:[[xl,y],[xr,y]],cur:1}));
   for(let k=n-1;k>=1;k--){
-   flows.push({pts:[[xl,rows[k]],[xl,rows[k-1]]],rate:k});
-   flows.push({pts:[[xr,rows[k-1]],[xr,rows[k]]],rate:k});
+   flows.push({pts:[[xl,rows[k]],[xl,rows[k-1]]],cur:k});
+   flows.push({pts:[[xr,rows[k-1]],[xr,rows[k]]],cur:k});
   }
   const junc=[];
   rows.forEach((y,i)=>{if(i<n-1||n===1)return;});
@@ -2725,13 +2731,14 @@ function circuitAria(mode,remA,remB){
    for(let i=1;i<pts.length;i++){
     tot+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]); cum.push(tot);
    }
-   const nD=Math.max(2,Math.round(tot/21)), dots=[];
+   /* 점 사이 간격을 전류에 반비례시킨다 → 같은 시간에 지나가는 점의 수 ∝ 전류 */
+   const GAP=30, nD=Math.max(1,Math.round(tot/(GAP/f.cur))), dots=[];
    for(let i=0;i<nD;i++){
     const c=document.createElementNS(NS,'circle');
-    c.setAttribute('r','3.1'); c.setAttribute('fill','#a05c2c');
+    c.setAttribute('r','2.7'); c.setAttribute('fill','#a05c2c');
     g.appendChild(c); dots.push(c);
    }
-   out.push({pts:pts,cum:cum,len:tot,rate:f.rate,dots:dots,off:0});
+   out.push({pts:pts,cum:cum,len:tot,cur:f.cur,dots:dots,off:0});
   });
   return out;
  }
@@ -2849,7 +2856,8 @@ function circuitAria(mode,remA,remB){
   const vis=$('#panel-compare')&&$('#panel-compare').classList.contains('show')
    &&!document.body.classList.contains('cover-on');
   if(vis&&!reduceMotion){
-   [FS0,FS1,FP0,FP1].forEach(set=>{set.forEach(f=>{f.off+=f.rate*26*dt;});paint(set);});
+   /* 속도는 어디서나 같다 — 전류의 차이는 점의 촘촘함으로만 나타낸다 */
+   [FS0,FS1,FP0,FP1].forEach(set=>{set.forEach(f=>{f.off+=26*dt;});paint(set);});
   }
   requestAnimationFrame(frame);
  }

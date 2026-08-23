@@ -1327,7 +1327,7 @@ ANIM.oersted=function(cv,api){
       c.fillStyle=NEG; c.beginPath(); c.moveTo(-Rr*.78,0); c.lineTo(Rr*.2,-Rr*.26); c.lineTo(Rr*.2,Rr*.26); c.closePath(); c.fill();
       c.restore();
     }
-    label(c, on>.5? '전류에 수직! 전선을 감싸고 도는 방향' : '스위치 꺼짐 — 모두 북쪽을 가리킨다',
+    label(c, on>.5? '전선을 감싸고 도는 방향 — 위아래가 서로 반대!' : '스위치 꺼짐 — 모두 북쪽을 가리킨다',
       w/2, h-14, on>.5?MAG:DIM, Math.max(11,w*.016));
   });
 };
@@ -1750,8 +1750,8 @@ ANIM.solenoid=function(cv,api){
     c.strokeStyle='rgba(120,95,55,.5)'; c.lineWidth=2;
     c.beginPath(); c.moveTo(cx-cw*.62,cy); c.lineTo(cx+cw*.62,cy); c.stroke();
     /* 극 표시 */
-    label(c,'N',cx-cw*.70,cy+5,NEG,Math.max(13,w*.019));
-    label(c,'S',cx+cw*.70,cy+5,POS,Math.max(13,w*.019));
+    label(c,'N',cx-cw*.70,cy+5,POS,Math.max(13,w*.019));   /* N=빨강 (막대자석과 동일 규칙) */
+    label(c,'S',cx+cw*.70,cy+5,NEG,Math.max(13,w*.019));   /* S=파랑 */
     /* 붙는 클립 */
     var clips=Math.round(1+strength*7);
     for(var q=0;q<clips;q++){
