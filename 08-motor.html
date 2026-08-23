@@ -1055,9 +1055,7 @@ body.teacher .keyline-s{display:none}
  <li>코일에 흐르는 <b class="k">전류의 방향을 반대로</b> 바꾸고, 코일의 움직임을 관찰한다.</li>
  <li>코일에 흐르는 <b class="k">전류의 세기를 더 세게</b> 하고, 코일의 움직임을 관찰한다.</li>
  </ol>
- <figure class="fig" data-fig="mo-setup"
- data-alt="그네형 코일 장치를 전원 장치에 연결하고, 스탠드에 고정한 네오디뮴 자석이 코일과 마주 보게 놓인 실험 장치 사진"
- data-cap="준비물: 그네형 코일 장치, 네오디뮴 자석, 전원 장치, 집게 달린 전선, 스탠드, 면장갑 "></figure>
+
  <div class="note class"><span class="ic">💬</span><div><b>탐구 지도 유의점(교과서 명시)</b> — ① 네오디뮴 자석은 자기력이 세고 깨지기 쉬우므로 다룰 때 손을 다치지 않게 주의시키세요. ② 감전 위험이 있으므로 전류가 흐르는 동안 집게 전선이나 그네형 코일 장치의 도체 부분을 만지지 않게 합니다. ③ 결과가 잘 나오려면 <b>코일과 네오디뮴 자석이 같은 중심축 상에</b> 있게 위치를 맞춥니다. ④ 아래 가상 실험대는 실제 실험을 대신하는 게 아니라 예습·복습용입니다.</div></div>
  </div>
 
@@ -1085,6 +1083,10 @@ body.teacher .keyline-s{display:none}
  <ellipse cx="278" cy="190" rx="20" ry="46" fill="none" stroke="#a05c2c" stroke-width="3" stroke-dasharray="7 5"/>
  <text id="fsCoilPole" x="318" y="190" text-anchor="middle" dominant-baseline="central" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="21" font-weight="800" fill="#b3362e">N</text>
  <text x="278" y="262" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">코일</text>
+  <g id="fsCoilCur" opacity="0">
+   <line x1="278" y1="164" x2="278" y2="200" stroke="#a05c2c" stroke-width="3.4"/>
+   <polygon points="278,214 269,198 287,198" fill="#a05c2c"/>
+  </g>
  </g>
  <g id="fsForce" opacity="0">
  <g id="fsFArrow">
@@ -1236,6 +1238,9 @@ body.teacher .keyline-s{display:none}
  <text x="90" y="75" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="800" fill="#fdf6e8" font-family="Gowun Dodum, Pretendard, sans-serif">S</text>
  <text x="150" y="75" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="800" fill="#fdf6e8" font-family="Gowun Dodum, Pretendard, sans-serif">N</text>
  <ellipse cx="392" cy="75" rx="18" ry="44" fill="none" stroke="#8a5f24" stroke-width="6.5"/>
+ <line x1="392" y1="100" x2="392" y2="64" stroke="#a05c2c" stroke-width="3"/>
+ <polygon points="392,52 384,68 400,68" fill="#a05c2c"/>
+ <text x="446" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#a05c2c" font-family="Gowun Dodum, Pretendard, sans-serif">전류(앞면)</text>
  <text x="356" y="75" text-anchor="middle" dominant-baseline="central" font-size="20" font-weight="800" fill="#b3362e" font-family="Gowun Dodum, Pretendard, sans-serif">N</text>
  <text x="470" y="132" text-anchor="middle" font-size="14" fill="#6b573f" font-family="Gowun Dodum, Pretendard, sans-serif">전류가 흐르는 코일</text>
  <line x1="212" y1="75" x2="252" y2="75" stroke="#2c6e5f" stroke-width="4"/><polygon points="200,75 218,66 218,84" fill="#2c6e5f"/>
@@ -1250,6 +1255,9 @@ body.teacher .keyline-s{display:none}
  <text x="90" y="75" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="800" fill="#fdf6e8" font-family="Gowun Dodum, Pretendard, sans-serif">S</text>
  <text x="150" y="75" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="800" fill="#fdf6e8" font-family="Gowun Dodum, Pretendard, sans-serif">N</text>
  <ellipse cx="392" cy="75" rx="18" ry="44" fill="none" stroke="#8a5f24" stroke-width="6.5"/>
+ <line x1="392" y1="50" x2="392" y2="86" stroke="#a05c2c" stroke-width="3"/>
+ <polygon points="392,98 384,82 400,82" fill="#a05c2c"/>
+ <text x="446" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#a05c2c" font-family="Gowun Dodum, Pretendard, sans-serif">전류(앞면)</text>
  <text x="356" y="75" text-anchor="middle" dominant-baseline="central" font-size="20" font-weight="800" fill="#2e5f8f" font-family="Gowun Dodum, Pretendard, sans-serif">S</text>
  <text x="470" y="132" text-anchor="middle" font-size="14" fill="#6b573f" font-family="Gowun Dodum, Pretendard, sans-serif">코일(전류 반대 방향)</text>
  <line x1="252" y1="75" x2="212" y2="75" stroke="#2c6e5f" stroke-width="4"/><polygon points="264,75 246,66 246,84" fill="#2c6e5f"/>
@@ -1303,7 +1311,10 @@ body.teacher .keyline-s{display:none}
  <div class="keyline-s"><span class="kw">자기장 속 코일이 받는 힘</span><span class="arw">→</span><span class="kw hi">전동기</span><span class="kw">같은 극 밀고 · 다른 극 당김</span><span class="memo"></span></div>
  <div class="lab" style="margin-top:14px">
  <h3>🚁 전동기 돌리기</h3>
- <p class="lead" style="font-size:16.5px">전류의 세기를 바꿔 보세요. 회전이 어떻게 달라지나요?</p>
+ <p class="lead" style="font-size:16.5px">전류의 세기를 바꿔 보세요. 회전이 어떻게 달라지나요?
+ <b class="k">파란 화살표</b>는 자석이 만드는 자기장(N→S), 코일 위 <b style="color:#a05c2c">주황 세모</b>는 전류,
+ <b style="color:#2c6e5f">초록 화살표</b>는 코일의 양 끝이 받는 힘의 방향입니다 —
+ 두 끝이 <b>반대 방향의 힘</b>을 받아서 코일이 돌아요.</p>
  <div class="simgrid">
  <div class="svgstage">
  <svg viewBox="0 0 560 240" role="img" aria-label="전동기 모형. 왼쪽에 엔극, 오른쪽에 에스극 자석이 고정되어 있고 그 사이에서 전류가 흐르는 코일이 회전한다.">
@@ -1313,14 +1324,30 @@ body.teacher .keyline-s{display:none}
  <text x="498" y="120" text-anchor="middle" dominant-baseline="central" font-size="24" font-weight="800" fill="#fdf6e8" font-family="Gowun Dodum, Pretendard, sans-serif">S</text>
  <text x="62" y="192" text-anchor="middle" font-size="14" fill="#6b573f" font-family="Gowun Dodum, Pretendard, sans-serif">자석</text>
  <text x="498" y="192" text-anchor="middle" font-size="14" fill="#6b573f" font-family="Gowun Dodum, Pretendard, sans-serif">자석</text>
+ <g id="motB" opacity="0.5">
+ <line x1="104" y1="70" x2="440" y2="70" stroke="#2e5f8f" stroke-width="2.4"/>
+ <polygon points="456,70 438,62 438,78" fill="#2e5f8f"/>
+ <line x1="104" y1="170" x2="440" y2="170" stroke="#2e5f8f" stroke-width="2.4"/>
+ <polygon points="456,170 438,162 438,178" fill="#2e5f8f"/>
+ <text x="280" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#2e5f8f" font-family="Gowun Dodum, Pretendard, sans-serif">자기장 (N → S)</text>
+ </g>
  <g id="motRot">
  <rect x="190" y="102" width="180" height="36" rx="10" fill="none" stroke="#8a5f24" stroke-width="7"/>
  <rect x="190" y="102" width="180" height="36" rx="10" fill="none" stroke="#a05c2c" stroke-width="2.6" stroke-dasharray="8 6"/>
+ <g id="motCur">
+ <line x1="244" y1="102" x2="288" y2="102" stroke="#a05c2c" stroke-width="3.4"/>
+ <polygon points="304,102 286,94 286,110" fill="#a05c2c"/>
+ <line x1="316" y1="138" x2="272" y2="138" stroke="#a05c2c" stroke-width="3.4"/>
+ <polygon points="256,138 274,130 274,146" fill="#a05c2c"/>
+ </g>
  <circle cx="196" cy="120" r="9" fill="#2e5f8f"/><circle cx="364" cy="120" r="9" fill="#b3362e"/>
  </g>
+ <g id="motF1" opacity="0"><line x1="0" y1="0" x2="0" y2="0" stroke="#2c6e5f" stroke-width="4"/><polygon points="0,0 0,0 0,0" fill="#2c6e5f"/></g>
+ <g id="motF2" opacity="0"><line x1="0" y1="0" x2="0" y2="0" stroke="#2c6e5f" stroke-width="4"/><polygon points="0,0 0,0 0,0" fill="#2c6e5f"/></g>
+ <text id="motFLbl" x="280" y="212" text-anchor="middle" font-size="13" font-weight="800" fill="#2c6e5f" font-family="Gowun Dodum, Pretendard, sans-serif" opacity="0">→ 코일이 받는 힘</text>
  <circle cx="280" cy="120" r="6" fill="#4a3a26"/>
  <text x="280" y="34" text-anchor="middle" font-size="14.5" fill="#6b573f" font-family="Gowun Dodum, Pretendard, sans-serif" id="motCap">전류가 흐르면 코일이 힘을 받아 돌아가요</text>
- <text x="280" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#a05c2c" font-family="Gowun Dodum, Pretendard, sans-serif">코일(전류가 흐르는 중) · 파랑=S극 쪽 · 빨강=N극 쪽</text>
+ <text x="280" y="226" text-anchor="middle" font-size="13" font-weight="700" fill="#6b573f" font-family="Gowun Dodum, Pretendard, sans-serif">▲ 전류(주황) · → 자기장(파랑) · → 받는 힘(초록) · 코일 끝: 빨강=N·파랑=S</text>
  </svg>
  </div>
  <div class="simctl">
@@ -1340,9 +1367,7 @@ body.teacher .keyline-s{display:none}
  <p class="honest"><span class="ic">📌</span>코일이 반 바퀴 돌 때마다 <b>전류의 방향이 주기적으로 바뀌어야</b> 계속 같은 방향으로 돕니다.
  이 모형에서는 그 부분이 저절로 되는 것으로 그렸어요. 전류 방향을 때맞춰 바꿔 주는 장치의 자세한 구조는 고등학교에서 배웁니다.</p>
  </div>
- <figure class="fig" data-fig="mo-drone"
- data-alt="드론 속에 들어 있는 전동기 — 전동기가 드론의 날개를 회전시키는 모습"
- data-cap="드론 속 전동기 (그림 7-19)"></figure>
+
  <div class="note myth"><span class="ic">⚠️</span><div><b>오해 주의</b> — "코일이 자석에 <b>착 달라붙어서</b> 도는 것"이 아닙니다.
  코일은 자석과 <b>밀고 당기는 힘을 번갈아 주고받으며</b> 돕니다. 달라붙기만 한다면 코일은 자석 앞에 멈춰 버리겠죠.
  계속 도는 비결은 <b>전류의 방향이 주기적으로 바뀌면서 코일의 극이 계속 바뀌는 것</b>입니다.</div></div>
@@ -2084,6 +2109,10 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     $('#fsMinus').setAttribute('fill',CDIR==='fwd'?'#2e5f8f':'#b3362e');
     $('#fsCur').setAttribute('opacity',ON?'1':'0');
     $('#fsCArrow').setAttribute('transform',CDIR==='rev'?'translate(394 0) scale(-1 1)':'');
+    /* 코일 앞면의 전류 방향 — fwd(자석 쪽이 N)는 앞면 아래쪽, rev는 위쪽 */
+    const ccEl=$('#fsCoilCur');
+    ccEl.setAttribute('opacity',ON?'1':'0');
+    ccEl.setAttribute('transform',CDIR==='rev'?'rotate(180 278 190)':'');
     /* 코일의 극 — 전류가 흐를 때만 */
     const cpEl=$('#fsCoilPole');
     cpEl.textContent=ON?cp:'';
@@ -2188,15 +2217,44 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
       ? '전류가 0 — 코일이 받는 힘이 사라져 코일이 멈춥니다'
       : `전류 ${NAME[I]} → 코일이 받는 힘 ${FRC[I]} → ${HOW[I]} 돌아가요`;
   }
-  sl.addEventListener('input',()=>{I=parseInt(sl.value,10);paint();});
+  sl.addEventListener('input',()=>{I=parseInt(sl.value,10);paint();arrows();});
+  /* 받는 힘(양 끝의 접선 방향)과 정류자에 따른 전류 반전을 그린다 */
+  function setArrow(g,px,py,ux,uy,L){
+    const ln=g.querySelector('line'), po=g.querySelector('polygon');
+    const ex=px+ux*L, ey=py+uy*L;
+    ln.setAttribute('x1',px);ln.setAttribute('y1',py);
+    ln.setAttribute('x2',ex);ln.setAttribute('y2',ey);
+    const hx=ex+ux*11, hy=ey+uy*11, wx=-uy*6.5, wy=ux*6.5;
+    po.setAttribute('points',hx+','+hy+' '+(ex+wx)+','+(ey+wy)+' '+(ex-wx)+','+(ey-wy));
+  }
+  function arrows(){
+    const on=I>0;
+    $('#motF1').setAttribute('opacity',on?'1':'0');
+    $('#motF2').setAttribute('opacity',on?'1':'0');
+    $('#motFLbl').setAttribute('opacity',on?'1':'0');
+    $('#motCur').setAttribute('opacity',on?'1':'0');
+    if(!on)return;
+    const th=ang*Math.PI/180, R=98, L=10+7*I;
+    /* 코일 양 끝의 현재 위치 (rotate는 화면 기준 시계 방향) */
+    const c=Math.cos(th), sn=Math.sin(th);
+    const p1={x:280-R*c, y:120-R*sn}, p2={x:280+R*c, y:120+R*sn};
+    /* 시계 회전을 만드는 접선 방향 */
+    let m=Math.hypot(sn,c)||1;
+    setArrow($('#motF1'), p1.x, p1.y,  sn/m, -c/m, L);
+    setArrow($('#motF2'), p2.x, p2.y, -sn/m,  c/m, L);
+    /* 정류자 — 반 바퀴마다 코일 속 전류 방향이 뒤집힌다 */
+    const a=((ang%360)+360)%360;
+    $('#motCur').setAttribute('transform',(a>90&&a<270)?'rotate(180 280 120)':'');
+  }
   function tick(t){
     if(!last)last=t;
     const dt=Math.min((t-last)/1000,.1);last=t;
     if(!reduceMotion)ang=(ang+dt*I*130)%360;
     rot.style.transform=`rotate(${ang}deg)`;
+    arrows();
     requestAnimationFrame(tick);
   }
-  paint();requestAnimationFrame(tick);
+  paint();arrows();requestAnimationFrame(tick);
 })();
 
 /* ═══════ 🔊 3단계 · 스피커 울리기 ═══════ */
