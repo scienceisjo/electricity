@@ -58,6 +58,8 @@ body::after{
 }
 
 /* ── 상단 바 ───────────────────────── */
+/* 어떤 환경에서도 배경이 사라지지 않도록 하는 최후의 배경 층 */
+#bgfill{position:fixed; inset:0; z-index:-1; background-color:#efe4cd; forced-color-adjust:none}
 .topbar{
   position:fixed; top:0; left:0; right:0; z-index:40; display:flex; align-items:center; gap:10px;
   padding:10px clamp(12px,2vw,26px);
@@ -365,6 +367,7 @@ h1 em{font-style:normal; color:var(--accent)}
 </head>
 <body>
 
+<div id="bgfill" aria-hidden="true"></div>
 <header class="topbar">
   <a class="hubbtn" href="index.html" title="VII. 전기와 자기 단원 허브로 이동"><span class="ar">←</span>단원 허브</a>
   <button class="tbtn" id="home" title="이 자료의 표지로">⌂ 표지</button>
