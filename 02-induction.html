@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#f2eade">
-<title>문지르지 않은 캔은 왜 끌려왔을까 · 정전기 유도</title>
+<title>문지르지 않은 캔은 왜 끌려올까 · 정전기 유도</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -907,6 +907,16 @@ body.teacher .keyline-s{display:none}
  padding:7px 15px;border-radius:99px;border:1.5px dashed var(--accent,#a05c2c);
  color:var(--accent,#a05c2c);text-decoration:none;transition:.16s}
 .exp-yt:hover{background:rgba(160,92,44,.1)}
+.vwrap{margin:16px 0 4px}
+.vbox{border:2px solid var(--line);border-radius:16px;overflow:hidden;background:#000;position:relative}
+.vbox::before{content:"";display:block;padding-top:56.25%}
+.vbox.tall::before{padding-top:130%}
+.vbox.tall{max-width:min(460px,100%);margin-inline:auto}
+.vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vcap{font-size:14px;color:var(--ink-mute);margin-top:7px;line-height:1.6}
+.vcap b{color:var(--ink)}
+.vlead{font-family:var(--jua);font-size:clamp(16px,2vw,19px);color:var(--gold);margin:2px 0 8px;
+ display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body><!-- board-v2: inline font bumped -->
@@ -927,7 +937,7 @@ body.teacher .keyline-s{display:none}
       <rect x="36" y="94" width="18" height="5" rx="2" fill="#b9873c"/>
       <path d="M38 99 L52 99 L45 110 Z" fill="#5f3f12"/>
     </svg></div>
-    <h1 class="cover-title">문지르지 않은 캔은<br>왜 끌려왔을까</h1>
+    <h1 class="cover-title">문지르지 않은 캔은<br>왜 끌려올까</h1>
     <p class="cover-sub">가까이만 해도 나타나는 전기 — 정전기 유도 ⚡</p>
     <div class="cover-meta">
       <span class="badge">⏱️ 45분</span>
@@ -956,7 +966,7 @@ body.teacher .keyline-s{display:none}
   <div class="top-bar">
     <button class="brand" id="brandBtn" title="표지로 돌아가기">
       <div class="logo">🥫</div>
-      <div><b>캔은 <span>왜 끌려왔을까</span></b>
+      <div><b>캔은 <span>왜 끌려올까</span></b>
         <div class="sub">VII. 전기와 자기 · 1. 전기의 발생 · 2차시 · 중2 과학</div></div>
     </button>
     <div class="head-right">
@@ -998,17 +1008,30 @@ body.teacher .keyline-s{display:none}
 
 <!-- 1 -->
 <section class="panel show" id="panel-recall">
-  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">이어 보기 · 우리가 본 것, 그리고 남은 의문</span></div>
-  <h1 class="big">문지르지 않은 캔은<br><span class="t1">왜 끌려왔을까?</span></h1>
+  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">이어 보기 · 영상 한 편과 남은 의문</span></div>
+  <h1 class="big">문지르지 않은 캔은<br><span class="t1">왜 끌려올까?</span></h1>
   <p class="lead say" style="margin-top:16px">
     지난 시간에 우리는 규칙 하나를 세웠습니다.
-    <b class="k">같은 전하끼리는 밀어내고, 다른 전하끼리는 끌어당긴다.</b><br><br>
-    그리고 문지른 빨대를 빈 알루미늄 캔에 가까이 했더니 — <b class="t1">캔이 따라왔지요.</b>
-    우리 눈으로 똑똑히 봤습니다.
-    그런데 이상합니다. <b class="k">캔은 문지른 적이 없는데</b> 말이에요.
-    오늘은 그때 본 그 장면을 <b>설명해</b> 볼 겁니다.
+    <b class="k">같은 전하끼리는 밀어내고, 다른 전하끼리는 끌어당긴다.</b>
+    이 규칙으로 설명이 되는지, 영상을 하나 보고 이야기해 봅시다.
   </p>
- <div class="keyline-s"><span class="kw">문지른 빨대를 가까이</span><span class="arw">→</span><span class="kw hi">캔이 끌려왔다</span><span class="kw q">그런데 캔은 안 문질렀는데?</span><span class="memo"></span></div>
+
+  <div class="vwrap"><div class="vlead">🎬 오늘의 시작 — 풍선을 따라오는 캔</div>
+  <div class="vbox tall"><iframe src="https://www.youtube.com/embed/Z1NkUG1WUmw"
+   title="털가죽에 문지른 풍선을 가까이 하자 문지르지 않은 빈 캔이 따라 굴러오는 실험"
+   loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+   referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+  <p class="vcap"><b>보면서 챙길 것</b> — ① 풍선은 털가죽에 <b>문질렀습니다.</b>
+   ② 캔은 <b>문지르지 않았습니다.</b> ③ 그런데도 캔이 풍선을 <b>따라 굴러옵니다.</b></p></div>
+
+  <p class="lead say">
+    캔이 끌려온다는 건 캔과 풍선 사이에 <b class="k">끌어당기는 힘, 인력</b>이 작용했다는 뜻입니다.
+    지난 시간에 배운 바로 그 <b style="color:#2c6e5f">전기력</b>이죠.
+    그런데 전기력은 <b>전기를 띠는 두 물체</b> 사이에 작용하는 힘이었습니다.<br><br>
+    여기서 이상해집니다. 풍선은 문질렀지만 <b class="k">캔은 문지른 적이 없어요.</b>
+    마찰시키지도 않은 캔에 <b class="t1">어떻게 전기가 생겨서</b> 전기력이 작용한 걸까요?
+  </p>
+ <div class="keyline-s"><span class="kw">풍선은 문질렀다</span><span class="kw">캔은 안 문질렀다</span><span class="arw">→</span><span class="kw hi">그런데 인력이 작용했다</span><span class="kw q">캔에 어떻게 전기가 생겼나?</span><span class="memo"></span></div>
 
   <div class="card" style="margin-top:20px">
     <h2 class="sec" style="font-size:clamp(19px,3vw,24px)">🔗 규칙 되짚기 — <span class="t2">전기력</span>의 방향</h2>
@@ -1059,7 +1082,7 @@ body.teacher .keyline-s{display:none}
       <span class="pill">핵심어 · <b>전기력</b></span><span class="pill"><b>대전</b></span>
       <span class="pill"><b>대전체</b></span><span class="pill"><b>전자의 이동</b></span>
     </div>
-    <div class="note class"><span class="ic">💬</span><div><b>도입 들어가기</b> — 1차시에 <b>캔이 끌려오는 장면을 이미 함께 보았다</b>는 전제로 짜여 있습니다. 그래서 오늘은 "무슨 일이 일어날까"가 아니라 <b>"왜 그랬을까"</b>에서 출발해요. 먼저 규칙("다른 전하끼리는 끌어당긴다")을 학생 입으로 말하게 한 뒤, 아래 <b>가설 고르기</b>로 넘어가세요. 규칙을 확실히 잡아 두지 않으면 뒤의 인지 갈등이 생기지 않습니다.</div></div>
+    <div class="note class"><span class="ic">💬</span><div><b>도입 들어가기</b> — 도입 영상이 <b>관찰을 대신 공유</b>해 줍니다. 1차시에 캔 시연을 하셨든 안 하셨든 여기서 반 전체가 같은 장면을 갖게 되니, 그대로 진행하시면 됩니다. 순서는 ① 규칙("다른 전하끼리는 끌어당긴다")을 학생 입으로 말하게 하고 → ② 영상을 보여 준 뒤 → ③ <b>"캔이 끌려왔다 = 인력이 작용했다 = 캔도 전기를 띠었다"</b>까지 함께 짚고 → ④ <b>"그런데 캔은 안 문질렀는데?"</b>에서 멈춥니다. 규칙을 확실히 잡아 두지 않으면 뒤의 인지 갈등이 생기지 않아요. 실물 시연이 가능하면 영상 뒤에 바로 해 보이면 더 좋습니다.</div></div>
   </div>
 
   <div class="miniquiz" data-quiz="recall"></div>
@@ -1071,7 +1094,7 @@ body.teacher .keyline-s{display:none}
       규칙을 다시 읽어 봅시다. <b>전기를 띠는 두 물체</b> 사이에 작용하는 힘 — 전기력.
       그러면 한쪽이 <b class="k">전기를 전혀 띠지 않은 물체</b>라면요?
       밀어낼 전하도, 끌어당길 전하도 없으니 <b>아무 일도 안 일어나야</b> 맞잖아요.<br><br>
-      그런데 <b class="t1">캔은 끌려왔습니다.</b> 우리가 본 사실이에요.<br><br>
+      그런데 <b class="t1">캔은 끌려왔습니다.</b> 방금 영상에서 함께 본 사실이에요.<br><br>
       그렇다면 둘 중 하나입니다 —
       <b>규칙이 틀렸거나</b>, 아니면 <b class="k">우리가 무언가를 놓쳤거나.</b>
       오늘 수업은 정확히 이 지점에서 시작합니다.
@@ -1082,7 +1105,7 @@ body.teacher .keyline-s{display:none}
 
   <div class="card" id="hypoCard" style="margin-top:18px">
     <div class="badge" style="margin-bottom:12px">🔮 우리 반의 가설</div>
-    <h3 class="card-t">문지르지 않은 캔은 <span class="t1">왜</span> 끌려왔을까?</h3>
+    <h3 class="card-t">문지르지 않은 캔은 <span class="t1">왜</span> 끌려올까?</h3>
     <p class="lead say" style="font-size:17px;margin-top:10px">
       지금은 <b>정답을 맞히는 시간이 아닙니다.</b> 시험해 볼 <b class="k">설명 하나</b>를 고르는 거예요.
       골라 두면 2단계에서 그 설명이 정말 맞는지 <b>직접 시험</b>합니다.
@@ -1131,9 +1154,9 @@ body.teacher .keyline-s{display:none}
 
   <!-- POE ① -->
   <div class="card poe-card" id="poe1card" style="margin-top:18px">
-    <div class="badge" style="margin-bottom:12px">👀 되짚기 ① — 우리가 본 것</div>
-    <h3 class="card-t">지난 시간, 털가죽으로 문질러 <span class="t5">(−)전하를 띤 빨대</span>를
-      <span class="t1">빈 알루미늄 캔</span>에 가까이 했을 때 — 캔은 어떻게 됐었나요?</h3>
+    <div class="badge" style="margin-bottom:12px">👀 확인 ① — 영상에서 본 그 일이 교실에서도</div>
+    <h3 class="card-t">영상에서는 <span class="t4">풍선</span>이었죠. 이번엔 털가죽으로 문질러
+      <span class="t5">(−)전하를 띤 빨대</span>를 <span class="t1">빈 알루미늄 캔</span>에 가까이 하면?</h3>
     <div class="choices" id="poe1Choices">
       <button class="choice" data-poe="a"><span class="key">가</span>아무 일도 일어나지 않는다</button>
       <button class="choice" data-poe="b"><span class="key">나</span>캔이 빨대에서 밀려난다</button>
@@ -1143,12 +1166,12 @@ body.teacher .keyline-s{display:none}
     <div class="obswrap" id="obs1Wrap">
       <div class="badge" style="margin-bottom:10px">👀 관찰 ① (Observe)</div>
       <div class="obsstage"><canvas id="obscv1" height="250"></canvas></div>
-      <div class="btn-row"><button class="btn primary sm" id="obsGo1">▶ 그때 그 장면 다시 보기</button></div>
+      <div class="btn-row"><button class="btn primary sm" id="obsGo1">▶ 빨대로 확인해 보기</button></div>
       <p class="obscap" id="obsCap1">버튼을 눌러 관찰해 보세요.</p>
     </div>
-    <p class="help say">이건 우리가 <b>함께 본 장면</b>이라 다들 맞혔을 거예요. 오늘의 문제는 <b>"무슨 일이 일어났나"</b>가 아니라 <b class="k">"왜 그랬나"</b>입니다.</p>
- <div class="keyline-s"><span class="kw">본 것은 확실하다</span><span class="arw">→</span><span class="kw q">문제는 '왜'</span><span class="memo"></span></div>
-    <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — 여기는 <b>사실을 확정하는 단계</b>입니다. 정답률이 높은 게 정상이에요. "우리가 본 건 이거였다"를 반 전체가 같은 문장으로 갖게 한 뒤, <b>아직 설명하지 말고</b> 곧바로 가설 시험으로 넘기세요. 화면의 관찰 장치는 결석했거나 잘 못 본 학생을 위한 <b>재확인용</b>입니다.</div></div>
+    <p class="help say">영상에서 본 그대로예요 — 풍선이든 빨대든 <b>결과는 같습니다.</b> 오늘의 문제는 <b>"무슨 일이 일어나나"</b>가 아니라 <b class="k">"왜 그런가"</b>입니다.</p>
+ <div class="keyline-s"><span class="kw">풍선이든 빨대든 같다</span><span class="arw">→</span><span class="kw q">문제는 '왜'</span><span class="memo"></span></div>
+    <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — 여기는 <b>사실을 확정하는 단계</b>입니다. 정답률이 높은 게 정상이에요. 영상은 풍선, 교실은 빨대 — <b>대전체가 달라도 결과가 같다</b>는 점을 짚어 주면 뒤의 (+)털가죽 시험이 더 날카로워집니다. 확정한 뒤에는 <b>아직 설명하지 말고</b> 곧바로 가설 시험으로 넘기세요.</div></div>
   </div>
 
   <!-- POE ② -->
@@ -1804,7 +1827,7 @@ body.teacher .keyline-s{display:none}
   <div class="card" style="margin-top:18px">
     <h3 class="card-t">🎬 다시, 처음 그 문장</h3>
     <p class="lead say" style="font-size:18.5px;margin-top:10px">
-      <b class="k">"문지르지 않은 캔은 왜 끌려왔을까?"</b><br><br>
+      <b class="k">"문지르지 않은 캔은 왜 끌려올까?"</b><br><br>
       오늘 우리는 이 질문에 답하려고 <b>설명(가설)을 세웠습니다.</b>
       가장 많이 나온 답은 <b>"캔이 원래 (+)전하를 띠고 있었나 보다"</b>였죠.
       아주 합리적인 설명이었어요 — 규칙에도 딱 맞았고요.<br><br>
@@ -1850,12 +1873,12 @@ const BG_FALLBACK={
 };
 const SAVE='elec_induction_v1';
 
-/* ① 은 지난 시간에 함께 본 사실을 확정하는 단계, ② 가 가설을 무너뜨리는 진짜 시험대 */
+/* ① 은 도입 영상에서 본 사실을 교실 실험으로 확정하는 단계, ② 가 가설을 무너뜨리는 진짜 시험대 */
 const POE=[
   {key:'poe1', answer:'c', wrap:'#obs1Wrap', choices:'#poe1Choices', explain:'#poe1Explain',
-   okLabel:'✅ 우리가 본 그대로', noLabel:'👀 다시 확인해 보기',
-   right:'맞아요, 우리가 본 그대로입니다 — <b>캔이 빨대 쪽으로 끌려왔죠.</b> 그런데 캔은 문지른 적이 없습니다. 아래에서 그 장면을 다시 확인해 봅시다.',
-   wrong:'실제로는 <b>캔이 빨대 쪽으로 끌려왔습니다.</b> 그때 못 봤거나 헷갈렸다면 아래에서 다시 확인해 보세요. 오늘 풀 문제는 여기서부터 시작합니다.'},
+   okLabel:'✅ 영상에서 본 그대로', noLabel:'👀 다시 확인해 보기',
+   right:'맞아요, 영상에서 본 그대로입니다 — <b>캔이 빨대 쪽으로 끌려옵니다.</b> 대전체가 풍선에서 빨대로 바뀌어도 결과는 같아요. 그런데 캔은 여전히 문지른 적이 없습니다.',
+   wrong:'실제로는 <b>캔이 빨대 쪽으로 끌려옵니다.</b> 영상 속 풍선일 때와 같은 결과예요. 아래에서 직접 확인해 보세요. 오늘 풀 문제는 여기서부터 시작합니다.'},
   {key:'poe2', answer:'b', wrap:'#obs2Wrap', choices:'#poe2Choices', explain:'#poe2Explain',
    okLabel:'✅ 예측 성공', noLabel:'🔍 가설이 빗나갔어요',
    right:'맞혔어요! 부호를 반대로 바꿨는데도 <b>이번에도 끌려옵니다.</b> 그렇다면 "캔이 원래 (+)를 띠고 있었다"는 설명은 <b>틀린 것</b>이 됩니다. 그럼 대체 왜? 아래에서 확인한 뒤 3단계로 갑시다.',
