@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#f2eade">
-<title>문지르지 않은 캔도 움직일까 · 정전기 유도</title>
+<title>문지르지 않은 캔은 왜 끌려왔을까 · 정전기 유도</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -159,6 +159,9 @@ body.teacher .note.class{display:flex}
 .choice.wrong{border-color:var(--danger);background:rgba(179,54,46,.12)}
 .choice.wrong .key{background:var(--danger);color:#fdf1ef}
 .choice.dim{opacity:.5}.choice.done{cursor:default}
+/* 가설 고르기 — 채점하지 않으므로 정답/오답이 아닌 '선택됨' 표시만 준다 */
+.choice.pick{border-color:var(--accent2);background:rgba(138,95,36,.12)}
+.choice.pick .key{background:var(--accent2);color:#fdf6e8}
 .explain{margin-top:14px;border-radius:13px;padding:15px 17px;font-size:14.5px;line-height:1.6;border:1px solid var(--line);
   background:rgba(160,92,44,.08);color:var(--ink-dim);display:none;animation:fade .35s}
 .explain.show{display:block}
@@ -924,7 +927,7 @@ body.teacher .keyline-s{display:none}
       <rect x="36" y="94" width="18" height="5" rx="2" fill="#b9873c"/>
       <path d="M38 99 L52 99 L45 110 Z" fill="#5f3f12"/>
     </svg></div>
-    <h1 class="cover-title">문지르지 않은 캔도<br>움직일까</h1>
+    <h1 class="cover-title">문지르지 않은 캔은<br>왜 끌려왔을까</h1>
     <p class="cover-sub">가까이만 해도 나타나는 전기 — 정전기 유도 ⚡</p>
     <div class="cover-meta">
       <span class="badge">⏱️ 45분</span>
@@ -934,8 +937,8 @@ body.teacher .keyline-s{display:none}
     <div class="steps-card">
       <h3>💡 학습 단계 안내</h3>
       <ol>
-        <li><span class="sn">1</span><div><b>이어 보기</b> — 지난 시간에 세운 규칙 되짚기</div></li>
-        <li><span class="sn">2</span><div><b>예측하고 관찰하기</b> — 두 번 예측하고, 두 번 확인하기</div></li>
+        <li><span class="sn">1</span><div><b>이어 보기</b> — 우리가 본 것, 그리고 우리의 가설</div></li>
+        <li><span class="sn">2</span><div><b>가설 시험하기</b> — 우리 설명이 맞는지 직접 확인하기</div></li>
         <li><span class="sn">3</span><div><b>모형으로 설명하기</b> — 전자는 어디로 갔을까</div></li>
         <li><span class="sn">4</span><div><b>적용하기</b> — 먼지는 왜 필터에 붙잡히나</div></li>
         <li><span class="sn">5</span><div><b>확인하기</b> — 배운 것 점검하기</div></li>
@@ -943,7 +946,7 @@ body.teacher .keyline-s{display:none}
       </ol>
     </div>
     <div class="cover-cta">
-      <button class="btn primary xl" id="coverGo">예측하러 가기 🥫</button>
+      <button class="btn primary xl" id="coverGo">왜 그런지 밝히러 가기 🥫</button>
       <span class="cover-hint">진행 상황은 이 기기에 자동 저장돼요 · 왼쪽 위 제목을 누르면 이 화면으로 돌아옵니다</span>
     </div>
   </div>
@@ -953,7 +956,7 @@ body.teacher .keyline-s{display:none}
   <div class="top-bar">
     <button class="brand" id="brandBtn" title="표지로 돌아가기">
       <div class="logo">🥫</div>
-      <div><b>캔도 <span>움직일까</span></b>
+      <div><b>캔은 <span>왜 끌려왔을까</span></b>
         <div class="sub">VII. 전기와 자기 · 1. 전기의 발생 · 2차시 · 중2 과학</div></div>
     </button>
     <div class="head-right">
@@ -979,7 +982,7 @@ body.teacher .keyline-s{display:none}
   </div>
   <nav class="tabs" id="tabNav">
     <button data-tab="recall" class="active"><span class="sn"><i>1</i></span>이어 보기</button>
-    <button data-tab="predict"><span class="sn"><i>2</i></span>예측하고 관찰하기</button>
+    <button data-tab="predict"><span class="sn"><i>2</i></span>가설 시험하기</button>
     <button data-tab="model"><span class="sn"><i>3</i></span>모형으로 설명하기</button>
     <button data-tab="apply"><span class="sn"><i>4</i></span>적용하기</button>
     <button data-tab="check"><span class="sn"><i>5</i></span>확인하기</button>
@@ -995,15 +998,17 @@ body.teacher .keyline-s{display:none}
 
 <!-- 1 -->
 <section class="panel show" id="panel-recall">
-  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">이어 보기 · 지난 시간에 세운 규칙</span></div>
-  <h1 class="big">문지르지 않은 캔도<br><span class="t1">움직일까?</span></h1>
+  <div class="stepline"><span class="sbadge">STEP 1</span><span class="swhat">이어 보기 · 우리가 본 것, 그리고 남은 의문</span></div>
+  <h1 class="big">문지르지 않은 캔은<br><span class="t1">왜 끌려왔을까?</span></h1>
   <p class="lead say" style="margin-top:16px">
     지난 시간에 우리는 규칙 하나를 세웠습니다.
-    <b class="k">같은 전하끼리는 밀어내고, 다른 전하끼리는 끌어당긴다.</b>
-    이 규칙이면 이제 무슨 일이 일어날지 <b>예측</b>할 수 있어요.
-    오늘은 그 예측을 두 번 해 보고, 두 번 다 확인해 볼 겁니다.
+    <b class="k">같은 전하끼리는 밀어내고, 다른 전하끼리는 끌어당긴다.</b><br><br>
+    그리고 문지른 빨대를 빈 알루미늄 캔에 가까이 했더니 — <b class="t1">캔이 따라왔지요.</b>
+    우리 눈으로 똑똑히 봤습니다.
+    그런데 이상합니다. <b class="k">캔은 문지른 적이 없는데</b> 말이에요.
+    오늘은 그때 본 그 장면을 <b>설명해</b> 볼 겁니다.
   </p>
- <div class="keyline-s"><span class="kw">지난 시간 규칙</span><span class="kw">같은 전하 → 밀어냄</span><span class="kw">다른 전하 → 끌어당김</span><span class="arw">→</span><span class="kw hi">이제 예측할 수 있다</span><span class="memo"></span></div>
+ <div class="keyline-s"><span class="kw">문지른 빨대를 가까이</span><span class="arw">→</span><span class="kw hi">캔이 끌려왔다</span><span class="kw q">그런데 캔은 안 문질렀는데?</span><span class="memo"></span></div>
 
   <div class="card" style="margin-top:20px">
     <h2 class="sec" style="font-size:clamp(19px,3vw,24px)">🔗 규칙 되짚기 — <span class="t2">전기력</span>의 방향</h2>
@@ -1054,22 +1059,43 @@ body.teacher .keyline-s{display:none}
       <span class="pill">핵심어 · <b>전기력</b></span><span class="pill"><b>대전</b></span>
       <span class="pill"><b>대전체</b></span><span class="pill"><b>전자의 이동</b></span>
     </div>
-    <div class="note class"><span class="ic">💬</span><div><b>도입 들어가기</b> — 오늘 수업은 <b>1차시의 규칙을 그대로 적용했다가 어긋나는 경험</b>에서 출발합니다. 이 규칙을 학생 입으로 한 번 말하게 한 뒤 2단계로 넘어가세요. "다른 전하끼리는 끌어당긴다"를 확실히 잡아 두지 않으면 오늘의 인지 갈등이 생기지 않습니다.</div></div>
+    <div class="note class"><span class="ic">💬</span><div><b>도입 들어가기</b> — 1차시에 <b>캔이 끌려오는 장면을 이미 함께 보았다</b>는 전제로 짜여 있습니다. 그래서 오늘은 "무슨 일이 일어날까"가 아니라 <b>"왜 그랬을까"</b>에서 출발해요. 먼저 규칙("다른 전하끼리는 끌어당긴다")을 학생 입으로 말하게 한 뒤, 아래 <b>가설 고르기</b>로 넘어가세요. 규칙을 확실히 잡아 두지 않으면 뒤의 인지 갈등이 생기지 않습니다.</div></div>
   </div>
 
   <div class="miniquiz" data-quiz="recall"></div>
 
   <div class="card" style="margin-top:18px">
     <div class="eyebrow" style="margin-bottom:8px">그런데 말입니다</div>
-    <h3 class="card-t" style="margin-bottom:12px">🤔 아무 전기도 안 띤 물체는?</h3>
+    <h3 class="card-t" style="margin-bottom:12px">🤔 규칙대로라면 아무 일도 없어야 했다</h3>
     <p class="lead say" style="font-size:17.5px">
       규칙을 다시 읽어 봅시다. <b>전기를 띠는 두 물체</b> 사이에 작용하는 힘 — 전기력.
       그러면 한쪽이 <b class="k">전기를 전혀 띠지 않은 물체</b>라면요?
       밀어낼 전하도, 끌어당길 전하도 없으니 <b>아무 일도 안 일어나야</b> 맞잖아요.<br><br>
+      그런데 <b class="t1">캔은 끌려왔습니다.</b> 우리가 본 사실이에요.<br><br>
+      그렇다면 둘 중 하나입니다 —
+      <b>규칙이 틀렸거나</b>, 아니면 <b class="k">우리가 무언가를 놓쳤거나.</b>
       오늘 수업은 정확히 이 지점에서 시작합니다.
     </p>
- <div class="keyline-s"><span class="kw">한쪽이 전기를 안 띠면?</span><span class="arw">→</span><span class="kw q">아무 일도 없어야 맞는데</span><span class="memo"></span></div>
+ <div class="keyline-s"><span class="kw">규칙대로면 아무 일도 없어야</span><span class="kw">그런데 끌려왔다</span><span class="arw">→</span><span class="kw q">규칙이 틀렸나, 우리가 놓쳤나?</span><span class="memo"></span></div>
     <p class="help"> 도입 — "마찰하지 않은 금속 공이 끌려가는 까닭은 무엇일까?"</p>
+  </div>
+
+  <div class="card" id="hypoCard" style="margin-top:18px">
+    <div class="badge" style="margin-bottom:12px">🔮 우리 반의 가설</div>
+    <h3 class="card-t">문지르지 않은 캔은 <span class="t1">왜</span> 끌려왔을까?</h3>
+    <p class="lead say" style="font-size:17px;margin-top:10px">
+      지금은 <b>정답을 맞히는 시간이 아닙니다.</b> 시험해 볼 <b class="k">설명 하나</b>를 고르는 거예요.
+      골라 두면 2단계에서 그 설명이 정말 맞는지 <b>직접 시험</b>합니다.
+      마음에 드는 게 없으면 자기 설명을 공책에 적어 두어도 좋아요.</p>
+    <div class="choices" id="hypoChoices">
+      <button class="choice" data-h="a"><span class="key">가</span>캔이 원래 (+)전하를 띠고 있어서</button>
+      <button class="choice" data-h="b"><span class="key">나</span>금속은 원래 전기를 띤 것을 끌어당기는 성질이 있어서</button>
+      <button class="choice" data-h="c"><span class="key">다</span>빨대가 다가오면서 캔을 (+)전하로 만들어서</button>
+      <button class="choice" data-h="d"><span class="key">라</span>캔 안에서 무언가가 움직여서</button>
+    </div>
+    <div class="explain" id="hypoExplain"></div>
+ <div class="keyline-s"><span class="kw">가설을 고른다</span><span class="arw">→</span><span class="kw hi">2단계에서 시험한다</span><span class="memo"></span></div>
+    <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — 손들어 <b>집계해 칠판에 적어 두세요.</b> 압도적으로 많이 나오는 것이 <b>'가'(캔이 원래 (+)를 띠고 있었다)</b>입니다. 이 가설은 <b>검증 가능한 예측</b>을 만듭니다 — "(+)를 띤 물체를 가까이 하면 밀려나야 한다". 2단계 가설 시험이 바로 그 예측을 깨는 장치예요. 여기서 <b>정답을 말해 주지 마세요.</b> 가설이 스스로 무너지는 경험이 오늘 수업의 전부입니다.</div></div>
   </div>
 
   <a class="linkcard" href="01-friction.html">
@@ -1078,16 +1104,17 @@ body.teacher .keyline-s{display:none}
       <span class="ld">마찰 전기와 전기력 · 규칙이 잘 기억나지 않으면 여기로</span></span>
   </a>
 
-  <div class="cta-row"><button class="btn primary" data-go="predict">2단계 · 예측해 보기 →</button></div>
+  <div class="cta-row"><button class="btn primary" data-go="predict">2단계 · 가설 시험하러 가기 →</button></div>
 </section>
 
 <!-- 2 -->
 <section class="panel" id="panel-predict">
-  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">예측하고 관찰하기 · 두 번 틀려도 괜찮습니다</span></div>
-  <h2 class="sec">먼저 예측하고, 그 다음에 확인합니다</h2>
-  <p class="lead say">「해 보기」입니다. 오늘은 <b class="k">예측을 두 번</b> 합니다.
-    두 번 다 빗나가도 괜찮아요 — 오히려 그게 오늘 배울 것이 있다는 뜻입니다.</p>
- <div class="keyline-s"><span class="kw">예측 두 번</span><span class="kw hi">빗나가도 괜찮다</span><span class="memo"></span></div>
+  <div class="stepline"><span class="sbadge">STEP 2</span><span class="swhat">가설 시험하기 · 우리 설명이 맞는지 확인합니다</span></div>
+  <h2 class="sec">우리 가설이 맞다면, <span class="t2">이렇게 되어야</span> 합니다</h2>
+  <p class="lead say">좋은 가설은 <b class="k">앞일을 예측</b>합니다. 그리고 그 예측이 빗나가면 가설은 버려야 하죠.
+    먼저 <b>우리가 본 것</b>을 확정한 뒤, 방금 고른 가설을 <b class="k">시험</b>해 봅시다.
+    가설이 무너져도 괜찮아요 — 오히려 그게 오늘 배울 것이 있다는 뜻입니다.</p>
+ <div class="keyline-s"><span class="kw">본 것 확정</span><span class="arw">→</span><span class="kw hi">가설이 만든 예측을 시험</span><span class="memo"></span></div>
 
   <div class="card" style="margin-top:20px">
     <h3 class="card-t">🧪 실험은 이렇게 합니다</h3>
@@ -1104,9 +1131,9 @@ body.teacher .keyline-s{display:none}
 
   <!-- POE ① -->
   <div class="card poe-card" id="poe1card" style="margin-top:18px">
-    <div class="badge" style="margin-bottom:12px">🔮 예측 ① (Predict)</div>
-    <h3 class="card-t">털가죽으로 문질러 <span class="t5">(−)전하를 띤 빨대</span>를,
-      문지르지도 않은 <span class="t1">빈 알루미늄 캔</span>에 가까이 하면?</h3>
+    <div class="badge" style="margin-bottom:12px">👀 되짚기 ① — 우리가 본 것</div>
+    <h3 class="card-t">지난 시간, 털가죽으로 문질러 <span class="t5">(−)전하를 띤 빨대</span>를
+      <span class="t1">빈 알루미늄 캔</span>에 가까이 했을 때 — 캔은 어떻게 됐었나요?</h3>
     <div class="choices" id="poe1Choices">
       <button class="choice" data-poe="a"><span class="key">가</span>아무 일도 일어나지 않는다</button>
       <button class="choice" data-poe="b"><span class="key">나</span>캔이 빨대에서 밀려난다</button>
@@ -1116,23 +1143,27 @@ body.teacher .keyline-s{display:none}
     <div class="obswrap" id="obs1Wrap">
       <div class="badge" style="margin-bottom:10px">👀 관찰 ① (Observe)</div>
       <div class="obsstage"><canvas id="obscv1" height="250"></canvas></div>
-      <div class="btn-row"><button class="btn primary sm" id="obsGo1">▶ 빨대를 가까이 해 보기</button></div>
+      <div class="btn-row"><button class="btn primary sm" id="obsGo1">▶ 그때 그 장면 다시 보기</button></div>
       <p class="obscap" id="obsCap1">버튼을 눌러 관찰해 보세요.</p>
     </div>
-    <p class="help say">'가'를 고르는 학생이 가장 많습니다. 캔은 문지르지 않았으니 전기를 안 띤 게 맞으니까요. 그 생각이 어디서 어긋나는지가 오늘의 핵심입니다.</p>
- <div class="keyline-s"><span class="kw">'가'를 고르는 학생이 가장 많음</span><span class="arw">→</span><span class="kw q">어디서 어긋날까</span><span class="memo"></span></div>
-    <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — 예측 ①의 정답률이 낮을수록 좋은 수업입니다. 관찰 결과를 보여 준 뒤 <b>"어? 캔은 전기를 안 띠는데?"</b>를 학생 입에서 나오게 하세요. 아직 설명하지 말고 예측 ②로 바로 넘깁니다.</div></div>
+    <p class="help say">이건 우리가 <b>함께 본 장면</b>이라 다들 맞혔을 거예요. 오늘의 문제는 <b>"무슨 일이 일어났나"</b>가 아니라 <b class="k">"왜 그랬나"</b>입니다.</p>
+ <div class="keyline-s"><span class="kw">본 것은 확실하다</span><span class="arw">→</span><span class="kw q">문제는 '왜'</span><span class="memo"></span></div>
+    <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — 여기는 <b>사실을 확정하는 단계</b>입니다. 정답률이 높은 게 정상이에요. "우리가 본 건 이거였다"를 반 전체가 같은 문장으로 갖게 한 뒤, <b>아직 설명하지 말고</b> 곧바로 가설 시험으로 넘기세요. 화면의 관찰 장치는 결석했거나 잘 못 본 학생을 위한 <b>재확인용</b>입니다.</div></div>
   </div>
 
   <!-- POE ② -->
   <div class="card poe-card locked" id="poe2card" style="margin-top:18px">
-    <div class="badge" style="margin-bottom:12px">🔮 예측 ② (Predict)</div>
+    <div class="badge" style="margin-bottom:12px">🔮 가설 시험 (Predict)</div>
     <h3 class="card-t">이번엔 빨대를 문질렀던 <span class="t4">(+)전하를 띤 털가죽</span>을
       같은 캔에 가까이 하면?</h3>
-    <div class="lockmsg"><span>🔒</span><span>예측 ①의 <b>관찰</b>을 마치면 열립니다.</span></div>
+    <div class="lockmsg"><span>🔒</span><span>되짚기 ①의 <b>관찰</b>을 마치면 열립니다.</span></div>
+    <div class="note" style="margin:14px 0 0"><span class="ic">🧭</span><div><b>가설이 만든 예측</b> —
+      가장 많이 나온 가설은 <b>"캔이 원래 (+)전하를 띠고 있었다"</b>였죠.
+      그 말이 맞다면 이번엔 <b class="k">(+)끼리 만나는</b> 셈이니 캔은 <b>밀려나야</b> 합니다.
+      정말 그럴까요?</div></div>
     <div class="choices" id="poe2Choices">
-      <button class="choice" data-poe="a"><span class="key">가</span>부호가 반대니까 이번엔 밀려난다</button>
-      <button class="choice" data-poe="b"><span class="key">나</span>이번에도 끌려온다</button>
+      <button class="choice" data-poe="a"><span class="key">가</span>가설대로 — (+)끼리니까 이번엔 밀려난다</button>
+      <button class="choice" data-poe="b"><span class="key">나</span>가설과 달리 — 이번에도 끌려온다</button>
       <button class="choice" data-poe="c"><span class="key">다</span>이번엔 아무 일도 없다</button>
     </div>
     <div class="explain" id="poe2Explain"></div>
@@ -1142,9 +1173,9 @@ body.teacher .keyline-s{display:none}
       <div class="btn-row"><button class="btn primary sm" id="obsGo2">▶ 털가죽을 가까이 해 보기</button></div>
       <p class="obscap" id="obsCap2">버튼을 눌러 관찰해 보세요.</p>
     </div>
-    <p class="help say">빨대를 털가죽으로 문지르면 빨대는 (−)전하, 털가죽은 <b class="t4">(+)전하</b>를 띱니다. 부호가 정반대죠. 그래서 "이번엔 반대로 밀리겠지"라고 예측하기 쉽습니다.</p>
- <div class="keyline-s"><span class="kw">빨대 (−) · 털가죽 (+)</span><span class="arw">→</span><span class="kw q">이번엔 반대로 밀릴까?</span><span class="memo"></span></div>
-    <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — 이 문항이 <b>「사고력」</b>과 같은 내용입니다. 여기서 <b>대칭성에 대한 기대</b>가 깨집니다. 두 번의 관찰 결과를 나란히 칠판에 적어 놓고 3단계로 넘어가세요.</div></div>
+    <p class="help say">빨대를 털가죽으로 문지르면 빨대는 (−)전하, 털가죽은 <b class="t4">(+)전하</b>를 띱니다. 부호가 정반대죠. 그래서 우리 가설대로라면 <b>결과도 반대</b>가 나와야 합니다.</p>
+ <div class="keyline-s"><span class="kw">빨대 (−) · 털가죽 (+)</span><span class="arw">→</span><span class="kw q">가설대로 밀려날까?</span><span class="memo"></span></div>
+    <div class="note class"><span class="ic">💬</span><div><b>교실 연결</b> — <b>오늘 수업의 심장</b>입니다. 「사고력」과 같은 내용이기도 해요. 여기서 학생이 세운 가설이 <b>스스로 무너집니다.</b> 칠판의 가설 집계를 가리키며 <b>"우리 반 ○○명의 설명이 방금 틀린 걸로 판명됐다"</b>고 짚어 주세요. 그리고 두 관찰을 나란히 적어 둔 채로 3단계로 넘어갑니다.</div></div>
   </div>
 
   <div class="card" style="margin-top:18px" id="poeSummary">
@@ -1153,6 +1184,11 @@ body.teacher .keyline-s{display:none}
     <p class="lead say" style="font-size:17.5px;margin-top:10px">
       (−)를 가까이 해도 끌려오고, (+)를 가까이 해도 끌려왔습니다.
       캔은 분명히 <b class="k">문지른 적이 없는데</b> 말이죠.<br><br>
+      <b class="k">우리 가설은 여기서 무너집니다.</b>
+      캔이 원래 (+)전하를 띠고 있었다면, (+)를 띤 털가죽에는 <b>밀려났어야</b> 합니다.
+      캔이 (−)를 띠고 있었다면 (−)빨대에 밀려났어야 하고요.
+      <b>어느 쪽으로도 설명이 안 됩니다.</b>
+      캔이 <b class="k">정해진 전하를 띠고 있었다</b>는 설명은 틀렸어요.<br><br>
       그렇다면 남는 설명은 하나뿐입니다 —
       <b class="t1">대전체를 가까이 하는 순간, 캔 안에서 무언가가 움직였다.</b>
       다음 단계에서 그 '무언가'를 직접 움직여 봅시다.
@@ -1768,15 +1804,20 @@ body.teacher .keyline-s{display:none}
   <div class="card" style="margin-top:18px">
     <h3 class="card-t">🎬 다시, 처음 그 문장</h3>
     <p class="lead say" style="font-size:18.5px;margin-top:10px">
-      <b class="k">"밀어낼 줄 알았는데, 또 끌려왔다."</b><br><br>
-      부호를 반대로 바꿨으니 이번엔 반대 결과가 나오겠지 — 아주 자연스러운 예측이었습니다.
-      그런데도 캔은 두 번 다 끌려왔어요.<br><br>
+      <b class="k">"문지르지 않은 캔은 왜 끌려왔을까?"</b><br><br>
+      오늘 우리는 이 질문에 답하려고 <b>설명(가설)을 세웠습니다.</b>
+      가장 많이 나온 답은 <b>"캔이 원래 (+)전하를 띠고 있었나 보다"</b>였죠.
+      아주 합리적인 설명이었어요 — 규칙에도 딱 맞았고요.<br><br>
+      그래서 우리는 그 설명을 <b class="t2">시험</b>했습니다.
+      그 말이 맞다면 (+)를 띤 털가죽에는 밀려나야 했으니까요.
+      그런데 캔은 <b class="k">또 끌려왔습니다.</b> 가설은 그 자리에서 무너졌어요.<br><br>
       틀린 건 규칙이 아니었습니다. <b class="t2">같은 전하는 밀고 다른 전하는 당긴다</b>는 규칙은 그대로였죠.
       놓친 건 <b class="k">"캔은 아무것도 안 하고 가만히 있을 것"</b>이라는 숨은 가정이었습니다.
       캔은 가만히 있지 않았어요. 대전체가 다가오는 순간, 안에서 전자를 옮겨
       <b class="t1">스스로 끌릴 수밖에 없는 모양</b>이 되어 버렸습니다.<br><br>
-      예측이 빗나갔을 때 규칙부터 의심하기 쉽지만, 대개 문제는 <b>내가 눈치채지 못한 가정</b>에 있습니다.
-      오늘 두 번 빗나간 예측이 그걸 알려 준 셈이에요.
+      설명이 빗나갔을 때 규칙부터 의심하기 쉽지만, 대개 문제는 <b>내가 눈치채지 못한 가정</b>에 있습니다.
+      오늘 무너진 가설이 그걸 알려 준 셈이에요 —
+      <b>가설이 틀리는 건 실패가 아니라, 과학이 앞으로 나아가는 방식입니다.</b>
     </p>
  <div class="keyline-s"><span class="kw">규칙은 그대로였다</span><span class="arw">→</span><span class="kw hi">놓친 것 = 캔 속 전자</span><span class="memo"></span></div>
     <div class="cta-row" style="justify-content:center">
@@ -1809,14 +1850,16 @@ const BG_FALLBACK={
 };
 const SAVE='elec_induction_v1';
 
-/* POE 2연발 — ①(−)빨대 → 캔 / ②(+)털가죽 → 캔. 둘 다 정답은 '끌려온다' */
+/* ① 은 지난 시간에 함께 본 사실을 확정하는 단계, ② 가 가설을 무너뜨리는 진짜 시험대 */
 const POE=[
   {key:'poe1', answer:'c', wrap:'#obs1Wrap', choices:'#poe1Choices', explain:'#poe1Explain',
-   right:'맞혔어요! 캔이 <b>빨대 쪽으로 끌려옵니다.</b> 그런데 캔은 문지른 적이 없죠. 아래에서 직접 확인해 봅시다.',
-   wrong:'가장 많이 나오는 예측이에요 — 캔은 문지르지 않았으니 전기를 안 띠는 게 맞으니까요. 그런데 실제로는 <b>캔이 빨대 쪽으로 끌려옵니다.</b> 아래에서 직접 확인해 보세요.'},
+   okLabel:'✅ 우리가 본 그대로', noLabel:'👀 다시 확인해 보기',
+   right:'맞아요, 우리가 본 그대로입니다 — <b>캔이 빨대 쪽으로 끌려왔죠.</b> 그런데 캔은 문지른 적이 없습니다. 아래에서 그 장면을 다시 확인해 봅시다.',
+   wrong:'실제로는 <b>캔이 빨대 쪽으로 끌려왔습니다.</b> 그때 못 봤거나 헷갈렸다면 아래에서 다시 확인해 보세요. 오늘 풀 문제는 여기서부터 시작합니다.'},
   {key:'poe2', answer:'b', wrap:'#obs2Wrap', choices:'#poe2Choices', explain:'#poe2Explain',
-   right:'맞혔어요! 부호를 반대로 바꿨는데도 <b>이번에도 끌려옵니다.</b> 왜 그럴까요? 아래에서 확인한 뒤 3단계로 갑시다.',
-   wrong:'"부호가 반대니 이번엔 밀리겠지" — 아주 자연스러운 예측입니다. 그런데 결과는 <b>이번에도 끌려옴</b>이에요. 아래에서 직접 확인해 보세요.'}
+   okLabel:'✅ 예측 성공', noLabel:'🔍 가설이 빗나갔어요',
+   right:'맞혔어요! 부호를 반대로 바꿨는데도 <b>이번에도 끌려옵니다.</b> 그렇다면 "캔이 원래 (+)를 띠고 있었다"는 설명은 <b>틀린 것</b>이 됩니다. 그럼 대체 왜? 아래에서 확인한 뒤 3단계로 갑시다.',
+   wrong:'우리 가설을 그대로 따라간 아주 정직한 예측입니다. 그런데 결과는 <b>이번에도 끌려옴</b>이에요. 예측이 빗나갔다는 건 <b class="k">가설이 틀렸다</b>는 뜻입니다. 아래에서 직접 확인해 보세요.'}
 ];
 
 const QUIZ_SETS={
@@ -1942,7 +1985,7 @@ const A={ctx:null,
 let S=load()||{tab:'recall',visited:{},poe1:null,poe2:null,obs:{},lab:{},cloze:{},mini:{},essay:'',block:'',best:0,medals:{}};
 S.visited=S.visited||{};S.obs=S.obs||{};S.lab=S.lab||{};S.cloze=S.cloze||{};S.mini=S.mini||{};S.medals=S.medals||{};
 S.essay=S.essay||'';S.block=S.block||'';
-S.rec=Array.isArray(S.rec)?S.rec:[];S.rule=S.rule||'';
+S.rec=Array.isArray(S.rec)?S.rec:[];S.rule=S.rule||'';S.hypo=S.hypo||'';
 let CLOZE_TOTAL=0;
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(S));}catch(e){}}
 function load(){try{return JSON.parse(localStorage.getItem(SAVE));}catch(e){return null;}}
@@ -1956,9 +1999,10 @@ const ruleOK=()=>(S.rule||'').trim().length>=10;
 function progChecks(){
   return [
     {label:'1단계 · 규칙 되짚기 퀴즈',     ok:!!S.mini.recall},
-    {label:'2단계 · 예측 ① 하기',          ok:!!S.poe1},
+    {label:'1단계 · 우리 반의 가설 고르기', ok:!!S.hypo},
+    {label:'2단계 · 되짚기 ① 답하기',      ok:!!S.poe1},
     {label:'2단계 · 관찰 ① 확인',          ok:!!S.obs.o1},
-    {label:'2단계 · 예측 ② 하기',          ok:!!S.poe2},
+    {label:'2단계 · 가설 시험 예측하기',    ok:!!S.poe2},
     {label:'2단계 · 관찰 ② 확인',          ok:!!S.obs.o2},
     {label:'3단계 · 실험실 4가지 조합',    ok:labSeen()>=4},
     {label:'3단계 · 실험 기록 4줄 이상',   ok:recOK()},
@@ -1976,7 +2020,7 @@ function updateProgress(){
   const _pn=$('#progNeedle'); if(_pn)_pn.style.transform='rotate('+(pct*1.8-90)+'deg)';
   const ul=$('#progItems');
   if(ul)ul.innerHTML=c.map(x=>`<li class="${x.ok?'on':''}"><span class="mk">${x.ok?'✔':'○'}</span>${x.label}</li>`).join('');
-  const done={recall:!!S.visited.recall&&!!S.mini.recall,
+  const done={recall:!!S.visited.recall&&!!S.mini.recall&&!!S.hypo,
     predict:!!S.poe1&&!!S.obs.o1&&!!S.poe2&&!!S.obs.o2,
     model:labSeen()>=4&&recOK()&&ruleOK()&&clozeOK()&&!!S.mini.model,
     apply:(S.essay||'').trim().length>=15&&(S.block||'').trim().length>=15,
@@ -2003,7 +2047,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b
 function refreshCover(){
   const any=progChecks().some(x=>x.ok);
   $('#coverSaved').style.display=any?'inline-flex':'none';
-  $('#coverGo').textContent=any?`이어서 하기 (${$('#progPct').textContent}) 🥫`:'예측하러 가기 🥫';
+  $('#coverGo').textContent=any?`이어서 하기 (${$('#progPct').textContent}) 🥫`:'왜 그런지 밝히러 가기 🥫';
 }
 $('#coverGo').addEventListener('click',()=>{$('#cover').classList.add('hide');
   document.body.classList.remove('cover-on');A.ensure();A.pop();showTab(S.tab||'recall',true);});
@@ -2144,7 +2188,7 @@ const OBSV={};
         else if(b.dataset.poe===pick)b.classList.add('wrong');else b.classList.add('dim');});
       const ok=pick===p.answer;
       exp.className='explain show '+(ok?'ok':'no');
-      exp.innerHTML=`<div class="why">${ok?'✅ 예측 성공':'🔍 다시 생각해 보기'}</div>${ok?p.right:p.wrong}`;
+      exp.innerHTML=`<div class="why">${ok?(p.okLabel||'✅ 예측 성공'):(p.noLabel||'🔍 다시 생각해 보기')}</div>${ok?p.right:p.wrong}`;
       obw.classList.add('show');
       /* 방금 보이게 된 관찰 캔버스는 그때까지 폭을 0으로 재고 있었으므로 반드시 다시 맞춘다 */
       if(window.__obsResize)window.__obsResize();
@@ -2167,6 +2211,29 @@ const OBSV={};
     if(S.obs.o1)OBSV.o1.setDone();if(S.obs.o2)OBSV.o2.setDone();};
   let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(window.__obsResize,180);});
   window.__obsResize();
+})();
+
+/* ═══════ 🔮 우리 반의 가설 — 채점하지 않고, 그 가설이 만드는 예측만 되돌려 준다 ═══════ */
+(function(){
+  const wrap=$('#hypoChoices'), exp=$('#hypoExplain');
+  if(!wrap||!exp)return;
+  const NEXT={
+    a:'좋습니다. 그 설명이 맞다면 — 캔이 <b>(+)전하</b>를 띠고 있었다면 — <b class="t4">(+)전하를 띤 물체</b>를 가까이 했을 때 같은 부호끼리라 <b class="k">밀려나야</b> 합니다. 2단계에서 바로 그걸 해 봅시다.',
+    b:'좋습니다. 그렇다면 <b>금속이 아닌 것</b>은 끌려오지 않아야겠죠. 그리고 금속이 무엇을 하길래 끌어당기는지도 말할 수 있어야 하고요. 3단계 실험실에서 종이와 나란히 견주어 볼 거예요.',
+    c:'날카롭습니다. 그런데 빨대는 캔에 <b>닿지 않았어요.</b> 닿지도 않았는데 어떻게 캔 전체가 (+)가 될까요? 그리고 그게 맞다면 <b class="t4">(+)전하를 띤 물체</b>를 가까이 할 때는 어떻게 될까요?',
+    d:'예리한 설명입니다. 그렇다면 <b>무엇이</b> <b>어느 쪽으로</b> 움직였는지까지 말할 수 있어야 해요. 그 설명이 맞다면 <b class="t4">(+)전하를 띤 물체</b>를 가까이 해도 여전히 끌려와야 합니다.'
+  };
+  function paint(pick){
+    $$('.choice',wrap).forEach(b=>b.classList.toggle('pick',b.dataset.h===pick));
+    exp.className='explain show';
+    exp.innerHTML='<div class="why">🧭 그 가설을 시험하려면</div>'+(NEXT[pick]||'')+
+      '<div style="margin-top:10px">네 가지 가설은 모두 <b>같은 시험</b> 앞에서 갈립니다 — 2단계로 가서 확인해 봅시다.</div>';
+  }
+  wrap.addEventListener('click',e=>{
+    const b=e.target.closest('.choice'); if(!b)return;
+    S.hypo=b.dataset.h; save(); updateProgress(); A.pop(); paint(S.hypo);
+  });
+  if(S.hypo)paint(S.hypo);
 })();
 
 /* ═══════ ⚡ 정전기 유도 실험실 ═══════ */
