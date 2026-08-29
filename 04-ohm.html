@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#f2eade">
-<title>같은 전지인데 왜 밝기가 다를까 · 전압·저항과 옴의 법칙</title>
+<title>같은 전지인데 왜 밝기가 다를까 · 옴의 법칙과 물질의 저항</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -647,67 +647,11 @@ ellipse[fill="#ffffff"][opacity="0.16"]{opacity:.5;fill:#fffdf5}
 .u-d .cloze,.lead .cloze,.help .cloze{vertical-align:baseline}
 .use .u-d:has(.cloze){line-height:1.95}
 
-/* ══════════ 저항은 무엇에 의해 달라질까 — 도선 실험대 ══════════ */
-.wirestage{background:var(--paper-hi);border:1px solid var(--line);border-radius:13px;
-  padding:10px;overflow:hidden}
-.wirestage svg{width:100%;height:auto;display:block}
-/* 조건 표시줄 — 지금 무엇으로 맞춰져 있는지 항상 보인다 */
-.cond{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
-.cond .c{display:flex;align-items:center;gap:6px;background:var(--paper-hi);border:1px solid var(--line);
-  border-radius:99px;padding:6px 13px;font-size:14.5px;color:var(--ink-dim);transition:.25s}
-.cond .c b{color:var(--ink);font-weight:800}
-.cond .c.hit{border-color:var(--accent);background:#f6e8d8;transform:translateY(-1px)}
-/* 저항 게이지 */
-.rgauge{margin-top:12px}
-.rgauge .track{position:relative;height:14px;border-radius:99px;border:1.5px solid var(--line);
-  background:linear-gradient(90deg,#cfe0d6,#f0e2c4 45%,#eccfc8);overflow:visible}
-.rgauge .knob{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#f0d79c,var(--brass) 55%,var(--brass-dk));
-  border:2px solid #5f3f12;transform:translate(-50%,-50%);transition:left .45s cubic-bezier(.34,1.1,.5,1)}
-.rgauge .ends{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-mute);margin-top:7px}
-.rdelta{display:inline-block;margin-left:8px;font-size:14px;font-weight:800;opacity:0;transition:.3s}
-.rdelta.up{color:var(--danger);opacity:1}
-.rdelta.down{color:var(--ok);opacity:1}
-/* 관계 정리 — 작은 도선 그림 + 화살표 */
-.rules3{display:grid;gap:12px;grid-template-columns:1fr;margin-top:14px}
-@media(min-width:720px){.rules3{grid-template-columns:repeat(3,1fr)}}
-.rule3{background:var(--paper-hi);border:1px solid var(--line);border-radius:13px;padding:14px;
-  border-top:3px solid var(--c,var(--accent))}
-.rule3 h4{font-family:var(--jua);font-size:17px;margin-bottom:9px}
-.rule3 svg{width:100%;height:auto;display:block;margin-bottom:8px}
-.rule3 p{font-size:15px;color:var(--ink-dim);line-height:1.6;margin:0}
-/* 비교하기 */
-.cmp2{display:grid;gap:12px;grid-template-columns:1fr;margin-top:12px}
-@media(min-width:720px){.cmp2{grid-template-columns:1fr 1fr}}
-.cmpcard{background:var(--paper-hi);border:1.5px solid var(--line);border-radius:13px;padding:12px}
-.cmpcard.win{border-color:var(--danger);box-shadow:0 0 0 3px rgba(179,54,46,.10)}
-.cmpcard .ttl{font-family:var(--jua);font-size:16.5px;margin-bottom:6px;display:flex;gap:8px;align-items:center}
-.cmpcard .badge2{font-size:12.5px;font-weight:800;padding:2px 9px;border-radius:99px;
-  background:var(--paper);border:1px solid var(--line);color:var(--ink-mute)}
-.cmpcard.win .badge2{background:rgba(179,54,46,.12);border-color:var(--danger);color:var(--danger)}
-.cmpcard .val2{font-family:var(--mono);font-size:20px;font-weight:800;color:var(--c1);margin-top:6px}
-/* 오개념 방지 — 전압을 올려도 저항은 그대로 */
-.ohmbars{display:grid;gap:10px;margin-top:12px}
-.obar{display:grid;grid-template-columns:74px 1fr 84px;gap:10px;align-items:center}
-.obar .nm{font-size:15px;font-weight:700;color:var(--ink-dim)}
-.obar .bar{height:20px;border-radius:99px;background:var(--paper);border:1px solid var(--line);overflow:hidden}
-.obar .bar i{display:block;height:100%;width:0;transition:width .4s cubic-bezier(.34,1.05,.5,1)}
-.obar .num{font-family:var(--mono);font-size:16px;font-weight:800;text-align:right}
-.obar.fixed .bar{background:repeating-linear-gradient(45deg,#efe6d2 0 7px,#e7dcc4 7px 14px)}
-.keyline{margin-top:14px;background:#f6edd6;border:1px solid var(--brass);border-left:5px solid var(--brass);
-  border-radius:12px;padding:14px 16px;font-size:16px;line-height:1.7;color:var(--ink)}
-.keyline .no{color:var(--danger);font-weight:800}
-.keyline .yes{color:var(--ok);font-weight:800}
 /* 태블릿·전자칠판에서 손가락으로 잡기 쉽게 — 이 차시의 조작판 전체에 적용 */
 .simctl input[type=range]{height:12px}
 .simctl input[type=range]::-webkit-slider-thumb{width:30px;height:30px;border-width:4px}
 .simctl input[type=range]::-moz-range-thumb{width:26px;height:26px;border-width:4px}
 .simctl .btn.sm{padding:11px 16px;font-size:15.5px}
-#wMat .btn,#cmpPick .btn{flex:1 1 auto;min-width:78px}
-@media(max-width:719px){
-  .cond .c{font-size:14px;padding:5px 11px}
-  #wSvg{min-height:150px}
-}
 </style>
 
 <style id="ink-emphasis-fix">
@@ -964,7 +908,7 @@ body.teacher .keyline-s{display:none}
  <path d="M38 99 L52 99 L45 110 Z" fill="#5f3f12"/>
  </svg></div>
  <h1 class="cover-title">같은 전지인데<br>왜 밝기가 다를까</h1>
- <p class="cover-sub">전류를 조절하는 두 손잡이 — 전압·저항과 옴의 법칙 ⚡</p>
+ <p class="cover-sub">전압·저항·전류를 하나의 식으로 — 옴의 법칙 ⚡</p>
  <div class="cover-meta">
  <span class="badge">⏱️ 45분</span>
  <span class="badge">📘 VII. 전기와 자기 · 2. 전기 회로와 에너지 ②</span>
@@ -974,8 +918,8 @@ body.teacher .keyline-s{display:none}
  <h3>💡 학습 단계 안내</h3>
  <ol>
  <li><span class="sn">1</span><div><b>생각 열기</b> — 전구 밝기를 줄이는 방법은 몇 가지일까</div></li>
- <li><span class="sn">2</span><div><b>탐구하기</b> — 예상 먼저, 그다음 옴의 실험대에서 측정</div></li>
- <li><span class="sn">3</span><div><b>법칙 세우기</b> — 전압·저항, 그리고 옴의 법칙</div></li>
+ <li><span class="sn">2</span><div><b>탐구하기</b> — 예상 먼저, 그다음 옴의 실험대에서 측정 (전압·길이·굵기)</div></li>
+ <li><span class="sn">3</span><div><b>법칙 세우기</b> — 전압·저항을 되짚고, 옴의 법칙으로</div></li>
  <li><span class="sn">4</span><div><b>가려내기</b> — 도체 · 부도체 · 반도체 분류하기</div></li>
  <li><span class="sn">5</span><div><b>확인하기</b> — 배운 것 점검하기</div></li>
  <li class="opt"><span class="sn">+</span><div><b>더 알아보기</b> — 옴이라는 과학자, 저항이 0이 되는 물질</div></li>
@@ -1090,8 +1034,8 @@ body.teacher .keyline-s{display:none}
  </div>
  </div>
  <div class="pill-list">
- <span class="pill">핵심어 · <b>전압(V)</b></span><span class="pill"><b>저항(Ω)</b></span>
- <span class="pill"><b>옴의 법칙</b></span><span class="pill"><b>도체 · 부도체 · 반도체</b></span>
+ <span class="pill">핵심어 · <b>옴의 법칙</b></span><span class="pill"><b>I = V ÷ R</b></span>
+ <span class="pill"><b>전압-전류 그래프</b></span><span class="pill"><b>도체 · 부도체 · 반도체</b></span>
  </div>
  </div>
  <div class="cta-row"><button class="btn primary" data-go="explore">2단계 · 예상하고 실험하기 →</button></div>
@@ -1137,10 +1081,10 @@ body.teacher .keyline-s{display:none}
 
  <!-- ⚡ 옴의 실험대 -->
  <div class="card" style="margin-top:18px">
- <div class="badge" style="margin-bottom:12px">🎚️ 가상 실험 — 손잡이 두 개를 직접 돌려 보기</div>
+ <div class="badge" style="margin-bottom:12px">🎚️ 가상 실험 — 손잡이 세 개를 직접 돌려 보기</div>
  <div class="lab">
  <h3>⚡ 옴의 실험대</h3>
- <p class="lead say" style="font-size:17px">전압 슬라이더와 니크롬선 버튼을 바꿔 가며 <b class="k">전류계 눈금</b>을 읽으세요.
+ <p class="lead say" style="font-size:17px">전압 슬라이더와 니크롬선의 <b>길이·굵기</b> 버튼을 바꿔 가며 <b class="k">전류계 눈금</b>을 읽으세요. 바꿀 때마다 <b>무엇이 어떻게 변했는지</b>가 팝업으로 뜹니다.
  읽은 값은 <b>📌 기록</b>을 눌러 표와 그래프에 쌓입니다.
  <b class="k">같은 전압에서 두 니크롬선</b>을 꼭 비교해 보세요 — 아까의 예상이 판정됩니다.</p>
  <div class="keyline-s"><span class="kw">바꾸기</span><span class="arw">→</span><span class="kw">전류 읽기</span><span class="arw">→</span><span class="kw">📌 기록</span><span class="arw">→</span><span class="kw hi">같은 전압에서 비교</span><span class="memo"></span></div>
@@ -1166,16 +1110,15 @@ body.teacher .keyline-s{display:none}
  <circle cx="348" cy="230" r="4.5" fill="#6b573f"/><circle cx="392" cy="230" r="4.5" fill="#6b573f"/>
  <line x1="348" y1="230" x2="392" y2="230" stroke="#6b573f" stroke-width="3"/>
  <text x="370" y="256" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13" fill="#6b573f">스위치(닫힘)</text>
- <g id="wireS">
- <path d="M510 116 L524 125 L496 136 L524 147 L496 158 L524 169 L496 180 L524 191 L510 200 V204" fill="none" stroke="#8a5f24" stroke-width="3"/>
- <text x="488" y="150" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="700" fill="#8a5f24">짧은 니크롬선</text>
- </g>
- <g id="wireL" opacity="0">
- <path d="M510 116 L530 121 L490 128 L530 135 L490 142 L530 149 L490 156 L530 163 L490 170 L530 177 L490 184 L530 191 L490 197 L510 201 V204" fill="none" stroke="#8a5f24" stroke-width="3"/>
- <text x="482" y="146" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="700" fill="#8a5f24">긴 니크롬선</text>
- <text x="482" y="166" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#6b573f">(짧은 것의 2배 길이)</text>
- </g>
- <text x="310" y="290" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" fill="#6b573f" id="ohCap">전압과 니크롬선을 바꿔 가며 전류계 값을 읽어 보세요</text>
+ <line id="ohCut" x1="430" y1="66" x2="430" y2="114" stroke="#2e5f8f" stroke-width="1.8" stroke-dasharray="5 4"/>
+ <text x="430" y="58" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#2e5f8f">단면</text>
+ <g id="ohEl"></g>
+ <path id="ohWire" d="" fill="none" stroke="#8a5f24" stroke-width="3.4" stroke-linejoin="round"/>
+ <text id="ohWireT" x="474" y="150" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="700" fill="#8a5f24">니크롬선</text>
+ <text id="ohWireT2" x="474" y="170" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#6b573f">짧다 · 보통</text>
+ <text id="ohWireR" x="474" y="190" text-anchor="end" font-family="Nanum Gothic Coding, monospace" font-size="14" font-weight="700" fill="#b23a30">2 Ω</text> <circle cx="118" cy="286" r="5.2" fill="#2e5f8f"/>
+ <text x="130" y="291" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#6b573f">전자 — (−)극에서 나와 (+)극으로</text>
+ <text x="330" y="290" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" fill="#6b573f" id="ohCap">전압과 니크롬선을 바꿔 가며 전류계 값을 읽어 보세요</text>
  </svg>
  </div>
  <div class="dl-head">
@@ -1187,37 +1130,45 @@ body.teacher .keyline-s{display:none}
  </div>
  <div class="dtable-wrap">
  <table class="dtable" id="labTable">
- <tr><th>전압 (V)</th><th>니크롬선</th><th>전류의 세기 (A)</th><th>전류의 세기 (mA)</th><th></th></tr>
- <tr><td class="empty" colspan="5">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 눌러 보세요</td></tr>
+ <tr><th>전압 (V)</th><th>니크롬선</th><th>저항 (Ω)</th><th>전류의 세기 (A)</th><th>전류의 세기 (mA)</th><th></th></tr>
+ <tr><td class="empty" colspan="6">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 눌러 보세요</td></tr>
  </table>
  </div>
  <div class="graph-wrap"><canvas id="labGraph" height="280"></canvas></div>
- <div class="legend">
- <span><i style="background:#a05c2c"></i>짧은 니크롬선</span>
- <span><i style="background:#8a5f24"></i>긴 니크롬선</span>
- <span>가로축 전압(V) · 세로축 전류(A)</span>
- </div>
+ <div class="legend" id="labLegend"><span>가로축 전압(V) · 세로축 전류(A)</span></div>
  </div>
  <div class="simctl">
  <h4>🎛️ 조작판</h4>
- <p class="help say" style="margin-top:2px">바꿀 수 있는 것은 딱 두 가지입니다.</p>
- <div class="keyline-s"><span class="kw">바꾸는 것</span><span class="kw hi">전압</span><span class="kw hi">니크롬선 길이</span><span class="memo"></span></div>
+ <p class="help say" style="margin-top:2px">바꿀 수 있는 것은 <b>전압 · 길이 · 굵기</b> 세 가지입니다. 한 번에 하나씩만 바꿔 보세요.</p>
+ <div class="keyline-s"><span class="kw">바꾸는 것</span><span class="kw hi">전압</span><span class="kw hi">니크롬선 길이</span><span class="kw hi">니크롬선 굵기</span><span class="memo"></span></div>
  <div class="ctl">
  <label><span>🎚️ 전원 장치 전압</span><span class="val" id="vVal">1.5 V</span></label>
  <input type="range" id="vSlider" min="0" max="6" step="1.5" value="1.5">
  </div>
  <div class="ctl">
- <label><span>📏 니크롬선 고르기</span><span class="val" id="wVal">짧다</span></label>
- <div class="btn-row" style="margin-top:4px">
- <button class="btn ghost sm on" data-wire="short">짧은 니크롬선</button>
- <button class="btn ghost sm" data-wire="long">긴 니크롬선</button>
+ <label><span>📏 니크롬선 길이</span><span class="val" id="wLenV">짧다</span></label>
+ <div class="btn-row" style="margin-top:4px" id="ohLen">
+ <button class="btn ghost sm on" data-len="s">짧다</button>
+ <button class="btn ghost sm" data-len="l">길다 <small>(2배)</small></button>
+ </div>
+ </div>
+ <div class="ctl">
+ <label><span>⭕ 니크롬선 굵기</span><span class="val" id="wThkV">보통</span></label>
+ <div class="btn-row" style="margin-top:4px" id="ohThk">
+ <button class="btn ghost sm" data-thk="t">가늘다</button>
+ <button class="btn ghost sm on" data-thk="m">보통</button>
+ <button class="btn ghost sm" data-thk="k">굵다</button>
  </div>
  </div>
  <div class="readout">
  <div class="r"><div class="lab2">🎚️ 전압</div><div class="v" id="rVolt" style="color:#7d5ba6">1.5<small> V</small></div></div>
  <div class="r"><div class="lab2">⚡ 전류의 세기</div><div class="v" id="rAmp" style="color:#a05c2c">0.75<small> A</small></div></div>
  <div class="r"><div class="lab2">mA로 읽으면</div><div class="v" id="rMa">750<small> mA</small></div></div>
+ <div class="r"><div class="lab2">🧱 저항</div><div class="v" id="rRes" style="color:#b23a30">2<small> Ω</small></div></div>
+ <div class="r"><div class="lab2">1초 동안 <b>단면</b>을 지난 전자</div><div class="v" id="ohCross" style="color:#2e5f8f">0<small> 개</small></div></div>
  </div>
+ <p class="help"><b>전류의 세기 = 1초 동안 도선의 단면을 지나는 전하의 양</b>입니다.
+ 그래서 전류가 셀수록 전자가 <b>더 빠르게</b> 움직여요.</p>
  <p class="help">1 A = 1000 mA. 실제 디지털 전류계는 mA 단위로 보여 줄 때가 많아요.</p>
  </div>
  </div>
@@ -1228,157 +1179,7 @@ body.teacher .keyline-s{display:none}
  </div>
  </div>
 
-<div class="card xsim" id="rwhy-card">
- <span class="xsim-scope">🔎 왜 그럴까 · 성취기준 밖 보조 자료</span>
- <h3 class="card-t">🚧 저항의 정체 — 전자의 길을 얼마나 막느냐</h3>
- <p class="lead say">저항은 눈에 보이지 않는 신비한 힘이 아닙니다. 도선 속에는 <b class="t4">금속 원자</b>가 제자리에서 떨고 있고,
- 전자는 그 사이를 지나며 <b>계속 부딪힙니다.</b> 이 <b class="k">부딪히는 정도</b>가 곧 저항이에요.
- 아래에서 <b>도착한 전자 수</b>를 지켜보세요 — 그것이 전류입니다.</p>
- <div class="keyline-s"><span class="kw">전자가 원자에 부딪힘</span><span class="arw">→</span><span class="kw hi">그 방해가 곧 저항</span><span class="kw q">길이·굵기를 바꾸면?</span><span class="memo"></span></div>
 
- <div class="xsim-stage"><canvas id="rwCv2" height="250" aria-label="도선 속에서 전자가 금속 원자와 부딪히며 지그재그로 나아가는 모습. 도선이 길수록 더 많이 부딪히고, 굵을수록 나란히 갈 수 있는 통로가 늘어난다."></canvas></div>
-
- <div class="xsim-ctl">
-  <span class="xsim-lab"><b>도선의 길이</b> <span id="rwLenV">보통</span></span>
-  <input type="range" id="rwLenS" min="1" max="3" step="1" value="2">
-  <span class="xsim-lab" style="margin-left:14px"><b>도선의 굵기</b> <span id="rwThkV">보통</span></span>
-  <input type="range" id="rwThkS" min="1" max="3" step="1" value="2">
-  <button class="xsim-btn" id="rwReset" style="margin-left:auto">↺ 세어 보기 다시</button>
- </div>
-
- <div class="xsim-read">
-  <div class="xsim-r"><div class="k">10초 동안 도착한 전자<br><small>= 전류</small></div><div class="v" id="rwArr">0<small> 개</small></div></div>
-  <div class="xsim-r"><div class="k">부딪힌 횟수</div><div class="v" id="rwHit">0<small> 회</small></div></div>
-  <div class="xsim-r"><div class="k">나란히 갈 수 있는 통로</div><div class="v" id="rwLane">2<small> 줄</small></div></div>
-  <div class="xsim-r"><div class="k">저항(상대값)</div><div class="v" id="rwR" style="color:#8a5f24">1.0<small> 배</small></div></div>
- </div>
- <div class="xsim-msg" id="rwMsg">길이와 굵기를 바꿔 가며, <b>같은 시간에 도착하는 전자 수</b>가 어떻게 달라지는지 세어 보세요.</div>
-
- <div class="xsim-why"><div class="h">📏 길게 하면 왜 저항이 커질까</div>
- 도선이 길어지면 전자가 <b>지나가야 할 원자의 줄이 늘어납니다.</b> 부딪히는 횟수가 늘어나니 그만큼 오래 걸리고,
- 같은 시간에 반대편에 도착하는 전자 수가 줄어들죠. <b>도착이 적다 = 전류가 작다 = 저항이 크다.</b></div>
- <div class="xsim-why"><div class="h">🚗 굵게 하면 왜 저항이 작아질까</div>
- 굵어진다는 건 <b>차선이 늘어나는 것</b>과 같습니다. 한 줄로만 가던 전자들이 두 줄, 세 줄로 <b>나란히</b> 갈 수 있게 되죠.
- 한 전자가 겪는 방해는 비슷하지만 <b>동시에 통과하는 전자 수가 늘어나</b>, 같은 시간에 도착하는 전자가 많아집니다.
- 좁은 골목보다 넓은 도로에 차가 더 많이 지나가는 것과 똑같아요.</div>
-
- <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① 기본값에서 10초 세기 → 도착 수를 칠판에 적습니다. ② 길이만 최대로 → 다시 세기 → "줄었죠? 부딪힘 횟수를 보세요." ③ 길이 되돌리고 굵기만 최대로 → "통로가 3줄이 됐고 도착이 늘었습니다." ④ 정리 — <b>길이는 방해를 늘리고, 굵기는 통로를 늘린다.</b> 4차시 실험대의 결과가 여기서 설명됩니다.</div></div>
-</div>
-
-<script>
-(function(){
-  var cv=document.getElementById('rwCv2'); if(!cv) return;
-  var cx=cv.getContext('2d'), W=640, H=250;
-  var LEN=2, THK=2, hits=0, arrived=0, tAcc=0;
-  var atoms=[], els=[];
-  var NAME=['짧다','보통','길다'], TNAME=['얇다','보통','굵다'];
-  function fit(){var b=cv.parentElement.clientWidth||640; if(b<10)b=640; W=b;
-    var d=Math.min(devicePixelRatio||1,2); cv.width=W*d; cv.height=H*d;
-    cv.style.height=H+'px'; cx.setTransform(d,0,0,d,0,0);}
-  function geom(){
-    var w=[0.42,0.62,0.86][LEN-1];
-    var x0=24, x1=24+(W-48)*w;
-    var lanes=THK;                      /* 굵기 = 나란한 통로 수 */
-    var laneH=26, totalH=lanes*laneH+(lanes-1)*8;
-    var y0=(H-58)/2-totalH/2+16;
-    return {x0:x0,x1:x1,lanes:lanes,laneH:laneH,y0:y0,totalH:totalH};
-  }
-  function build(){
-    var g=geom();
-    atoms=[];
-    var cols=Math.round((g.x1-g.x0)/34);
-    for(var l=0;l<g.lanes;l++){
-      var cy=g.y0+l*(g.laneH+8)+g.laneH/2;
-      for(var c=0;c<cols;c++){
-        atoms.push({x:g.x0+18+c*34+(l%2?17:0), y:cy, ph:Math.random()*6.28});
-      }
-    }
-    els=[];
-    for(var i=0;i<g.lanes*3;i++) spawn(i%g.lanes, Math.random());
-    hits=0; arrived=0; tAcc=0;
-  }
-  function spawn(lane, prog){
-    var g=geom();
-    els.push({lane:lane, x:g.x0+6+(g.x1-g.x0-12)*(prog||0),
-      y:g.y0+lane*(g.laneH+8)+g.laneH/2, vy:0, flash:0});
-  }
-  function upd(v){
-    document.getElementById('rwLenV').textContent=NAME[LEN-1];
-    document.getElementById('rwThkV').textContent=TNAME[THK-1];
-    document.getElementById('rwLane').innerHTML=THK+'<small> 줄</small>';
-    var R=([0.6,1,1.5][LEN-1])/([0.55,1,1.6][THK-1]);
-    document.getElementById('rwR').innerHTML=R.toFixed(1)+'<small> 배</small>';
-  }
-  document.getElementById('rwLenS').addEventListener('input',function(){LEN=+this.value; build(); upd(); render();});
-  document.getElementById('rwThkS').addEventListener('input',function(){THK=+this.value; build(); upd(); render();});
-  document.getElementById('rwReset').addEventListener('click',function(){build(); render();});
-  var last=0;
-  function render(t){
-    t=t||performance.now();
-    var dt=Math.min(.045,(t-last)/1000)||.016; last=t;
-    var bw=cv.parentElement.clientWidth; if(bw>10&&Math.abs(bw-W)>2){fit(); build();}
-    var g=geom();
-    tAcc+=dt;
-    if(tAcc>10){ tAcc=0; hits=0; arrived=0; }
-    /* 이동 */
-    for(var i=els.length-1;i>=0;i--){
-      var e=els[i];
-      e.x+=64*dt;
-      e.y+=e.vy*dt; e.vy*=Math.max(0,1-6*dt);
-      var cy=g.y0+e.lane*(g.laneH+8)+g.laneH/2;
-      e.y+=(cy-e.y)*Math.min(1,dt*4);
-      if(e.flash>0) e.flash-=dt*3;
-      /* 원자와 충돌 */
-      for(var a=0;a<atoms.length;a++){
-        var at=atoms[a];
-        if(Math.abs(at.x-e.x)<9 && Math.abs(at.y-e.y)<11){
-          e.x=at.x-9; e.vy=(Math.random()<.5?-1:1)*54; e.flash=1; hits++;
-          break;
-        }
-      }
-      if(e.x>g.x1-8){ els.splice(i,1); arrived++; spawn(Math.floor(Math.random()*g.lanes),0); }
-    }
-    while(els.length<g.lanes*3) spawn(Math.floor(Math.random()*g.lanes),0);
-    cx.clearRect(0,0,W,H);
-    /* 도선 */
-    cx.fillStyle='rgba(176,113,58,.14)'; cx.strokeStyle='rgba(176,113,58,.75)'; cx.lineWidth=2;
-    cx.fillRect(g.x0,g.y0-10,g.x1-g.x0,g.totalH+20);
-    cx.strokeRect(g.x0,g.y0-10,g.x1-g.x0,g.totalH+20);
-    /* 통로 구분선 */
-    cx.strokeStyle='rgba(176,113,58,.3)'; cx.setLineDash([4,4]); cx.lineWidth=1;
-    for(var l=1;l<g.lanes;l++){
-      var yy=g.y0+l*(g.laneH+8)-4;
-      cx.beginPath(); cx.moveTo(g.x0,yy); cx.lineTo(g.x1,yy); cx.stroke();
-    }
-    cx.setLineDash([]);
-    /* 원자 (제자리 진동) */
-    for(var a2=0;a2<atoms.length;a2++){
-      var A=atoms[a2];
-      var jx=Math.cos(t/170+A.ph)*1.8, jy=Math.sin(t/140+A.ph)*1.8;
-      cx.fillStyle='#8a5f24'; cx.beginPath(); cx.arc(A.x+jx,A.y+jy,7.5,0,6.2832); cx.fill();
-    }
-    /* 전자 */
-    for(var k=0;k<els.length;k++){
-      var E=els[k];
-      if(E.flash>0){ cx.fillStyle='rgba(178,58,48,'+(E.flash*.5)+')';
-        cx.beginPath(); cx.arc(E.x,E.y,13,0,6.2832); cx.fill(); }
-      cx.fillStyle='#3a7a3f'; cx.beginPath(); cx.arc(E.x,E.y,6.5,0,6.2832); cx.fill();
-    }
-    /* 라벨 */
-    cx.font='12.5px Pretendard, sans-serif'; cx.textAlign='center'; cx.fillStyle='#8a7a68';
-    cx.fillText('전자 →', g.x0+30, g.y0-20);
-    cx.fillText('도착!', g.x1-24, g.y0+g.totalH+34);
-    cx.fillStyle='#8a5f24';
-    cx.fillText('갈색 = 제자리에서 떨고 있는 금속 원자', W/2, H-10);
-    document.getElementById('rwArr').innerHTML=arrived+'<small> 개</small>';
-    document.getElementById('rwHit').innerHTML=hits+'<small> 회</small>';
-    requestAnimationFrame(render);
-  }
-  addEventListener('resize',function(){fit(); build();});
-  cv.__tick=render;
-  fit(); build(); upd(); requestAnimationFrame(render);
-})();
-</script>
 
 
 
@@ -1408,14 +1209,14 @@ body.teacher .keyline-s{display:none}
 <!-- 3 -->
 <section class="panel" id="panel-law">
  <div class="stepline"><span class="sbadge">STEP 3</span><span class="swhat">법칙 세우기 · 두 문장에 이름 붙이기</span></div>
- <h2 class="sec">이름을 붙입시다 — 전압, 저항, 그리고 옴의 법칙</h2>
- <p class="lead say">실험에서 캐낸 두 문장을 과학의 말로 바꿉니다.
- 전지가 미는 힘의 크기에는 <b class="t2">전압</b>, 니크롬선이 방해하는 정도에는 <b class="t1">저항</b>이라는
- 이름이 붙어 있어요.</p>
+ <h2 class="sec">세 양을 한 줄로 묶읍시다 — 옴의 법칙</h2>
+ <p class="lead say">지난 시간에 배운 <b class="t2">전압</b>과 <b class="t1">저항</b>을 먼저 되짚고,
+ 실험에서 캐낸 두 문장을 하나의 식으로 묶습니다.
+ 전압·전류·저항 — 세 양이 어떻게 맞물리는지가 오늘의 목표예요.</p>
  <div class="keyline-s"><span class="kw">전지가 미는 힘 → 전압</span><span class="kw">방해하는 정도 → 저항</span><span class="memo"></span></div>
 
  <div class="card" style="margin-top:20px">
- <h3 class="card-t" style="margin-bottom:14px">오늘의 용어 — 전류를 조절하는 두 손잡이</h3>
+ <h3 class="card-t" style="margin-bottom:14px">되짚기 — 지난 시간의 두 손잡이</h3>
  <p class="help" style="margin-top:0">설명을 먼저 읽고, <b>이름이 무엇일지 떠올린 뒤</b> 빈칸을 눌러 확인하세요.</p>
  <div class="terms cloze-set" style="grid-template-columns:1fr">
  <div class="term" style="--c:var(--c2)"><div class="nm t2"><span class="cloze" data-ans="전압" data-c="c2">　</span> (단위: V, 볼트)</div><div class="de">전기 회로에서 <b>전류를 계속 흐르게 하는 원인</b>. 전지에 적힌 1.5 V, 9 V가 바로 이것. 전압이 클수록 전류가 세게 흐른다.</div></div>
@@ -1444,7 +1245,7 @@ body.teacher .keyline-s{display:none}
  <p class="help" style="text-align:center">전류의 세기를 I, 전압을 V, 저항을 R라고 쓴 것뿐, 내용은 같은 식입니다.</p>
  <div class="dtable-wrap" style="margin-top:14px">
  <table class="dtable">
- <tr><th>검산해 보기</th><th>전압</th><th>저항</th><th>전류의 세기</th></tr>
+ <tr><th>검산해 보기 <span style="font-weight:600;font-size:12.5px">(굵기 보통)</span></th><th>전압</th><th>저항</th><th>전류의 세기</th></tr>
  <tr><td>짧은 니크롬선</td><td class="t2" style="font-weight:800">1.5 V</td><td class="t1" style="font-weight:800">2 Ω</td><td style="font-weight:800;color:#a05c2c">1.5 ÷ 2 = 0.75 A</td></tr>
  <tr><td>긴 니크롬선</td><td class="t2" style="font-weight:800">1.5 V</td><td class="t1" style="font-weight:800">4 Ω</td><td style="font-weight:800;color:#a05c2c">1.5 ÷ 4 = 0.375 A</td></tr>
  </table>
@@ -1462,6 +1263,25 @@ body.teacher .keyline-s{display:none}
  <span class="cloze" data-ans="절반" data-c="c1">　</span>이 된다.</p>
  <div class="cloze-done">✅ 검산 완료 — 실험대 기록표와 맞나요?</div>
  </div>
+ </div>
+
+ <div class="card" style="margin-top:18px">
+ <h3 class="card-t">🪥 치약으로 옴의 법칙 느끼기</h3>
+ <p class="lead say" style="font-size:17px;margin-top:8px">식이 손에 안 잡힐 때는 <b class="k">치약 튜브</b>를 떠올리세요.
+ 튜브를 <b>누르는 힘</b>이 전압, 치약이 빠져나오는 <b>좁은 구멍</b>이 저항,
+ <b>짜여 나온 치약의 양</b>이 전류입니다.</p>
+ <div class="keyline-s"><span class="kw">누르는 힘 → 전압</span><span class="kw">좁은 구멍 → 저항</span><span class="kw hi">나온 양 → 전류</span><span class="memo"></span></div>
+ <svg viewBox="0 0 560 396" style="max-width:560px;width:100%;height:auto;display:block;margin:12px auto 2px" role="img" aria-label="치약 튜브 네 개를 견주어 놓은 그림. 위 두 개는 구멍 크기가 같고 누르는 힘만 다르며, 세게 누를수록 치약이 많이 나온다. 아래 두 개는 누르는 힘이 같고 구멍 크기만 다르며, 구멍이 넓을수록 치약이 많이 나온다."><text x="280" y="20" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="700" fill="#4a3a26">구멍은 같게 — 누르는 힘만 다르게</text><line x1="108" y1="18" x2="108" y2="44" stroke="#b23a30" stroke-width="4.5"/><polygon points="108,57 100,43 116,43" fill="#b23a30"/><rect x="44" y="69" width="13" height="30" rx="3" fill="#e2d3b2" stroke="#a08b64" stroke-width="1.8"/><rect x="56" y="62" width="104" height="44" rx="11" fill="#f7f1e2" stroke="#a08b64" stroke-width="2.2"/><rect x="72" y="75" width="58" height="18" rx="6" fill="#e8ddc4"/><polygon points="160,71 182,76.0 182,92.0 160,97" fill="#e2d3b2" stroke="#a08b64" stroke-width="2"/><rect x="182" y="76.0" width="60" height="16" rx="8.0" fill="#bfe3d0" stroke="#5d9b7a" stroke-width="1.8"/><text x="112" y="134" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" font-weight="700" fill="#b23a30">세게 누른다</text><text x="112" y="153" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#6b573f">전압이 크다 → 많이 나온다</text><line x1="382" y1="39" x2="382" y2="44" stroke="#b23a30" stroke-width="3.0"/><polygon points="382,57 374,43 390,43" fill="#b23a30"/><rect x="318" y="69" width="13" height="30" rx="3" fill="#e2d3b2" stroke="#a08b64" stroke-width="1.8"/><rect x="330" y="62" width="104" height="44" rx="11" fill="#f7f1e2" stroke="#a08b64" stroke-width="2.2"/><rect x="346" y="75" width="58" height="18" rx="6" fill="#e8ddc4"/><polygon points="434,71 456,76.0 456,92.0 434,97" fill="#e2d3b2" stroke="#a08b64" stroke-width="2"/><rect x="456" y="76.0" width="22" height="16" rx="8.0" fill="#bfe3d0" stroke="#5d9b7a" stroke-width="1.8"/><text x="386" y="134" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" font-weight="700" fill="#8a7a63">살살 누른다</text><text x="386" y="153" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#6b573f">전압이 작다 → 조금 나온다</text><text x="280" y="176" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="15" font-weight="700" fill="#a05c2c">전류 ∝ 전압</text><line x1="30" y1="194" x2="530" y2="194" stroke="#cbb894" stroke-width="1.2" stroke-dasharray="5 6"/><text x="280" y="222" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="700" fill="#4a3a26">누르는 힘은 같게 — 구멍만 다르게</text><line x1="108" y1="226" x2="108" y2="240" stroke="#b23a30" stroke-width="3.6"/><polygon points="108,253 100,239 116,239" fill="#b23a30"/><rect x="44" y="265" width="13" height="30" rx="3" fill="#e2d3b2" stroke="#a08b64" stroke-width="1.8"/><rect x="56" y="258" width="104" height="44" rx="11" fill="#f7f1e2" stroke="#a08b64" stroke-width="2.2"/><rect x="72" y="271" width="58" height="18" rx="6" fill="#e8ddc4"/><polygon points="160,267 182,268.0 182,292.0 160,293" fill="#e2d3b2" stroke="#a08b64" stroke-width="2"/><rect x="182" y="268.0" width="56" height="24" rx="12.0" fill="#bfe3d0" stroke="#5d9b7a" stroke-width="1.8"/><text x="112" y="330" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" font-weight="700" fill="#b23a30">구멍이 넓다</text><text x="112" y="349" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#6b573f">저항이 작다 → 많이 나온다</text><line x1="382" y1="226" x2="382" y2="240" stroke="#b23a30" stroke-width="3.6"/><polygon points="382,253 374,239 390,239" fill="#b23a30"/><rect x="318" y="265" width="13" height="30" rx="3" fill="#e2d3b2" stroke="#a08b64" stroke-width="1.8"/><rect x="330" y="258" width="104" height="44" rx="11" fill="#f7f1e2" stroke="#a08b64" stroke-width="2.2"/><rect x="346" y="271" width="58" height="18" rx="6" fill="#e8ddc4"/><polygon points="434,267 456,276.0 456,284.0 434,293" fill="#e2d3b2" stroke="#a08b64" stroke-width="2"/><rect x="456" y="276.0" width="20" height="8" rx="4.0" fill="#bfe3d0" stroke="#5d9b7a" stroke-width="1.8"/><text x="386" y="330" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" font-weight="700" fill="#8a7a63">구멍이 좁다</text><text x="386" y="349" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#6b573f">저항이 크다 → 조금 나온다</text><text x="280" y="388" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="15" font-weight="700" fill="#a05c2c">전류 ∝ 1 / 저항</text></svg>
+ <div class="dtable-wrap" style="margin-top:14px">
+ <table class="dtable">
+ <tr><th>🪥 치약</th><th>⚡ 전기 회로</th><th>바꾸면</th></tr>
+ <tr><td>튜브를 <b>누르는 힘</b></td><td class="t2" style="font-weight:800">전압 V</td><td>세게 누를수록 많이 나온다 → 전류 ∝ 전압</td></tr>
+ <tr><td>치약이 나오는 <b>구멍</b></td><td class="t1" style="font-weight:800">저항 R</td><td>좁을수록 잘 나오지 못한다 → 전류 ∝ 1/저항</td></tr>
+ <tr><td><b>짜여 나온 양</b></td><td style="font-weight:800;color:#a05c2c">전류 I</td><td>= 누르는 힘 ÷ 구멍의 좁은 정도</td></tr>
+ </table>
+ </div>
+ <div class="note"><span class="ic">📌</span><div>비유는 <b>느낌을 잡는 데까지만</b> 씁니다. 치약은 짜면 줄어들지만 도선 속 전자는 없어지지 않아요. 계산은 반드시 <b>I = V ÷ R</b>로 하세요.</div></div>
+ <div class="note class"><span class="ic">💬</span><div><b>교실에서</b> — 실제 치약이나 물풀 하나를 들고 세게·살살 눌러 보이면 5초면 끝납니다. 그다음 "구멍을 손가락으로 반쯤 막으면?"이라고 물어 저항 쪽으로 넘어가세요.</div></div>
  </div>
 
  <div class="card" style="margin-top:18px">
@@ -1502,315 +1322,14 @@ body.teacher .keyline-s{display:none}
  </div>
  </div>
 
- <!-- ══════════ 저항은 무엇에 의해 달라질까 ══════════ -->
- <div class="card" style="margin-top:18px">
- <h3 class="card-t" style="margin-bottom:6px">🔌 저항은 무엇에 의해 달라질까?</h3>
- <p class="lead say" style="font-size:17px;margin-bottom:12px">
- 저항은 도선이 <b class="k">원래 가지고 있는 성질</b>입니다.
- 무엇을 바꾸면 저항이 달라지는지, <b class="k">하나씩만 바꿔 가며</b> 직접 확인해 보세요.</p>
- <div class="keyline-s"><span class="kw">저항 = 도선이 원래 가진 성질</span><span class="arw">→</span><span class="kw hi">하나씩만 바꿔 보기</span><span class="memo"></span></div>
-
- <div class="lab">
- <h3>🧪 도선 실험대</h3>
-
- <div class="cond" id="wCond">
- <span class="c" data-cond="mat">재질 <b id="cMat">구리</b></span>
- <span class="c" data-cond="len">길이 <b id="cLen">1.0 m</b></span>
- <span class="c" data-cond="thk">굵기 <b id="cThk">보통</b></span>
- <span class="c" data-cond="r">저항 <b id="cR">1.00 Ω</b></span>
- </div>
-
- <div class="simgrid">
- <div class="wirestage">
- <svg id="wSvg" viewBox="0 0 560 210" role="img"
- aria-label="양쪽 집게 사이에 연결된 금속 도선. 길이·굵기·재질을 바꾸면 도선의 모습과 저항이 달라진다. 도선 안에서는 전하가 오른쪽으로 이동한다.">
- <rect x="0" y="0" width="560" height="210" fill="none"/>
- <!-- 길이 치수선 -->
- <g id="wDim">
- <line id="wDimLine" x1="60" y1="176" x2="360" y2="176" stroke="#96805c" stroke-width="1.6" stroke-dasharray="5 4"/>
- <line id="wDimL" x1="60" y1="170" x2="60" y2="182" stroke="#96805c" stroke-width="1.6"/>
- <line id="wDimR" x1="360" y1="170" x2="360" y2="182" stroke="#96805c" stroke-width="1.6"/>
- <text id="wDimT" x="210" y="197" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#6b573f">길이 1.0 m</text>
- </g>
- <!-- 도선 -->
- <rect id="wBand" x="60" y="80" width="300" height="34" rx="6" fill="#c98a4e" stroke="#7d451e" stroke-width="2"/>
- <g id="wParts"></g>
- <!-- 집게 -->
- <g id="wClampL">
- <rect x="34" y="66" width="26" height="62" rx="5" fill="#b9873c" stroke="#5f3f12" stroke-width="2"/>
- <line x1="10" y1="97" x2="34" y2="97" stroke="#96805c" stroke-width="3"/>
- </g>
- <g id="wClampR">
- <rect x="360" y="66" width="26" height="62" rx="5" fill="#b9873c" stroke="#5f3f12" stroke-width="2"/>
- <line x1="386" y1="97" x2="410" y2="97" stroke="#96805c" stroke-width="3"/>
- </g>
- <text id="wMatT" x="210" y="52" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" font-weight="700" fill="#4a3a26">구리</text>
- </svg>
- </div>
-
- <div class="simctl">
- <div class="ctl">
- <label><span>📏 도선의 길이</span><span class="val" id="wLenVal">1.0 m</span></label>
- <input type="range" id="wLen" min="0.5" max="2" step="0.1" value="1">
- </div>
- <div class="ctl">
- <label><span>⭕ 도선의 굵기</span><span class="val" id="wThkVal">보통</span></label>
- <input type="range" id="wThk" min="0" max="2" step="1" value="1">
- </div>
- <div class="ctl">
- <label><span>🧱 도선의 재질</span></label>
- <div class="btn-row" id="wMat" style="margin-top:6px">
- <button class="btn ghost sm on" data-mat="cu">구리</button>
- <button class="btn ghost sm" data-mat="fe">철</button>
- <button class="btn ghost sm" data-mat="ni">니크롬</button>
- </div>
- </div>
-
- <div class="readout" style="margin-top:12px">
- <div class="r"><div class="lab2">🧱 저항</div>
- <div class="v" id="wR" style="color:#8a5f24">1.00<small> Ω</small></div></div>
- </div>
-
- <div class="rgauge">
- <div class="track"><span class="knob" id="wKnob" style="left:22%"></span></div>
- <div class="ends"><span>저항 낮음</span><span>저항 높음</span></div>
- <div style="margin-top:8px;font-size:14.5px;color:var(--ink-dim)">
- <span id="wMsg">세 손잡이를 하나씩만 바꿔 보세요.</span>
- <span class="rdelta" id="wDelta"></span></div>
- </div>
- </div>
- </div>
-
- <div class="btn-row" style="margin-top:14px">
- <button class="btn" id="cmpBtn">🔍 두 도선 비교하기</button>
- <button class="btn ghost sm" id="wReset">처음 조건으로</button>
- </div>
-
- <div id="cmpBox" style="display:none;margin-top:12px">
- <p class="help" style="margin-bottom:8px">
- <b class="k">한 가지만 다르게</b> 두고 견주어 봅니다. 무엇을 다르게 할까요?</p>
- <div class="btn-row" id="cmpPick">
- <button class="btn ghost sm on" data-cmp="len">길이만 다르게</button>
- <button class="btn ghost sm" data-cmp="thk">굵기만 다르게</button>
- <button class="btn ghost sm" data-cmp="mat">재질만 다르게</button>
- </div>
- <div class="cmp2">
- <div class="cmpcard" id="cmpA">
- <div class="ttl">도선 A <span class="badge2" id="cmpABadge">지금 조건</span></div>
- <div id="cmpADesc" style="font-size:15px;color:var(--ink-dim)"></div>
- <div class="val2" id="cmpAR">1.00 Ω</div>
- </div>
- <div class="cmpcard" id="cmpB">
- <div class="ttl">도선 B <span class="badge2" id="cmpBBadge">비교</span></div>
- <div id="cmpBDesc" style="font-size:15px;color:var(--ink-dim)"></div>
- <div class="val2" id="cmpBR">2.00 Ω</div>
- </div>
- </div>
- <p class="help" id="cmpMsg" style="margin-top:10px"></p>
- </div>
- </div>
-
- <!-- 관계 정리 -->
- <h3 class="card-t" style="margin-top:20px;margin-bottom:4px">📌 찾아낸 관계</h3>
- <div class="rules3">
- <div class="rule3" style="--c:#2e5f8f">
- <h4>📏 길이</h4>
- <svg viewBox="0 0 220 92" role="img" aria-label="짧은 도선보다 긴 도선의 저항이 크다">
- <rect x="14" y="18" width="70" height="15" rx="4" fill="#c98a4e" stroke="#7d451e" stroke-width="1.6"/>
- <text x="49" y="48" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13" fill="#6b573f">짧다</text>
- <rect x="14" y="60" width="150" height="15" rx="4" fill="#c98a4e" stroke="#7d451e" stroke-width="1.6"/>
- <text x="89" y="90" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13" fill="#6b573f">길다</text>
- <text x="196" y="30" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="800" fill="#2c7a44">↓</text>
- <text x="196" y="72" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="800" fill="#b3362e">↑</text>
- </svg>
- <p>길어질수록 저항이 <b style="color:#b3362e">커져요</b>.<br>전하가 지나갈 길이 그만큼 멀어져요.</p>
- </div>
- <div class="rule3" style="--c:#3a7a3f">
- <h4>⭕ 굵기</h4>
- <svg viewBox="0 0 220 92" role="img" aria-label="굵은 도선보다 가는 도선의 저항이 크다">
- <rect x="14" y="12" width="150" height="26" rx="6" fill="#c98a4e" stroke="#7d451e" stroke-width="1.6"/>
- <text x="89" y="52" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13" fill="#6b573f">굵다</text>
- <rect x="14" y="64" width="150" height="9" rx="4" fill="#c98a4e" stroke="#7d451e" stroke-width="1.6"/>
- <text x="89" y="90" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13" fill="#6b573f">가늘다</text>
- <text x="196" y="30" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="800" fill="#2c7a44">↓</text>
- <text x="196" y="74" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="800" fill="#b3362e">↑</text>
- </svg>
- <p>굵어질수록 저항이 <b style="color:#2c7a44">작아져요</b>.<br>전하가 지나갈 길이 넓어져요.</p>
- </div>
- <div class="rule3" style="--c:#8a5f24">
- <h4>🧱 재질</h4>
- <svg viewBox="0 0 220 92" role="img" aria-label="같은 길이와 굵기라도 재질에 따라 저항이 다르다">
- <rect x="14" y="14" width="130" height="16" rx="4" fill="#c98a4e" stroke="#7d451e" stroke-width="1.6"/>
- <text x="180" y="27" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13" fill="#6b573f">구리</text>
- <rect x="14" y="40" width="130" height="16" rx="4" fill="#9aa0a6" stroke="#5e6367" stroke-width="1.6"/>
- <text x="180" y="53" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13" fill="#6b573f">철</text>
- <rect x="14" y="66" width="130" height="16" rx="4" fill="#8d7f6a" stroke="#5a5044" stroke-width="1.6"/>
- <text x="180" y="79" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13" fill="#6b573f">니크롬</text>
- </svg>
- <p>길이와 굵기가 같아도<br>재질이 다르면 저항이 <b style="color:#8a5f24">달라져요</b>.</p>
- </div>
- </div>
- </div>
 
 
-<!-- ═══════ '왜 그럴까?' — 저항은 왜 길이·굵기에 따라 달라지나 ═══════ -->
-<div class="why-mod" id="whyWire">
- <div class="why-q"><span class="qi">💡</span><span class="qt">관계는 찾았습니다. 그런데 <span class="t1">왜</span><br>길면 커지고, 굵으면 작아질까?</span></div>
 
- <div class="why-step" style="border-top:0;padding-top:16px">
- <div class="why-h"><span class="no">1</span>기억해 보기</div>
- <p class="say">1차시에서 원자를 들여다봤죠. 금속 도선 속에는 <b class="k">제자리에서 흔들리는 원자</b>가 빽빽하고,
- 그 사이를 <b class="k">자유롭게 돌아다니는 전자</b>가 있습니다. 전류는 이 전자들이 한쪽으로 밀려 흐르는 것이었어요.</p>
- <div class="keyline-s"><span class="kw">도선 속</span><span class="arw">→</span><span class="kw">원자는 빽빽</span>
- <span class="kw">전자는 돌아다님</span><span class="memo"></span></div>
- </div>
 
- <div class="why-step">
- <div class="why-h"><span class="no">2</span>힌트</div>
- <div class="clue" style="margin-top:4px"><div class="cl-h">🔍 이렇게 보면 보입니다</div>
- <p>전자가 도선을 지나가려면 <b>원자들 사이를 헤치고</b> 가야 합니다.
- 헤치고 가야 할 구간이 <b>길어지면</b> 어떻게 될까요? 지나갈 통로가 <b>넓어지면</b>요?</p></div>
- </div>
 
- <div class="why-step">
- <div class="why-h"><span class="no">3</span>먼저 생각해 보기</div>
- <p>도선을 <b>2배 길게</b> 하면, 1초 동안 어느 한 지점을 지나가는 전자 수는 어떻게 될까요?</p>
- <div class="wpick small" id="wwPick">
- <button data-v="up">더 많아진다</button><button data-v="down">더 적어진다</button><button data-v="same">그대로다</button></div>
- <div class="verdict" id="wwSay" style="display:none"></div>
- </div>
 
- <div class="why-step">
- <div class="why-h"><span class="no">4</span>직접 확인하기 — 도선 속을 들여다보기</div>
- <p>도선을 잘라 옆에서 본 그림입니다. <span class="t3">초록 점</span>이 전자, <span style="color:var(--ink-mute)">회색 점</span>이 제자리에서 흔들리는 원자예요.
- 가운데 <b class="k">세로선을 지나가는 전자 수</b>를 세면 그것이 곧 전류입니다. 손잡이를 움직여 보세요.</p>
- <div class="simwrap" style="margin-top:14px">
- <div class="simstage"><canvas id="rwCv" width="660" height="230"></canvas></div>
- <div class="simctl">
- <h4>🎛️ 도선 바꾸기</h4>
- <div class="ctl"><label>도선의 길이 <span class="val" id="rwLenV">1배</span></label>
- <input type="range" id="rwLen" min="1" max="3" step="1" value="1" aria-label="도선의 길이"></div>
- <div class="ctl"><label>도선의 굵기 <span class="val" id="rwThkV">1배</span></label>
- <input type="range" id="rwThk" min="1" max="3" step="1" value="1" aria-label="도선의 굵기"></div>
- <div class="readout">
- <div class="r"><div class="lab2">1초에 지나간 전자 수 <small>(= 전류)</small></div><div class="v" id="rwI">–</div></div>
- <div class="r"><div class="lab2">1초에 부딪힌 횟수</div><div class="v" id="rwC">–</div></div>
- <div class="r"><div class="lab2">전자가 나아가는 빠르기</div><div class="v" id="rwV">–</div></div>
- <div class="r"><div class="lab2">상대적인 저항</div><div class="v" id="rwR">–</div></div>
- </div>
- <div class="btn-row" style="margin-top:12px"><button class="btn sm ghost" id="rwReset">↺ 처음으로</button></div>
- </div>
- </div>
- <div class="verdict" id="rwObs" style="display:none"></div>
- </div>
 
- <div class="wlockmsg" id="wwLockMsg">🔒 위 화면에서 <b>길이와 굵기를 모두 바꿔 본 뒤에</b> 나머지가 열립니다.</div>
 
- <div class="wlock" id="wwAfter">
- <div class="why-step">
- <div class="why-h"><span class="no">5</span>무엇이 달라졌나</div>
- <ul class="obs-list">
- <li>📏 <b>길게</b> 했더니 — 전자가 <b>더 느리게</b> 나아가고, 1초에 지나가는 전자 수가 <b>줄었다.</b></li>
- <li>⭕ <b>굵게</b> 했더니 — 전자의 빠르기는 그대로인데, 한꺼번에 지나가는 <b>전자 수가 늘었다.</b></li>
- <li>둘 다 전자가 부딪히는 것은 똑같은데, <b>줄어드는 방식이 서로 달랐다.</b></li>
- </ul>
- </div>
-
- <div class="why-step">
- <div class="why-h"><span class="no">6</span>이제 이유를 연결해 보자</div>
- <p class="wsub">📏 길이 — 밀어 주는 힘이 긴 구간에 나뉜다</p>
- <p class="say">전지가 만드는 <b class="k">같은 전압</b>을 더 <b class="k">긴 구간에 나눠 걸어야</b> 하니,
- 전자를 앞으로 미는 힘이 구간마다 약해집니다. 게다가 헤치고 지나가야 할 원자 구간도 그만큼 길어져요.
- 그래서 전자가 <b class="k">더 느리게</b> 흐르고, 한 지점을 지나가는 전자 수가 줄어듭니다 → <b class="k">저항이 커진 것</b>입니다.</p>
- <div class="keyline-s"><span class="kw">길이 ↑</span><span class="arw">→</span><span class="kw">전자가 느려짐</span>
- <span class="arw">→</span><span class="kw hi">저항 ↑</span><span class="memo"></span></div>
- <p class="wsub">⭕ 굵기 — 한 번에 지나갈 수 있는 전자가 늘어난다</p>
- <p class="say">굵어져도 전자 하나하나의 <b class="k">빠르기는 그대로</b>입니다. 대신 통로의 단면이 넓어져
- <b class="k">같은 시간에 지나갈 수 있는 전자 수가 늘어나요.</b> 그래서 전류가 커집니다 → <b class="k">저항이 작아진 것</b>이죠.
- 넓은 문으로 사람이 한꺼번에 더 많이 빠져나가는 것과 같습니다.</p>
- <div class="keyline-s"><span class="kw">굵기 ↑</span><span class="arw">→</span><span class="kw">한 번에 더 많이</span>
- <span class="arw">→</span><span class="kw hi">저항 ↓</span><span class="memo"></span></div>
- <div class="note class"><span class="ic">💬</span><div><b>모형의 한계</b> — 화면의 전자는 보기 좋게 크고 느리게 그린 것입니다.
- 실제 도선 속 전자는 훨씬 촘촘하고, 밀려 나아가는 빠르기는 오히려 아주 느려요(1초에 1 mm도 못 갑니다).
- 그런데도 스위치를 켜면 곧바로 불이 켜지는 것은 <b>도선 속 전자가 모두 동시에 밀리기 때문</b>입니다.</div></div>
- </div>
-
- <div class="why-step">
- <div class="why-h"><span class="no">7</span>한 줄 정리</div>
- <div class="rulebox"><div class="rb-h">📐 이렇게 정리됩니다</div>
- <p style="margin-top:8px;font-size:16px;line-height:1.9">
- 저항은 <b class="t1">전자가 지나가기 어려운 정도</b>다.<br>
- 📏 길수록 — 밀어 주는 힘이 나뉘고 헤쳐 갈 구간도 길어져 <b class="t1">저항이 커진다</b><br>
- ⭕ 굵을수록 — 한 번에 지나갈 수 있는 전자가 늘어 <b class="t1">저항이 작아진다</b><br>
- 🧱 재질이 다르면 — 원자가 놓인 모양이 달라 <b class="t1">저항도 달라진다</b></p>
- </div>
- </div>
- </div>
-</div>
-
- <!-- ══════════ 오개념 방지 ══════════ -->
- <div class="card" style="margin-top:18px">
- <h3 class="card-t" style="margin-bottom:6px">🎚️ 전압을 크게 하면 저항도 커질까?</h3>
- <p class="lead" style="font-size:17px;margin-bottom:10px">
- <b class="k">같은 저항체</b>를 그대로 두고 전압만 올려 봅시다. 무엇이 변하고 무엇이 그대로인지 보세요.</p>
-
- <div class="lab">
- <div class="simgrid">
- <div class="wirestage">
- <svg id="oSvg" viewBox="0 0 560 190" role="img"
- aria-label="전지와 저항체가 연결된 회로. 전압을 올리면 회로를 도는 전하가 빨라지고 전류가 커지지만, 저항체의 저항은 그대로다.">
- <rect x="70" y="40" width="420" height="110" rx="10" fill="none" stroke="#a05c2c" stroke-width="3"/>
- <rect x="240" y="26" width="80" height="28" rx="5" fill="#efe6d2" stroke="#8a5f24" stroke-width="2.5"/>
- <text x="280" y="46" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="800" fill="#8a5f24">10 Ω</text>
- <text x="280" y="18" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" fill="#6b573f">저항체 (바꾸지 않음)</text>
- <g id="oBat">
- <line x1="252" y1="136" x2="252" y2="164" stroke="#7d5ba6" stroke-width="4"/>
- <line x1="268" y1="144" x2="268" y2="156" stroke="#7d5ba6" stroke-width="8"/>
- <text x="236" y="182" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="800" fill="#7d5ba6" id="oBatT">1.0 V</text>
- </g>
- <g id="oParts"></g>
- </svg>
- </div>
- <div class="simctl">
- <div class="ctl">
- <label><span>🎚️ 전원 전압</span><span class="val" id="oVVal">1.0 V</span></label>
- <input type="range" id="oV" min="1" max="5" step="0.5" value="1">
- </div>
- <div class="ohmbars">
- <div class="obar"><span class="nm" style="color:#7d5ba6">전압</span>
- <div class="bar"><i id="oBarV" style="background:#7d5ba6"></i></div>
- <span class="num" id="oNumV" style="color:#7d5ba6">1.0 V</span></div>
- <div class="obar"><span class="nm" style="color:#a05c2c">전류</span>
- <div class="bar"><i id="oBarI" style="background:#a05c2c"></i></div>
- <span class="num" id="oNumI" style="color:#a05c2c">0.10 A</span></div>
- <div class="obar fixed"><span class="nm" style="color:#8a5f24">저항</span>
- <div class="bar"><i id="oBarR" style="background:#8a5f24;width:50%"></i></div>
- <span class="num" id="oNumR" style="color:#8a5f24">10 Ω</span></div>
- </div>
- <p class="help" id="oMsg" style="margin-top:10px">전압을 올려 보세요.</p>
- </div>
- </div>
-
- <div class="dtable-wrap" style="margin-top:12px">
- <table class="dtable">
- <thead><tr><th>전압</th><th>전류</th><th>저항 (= 전압 ÷ 전류)</th></tr></thead>
- <tbody id="oRows"></tbody>
- </table>
- </div>
- </div>
-
- <div class="keyline">
- <span class="no">✗ 전압이 커져서 저항이 커진 것이 아닙니다.</span><br>
- <span class="yes">○ 같은 저항에서 전압이 커지면 전류가 커집니다.</span><br>
- <span style="font-size:15px;color:var(--ink-dim)">전압을 올리면 전류도 함께 커지기 때문에,
- 전압 ÷ 전류인 <b>저항은 그대로</b>입니다.</span>
- </div>
- <p class="help" style="margin-top:10px">
- <b class="k">I = V ÷ R</b> <span style="color:var(--danger);font-weight:800">(R이 일정할 때)</span> —
- 저항은 도선의 재질·길이·굵기가 정하는 값이에요.</p>
- </div>
-
- <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 연필로 그리는 저항</h3><p class="expc-s">방금 시뮬레이션에서 본 <b>길이와 굵기</b>를 종이 위에서 확인합니다<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">1</span><h4>연필 그림 회로</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · 4B 이상 진한 연필, 도화지, LED, 건전지 2~3개, 집게 전선, (있으면) 저항계·전압계</div><ol><li>도화지에 <b>10 cm 길이, 1 cm 폭</b>의 띠를 아주 진하게 여러 번 덧칠합니다. 흑연이 종이에 두껍게 얹히도록요.</li><li>띠의 양 끝을 집게로 물고, 건전지와 LED를 연결합니다.</li><li>집게 하나를 띠를 따라 <b>움직여</b> 간격을 넓혔다 좁혔다 해 봅니다.</li><li>같은 간격에서 띠를 <b>더 진하고 굵게</b> 덧칠한 뒤 다시 봅니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 집게 간격을 <b>넓히면 어두워지고</b>, 띠를 <b>덧칠하면 밝아집니다</b>. 저항계가 있다면 숫자로도 확인해 보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">흑연은 전기가 통하지만 금속만큼 잘 통하지는 않습니다 — 그래서 <b>저항</b> 역할을 하죠.<br><b>간격을 넓힌다</b> = 전자가 지나야 할 길이 <b>길어진다</b> → 저항 커짐 → 전류 줄어듦 → 어두워짐.<br><b>덧칠한다</b> = 흑연 층이 <b>두꺼워진다</b> = 길이 <b>넓어진다</b> → 저항 작아짐 → 밝아짐.<br>저항은 <b>길이에 비례하고 단면적에 반비례한다</b> — 방금 시뮬레이션에서 슬라이더로 움직였던 그 관계를 연필로 다시 그린 겁니다.</div></details><p class="exp-tip"><span>💡</span><span>잘 안 되면 연필을 눕혀 칠하세요. 그래도 안 되면 <b>연필심 자체</b>(샤프심 여러 개)를 회로에 물리면 확실합니다.</span></p></div></details></div>
  <div class="card" style="margin-top:18px">
  <h3 class="card-t" style="margin-bottom:6px">⚠️ 여기서 자주 어긋납니다</h3>
  <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ①</b> — "I = V/R 이니까, <b>전압을 높이면 저항도 같이 커진다</b>."<br>
@@ -2204,9 +1723,13 @@ const SAVE='elec_ohm_v1';
 
 /* ⚡ 옴의 실험대 — 짧은 니크롬선 2Ω · 긴 니크롬선 4Ω (모든 표시값은 I=V/R로 계산)
  1.5V: 0.75A/0.375A · 3.0V: 1.5A/0.75A · 4.5V: 2.25A/1.125A · 6.0V: 3A/1.5A */
-const LAB_R={short:2, long:4};
-const LAB_NAME={short:'짧은 니크롬선', long:'긴 니크롬선'};
-const LAB_COL={short:'#a05c2c', long:'#8a5f24'};
+/* 니크롬선 6종 — 기준(짧다·보통) 2 Ω. R = 2 × 길이배수 ÷ 굵기배수 */
+const LAB_R   ={s_t:4, s_m:2, s_k:1, l_t:8, l_m:4, l_k:2};
+const LAB_NAME={s_t:'짧다·가늘다', s_m:'짧다·보통', s_k:'짧다·굵다',
+                l_t:'길다·가늘다', l_m:'길다·보통', l_k:'길다·굵다'};
+const LAB_COL ={s_t:'#b23a30', s_m:'#a05c2c', s_k:'#2c7a44',
+                l_t:'#7d5ba6', l_m:'#8a5f24', l_k:'#2e5f8f'};
+const LEN_NAME={s:'짧다', l:'길다'}, THK_NAME={t:'가늘다', m:'보통', k:'굵다'};
 
 /* 도체·부도체·반도체 가려내기 — 정답과 판정 후 한 줄 설명 */
 const SORT_WHY={
@@ -2239,12 +1762,6 @@ const QUIZ_SETS={
 };
 
 const GAME_QS=[
- {id:"o1",difficulty:"하",
- intent:"도선의 길이·굵기·재질이 저항에 미치는 영향을 바르게 알고 있는지 확인한다.",
- stem:"전기 저항에 대한 설명으로 옳지 <u>않은</u> 것은?",
- ch:[{t:"저항은 전하의 흐름을 방해하는 정도를 나타내며, 단위로 옴(Ω)을 쓴다.",ok:0},{t:"재질과 굵기가 같은 니크롬선이라면 길이가 길수록 저항이 작아진다.",ok:1},{t:"재질과 길이가 같은 니크롬선이라면 굵을수록 저항이 작아진다.",ok:0},{t:"길이와 굵기가 똑같아도 재질이 다르면 저항의 크기가 다를 수 있다.",ok:0},{t:"저항이 클수록 같은 전압에서 흐르는 전류의 세기가 약해진다.",ok:0}],
- why:"도선은 <b>길수록 저항이 커집니다</b>. 전자가 지나가야 할 길이 길어져 방해를 더 많이 받기 때문이므로 ②는 반대로 말한 진술입니다.<br>③을 틀렸다고 고르는 학생이 많은데, 굵어지면 전자가 지나갈 통로가 넓어지므로 <b>굵을수록 저항은 작아집니다</b>. 길이는 비례, 굵기는 반비례라고 짝지어 외워 두세요."},
-
  {id:"o2",difficulty:"하",
  intent:"옴의 법칙에 값을 정방향으로 대입하고 A를 mA로 환산할 수 있는지 확인한다.",
  svg:"<svg viewBox=\\\"0 0 520 190\\\" role=\\\"img\\\" aria-label=\\\"전압이 9 V인 전지에 저항이 180 옴인 꼬마전구를 연결한 회로.\\\"><path d=\\\"M 120 50 H 224 M 296 50 H 400 V 150 H 296 M 224 150 H 120 Z\\\" fill=\\\"none\\\" stroke=\\\"#4a3a26\\\" stroke-width=\\\"2.4\\\"/><path d=\\\"M 120 50 V 150\\\" fill=\\\"none\\\" stroke=\\\"#4a3a26\\\" stroke-width=\\\"2.4\\\"/><line x1=\\\"244\\\" y1=\\\"50\\\" x2=\\\"251.2\\\" y2=\\\"50\\\" stroke=\\\"#4a3a26\\\" stroke-width=\\\"2.4\\\"/><path d=\\\"M 251.2 50 A 8.8 8.8 0 0 1 268.8 50\\\" fill=\\\"none\\\" stroke=\\\"#4a3a26\\\" stroke-width=\\\"2.4\\\"/><line x1=\\\"268.8\\\" y1=\\\"50\\\" x2=\\\"276\\\" y2=\\\"50\\\" stroke=\\\"#4a3a26\\\" stroke-width=\\\"2.4\\\"/><circle cx=\\\"260\\\" cy=\\\"50\\\" r=\\\"16\\\" fill=\\\"none\\\" stroke=\\\"#4a3a26\\\" stroke-width=\\\"2.4\\\"/><text x=\\\"260\\\" y=\\\"22\\\" text-anchor=\\\"middle\\\" font-family=\\\"Gowun Dodum, Pretendard, sans-serif\\\" font-size=\\\"13.5\\\" fill=\\\"#4a3a26\\\">꼬마전구 180 Ω</text><line x1=\\\"224\\\" y1=\\\"150\\\" x2=\\\"246\\\" y2=\\\"150\\\" stroke=\\\"#4a3a26\\\" stroke-width=\\\"2.4\\\"/><line x1=\\\"246\\\" y1=\\\"133\\\" x2=\\\"246\\\" y2=\\\"167\\\" stroke=\\\"#4a3a26\\\" stroke-width=\\\"3\\\"/><line x1=\\\"258\\\" y1=\\\"141\\\" x2=\\\"258\\\" y2=\\\"159\\\" stroke=\\\"#4a3a26\\\" stroke-width=\\\"6\\\"/><line x1=\\\"258\\\" y1=\\\"150\\\" x2=\\\"280\\\" y2=\\\"150\\\" stroke=\\\"#4a3a26\\\" stroke-width=\\\"2.4\\\"/><text x=\\\"252\\\" y=\\\"182\\\" text-anchor=\\\"middle\\\" font-family=\\\"Gowun Dodum, Pretendard, sans-serif\\\" font-size=\\\"13.5\\\" fill=\\\"#4a3a26\\\">전지 9 V</text><text x=\\\"440\\\" y=\\\"100\\\" text-anchor=\\\"middle\\\" font-family=\\\"Gowun Dodum, Pretendard, sans-serif\\\" font-size=\\\"13.5\\\" fill=\\\"#a05c2c\\\" font-weight=\\\"700\\\">전류 = ?</text></svg>",
@@ -2341,7 +1858,8 @@ const A={ctx:null,
 ['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>A.ensure(),{once:true}));
 
 let S=load()||{tab:'open',visited:{},seen:{},poe:'',rows:[],concl:'',cloze:{},mini:{},sortDone:{},essay:'',best:0,medals:{}};
-S.visited=S.visited||{};S.seen=S.seen||{};S.rows=S.rows||[];S.cloze=S.cloze||{};S.mini=S.mini||{};
+S.visited=S.visited||{};S.seen=S.seen||{};S.rows=S.rows||[];
+S.rows=S.rows.map(r=>r.w==='short'?{v:r.v,w:'s_m'}:r.w==='long'?{v:r.v,w:'l_m'}:r).filter(r=>LAB_R[r.w]!==undefined);S.cloze=S.cloze||{};S.mini=S.mini||{};
 S.medals=S.medals||{};S.essay=S.essay||'';S.poe=S.poe||'';S.concl=S.concl||'';S.sortDone=S.sortDone||{};
 let CLOZE_TOTAL=0;
 S.wwPred=S.wwPred||'';S.wwLen=S.wwLen||0;S.wwThk=S.wwThk||0;
@@ -2362,8 +1880,6 @@ function progChecks(){
  {label:'3단계 · 빈칸 모두 채우기', ok:CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL},
  {label:'3단계 · 개념 확인 퀴즈', ok:!!S.mini.law},
  {label:'3단계 · 도선 속을 들여다보고 길이·굵기 바꿔 보기', ok:!!S.wwLen&&!!S.wwThk},
- {label:'3단계 · 도선 실험대에서 세 가지 다 바꿔 보기', ok:Object.keys(S.wireTried||{}).length>=3},
- {label:'3단계 · 전압을 3단계 이상 올려 보기', ok:Object.keys(S.ohmSeen||{}).length>=3},
  {label:'4단계 · 물질 8개 가려내기', ok:Object.keys(S.sortDone||{}).length>=8},
  {label:'4단계 · 사고력 문제 답쓰기', ok:(S.essay||'').trim().length>=15},
  {label:'5단계 · 확인 문제 완주', ok:S.best>0}
@@ -2378,7 +1894,7 @@ function updateProgress(){
  const done={open:Object.keys(S.seen||{}).length>=1,
  explore:!!S.poe&&labOk()&&(S.concl||'').trim().length>=10,
  law:CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL&&!!S.mini.law
- &&Object.keys(S.wireTried||{}).length>=3&&Object.keys(S.ohmSeen||{}).length>=3,
+ ,
  sort:Object.keys(S.sortDone||{}).length>=8&&(S.essay||'').trim().length>=15,
  check:S.best>0, beyond:!!S.visited.beyond};
  $$('#tabNav button').forEach(b=>b.classList.toggle('done',!!done[b.dataset.tab]));
@@ -2468,110 +1984,232 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  paint();
 })();
 
-/* ═══════ ⚡ 2단계 · 옴의 실험대 ═══════ */
+/* ═══════ ⚡ 2단계 · 옴의 실험대 ═══════
+   전자는 (−)극에서 나와 회로를 돌아 (+)극으로 들어간다.
+   전자 사이 간격은 일정하게 두고 속력만 전류에 비례시킨다 —
+   전류 = 1초 동안 단면을 지나는 전하의 양, 이라는 정의를 눈으로 보이게 하려는 것. */
 (function(){
  const slider=$('#vSlider');if(!slider)return;
- let V=1.5, W='short';
+ let V=1.5, LEN='s', THK='m';
+ const key=()=>LEN+'_'+THK;
+ const Rv=()=>LAB_R[key()];
+ const cur=()=>V/Rv();
  const fmtA=i=>String(Math.round(i*1000)/1000);
- const cur=()=>V/LAB_R[W];
+
+ /* ── 니크롬선 그림 : 감김 수=길이, 선 두께=굵기 ── */
+ const TURNS={s:8,l:16}, SW={t:2,m:3.4,k:6}, AMPX={s:16,l:22};
+ function coilPath(){
+   const y0=116,y1=204,x=510,n=TURNS[LEN],a=AMPX[LEN],st=(y1-y0)/(n+1);
+   let d='M'+x+' '+y0;
+   for(let i=1;i<=n;i++) d+=' L'+(x+(i%2?a:-a))+' '+(y0+st*i).toFixed(1);
+   return d+' L'+x+' '+y1;
+ }
+
+ /* ── 전자가 도는 길 : (−)단자 → 왼쪽 → 위 → 전류계 → 니크롬선 → 스위치 → (+)단자 ── */
+ const PATH=[[136,230],[110,230],[110,90],[510,90],[510,230],[284,230],[136,230]];
+ const SEG=[],ACC=[];let TOT=0;
+ for(let i=0;i<PATH.length-1;i++){
+   const a=PATH[i],b=PATH[i+1],l=Math.hypot(b[0]-a[0],b[1]-a[1]);
+   SEG.push({x0:a[0],y0:a[1],x1:b[0],y1:b[1],l:l,bat:i===PATH.length-2});
+   ACC.push(TOT);TOT+=l;
+ }
+ function at(u){
+   u=((u%TOT)+TOT)%TOT;
+   for(let i=0;i<SEG.length;i++){const g=SEG[i];
+     if(u<=ACC[i]+g.l){const t=(u-ACC[i])/g.l;
+       return{x:g.x0+(g.x1-g.x0)*t,y:g.y0+(g.y1-g.y0)*t,hide:g.bat};}}
+   return{x:PATH[0][0],y:PATH[0][1],hide:true};
+ }
+ const NE=18, GAP=TOT/NE, SPEED=190;      /* 1 A 일 때 초당 190 px */
+ const egroup=document.getElementById('ohEl'), els=[];
+ if(egroup)for(let i=0;i<NE;i++){
+   const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+   c.setAttribute('r','5.2');c.setAttribute('fill','#2e5f8f');
+   c.setAttribute('stroke','#faf4e6');c.setAttribute('stroke-width','1.1');
+   egroup.appendChild(c);els.push(c);
+ }
+ let base=0,acc=0,marks=[],tPrev=0;
+ function placeEls(){
+   for(let i=0;i<els.length;i++){
+     const p=at(base+i*GAP);
+     els[i].setAttribute('cx',p.x.toFixed(1));
+     els[i].setAttribute('cy',p.y.toFixed(1));
+     els[i].setAttribute('opacity',p.hide?'0':'1');
+   }
+ }
+ function tick(t){
+   const now=t/1000, dt=Math.min(.05,tPrev?now-tPrev:0); tPrev=now;
+   const vis=$('#panel-explore')&&$('#panel-explore').classList.contains('show')
+     &&!document.body.classList.contains('cover-on');
+   const sp=SPEED*cur();
+   if(vis&&!reduceMotion&&sp>0){
+     base+=sp*dt; acc+=sp*dt/GAP;
+     while(acc>=1){acc-=1;marks.push(now);}
+   }
+   while(marks.length&&now-marks[0]>1)marks.shift();
+   if(vis){placeEls();
+     const c=$('#ohCross');
+     if(c)c.innerHTML=(sp>0?marks.length:0)+'<small> 개</small>';}
+   requestAnimationFrame(tick);
+ }
+
  function paintMeter(){
- const i=cur();
- $('#vVal').textContent=V.toFixed(1)+' V';
- $('#wVal').textContent=W==='short'?'짧다':'길다';
- $('#rVolt').innerHTML=V.toFixed(1)+'<small> V</small>';
- $('#rAmp').innerHTML=fmtA(i)+'<small> A</small>';
- $('#rMa').innerHTML=Math.round(i*1000)+'<small> mA</small>';
- $('#ohVolt').textContent=V.toFixed(1)+' V';
- $('#ohAmp').textContent=fmtA(i)+' A';
- $('#wireS').setAttribute('opacity',W==='short'?'1':'0');
- $('#wireL').setAttribute('opacity',W==='long'?'1':'0');
- $('#ohFlow').setAttribute('opacity',i>0?'1':'0');
- $('#ohCap').textContent = V===0 ? '전압이 0 V — 전류가 흐르지 않습니다'
- : `${LAB_NAME[W]} · ${V.toFixed(1)} V → 전류계 눈금 ${fmtA(i)} A`;
- slider.style.setProperty('--p',(V/6*100)+'%');
- $$('[data-wire]').forEach(b=>b.classList.toggle('on',b.dataset.wire===W));
+   const i=cur(), r=Rv();
+   $('#vVal').textContent=V.toFixed(1)+' V';
+   $('#wLenV').textContent=LEN_NAME[LEN];
+   $('#wThkV').textContent=THK_NAME[THK];
+   $('#rVolt').innerHTML=V.toFixed(1)+'<small> V</small>';
+   $('#rAmp').innerHTML=fmtA(i)+'<small> A</small>';
+   $('#rMa').innerHTML=Math.round(i*1000)+'<small> mA</small>';
+   $('#rRes').innerHTML=r+'<small> Ω</small>';
+   $('#ohVolt').textContent=V.toFixed(1)+' V';
+   $('#ohAmp').textContent=fmtA(i)+' A';
+   $('#ohWire').setAttribute('d',coilPath());
+   $('#ohWire').setAttribute('stroke-width',SW[THK]);
+   $('#ohWireT2').textContent=LEN_NAME[LEN]+' · '+THK_NAME[THK];
+   $('#ohWireR').textContent=r+' Ω';
+   $('#ohWireR').setAttribute('fill',LAB_COL[key()]);
+   $('#ohFlow').setAttribute('opacity',i>0?'1':'0');
+   $('#ohCap').textContent = V===0 ? '전압이 0 V — 전류가 흐르지 않아 전자가 한쪽으로 밀리지 않습니다'
+     : LAB_NAME[key()]+' ('+r+' Ω) · '+V.toFixed(1)+' V → 전류계 눈금 '+fmtA(i)+' A';
+   slider.style.setProperty('--p',(V/6*100)+'%');
+   $$('#ohLen button').forEach(b=>b.classList.toggle('on',b.dataset.len===LEN));
+   $$('#ohThk button').forEach(b=>b.classList.toggle('on',b.dataset.thk===THK));
+   if(reduceMotion)placeEls();
  }
+
+ /* ── 변인을 바꾸면 결과를 팝업으로 알려 준다 ── */
+ function announce(what,r0,i0){
+   const r=Rv(), i=cur();
+   let why='';
+   if(what==='v') why = V===0 ? '전압이 0이면 미는 힘이 없어 <b>전류도 0</b>입니다.'
+     : '저항은 그대로인데 미는 힘이 커져 <b>전류가 커집니다</b>.';
+   if(what==='len') why = LEN==='l'
+     ? '길수록 전자가 원자와 <b>더 많이 부딪혀</b> 저항이 커집니다.'
+     : '짧을수록 부딪히는 횟수가 줄어 <b>저항이 작아집니다</b>.';
+   if(what==='thk') why = (THK==='k'||(THK==='m'&&r<r0))
+     ? '굵을수록 전자가 단면을 <b>지나가기 쉬워</b> 저항이 작아집니다.'
+     : '가늘수록 지나갈 통로가 좁아 <b>저항이 커집니다</b>.';
+   const rs = r===r0 ? '저항 <b>'+r+' Ω</b>(그대로)' : '저항 '+r0+' Ω → <b>'+r+' Ω</b>';
+   const is = '전류 '+fmtA(i0)+' A → <b>'+fmtA(i)+' A</b>';
+   toast(rs+' · '+is+'<br>'+why, i>i0?'good':(i<i0?'warn':''));
+ }
+
  function paintTable(){
- const tb=$('#labTable');
- const rows=S.rows.slice().sort((a,b)=>(a.w===b.w?a.v-b.v:(a.w==='short'?-1:1)));
- let html='<tr><th>전압 (V)</th><th>니크롬선</th><th>전류의 세기 (A)</th><th>전류의 세기 (mA)</th><th></th></tr>';
- if(!rows.length)html+='<tr><td class="empty" colspan="5">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 눌러 보세요</td></tr>';
- rows.forEach(r=>{const i=r.v/LAB_R[r.w];
- html+=`<tr><td>${r.v.toFixed(1)}</td><td style="color:${LAB_COL[r.w]};font-weight:700">${LAB_NAME[r.w]}</td><td>${fmtA(i)}</td><td>${Math.round(i*1000)}</td><td class="del" data-del="${r.v}|${r.w}" title="이 기록 지우기">✕</td></tr>`;});
- tb.innerHTML=html;
+   const tb=$('#labTable');
+   const rows=S.rows.slice().sort((a,b)=>(LAB_R[a.w]-LAB_R[b.w])||(a.v-b.v));
+   let html='<tr><th>전압 (V)</th><th>니크롬선</th><th>저항 (Ω)</th><th>전류의 세기 (A)</th><th>전류의 세기 (mA)</th><th></th></tr>';
+   if(!rows.length)html+='<tr><td class="empty" colspan="6">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 눌러 보세요</td></tr>';
+   rows.forEach(r=>{const i=r.v/LAB_R[r.w];
+     html+='<tr><td>'+r.v.toFixed(1)+'</td>'
+       +'<td style="color:'+LAB_COL[r.w]+';font-weight:700">'+LAB_NAME[r.w]+'</td>'
+       +'<td>'+LAB_R[r.w]+'</td><td>'+fmtA(i)+'</td><td>'+Math.round(i*1000)+'</td>'
+       +'<td class="del" data-del="'+r.v+'|'+r.w+'">✕</td></tr>';});
+   tb.innerHTML=html;
+   const used=[...new Set(S.rows.map(r=>r.w))];
+   const lg=$('#labLegend');
+   if(lg)lg.innerHTML=used.map(k=>'<span><i style="background:'+LAB_COL[k]+'"></i>'
+     +LAB_NAME[k]+' ('+LAB_R[k]+' Ω)</span>').join('')
+     +'<span>가로축 전압(V) · 세로축 전류(A)</span>';
  }
+
  const gcv=$('#labGraph');
  function paintGraph(){
- if(!gcv)return;
- const {ctx,w,h}=fit(gcv);
- const L=58,Rm=18,T=24,B=40,gw=w-L-Rm,gh=h-T-B,XM=6,YM=3.2;
- const X=v=>L+v/XM*gw, Y=i=>T+gh-(i/YM)*gh;
- ctx.clearRect(0,0,w,h);
- ctx.font='12px "Nanum Gothic Coding",monospace';ctx.fillStyle=C.inkmute;
- ctx.strokeStyle=C.line;ctx.lineWidth=1;
- ctx.textAlign='center';
- for(let v=0;v<=6.01;v+=1.5){ctx.globalAlpha=v?.4:1;ctx.beginPath();ctx.moveTo(X(v),T);ctx.lineTo(X(v),T+gh);ctx.stroke();ctx.globalAlpha=1;
- ctx.fillText(v.toFixed(1),X(v),T+gh+18);}
- ctx.textAlign='right';
- for(let i=0;i<=3.01;i+=0.5){ctx.globalAlpha=i?.4:1;ctx.beginPath();ctx.moveTo(L,Y(i));ctx.lineTo(L+gw,Y(i));ctx.stroke();ctx.globalAlpha=1;
- ctx.fillText(i.toFixed(1),L-7,Y(i)+4);}
- ctx.globalAlpha=1;ctx.strokeStyle=C.inkmute;ctx.lineWidth=1.6;
- ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,T+gh);ctx.lineTo(L+gw,T+gh);ctx.stroke();
- ctx.fillStyle=C.inkdim;ctx.font='12.5px "Gowun Dodum",sans-serif';
- ctx.textAlign='left';ctx.fillText('전류의 세기 I (A)',6,15);
- ctx.textAlign='right';ctx.fillText('전압 V (V)',w-6,h-8);
- ['short','long'].forEach(k=>{
- const pts=S.rows.filter(r=>r.w===k);
- if(pts.length>=2){ctx.strokeStyle=LAB_COL[k];ctx.globalAlpha=.4;ctx.lineWidth=2;
- ctx.beginPath();ctx.moveTo(X(0),Y(0));ctx.lineTo(X(6),Y(6/LAB_R[k]));ctx.stroke();ctx.globalAlpha=1;}
- pts.forEach(r=>{const i=r.v/LAB_R[k];
- ctx.fillStyle=LAB_COL[k];ctx.beginPath();ctx.arc(X(r.v),Y(i),5,0,TAU);ctx.fill();
- ctx.strokeStyle='#faf4e6';ctx.lineWidth=1.5;ctx.stroke();});
- });
+   if(!gcv)return;
+   const f=fit(gcv),ctx=f.ctx,w=f.w,h=f.h;
+   const maxI=Math.max(3.2,...S.rows.map(r=>r.v/LAB_R[r.w]),cur());
+   const YM=Math.ceil(maxI*1.08*2)/2, YS=YM>4?1:0.5;
+   const L=58,Rm=18,T=24,B=40,gw=w-L-Rm,gh=h-T-B,XM=6;
+   const X=v=>L+v/XM*gw, Y=i=>T+gh-(i/YM)*gh;
+   ctx.clearRect(0,0,w,h);
+   ctx.font='12px "Nanum Gothic Coding",monospace';ctx.fillStyle=C.inkmute;
+   ctx.strokeStyle=C.line;ctx.lineWidth=1;ctx.textAlign='center';
+   for(let v=0;v<=6.01;v+=1.5){ctx.globalAlpha=v?.4:1;ctx.beginPath();
+     ctx.moveTo(X(v),T);ctx.lineTo(X(v),T+gh);ctx.stroke();ctx.globalAlpha=1;
+     ctx.fillText(v.toFixed(1),X(v),T+gh+18);}
+   ctx.textAlign='right';
+   for(let i=0;i<=YM+0.001;i+=YS){ctx.globalAlpha=i?.4:1;ctx.beginPath();
+     ctx.moveTo(L,Y(i));ctx.lineTo(L+gw,Y(i));ctx.stroke();ctx.globalAlpha=1;
+     ctx.fillText(i.toFixed(1),L-7,Y(i)+4);}
+   ctx.globalAlpha=1;ctx.strokeStyle=C.inkmute;ctx.lineWidth=1.6;
+   ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,T+gh);ctx.lineTo(L+gw,T+gh);ctx.stroke();
+   ctx.fillStyle=C.inkdim;ctx.font='12.5px "Gowun Dodum",sans-serif';
+   ctx.textAlign='left';ctx.fillText('전류의 세기 I (A)',6,15);
+   ctx.textAlign='right';ctx.fillText('전압 V (V)',w-6,h-8);
+   [...new Set(S.rows.map(r=>r.w))].forEach(k=>{
+     const pts=S.rows.filter(r=>r.w===k);
+     if(pts.length>=2){ctx.strokeStyle=LAB_COL[k];ctx.globalAlpha=.4;ctx.lineWidth=2;
+       ctx.beginPath();ctx.moveTo(X(0),Y(0));ctx.lineTo(X(6),Y(6/LAB_R[k]));ctx.stroke();
+       ctx.globalAlpha=1;}
+     pts.forEach(r=>{const i=r.v/LAB_R[k];
+       ctx.fillStyle=LAB_COL[k];ctx.beginPath();ctx.arc(X(r.v),Y(i),5,0,TAU);ctx.fill();
+       ctx.strokeStyle='#faf4e6';ctx.lineWidth=1.5;ctx.stroke();});
+   });
  }
+
  function judge(){
- const msg=$('#labMsg');
- const volts=[...new Set(S.rows.filter(r=>r.v>0).map(r=>r.v))];
- const pv=volts.find(v=>S.rows.some(r=>r.v===v&&r.w==='short')&&S.rows.some(r=>r.v===v&&r.w==='long'));
- if(pv!==undefined){
- const is=pv/LAB_R.short, il=pv/LAB_R.long;
- const vt = S.poe==='down'
- ? '🔮 예상 판정 — <b>적중!</b> 예상대로 전류가 약해졌습니다.'
- : (S.poe ? '🔮 예상 판정 — 실험 결과는 <b>③ 약해진다</b>였습니다. 예상과 달랐다면 오히려 좋아요, 틀린 예상이 더 오래 기억에 남거든요.'
- : '🔮 위의 예상 카드에서 예상을 골라 두면 여기서 판정해 드립니다.');
- msg.className='verdict hit';
- msg.innerHTML=`같은 <b>${pv.toFixed(1)} V</b>에서 — 짧은 니크롬선 <b style="color:${LAB_COL.short}">${fmtA(is)} A</b> · 긴 니크롬선 <b style="color:${LAB_COL.long}">${fmtA(il)} A</b>.<br>`
- +`니크롬선을 길게 바꿨더니 전류가 <b>절반</b>이 되었습니다. 긴 쪽이 전류의 흐름을 <b>더 크게 방해</b>한다는 뜻이에요.<br>${vt}`
- +`<br><br>이번에는 <b>니크롬선은 그대로 두고 전압만</b> 0 → 1.5 → 3.0 → 4.5 → 6.0 V로 바꿔 기록해 보세요. 그래프에 직선이 떠오릅니다.`;
- } else if(S.rows.length){
- msg.className='verdict';
- msg.innerHTML=`기록 ${S.rows.length}개. <b>같은 전압에서 짧은 니크롬선과 긴 니크롬선</b>을 각각 한 번씩 기록하면 비교 판정이 나옵니다.`;
- } else {
- msg.className='verdict';
- msg.innerHTML='먼저 <b>같은 전압(예: 1.5 V)에서 짧은 니크롬선과 긴 니크롬선</b>을 한 번씩 기록해 보세요.';
+   const msg=$('#labMsg');
+   /* 같은 전압에서 저항이 다른 두 니크롬선을 기록했는가 */
+   let pv=null,lo=null,hi=null;
+   [...new Set(S.rows.filter(r=>r.v>0).map(r=>r.v))].sort((a,b)=>a-b).forEach(v=>{
+     if(pv!==null)return;
+     const ks=[...new Set(S.rows.filter(r=>r.v===v).map(r=>r.w))]
+       .sort((a,b)=>LAB_R[a]-LAB_R[b]);
+     if(ks.length>=2){pv=v;lo=ks[0];hi=ks[ks.length-1];}
+   });
+   if(pv!==null){
+     const il=pv/LAB_R[lo], ih=pv/LAB_R[hi];
+     const vt = S.poe==='down'
+       ? '🔮 예상 판정 — <b>적중!</b> 저항이 큰 쪽에서 전류가 약해졌습니다.'
+       : (S.poe ? '🔮 예상 판정 — 실험 결과는 <b>③ 약해진다</b>였습니다. 예상과 달랐다면 오히려 좋아요, 틀린 예상이 더 오래 기억에 남거든요.'
+                : '🔮 위의 예상 카드에서 예상을 골라 두면 여기서 판정해 드립니다.');
+     msg.className='verdict hit';
+     msg.innerHTML='같은 <b>'+pv.toFixed(1)+' V</b>에서 — '
+       +'<b style="color:'+LAB_COL[lo]+'">'+LAB_NAME[lo]+' ('+LAB_R[lo]+' Ω) '+fmtA(il)+' A</b> · '
+       +'<b style="color:'+LAB_COL[hi]+'">'+LAB_NAME[hi]+' ('+LAB_R[hi]+' Ω) '+fmtA(ih)+' A</b><br>'
+       +'저항이 <b>'+(LAB_R[hi]/LAB_R[lo])+'배</b>가 되니 전류는 <b>'+(LAB_R[hi]/LAB_R[lo])+'분의 1</b>이 되었습니다 — 반비례입니다.<br>'+vt
+       +'<br><br>이번에는 <b>니크롬선은 그대로 두고 전압만</b> 0 → 1.5 → 3.0 → 4.5 → 6.0 V로 바꿔 기록해 보세요. 그래프에 직선이 떠오릅니다.';
+   } else if(S.rows.length){
+     msg.className='verdict';
+     msg.innerHTML='기록 '+S.rows.length+'개. <b>같은 전압에서 저항이 다른 니크롬선 두 가지</b>를 기록하면 비교 판정이 나옵니다.';
+   } else {
+     msg.className='verdict';
+     msg.innerHTML='먼저 <b>같은 전압(예: 1.5 V)에서 짧은 니크롬선과 긴 니크롬선</b>을 한 번씩 기록해 보세요.';
+   }
  }
- }
+
+ function redraw(){paintTable();paintGraph();judge();updateProgress();}
  $('#labRec').addEventListener('click',()=>{
- S.rows=S.rows.filter(r=>!(r.v===V&&r.w===W));
- S.rows.push({v:V,w:W});
- save();paintTable();paintGraph();judge();updateProgress();A.pop();
- toast(V===0?'0 V → 0 A — 원점도 훌륭한 데이터입니다 📌':`기록! ${LAB_NAME[W]} · ${V.toFixed(1)} V → ${fmtA(cur())} A`,'good');
+   S.rows=S.rows.filter(r=>!(r.v===V&&r.w===key()));
+   S.rows.push({v:V,w:key()});
+   save();redraw();A.pop();
+   toast(V===0?'0 V → 0 A — 원점도 훌륭한 데이터입니다 📌'
+     :'기록! '+LAB_NAME[key()]+' ('+Rv()+' Ω) · '+V.toFixed(1)+' V → '+fmtA(cur())+' A','good');
  });
- $('#labClear').addEventListener('click',()=>{
- S.rows=[];save();paintTable();paintGraph();judge();updateProgress();A.pop();});
+ $('#labClear').addEventListener('click',()=>{S.rows=[];save();redraw();A.pop();});
  $('#labTable').addEventListener('click',e=>{
- const d=e.target.closest('[data-del]');if(!d)return;
- const parts=d.dataset.del.split('|');
- S.rows=S.rows.filter(r=>!(r.v===parseFloat(parts[0])&&r.w===parts[1]));
- save();paintTable();paintGraph();judge();updateProgress();A.pop();});
+   const d=e.target.closest('[data-del]');if(!d)return;
+   const p=d.dataset.del.split('|');
+   S.rows=S.rows.filter(r=>!(r.v===parseFloat(p[0])&&r.w===p[1]));
+   save();redraw();A.pop();});
+
+ let r0=Rv(), i0=cur();
  slider.addEventListener('input',()=>{V=parseFloat(slider.value);paintMeter();});
- document.addEventListener('click',e=>{
- const b=e.target.closest('[data-wire]');if(!b)return;
- W=b.dataset.wire;paintMeter();A.pop();});
+ slider.addEventListener('change',()=>{announce('v',r0,i0);r0=Rv();i0=cur();A.pop();});
+ $('#ohLen').addEventListener('click',e=>{
+   const b=e.target.closest('[data-len]');if(!b||b.dataset.len===LEN)return;
+   LEN=b.dataset.len;paintMeter();announce('len',r0,i0);r0=Rv();i0=cur();
+   S.labTried=S.labTried||{};S.labTried[key()]=1;save();updateProgress();A.pop();});
+ $('#ohThk').addEventListener('click',e=>{
+   const b=e.target.closest('[data-thk]');if(!b||b.dataset.thk===THK)return;
+   THK=b.dataset.thk;paintMeter();announce('thk',r0,i0);r0=Rv();i0=cur();
+   S.labTried=S.labTried||{};S.labTried[key()]=1;save();updateProgress();A.pop();});
+
  let rz2;addEventListener('resize',()=>{clearTimeout(rz2);rz2=setTimeout(paintGraph,220);});
  document.addEventListener('click',e=>{
- if(e.target.closest('[data-tab="explore"],[data-go="explore"]'))setTimeout(paintGraph,80);});
- paintMeter();paintTable();paintGraph();judge();
+   if(e.target.closest('[data-tab="explore"],[data-go="explore"]'))setTimeout(paintGraph,80);});
+ paintMeter();paintTable();paintGraph();judge();placeEls();
+ requestAnimationFrame(tick);
 })();
 
 /* 2단계 — 나의 결론 */
@@ -2794,323 +2432,12 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  build();draw();
 })();
 
-/* ══════════ 🔌 도선 실험대 — 저항은 무엇에 의해 달라질까 ══════════
-   R = (재질 상수) × 길이 ÷ 굵기.
-   비저항 실제 비율(구리 1 : 철 약 6 : 니크롬 약 30)을 학생이 읽기 쉬운 값으로 옮겨 놓았다.
-   공식은 화면에 내지 않는다 — 학생은 조작 결과로만 관계를 찾는다. */
-(function(){
- const MAT={
-   cu:{나:'구리', r:1,  fill:'#c98a4e', stroke:'#7d451e'},
-   fe:{나:'철',   r:6,  fill:'#9aa0a6', stroke:'#5e6367'},
-   ni:{나:'니크롬', r:30, fill:'#8d7f6a', stroke:'#5a5044'}
- };
- const THK=[{나:'가늘다', a:0.5, px:14},{나:'보통', a:1, px:34},{나:'굵다', a:2, px:56}];
- const calcR=(mat,len,ti)=>MAT[mat].r*len/THK[ti].a;
-
- S.wire=S.wire||{mat:'cu',len:1,thk:1};
- S.wireTried=S.wireTried||{};
- let prevR=calcR(S.wire.mat,S.wire.len,S.wire.thk);
-
- const svg=$('#wSvg'), band=$('#wBand'), parts=$('#wParts');
- const X0=60, YC=97;                     // 왼쪽 집게 오른쪽 끝 · 도선 중심선
- const pxLen=len=>120+(len-0.5)*200;     // 0.5m→120px, 2.0m→420px
-
- /* 도선 안 전하 — 굵을수록 통로(줄)가 많아 보이도록 */
- let dots=[];
- function buildDots(){
-   const t=THK[S.wire.thk], lanes=t.px<20?1:(t.px<45?2:3), per=Math.round(pxLen(S.wire.len)/46);
-   dots=[];
-   for(let l=0;l<lanes;l++)
-     for(let k=0;k<per;k++)
-       dots.push({lane:l, lanes:lanes, p:(k+l*0.4)/per});
-   parts.innerHTML=dots.map(()=>'<circle r="3.4" fill="#3a7a3f" opacity=".85"></circle>').join('');
- }
- function placeDots(){
-   const t=THK[S.wire.thk], L=pxLen(S.wire.len), c=parts.children;
-   for(let i=0;i<dots.length;i++){
-     const d=dots[i], gap=t.px/(d.lanes+1);
-     c[i].setAttribute('cx',(X0+8+d.p*(L-16)).toFixed(1));
-     c[i].setAttribute('cy',(YC-t.px/2+gap*(d.lane+1)).toFixed(1));
-   }
- }
- let raf=null;
- function tick(){
-   const spd=0.0016;                     // 저항과 무관 — 여기선 '통로의 넓이'만 보여 준다
-   dots.forEach(d=>{d.p+=spd; if(d.p>1)d.p-=1;});
-   placeDots();
-   raf=requestAnimationFrame(tick);
- }
-
- function paint(changed){
-   const m=MAT[S.wire.mat], t=THK[S.wire.thk], L=pxLen(S.wire.len);
-   band.setAttribute('x',X0); band.setAttribute('width',L);
-   band.setAttribute('y',YC-t.px/2); band.setAttribute('height',t.px);
-   band.setAttribute('fill',m.fill); band.setAttribute('stroke',m.stroke);
-   $('#wClampR').setAttribute('transform','translate('+(L-300)+',0)');
-   $('#wDimLine').setAttribute('x2',X0+L); $('#wDimR').setAttribute('x1',X0+L); $('#wDimR').setAttribute('x2',X0+L);
-   $('#wDimT').setAttribute('x',X0+L/2); $('#wDimT').textContent='길이 '+S.wire.len.toFixed(1)+' m';
-   $('#wMatT').setAttribute('x',X0+L/2); $('#wMatT').textContent=m.나;
-
-   const R=calcR(S.wire.mat,S.wire.len,S.wire.thk);
-   $('#wR').innerHTML=R.toFixed(2)+'<small> Ω</small>';
-   $('#cMat').textContent=m.나; $('#cLen').textContent=S.wire.len.toFixed(1)+' m';
-   $('#cThk').textContent=t.나; $('#cR').textContent=R.toFixed(2)+' Ω';
-   $('#wLenVal').textContent=S.wire.len.toFixed(1)+' m'; $('#wThkVal').textContent=t.나;
-
-   /* 게이지 — 값의 폭이 넓어 로그 눈금으로 놓는다 */
-   const lo=Math.log(0.25), hi=Math.log(120);
-   $('#wKnob').style.left=Math.max(2,Math.min(98,(Math.log(R)-lo)/(hi-lo)*100)).toFixed(1)+'%';
-
-   const dEl=$('#wDelta');
-   if(changed && Math.abs(R-prevR)>1e-6){
-     const up=R>prevR;
-     dEl.textContent=up?'저항이 커졌어요 ↑':'저항이 작아졌어요 ↓';
-     dEl.className='rdelta '+(up?'up':'down');
-     clearTimeout(dEl._t); dEl._t=setTimeout(()=>{dEl.className='rdelta';},1800);
-   }
-   prevR=R;
-
-   $$('#wCond .c').forEach(c=>c.classList.toggle('hit',c.dataset.cond===changed));
-   if(changed){clearTimeout(paint._h); paint._h=setTimeout(()=>$$('#wCond .c').forEach(c=>c.classList.remove('hit')),1500);}
-
-   buildDots(); placeDots();
-   if(cmpOn)paintCmp();
- }
-
- function note(kind){
-   S.wireTried[kind]=1; save();
-   const n=Object.keys(S.wireTried).length;
-   $('#wMsg').textContent = n>=3
-     ? '세 가지를 모두 바꿔 봤어요. 무엇이 저항을 정하나요?'
-     : '좋아요. 나머지 손잡이도 하나씩 바꿔 보세요. (' + n + '/3)';
-   updateProgress();
- }
-
- $('#wLen').addEventListener('input',e=>{S.wire.len=+e.target.value;save();paint('len');});
- $('#wLen').addEventListener('change',()=>note('len'));
- $('#wThk').addEventListener('input',e=>{S.wire.thk=+e.target.value;save();paint('thk');});
- $('#wThk').addEventListener('change',()=>note('thk'));
- $('#wMat').addEventListener('click',e=>{
-   const b=e.target.closest('[data-mat]'); if(!b)return;
-   $$('#wMat button').forEach(x=>x.classList.toggle('on',x===b));
-   S.wire.mat=b.dataset.mat; save(); paint('mat'); note('mat'); A.pop();
- });
- $('#wReset').addEventListener('click',()=>{
-   S.wire={mat:'cu',len:1,thk:1}; save();
-   $('#wLen').value=1; $('#wThk').value=1;
-   $$('#wMat button').forEach(x=>x.classList.toggle('on',x.dataset.mat==='cu'));
-   paint(); A.pop();
- });
-
- /* ── 비교하기 — 기본은 '한 가지만 다르게' ── */
- let cmpOn=false, cmpKey='len';
- function paintCmp(){
-   const A0=S.wire, m=MAT[A0.mat], t=THK[A0.thk];
-   let B={mat:A0.mat,len:A0.len,thk:A0.thk}, diff='';
-   let josa='가';                          // '재질이' / '길이가' — 받침에 따라 조사를 고른다
-   if(cmpKey==='len'){ B.len=A0.len<1.25?Math.min(2,A0.len+1):Math.max(0.5,A0.len-0.75); diff='길이'; }
-   if(cmpKey==='thk'){ B.thk=A0.thk===2?0:A0.thk+1; diff='굵기'; }
-   if(cmpKey==='mat'){ const o=['cu','fe','ni'].filter(x=>x!==A0.mat); B.mat=o[0]; diff='재질'; josa='이'; }
-   const RA=calcR(A0.mat,A0.len,A0.thk), RB=calcR(B.mat,B.len,B.thk);
-   const d=(w)=>MAT[w.mat].나+' / '+w.len.toFixed(1)+' m / '+THK[w.thk].나;
-   $('#cmpADesc').textContent=d(A0); $('#cmpBDesc').textContent=d(B);
-   $('#cmpAR').textContent=RA.toFixed(2)+' Ω'; $('#cmpBR').textContent=RB.toFixed(2)+' Ω';
-   $('#cmpA').classList.toggle('win',RA>RB); $('#cmpB').classList.toggle('win',RB>RA);
-   $('#cmpMsg').innerHTML = Math.abs(RA-RB)<1e-6
-     ? '두 도선의 저항이 같아요.'
-     : '<b class="k">'+diff+'</b>만 다른데 저항이 <b>'+(RA>RB?'A':'B')+'</b> 쪽이 큽니다 — '
-       + diff+josa+' 저항을 바꾼다는 뜻이에요.';
- }
- $('#cmpBtn').addEventListener('click',()=>{
-   cmpOn=!cmpOn;
-   $('#cmpBox').style.display=cmpOn?'block':'none';
-   $('#cmpBtn').textContent=cmpOn?'🔍 비교 접기':'🔍 두 도선 비교하기';
-   if(cmpOn){paintCmp();A.pop();}
- });
- $('#cmpPick').addEventListener('click',e=>{
-   const b=e.target.closest('[data-cmp]'); if(!b)return;
-   $$('#cmpPick button').forEach(x=>x.classList.toggle('on',x===b));
-   cmpKey=b.dataset.cmp; paintCmp();
- });
-
- $('#wLen').value=S.wire.len; $('#wThk').value=S.wire.thk;
- $$('#wMat button').forEach(x=>x.classList.toggle('on',x.dataset.mat===S.wire.mat));
- paint();
- if(!reduceMotion)raf=requestAnimationFrame(tick);
- window.__wirePaint=paint;
-})();
-
-/* ══════════ 🎚️ 전압을 올려도 저항은 그대로 ══════════ */
-(function(){
- const R=10;                              // 저항체는 바꾸지 않는다
- S.ohmSeen=S.ohmSeen||{};
- const oParts=$('#oParts');
- /* 회로를 도는 전하 — 전압이 커지면 빨라진다(전류가 커진다) */
- const PATH=[[70,40],[490,40],[490,150],[70,150]];
- let dots=Array.from({length:16},(_,i)=>({p:i/16}));
- oParts.innerHTML=dots.map(()=>'<circle r="4" fill="#a05c2c" opacity=".9"></circle>').join('');
- function at(p){
-   const per=[420,110,420,110], tot=1060; let d=p*tot;
-   for(let i=0;i<4;i++){
-     if(d<=per[i]){
-       const a=PATH[i], b=PATH[(i+1)%4], f=d/per[i];
-       return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f];
-     }
-     d-=per[i];
-   }
-   return PATH[0];
- }
- function placeO(){
-   const c=oParts.children;
-   for(let i=0;i<dots.length;i++){const [x,y]=at(dots[i].p);
-     c[i].setAttribute('cx',x.toFixed(1)); c[i].setAttribute('cy',y.toFixed(1));}
- }
- let V=1, raf=null;
- function tickO(){
-   const spd=0.00022*V*10/R*10;           // 전류에 비례한 속도
-   dots.forEach(d=>{d.p+=spd; if(d.p>1)d.p-=1;});
-   placeO(); raf=requestAnimationFrame(tickO);
- }
- function paintO(){
-   const I=V/R;
-   $('#oVVal').textContent=V.toFixed(1)+' V';
-   $('#oBatT').textContent=V.toFixed(1)+' V';
-   $('#oNumV').textContent=V.toFixed(1)+' V';
-   $('#oNumI').textContent=I.toFixed(2)+' A';
-   $('#oNumR').textContent=R+' Ω';
-   $('#oBarV').style.width=(V/5*100)+'%';
-   $('#oBarI').style.width=(I/0.5*100)+'%';
-   $('#oBarR').style.width='50%';         // 언제나 그대로
-   $('#oMsg').innerHTML='전압 <b style="color:#7d5ba6">↑</b> · 전류 <b style="color:#a05c2c">↑</b> · '
-     + '저항 <b style="color:#8a5f24">그대로</b> — 전압 ÷ 전류 = '+(V/I).toFixed(0)+' Ω';
-   const key=V.toFixed(1);
-   if(!S.ohmSeen[key]){S.ohmSeen[key]=1;save();rows();updateProgress();}
-   placeO();
- }
- function rows(){
-   const ks=Object.keys(S.ohmSeen).map(Number).sort((a,b)=>a-b);
-   $('#oRows').innerHTML=ks.map(v=>{
-     const i=v/R;
-     return '<tr><td>'+v.toFixed(1)+' V</td><td>'+i.toFixed(2)+' A</td><td><b>'+(v/i).toFixed(0)+' Ω</b></td></tr>';
-   }).join('');
- }
- $('#oV').addEventListener('input',e=>{V=+e.target.value;paintO();});
- rows(); paintO();
- if(!reduceMotion)raf=requestAnimationFrame(tickO);
-})();
 
 
-/* ══════ '왜 그럴까?' — 저항의 이유(입자 모형) ══════
-   전자 밀도는 단면적에 비례하고, 같은 전압에서 전자가 밀리는 빠르기는 길이에 반비례한다.
-   그래서 가운데 선을 지나가는 수(전류)는 굵기에 비례하고 길이에 반비례한다. */
-(function(){
- const cv=$('#rwCv'); if(!cv)return;
- const ctx=cv.getContext('2d');
- const X0=70, YC=115, UL=120, UT=24;      /* 기준 도선 : 길이 120 px, 굵기 24 px */
- let len=1, thk=1, els=[], ions=[], hits=0, cross=0, win=[], tPrev=0;
 
- function build(){
-  const L=UL*len, H=UT*thk, y0=YC-H/2;
-  ions=[];
-  for(let x=X0+9;x<X0+L-4;x+=15)
-   for(let y=y0+8;y<y0+H-4;y+=15) ions.push({x:x,y:y,p:Math.random()*6.28});
-  const n=Math.round(8*len*thk);          /* 전자 수 ∝ 부피(길이×굵기) — 밀도는 그대로 */
-  els=[];
-  for(let i=0;i<n;i++) els.push({x:X0+Math.random()*L, y:y0+4+Math.random()*(H-8), jy:0});
-  hits=0; cross=0; win=[];
-  $('#rwLenV').textContent=len+'배'; $('#rwThkV').textContent=thk+'배';
-  $('#rwR').innerHTML=(Math.round(len/thk*100)/100)+'<small> 배</small>';
-  $('#rwV').innerHTML=(Math.round(100/len)/100)+'<small> 배</small>';
- }
- function step(dt){
-  const L=UL*len, H=UT*thk, y0=YC-H/2, v=120/len, mid=X0+L/2;
-  els.forEach(e=>{
-   const before=e.x;
-   e.x+=v*dt;
-   e.y+=e.jy*dt; e.jy*=0.90;
-   if(e.y<y0+3){e.y=y0+3;e.jy=Math.abs(e.jy);}
-   if(e.y>y0+H-3){e.y=y0+H-3;e.jy=-Math.abs(e.jy);}
-   for(let i=0;i<ions.length;i++){
-    const io=ions[i];
-    if(Math.abs(io.x-e.x)<4.2&&Math.abs(io.y-e.y)<4.2){
-     e.jy=(Math.random()*2-1)*70; hits++; break;
-    }
-   }
-   if(before<mid&&e.x>=mid)cross++;
-   if(e.x>X0+L){e.x-=L;e.y=y0+4+Math.random()*(H-8);}
-  });
- }
- function readout(t){
-  win.push({t:t,c:cross,h:hits});
-  while(win.length>2&&t-win[0].t>2)win.shift();
-  const d=t-win[0].t;
-  if(d>0.9){
-   $('#rwI').innerHTML=(Math.round((cross-win[0].c)/d*10)/10)+'<small> 개/초</small>';
-   $('#rwC').innerHTML=Math.round((hits-win[0].h)/d)+'<small> 번/초</small>';
-  }
- }
- function draw(){
-  const L=UL*len, H=UT*thk, y0=YC-H/2;
-  ctx.clearRect(0,0,660,230);
-  /* 도선 */
-  ctx.fillStyle='#f0dcbd'; ctx.strokeStyle='#a8763f'; ctx.lineWidth=2;
-  ctx.beginPath(); ctx.roundRect(X0,y0,L,H,5); ctx.fill(); ctx.stroke();
-  /* 양 끝 도선과 전지 표시 */
-  ctx.strokeStyle='#8d7a5c'; ctx.lineWidth=2.4;
-  ctx.beginPath(); ctx.moveTo(12,YC); ctx.lineTo(X0,YC); ctx.moveTo(X0+L,YC); ctx.lineTo(648,YC); ctx.stroke();
-  ctx.fillStyle='#b23a30'; ctx.font='700 14px Pretendard, sans-serif';
-  ctx.fillText('(+)',624,YC-10); ctx.fillStyle='#2e5f8f'; ctx.fillText('(−)',18,YC-10);
-  /* 원자 */
-  ctx.fillStyle='#bda98a';
-  ions.forEach(io=>{ctx.beginPath();ctx.arc(io.x,io.y,3.1,0,6.283);ctx.fill();});
-  /* 재는 자리 */
-  ctx.strokeStyle='#a05c2c'; ctx.lineWidth=1.8; ctx.setLineDash([5,4]);
-  ctx.beginPath(); ctx.moveTo(X0+L/2,y0-14); ctx.lineTo(X0+L/2,y0+H+14); ctx.stroke(); ctx.setLineDash([]);
-  ctx.fillStyle='#a05c2c'; ctx.font='700 13px Pretendard, sans-serif'; ctx.textAlign='center';
-  ctx.fillText('여기를 지나간 수를 셉니다',X0+L/2,y0+H+32); ctx.textAlign='left';
-  /* 전자 */
-  ctx.fillStyle='#3a7a3f';
-  els.forEach(e=>{ctx.beginPath();ctx.arc(e.x,e.y,3.4,0,6.283);ctx.fill();});
-  /* 전류 방향 */
-  ctx.fillStyle='#96805c'; ctx.font='13px Pretendard, sans-serif';
-  ctx.fillText('전자가 밀려 가는 쪽 →',X0,26);
- }
 
- function reset(){len=1;thk=1;$('#rwLen').value=1;$('#rwThk').value=1;build();draw();}
- ['rwLen','rwThk'].forEach(id=>$('#'+id).addEventListener('input',()=>{
-  len=+$('#rwLen').value; thk=+$('#rwThk').value; build(); draw();
-  if(len>1)S.wwLen=1; if(thk>1)S.wwThk=1;
-  if(S.wwLen&&S.wwThk){
-   $('#wwAfter').classList.add('open'); $('#wwLockMsg').classList.add('gone');
-  }
-  const o=$('#rwObs'); o.style.display='block'; o.classList.add('hit');
-  o.innerHTML='길이 <b>'+len+'배</b> · 굵기 <b>'+thk+'배</b> → 상대적인 저항 <b>'
-   +(Math.round(len/thk*100)/100)+'배</b>. 가운데 선을 지나가는 전자 수를 눈으로 세어 보세요.';
-  save(); updateProgress();
- }));
- $('#rwReset').addEventListener('click',reset);
 
- $('#wwPick').addEventListener('click',e=>{
-  const b=e.target.closest('button'); if(!b)return;
-  S.wwPred=b.dataset.v; save();
-  $$('#wwPick button').forEach(x=>x.classList.toggle('sel',x.dataset.v===S.wwPred));
-  const sy=$('#wwSay'); sy.style.display='block';
-  sy.innerHTML='생각을 남겼어요. 아래에서 <b>직접 세어</b> 확인해 봅시다.';
-  A.pop(); updateProgress();
- });
- if(S.wwPred)$$('#wwPick button').forEach(x=>x.classList.toggle('sel',x.dataset.v===S.wwPred));
- if(S.wwLen&&S.wwThk){$('#wwAfter').classList.add('open');$('#wwLockMsg').classList.add('gone');}
 
- build(); draw();
- function frame(t){
-  const now=t/1000, dt=Math.min(.05,now-tPrev||.016); tPrev=now;
-  const vis=$('#panel-law')&&$('#panel-law').classList.contains('show')
-   &&!document.body.classList.contains('cover-on');
-  if(vis&&!reduceMotion){step(dt);readout(now);draw();}
-  requestAnimationFrame(frame);
- }
- requestAnimationFrame(frame);
-})();
 
 (function init(){
  updateProgress();
@@ -3284,15 +2611,13 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
 <script id="sum-js">
 (function(){
   var SUM=[
- {t:'전압', lines:[
-  ['전류를 <b>흐르게 하는</b> 능력 (물을 미는 펌프처럼)'],
-  ['단위 : ', {a:'V', alt:['볼트','브이']}, ' (볼트)']]},
- {t:'저항', lines:[
-  ['전류의 흐름을 ', {a:'방해', alt:['방해']}, '하는 정도'],
-  ['단위 : ', {a:'Ω', alt:['옴']}, ' (옴)'],
-  ['도선이 <b>길수록</b> 저항이 ', {a:'커진다', alt:['커진','크다','증가']}, ' · <b>굵을수록</b> ', {a:'작아진다', alt:['작아진','작다','감소']}]]},
+ {t:'되짚기 — 전압과 저항 (지난 시간)', lines:[
+  ['<b>전압</b> : 전류를 흐르게 하는 능력 · 단위 ', {a:'V', alt:['볼트','브이']}, ' (볼트)'],
+  ['<b>저항</b> : 전류의 흐름을 방해하는 정도 · 단위 ', {a:'Ω', alt:['옴']}, ' (옴)'],
+  ['저항의 크기는 물질의 <b>종류 · 길이 · 단면적</b>이 정한다 — 전압을 올려도 저항은 ', {a:'그대로', alt:['그대로','변하지 않는다','일정']}]]},
  {t:'옴의 법칙', lines:[
   ['전류의 세기는 전압에 ', {a:'비례', alt:['비례']}, '하고, 저항에 ', {a:'반비례', alt:['반비례']}, '한다'],
+  ['🪥 치약으로 기억하기 — 누르는 힘 = ', {a:'전압', alt:['전압']}, ' · 좁은 구멍 = ', {a:'저항', alt:['저항']}, ' · 짜여 나온 양 = ', {a:'전류', alt:['전류']}],
   ['전류 = ', {a:'전압', alt:['전압']}, ' ÷ ', {a:'저항', alt:['저항']}, '  ( I = V/R )']]}
 ];
 
