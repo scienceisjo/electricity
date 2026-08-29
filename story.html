@@ -362,6 +362,7 @@ h1 em{font-style:normal; color:var(--accent)}
   .vote{margin-top:8px; gap:10px}
   .vbox{padding:9px}
   .viz{height:clamp(210px,50vh,600px)}
+  .srcnote{margin-top:clamp(8px,1.3vh,15px); padding-top:8px; font-size:clamp(10.5px,.95vw,14px)}
 }
 </style>
 </head>
@@ -403,7 +404,34 @@ h1 em{font-style:normal; color:var(--accent)}
   </div>
 </section>
 
-<!-- ═══ 2. 호박 ═══ -->
+<!-- ═══ 2. 전기는 어디에 있나 ═══ -->
+<section class="scene" data-t="전기는 어디에 있나">
+  <div class="txt">
+    <span class="kicker">그 전에 · 크기를 가늠해 보기</span>
+    <h2 class="title">아침에 <span class="kp">물</span>이<br>안 나옵니다</h2>
+    <p class="lead">전기가 사라지면 무엇이 멈출까요? 휴대전화, 컴퓨터, 전등은 금방 떠오릅니다. 그런데 <b>수도꼭지도 마릅니다.</b></p>
+    <p class="sub">물을 높은 곳까지 올려 보내는 <b>펌프</b>가 전기로 돌기 때문이에요. 물과 전기는 상관없어 보이지만, 전기가 없으면 물도 오지 않습니다.</p>
+    <p class="sub">그런데 전기는 기계 속에만 있는 게 아닙니다. 지금 이 <b>손이 흩어지지 않고 손 모양을 유지하는 것</b>, 책상이 책상으로 남아 있는 것 — 원자들을 붙들고 있는 그 힘이 바로 <span class="kp">전기력</span>입니다.</p>
+    <p class="sub">뜨거운 것에 닿았을 때 “앗!” 하고 손을 빼는 것도, 그 신호가 신경을 타고 달리는 <span class="ke">전기</span>예요.</p>
+    <p class="sub" style="color:var(--accent)"><b>전기는 어디에나 있습니다. 그래서 전기를 이해하는 일은 곧 세상을 이해하는 일입니다.</b></p>
+    <div class="ctl"><button class="pill pe" data-act="everywhere">⚡ 전기를 꺼 보기</button></div>
+    <div class="script">
+      <b>도입 · 크기 감각 잡기</b> — 본격적인 역사 이야기 전에 “왜 배우나”를 세워 주는 자리입니다.
+      <ul>
+        <li>“전기가 사라지면 뭐가 멈출까?” 자유롭게 받다가 <b>수도꼭지</b>에서 한 번 놀라게 하세요</li>
+        <li>버튼을 눌러 일상 → 정전 → <b>원자 확대</b>까지 차례로 넘기며 설명합니다</li>
+        <li>핵심 전환: <b>“전기는 기계 속에만 있는 게 아니다”</b> — 물질이 물질로 존재하는 것 자체가 전기력</li>
+        <li>학생 몸으로 연결: 손을 쥐었다 펴 보게 하고 “지금 이 손이 흩어지지 않는 이유”를 묻기</li>
+      </ul>
+      <span class="ask">발문: “전기가 없으면 이 책상은 어떻게 될까?”</span>
+    </div>
+  </div>
+  <div class="viz"><canvas data-anim="everywhere"></canvas>
+    <div class="vizcap">일상 → 정전 → 확대. 마지막에 남는 건 <b>원자를 붙들고 있는 전기력</b></div>
+  </div>
+</section>
+
+<!-- ═══ 3. 호박 ═══ -->
 <section class="scene" data-t="호박 — 전기의 이름이 태어나다">
   <div class="txt">
     <span class="kicker">기원전 그리스</span>
@@ -894,7 +922,8 @@ h1 em{font-style:normal; color:var(--accent)}
       <div class="card"><span class="badge l">그리고</span><h4>둘은 한 몸이었다</h4><p>그 진동이 곧 빛</p></div>
     </div>
     <p class="lead" style="max-width:54ch; margin:22px auto 0">물리학자들은 이때 <b>“이제 세상을 다 이해했다”</b>고 믿었습니다.</p>
-    <p class="sub" style="max-width:54ch; margin:12px auto 0">그리고 얼마 지나지 않아 <b>양자역학과 상대성이론</b>이 그 확신을 다시 무너뜨립니다. 과학은 늘 그런 식으로 이어져 왔어요.</p>
+    <p class="sub" style="max-width:54ch; margin:8px auto 0">그리고 얼마 지나지 않아 <b>양자역학과 상대성이론</b>이 그 확신을 다시 무너뜨립니다. 과학은 늘 그런 식으로 이어져 왔어요.</p>
+    <p class="lead" style="max-width:54ch; margin:11px auto 0; color:var(--accent)"><b>전기를 이해하는 일은 곧 세상을 이해하는 일입니다.</b></p>
     <p class="srcnote" style="max-width:54ch; margin-left:auto; margin-right:auto">
       이 이야기는 아래 두 영상의 내용을 바탕으로 만들었습니다.<br>
       <b>〈취미는 과학〉 전자기학 편</b> — 출연: KAIST 물리학과 <b>김갑진</b> 교수<br>
@@ -1819,6 +1848,79 @@ ANIM.generator=function(cv,api){
   });
 };
 
+/* 2) 전기는 어디에 있나 — 일상 → 정전 → 원자 확대 */
+ANIM.everywhere=function(cv,api){
+  var stage=0, zoom=0;
+  api.next=function(){ stage=(stage+1)%3; return stage; };
+  return loop(cv,function(c,w,h,t){
+    zoom += (((stage===2)?1:0)-zoom)*(RM?1:.07);
+    c.clearRect(0,0,w,h);
+    var on=(stage===0);
+    /* ── 방 ── */
+    if(zoom<.95){
+      c.globalAlpha=1-zoom;
+      var fy=h*.80;
+      c.strokeStyle=LINE; c.lineWidth=1.5;
+      c.beginPath(); c.moveTo(0,fy); c.lineTo(w,fy); c.stroke();
+      /* 전등 */
+      var lx=w*.22, ly=h*.30, R=Math.min(w,h)*.075;
+      if(on){ var g=c.createRadialGradient(lx,ly,0,lx,ly,R*3.4);
+        g.addColorStop(0,'rgba(255,214,120,.85)'); g.addColorStop(1,'rgba(255,200,90,0)');
+        c.fillStyle=g; c.beginPath(); c.arc(lx,ly,R*3.4,0,7); c.fill(); }
+      c.strokeStyle='rgba(110,85,45,.8)'; c.lineWidth=2;
+      c.beginPath(); c.moveTo(lx,0); c.lineTo(lx,ly-R); c.stroke();
+      c.fillStyle= on? 'rgba(255,248,225,.95)':'rgba(190,185,170,.5)';
+      c.beginPath(); c.arc(lx,ly,R,0,7); c.fill(); c.strokeStyle='rgba(110,85,45,.8)'; c.stroke();
+      label(c, on?'':'꺼짐', lx, ly+R*2.1, DIM, Math.max(10,w*.013));
+      /* 휴대전화 */
+      var px=w*.50, py=h*.52, pw=Math.min(w,h)*.11, ph=pw*1.75;
+      c.fillStyle= on? '#2b3550':'#8f8a80';
+      c.beginPath(); c.roundRect? c.roundRect(px-pw/2,py-ph/2,pw,ph,pw*.16) : c.rect(px-pw/2,py-ph/2,pw,ph);
+      c.fill(); c.strokeStyle='rgba(90,70,40,.6)'; c.lineWidth=1.6; c.stroke();
+      if(on){ c.fillStyle='rgba(120,200,255,.85)';
+        c.fillRect(px-pw*.36,py-ph*.40,pw*.72,ph*.62); }
+      label(c,'', px, py+ph*.62, DIM, 10);
+      /* 수도꼭지 */
+      var tx=w*.80, ty=h*.34;
+      c.strokeStyle=BRASS; c.lineWidth=Math.max(5,w*.008); c.lineCap='round';
+      c.beginPath(); c.moveTo(tx-w*.06,ty); c.lineTo(tx,ty); c.lineTo(tx,ty+h*.06); c.stroke();
+      if(on){ c.strokeStyle='rgba(110,190,255,.85)'; c.lineWidth=Math.max(3,w*.005);
+        for(var k=0;k<3;k++){ var yy=ty+h*.08+((t*260+k*40)%(fy-ty-h*.08));
+          c.beginPath(); c.moveTo(tx,yy); c.lineTo(tx,Math.min(fy,yy+h*.05)); c.stroke(); } }
+      label(c, on?'물이 나온다':'물이 안 나온다', tx, fy+Math.max(18,h*.06),
+        on?'#2f6f9e':POS, Math.max(10,w*.014));
+      c.globalAlpha=1;
+    }
+    /* ── 원자 확대 ── */
+    if(zoom>.05){
+      c.globalAlpha=zoom;
+      var cols=5, rows=3, mx=w*.14, my=h*.20, gw=w*.72, gh=h*.46;
+      for(var r=0;r<rows;r++)for(var q=0;q<cols;q++){
+        var X=mx+gw*(q+.5)/cols, Y=my+gh*(r+.5)/rows;
+        var rr=Math.min(gw/cols,gh/rows)*.20;
+        /* 인력 선 */
+        if(q<cols-1){ c.strokeStyle='rgba(178,58,48,.35)'; c.lineWidth=1.6;
+          c.beginPath(); c.moveTo(X+rr*1.5,Y); c.lineTo(X+gw/cols-rr*1.5,Y); c.stroke(); }
+        if(r<rows-1){ c.strokeStyle='rgba(178,58,48,.35)'; c.lineWidth=1.6;
+          c.beginPath(); c.moveTo(X,Y+rr*1.5); c.lineTo(X,Y+gh/rows-rr*1.5); c.stroke(); }
+        /* 원자핵 + 전자 */
+        c.fillStyle=POS; c.beginPath(); c.arc(X,Y,rr*.62,0,7); c.fill();
+        var a=t*1.1+q*.7+r*1.3;
+        c.strokeStyle='rgba(58,122,63,.35)'; c.lineWidth=1;
+        c.beginPath(); c.ellipse(X,Y,rr*1.35,rr*.8,0,0,7); c.stroke();
+        c.fillStyle=EL;
+        c.beginPath(); c.arc(X+Math.cos(a)*rr*1.35, Y+Math.sin(a)*rr*.8, rr*.26,0,7); c.fill();
+      }
+      label(c,'원자를 붙들고 있는 힘 = 전기력', w/2, my+gh+Math.max(30,h*.11), POS, Math.max(12,w*.018));
+      c.globalAlpha=1;
+    }
+    var msg = stage===0 ? '평소의 아침 — 불도, 폰도, 물도 나온다'
+            : stage===1 ? '전기가 사라지면 수도꼭지까지 마른다'
+                        : '더 들어가면 — 물질이 물질로 있는 것 자체가 전기';
+    label(c, msg, w/2, h-14, stage===0?DIM:POS, Math.max(11,w*.016));
+  });
+};
+
 /* ── 장면 엔진 ─────────────────── */
 var scenes=$$('.scene'), N=scenes.length, cur=0, live=[];
 var counter=$('#counter'), dots=$('#dots'), tocgrid=$('#tocgrid');
@@ -1937,6 +2039,10 @@ document.addEventListener('click',function(e){
   else if(act==='sw2'){ a=apiOf('bulbfield');
     if(a){ var s2=a.sw(); b.classList.toggle('on',s2); b.textContent= s2? '🔌 스위치 끄기':'🔌 스위치 켜기'; } }
   else if(act==='slow'){ a=apiOf('bulbfield'); if(a) b.classList.toggle('on',a.slow()); }
+  else if(act==='everywhere'){ a=apiOf('everywhere');
+    if(a){ var st=a.next();
+      b.textContent = st===0? '⚡ 전기를 꺼 보기' : (st===1? '🔬 더 들어가 보기' : '↩ 처음으로');
+      b.classList.toggle('on', st!==0); } }
   else if(act==='spin'){ a=apiOf('generator');
     if(a){ var sp=a.play(); b.classList.toggle('on',sp); b.textContent= sp? '⏸ 멈추기':'▶ 터빈 돌리기'; } }
 });
