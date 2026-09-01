@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>다 이었는데 왜 안 켜지지? · 회로 잇기</title>
+<title>불이 켜지려면 무엇이 필요할까 · 회로 잇기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <style>
 :root{
- --abyss:#f2eade; --surface:#f3ede3; --surface2:#fffcf4; --line:#c1ac82; --line-soft:#dccfae;
+ --abyss:#f2eade; --surface2:#fffcf4; --line:#c1ac82; --line-soft:#dccfae;
  --ink:#2e2315; --ink-dim:#5c4a33; --ink-mute:#96805c;
  --accent:#a05c2c; --gold:#8a5f24; --ok:#2c7a44; --danger:#b3362e;
  --c-plus:#b23a30; --c-minus:#2e5f8f; --wire:#8d7a5c; --lit:#e0952f;
@@ -23,93 +23,103 @@ body{font-family:var(--disp);color:var(--ink);background:
  radial-gradient(700px 480px at 92% 90%, rgba(44,110,95,.07), transparent 55%),
  var(--abyss); min-height:100vh; -webkit-font-smoothing:antialiased}
 
-header.top{padding:26px 20px 6px; text-align:center}
-header.top h1{font-family:var(--jua); font-size:clamp(23px,4.6vw,36px); line-height:1.3}
+header.top{padding:22px 20px 4px; text-align:center}
+header.top h1{font-family:var(--jua); font-size:clamp(21px,4.2vw,32px); line-height:1.3}
 header.top h1 .em{color:var(--accent)}
-header.top p{color:var(--ink-dim); margin-top:8px; font-size:clamp(13.5px,2.4vw,16px); font-family:var(--gowun)}
-.wrap{max-width:1220px; margin:0 auto; padding:14px 16px 40px}
+.wrap{max-width:860px; margin:0 auto; padding:12px 16px 40px}
 
-/* 미션 */
-.missions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:16px 0 20px}
-.mi{display:flex; align-items:center; gap:9px; background:var(--surface2); border:1.5px solid var(--line);
- border-radius:999px; padding:9px 18px 9px 13px; font-family:var(--gowun); font-size:14.5px; color:var(--ink-dim);
- transition:.2s}
-.mi .box{width:21px;height:21px;border-radius:6px;border:2px solid var(--line);flex:none;
- display:grid;place-items:center;font-size:13px;color:transparent;transition:.2s}
-.mi.done{border-color:var(--ok); background:#f0f7ee; color:var(--ok)}
-.mi.done .box{background:var(--ok); border-color:var(--ok); color:#fff}
-.mi.done .mt{font-weight:700}
+/* 미션 진행 */
+.steps{display:flex; gap:8px; justify-content:center; margin:14px 0 6px; flex-wrap:wrap}
+.st{display:flex; align-items:center; gap:8px; background:var(--surface2); border:1.5px solid var(--line-soft);
+ border-radius:999px; padding:8px 16px 8px 11px; font-family:var(--gowun); font-size:13.5px;
+ color:var(--ink-mute); transition:.2s}
+.st .no{width:20px;height:20px;border-radius:50%;background:var(--line-soft);color:#fff;flex:none;
+ display:grid;place-items:center;font-size:12px;font-family:var(--jua)}
+.st.now{border-color:var(--accent); color:var(--accent); background:#fbf1e4; box-shadow:0 0 0 3px rgba(160,92,44,.12)}
+.st.now .no{background:var(--accent)}
+.st.done{border-color:var(--ok); color:var(--ok)}
+.st.done .no{background:var(--ok)}
+.st .rs{font-family:var(--jua); font-size:13px}
 
-/* 판 */
-.lab{display:grid; grid-template-columns:minmax(0,1fr) 258px; gap:16px; align-items:start}
-@media (max-width:900px){ .lab{grid-template-columns:1fr} }
+/* 지금 할 일 띠 */
+#todo{margin:12px auto 0; max-width:720px; display:flex; gap:11px; align-items:center;
+ background:#fbf1e4; border:1.6px solid var(--accent); border-radius:14px; padding:13px 18px;
+ font-family:var(--gowun); font-size:15.5px; line-height:1.6; color:var(--ink-dim)}
+#todo .ic{font-size:20px; flex:none}
+#todo b{color:var(--accent); font-family:var(--disp)}
 
 .card{background:rgba(255,252,244,.82); border:1.5px solid var(--line); border-radius:var(--r);
- box-shadow:var(--shadow); overflow:hidden}
-.card-h{display:flex; align-items:center; gap:9px; padding:11px 17px; border-bottom:1px dashed var(--line-soft)}
+ box-shadow:var(--shadow); overflow:hidden; margin-top:14px}
+.card-h{display:flex; align-items:center; gap:9px; padding:10px 16px; border-bottom:1px dashed var(--line-soft)}
 .card-h .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
-.card-h h2{font-family:var(--jua); font-size:17px; color:var(--gold)}
+.card-h h2{font-family:var(--jua); font-size:16px; color:var(--gold)}
 .card-h .hint{margin-left:auto; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun)}
 
-/* SVG 에 고유 크기(width·height)와 aspect-ratio 를 함께 준다.
-   viewBox 만 두고 height:auto 로 두면 일부 브라우저(웨일 등)가 높이를 0 으로 잡아 그림이 사라진다. */
-#board{display:block; width:100%; height:auto; aspect-ratio:640/372; touch-action:none;
+#board{display:block; width:100%; height:auto; aspect-ratio:640/380; touch-action:none;
  user-select:none; -webkit-user-select:none}
-.boardbox{background:linear-gradient(180deg,#efe6d3,#e7dcc4); padding:6px 8px}
+.boardbox{background:linear-gradient(180deg,#efe6d3,#e7dcc4); padding:4px 8px}
 
-/* 선반 */
-.shelf{padding:12px}
-.shelf .grp{font-family:var(--jua); font-size:13px; color:var(--ink-mute); margin:4px 2px 7px}
-.shelf .items{display:grid; grid-template-columns:1fr 1fr; gap:8px}
-/* 좁은 화면에서는 작업판이 화면을 다 먹어 선반이 한참 아래로 밀린다 — 작업판 높이를 묶는다 */
-@media (max-width:900px){
- .shelf .items{grid-template-columns:repeat(auto-fill,minmax(108px,1fr))}
- #board{max-height:46vh}
-}
-.pit{background:var(--surface2); border:1.6px solid var(--line-soft); border-radius:12px; padding:7px 5px 5px;
- cursor:grab; touch-action:none; text-align:center; transition:.15s; position:relative}
+/* 선반 — 가로 띠 */
+.shelf{padding:12px 14px 14px}
+.shelf .items{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+.pit{background:var(--surface2); border:1.6px solid var(--line-soft); border-radius:12px;
+ padding:8px 10px 5px; cursor:grab; touch-action:none; text-align:center; transition:.15s;
+ width:132px; position:relative}
 .pit:hover{border-color:var(--accent); transform:translateY(-2px)}
 .pit.sel{border-color:var(--accent); background:#fbf0df; box-shadow:0 0 0 3px rgba(160,92,44,.18)}
-.pit.used{opacity:.28; pointer-events:none; filter:grayscale(1)}
-.pit svg{display:block; width:100%; height:auto; aspect-ratio:148/80}
-.pit .nm{font-family:var(--gowun); font-size:12.5px; color:var(--ink-dim); margin-top:2px}
-.pit .n{position:absolute; right:5px; top:4px; font-family:var(--jua); font-size:11.5px; color:var(--ink-mute)}
+.pit.used{opacity:.26; pointer-events:none; filter:grayscale(1)}
+.pit svg{display:block; width:100%; height:auto; aspect-ratio:148/56}
+.pit .nm{font-family:var(--gowun); font-size:12.5px; color:var(--ink-dim); margin-top:3px}
+.pit.bad .nm{color:var(--danger); font-weight:700}
+.shelf .empty{font-family:var(--gowun); font-size:13.5px; color:var(--ink-mute); padding:14px}
 
-/* 유령 */
 #ghost{position:fixed; left:0; top:0; z-index:90; pointer-events:none; width:132px;
  opacity:.92; display:none; filter:drop-shadow(0 8px 16px rgba(0,0,0,.28))}
 
 /* 조작 */
-.acts{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; margin-top:16px}
-.btn{font-family:var(--jua); font-size:15.5px; padding:11px 24px; border-radius:12px; cursor:pointer;
+.acts{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:16px}
+.btn{font-family:var(--jua); font-size:16px; padding:12px 26px; border-radius:12px; cursor:pointer;
  border:1.8px solid var(--line); background:var(--surface2); color:var(--ink-dim); transition:.15s}
-.btn:hover{border-color:var(--accent); color:var(--accent)}
+.btn:hover:not(:disabled){border-color:var(--accent); color:var(--accent)}
 .btn.primary{background:var(--accent); color:#fdf6e8; border-color:var(--accent)}
-.btn.primary:hover{filter:brightness(1.08); color:#fdf6e8}
-.btn.sw{background:#2f4f70; border-color:#2f4f70; color:#eaf1f8}
-.btn.sw.on{background:var(--ok); border-color:var(--ok)}
-.btn:disabled{opacity:.4; cursor:default; transform:none}
+.btn.primary:hover:not(:disabled){filter:brightness(1.08); color:#fdf6e8}
+.btn:disabled{opacity:.38; cursor:not-allowed}
 
-/* 결과 말풍선 */
-#say{margin:16px auto 0; max-width:760px; text-align:center; font-family:var(--gowun); font-size:16px;
- line-height:1.65; color:var(--ink-dim); background:var(--surface2); border:1.5px solid var(--line-soft);
- border-radius:14px; padding:15px 20px; min-height:58px; display:flex; align-items:center; justify-content:center}
-#say b{color:var(--ink); font-family:var(--disp)}
-#say.hit{border-color:var(--lit); background:#fff6e4; color:var(--gold)}
-#say.miss{border-color:var(--line); background:#f7f1e6}
+/* 팝업 */
+#pop{position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
+ background:rgba(46,35,21,.52); padding:20px}
+#pop.on{display:flex}
+.popbox{background:#fffdf6; border:2px solid var(--line); border-radius:20px; max-width:520px; width:100%;
+ padding:26px 26px 22px; box-shadow:0 30px 70px -20px rgba(0,0,0,.5); text-align:center;
+ max-height:88vh; overflow-y:auto}
+@media (prefers-reduced-motion:no-preference){ #pop.on .popbox{animation:popIn .22s cubic-bezier(.2,1.1,.4,1) both} }
+@keyframes popIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.popbox .kicker{font-family:var(--jua); font-size:13.5px; color:var(--accent); letter-spacing:.02em}
+.popbox h3{font-family:var(--jua); font-size:22px; margin-top:6px; line-height:1.35}
+.popbox .body{font-family:var(--gowun); font-size:16px; line-height:1.75; color:var(--ink-dim); margin-top:14px}
+.popbox .body b{color:var(--ink); font-family:var(--disp)}
+.popbox .big{font-family:var(--jua); font-size:19px; margin-top:16px; line-height:1.5}
+.popbox .big.no{color:var(--ink-mute)} .popbox .big.yes{color:var(--lit)}
+.poprow{display:flex; gap:10px; justify-content:center; margin-top:20px; flex-wrap:wrap}
+.poprow .btn{font-size:16.5px; padding:13px 28px}
+.judge{margin-top:16px; padding:12px 16px; border-radius:12px; font-family:var(--gowun); font-size:15px}
+.judge.miss{background:#fdf0e2; border:1.5px solid var(--accent); color:var(--accent); font-weight:700}
+.judge.hit{background:#f0f7ee; border:1.5px solid var(--ok); color:var(--ok)}
+.qbox{margin-top:18px; padding:15px 18px; border-radius:14px; border:1.6px solid var(--accent);
+ background:rgba(160,92,44,.07); font-family:var(--gowun); font-size:16.5px; line-height:1.6}
+.qbox b{color:var(--accent); font-family:var(--disp)}
 
-/* 기록표 */
-.rec{margin-top:22px}
-table{width:100%; border-collapse:collapse; font-size:14px; font-family:var(--gowun)}
-th,td{border:1px solid var(--line-soft); padding:8px 10px; text-align:center}
-th{background:#efe4cf; font-family:var(--jua); font-size:13.5px; color:var(--gold); font-weight:400}
-td.parts{text-align:left; font-size:13.5px; color:var(--ink-dim)}
-tr.hit td{background:#fdf6e6}
-td .rr{font-family:var(--jua)}
-td .rr.y{color:var(--lit)} td .rr.n{color:var(--ink-mute)}
-.emptyrow td{color:var(--ink-mute); padding:18px; font-size:13.5px}
+/* 마무리 세 컷 */
+.recap{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:16px}
+@media (max-width:520px){ .recap{grid-template-columns:1fr} }
+.rc{border:1.5px solid var(--line-soft); border-radius:12px; padding:11px 8px; background:#fbf6ea}
+.rc .t{font-family:var(--jua); font-size:12.5px; color:var(--ink-mute)}
+.rc .w{font-family:var(--gowun); font-size:12.5px; color:var(--ink-dim); margin:5px 0 7px; line-height:1.45}
+.rc .r{font-family:var(--jua); font-size:15px}
+.rc .r.y{color:var(--lit)} .rc .r.n{color:var(--ink-mute)}
+.rc.miss{border-color:var(--accent)}
 
-.backline{margin-top:26px; text-align:center}
+.backline{margin-top:24px; text-align:center}
 .backline a{display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-family:var(--jua);
  font-size:15px; color:var(--ink-dim); background:var(--surface2); border:1.5px solid var(--line);
  border-radius:12px; padding:11px 22px; transition:.15s}
@@ -120,62 +130,42 @@ td .rr.y{color:var(--lit)} td .rr.n{color:var(--ink-mute)}
  border-top:1px solid rgba(128,128,128,.25)}
 
 @media (prefers-reduced-motion:no-preference){
- @keyframes glowpulse{0%,100%{opacity:.85}50%{opacity:.35}}
+ @keyframes glowpulse{0%,100%{opacity:.85}50%{opacity:.4}}
  .glow{animation:glowpulse 1.5s ease-in-out infinite}
+ @keyframes shake{10%,90%{transform:translateX(-2px)}30%,70%{transform:translateX(3px)}50%{transform:translateX(-3px)}}
+ .shake{animation:shake .5s both}
 }
 </style>
 </head>
 <body>
 
 <header class="top">
-  <h1>다 이었는데, <span class="em">왜 안 켜지지?</span></h1>
-  <p>부품을 끌어다 놓거나, 부품을 누른 뒤 빈자리를 누르세요. 놓았으면 <b>⚡ 켜 보기</b>.</p>
+  <h1>불이 켜지려면 <span class="em">무엇이 필요할까?</span></h1>
 </header>
 
 <div class="wrap">
 
-  <div class="missions" id="missions">
-    <div class="mi" data-m="m1"><span class="box">✓</span><span class="mt">전구에 불을 켠다</span></div>
-    <div class="mi" data-m="m2"><span class="box">✓</span><span class="mt">스위치 없이 불을 켠다</span></div>
-    <div class="mi" data-m="m3"><span class="box">✓</span><span class="mt">네 자리를 다 채웠는데 안 켜지게 한다</span></div>
-  </div>
+  <div class="steps" id="steps"></div>
+  <div id="todo"><span class="ic">👉</span><span id="todoTx">시작합니다.</span></div>
 
-  <div class="lab">
-    <div class="card">
-      <div class="card-h"><span class="dot"></span><h2>작업판</h2>
-        <span class="hint">놓인 부품을 다시 누르면 선반으로 돌아갑니다</span></div>
-      <div class="boardbox"><svg id="board" viewBox="0 0 640 372" width="640" height="372" role="img"
-        aria-label="네모난 회로 그림. 위쪽에 빈자리 두 곳, 아래쪽에 빈자리 두 곳이 있고 학생이 부품을 놓아 회로를 완성한다."></svg></div>
-    </div>
-
-    <div class="card shelf">
-      <div class="card-h" style="margin:-12px -12px 10px"><span class="dot"></span><h2>부품 선반</h2></div>
-      <div class="grp">회로에 놓을 것</div>
-      <div class="items" id="shelf"></div>
-    </div>
+  <div class="card">
+    <div class="card-h"><span class="dot"></span><h2>회로판</h2>
+      <span class="hint">놓인 전선을 다시 누르면 선반으로 돌아갑니다</span></div>
+    <div class="boardbox"><svg id="board" viewBox="0 0 640 380" width="640" height="380" role="img"
+      aria-label="전지와 전구가 놓인 회로판. 전지에서 전구로 가는 왼쪽 길과 전구에서 전지로 돌아오는 오른쪽 길이 있고, 학생이 전선을 놓아 길을 잇는다."></svg></div>
+    <div class="shelf"><div class="items" id="shelf"></div></div>
   </div>
 
   <div class="acts">
-    <button class="btn primary" id="btnTest">⚡ 켜 보기</button>
-    <button class="btn sw" id="btnSw" hidden>🔌 스위치 켜기</button>
-    <button class="btn" id="btnReset">↺ 처음부터</button>
-  </div>
-
-  <div id="say">부품 네 개를 빈자리에 놓고 <b>⚡ 켜 보기</b>를 누르세요.</div>
-
-  <div class="card rec">
-    <div class="card-h"><span class="dot"></span><h2>해 본 기록</h2>
-      <span class="hint">켜진 줄과 안 켜진 줄이 무엇이 다른지 견주어 보세요</span></div>
-    <table>
-      <thead><tr><th style="width:52px">번호</th><th>회로에 놓은 것</th><th style="width:92px">스위치</th><th style="width:88px">결과</th></tr></thead>
-      <tbody id="recBody"><tr class="emptyrow"><td colspan="4">아직 해 본 것이 없습니다.</td></tr></tbody>
-    </table>
+    <button class="btn primary" id="btnGo" disabled>⚡ 켜 보기</button>
+    <button class="btn" id="btnAgain">↺ 이 미션 다시</button>
   </div>
 
   <div class="backline"><a href="03-current.html">← 수업 페이지로 돌아가기</a></div>
 </div>
 
 <div id="ghost"></div>
+<div id="pop"><div class="popbox" id="popbox"></div></div>
 
 <footer id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-09-01</span></footer>
 
@@ -183,256 +173,250 @@ td .rr.y{color:var(--lit)} td .rr.n{color:var(--ink-mute)}
 "use strict";
 (function(){
 
-/* ─────────────────────────────────────────────────────────
-   부품 그림 — 가로 140 × 세로 72 상자, 도선은 y=36 을 지난다
-   전구 기호는 다른 페이지와 같은 약속(원 + 안쪽 아치)을 따른다
-   ───────────────────────────────────────────────────────── */
-var W = 140, H = 72, MID = 36, WIRE = '#8d7a5c';
-
-/* 부품에 딸린 도선 토막 색 — 회로에 불이 들어오면 회로 도선과 같은 색이 되어야
-   선이 끊긴 것처럼 보이지 않는다. 그림 그리기가 동기 실행이라 전역 하나로 충분하다. */
-var STUB = '#6b573f';
-
-function ln(x1,y1,x2,y2,c,w){
-  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||WIRE)+
-         '" stroke-width="'+(w||2.6)+'" stroke-linecap="round"/>';
+/* ═══════════════════════════════════════════════════════════
+   부품 그림 — 가로 148 × 세로 56 상자, 도선은 y=28 을 지난다
+   ═══════════════════════════════════════════════════════════ */
+function wireMini(kind){
+  /* kind : 'ok' 보통 전선 · 'bad' 속이 드러난 전선 */
+  var s = '<line x1="6" y1="28" x2="142" y2="28" stroke="#8a6a3a" stroke-width="9" stroke-linecap="round"/>';
+  /* 양 끝 집게 */
+  s += '<rect x="2" y="20" width="14" height="16" rx="4" fill="#5d6b7d"/>'
+     + '<rect x="132" y="20" width="14" height="16" rx="4" fill="#5d6b7d"/>';
+  if(kind === 'bad'){
+    /* 껍질이 벗겨져 속이 드러난 모습 — 속이 하얗다 */
+    s += '<path d="M56 21 L60 35 L66 21 L72 35 L78 21 L84 35 L90 21" fill="none" stroke="#efe9dc"'
+       + ' stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'
+       + '<line x1="52" y1="18" x2="52" y2="38" stroke="#6b573f" stroke-width="2"/>'
+       + '<line x1="94" y1="18" x2="94" y2="38" stroke="#6b573f" stroke-width="2"/>';
+  }
+  return '<svg viewBox="0 0 148 56" width="148" height="56" aria-hidden="true">' + s + '</svg>';
 }
 
-var DRAW = {
-  wire: function(){ return ln(0,MID,W,MID,STUB,3); },
-
-  battery: function(){
-    return ln(0,MID,60,MID,STUB,3) + ln(80,MID,W,MID,STUB,3)
-      + ln(62,14,62,58,'#b23a30',2.8) + ln(78,24,78,48,'#2e5f8f',7)
-      + '<text x="58" y="10" text-anchor="middle" font-size="13" font-weight="700" fill="#b23a30" font-family="sans-serif">+</text>'
-      + '<text x="83" y="10" text-anchor="middle" font-size="15" font-weight="700" fill="#2e5f8f" font-family="sans-serif">−</text>';
-  },
-
-  /* 원 R=22 · 곧은 선 0.453R≈10 · 아치 반지름 0.547R≈12 */
-  bulb: function(lit){
-    var g = lit
-      ? '<circle cx="70" cy="36" r="33" fill="#e0952f" opacity=".22" class="glow"/>'
-        + '<circle cx="70" cy="36" r="22" fill="#ffe9b4"/>'
-      : '<circle cx="70" cy="36" r="22" fill="#fffcf4"/>';
-    return ln(0,MID,48,MID,STUB,3) + ln(92,MID,W,MID,STUB,3) + g
-      + '<circle cx="70" cy="36" r="22" fill="none" stroke="'+(lit?'#c67a12':'#6b573f')+'" stroke-width="2.6"/>'
-      + ln(48,MID,58,MID,lit?'#c67a12':'#6b573f',2.6) + ln(82,MID,92,MID,lit?'#c67a12':'#6b573f',2.6)
-      + '<path d="M58 36 A 12 12 0 0 1 82 36" fill="none" stroke="'+(lit?'#c67a12':'#6b573f')+
-        '" stroke-width="2.6" stroke-linecap="round"/>';
-  },
-
-  swi: function(on){
-    return ln(0,MID,46,MID,STUB,3) + ln(94,MID,W,MID,STUB,3)
-      + (on ? ln(46,MID,94,MID,'#2c7a44',3.4) : ln(46,MID,90,14,'#6b573f',3.4))
-      + '<circle cx="46" cy="36" r="4.4" fill="'+(on?'#2c7a44':'#6b573f')+'"/>'
-      + '<circle cx="94" cy="36" r="4.4" fill="'+(on?'#2c7a44':'#6b573f')+'"/>';
-  },
-
-  rubber: function(){
-    return ln(0,MID,40,MID,STUB,3) + ln(100,MID,W,MID,STUB,3)
-      + '<path d="M40 36 C 48 12, 62 12, 70 36 C 78 60, 92 60, 100 36" fill="none" stroke="#8a6fae"'
-      + ' stroke-width="5.4" stroke-linecap="round"/>'
-      + '<circle cx="40" cy="36" r="3.6" fill="#6b573f"/><circle cx="100" cy="36" r="3.6" fill="#6b573f"/>';
-  },
-
-  wood: function(){
-    return ln(0,MID,38,MID,STUB,3) + ln(102,MID,W,MID,STUB,3)
-      + '<rect x="38" y="21" width="64" height="30" rx="6" fill="#c09a63" stroke="#8a6a3a" stroke-width="2"/>'
-      + '<path d="M46 30 q 12 5 24 0 t 22 1" fill="none" stroke="#a07d47" stroke-width="1.6"/>'
-      + '<path d="M46 43 q 14 -5 26 0 t 20 -1" fill="none" stroke="#a07d47" stroke-width="1.6"/>';
-  }
-};
-
-var PARTS = {
-  battery:{ nm:'전지',      go:true,  draw:function(){return DRAW.battery();} },
-  bulb:   { nm:'전구',      go:true,  draw:function(s){return DRAW.bulb(s&&s.lit);} },
-  swi:    { nm:'스위치',    go:null,  draw:function(s){return DRAW.swi(s&&s.on);} },
-  wire:   { nm:'전선',      go:true,  draw:function(){return DRAW.wire();} },
-  rubber: { nm:'고무줄',    go:false, draw:function(){return DRAW.rubber();} },
-  wood:   { nm:'나무 막대', go:false, draw:function(){return DRAW.wood();} }
-};
-
-/* 선반에 놓을 부품 — 전선을 넉넉히 줘야 스위치를 빼고도 회로를 닫을 수 있다 */
-var STOCK = ['battery','bulb','swi','wire','wire','wire','rubber','wood'];
-
-/* ─────────────────────────────────────────────────────────
-   상태
-   ───────────────────────────────────────────────────────── */
-var SLOT_IDS = ['A','B','C','D'];
-var SLOT_POS = { A:{x:130,y:104}, B:{x:370,y:104}, C:{x:130,y:264}, D:{x:370,y:264} };
-var slots = { A:null, B:null, C:null, D:null };
-var bag   = STOCK.map(function(t,i){ return { uid:i, type:t }; });
-var swOn  = false, lit = false, tries = 0, picked = null;
-var done  = { m1:false, m2:false, m3:false };
-
-function partOf(uid){ for(var i=0;i<bag.length;i++) if(bag[i].uid===uid) return bag[i]; return null; }
-function placedUids(){ return SLOT_IDS.map(function(k){ return slots[k]; }); }
-function inSlot(uid){ return placedUids().indexOf(uid) >= 0; }
-function typeAt(k){ var u=slots[k]; return u===null ? null : partOf(u).type; }
-function typesPlaced(){ return SLOT_IDS.map(typeAt); }
-
-/* ─────────────────────────────────────────────────────────
-   작업판 그리기
-   ───────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   회로판
+   ═══════════════════════════════════════════════════════════ */
 var board = document.getElementById('board');
-var L=70, R=570, TOP=104, BOT=264;   /* 도선 사각형 (부품 중심선 기준) */
+var BR = 26;                                   /* 전구 반지름 */
+var BX = 320, BY = 92;                         /* 전구 중심 */
+var PX = 308, MX = 332, EY = 300;              /* 전지 (+)판 · (−)판 · 아래 도선 높이 */
 
-function boardWire(x1,y1,x2,y2){
-  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(lit?'#d98f24':WIRE)+
-         '" stroke-width="'+(lit?3.4:2.8)+'" stroke-linecap="round"'+(lit?' class="glow"':'')+'/>';
+/* 두 길 — 꺾인 선. 전선을 놓으면 이 선이 살아난다. */
+var PATH = {
+  L: [[BX-BR,BY],[110,BY],[110,EY],[PX,EY]],
+  R: [[BX+BR,BY],[530,BY],[530,EY],[MX,EY]]
+};
+var PATH_MID = { L:[110,196], R:[530,196] };   /* 안내 글자를 놓을 자리 */
+
+function poly(pts){ return pts.map(function(p){ return p[0]+' '+p[1]; }).join(' L'); }
+
+function drawPath(k, on, lit){
+  var d = 'M' + poly(PATH[k]);
+  if(!on){
+    return '<path d="'+d+'" fill="none" stroke="#bcab88" stroke-width="3" stroke-dasharray="9 8"'
+         + ' stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+  var col = lit ? '#d98f24' : '#8a6a3a';
+  return '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="8" stroke-linecap="round"'
+       + ' stroke-linejoin="round"'+(lit?' class="glow"':'')+'/>';
+}
+
+function drawBulb(lit){
+  var st = 12, ar = 14, col = lit ? '#c67a12' : '#6b573f';
+  var s = lit
+    ? '<circle cx="'+BX+'" cy="'+BY+'" r="'+(BR+15)+'" fill="#e0952f" opacity=".26" class="glow"/>'
+      + '<circle cx="'+BX+'" cy="'+BY+'" r="'+BR+'" fill="#ffe9b4"/>'
+    : '<circle cx="'+BX+'" cy="'+BY+'" r="'+BR+'" fill="#fffcf4"/>';
+  return s
+    + '<circle cx="'+BX+'" cy="'+BY+'" r="'+BR+'" fill="none" stroke="'+col+'" stroke-width="3"/>'
+    + '<line x1="'+(BX-BR)+'" y1="'+BY+'" x2="'+(BX-ar)+'" y2="'+BY+'" stroke="'+col+'" stroke-width="3"/>'
+    + '<line x1="'+(BX+ar)+'" y1="'+BY+'" x2="'+(BX+BR)+'" y2="'+BY+'" stroke="'+col+'" stroke-width="3"/>'
+    + '<path d="M'+(BX-ar)+' '+BY+' A '+ar+' '+ar+' 0 0 1 '+(BX+ar)+' '+BY+'" fill="none" stroke="'+col
+    + '" stroke-width="3" stroke-linecap="round"/>'
+    + '<text x="'+BX+'" y="'+(BY-BR-14)+'" text-anchor="middle" font-family="Jua, sans-serif" font-size="15"'
+    + ' fill="#6b573f">전구</text>';
+}
+
+function drawBattery(){
+  return '<line x1="'+PX+'" y1="'+(EY-22)+'" x2="'+PX+'" y2="'+(EY+22)+'" stroke="#b23a30" stroke-width="3.2"/>'
+    + '<line x1="'+MX+'" y1="'+(EY-12)+'" x2="'+MX+'" y2="'+(EY+12)+'" stroke="#2e5f8f" stroke-width="8"/>'
+    + '<text x="'+(PX-13)+'" y="'+(EY+46)+'" text-anchor="middle" font-family="Jua, sans-serif" font-size="15"'
+    + ' fill="#b23a30">(+)</text>'
+    + '<text x="'+(MX+15)+'" y="'+(EY+46)+'" text-anchor="middle" font-family="Jua, sans-serif" font-size="15"'
+    + ' fill="#2e5f8f">(−)</text>'
+    + '<text x="'+BX+'" y="'+(EY-38)+'" text-anchor="middle" font-family="Jua, sans-serif" font-size="15"'
+    + ' fill="#6b573f">전지</text>';
 }
 
 function drawBoard(){
-  STUB = lit ? '#c67a12' : '#6b573f';
   var s = '';
-  /* 회로 도선 — 빈자리 사이를 잇는 구간 */
-  s += boardWire(L,TOP,130,TOP) + boardWire(270,TOP,370,TOP) + boardWire(510,TOP,R,TOP);
-  s += boardWire(L,BOT,130,BOT) + boardWire(270,BOT,370,BOT) + boardWire(510,BOT,R,BOT);
-  s += boardWire(L,TOP,L,BOT) + boardWire(R,TOP,R,BOT);
-
-  /* 빈자리 · 놓인 부품 */
-  SLOT_IDS.forEach(function(k){
-    var p = SLOT_POS[k], u = slots[k];
-    if(u === null){
-      s += '<rect x="'+p.x+'" y="'+(p.y-36)+'" width="140" height="72" rx="12" fill="rgba(255,252,244,.55)" '
-         + 'stroke="'+WIRE+'" stroke-width="2" stroke-dasharray="7 6" class="slot" data-slot="'+k+'"/>'
-         + '<text x="'+(p.x+70)+'" y="'+(p.y+6)+'" text-anchor="middle" font-size="15" fill="#96805c" '
-         + 'font-family="Gowun Dodum, sans-serif" pointer-events="none">여기</text>';
-    } else {
-      var pt = partOf(u), st = (pt.type==='swi') ? {on:swOn} : {lit:lit};
-      /* 전선처럼 도선과 구별이 안 되는 부품도 있으니, 채워진 자리는 옅은 판으로 표시한다 */
-      s += '<g transform="translate('+p.x+','+(p.y-36)+')" class="pl" data-slot="'+k+'" style="cursor:pointer">'
-         + '<rect x="-2" y="-2" width="144" height="76" rx="12" fill="'+(lit?'rgba(255,244,220,.62)':'rgba(255,252,244,.62)')
-         + '" stroke="'+(lit?'rgba(217,143,36,.5)':'rgba(193,172,130,.55)')+'" stroke-width="1.5"/>'
-         + PARTS[pt.type].draw(st) + '</g>';
+  /* 아직 열리지 않은 길은 점선조차 그리지 않는다 —
+     미션 1에서 오른쪽 길이 보이면 학생이 답을 미리 알아채 함정이 무너진다 */
+  if(open.L || slots.L !== null) s += drawPath('L', slots.L !== null, lit);
+  if(open.R || slots.R !== null) s += drawPath('R', slots.R !== null, lit);
+  s += drawBattery() + drawBulb(lit);
+  ['L','R'].forEach(function(k){
+    var m = PATH_MID[k];
+    if(slots[k] === null && open[k]){
+      s += '<g class="drop" data-slot="'+k+'" style="cursor:pointer">'
+         + '<rect x="'+(m[0]-52)+'" y="'+(m[1]-30)+'" width="104" height="60" rx="12"'
+         + ' fill="rgba(255,252,244,.72)" stroke="#a05c2c" stroke-width="2" stroke-dasharray="7 6"/>'
+         + '<text x="'+m[0]+'" y="'+(m[1]-4)+'" text-anchor="middle" font-family="Gowun Dodum, sans-serif"'
+         + ' font-size="14" fill="#a05c2c" pointer-events="none">여기에</text>'
+         + '<text x="'+m[0]+'" y="'+(m[1]+16)+'" text-anchor="middle" font-family="Gowun Dodum, sans-serif"'
+         + ' font-size="14" fill="#a05c2c" pointer-events="none">전선을</text></g>';
+    } else if(slots[k] !== null){
+      s += '<g class="pl" data-slot="'+k+'" style="cursor:pointer">'
+         + '<rect x="'+(m[0]-26)+'" y="'+(m[1]-26)+'" width="52" height="52" rx="12"'
+         + ' fill="transparent"/></g>';
     }
   });
-
-  /* 자리 이름 */
-  SLOT_IDS.forEach(function(k){
-    var p = SLOT_POS[k], ty = (k==='A'||k==='B') ? p.y-46 : p.y+58;
-    s += '<text x="'+(p.x+70)+'" y="'+ty+'" text-anchor="middle" font-size="13.5" fill="#96805c" '
-       + 'font-family="Jua, sans-serif" pointer-events="none">'+k+' 자리</text>';
-  });
-
   board.innerHTML = s;
 }
 
-/* ─────────────────────────────────────────────────────────
-   선반 그리기
-   ───────────────────────────────────────────────────────── */
-var shelfEl = document.getElementById('shelf');
+/* ═══════════════════════════════════════════════════════════
+   미션
+   ═══════════════════════════════════════════════════════════ */
+var M = [
+{
+  n:1, kicker:'미션 1', head:'전구까지 길을 만들자',
+  brief:'전기가 전지에서 출발해 <b>전구까지 도착</b>할 수 있도록,<br>'
+       +'전선으로 <b>왼쪽 길</b>을 이으세요.',
+  todo:'선반의 <b>전선</b>을 <b>왼쪽 길</b>에 놓으세요.',
+  open:{L:true, R:false},
+  bag:[{k:'ok'}],
+  need:['L'],
+  ask:'전기가 전구까지 도착했습니다. 이제 켜 볼까요?<br>전구에 <b>불이 켜질까요?</b>',
+  q:'전구까지 <b>분명히 이었는데</b> 왜 켜지지 않을까요?'
+},
+{
+  n:2, kicker:'미션 2', head:'반대쪽도 이어 보자',
+  brief:'이번에는 전구의 <b>반대쪽</b>에서 전지로 가는<br>'
+       +'<b>오른쪽 길</b>도 이어 보세요.',
+  todo:'전선을 하나 더 받았습니다. <b>오른쪽 길</b>에 놓으세요.',
+  open:{L:true, R:true},
+  bag:[{k:'ok'},{k:'ok'}],
+  preset:{L:0},                 /* 미션 1에서 놓은 왼쪽 전선을 그대로 둔다 */
+  need:['L','R'],
+  ask:'이번에는 <b>불이 켜질까요?</b>',
+  q:'미션 1과 <b>딱 하나</b>가 달랐습니다. 무엇이 달랐나요?'
+},
+{
+  n:3, kicker:'미션 3', head:'똑같이 이었는데',
+  brief:'새 전선 두 개를 받았습니다.<br>'
+       +'미션 2와 <b>똑같이</b> 두 길을 모두 이으세요.',
+  todo:'전선 두 개를 <b>양쪽 길에 모두</b> 놓으세요.',
+  open:{L:true, R:true},
+  bag:[{k:'ok'},{k:'bad'}],
+  need:['L','R'],
+  ask:'미션 2와 똑같이 이었습니다. <b>불이 켜질까요?</b>',
+  q:'겉모습은 <b>똑같은 전선</b>이었습니다. 그런데 하나는 되고 하나는 안 됐어요.<br>'
+   +'<b>무엇이 달랐을까요?</b>'
+}];
 
-function miniSvg(type, state){
-  return '<svg viewBox="-4 -4 148 80" width="148" height="80" aria-hidden="true">'
-       + PARTS[type].draw(state) + '</svg>';
+var mi = 0;                       /* 진행 중인 미션 번호 */
+var slots = {L:null, R:null};
+var open  = {L:true, R:false};
+var bag = [], lit = false, picked = null, spare = false, revealed = false;
+var log = [];                     /* {n, guess, lit} */
+
+function partOf(uid){ for(var i=0;i<bag.length;i++) if(bag[i].uid===uid) return bag[i]; return null; }
+function placed(){ return [slots.L, slots.R]; }
+function inSlot(uid){ return placed().indexOf(uid) >= 0; }
+function needMet(){ return M[mi].need.every(function(k){ return slots[k] !== null; }); }
+function badInCircuit(){
+  return placed().some(function(u){ return u !== null && partOf(u).k === 'bad'; });
+}
+/* 켜짐 판정은 오직 이 한 줄 — 두 길이 다 이어지고, 그 길이 전기를 통해야 한다.
+   미션마다 결과를 박아 두면 미션 3에서 전선을 바꿔 껴도 영영 안 켜진다. */
+function circuitLights(){
+  return slots.L !== null && slots.R !== null && !badInCircuit();
 }
 
+/* ═══════════════════════════════════════════════════════════
+   선반
+   ═══════════════════════════════════════════════════════════ */
+var shelfEl = document.getElementById('shelf');
+
 function drawShelf(){
-  STUB = '#6b573f';
+  if(!bag.length){ shelfEl.innerHTML = '<div class="empty">선반이 비었습니다.</div>'; return; }
   shelfEl.innerHTML = bag.map(function(p){
-    var used = inSlot(p.uid);
-    return '<div class="pit'+(used?' used':'')+(picked===p.uid?' sel':'')+'" data-uid="'+p.uid+'">'
-         + miniSvg(p.type, {}) + '<div class="nm">'+PARTS[p.type].nm+'</div></div>';
+    var show = (revealed && p.k === 'bad') ? 'bad' : 'ok';
+    var nm = show === 'bad' ? '전기가 안 통함' : '전선';
+    return '<div class="pit'+(inSlot(p.uid)?' used':'')+(picked===p.uid?' sel':'')
+         + (show==='bad'?' bad':'')+'" data-uid="'+p.uid+'">'
+         + wireMini(show) + '<div class="nm">'+nm+'</div></div>';
   }).join('');
 }
 
-/* ─────────────────────────────────────────────────────────
-   놓기 / 빼기
-   ───────────────────────────────────────────────────────── */
-function place(uid, slotKey){
-  if(uid === null || !slots.hasOwnProperty(slotKey)) return false;
-  if(slots[slotKey] !== null) return false;          /* 이미 찬 자리 */
-  SLOT_IDS.forEach(function(k){ if(slots[k] === uid) slots[k] = null; });
-  slots[slotKey] = uid;
-  if(partOf(uid).type === 'swi') swOn = false;
-  reset_light();
-  picked = null;
-  render();
-  return true;
+/* ═══════════════════════════════════════════════════════════
+   놓기 · 빼기 — 끌어놓기와 눌러서 놓기 둘 다
+   ═══════════════════════════════════════════════════════════ */
+function place(uid, k){
+  if(uid === null || !open[k] || slots[k] !== null) return false;
+  if(slots.L === uid) slots.L = null;
+  if(slots.R === uid) slots.R = null;
+  slots[k] = uid; picked = null; lit = false;
+  render(); return true;
+}
+function pull(k){
+  if(slots[k] === null) return;
+  slots[k] = null; lit = false; render();
 }
 
-function pull(slotKey){
-  if(slots[slotKey] === null) return;
-  if(partOf(slots[slotKey]).type === 'swi') swOn = false;
-  slots[slotKey] = null;
-  reset_light();
-  render();
-}
+var ghost = document.getElementById('ghost'), drag = null;
 
-/* 회로를 건드리면 결과는 무효 — 말풍선도 처음 안내로 되돌린다 */
-function reset_light(){
-  lit = false;
-  say('', '');
+function svgPt(cx, cy){
+  var m = board.getScreenCTM(); if(!m) return null;
+  var i = m.inverse();
+  return { x: i.a*cx + i.c*cy + i.e, y: i.b*cx + i.d*cy + i.f };
 }
-
-/* ─────────────────────────────────────────────────────────
-   끌어놓기 + 눌러서 놓기 — 포인터 하나로 둘 다 (전자칠판 터치 포함)
-   ───────────────────────────────────────────────────────── */
-var ghost = document.getElementById('ghost');
-var drag = null;   /* {uid, moved} */
-
-function svgPoint(clientX, clientY){
-  var m = board.getScreenCTM();
-  if(!m) return null;
-  var inv = m.inverse();
-  return { x: inv.a*clientX + inv.c*clientY + inv.e, y: inv.b*clientX + inv.d*clientY + inv.f };
+function d2seg(p, a, b){
+  var vx=b[0]-a[0], vy=b[1]-a[1], wx=p.x-a[0], wy=p.y-a[1];
+  var L2=vx*vx+vy*vy, t = L2 ? Math.max(0, Math.min(1,(wx*vx+wy*vy)/L2)) : 0;
+  var dx=p.x-(a[0]+t*vx), dy=p.y-(a[1]+t*vy);
+  return Math.sqrt(dx*dx+dy*dy);
 }
-
-function slotAt(clientX, clientY){
-  var pt = svgPoint(clientX, clientY);
-  if(!pt) return null;
-  for(var i=0;i<SLOT_IDS.length;i++){
-    var k = SLOT_IDS[i], p = SLOT_POS[k];
-    if(pt.x >= p.x-6 && pt.x <= p.x+146 && pt.y >= p.y-42 && pt.y <= p.y+42) return k;
-  }
-  return null;
+function slotAt(cx, cy){
+  var p = svgPt(cx, cy); if(!p) return null;
+  var best = null, bd = 56;
+  ['L','R'].forEach(function(k){
+    if(!open[k] || slots[k] !== null) return;
+    var pts = PATH[k];
+    for(var i=0;i<pts.length-1;i++){
+      var d = d2seg(p, pts[i], pts[i+1]);
+      if(d < bd){ bd = d; best = k; }
+    }
+  });
+  return best;
 }
-
-function showGhost(uid, x, y){
-  STUB = '#6b573f';
-  ghost.innerHTML = miniSvg(partOf(uid).type, {});
-  ghost.style.display = 'block';
-  moveGhost(x, y);
-}
-function moveGhost(x, y){
-  ghost.style.transform = 'translate(' + (x-66) + 'px,' + (y-32) + 'px)';
-}
-function hideGhost(){ ghost.style.display = 'none'; ghost.innerHTML = ''; }
+function showGhost(uid,x,y){ ghost.innerHTML = wireMini('ok'); ghost.style.display='block'; moveGhost(x,y); }
+function moveGhost(x,y){ ghost.style.transform = 'translate('+(x-66)+'px,'+(y-28)+'px)'; }
 
 shelfEl.addEventListener('pointerdown', function(e){
   var it = e.target.closest('.pit');
   if(!it || it.classList.contains('used')) return;
   e.preventDefault();
-  var uid = +it.dataset.uid;
-  drag = { uid: uid, moved: false, sx: e.clientX, sy: e.clientY };
+  drag = { uid:+it.dataset.uid, moved:false, sx:e.clientX, sy:e.clientY };
   try{ it.setPointerCapture(e.pointerId); }catch(_){}
 });
-
 document.addEventListener('pointermove', function(e){
   if(!drag) return;
   if(!drag.moved){
-    if(Math.abs(e.clientX-drag.sx) < 6 && Math.abs(e.clientY-drag.sy) < 6) return;
-    drag.moved = true;
-    showGhost(drag.uid, e.clientX, e.clientY);
+    if(Math.abs(e.clientX-drag.sx)<6 && Math.abs(e.clientY-drag.sy)<6) return;
+    drag.moved = true; showGhost(drag.uid, e.clientX, e.clientY);
   }
   moveGhost(e.clientX, e.clientY);
 });
-
 document.addEventListener('pointerup', function(e){
   if(!drag) return;
-  var d = drag; drag = null; hideGhost();
+  var d = drag; drag = null; ghost.style.display='none'; ghost.innerHTML='';
   if(d.moved){
     var k = slotAt(e.clientX, e.clientY);
     if(k) place(d.uid, k); else render();
   } else {
-    picked = (picked === d.uid) ? null : d.uid;   /* 눌러서 고르기 */
-    render();
-    if(picked !== null) say('놓을 자리를 누르세요.', '');
+    picked = (picked === d.uid) ? null : d.uid; render();
   }
 });
-
-/* 작업판을 누르면 — 고른 부품 놓기 / 놓인 부품 빼기 */
 board.addEventListener('pointerdown', function(e){
   var pl = e.target.closest('.pl');
   if(pl){ pull(pl.dataset.slot); return; }
@@ -440,108 +424,188 @@ board.addEventListener('pointerdown', function(e){
   if(k && picked !== null) place(picked, k);
 });
 
-/* ─────────────────────────────────────────────────────────
-   판정 — 이유는 알려 주지 않는다. 기록표에서 학생이 찾는다.
-   ───────────────────────────────────────────────────────── */
-function verdict(){
-  var ts = typesPlaced();
-  if(ts.indexOf(null) >= 0)       return { on:false, why:'gap'  };
-  if(ts.indexOf('rubber') >= 0 ||
-     ts.indexOf('wood')   >= 0)   return { on:false, why:'block'};
-  if(ts.indexOf('battery') < 0)   return { on:false, why:'nobat'};
-  if(ts.indexOf('bulb')    < 0)   return { on:false, why:'nobulb'};
-  if(ts.indexOf('swi') >= 0 && !swOn) return { on:false, why:'off' };
-  return { on:true, why: ts.indexOf('swi') >= 0 ? 'ok' : 'okNoSw' };
+/* ═══════════════════════════════════════════════════════════
+   팝업
+   ═══════════════════════════════════════════════════════════ */
+var pop = document.getElementById('pop'), popbox = document.getElementById('popbox');
+function openPop(html){ popbox.innerHTML = html; pop.classList.add('on'); }
+function closePop(){ pop.classList.remove('on'); }
+popbox.addEventListener('click', function(e){
+  var b = e.target.closest('button[data-act]');
+  if(b) ACT[b.dataset.act]();
+});
+
+var ACT = {};
+
+/* ── 미션 브리핑 ───────────────────────────────────────── */
+function briefPop(){
+  var m = M[mi];
+  openPop('<div class="kicker">'+m.kicker+'</div><h3>'+m.head+'</h3>'
+        + '<div class="body">'+m.brief+'</div>'
+        + '<div class="poprow"><button class="btn primary" data-act="start">해 볼게요</button></div>');
+}
+ACT.start = function(){ closePop(); };
+
+/* ── 예상 받기 ─────────────────────────────────────────── */
+function askPop(){
+  var m = M[mi];
+  openPop('<div class="kicker">'+m.kicker+' · 예상</div><h3>어떻게 될까요?</h3>'
+        + '<div class="body">'+m.ask+'</div>'
+        + '<div class="poprow">'
+        + '<button class="btn primary" data-act="gYes">💡 켜진다</button>'
+        + '<button class="btn" data-act="gNo">○ 안 켜진다</button></div>');
+}
+ACT.gYes = function(){ resolve(true); };
+ACT.gNo  = function(){ resolve(false); };
+
+/* ── 결과 ──────────────────────────────────────────────── */
+function resolve(guess){
+  closePop();
+  var willLight = circuitLights();
+  var btn = document.getElementById('btnGo');
+  btn.disabled = true; btn.textContent = '켜는 중…';
+  setTimeout(function(){
+    lit = willLight; render();
+    btn.textContent = '⚡ 켜 보기';
+    if(!willLight){
+      var bb = document.querySelector('.boardbox');
+      bb.classList.add('shake'); setTimeout(function(){ bb.classList.remove('shake'); }, 520);
+    }
+    setTimeout(function(){ resultPop(guess, willLight); }, willLight ? 900 : 620);
+  }, 1100);
 }
 
-var sayEl = document.getElementById('say');
-function say(html, cls){
-  sayEl.innerHTML = html || '부품 네 개를 빈자리에 놓고 <b>⚡ 켜 보기</b>를 누르세요.';
-  sayEl.className = cls || '';
+function resultPop(guess, on){
+  var m = M[mi];
+
+  /* 미션 3 — 처음 실패했을 때만 기록에 남기고, 여분 전선을 내어 준다 */
+  if(mi === 2 && !on && !spare){
+    spare = true;
+    bag.push({ uid: Math.max.apply(null, bag.map(function(p){ return p.uid; })) + 1, k:'ok' });
+    log.push({ n:m.n, guess:guess, lit:false });
+    render();
+    openPop('<div class="kicker">미션 3</div><h3>겉으로는 멀쩡한데…</h3>'
+          + '<div class="big no">불이 켜지지 않았습니다</div>'
+          + judgeHtml(guess, false)
+          + '<div class="body">길은 <b>양쪽 다 이어져</b> 있습니다. 그런데도 안 켜져요.<br>'
+          + '<b>여분 전선을 하나 더</b> 드릴게요. 하나씩 바꿔 끼워 범인을 찾아보세요.</div>'
+          + '<div class="poprow"><button class="btn primary" data-act="start">바꿔 볼게요</button></div>');
+    return;
+  }
+
+  /* 미션 3 — 엉뚱한 쪽을 바꾼 경우. 기록은 그대로 두고 다시 기회를 준다 */
+  if(mi === 2 && !on){
+    openPop('<div class="kicker">미션 3</div><h3>아직이네요</h3>'
+          + '<div class="big no">여전히 켜지지 않습니다</div>'
+          + '<div class="body">방금 바꾼 전선은 <b>범인이 아니었나 봅니다.</b><br>'
+          + '다른 쪽을 바꿔 보세요.</div>'
+          + '<div class="poprow"><button class="btn primary" data-act="start">다시 해 볼게요</button></div>');
+    return;
+  }
+
+  /* 미션 3 — 범인을 찾아 켜졌다. 속을 보여 주고 마무리로 넘긴다 */
+  if(mi === 2 && on){
+    revealed = true; render();
+    openPop('<div class="kicker">미션 3 · 찾았습니다</div><h3>범인은 이 전선</h3>'
+          + '<div class="big yes">불이 켜졌습니다!</div>'
+          + '<div class="body">빼낸 전선의 껍질을 벗겨 보니 —<br>'
+          + '속이 금속이 아니라 <b>전기가 통하지 않는 것</b>이었습니다.</div>'
+          + '<div style="max-width:200px;margin:12px auto 0">' + wireMini('bad') + '</div>'
+          + '<div class="qbox">🤔 ' + m.q + '</div>'
+          + '<div class="poprow"><button class="btn primary" data-act="next">'
+          + '세 결과 나란히 보기 →</button></div>');
+    return;
+  }
+
+  /* 미션 1 · 2 */
+  log.push({ n:m.n, guess:guess, lit:on });
+  openPop('<div class="kicker">'+m.kicker+' · 결과</div>'
+        + '<h3>'+(on ? '켜졌습니다' : '켜지지 않았습니다')+'</h3>'
+        + '<div class="big '+(on?'yes':'no')+'">'
+        + (on ? '불이 켜졌습니다!' : '…불이 켜지지 않습니다.') + '</div>'
+        + judgeHtml(guess, on)
+        + '<div class="qbox">🤔 '+m.q+'</div>'
+        + '<div class="poprow"><button class="btn primary" data-act="next">'
+        + '다음 미션으로 →</button></div>');
 }
 
-var MSG = {
-  gap:   '안 켜집니다.',
-  block: '안 켜집니다.',
-  nobat: '안 켜집니다.',
-  nobulb:'전구가 없어서 볼 것이 없습니다.',
-  off:   '안 켜집니다.',
-  ok:    '<b>불이 켜졌습니다!</b> 스위치를 눌러 껐다 켜 보세요.',
-  okNoSw:'<b>불이 켜졌습니다!</b> … 그런데 이 회로, <b>어떻게 끄죠?</b>'
+function judgeHtml(guess, on){
+  return guess === on
+    ? '<div class="judge hit">예상대로예요.</div>'
+    : '<div class="judge miss">✋ 예상과 달랐습니다!</div>';
+}
+
+ACT.next = function(){
+  closePop();
+  if(mi < 2){ mi++; startMission(); }
+  else { donePop(); }
 };
 
-function test(){
-  var v = verdict();
-  lit = v.on;
-  tries++;
-  logRow(v);
-  say(MSG[v.why], v.on ? 'hit' : 'miss');
+/* ── 마무리 ────────────────────────────────────────────── */
+var WHAT = ['왼쪽 길만 이었다', '양쪽 길을 이었다', '양쪽 길을 이었다<br>(전선 하나가 달랐다)'];
+function donePop(){
+  var cells = log.map(function(r, i){
+    return '<div class="rc'+(r.guess!==r.lit?' miss':'')+'"><div class="t">미션 '+r.n+'</div>'
+         + '<div class="w">'+WHAT[i]+'</div>'
+         + '<div class="r '+(r.lit?'y':'n')+'">'+(r.lit?'💡 켜짐':'○ 안 켜짐')+'</div></div>';
+  }).join('');
+  openPop('<div class="kicker">다 했습니다</div><h3>세 번의 결과</h3>'
+        + '<div class="recap">'+cells+'</div>'
+        + '<div class="qbox" style="margin-top:18px">🤔 <b>두 번</b> 켜지지 않았습니다.<br>'
+        + '그 이유가 <b>같을까요, 다를까요?</b></div>'
+        + '<div class="poprow"><button class="btn" data-act="redo">↺ 처음부터</button>'
+        + '<button class="btn primary" data-act="close">닫기</button></div>');
+}
+ACT.close = function(){
+  closePop();
+  document.getElementById('todoTx').innerHTML =
+    '다 했습니다. 선생님 이야기를 들으며 <b>왜 그런지</b> 생각해 보세요.';
+};
+ACT.redo = function(){ closePop(); mi = 0; log = []; startMission(); };
 
-  if(v.on){
-    done.m1 = true;
-    if(typesPlaced().indexOf('swi') < 0) done.m2 = true;
-  } else if(v.why !== 'gap' && v.why !== 'off'){
-    done.m3 = true;                      /* 네 자리를 다 채웠는데 안 켜짐 */
-  }
+/* ═══════════════════════════════════════════════════════════
+   미션 시작 · 화면 갱신
+   ═══════════════════════════════════════════════════════════ */
+function startMission(){
+  var m = M[mi];
+  slots = {L:null, R:null};
+  open = {L:m.open.L, R:m.open.R};
+  bag = m.bag.map(function(b, i){ return { uid:i, k:b.k }; });
+  if(m.preset) Object.keys(m.preset).forEach(function(k){ slots[k] = m.preset[k]; });
+  lit = false; picked = null; spare = false; revealed = false;
   render();
+  briefPop();
 }
 
-/* ─────────────────────────────────────────────────────────
-   기록표
-   ───────────────────────────────────────────────────────── */
-var recBody = document.getElementById('recBody');
-var rows = [];
-
-function logRow(v){
-  var ts = typesPlaced().map(function(t){ return t === null ? '(빈자리)' : PARTS[t].nm; });
-  var hasSw = typesPlaced().indexOf('swi') >= 0;
-  rows.push({
-    n: tries,
-    parts: ts.join(' · '),
-    sw: hasSw ? (swOn ? '켬' : '끔') : '없음',
-    on: v.on
-  });
-  recBody.innerHTML = rows.map(function(r){
-    return '<tr class="'+(r.on?'hit':'')+'"><td>'+r.n+'</td><td class="parts">'+r.parts+'</td><td>'+r.sw+'</td>'
-         + '<td><span class="rr '+(r.on?'y':'n')+'">'+(r.on?'💡 켜짐':'○ 안 켜짐')+'</span></td></tr>';
+function drawSteps(){
+  var el = document.getElementById('steps');
+  el.innerHTML = M.map(function(m, i){
+    var r = log.filter(function(x){ return x.n === m.n; })[0];
+    var cls = r ? 'done' : (i === mi ? 'now' : '');
+    var tail = r ? '<span class="rs">'+(r.lit?'💡':'○')+'</span>' : '';
+    return '<div class="st '+cls+'"><span class="no">'+m.n+'</span><span>'+m.head+'</span>'+tail+'</div>';
   }).join('');
 }
 
-/* ─────────────────────────────────────────────────────────
-   버튼 · 그리기
-   ───────────────────────────────────────────────────────── */
-var btnSw = document.getElementById('btnSw');
-
-document.getElementById('btnTest').addEventListener('click', test);
-
-btnSw.addEventListener('click', function(){
-  swOn = !swOn;
-  if(!swOn) lit = false;
-  render();
-  if(swOn) test(); else say('스위치를 껐습니다.', 'miss');
-});
-
-document.getElementById('btnReset').addEventListener('click', function(){
-  SLOT_IDS.forEach(function(k){ slots[k] = null; });
-  swOn = false; lit = false; picked = null;
-  say('', '');
-  render();
-});
-
 function render(){
-  drawBoard();
-  drawShelf();
-  var hasSw = typesPlaced().indexOf('swi') >= 0;
-  btnSw.hidden = !hasSw;
-  btnSw.textContent = swOn ? '🔌 스위치 끄기' : '🔌 스위치 켜기';
-  btnSw.classList.toggle('on', swOn);
-  Object.keys(done).forEach(function(m){
-    var el = document.querySelector('.mi[data-m="'+m+'"]');
-    if(el) el.classList.toggle('done', done[m]);
-  });
+  drawBoard(); drawShelf(); drawSteps();
+  var m = M[mi];
+  document.getElementById('todoTx').innerHTML =
+    needMet() ? '다 놓았습니다. <b>⚡ 켜 보기</b>를 누르세요.' : m.todo;
+  var go = document.getElementById('btnGo');
+  go.disabled = !needMet();
+  go.textContent = '⚡ 켜 보기';
 }
 
-render();
+document.getElementById('btnGo').addEventListener('click', function(){
+  if(needMet()) askPop();
+});
+document.getElementById('btnAgain').addEventListener('click', function(){
+  log = log.filter(function(x){ return x.n !== M[mi].n; });
+  startMission();
+});
+
+startMission();
 })();
 </script>
 </body>
