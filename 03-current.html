@@ -1318,6 +1318,249 @@ body.teacher .keyline-s{display:none}
  <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① 스위치 OFF 상태로 "전자가 이미 있고, 엄청 빠르게 떨고 있죠?" ② 「열운동 숨기기」 → "이제 진짜 이동만 봅시다. 거의 안 움직이죠." ③ 스위치 ON → "전구는 <b>즉시</b> 켜졌는데 노란 전자는 아직도 저기 있어요." ④ 호스 비유로 마무리. ⑤ "그래서 '전자가 달려가서 켠다'는 말은 <b>틀린 그림</b>입니다."</div></div>
 </div>
 
+ <div class="card" style="margin-top:18px">
+ <h3 class="card-t">🤔 잠깐 궁금! — 스위치를 켜는 순간, 무엇이 회로를 달려갔을까?</h3>
+ <p class="lead say" style="font-size:17px;margin-top:8px">전지에서 출발한 전자 <b>한 개</b>가
+ 전구까지 쏜살같이 달려간 걸까요? 눌러서 확인해 보세요.</p>
+
+ <div class="wq">
+  <div class="wq-stage">
+   <svg id="wqCir" viewBox="0 0 620 250" width="620" height="250" role="img"
+     aria-label="전지·스위치·전구가 이어진 네모난 회로. 도선 전체에 전자가 이미 들어 있고, 스위치를 닫으면 전기장의 변화가 회로를 따라 빠르게 퍼져 나가며 그 자리의 전자들이 움직이기 시작한다."></svg>
+   <svg id="wqHose" viewBox="0 0 620 250" width="620" height="250" hidden role="img"
+     aria-label="물이 가득 찬 긴 호스. 왼쪽 끝을 밀면 밀림이 호스를 따라 빠르게 전달되어 오른쪽 끝에서 곧바로 물이 나온다. 방금 넣은 물이 끝까지 간 것이 아니다."></svg>
+  </div>
+
+  <div class="wq-ctl">
+   <button type="button" class="btn primary" id="wqGo">🔌 스위치 닫기</button>
+   <button type="button" class="btn" id="wqAgain">↺ 다시 보기</button>
+   <label class="wq-tg"><input type="checkbox" id="wqE" checked> 전자 이동 보기</label>
+   <label class="wq-tg"><input type="checkbox" id="wqF" checked> 전기장 전달 보기</label>
+   <label class="wq-tg"><input type="checkbox" id="wqH"> 물 호스 비유 보기</label>
+  </div>
+
+  <div class="wq-say" id="wqSay" role="status" aria-live="polite">스위치를 닫아 보세요.</div>
+  <p class="wq-warn">⚠️ 화면 속 <b>전자의 이동은 눈에 보이도록 수백만 배 과장</b>했습니다.
+  실제로는 1분에 4 mm쯤 — 바로 위 카드의 숫자를 다시 보세요.</p>
+ </div>
+
+ <div class="wq-sum">
+  <b>한 줄 정리</b><br>
+  전구가 바로 켜지는 것은 전자가 전지에서 전구까지 순식간에 달려가기 때문이 아니라,
+  <b>전기장의 변화가 회로를 따라 매우 빠르게 전달</b>되기 때문입니다.
+ </div>
+
+ <div class="note class"><span class="ic">💬</span><div><b>지도 노트</b> —
+ 「전기장 전달 보기」만 켜고 한 번, 「전자 이동 보기」만 켜고 한 번 보여 주세요.
+ <b>노란 물결(전기장)은 순식간에 회로를 한 바퀴 돌지만, 파란 전자는 거의 제자리</b>입니다.
+ 그 대비가 이 카드의 전부예요.
+ 「물 호스 비유 보기」는 학생이 "그럼 뭐가 간 거예요?"라고 물을 때 켜세요.</div></div>
+ </div>
+
+<style id="wq-css">
+.wq{margin-top:14px}
+.wq-stage{background:var(--surface2);border:1.5px solid var(--line);border-radius:14px;padding:6px 8px}
+.wq-stage svg{display:block;width:100%;height:auto;aspect-ratio:620/250}
+.wq-stage svg[hidden]{display:none}
+.wq-ctl{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:12px}
+.wq-tg{display:inline-flex;align-items:center;gap:7px;font-family:var(--gowun);font-size:14.5px;
+ color:var(--ink-dim);background:var(--surface2);border:1.5px solid var(--line);border-radius:999px;
+ padding:9px 16px;cursor:pointer;transition:.15s}
+.wq-tg:hover{border-color:var(--accent);color:var(--accent)}
+.wq-tg input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer}
+.wq-say{margin:12px auto 0;max-width:640px;text-align:center;font-family:var(--gowun);font-size:16px;
+ line-height:1.65;color:var(--ink-dim);background:#fbf1e4;border:1.5px solid var(--line);
+ border-radius:12px;padding:12px 16px;min-height:52px;display:flex;align-items:center;justify-content:center}
+.wq-say b{color:var(--accent);font-family:var(--disp)}
+.wq-warn{margin-top:10px;font-family:var(--gowun);font-size:13.5px;color:var(--ink-mute);text-align:center;line-height:1.6}
+.wq-sum{margin-top:14px;padding:15px 18px;border-radius:14px;border:1.6px solid var(--accent);
+ background:rgba(160,92,44,.07);font-family:var(--gowun);font-size:16px;line-height:1.7}
+.wq-sum b{color:var(--accent);font-family:var(--disp)}
+@media(max-width:520px){.wq-tg{font-size:13.5px;padding:8px 13px}}
+</style>
+
+<script>
+/* 🤔 잠깐 궁금! — 스위치를 켜는 순간 무엇이 달려갔나
+   노란 물결(전기장의 변화)은 회로를 순식간에 돌고, 파란 전자는 거의 제자리에 있다.
+   그 대비 하나만 보여 주는 것이 이 시뮬레이터의 전부다. */
+(function(){
+  var cir = document.getElementById('wqCir'); if(!cir) return;
+  var hose = document.getElementById('wqHose');
+  var say  = document.getElementById('wqSay');
+  var tgE  = document.getElementById('wqE'), tgF = document.getElementById('wqF'),
+      tgH  = document.getElementById('wqH');
+
+  /* ── 회로 경로 : 전지 (−)단자에서 출발해 스위치·전구를 거쳐 (+)단자로 ── */
+  var PTS = [[296,200],[70,200],[70,60],[550,60],[550,200],[324,200]];
+  var SEG = [], TOTAL = 0;
+  (function(){
+    for(var i=0;i<PTS.length-1;i++){
+      var a=PTS[i], b=PTS[i+1];
+      var L=Math.hypot(b[0]-a[0], b[1]-a[1]);
+      SEG.push({a:a,b:b,L:L,s0:TOTAL}); TOTAL+=L;
+    }
+  })();
+  function ptAt(s){
+    s=Math.max(0,Math.min(TOTAL,s));
+    for(var i=0;i<SEG.length;i++){
+      var g=SEG[i];
+      if(s<=g.s0+g.L||i===SEG.length-1){
+        var t=(s-g.s0)/g.L;
+        return [g.a[0]+(g.b[0]-g.a[0])*t, g.a[1]+(g.b[1]-g.a[1])*t];
+      }
+    }
+    return PTS[0];
+  }
+  var D = 'M' + PTS.map(function(p){return p[0]+' '+p[1];}).join(' L');
+  var S_SW = 296+70;          /* 스위치 자리 */
+  var S_BULB = 296+140+240;   /* 전구 자리 */
+  var N = 30, GAP = TOTAL/N;
+
+  var FIELD_V = TOTAL/0.9;    /* 전기장 변화가 퍼지는 빠르기 (화면용) */
+  var DRIFT_V = 11;           /* 전자가 실제로 밀려가는 빠르기 — 아주 느리다 */
+
+  var t0 = 0, run = false, hoseMode = false;
+
+  /* ── 한 번만 그리는 뼈대 ── */
+  function shell(){
+    var s = '<defs><radialGradient id="wqGlow" cx=".5" cy=".5" r=".5">'
+      + '<stop offset="0" stop-color="#ffe9b4"/><stop offset="1" stop-color="#ffd166" stop-opacity="0"/>'
+      + '</radialGradient></defs>';
+    s += '<path d="'+D+'" fill="none" stroke="#8d7a5c" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>';
+    s += '<path id="wqWave" d="'+D+'" fill="none" stroke="#f2b134" stroke-width="10" opacity=".85"'
+       + ' stroke-linecap="round" stroke-dasharray="0 99999"/>';
+    s += '<g id="wqEls"></g>';
+    /* 전지 */
+    s += '<line x1="296" y1="182" x2="296" y2="218" stroke="#2e5f8f" stroke-width="7"/>'
+       + '<line x1="324" y1="174" x2="324" y2="226" stroke="#b23a30" stroke-width="3"/>'
+       + '<text x="286" y="243" text-anchor="middle" font-family="Jua,sans-serif" font-size="15" fill="#2e5f8f">(−)</text>'
+       + '<text x="336" y="243" text-anchor="middle" font-family="Jua,sans-serif" font-size="15" fill="#b23a30">(+)</text>'
+       + '<text x="310" y="168" text-anchor="middle" font-family="Jua,sans-serif" font-size="15" fill="#6b573f">전지</text>';
+    /* 스위치 */
+    s += '<g id="wqSw"><circle cx="70" cy="152" r="5" fill="#6b573f"/><circle cx="70" cy="108" r="5" fill="#6b573f"/>'
+       + '<line id="wqBlade" x1="70" y1="152" x2="96" y2="112" stroke="#6b573f" stroke-width="4.5" stroke-linecap="round"/></g>'
+       + '<text x="70" y="180" text-anchor="middle" font-family="Jua,sans-serif" font-size="15" fill="#6b573f">스위치</text>';
+    /* 전구 — 원 안의 아치, 다른 페이지와 같은 약속 */
+    s += '<circle id="wqHalo" cx="310" cy="60" r="42" fill="url(#wqGlow)" opacity="0"/>'
+       + '<circle id="wqBulbF" cx="310" cy="60" r="24" fill="#fffcf4"/>'
+       + '<circle id="wqBulbO" cx="310" cy="60" r="24" fill="none" stroke="#6b573f" stroke-width="3"/>'
+       + '<path id="wqFil" d="M297 60 A 13 13 0 0 1 323 60" fill="none" stroke="#6b573f" stroke-width="3" stroke-linecap="round"/>'
+       + '<line x1="286" y1="60" x2="297" y2="60" stroke="#6b573f" stroke-width="3"/>'
+       + '<line x1="323" y1="60" x2="334" y2="60" stroke="#6b573f" stroke-width="3"/>'
+       + '<text x="310" y="30" text-anchor="middle" font-family="Jua,sans-serif" font-size="15" fill="#6b573f">전구</text>';
+    cir.innerHTML = s;
+  }
+
+  /* 호스 비유 — 같은 이야기를 물로 */
+  var HX0 = 70, HX1 = 550, HY = 130, HN = 18;
+  function hoseShell(){
+    var s = '<rect x="'+HX0+'" y="'+(HY-26)+'" width="'+(HX1-HX0)+'" height="52" rx="26"'
+      + ' fill="#dcecf5" stroke="#a08b64" stroke-width="3"/>';
+    s += '<path id="hsWave" d="M'+HX0+' '+HY+' L'+HX1+' '+HY+'" fill="none" stroke="#f2b134"'
+       + ' stroke-width="34" opacity=".55" stroke-dasharray="0 99999"/>';
+    s += '<g id="hsDrops"></g>';
+    /* 미는 손 */
+    s += '<g id="hsHand"><path d="M20 108 q28 -10 48 2 q11 7 11 18 q0 13 -13 17 q-22 7 -46 -2 z"'
+       + ' fill="#e7bc95" stroke="#b98f68" stroke-width="1.6"/></g>'
+       + '<text x="46" y="176" text-anchor="middle" font-family="Jua,sans-serif" font-size="15" fill="#6b573f">민다</text>';
+    s += '<text x="310" y="66" text-anchor="middle" font-family="Jua,sans-serif" font-size="15" fill="#6b573f">물이 가득 찬 호스</text>';
+    s += '<g id="hsOut"></g>';
+    s += '<text x="574" y="176" text-anchor="middle" font-family="Jua,sans-serif" font-size="15" fill="#2e5f8f">여기서 바로 나온다</text>';
+    hose.innerHTML = s;
+  }
+
+  function paint(now){
+    var el = now && run ? (now - t0)/1000 : 0;
+    var d  = el * FIELD_V;                       /* 전기장 변화가 퍼진 거리 */
+    var mv = el * DRIFT_V;                       /* 전자가 밀려간 거리 */
+
+    if(!hoseMode){
+      /* 노란 물결 — 스위치에서 양쪽으로 퍼진다 */
+      var w = cir.querySelector('#wqWave');
+      var lo = Math.max(0, S_SW - d), hi = Math.min(TOTAL, S_SW + d);
+      var on = run && tgF.checked && d > 0;
+      w.setAttribute('stroke-dasharray', on ? (hi-lo)+' 99999' : '0 99999');
+      w.setAttribute('stroke-dashoffset', on ? -lo : 0);
+      w.setAttribute('opacity', on ? Math.max(0, .85 - el*0.35) : 0);
+
+      /* 전자 — 전기장 변화가 지나간 자리부터 움직이기 시작한다 */
+      var g = '';
+      if(tgE.checked){
+        for(var i=0;i<N;i++){
+          var base = i*GAP + 8;
+          var woke = run && Math.abs(base - S_SW) <= d;
+          var s = base + (woke ? Math.min(mv, GAP*0.8) : 0);
+          var p = ptAt(s);
+          g += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="7" fill="'
+             + (woke ? '#2f6ea8' : '#9fb4c8') + '"/>'
+             + '<line x1="'+(p[0]-3.4).toFixed(1)+'" y1="'+p[1].toFixed(1)+'" x2="'+(p[0]+3.4).toFixed(1)
+             + '" y2="'+p[1].toFixed(1)+'" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/>';
+        }
+      }
+      cir.querySelector('#wqEls').innerHTML = g;
+
+      /* 전구 — 전기장 변화가 도달한 직후 밝아진다 */
+      var litNow = run && d >= Math.abs(S_BULB - S_SW);
+      cir.querySelector('#wqHalo').setAttribute('opacity', litNow ? '1' : '0');
+      cir.querySelector('#wqBulbF').setAttribute('fill', litNow ? '#ffe9b4' : '#fffcf4');
+      cir.querySelector('#wqBulbO').setAttribute('stroke', litNow ? '#c67a12' : '#6b573f');
+      cir.querySelector('#wqFil').setAttribute('stroke', litNow ? '#c67a12' : '#6b573f');
+      cir.querySelector('#wqBlade').setAttribute('x2', run ? '70' : '96');
+      cir.querySelector('#wqBlade').setAttribute('y2', run ? '108' : '112');
+    } else {
+      var hw = hose.querySelector('#hsWave');
+      var hd = Math.min(HX1-HX0, el*(HX1-HX0)/0.9);
+      var hon = run && tgF.checked && hd > 0;
+      hw.setAttribute('stroke-dasharray', hon ? hd+' 99999' : '0 99999');
+      hw.setAttribute('opacity', hon ? Math.max(0, .55 - el*0.22) : 0);
+      var gap = (HX1-HX0)/HN, gg = '';
+      if(tgE.checked){
+        for(var k=0;k<HN;k++){
+          var bx = HX0 + 14 + k*gap;
+          var wk = run && (bx - HX0) <= hd;
+          var x = bx + (wk ? Math.min(mv, gap*0.7) : 0);
+          gg += '<circle cx="'+x.toFixed(1)+'" cy="'+HY+'" r="9" fill="'+(wk?'#3d8fc4':'#a8c4d8')+'"/>';
+        }
+      }
+      hose.querySelector('#hsDrops').innerHTML = gg;
+      var outNow = run && hd >= (HX1-HX0) - 2;
+      hose.querySelector('#hsOut').innerHTML = outNow
+        ? '<circle cx="572" cy="128" r="9" fill="#3d8fc4"/><circle cx="588" cy="146" r="7" fill="#3d8fc4" opacity=".8"/>'
+          + '<circle cx="576" cy="160" r="5.5" fill="#3d8fc4" opacity=".6"/>' : '';
+      hose.querySelector('#hsHand').setAttribute('transform', run ? 'translate(26,0)' : 'translate(0,0)');
+    }
+
+    if(run && el < 3.2) requestAnimationFrame(paint);
+    else if(run) run = 'idle';
+  }
+
+  function start(){
+    t0 = performance.now(); run = true;
+    say.innerHTML = hoseMode
+      ? '한쪽 끝을 밀자 <b>반대쪽에서 곧바로</b> 물이 나옵니다. 방금 넣은 그 물이 끝까지 간 게 아니에요.'
+      : '노란 물결(<b>전기장의 변화</b>)이 회로를 한 바퀴 도는 동안, 파란 전자는 <b>거의 제자리</b>입니다.';
+    requestAnimationFrame(paint);
+  }
+  function reset(){
+    run = false;
+    say.textContent = hoseMode ? '왼쪽 끝을 밀어 보세요.' : '스위치를 닫아 보세요.';
+    paint(0);
+  }
+
+  document.getElementById('wqGo').addEventListener('click', start);
+  document.getElementById('wqAgain').addEventListener('click', reset);
+  [tgE, tgF].forEach(function(x){ x.addEventListener('change', function(){ paint(performance.now()); }); });
+  tgH.addEventListener('change', function(){
+    hoseMode = tgH.checked;
+    cir.hidden = hoseMode; hose.hidden = !hoseMode;
+    document.getElementById('wqGo').textContent = hoseMode ? '💧 물을 밀어 보기' : '🔌 스위치 닫기';
+    reset();
+  });
+
+  shell(); hoseShell(); reset();
+})();
+</script>
+
 <script>
 (function(){
   var cv=document.getElementById('drCv'); if(!cv) return;
@@ -2016,17 +2259,17 @@ body.teacher .keyline-s{display:none}
  <div class="simstage"><canvas id="rwCv" width="660" height="230"></canvas></div>
  <div class="simctl">
  <h4>🎛️ 도선 바꾸기</h4>
- <div class="ctl"><label>도선의 길이 <span class="val" id="rwLenV">1배</span></label>
+ <div class="ctl"><label>도선의 길이 <span class="val" id="wlLenV">1배</span></label>
  <input type="range" id="rwLen" min="1" max="3" step="1" value="1" aria-label="도선의 길이"></div>
- <div class="ctl"><label>도선의 굵기 <span class="val" id="rwThkV">1배</span></label>
+ <div class="ctl"><label>도선의 굵기 <span class="val" id="wlThkV">1배</span></label>
  <input type="range" id="rwThk" min="1" max="3" step="1" value="1" aria-label="도선의 굵기"></div>
  <div class="readout">
  <div class="r"><div class="lab2">1초에 지나간 전자 수 <small>(= 전류)</small></div><div class="v" id="rwI">–</div></div>
  <div class="r"><div class="lab2">1초에 부딪힌 횟수</div><div class="v" id="rwC">–</div></div>
  <div class="r"><div class="lab2">전자가 나아가는 빠르기</div><div class="v" id="rwV">–</div></div>
- <div class="r"><div class="lab2">상대적인 저항</div><div class="v" id="rwR">–</div></div>
+ <div class="r"><div class="lab2">상대적인 저항</div><div class="v" id="wlR">–</div></div>
  </div>
- <div class="btn-row" style="margin-top:12px"><button class="btn sm ghost" id="rwReset">↺ 처음으로</button></div>
+ <div class="btn-row" style="margin-top:12px"><button class="btn sm ghost" id="wlReset">↺ 처음으로</button></div>
  </div>
  </div>
  <div class="verdict" id="rwObs" style="display:none"></div>
@@ -2136,6 +2379,198 @@ body.teacher .keyline-s{display:none}
  <p class="help" style="margin-top:10px">
  저항은 <b class="k">도선의 재질·길이·굵기</b>가 정하는 값이에요 — 전압을 아무리 올려도 도선을 바꾸지 않으면 저항은 그대로입니다.</p>
  </div>
+
+ <div class="card" style="margin-top:18px">
+ <h3 class="card-t">🤔 잠깐 궁금! — 저항이 없으면 무조건 좋을까?</h3>
+
+ <div class="rq-ask">
+  <p>저항은 전류를 <b>방해</b>하는 성질이라고 배웠습니다.<br>
+  그렇다면 저항은 <b>없을수록 무조건 좋은</b> 걸까요?</p>
+  <div class="rq-row">
+   <button type="button" class="btn" id="rqThink">💭 내 생각 해보기</button>
+   <button type="button" class="btn primary" id="rqShow">설명 보기</button>
+  </div>
+  <div class="rq-think" id="rqThinkBox" hidden>
+   짝과 <b>30초</b>만 이야기해 보세요 — 우리 집에서 저항이 <b>있어야</b> 하는 물건이 있을까요?
+   답을 정하지 말고, 그냥 떠오르는 것을 말해 보세요.
+  </div>
+ </div>
+
+ <div id="rqBody" hidden>
+  <p class="lead say" style="font-size:17px;margin-top:16px">먼저 손잡이를 돌려 보세요.
+  <b class="k">전압은 그대로</b>, 저항만 바꿉니다.</p>
+
+  <div class="rq-stage">
+   <svg id="rqSvg" viewBox="0 0 600 220" width="600" height="220" role="img"
+     aria-label="전지와 저항체와 전구가 이어진 회로. 저항을 작게 하면 전류를 나타내는 화살표가 많아지고 전구가 밝아지며, 저항이 거의 없으면 전류가 지나치게 커져 위험하다."></svg>
+  </div>
+
+  <div class="rq-ctl">
+   <span class="rq-lb">저항 작게</span>
+   <input type="range" id="rqR" min="0" max="4" step="1" value="2" aria-label="저항의 크기">
+   <span class="rq-lb">크게</span>
+  </div>
+
+  <div class="rq-say" id="rqSay" role="status" aria-live="polite"></div>
+
+  <h4 class="rq-h">세 가지를 나란히 놓고 보면</h4>
+  <div class="rq-grid">
+   <div class="rq-c">
+    <div class="rq-ic">🔌</div><div class="rq-t">전선</div>
+    <div class="rq-role">전기를 <b>전달</b>하는 역할</div>
+    <p>저항이 <b>작을수록 좋습니다.</b> 저항이 크면 전선이 뜨거워지면서
+    전기 에너지를 길에서 흘려 버리게 되니까요.</p>
+    <div class="rq-tag ok">저항 작게</div>
+   </div>
+   <div class="rq-c">
+    <div class="rq-ic">💡</div><div class="rq-t">전구 · 전열기</div>
+    <div class="rq-role">전기를 <b>빛·열로 바꾸는</b> 역할</div>
+    <p>저항이 <b>있어야 합니다.</b> 전구의 필라멘트는 저항이 크기 때문에
+    뜨거워지면서 빛을 냅니다. 전기난로도 같은 원리예요.</p>
+    <div class="rq-tag need">알맞은 저항</div>
+   </div>
+   <div class="rq-c danger">
+    <div class="rq-ic">⚠️</div><div class="rq-t">합선(단락)</div>
+    <div class="rq-role">전지의 두 극을 <b>그냥 잇는</b> 것</div>
+    <p>저항이 거의 없어 전류가 <b>지나치게</b> 흐릅니다. 전선이 뜨거워지고
+    전지가 망가지거나 불이 날 수 있어요. <b>절대 하지 마세요.</b></p>
+    <div class="rq-tag bad">위험</div>
+   </div>
+  </div>
+
+  <div class="rq-sum">
+   <b>한 줄 정리</b><br>
+   전류를 흐르게 하는 것은 <b>전압</b>이고, 저항은 전류의 크기를 조절하거나
+   전기 에너지가 <b>빛·열로 바뀌게</b> 하는 성질입니다.
+  </div>
+
+  <div class="note"><span class="ic">💧</span><div><b>물로 다시 보면</b> —
+  전압은 물을 밀어 주는 <b>힘</b>, 전류는 흐르는 <b>물의 양</b>, 저항은 <b>관이 좁은 정도</b>입니다.
+  다만 비유는 비유일 뿐 — 좁은 관은 물을 데우지 않지만, <b>저항은 전기 에너지를 열과 빛으로 바꿉니다.</b>
+  전구가 켜지는 것이 바로 그것이에요.</div></div>
+
+  <div class="note class"><span class="ic">💬</span><div><b>지도 노트</b> —
+  손잡이를 <b>맨 왼쪽까지</b> 밀어 합선 경고를 띄운 뒤 "그럼 저항이 없으면 좋은 걸까요?"를 다시 물으세요.
+  학생 대부분이 "저항 = 나쁜 것"으로 알고 들어옵니다. 전구가 <b>저항 덕분에</b> 빛난다는 한 문장이
+  이 카드의 핵심입니다.</div></div>
+ </div>
+ </div>
+
+<style id="rq-css">
+.rq-ask{margin-top:14px;padding:16px 18px;border-radius:14px;border:1.6px solid var(--accent);
+ background:rgba(160,92,44,.07)}
+.rq-ask p{font-family:var(--gowun);font-size:17px;line-height:1.7;color:var(--ink-dim)}
+.rq-ask p b{color:var(--accent);font-family:var(--disp)}
+.rq-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.rq-think{margin-top:12px;padding:12px 15px;border-radius:11px;background:var(--surface2);
+ border:1.5px dashed var(--line);font-family:var(--gowun);font-size:15.5px;line-height:1.65;color:var(--ink-dim)}
+.rq-think[hidden]{display:none}
+#rqBody[hidden]{display:none}
+.rq-stage{margin-top:12px;background:var(--surface2);border:1.5px solid var(--line);border-radius:14px;padding:6px 8px}
+.rq-stage svg{display:block;width:100%;height:auto;aspect-ratio:600/220}
+.rq-ctl{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:13px;flex-wrap:wrap}
+.rq-ctl input[type=range]{width:min(340px,70vw);accent-color:var(--accent);cursor:pointer}
+.rq-lb{font-family:var(--jua);font-size:14px;color:var(--ink-mute)}
+.rq-say{margin:12px auto 0;max-width:640px;text-align:center;font-family:var(--gowun);font-size:16px;
+ line-height:1.65;color:var(--ink-dim);background:#fbf1e4;border:1.5px solid var(--line);
+ border-radius:12px;padding:13px 16px;min-height:56px;display:flex;align-items:center;justify-content:center}
+.rq-say b{color:var(--accent);font-family:var(--disp)}
+.rq-say.warn{border-color:#b3362e;background:#fbeae8}
+.rq-say.warn b{color:#b3362e}
+.rq-h{font-family:var(--jua);font-size:17px;color:var(--gold);margin-top:20px}
+.rq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px;margin-top:11px}
+.rq-c{border:1.5px solid var(--line);border-radius:14px;padding:14px 15px;background:var(--surface2)}
+.rq-c.danger{border-color:#b3362e;background:#fdf3f1}
+.rq-ic{font-size:26px}
+.rq-t{font-family:var(--jua);font-size:17px;margin-top:4px}
+.rq-role{font-family:var(--gowun);font-size:13.5px;color:var(--ink-mute);margin:4px 0 8px}
+.rq-c p{font-family:var(--gowun);font-size:14.5px;line-height:1.7;color:var(--ink-dim)}
+.rq-tag{display:inline-block;margin-top:10px;font-family:var(--jua);font-size:13px;padding:5px 13px;border-radius:999px}
+.rq-tag.ok{background:#e8f1e6;color:#2c7a44}
+.rq-tag.need{background:#fbf0df;color:var(--accent)}
+.rq-tag.bad{background:#f7ddd9;color:#b3362e}
+.rq-sum{margin-top:16px;padding:15px 18px;border-radius:14px;border:1.6px solid var(--accent);
+ background:rgba(160,92,44,.07);font-family:var(--gowun);font-size:16px;line-height:1.7}
+.rq-sum b{color:var(--accent);font-family:var(--disp)}
+</style>
+
+<script>
+/* 🤔 잠깐 궁금! — 저항이 없으면 무조건 좋을까?
+   정량 계산은 옴의 실험대(2-7-2-2)의 몫이고, 여기서는 저항의 '역할'만 본다.
+   전압은 고정, 저항만 다섯 단계로 바꾸며 전류·밝기·위험을 눈으로 견준다. */
+(function(){
+  var svg = document.getElementById('rqSvg'); if(!svg) return;
+  var rng = document.getElementById('rqR'), say = document.getElementById('rqSay');
+
+  var LV = [
+   {nm:'거의 없음', w:6,  n:9, br:1.00, hot:1, danger:true,
+    msg:'저항이 <b>거의 없습니다.</b> 전류가 지나치게 흘러 도선이 뜨거워집니다 — 이것이 <b>합선(단락)</b>이에요.'},
+   {nm:'작다',      w:12, n:7, br:0.92, hot:.45,
+    msg:'저항이 작아 전류가 <b>많이</b> 흐릅니다. 전구는 아주 밝지만 오래 못 갑니다.'},
+   {nm:'알맞다',    w:22, n:5, br:0.72, hot:0,
+    msg:'알맞은 저항입니다. 전구가 <b>환하게</b> 켜집니다 — 저항 덕분에 필라멘트가 뜨거워져 빛이 나요.'},
+   {nm:'크다',      w:34, n:3, br:0.40, hot:0,
+    msg:'저항이 커서 전류가 <b>적게</b> 흐릅니다. 전구가 어두워졌어요.'},
+   {nm:'아주 크다', w:48, n:1, br:0.14, hot:0,
+    msg:'저항이 아주 큽니다. 전류가 거의 흐르지 못해 전구가 <b>겨우</b> 켜집니다.'}
+  ];
+
+  function draw(i){
+    var L = LV[i];
+    var s = '<defs><radialGradient id="rqG" cx=".5" cy=".5" r=".5">'
+      + '<stop offset="0" stop-color="#ffe9b4"/><stop offset="1" stop-color="#ffd166" stop-opacity="0"/>'
+      + '</radialGradient></defs>';
+    /* 회로 — 네모 한 바퀴 */
+    var wire = L.danger ? '#c2452f' : '#8d7a5c';
+    s += '<path d="M300 180 L60 180 L60 60 L240 60 M360 60 L540 60 L540 180 L300 180" fill="none" stroke="'
+       + wire + '" stroke-width="'+(L.danger?6:4.5)+'" stroke-linejoin="round" stroke-linecap="round"/>';
+    /* 전지 (전압 고정) */
+    s += '<line x1="300" y1="162" x2="300" y2="198" stroke="#2e5f8f" stroke-width="7"/>'
+       + '<line x1="326" y1="154" x2="326" y2="206" stroke="#b23a30" stroke-width="3"/>'
+       + '<text x="313" y="150" text-anchor="middle" font-family="Jua,sans-serif" font-size="14.5" fill="#6b573f">전지 (전압 그대로)</text>';
+    /* 저항체 — 굵기가 바뀐다 : 굵을수록 저항이 작다 */
+    var h = Math.max(7, 46 - L.w*0.7);
+    s += '<rect x="240" y="'+(60-h/2)+'" width="120" height="'+h+'" rx="'+(h/2)+'" fill="#e8dcc0" stroke="#8a5f24" stroke-width="2.5"/>'
+       + '<text x="300" y="'+(60-h/2-12)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="15" fill="#8a5f24">저항 — '+L.nm+'</text>';
+    /* 전구 */
+    var glow = L.br;
+    s += '<circle cx="60" cy="120" r="'+(26+glow*22).toFixed(0)+'" fill="url(#rqG)" opacity="'+glow.toFixed(2)+'"/>'
+       + '<circle cx="60" cy="120" r="24" fill="'+(glow>.05?'#ffe9b4':'#fffcf4')+'" opacity="'+(0.35+glow*0.65).toFixed(2)+'"/>'
+       + '<circle cx="60" cy="120" r="24" fill="none" stroke="'+(glow>.5?'#c67a12':'#6b573f')+'" stroke-width="3"/>'
+       + '<path d="M47 120 A 13 13 0 0 1 73 120" fill="none" stroke="'+(glow>.5?'#c67a12':'#6b573f')+'" stroke-width="3" stroke-linecap="round"/>'
+       + '<text x="60" y="166" text-anchor="middle" font-family="Jua,sans-serif" font-size="15" fill="#6b573f">전구</text>';
+    /* 전류 — 화살표 개수로 */
+    var ax = 400, g = '';
+    for(var k=0;k<L.n;k++){
+      var x = ax + k*20;
+      g += '<polygon points="'+x+',52 '+(x+13)+',60 '+x+',68" fill="'+(L.danger?'#c2452f':'#a05c2c')+'"/>';
+    }
+    s += g + '<text x="'+(ax+L.n*10)+'" y="40" text-anchor="middle" font-family="Jua,sans-serif" font-size="14.5" fill="'
+       + (L.danger?'#c2452f':'#a05c2c')+'">전류</text>';
+    /* 뜨거움 표시 */
+    if(L.hot){
+      s += '<text x="150" y="205" font-family="Jua,sans-serif" font-size="15" fill="#c2452f" opacity="'+L.hot+'">'
+         + '🔥 도선이 뜨거워집니다</text>';
+    }
+    svg.innerHTML = s;
+    say.innerHTML = L.msg;
+    say.className = 'rq-say' + (L.danger ? ' warn' : '');
+  }
+
+  rng.addEventListener('input', function(){ draw(+rng.value); });
+  document.getElementById('rqThink').addEventListener('click', function(){
+    var b = document.getElementById('rqThinkBox'); b.hidden = !b.hidden;
+  });
+  document.getElementById('rqShow').addEventListener('click', function(){
+    var b = document.getElementById('rqBody');
+    b.hidden = false;
+    this.textContent = '설명 보기';
+    draw(+rng.value);
+    b.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+  draw(2);
+})();
+</script>
 
  <div class="expc"><h3 class="expc-t">🧪 교실에서 해 보기 — 연필로 그리는 저항</h3><p class="expc-s">방금 시뮬레이션에서 본 <b>길이와 굵기</b>를 종이 위에서 확인합니다<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">1</span><h4>연필 그림 회로</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · 4B 이상 진한 연필, 도화지, LED, 건전지 2~3개, 집게 전선, (있으면) 저항계·전압계</div><ol><li>도화지에 <b>10 cm 길이, 1 cm 폭</b>의 띠를 아주 진하게 여러 번 덧칠합니다. 흑연이 종이에 두껍게 얹히도록요.</li><li>띠의 양 끝을 집게로 물고, 건전지와 LED를 연결합니다.</li><li>집게 하나를 띠를 따라 <b>움직여</b> 간격을 넓혔다 좁혔다 해 봅니다.</li><li>같은 간격에서 띠를 <b>더 진하고 굵게</b> 덧칠한 뒤 다시 봅니다.</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 집게 간격을 <b>넓히면 어두워지고</b>, 띠를 <b>덧칠하면 밝아집니다</b>. 저항계가 있다면 숫자로도 확인해 보세요.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">흑연은 전기가 통하지만 금속만큼 잘 통하지는 않습니다 — 그래서 <b>저항</b> 역할을 하죠.<br><b>간격을 넓힌다</b> = 전자가 지나야 할 길이 <b>길어진다</b> → 저항 커짐 → 전류 줄어듦 → 어두워짐.<br><b>덧칠한다</b> = 흑연 층이 <b>두꺼워진다</b> = 길이 <b>넓어진다</b> → 저항 작아짐 → 밝아짐.<br>저항은 <b>길이에 비례하고 단면적에 반비례한다</b> — 방금 시뮬레이션에서 슬라이더로 움직였던 그 관계를 연필로 다시 그린 겁니다.</div></details><p class="exp-tip"><span>💡</span><span>잘 안 되면 연필을 눕혀 칠하세요. 그래도 안 되면 <b>연필심 자체</b>(샤프심 여러 개)를 회로에 물리면 확실합니다.</span></p></div></details></div>
 
@@ -3332,8 +3767,8 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
   els=[];
   for(let i=0;i<n;i++) els.push({x:X0+Math.random()*L, y:y0+4+Math.random()*(H-8), jy:0});
   hits=0; cross=0; win=[];
-  $('#rwLenV').textContent=len+'배'; $('#rwThkV').textContent=thk+'배';
-  $('#rwR').innerHTML=(Math.round(len/thk*100)/100)+'<small> 배</small>';
+  $('#wlLenV').textContent=len+'배'; $('#wlThkV').textContent=thk+'배';
+  $('#wlR').innerHTML=(Math.round(len/thk*100)/100)+'<small> 배</small>';
   $('#rwV').innerHTML=(Math.round(100/len)/100)+'<small> 배</small>';
  }
  function step(dt){
@@ -3402,7 +3837,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
    +(Math.round(len/thk*100)/100)+'배</b>. 가운데 선을 지나가는 전자 수를 눈으로 세어 보세요.';
   save(); updateProgress();
  }));
- $('#rwReset').addEventListener('click',reset);
+ $('#wlReset').addEventListener('click',reset);
 
  $('#wwPick').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b)return;
