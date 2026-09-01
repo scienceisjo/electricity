@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>전지도 없이 전구를 켜 보자 · 가상 실험실</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{
+ --abyss:#f2eade; --surface2:#fffcf4; --line:#c1ac82; --line-soft:#dccfae;
+ --ink:#2e2315; --ink-dim:#5c4a33; --ink-mute:#96805c;
+ --accent:#a05c2c; --gold:#8a5f24; --ok:#2c7a44; --neon:#ff6a2a;
+ --disp:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+ --jua:"Jua",var(--disp); --gowun:"Gowun Dodum",var(--disp);
+ --r:16px; --shadow:0 18px 50px -22px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overscroll-behavior:none}
+body{font-family:var(--disp);color:var(--ink);background:
+ radial-gradient(900px 560px at 8% 6%, rgba(160,92,44,.08), transparent 60%),
+ radial-gradient(700px 480px at 92% 90%, rgba(44,110,95,.07), transparent 55%),
+ var(--abyss); min-height:100vh; -webkit-font-smoothing:antialiased}
+
+header.top{padding:20px 20px 2px; text-align:center}
+header.top h1{font-family:var(--jua); font-size:clamp(21px,4.2vw,32px); line-height:1.3}
+header.top h1 .em{color:var(--accent)}
+.wrap{max-width:900px; margin:0 auto; padding:10px 14px 40px}
+
+.steps{display:flex; gap:7px; justify-content:center; margin:13px 0 4px; flex-wrap:wrap}
+.st{display:flex; align-items:center; gap:7px; background:var(--surface2); border:1.5px solid var(--line-soft);
+ border-radius:999px; padding:7px 14px 7px 10px; font-family:var(--gowun); font-size:13px;
+ color:var(--ink-mute); transition:.2s}
+.st .no{width:19px;height:19px;border-radius:50%;background:var(--line-soft);color:#fff;flex:none;
+ display:grid;place-items:center;font-size:11.5px;font-family:var(--jua)}
+.st.now{border-color:var(--accent); color:var(--accent); background:#fbf1e4; box-shadow:0 0 0 3px rgba(160,92,44,.12)}
+.st.now .no{background:var(--accent)}
+.st.done{border-color:var(--ok); color:var(--ok)} .st.done .no{background:var(--ok)}
+
+#todo{margin:11px auto 0; max-width:740px; display:flex; gap:11px; align-items:center;
+ background:#fbf1e4; border:1.6px solid var(--accent); border-radius:14px; padding:12px 18px;
+ font-family:var(--gowun); font-size:15.5px; line-height:1.6; color:var(--ink-dim)}
+#todo .ic{font-size:20px; flex:none} #todo b{color:var(--accent); font-family:var(--disp)}
+
+.card{background:rgba(255,252,244,.82); border:1.5px solid var(--line); border-radius:var(--r);
+ box-shadow:var(--shadow); overflow:hidden; margin-top:13px}
+.card-h{display:flex; align-items:center; gap:9px; padding:10px 16px; border-bottom:1px dashed var(--line-soft)}
+.card-h .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
+.card-h h2{font-family:var(--jua); font-size:16px; color:var(--gold)}
+.card-h .hint{margin-left:auto; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun)}
+
+#lab{display:block; width:100%; height:auto; aspect-ratio:820/480; touch-action:none;
+ user-select:none; -webkit-user-select:none; cursor:default}
+.labbox{background:#0f0c09; line-height:0}
+
+.acts{display:flex; gap:9px; flex-wrap:wrap; justify-content:center; margin-top:14px}
+.btn{font-family:var(--jua); font-size:15.5px; padding:11px 22px; border-radius:12px; cursor:pointer;
+ border:1.8px solid var(--line); background:var(--surface2); color:var(--ink-dim); transition:.15s}
+.btn:hover:not(:disabled){border-color:var(--accent); color:var(--accent)}
+.btn.primary{background:var(--accent); color:#fdf6e8; border-color:var(--accent)}
+.btn.primary:hover:not(:disabled){filter:brightness(1.08); color:#fdf6e8}
+.btn:disabled{opacity:.36; cursor:not-allowed}
+.btn[hidden]{display:none}
+
+#count{margin:13px auto 0; max-width:740px; text-align:center; font-family:var(--gowun);
+ font-size:15px; color:var(--ink-dim)}
+#count b{font-family:var(--jua); font-size:19px; color:var(--neon)}
+
+#pop{position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
+ background:rgba(20,14,8,.62); padding:20px}
+#pop.on{display:flex}
+.popbox{background:#fffdf6; border:2px solid var(--line); border-radius:20px; max-width:520px; width:100%;
+ padding:25px 26px 21px; box-shadow:0 30px 70px -20px rgba(0,0,0,.6); text-align:center;
+ max-height:88vh; overflow-y:auto}
+@media (prefers-reduced-motion:no-preference){ #pop.on .popbox{animation:popIn .22s cubic-bezier(.2,1.1,.4,1) both} }
+@keyframes popIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.popbox .kicker{font-family:var(--jua); font-size:13.5px; color:var(--accent)}
+.popbox h3{font-family:var(--jua); font-size:22px; margin-top:5px; line-height:1.35}
+.popbox .body{font-family:var(--gowun); font-size:16px; line-height:1.75; color:var(--ink-dim); margin-top:13px}
+.popbox .body b{color:var(--ink); font-family:var(--disp)}
+.popbox ol{text-align:left; margin:12px 4px 0 22px; font-family:var(--gowun); font-size:15.5px;
+ line-height:1.8; color:var(--ink-dim)}
+.poprow{display:flex; gap:10px; justify-content:center; margin-top:19px; flex-wrap:wrap}
+.qbox{margin-top:16px; padding:15px 18px; border-radius:14px; border:1.6px solid var(--accent);
+ background:rgba(160,92,44,.07); font-family:var(--gowun); font-size:16.5px; line-height:1.65}
+.qbox b{color:var(--accent); font-family:var(--disp)}
+.qbox + .qbox{margin-top:10px; border-style:dashed; font-size:15.5px}
+
+.backline{margin-top:22px; text-align:center}
+.backline a{display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-family:var(--jua);
+ font-size:15px; color:var(--ink-dim); background:var(--surface2); border:1.5px solid var(--line);
+ border-radius:12px; padding:11px 22px; transition:.15s}
+.backline a:hover{border-color:var(--accent); color:var(--accent)}
+
+#app-credit{width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;
+ line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;
+ border-top:1px solid rgba(128,128,128,.25)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>전지도 없이 <span class="em">전구를 켜 보자</span></h1>
+</header>
+
+<div class="wrap">
+  <div class="steps" id="steps"></div>
+  <div id="todo"><span class="ic">👉</span><span id="todoTx">준비 중…</span></div>
+
+  <div class="card">
+    <div class="card-h"><span class="dot"></span><h2>실험대</h2>
+      <span class="hint">도구를 끌어다 옮기세요</span></div>
+    <div class="labbox"><svg id="lab" viewBox="0 0 820 480" width="820" height="480" role="img"
+      aria-label="어두운 실험실 책상 위에 스타이로폼 접시, 털가죽, 수수깡 손잡이가 달린 알루미늄 접시, 네온전구가 놓여 있다. 도구를 끌어다 실험 순서를 따라 하면 네온전구가 순간적으로 켜진다."></svg></div>
+  </div>
+
+  <div class="acts">
+    <button class="btn primary" id="btnFlip" hidden>접시 뒤집어 놓기</button>
+    <button class="btn primary" id="btnLift" hidden>접시를 들었다 다시 놓기</button>
+    <button class="btn" id="btnSlow" hidden>🐢 느리게 다시 보기</button>
+    <button class="btn" id="btnLight">💡 교실 불 켜기</button>
+    <button class="btn" id="btnReset">↺ 처음부터</button>
+  </div>
+
+  <div id="count"></div>
+
+  <div class="backline"><a href="03-current.html">← 수업 페이지로 돌아가기</a></div>
+</div>
+
+<div id="pop"><div class="popbox" id="popbox"></div></div>
+
+<footer id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-09-01</span></footer>
+
+<script>
+"use strict";
+(function(){
+
+var lab = document.getElementById('lab');
+
+/* 같은 화면이 매번 똑같이 나오도록 씨앗 난수를 쓴다 */
+var seed = 20260901;
+function rnd(){ seed = (seed*1664525 + 1013904223) % 4294967296; return seed/4294967296; }
+
+/* ═══════════════════════════════════════════════════════════
+   무대 좌표
+   ═══════════════════════════════════════════════════════════ */
+var DESK_Y  = 268;                       /* 책상 윗면이 시작되는 높이 */
+var STY = {x:270, y:372, rx:132, ry:34};  /* 스타이로폼 접시 */
+var ALU_ON  = {x:270, y:344, rx:106, ry:28};
+var ALU_HOME= {x:630, y:330};
+var FUR_HOME= {x:640, y:414};
+var NEON_HOME={x:556, y:238};
+var TOUCH   = {x:ALU_ON.x + ALU_ON.rx - 6, y:ALU_ON.y - 4};   /* 알루미늄 가장자리 */
+
+var S = {
+  step:0,            /* 0 문지르기 · 1 뒤집기 · 2 접시 올리기 · 3 전구 대기 · 4 끝 */
+  rub:0,             /* 문지른 거리 */
+  flipped:false, aluOn:false, armed:false,
+  lit:0, dark:true,
+  fur:{x:FUR_HOME.x, y:FUR_HOME.y},
+  alu:{x:ALU_HOME.x, y:ALU_HOME.y},
+  neon:{x:NEON_HOME.x, y:NEON_HOME.y}
+};
+var RUB_NEED = 900;                       /* 이만큼 문지르면 충분 */
+function rubPct(){ return Math.min(1, S.rub / RUB_NEED); }
+
+/* ═══════════════════════════════════════════════════════════
+   그림 조각
+   ═══════════════════════════════════════════════════════════ */
+function defs(){
+  return '<defs>'
+  /* 어둠 · 책상 */
+  + '<linearGradient id="pWall" x1="0" y1="0" x2="0" y2="1">'
+  +  '<stop offset="0" stop-color="#0c0a08"/><stop offset="1" stop-color="#1b1611"/></linearGradient>'
+  + '<linearGradient id="pWallOn" x1="0" y1="0" x2="0" y2="1">'
+  +  '<stop offset="0" stop-color="#e6dcc6"/><stop offset="1" stop-color="#d9cbad"/></linearGradient>'
+  + '<linearGradient id="pDesk" x1="0" y1="0" x2="0" y2="1">'
+  +  '<stop offset="0" stop-color="#4a3624"/><stop offset=".25" stop-color="#3a2a1b"/>'
+  +  '<stop offset="1" stop-color="#241a11"/></linearGradient>'
+  + '<linearGradient id="pDeskOn" x1="0" y1="0" x2="0" y2="1">'
+  +  '<stop offset="0" stop-color="#c69a63"/><stop offset=".25" stop-color="#b0854f"/>'
+  +  '<stop offset="1" stop-color="#8e6738"/></linearGradient>'
+  + '<radialGradient id="pLamp" cx=".5" cy=".5" r=".5">'
+  +  '<stop offset="0" stop-color="#fff3d6" stop-opacity=".16"/>'
+  +  '<stop offset="1" stop-color="#fff3d6" stop-opacity="0"/></radialGradient>'
+  /* 스타이로폼 — 미세한 알갱이가 보이는 하얀 발포 */
+  + '<linearGradient id="pSty" x1="0" y1="0" x2="0" y2="1">'
+  +  '<stop offset="0" stop-color="#fbfaf6"/><stop offset=".55" stop-color="#e9e6dc"/>'
+  +  '<stop offset="1" stop-color="#cfcabb"/></linearGradient>'
+  /* 알루미늄 — 금속 띠 */
+  + '<linearGradient id="pAlu" x1="0" y1="0" x2="1" y2="0">'
+  +  '<stop offset="0" stop-color="#8f9298"/><stop offset=".14" stop-color="#e8ecef"/>'
+  +  '<stop offset=".33" stop-color="#a9aeb4"/><stop offset=".5" stop-color="#f2f5f7"/>'
+  +  '<stop offset=".68" stop-color="#9aa0a6"/><stop offset=".86" stop-color="#dfe3e7"/>'
+  +  '<stop offset="1" stop-color="#83878d"/></linearGradient>'
+  + '<linearGradient id="pAluRim" x1="0" y1="0" x2="0" y2="1">'
+  +  '<stop offset="0" stop-color="#fdfefe"/><stop offset="1" stop-color="#8d9298"/></linearGradient>'
+  /* 털가죽 */
+  + '<linearGradient id="pFur" x1="0" y1="0" x2="0" y2="1">'
+  +  '<stop offset="0" stop-color="#7c5a38"/><stop offset=".6" stop-color="#5d4128"/>'
+  +  '<stop offset="1" stop-color="#3d2a19"/></linearGradient>'
+  /* 네온 불빛 */
+  + '<radialGradient id="pNeon" cx=".5" cy=".5" r=".5">'
+  +  '<stop offset="0" stop-color="#ffd9a8"/><stop offset=".28" stop-color="#ff8a3c"/>'
+  +  '<stop offset=".62" stop-color="#ff4d1a" stop-opacity=".55"/>'
+  +  '<stop offset="1" stop-color="#ff3300" stop-opacity="0"/></radialGradient>'
+  + '<filter id="fBlur" x="-80%" y="-80%" width="260%" height="260%">'
+  +  '<feGaussianBlur stdDeviation="7"/></filter>'
+  + '<filter id="fSoft" x="-40%" y="-40%" width="180%" height="180%">'
+  +  '<feGaussianBlur stdDeviation="2.2"/></filter>'
+  + '</defs>';
+}
+
+function stage(){
+  var wall = S.dark ? 'url(#pWall)' : 'url(#pWallOn)';
+  var desk = S.dark ? 'url(#pDesk)' : 'url(#pDeskOn)';
+  var s = '<rect width="820" height="'+DESK_Y+'" fill="'+wall+'"/>'
+        + '<rect y="'+DESK_Y+'" width="820" height="'+(480-DESK_Y)+'" fill="'+desk+'"/>'
+        + '<line x1="0" y1="'+DESK_Y+'" x2="820" y2="'+DESK_Y+'" stroke="'
+        + (S.dark?'#5b4530':'#e0c397') + '" stroke-width="2"/>';
+  /* 나뭇결 */
+  for(var i=0;i<16;i++){
+    var y = DESK_Y + 10 + i*13 + rnd()*4;
+    s += '<line x1="0" y1="'+y.toFixed(1)+'" x2="820" y2="'+(y+2).toFixed(1)+'" stroke="'
+       + (S.dark?'#000':'#7d5a30') + '" stroke-width="1" opacity="'+(S.dark?.22:.13)+'"/>';
+  }
+  if(S.dark) s += '<ellipse cx="330" cy="250" rx="430" ry="250" fill="url(#pLamp)"/>';
+  return s;
+}
+
+/* ── 스타이로폼 접시 ─────────────────────────────────────── */
+function styro(){
+  var x=STY.x, y=STY.y, rx=STY.rx, ry=STY.ry;
+  var s = '<ellipse cx="'+x+'" cy="'+(y+13)+'" rx="'+(rx+6)+'" ry="'+(ry*0.5)+'" fill="#000" opacity="'
+        + (S.dark?.5:.24) + '" filter="url(#fBlur)"/>';
+  if(!S.flipped){
+    /* 바로 놓임 — 안쪽 오목한 면이 보인다 */
+    s += '<ellipse cx="'+x+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" fill="url(#pSty)" stroke="#b9b4a5" stroke-width="1.5"/>'
+       + '<ellipse cx="'+x+'" cy="'+(y+3)+'" rx="'+(rx-22)+'" ry="'+(ry-9)+'" fill="#e4e0d5" opacity=".85"/>'
+       + '<ellipse cx="'+x+'" cy="'+(y+4)+'" rx="'+(rx-30)+'" ry="'+(ry-13)+'" fill="#f4f2ea"/>';
+  } else {
+    /* 뒤집힘 — 볼록한 바닥이 위로 */
+    s += '<ellipse cx="'+x+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" fill="url(#pSty)" stroke="#b9b4a5" stroke-width="1.5"/>'
+       + '<ellipse cx="'+x+'" cy="'+(y-6)+'" rx="'+(rx-14)+'" ry="'+(ry-8)+'" fill="#fbfaf6" opacity=".9"/>'
+       + '<ellipse cx="'+(x-34)+'" cy="'+(y-13)+'" rx="46" ry="9" fill="#ffffff" opacity=".55" filter="url(#fSoft)"/>';
+  }
+  /* 발포 알갱이 */
+  var g = '';
+  for(var i=0;i<90;i++){
+    var a = rnd()*Math.PI*2, r = Math.sqrt(rnd());
+    var px = x + Math.cos(a)*r*(rx-10), py = y + Math.sin(a)*r*(ry-7);
+    g += '<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="'+(0.8+rnd()*1.1).toFixed(2)
+       + '" fill="#ffffff" opacity="'+(0.28+rnd()*0.4).toFixed(2)+'"/>';
+  }
+  s += g;
+  /* 문지른 자리에 생기는 옅은 윤 */
+  if(rubPct() > 0.08 && !S.flipped){
+    s += '<ellipse cx="'+x+'" cy="'+(y+1)+'" rx="'+(rx-26)+'" ry="'+(ry-10)+'" fill="#ffffff" opacity="'
+       + (rubPct()*0.3).toFixed(2) + '" filter="url(#fSoft)"/>';
+  }
+  s += '<text x="'+x+'" y="'+(y+ry+26)+'" text-anchor="middle" font-family="Gowun Dodum, sans-serif"'
+     + ' font-size="14" fill="'+(S.dark?'#b6a486':'#5c4a33')+'">스타이로폼 접시</text>';
+  return s;
+}
+
+/* ── 털가죽 ─────────────────────────────────────────────── */
+var FUR_HAIR = (function(){
+  var h = '';
+  for(var i=0;i<120;i++){
+    var x = -74 + rnd()*148, y = 4 + rnd()*24;
+    var dx = -3 + rnd()*6, dy = 8 + rnd()*11;
+    h += '<line x1="'+x.toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(x+dx).toFixed(1)+'" y2="'
+       + (y+dy).toFixed(1)+'" stroke="#8a6640" stroke-width="1.2" opacity="'
+       + (0.3+rnd()*0.5).toFixed(2)+'" stroke-linecap="round"/>';
+  }
+  return h;
+})();
+function fur(){
+  return '<g id="gFur" transform="translate('+S.fur.x+','+S.fur.y+')" style="cursor:grab">'
+    + '<ellipse cx="0" cy="30" rx="80" ry="12" fill="#000" opacity="'+(S.dark?.45:.2)+'" filter="url(#fBlur)"/>'
+    + '<rect x="-78" y="-26" width="156" height="52" rx="16" fill="url(#pFur)" stroke="#2e2013" stroke-width="1.5"/>'
+    + '<g clip-path="none">'+FUR_HAIR+'</g>'
+    + '<rect x="-78" y="-26" width="156" height="16" rx="8" fill="#8b6743" opacity=".45"/>'
+    + '<text x="0" y="46" text-anchor="middle" font-family="Gowun Dodum, sans-serif" font-size="13.5"'
+    + ' fill="'+(S.dark?'#b6a486':'#5c4a33')+'">털가죽</text></g>';
+}
+
+/* ── 알루미늄 접시 + 수수깡 손잡이 ───────────────────────── */
+function alu(){
+  var on = S.aluOn;
+  var x = on ? ALU_ON.x : S.alu.x, y = on ? ALU_ON.y : S.alu.y;
+  var rx = ALU_ON.rx, ry = ALU_ON.ry;
+  var s = '<g id="gAluG" transform="translate('+x+','+y+')" style="cursor:grab">'
+    + '<ellipse cx="0" cy="'+(ry*0.5+8)+'" rx="'+(rx+4)+'" ry="'+(ry*0.45)+'" fill="#000" opacity="'
+    + (S.dark?.5:.22) + '" filter="url(#fBlur)"/>'
+    /* 접시 몸통 */
+    + '<ellipse cx="0" cy="0" rx="'+rx+'" ry="'+ry+'" fill="url(#pAlu)" stroke="#6f7479" stroke-width="1.4"/>'
+    + '<ellipse cx="0" cy="2" rx="'+(rx-16)+'" ry="'+(ry-7)+'" fill="url(#pAluRim)" opacity=".55"/>'
+    + '<ellipse cx="0" cy="3" rx="'+(rx-30)+'" ry="'+(ry-12)+'" fill="#eef1f3" opacity=".7"/>'
+    /* 가장자리 주름 */
+    + (function(){ var g=''; for(var i=0;i<26;i++){ var a=(i/26)*Math.PI*2;
+        var x1=Math.cos(a)*(rx-13), y1=Math.sin(a)*(ry-6);
+        var x2=Math.cos(a)*rx, y2=Math.sin(a)*ry;
+        g+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)
+          +'" stroke="#7f858b" stroke-width="1" opacity=".55"/>'; } return g; })()
+    /* 반짝임 */
+    + '<ellipse cx="-38" cy="-9" rx="30" ry="6" fill="#ffffff" opacity=".7" filter="url(#fSoft)"/>'
+    /* 수수깡 손잡이 */
+    + '<rect x="-7" y="-88" width="14" height="90" rx="6" fill="#d9c48f" stroke="#a98f52" stroke-width="1.4"/>'
+    + '<line x1="-2" y1="-84" x2="-2" y2="-6" stroke="#c2a86f" stroke-width="1.4"/>'
+    + '<line x1="3" y1="-82" x2="3" y2="-8" stroke="#c2a86f" stroke-width="1.4"/>'
+    + '<ellipse cx="0" cy="-88" rx="7" ry="3.4" fill="#e8d8ab"/>'
+    + '<text x="34" y="-74" font-family="Gowun Dodum, sans-serif" font-size="13"'
+    + ' fill="'+(S.dark?'#b6a486':'#5c4a33')+'">수수깡</text>'
+    + (on
+       /* 겹쳐 놓으면 스타이로폼 이름표와 부딪히므로 위로 올린다 */
+       ? '<text x="-78" y="'+(-ry-16)+'" text-anchor="middle" font-family="Gowun Dodum, sans-serif"'
+         + ' font-size="13.5" fill="'+(S.dark?'#b6a486':'#5c4a33')+'">알루미늄 접시</text>'
+       : '<text x="0" y="'+(ry+26)+'" text-anchor="middle" font-family="Gowun Dodum, sans-serif"'
+         + ' font-size="13.5" fill="'+(S.dark?'#b6a486':'#5c4a33')+'">알루미늄 접시</text>')
+    + '</g>';
+  return s;
+}
+
+/* ── 네온전구 + 그것을 쥔 손 ─────────────────────────────── */
+function neon(){
+  var x = S.neon.x, y = S.neon.y;
+  /* 원점은 오른쪽 극(접촉하는 쪽) 끝 */
+  return '<g id="gNeon" transform="translate('+x+','+y+')" style="cursor:grab">'
+    /* 불빛 — 밝기는 자바스크립트가 실시간으로 바꾼다 */
+    + '<circle id="nHalo" cx="52" cy="0" r="62" fill="url(#pNeon)" opacity="0"/>'
+    /* 접시에 닿는 쪽 리드선 */
+    + '<line x1="0" y1="0" x2="22" y2="0" stroke="#c9ccd0" stroke-width="2.6" stroke-linecap="round"/>'
+    /* 유리관 */
+    + '<rect x="22" y="-13" width="52" height="26" rx="13" fill="#2a2b30" opacity=".85"/>'
+    + '<rect x="22" y="-13" width="52" height="26" rx="13" fill="none" stroke="#9aa0a6" stroke-width="1.6"/>'
+    + '<rect id="nCore" x="26" y="-9" width="44" height="18" rx="9" fill="#ff7a2e" opacity="0"/>'
+    /* 안쪽 두 전극 */
+    + '<line x1="32" y1="-6" x2="32" y2="6" stroke="#b7bcc2" stroke-width="2.4"/>'
+    + '<line x1="64" y1="-6" x2="64" y2="6" stroke="#b7bcc2" stroke-width="2.4"/>'
+    + '<ellipse cx="58" cy="-7" rx="12" ry="3" fill="#ffffff" opacity=".35"/>'
+    /* 반대쪽 리드선 — 손이 잡는다 */
+    + '<line x1="74" y1="0" x2="104" y2="0" stroke="#c9ccd0" stroke-width="2.6" stroke-linecap="round"/>'
+    /* 손 */
+    + '<g transform="translate(150,-4) scale(-1,1)">'
+    +  '<path d="M0 -14 q26 -8 44 2 q10 6 10 16 q0 12 -12 16 q-20 6 -42 -2 z" fill="#e7bc95" stroke="#b98f68" stroke-width="1.5"/>'
+    +  '<path d="M44 -12 q12 -2 14 6 q2 8 -8 10" fill="none" stroke="#b98f68" stroke-width="1.4"/>'
+    +  '<path d="M6 -6 q16 -3 30 0" fill="none" stroke="#cfa07a" stroke-width="1.2"/>'
+    +  '<path d="M6 4 q16 3 30 0" fill="none" stroke="#cfa07a" stroke-width="1.2"/>'
+    + '</g>'
+    + '<text x="56" y="34" text-anchor="middle" font-family="Gowun Dodum, sans-serif" font-size="13.5"'
+    + ' fill="'+(S.dark?'#b6a486':'#5c4a33')+'">네온전구</text></g>';
+}
+
+/* 접촉 지점 표시 — 어디에 대야 하는지 */
+function target(){
+  if(S.step !== 3 || !S.armed) return '';
+  return '<g pointer-events="none"><circle cx="'+TOUCH.x+'" cy="'+TOUCH.y+'" r="17" fill="none"'
+       + ' stroke="#ffb066" stroke-width="2.4" stroke-dasharray="5 5" opacity=".9"/>'
+       + '<circle cx="'+TOUCH.x+'" cy="'+TOUCH.y+'" r="4" fill="#ffb066" opacity=".9"/></g>';
+}
+
+/* 문지르는 중 효과 */
+function rubFx(){
+  if(S.step !== 0 || !rubbing) return '';
+  var g = '';
+  for(var i=0;i<3;i++){
+    var yy = S.fur.y - 34 - i*9;
+    g += '<line x1="'+(S.fur.x-96-i*8)+'" y1="'+yy+'" x2="'+(S.fur.x-64-i*8)+'" y2="'+yy
+       + '" stroke="#ffe6b8" stroke-width="2.2" opacity="'+(0.5-i*0.13).toFixed(2)+'" stroke-linecap="round"/>'
+       + '<line x1="'+(S.fur.x+64+i*8)+'" y1="'+yy+'" x2="'+(S.fur.x+96+i*8)+'" y2="'+yy
+       + '" stroke="#ffe6b8" stroke-width="2.2" opacity="'+(0.5-i*0.13).toFixed(2)+'" stroke-linecap="round"/>';
+  }
+  return g;
+}
+
+/* 알루미늄 접시에 비치는 불빛 */
+function spill(){
+  return '<ellipse id="nSpill" cx="'+ALU_ON.x+'" cy="'+(ALU_ON.y-2)+'" rx="120" ry="34"'
+       + ' fill="#ff8a3c" opacity="0" filter="url(#fBlur)" pointer-events="none"/>';
+}
+
+function draw(){
+  seed = 20260901;
+  lab.innerHTML = defs() + stage() + styro() + spill()
+                + (S.aluOn ? alu() : '') + rubFx() + target()
+                + (S.step === 0 || S.step === 1 ? fur() : '')
+                + (!S.aluOn && S.step >= 2 ? alu() : '')
+                + (S.step >= 3 ? neon() : '');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   번쩍임
+   ═══════════════════════════════════════════════════════════ */
+var flashStart = 0, flashDur = 0, flashing = false;
+function fire(slow){
+  flashStart = performance.now();
+  flashDur = slow ? 1500 : 200;
+  flashing = true;
+  requestAnimationFrame(tick);
+}
+function tick(now){
+  if(!flashing) return;
+  var e = (now - flashStart) / flashDur;
+  var b;
+  if(e >= 1){ b = 0; flashing = false; }
+  else if(e < 0.07) b = e / 0.07;
+  else b = Math.pow(1 - (e - 0.07) / 0.93, 1.7);
+  var halo = document.getElementById('nHalo');
+  var core = document.getElementById('nCore');
+  var sp   = document.getElementById('nSpill');
+  if(halo) halo.setAttribute('opacity', (b * 0.95).toFixed(3));
+  if(halo) halo.setAttribute('r', (48 + b * 30).toFixed(1));
+  if(core) core.setAttribute('opacity', (b).toFixed(3));
+  if(sp)   sp.setAttribute('opacity', (b * (S.dark ? 0.5 : 0.22)).toFixed(3));
+  if(flashing) requestAnimationFrame(tick);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   끌기
+   ═══════════════════════════════════════════════════════════ */
+function svgPt(cx, cy){
+  var m = lab.getScreenCTM(); if(!m) return null;
+  var i = m.inverse();
+  return { x: i.a*cx + i.c*cy + i.e, y: i.b*cx + i.d*cy + i.f };
+}
+var drag = null, rubbing = false, lastRubX = 0;
+
+function hit(p){
+  if((S.step === 0 || S.step === 1) && Math.abs(p.x-S.fur.x) < 84 && Math.abs(p.y-S.fur.y) < 34) return 'fur';
+  if(S.step === 2 && !S.aluOn){
+    /* 수수깡을 잡는다 */
+    if(Math.abs(p.x-S.alu.x) < 30 && p.y > S.alu.y-96 && p.y < S.alu.y+6) return 'alu';
+    if(Math.abs(p.x-S.alu.x) < ALU_ON.rx && Math.abs(p.y-S.alu.y) < ALU_ON.ry+6) return 'alu';
+  }
+  if(S.step === 3 && p.x > S.neon.x-24 && p.x < S.neon.x+200 && Math.abs(p.y-S.neon.y) < 40) return 'neon';
+  return null;
+}
+
+lab.addEventListener('pointerdown', function(e){
+  var p = svgPt(e.clientX, e.clientY); if(!p) return;
+  var h = hit(p); if(!h) return;
+  e.preventDefault();
+  var o = h === 'fur' ? S.fur : (h === 'alu' ? S.alu : S.neon);
+  drag = { what:h, dx:o.x - p.x, dy:o.y - p.y };
+  if(h === 'fur'){ lastRubX = p.x; }
+  try{ lab.setPointerCapture(e.pointerId); }catch(_){}
+});
+
+lab.addEventListener('pointermove', function(e){
+  if(!drag) return;
+  var p = svgPt(e.clientX, e.clientY); if(!p) return;
+  var o = drag.what === 'fur' ? S.fur : (drag.what === 'alu' ? S.alu : S.neon);
+  o.x = p.x + drag.dx; o.y = p.y + drag.dy;
+
+  if(drag.what === 'fur' && S.step === 0){
+    var onPlate = Math.abs(o.x - STY.x) < STY.rx + 20 && Math.abs(o.y - STY.y) < 66;
+    rubbing = onPlate;
+    if(onPlate){
+      S.rub += Math.abs(p.x - lastRubX);
+      if(rubPct() >= 1 && S.step === 0) ready1();
+    }
+    lastRubX = p.x;
+  }
+  var g = document.getElementById(drag.what === 'fur' ? 'gFur' : (drag.what === 'alu' ? 'gAluG' : 'gNeon'));
+  if(g) g.setAttribute('transform', 'translate('+o.x+','+o.y+')');
+
+  if(drag.what === 'fur') { draw(); }
+  if(drag.what === 'neon' && S.step === 3 && S.armed){
+    var d = Math.hypot(o.x - TOUCH.x, o.y - TOUCH.y);
+    if(d < 46) contact();
+  }
+  updateTodo();
+});
+
+lab.addEventListener('pointerup', function(){
+  if(!drag) return;
+  var w = drag.what; drag = null; rubbing = false;
+  if(w === 'alu' && S.step === 2){
+    var d = Math.hypot(S.alu.x - ALU_ON.x, S.alu.y - ALU_ON.y);
+    if(d < 90){ S.aluOn = true; S.armed = true; S.step = 3; draw(); brief(3); }
+    else { S.alu.x = ALU_HOME.x; S.alu.y = ALU_HOME.y; }
+  }
+  draw(); updateTodo();
+});
+
+/* ═══════════════════════════════════════════════════════════
+   진행
+   ═══════════════════════════════════════════════════════════ */
+function ready1(){ S.step = 1; draw(); updateTodo(); brief(1); }
+
+function contact(){
+  if(!S.armed) return;
+  S.armed = false; S.lit++;
+  S.neon.x = TOUCH.x; S.neon.y = TOUCH.y;
+  drag = null;
+  draw();
+  fire(false);
+  document.getElementById('btnSlow').hidden = false;
+  document.getElementById('btnLift').hidden = false;
+  updateTodo(); updateCount();
+  setTimeout(function(){ if(S.lit === 1) result1(); }, 950);
+}
+
+var POP = document.getElementById('pop'), POPBOX = document.getElementById('popbox');
+function openPop(h){ POPBOX.innerHTML = h; POP.classList.add('on'); }
+function closePop(){ POP.classList.remove('on'); }
+POPBOX.addEventListener('click', function(e){
+  var b = e.target.closest('button[data-act]'); if(b) ACT[b.dataset.act]();
+});
+var ACT = { ok:function(){ closePop(); } };
+
+var BRIEF = [
+{ k:'준비', t:'실험을 시작합니다',
+  b:'전지는 하나도 쓰지 않습니다. 그래도 전구를 켤 수 있을까요?<br>'
+   +'<b>어두운 실험실</b>로 해 두었습니다 — 불빛이 아주 약하거든요.',
+  o:['스타이로폼 접시를 <b>털가죽으로 여러 번</b> 문지른다',
+     '문지른 접시를 <b>뒤집어</b> 책상에 놓는다',
+     '<b>수수깡을 잡고</b> 알루미늄 접시를 그 위에 올린다',
+     '네온전구 한쪽 극을 손으로 잡고, 다른 쪽을 <b>알루미늄 접시 가장자리</b>에 댄다'] },
+{ k:'2단계', t:'뒤집어 놓기',
+  b:'충분히 문질렀습니다.<br>이제 접시를 <b>뒤집어</b> 책상 위에 놓으세요.' },
+{ k:'3단계', t:'알루미늄 접시 올리기',
+  b:'<b>수수깡을 잡고</b> 알루미늄 접시를 스타이로폼 접시 위에 올려놓으세요.' },
+{ k:'4단계', t:'네온전구를 대 보기',
+  b:'네온전구의 한쪽 극은 이미 <b>손으로 잡고</b> 있습니다.<br>'
+   +'다른 쪽 끝을 <b>알루미늄 접시 가장자리</b>에 대 보세요.' }
+];
+function brief(i){
+  var m = BRIEF[i];
+  openPop('<div class="kicker">'+m.k+'</div><h3>'+m.t+'</h3>'
+        + '<div class="body">'+m.b+'</div>'
+        + (m.o ? '<ol>'+m.o.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ol>' : '')
+        + '<div class="poprow"><button class="btn primary" data-act="ok">알겠어요</button></div>');
+}
+
+function result1(){
+  openPop('<div class="kicker">봤나요?</div><h3>불이 켜졌습니다</h3>'
+        + '<div class="body">전지는 <b>하나도</b> 쓰지 않았습니다.<br>'
+        + '그런데 네온전구가 <b>아주 잠깐</b> 켜졌어요.<br>'
+        + '너무 빨라서 놓쳤다면 <b>🐢 느리게 다시 보기</b>를 눌러 보세요.</div>'
+        + '<div class="qbox">🤔 전지도 없었는데 불이 켜졌습니다.<br>'
+        + '그 순간, <b>무엇이 전구를 지나간 걸까요?</b></div>'
+        + '<div class="qbox">🤔 그리고 왜 <b>계속 켜져 있지 않고</b> 잠깐만 켜졌을까요?</div>'
+        + '<div class="poprow"><button class="btn primary" data-act="ok">더 해 볼게요</button></div>');
+}
+
+function again(){
+  openPop('<div class="kicker">한 번 더</div><h3>또 켜졌습니다</h3>'
+        + '<div class="body">털가죽으로는 <b>맨 처음 한 번만</b> 문질렀습니다.<br>'
+        + '그런데 접시를 들었다 놓기만 하면 <b>몇 번이고</b> 다시 켜져요.</div>'
+        + '<div class="qbox">🤔 문지르지도 않았는데 <b>어떻게 계속 켜질까요?</b></div>'
+        + '<div class="poprow"><button class="btn primary" data-act="ok">계속 해 볼게요</button></div>');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   단추 · 안내
+   ═══════════════════════════════════════════════════════════ */
+var STEPS = ['문지르기', '뒤집어 놓기', '접시 올리기', '전구 대기'];
+function drawSteps(){
+  document.getElementById('steps').innerHTML = STEPS.map(function(t, i){
+    var cls = S.step > i ? 'done' : (S.step === i ? 'now' : '');
+    return '<div class="st '+cls+'"><span class="no">'+(i+1)+'</span><span>'+t+'</span></div>';
+  }).join('');
+}
+function updateTodo(){
+  var t;
+  if(S.step === 0){
+    var pct = Math.round(rubPct()*100);
+    t = '<b>털가죽</b>을 끌어다 스타이로폼 접시 위에서 <b>좌우로 문지르세요.</b> ('+pct+'%)';
+  }
+  else if(S.step === 1) t = '<b>접시 뒤집어 놓기</b>를 누르세요.';
+  else if(S.step === 2) t = '<b>수수깡</b>을 잡고 알루미늄 접시를 스타이로폼 접시 위로 옮기세요.';
+  else if(S.step === 3 && S.armed) t = '네온전구 끝을 <b>알루미늄 접시 가장자리(○ 표시)</b>에 대세요.';
+  else t = '켜졌습니다. <b>접시를 들었다 다시 놓기</b>를 누르면 또 할 수 있어요.';
+  document.getElementById('todoTx').innerHTML = t;
+  document.getElementById('btnFlip').hidden = (S.step !== 1);
+  drawSteps();
+}
+function updateCount(){
+  document.getElementById('count').innerHTML = S.lit
+    ? '지금까지 불이 켜진 횟수 <b>'+S.lit+'</b>번'
+    : '';
+}
+
+document.getElementById('btnFlip').addEventListener('click', function(){
+  S.flipped = true; S.step = 2; draw(); updateTodo(); brief(2);
+});
+document.getElementById('btnLift').addEventListener('click', function(){
+  S.armed = true;
+  S.neon.x = NEON_HOME.x; S.neon.y = NEON_HOME.y;
+  draw(); updateTodo();
+});
+document.getElementById('btnSlow').addEventListener('click', function(){ fire(true); });
+document.getElementById('btnLight').addEventListener('click', function(){
+  S.dark = !S.dark;
+  this.textContent = S.dark ? '💡 교실 불 켜기' : '🌙 교실 불 끄기';
+  draw();
+});
+document.getElementById('btnReset').addEventListener('click', function(){
+  S.step = 0; S.rub = 0; S.flipped = false; S.aluOn = false; S.armed = false; S.lit = 0;
+  S.fur = {x:FUR_HOME.x, y:FUR_HOME.y};
+  S.alu = {x:ALU_HOME.x, y:ALU_HOME.y};
+  S.neon = {x:NEON_HOME.x, y:NEON_HOME.y};
+  document.getElementById('btnSlow').hidden = true;
+  document.getElementById('btnLift').hidden = true;
+  draw(); updateTodo(); updateCount(); brief(0);
+});
+
+/* 두 번째부터는 "또 켜졌다" 안내를 한 번만 */
+var saidAgain = false;
+var _contact = contact;
+contact = function(){
+  var before = S.lit;
+  _contact();
+  if(before >= 1 && !saidAgain){ saidAgain = true; setTimeout(again, 950); }
+};
+
+draw(); updateTodo(); updateCount(); brief(0);
+})();
+</script>
+</body>
+</html>
