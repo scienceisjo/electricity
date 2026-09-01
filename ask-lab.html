@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>불이 켜지려면 무엇이 필요할까 · 질문 실험실</title>
+<title>전구가 어둠을 밝히기까지 · 가상 실험실</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <style>
@@ -64,14 +64,15 @@ html.embed .frame{border:0; border-radius:0; box-shadow:none}
 <body>
 
 <header class="top">
-  <h1>불이 켜지려면 <span class="em">무엇이 필요할까?</span></h1>
-  <p>실험 두 가지를 해 보며 <b>질문</b>을 만들어 봅시다. 정답은 알려 주지 않습니다.</p>
+  <h1>전구가 <span class="em">어둠을 밝히기까지</span></h1>
+  <p>전지가 없어도 켜지고, 전지가 있어도 안 켜집니다.<br>
+  두 가지 실험을 해 보고 <b>궁금한 것</b>을 찾아보세요. 정답은 알려 주지 않습니다.</p>
 </header>
 
 <div class="wrap">
   <div class="tabs" id="tabs">
     <button class="tb on" data-k="eph"><span class="n">①</span>🔦 전지 없이 켜 보기</button>
-    <button class="tb" data-k="cir"><span class="n">②</span>🔌 회로 잇기</button>
+    <button class="tb" data-k="cir"><span class="n">②</span>🔌 다 이었는데 안 켜진다</button>
   </div>
 
   <p class="lead" id="lead"></p>
@@ -97,7 +98,7 @@ var SRC = {
 };
 var LEAD = {
   eph: '전지를 <b>하나도</b> 쓰지 않고 전구를 켜 봅니다. 어두운 실험실이 기본이에요.',
-  cir: '전지와 전구를 <b>전선으로 이어</b> 봅니다. 시키는 대로 했는데도 안 켜지는 순간이 옵니다.'
+  cir: '전지도 전구도 있는데 <b>안 켜집니다.</b> 무엇이 빠졌는지 찾아보세요.'
 };
 
 var cur = 'eph', loaded = {};
