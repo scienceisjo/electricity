@@ -95,6 +95,12 @@ header.top h1 .em{color:var(--accent)}
 #app-credit{width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;
  line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;
  border-top:1px solid rgba(128,128,128,.25)}
+
+/* 수업 페이지 안에 끼워 넣을 때 — 제목·푸터·돌아가기를 감춘다 */
+html.embed body{background:none}
+html.embed header.top, html.embed .backline, html.embed #app-credit{display:none}
+html.embed .wrap{padding:4px 10px 10px; max-width:none}
+html.embed .card{box-shadow:none}
 </style>
 </head>
 <body>
@@ -163,6 +169,71 @@ var S = {
 };
 var RUB_NEED = 900;                       /* 이만큼 문지르면 충분 */
 function rubPct(){ return Math.min(1, S.rub / RUB_NEED); }
+
+var EMBED = /[?&]embed=1/.test(location.search);
+if(EMBED) document.documentElement.classList.add('embed');
+
+/* ── 전하 표시 ────────────────────────────────────────────
+   지난 차시에 배운 것(마찰전기 · 정전기 유도)까지만 보여 준다.
+   스타이로폼은 부도체라 전하가 알루미늄으로 건너가지 않는다 —
+   움직이는 것은 알루미늄 접시 안에 원래 있던 전하다. */
+var STY_PTS = [], ALU_PTS = [];
+(function(){
+  /* 스타이로폼 — 알루미늄 접시(rx 106)를 올려도 가려지지 않도록 바깥 테두리를 따라 둔다 */
+  for(var i=0;i<14;i++){
+    var a = (i/14)*6.2832 + 0.22;
+    STY_PTS.push([STY.x + Math.cos(a)*(STY.rx-16), STY.y + Math.sin(a)*(STY.ry-6)]);
+  }
+  /* 알루미늄 — 접시 안의 전하가 아래쪽 테두리에서 위쪽 테두리로 밀려 올라간다 */
+  for(var j=0;j<9;j++){
+    var b = -0.82 + (j/8)*1.64;
+    var w = Math.sqrt(1 - b*b) * 0.92;
+    ALU_PTS.push({ x0: b*(ALU_ON.rx-26), y0:  (ALU_ON.ry-4)*w,
+                   x1: b*(ALU_ON.rx-26), y1: -(ALU_ON.ry-4)*w });
+  }
+})();
+var aluT = 0, chgA = 1, fading = false, animRun = false;
+
+function minus(x, y, op){
+  return '<g opacity="'+op.toFixed(2)+'"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)
+       + '" r="7" fill="#2f6ea8" stroke="#dceaf7" stroke-width="1.4"/>'
+       + '<line x1="'+(x-4).toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(x+4).toFixed(1)+'" y2="'
+       + y.toFixed(1)+'" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/></g>';
+}
+function chgSty(){
+  if(chgA <= 0.02) return '';
+  var n = Math.round(rubPct()*STY_PTS.length), g = '';
+  for(var i=0;i<n;i++) g += minus(STY_PTS[i][0], STY_PTS[i][1], chgA);
+  return g;
+}
+function chgAlu(){
+  if(!S.aluOn || chgA <= 0.02) return '';
+  var t = aluT < 0.5 ? 2*aluT*aluT : 1 - Math.pow(-2*aluT+2, 2)/2;   /* 부드럽게 */
+  var g = '';
+  for(var i=0;i<ALU_PTS.length;i++){
+    var p = ALU_PTS[i];
+    g += minus(ALU_ON.x + p.x0 + (p.x1-p.x0)*t, ALU_ON.y + p.y0 + (p.y1-p.y0)*t, chgA);
+  }
+  return g;
+}
+function paintChg(){
+  var a = document.getElementById('chgS'), b = document.getElementById('chgA');
+  if(a) a.innerHTML = chgSty();
+  if(b) b.innerHTML = chgAlu();
+}
+/* 프레임 수가 아니라 흘러간 시간으로 움직인다 —
+   전자칠판처럼 프레임이 느린 기기에서도 같은 시간에 끝나야 한다 */
+var animLast = 0;
+function anim(now){
+  var dt = animLast ? Math.min(80, now - animLast) : 16;
+  animLast = now;
+  var go = false;
+  if(S.aluOn && aluT < 1){ aluT = Math.min(1, aluT + dt/850); go = true; }
+  if(fading && chgA > 0){ chgA = Math.max(0, chgA - dt/650); go = true; }
+  paintChg();
+  if(go) requestAnimationFrame(anim); else { animRun = false; animLast = 0; }
+}
+function startAnim(){ if(!animRun){ animRun = true; animLast = 0; requestAnimationFrame(anim); } }
 
 /* ═══════════════════════════════════════════════════════════
    그림 조각
@@ -382,11 +453,13 @@ function spill(){
 
 function draw(){
   seed = 20260901;
-  lab.innerHTML = defs() + stage() + styro() + spill()
-                + (S.aluOn ? alu() : '') + rubFx() + target()
+  lab.innerHTML = defs() + stage() + styro() + '<g id="chgS"></g>'
+                + (S.aluOn ? alu() + '<g id="chgA"></g>' : '')
+                + spill() + rubFx() + target()
                 + (S.step === 0 || S.step === 1 ? fur() : '')
                 + (!S.aluOn && S.step >= 2 ? alu() : '')
                 + (S.step >= 3 ? neon() : '');
+  paintChg();
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -478,7 +551,12 @@ lab.addEventListener('pointerup', function(){
   var w = drag.what; drag = null; rubbing = false;
   if(w === 'alu' && S.step === 2){
     var d = Math.hypot(S.alu.x - ALU_ON.x, S.alu.y - ALU_ON.y);
-    if(d < 90){ S.aluOn = true; S.armed = true; S.step = 3; draw(); brief(3); }
+    if(d < 90){
+      S.aluOn = true; S.armed = true; S.step = 3; aluT = 0;
+      draw(); startAnim();
+      /* 전하가 다 몰린 뒤에 다음 안내를 띄운다 */
+      setTimeout(function(){ fadeAfterPop = true; brief(3); }, 1200);
+    }
     else { S.alu.x = ALU_HOME.x; S.alu.y = ALU_HOME.y; }
   }
   draw(); updateTodo();
@@ -496,6 +574,7 @@ function contact(){
   drag = null;
   draw();
   fire(false);
+  try{ if(window.parent !== window) window.parent.postMessage({ t:'electrophorusLit' }, '*'); }catch(_){}
   document.getElementById('btnSlow').hidden = false;
   document.getElementById('btnLift').hidden = false;
   updateTodo(); updateCount();
@@ -508,7 +587,11 @@ function closePop(){ POP.classList.remove('on'); }
 POPBOX.addEventListener('click', function(e){
   var b = e.target.closest('button[data-act]'); if(b) ACT[b.dataset.act]();
 });
-var ACT = { ok:function(){ closePop(); } };
+var fadeAfterPop = false;
+var ACT = { ok:function(){
+  closePop();
+  if(fadeAfterPop){ fadeAfterPop = false; fading = true; startAnim(); }
+} };
 
 var BRIEF = [
 { k:'준비', t:'실험을 시작합니다',
@@ -524,7 +607,8 @@ var BRIEF = [
   b:'<b>수수깡을 잡고</b> 알루미늄 접시를 스타이로폼 접시 위에 올려놓으세요.' },
 { k:'4단계', t:'네온전구를 대 보기',
   b:'네온전구의 한쪽 극은 이미 <b>손으로 잡고</b> 있습니다.<br>'
-   +'다른 쪽 끝을 <b>알루미늄 접시 가장자리</b>에 대 보세요.' }
+   +'다른 쪽 끝을 <b>알루미늄 접시 가장자리</b>에 대 보세요.<br><br>'
+   +'<b>여기서부터는 눈에 보이지 않습니다.</b><br>무슨 일이 일어나는지는 여러분이 알아내야 해요.' }
 ];
 function brief(i){
   var m = BRIEF[i];
@@ -599,6 +683,7 @@ document.getElementById('btnLight').addEventListener('click', function(){
 });
 document.getElementById('btnReset').addEventListener('click', function(){
   S.step = 0; S.rub = 0; S.flipped = false; S.aluOn = false; S.armed = false; S.lit = 0;
+  aluT = 0; chgA = 1; fading = false; fadeAfterPop = false; saidAgain = false;
   S.fur = {x:FUR_HOME.x, y:FUR_HOME.y};
   S.alu = {x:ALU_HOME.x, y:ALU_HOME.y};
   S.neon = {x:NEON_HOME.x, y:NEON_HOME.y};

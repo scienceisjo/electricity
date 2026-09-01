@@ -70,7 +70,6 @@ header.top h1 .em{color:var(--accent)}
 .pit.used{opacity:.26; pointer-events:none; filter:grayscale(1)}
 .pit svg{display:block; width:100%; height:auto; aspect-ratio:148/56}
 .pit .nm{font-family:var(--gowun); font-size:12.5px; color:var(--ink-dim); margin-top:3px}
-.pit.bad .nm{color:var(--danger); font-weight:700}
 .shelf .empty{font-family:var(--gowun); font-size:13.5px; color:var(--ink-mute); padding:14px}
 
 #ghost{position:fixed; left:0; top:0; z-index:90; pointer-events:none; width:132px;
@@ -110,7 +109,7 @@ header.top h1 .em{color:var(--accent)}
 .qbox b{color:var(--accent); font-family:var(--disp)}
 
 /* 마무리 세 컷 */
-.recap{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:16px}
+.recap{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px}
 @media (max-width:520px){ .recap{grid-template-columns:1fr} }
 .rc{border:1.5px solid var(--line-soft); border-radius:12px; padding:11px 8px; background:#fbf6ea}
 .rc .t{font-family:var(--jua); font-size:12.5px; color:var(--ink-mute)}
@@ -176,19 +175,11 @@ header.top h1 .em{color:var(--accent)}
 /* ═══════════════════════════════════════════════════════════
    부품 그림 — 가로 148 × 세로 56 상자, 도선은 y=28 을 지난다
    ═══════════════════════════════════════════════════════════ */
-function wireMini(kind){
-  /* kind : 'ok' 보통 전선 · 'bad' 속이 드러난 전선 */
-  var s = '<line x1="6" y1="28" x2="142" y2="28" stroke="#8a6a3a" stroke-width="9" stroke-linecap="round"/>';
+function wireMini(){
+  var s = '<line x1="6" y1="28" x2="142" y2="28" stroke="#8a6a3a" stroke-width="9" stroke-linecap="round"/>'
   /* 양 끝 집게 */
-  s += '<rect x="2" y="20" width="14" height="16" rx="4" fill="#5d6b7d"/>'
-     + '<rect x="132" y="20" width="14" height="16" rx="4" fill="#5d6b7d"/>';
-  if(kind === 'bad'){
-    /* 껍질이 벗겨져 속이 드러난 모습 — 속이 하얗다 */
-    s += '<path d="M56 21 L60 35 L66 21 L72 35 L78 21 L84 35 L90 21" fill="none" stroke="#efe9dc"'
-       + ' stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'
-       + '<line x1="52" y1="18" x2="52" y2="38" stroke="#6b573f" stroke-width="2"/>'
-       + '<line x1="94" y1="18" x2="94" y2="38" stroke="#6b573f" stroke-width="2"/>';
-  }
+        + '<rect x="2" y="20" width="14" height="16" rx="4" fill="#5d6b7d"/>'
+        + '<rect x="132" y="20" width="14" height="16" rx="4" fill="#5d6b7d"/>';
   return '<svg viewBox="0 0 148 56" width="148" height="56" aria-hidden="true">' + s + '</svg>';
 }
 
@@ -299,37 +290,22 @@ var M = [
   need:['L','R'],
   ask:'이번에는 <b>불이 켜질까요?</b>',
   q:'미션 1과 <b>딱 하나</b>가 달랐습니다. 무엇이 달랐나요?'
-},
-{
-  n:3, kicker:'미션 3', head:'똑같이 이었는데',
-  brief:'새 전선 두 개를 받았습니다.<br>'
-       +'미션 2와 <b>똑같이</b> 두 길을 모두 이으세요.',
-  todo:'전선 두 개를 <b>양쪽 길에 모두</b> 놓으세요.',
-  open:{L:true, R:true},
-  bag:[{k:'ok'},{k:'bad'}],
-  need:['L','R'],
-  ask:'미션 2와 똑같이 이었습니다. <b>불이 켜질까요?</b>',
-  q:'겉모습은 <b>똑같은 전선</b>이었습니다. 그런데 하나는 되고 하나는 안 됐어요.<br>'
-   +'<b>무엇이 달랐을까요?</b>'
 }];
 
 var mi = 0;                       /* 진행 중인 미션 번호 */
 var slots = {L:null, R:null};
 var open  = {L:true, R:false};
-var bag = [], lit = false, picked = null, spare = false, revealed = false;
+var bag = [], lit = false, picked = null;
 var log = [];                     /* {n, guess, lit} */
 
 function partOf(uid){ for(var i=0;i<bag.length;i++) if(bag[i].uid===uid) return bag[i]; return null; }
 function placed(){ return [slots.L, slots.R]; }
 function inSlot(uid){ return placed().indexOf(uid) >= 0; }
 function needMet(){ return M[mi].need.every(function(k){ return slots[k] !== null; }); }
-function badInCircuit(){
-  return placed().some(function(u){ return u !== null && partOf(u).k === 'bad'; });
-}
-/* 켜짐 판정은 오직 이 한 줄 — 두 길이 다 이어지고, 그 길이 전기를 통해야 한다.
-   미션마다 결과를 박아 두면 미션 3에서 전선을 바꿔 껴도 영영 안 켜진다. */
+/* 켜짐 판정은 오직 이 한 줄 — 두 길이 모두 이어져야 한다.
+   미션마다 결과를 박아 두면 회로를 고쳐도 결과가 안 따라온다. */
 function circuitLights(){
-  return slots.L !== null && slots.R !== null && !badInCircuit();
+  return slots.L !== null && slots.R !== null;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -340,11 +316,9 @@ var shelfEl = document.getElementById('shelf');
 function drawShelf(){
   if(!bag.length){ shelfEl.innerHTML = '<div class="empty">선반이 비었습니다.</div>'; return; }
   shelfEl.innerHTML = bag.map(function(p){
-    var show = (revealed && p.k === 'bad') ? 'bad' : 'ok';
-    var nm = show === 'bad' ? '전기가 안 통함' : '전선';
     return '<div class="pit'+(inSlot(p.uid)?' used':'')+(picked===p.uid?' sel':'')
-         + (show==='bad'?' bad':'')+'" data-uid="'+p.uid+'">'
-         + wireMini(show) + '<div class="nm">'+nm+'</div></div>';
+         + '" data-uid="'+p.uid+'">'
+         + wireMini() + '<div class="nm">전선</div></div>';
   }).join('');
 }
 
@@ -389,7 +363,7 @@ function slotAt(cx, cy){
   });
   return best;
 }
-function showGhost(uid,x,y){ ghost.innerHTML = wireMini('ok'); ghost.style.display='block'; moveGhost(x,y); }
+function showGhost(uid,x,y){ ghost.innerHTML = wireMini(); ghost.style.display='block'; moveGhost(x,y); }
 function moveGhost(x,y){ ghost.style.transform = 'translate('+(x-66)+'px,'+(y-28)+'px)'; }
 
 shelfEl.addEventListener('pointerdown', function(e){
@@ -478,45 +452,6 @@ function resolve(guess){
 function resultPop(guess, on){
   var m = M[mi];
 
-  /* 미션 3 — 처음 실패했을 때만 기록에 남기고, 여분 전선을 내어 준다 */
-  if(mi === 2 && !on && !spare){
-    spare = true;
-    bag.push({ uid: Math.max.apply(null, bag.map(function(p){ return p.uid; })) + 1, k:'ok' });
-    log.push({ n:m.n, guess:guess, lit:false });
-    render();
-    openPop('<div class="kicker">미션 3</div><h3>겉으로는 멀쩡한데…</h3>'
-          + '<div class="big no">불이 켜지지 않았습니다</div>'
-          + judgeHtml(guess, false)
-          + '<div class="body">길은 <b>양쪽 다 이어져</b> 있습니다. 그런데도 안 켜져요.<br>'
-          + '<b>여분 전선을 하나 더</b> 드릴게요. 하나씩 바꿔 끼워 범인을 찾아보세요.</div>'
-          + '<div class="poprow"><button class="btn primary" data-act="start">바꿔 볼게요</button></div>');
-    return;
-  }
-
-  /* 미션 3 — 엉뚱한 쪽을 바꾼 경우. 기록은 그대로 두고 다시 기회를 준다 */
-  if(mi === 2 && !on){
-    openPop('<div class="kicker">미션 3</div><h3>아직이네요</h3>'
-          + '<div class="big no">여전히 켜지지 않습니다</div>'
-          + '<div class="body">방금 바꾼 전선은 <b>범인이 아니었나 봅니다.</b><br>'
-          + '다른 쪽을 바꿔 보세요.</div>'
-          + '<div class="poprow"><button class="btn primary" data-act="start">다시 해 볼게요</button></div>');
-    return;
-  }
-
-  /* 미션 3 — 범인을 찾아 켜졌다. 속을 보여 주고 마무리로 넘긴다 */
-  if(mi === 2 && on){
-    revealed = true; render();
-    openPop('<div class="kicker">미션 3 · 찾았습니다</div><h3>범인은 이 전선</h3>'
-          + '<div class="big yes">불이 켜졌습니다!</div>'
-          + '<div class="body">빼낸 전선의 껍질을 벗겨 보니 —<br>'
-          + '속이 금속이 아니라 <b>전기가 통하지 않는 것</b>이었습니다.</div>'
-          + '<div style="max-width:200px;margin:12px auto 0">' + wireMini('bad') + '</div>'
-          + '<div class="qbox">🤔 ' + m.q + '</div>'
-          + '<div class="poprow"><button class="btn primary" data-act="next">'
-          + '세 결과 나란히 보기 →</button></div>');
-    return;
-  }
-
   /* 미션 1 · 2 */
   log.push({ n:m.n, guess:guess, lit:on });
   openPop('<div class="kicker">'+m.kicker+' · 결과</div>'
@@ -526,7 +461,7 @@ function resultPop(guess, on){
         + judgeHtml(guess, on)
         + '<div class="qbox">🤔 '+m.q+'</div>'
         + '<div class="poprow"><button class="btn primary" data-act="next">'
-        + '다음 미션으로 →</button></div>');
+        + (mi < 1 ? '다음 미션으로 →' : '두 결과 나란히 보기 →') + '</button></div>');
 }
 
 function judgeHtml(guess, on){
@@ -537,22 +472,23 @@ function judgeHtml(guess, on){
 
 ACT.next = function(){
   closePop();
-  if(mi < 2){ mi++; startMission(); }
+  if(mi < 1){ mi++; startMission(); }
   else { donePop(); }
 };
 
 /* ── 마무리 ────────────────────────────────────────────── */
-var WHAT = ['왼쪽 길만 이었다', '양쪽 길을 이었다', '양쪽 길을 이었다<br>(전선 하나가 달랐다)'];
+var WHAT = ['왼쪽 길만 이었다', '양쪽 길을 모두 이었다'];
 function donePop(){
   var cells = log.map(function(r, i){
     return '<div class="rc'+(r.guess!==r.lit?' miss':'')+'"><div class="t">미션 '+r.n+'</div>'
          + '<div class="w">'+WHAT[i]+'</div>'
          + '<div class="r '+(r.lit?'y':'n')+'">'+(r.lit?'💡 켜짐':'○ 안 켜짐')+'</div></div>';
   }).join('');
-  openPop('<div class="kicker">다 했습니다</div><h3>세 번의 결과</h3>'
+  openPop('<div class="kicker">다 했습니다</div><h3>두 번의 결과</h3>'
         + '<div class="recap">'+cells+'</div>'
-        + '<div class="qbox" style="margin-top:18px">🤔 <b>두 번</b> 켜지지 않았습니다.<br>'
-        + '그 이유가 <b>같을까요, 다를까요?</b></div>'
+        + '<div class="qbox" style="margin-top:18px">🤔 <b>딱 한 곳</b>이 달랐을 뿐인데<br>'
+        + '하나는 켜지고 하나는 켜지지 않았습니다.<br>'
+        + '<b>불이 켜지려면 무엇이 필요할까요?</b></div>'
         + '<div class="poprow"><button class="btn" data-act="redo">↺ 처음부터</button>'
         + '<button class="btn primary" data-act="close">닫기</button></div>');
 }
@@ -572,7 +508,7 @@ function startMission(){
   open = {L:m.open.L, R:m.open.R};
   bag = m.bag.map(function(b, i){ return { uid:i, k:b.k }; });
   if(m.preset) Object.keys(m.preset).forEach(function(k){ slots[k] = m.preset[k]; });
-  lit = false; picked = null; spare = false; revealed = false;
+  lit = false; picked = null;
   render();
   briefPop();
 }
