@@ -963,6 +963,11 @@ body.teacher .keyline-s{display:none}
 .exp-why .in b{color:var(--ink,#2e2315)}
 .exp-tip,.exp-warn{display:flex;gap:8px;font-size:13px;margin-top:9px;line-height:1.7;align-items:flex-start}
 .exp-tip{color:var(--ink-dim,#5c4a33)}
+.qbox-lite{margin-top:16px;padding:15px 18px;border-radius:14px;border:1.5px solid var(--accent);
+ background:rgba(160,92,44,.07)}
+.qbox-lite>b{font-size:16px;color:var(--accent)}
+.qbox-lite p{margin-top:7px;font-size:17px;line-height:1.65}
+
 .exp-warn{color:#8c212b;background:rgba(179,54,46,.08);border-left:3px solid var(--danger,#b3362e);
  padding:9px 13px;border-radius:0 10px 10px 0}
 .exp-warn b{color:#8c212b}
@@ -1186,6 +1191,13 @@ body.teacher .keyline-s{display:none}
  <b style="color:var(--accent)">전류</b>라고 하고, 단위는 <b class="k">A(암페어)</b>를 씁니다.
  전지를 연결한 전기 회로에서도 똑같습니다 — 전류가 흐르면 전구에 불이 켜져요.</p>
  <div class="keyline-s"><span class="kw">전하의 흐름</span><span class="arw">→</span><span class="kw hi">전류</span><span class="kw">단위 A(암페어)</span><span class="memo"></span></div>
+
+ <a class="linkcard" href="ask-circuit.html" target="_blank" rel="noopener">
+ <span class="lc-e">🔌</span>
+ <span><span class="lc-t">다 이었는데, 왜 안 켜지지? · 회로 잇기 ↗</span>
+ <span class="lc-d">부품을 직접 끌어다 놓아 회로를 완성해 봅니다. 용어를 배우기 <b>전에</b> 먼저 해 보세요 —
+ 켜지지 않는 회로를 만들어 보는 것이 오늘의 출발점입니다.</span></span>
+ </a>
 
  <div class="card cloze-set" style="margin-top:20px">
  <h3 class="card-t" style="margin-bottom:6px">오늘의 용어 세 개</h3>
@@ -1623,6 +1635,37 @@ body.teacher .keyline-s{display:none}
  전류를 <b class="k">더 세게 미는 쪽</b>과 <b class="k">흐름을 막는 쪽</b>, 두 가지가 전류의 세기를 정합니다.
  미는 쪽에는 <b class="t2">전압</b>, 막는 쪽에는 <b class="t1">저항</b>이라는 이름이 붙어 있어요.</p>
  <div class="keyline-s"><span class="kw">미는 힘 → 전압</span><span class="kw">막는 정도 → 저항</span><span class="kw hi">둘이 전류의 세기를 정한다</span><span class="memo"></span></div>
+
+ <div class="card" style="margin-top:20px">
+ <h3 class="card-t">🔦 도입 — 전지는 그대로인데, 왜 밝기가 변할까?</h3>
+ <p class="lead say" style="font-size:17px;margin-top:8px">샤프심 하나와 집게 두 개면 됩니다.
+ 집게 하나를 심 위에서 <b class="k">밀기만</b> 하면 전구가 서서히 어두워지고, 되돌리면 다시 밝아집니다.
+ 그동안 <b>전지도 전구도 손대지 않았습니다.</b></p>
+ <div class="exp-prep">🧰 <b>준비물</b> · 0.9 mm 샤프심(굵을수록 좋습니다) 1~2개, 꼬마전구와 소켓,
+ 건전지 2개(직렬), 집게 전선 2개</div>
+ <ol>
+ <li>건전지 → 전구 → 집게 전선 두 개로 회로를 만들고, 두 집게로 <b>샤프심의 양 끝</b>을 뭅니다.</li>
+ <li>불이 켜지는 것을 확인합니다.</li>
+ <li>집게 하나를 심을 따라 <b>천천히 밀어</b> 두 집게 사이를 넓힙니다.</li>
+ <li>다시 되돌립니다. 여러 번 왕복해서 보여 주세요.</li>
+ </ol>
+ <svg viewBox="0 0 620 248" style="max-width:620px;width:100%;height:auto;display:block;margin:14px auto 2px" width="620" height="248" role="img" aria-label="샤프심 조광기 두 컷 비교. 왼쪽은 두 집게가 가까워 전류가 심을 지나는 길이가 짧고 전구가 밝다. 오른쪽은 집게를 멀리 벌려 심을 지나는 길이가 길어졌고 전구가 어둡다. 전지와 전구는 두 컷에서 똑같다."><g transform="translate(0,0)"><rect x="40" y="57" width="210" height="10" rx="5" fill="#3f3f47"/><rect x="43" y="58" width="204" height="3" rx="1.5" fill="#6d6d78"/><line x1="52" y1="62" x2="52" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="96" y1="62" x2="96" y2="122" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="96" y1="122" x2="232" y2="122" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="232" y1="122" x2="232" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="52" y1="176" x2="90" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="134" y1="176" x2="163" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="199" y1="176" x2="232" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><circle cx="112" cy="176" r="33" fill="#e0952f" opacity=".24"/><circle cx="112" cy="176" r="22" fill="#ffe9b4"/><circle cx="112" cy="176" r="22" fill="none" stroke="#c67a12" stroke-width="2.6"/><line x1="90" y1="176" x2="100" y2="176" stroke="#c67a12" stroke-width="2.6" stroke-linecap="round"/><line x1="124" y1="176" x2="134" y2="176" stroke="#c67a12" stroke-width="2.6" stroke-linecap="round"/><path d="M100 176 A 12 12 0 0 1 124 176" fill="none" stroke="#c67a12" stroke-width="2.6" stroke-linecap="round"/><line x1="168" y1="161" x2="168" y2="191" stroke="#b23a30" stroke-width="2.6" stroke-linecap="round"/><line x1="177" y1="168" x2="177" y2="184" stroke="#2e5f8f" stroke-width="6.5" stroke-linecap="round"/><line x1="190" y1="161" x2="190" y2="191" stroke="#b23a30" stroke-width="2.6" stroke-linecap="round"/><line x1="199" y1="168" x2="199" y2="184" stroke="#2e5f8f" stroke-width="6.5" stroke-linecap="round"/><path d="M43 48 L61 48 L57 58 L47 58 Z" fill="#5d6b7d"/><path d="M43 76 L61 76 L57 66 L47 66 Z" fill="#5d6b7d"/><path d="M87 48 L105 48 L101 58 L91 58 Z" fill="#5d6b7d"/><path d="M87 76 L105 76 L101 66 L91 66 Z" fill="#5d6b7d"/><line x1="52" y1="36" x2="96" y2="36" stroke="#a05c2c" stroke-width="2" stroke-dasharray="6 5"/><text x="74.0" y="29" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#a05c2c" font-weight="800">지나는 길</text><text x="145" y="232" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#4a3a26" font-weight="800">집게가 가까울 때 · 길이 짧다 — 밝다</text></g><g transform="translate(310,0)"><rect x="40" y="57" width="210" height="10" rx="5" fill="#3f3f47"/><rect x="43" y="58" width="204" height="3" rx="1.5" fill="#6d6d78"/><line x1="52" y1="62" x2="52" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="214" y1="62" x2="214" y2="122" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="214" y1="122" x2="232" y2="122" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="232" y1="122" x2="232" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="52" y1="176" x2="90" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="134" y1="176" x2="163" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="199" y1="176" x2="232" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><circle cx="112" cy="176" r="22" fill="#f7f0df"/><circle cx="112" cy="176" r="22" fill="none" stroke="#6b573f" stroke-width="2.6"/><line x1="90" y1="176" x2="100" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="124" y1="176" x2="134" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><path d="M100 176 A 12 12 0 0 1 124 176" fill="none" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="168" y1="161" x2="168" y2="191" stroke="#b23a30" stroke-width="2.6" stroke-linecap="round"/><line x1="177" y1="168" x2="177" y2="184" stroke="#2e5f8f" stroke-width="6.5" stroke-linecap="round"/><line x1="190" y1="161" x2="190" y2="191" stroke="#b23a30" stroke-width="2.6" stroke-linecap="round"/><line x1="199" y1="168" x2="199" y2="184" stroke="#2e5f8f" stroke-width="6.5" stroke-linecap="round"/><path d="M43 48 L61 48 L57 58 L47 58 Z" fill="#5d6b7d"/><path d="M43 76 L61 76 L57 66 L47 66 Z" fill="#5d6b7d"/><path d="M205 48 L223 48 L219 58 L209 58 Z" fill="#5d6b7d"/><path d="M205 76 L223 76 L219 66 L209 66 Z" fill="#5d6b7d"/><line x1="52" y1="36" x2="214" y2="36" stroke="#a05c2c" stroke-width="2" stroke-dasharray="6 5"/><text x="133.0" y="29" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#a05c2c" font-weight="800">지나는 길</text><text x="145" y="232" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#4a3a26" font-weight="800">집게를 벌렸을 때 · 길이 길다 — 어둡다</text></g><line x1="303" y1="30" x2="303" y2="220" stroke="#dccfae" stroke-width="2" stroke-dasharray="5 6"/></svg>
+ <p class="exp-eye">👀 <b>여기를 보세요</b> — 밝기가 <b>딸깍 하고 꺼지는 것이 아니라 서서히</b> 변합니다.
+ 켜짐과 꺼짐 사이에 <b>중간이 있다</b>는 것이 오늘의 출발점입니다.</p>
+ <p class="exp-tip"><span>💡</span><span>심이 잘 안 물리면 집게 날을 심에 <b>수직으로</b> 세워 무세요.
+ 심은 쉽게 부러지니 종이 위에서 다루고, 여분을 준비하세요.</span></p>
+ <div class="note"><span class="ic">⚠️</span><div><b>전구를 빼고 심만 전지에 물리지 마세요.</b>
+ 심이 빨갛게 달아올라 부러지고 화상을 입을 수 있습니다. 전구가 회로에 있어야 전류가 알맞게 제한됩니다.</div></div>
+ <div class="qbox-lite">
+ <b>🤔 그래서, 오늘의 질문</b>
+ <p>전지도 그대로, 전구도 그대로입니다. 그런데 밝기가 변했어요.<br>
+ 그렇다면 집게를 밀 때 <b class="k">무엇이 달라진 걸까요?</b></p>
+ </div>
+ <div class="note class"><span class="ic">💬</span><div><b>이 자료의 노림수</b> —
+ 학생 입에서 나와야 하는 말은 "<b>길이</b>"입니다. 밝기가 연속으로 변하는 것을 보면
+ "전기가 지나가는 길이 길어져서요" 같은 말이 나옵니다. 그 말에 <b>저항</b>이라는 이름을 붙여 주면
+ 다음 카드의 용어 정리로 그대로 이어집니다. 먼저 이름을 알려 주지 마세요.</div></div>
+ </div>
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t" style="margin-bottom:14px">오늘의 용어 — 전류를 조절하는 두 손잡이</h3>
@@ -2343,19 +2386,20 @@ body.teacher .keyline-s{display:none}
 
 </main>
 <div id="toast"></div>
-<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-08-08</span></footer>
+<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-09-01</span></footer>
 
 <script>
 "use strict";
 const FIGS={
   neon:'img/cu-neon.jpg', fan:'img/cu-fan.jpg'
 };
-const BG_IMAGES={cover:'',see:'',model:'',direction:'',apply:'',check:'',sum:'',beyond:''};
+const BG_IMAGES={cover:'',see:'',model:'',direction:'',vr:'',apply:'',check:'',sum:'',beyond:''};
 const BG_FALLBACK={
   cover:'radial-gradient(120% 90% at 50% 0%, #f6f1e8, #f4ebd7 68%)',
   see:'radial-gradient(110% 80% at 50% 0%, #f6f1e8, #f4ebd7 66%)',
   model:'radial-gradient(100% 80% at 50% 20%, #f5f0e7, #f4ebd7 70%)',
   direction:'linear-gradient(180deg, #f5efe6, #f4ebd7 74%)',
+  vr:'radial-gradient(100% 82% at 34% 12%, #f4eee2, #f4ebd7 70%)',
   apply:'radial-gradient(90% 80% at 68% 15%, #efe0c2, #f4ebd7 70%)',
   check:'radial-gradient(100% 85% at 30% 15%, #f5efe6, #f4ebd7 70%)',
   sum:'radial-gradient(105% 85% at 50% 10%, #f6f1e6, #f4ebd7 68%)',
@@ -2487,7 +2531,7 @@ const GAME_QS=[
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const TAU=Math.PI*2;
-const TABS=['see','model','direction','apply','check','sum','beyond'];
+const TABS=['see','model','direction','vr','apply','check','sum','beyond'];
 const CS=getComputedStyle(document.documentElement);
 const CV=k=>CS.getPropertyValue('--'+k).trim();
 const C={accent:CV('accent'),accent2:CV('accent2'),c1:CV('c1'),c2:CV('c2'),c3:CV('c3'),c4:CV('c4'),c5:CV('c5'),
