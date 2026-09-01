@@ -134,6 +134,12 @@ header.top h1 .em{color:var(--accent)}
  @keyframes shake{10%,90%{transform:translateX(-2px)}30%,70%{transform:translateX(3px)}50%{transform:translateX(-3px)}}
  .shake{animation:shake .5s both}
 }
+
+/* 다른 페이지 안에 끼워 넣을 때 — 제목·푸터·돌아가기를 감춘다 */
+html.embed body{background:none}
+html.embed header.top, html.embed .backline, html.embed #app-credit{display:none}
+html.embed .wrap{padding:4px 12px 12px; max-width:840px}
+html.embed .card{box-shadow:none}
 </style>
 </head>
 <body>
@@ -171,6 +177,8 @@ header.top h1 .em{color:var(--accent)}
 <script>
 "use strict";
 (function(){
+
+if(/[?&]embed=1/.test(location.search)) document.documentElement.classList.add('embed');
 
 /* ═══════════════════════════════════════════════════════════
    부품 그림 — 가로 148 × 세로 56 상자, 도선은 y=28 을 지난다
