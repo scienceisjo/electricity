@@ -177,19 +177,25 @@ if(EMBED) document.documentElement.classList.add('embed');
    지난 차시에 배운 것(마찰전기 · 정전기 유도)까지만 보여 준다.
    스타이로폼은 부도체라 전하가 알루미늄으로 건너가지 않는다 —
    움직이는 것은 알루미늄 접시 안에 원래 있던 전하다. */
-var STY_PTS = [], ALU_PTS = [];
+var STY_PTS = [], ALU_PTS = [], PLUS_PTS = [];
 (function(){
   /* 스타이로폼 — 알루미늄 접시(rx 106)를 올려도 가려지지 않도록 바깥 테두리를 따라 둔다 */
   for(var i=0;i<14;i++){
     var a = (i/14)*6.2832 + 0.22;
     STY_PTS.push([STY.x + Math.cos(a)*(STY.rx-16), STY.y + Math.sin(a)*(STY.ry-6)]);
   }
-  /* 알루미늄 — 접시 안의 전하가 아래쪽 테두리에서 위쪽 테두리로 밀려 올라간다 */
+  /* 알루미늄 — 접시 안에 원래 고르게 있던 전자가, 아래 스타이로폼의 (−)에 밀려
+     먼 쪽(윗면)으로 몰린다. 스타이로폼에서 건너오는 것이 아니다. */
   for(var j=0;j<9;j++){
     var b = -0.82 + (j/8)*1.64;
     var w = Math.sqrt(1 - b*b) * 0.92;
-    ALU_PTS.push({ x0: b*(ALU_ON.rx-26), y0:  (ALU_ON.ry-4)*w,
-                   x1: b*(ALU_ON.rx-26), y1: -(ALU_ON.ry-4)*w });
+    ALU_PTS.push({ x0: b*(ALU_ON.rx-26), y0: (j % 2 ? 9 : -7),   /* 처음 — 고르게 */
+                   x1: b*(ALU_ON.rx-26), y1: -(ALU_ON.ry-4)*w });/* 나중 — 윗면으로 */
+  }
+  /* 전자가 빠져나간 아래쪽에는 (+)가 남는다 — 접시 전체 전하량은 그대로 0 */
+  for(var q=0;q<7;q++){
+    var c = -0.72 + (q/6)*1.44;
+    PLUS_PTS.push({ x: c*(ALU_ON.rx-30), y: (ALU_ON.ry-3)*Math.sqrt(1-c*c)*0.9 });
   }
 })();
 var aluT = 0, chgA = 1, fading = false, animRun = false;
@@ -206,10 +212,23 @@ function chgSty(){
   for(var i=0;i<n;i++) g += minus(STY_PTS[i][0], STY_PTS[i][1], chgA);
   return g;
 }
+function plus(x, y, op){
+  return '<g opacity="'+op.toFixed(2)+'"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)
+       + '" r="7" fill="#b23a30" stroke="#f7e0dc" stroke-width="1.4"/>'
+       + '<line x1="'+(x-4).toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(x+4).toFixed(1)+'" y2="'
+       + y.toFixed(1)+'" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>'
+       + '<line x1="'+x.toFixed(1)+'" y1="'+(y-4).toFixed(1)+'" x2="'+x.toFixed(1)+'" y2="'
+       + (y+4).toFixed(1)+'" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/></g>';
+}
 function chgAlu(){
   if(!S.aluOn || chgA <= 0.02) return '';
   var t = aluT < 0.5 ? 2*aluT*aluT : 1 - Math.pow(-2*aluT+2, 2)/2;   /* 부드럽게 */
   var g = '';
+  /* 전자가 빠져나간 자리에 (+)가 드러난다 — 몰림이 끝나 갈수록 뚜렷해진다 */
+  for(var q=0;q<PLUS_PTS.length;q++){
+    var e = PLUS_PTS[q];
+    g += plus(ALU_ON.x + e.x, ALU_ON.y + e.y, chgA * Math.max(0, (t-0.45)/0.55));
+  }
   for(var i=0;i<ALU_PTS.length;i++){
     var p = ALU_PTS[i];
     g += minus(ALU_ON.x + p.x0 + (p.x1-p.x0)*t, ALU_ON.y + p.y0 + (p.y1-p.y0)*t, chgA);
@@ -604,7 +623,9 @@ var BRIEF = [
 { k:'2단계', t:'뒤집어 놓기',
   b:'충분히 문질렀습니다.<br>이제 접시를 <b>뒤집어</b> 책상 위에 놓으세요.' },
 { k:'3단계', t:'알루미늄 접시 올리기',
-  b:'<b>수수깡을 잡고</b> 알루미늄 접시를 스타이로폼 접시 위에 올려놓으세요.' },
+  b:'<b>수수깡을 잡고</b> 알루미늄 접시를 스타이로폼 접시 위에 올려놓으세요.<br><br>'
+   +'스타이로폼의 (−)는 <b>한 톨도 움직이지 않습니다.</b><br>'
+   +'움직이는 것은 <b>알루미늄 접시 안에 원래 있던</b> (−)예요.' },
 { k:'4단계', t:'네온전구를 대 보기',
   b:'네온전구의 한쪽 극은 이미 <b>손으로 잡고</b> 있습니다.<br>'
    +'다른 쪽 끝을 <b>알루미늄 접시 가장자리</b>에 대 보세요.<br><br>'
