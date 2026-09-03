@@ -36,6 +36,9 @@ header.top h1 .em{color:var(--accent)}
 .st.now{border-color:var(--accent); color:var(--accent); background:#fbf1e4; box-shadow:0 0 0 3px rgba(160,92,44,.12)}
 .st.now .no{background:var(--accent)}
 .st.done{border-color:var(--ok); color:var(--ok)} .st.done .no{background:var(--ok)}
+.st.success{border-color:var(--ok); color:var(--ok); background:rgba(44,110,95,.14); font-weight:700;
+ animation:stpop .5s} .st.success .no{background:var(--ok)}
+@keyframes stpop{0%{transform:scale(.6)}70%{transform:scale(1.12)}100%{transform:scale(1)}}
 
 #todo{margin:11px auto 0; max-width:740px; display:flex; gap:11px; align-items:center;
  background:#fbf1e4; border:1.6px solid var(--accent); border-radius:14px; padding:12px 18px;
@@ -61,6 +64,8 @@ header.top h1 .em{color:var(--accent)}
 .btn.primary:hover:not(:disabled){filter:brightness(1.08); color:#fdf6e8}
 .btn:disabled{opacity:.36; cursor:not-allowed}
 .btn[hidden]{display:none}
+.nextbox{margin-top:12px; padding:12px 15px; border-radius:12px; background:rgba(44,110,95,.13);
+ border:1.5px solid var(--ok); font-family:var(--gowun); font-size:14.5px; line-height:1.65}
 
 #count{margin:13px auto 0; max-width:740px; text-align:center; font-family:var(--gowun);
  font-size:15px; color:var(--ink-dim)}
@@ -195,7 +200,7 @@ var STY_PTS = [], ALU_PTS = [], PLUS_PTS = [];
   /* 전자가 빠져나간 아래쪽에는 (+)가 남는다 — 접시 전체 전하량은 그대로 0 */
   for(var q=0;q<7;q++){
     var c = -0.72 + (q/6)*1.44;
-    PLUS_PTS.push({ x: c*(ALU_ON.rx-30), y: (ALU_ON.ry-3)*Math.sqrt(1-c*c)*0.9 });
+    PLUS_PTS.push({ x: c*(ALU_ON.rx-30), y: (ALU_ON.ry-9)*Math.sqrt(1-c*c)*0.72 });
   }
 })();
 var aluT = 0, chgA = 1, fading = false, animRun = false;
@@ -210,6 +215,13 @@ function chgSty(){
   if(chgA <= 0.02) return '';
   var n = Math.round(rubPct()*STY_PTS.length), g = '';
   for(var i=0;i<n;i++) g += minus(STY_PTS[i][0], STY_PTS[i][1], chgA);
+  /* 알루미늄이 올라와 있으면 — 스타이로폼의 (−)는 움직이지 않는다는 이름표 */
+  if(S.aluOn && aluT > 0.7){
+    var os = (chgA * Math.min(1, (aluT-0.7)/0.3)).toFixed(2);
+    g += '<text x="'+(STY.x + STY.rx + 12)+'" y="'+(STY.y + 12)+'" text-anchor="start"'
+       + ' font-family="Gowun Dodum,sans-serif" font-size="13" font-weight="700"'
+       + ' fill="#d8c9ae" opacity="'+os+'">스타이로폼의 −는 그대로 (부도체)</text>';
+  }
   return g;
 }
 function plus(x, y, op){
@@ -233,6 +245,26 @@ function chgAlu(){
     var p = ALU_PTS[i];
     g += minus(ALU_ON.x + p.x0 + (p.x1-p.x0)*t, ALU_ON.y + p.y0 + (p.y1-p.y0)*t, chgA);
   }
+  /* 이동 중 — (−)가 위로 밀려나는 방향 화살표 */
+  if(t < 0.92){
+    var oa = (chgA * (1-t)).toFixed(2);
+    [-56, 0, 56].forEach(function(ax){
+      var x = ALU_ON.x + ax, y1 = ALU_ON.y + 11, y2 = ALU_ON.y - 15;
+      g += '<g opacity="'+oa+'"><line x1="'+x+'" y1="'+y1+'" x2="'+x+'" y2="'+y2
+        + '" stroke="#8fc1ef" stroke-width="2.2" stroke-linecap="round"/>'
+        + '<polygon points="'+x+','+(y2-6)+' '+(x-4.5)+','+(y2+3)+' '+(x+4.5)+','+(y2+3)
+        + '" fill="#8fc1ef"/></g>';
+    });
+  }
+  /* 다 몰리면 — 어느 쪽이 어떤 전하인지 이름표 */
+  if(t > 0.7){
+    var ol = (chgA * Math.min(1, (t-0.7)/0.3)).toFixed(2);
+    var lx = ALU_ON.x - ALU_ON.rx - 12;
+    g += '<text x="'+lx+'" y="'+(ALU_ON.y-16)+'" text-anchor="end" font-family="Gowun Dodum,sans-serif"'
+       + ' font-size="13.5" font-weight="700" fill="#8fc1ef" opacity="'+ol+'">먼 쪽(위)엔 −</text>'
+       + '<text x="'+lx+'" y="'+(ALU_ON.y+18)+'" text-anchor="end" font-family="Gowun Dodum,sans-serif"'
+       + ' font-size="13.5" font-weight="700" fill="#f0a196" opacity="'+ol+'">닿은 쪽(아래)엔 +</text>';
+  }
   return g;
 }
 function paintChg(){
@@ -247,7 +279,7 @@ function anim(now){
   var dt = animLast ? Math.min(80, now - animLast) : 16;
   animLast = now;
   var go = false;
-  if(S.aluOn && aluT < 1){ aluT = Math.min(1, aluT + dt/850); go = true; }
+  if(S.aluOn && aluT < 1){ aluT = Math.min(1, aluT + dt/2800); go = true; }   /* 이동 과정이 보이게 천천히 */
   if(fading && chgA > 0){ chgA = Math.max(0, chgA - dt/650); go = true; }
   paintChg();
   if(go) requestAnimationFrame(anim); else { animRun = false; animLast = 0; }
@@ -610,6 +642,12 @@ var fadeAfterPop = false;
 var ACT = { ok:function(){
   closePop();
   if(fadeAfterPop){ fadeAfterPop = false; fading = true; startAnim(); }
+}, next:function(){
+  closePop();
+  /* 래퍼(질문실험실) 안이면 ② 탭으로 넘겨 달라고 신호, 단독으로 열었으면 바로 이동 */
+  var sent = false;
+  try{ if(window.parent !== window){ window.parent.postMessage({ t:'gotoCircuit' }, '*'); sent = true; } }catch(_){}
+  if(!sent) location.href = 'ask-circuit.html';
 } };
 
 var BRIEF = [
@@ -647,7 +685,10 @@ function result1(){
         + '<div class="qbox">🤔 전지도 없었는데 불이 켜졌습니다.<br>'
         + '그 순간, <b>무엇이 전구를 지나간 걸까요?</b></div>'
         + '<div class="qbox">🤔 그리고 왜 <b>계속 켜져 있지 않고</b> 잠깐만 켜졌을까요?</div>'
-        + '<div class="poprow"><button class="btn primary" data-act="ok">더 해 볼게요</button></div>');
+        + '<div class="nextbox">🎉 <b>① 성공!</b> 다음 실험은 <b>② 다 이었는데 안 켜진다</b> —'
+        + ' 이번엔 전지도 전구도 있는데 <b>안 켜지는</b> 회로입니다.</div>'
+        + '<div class="poprow"><button class="btn" data-act="ok">여기 더 있을래요</button>'
+        + '<button class="btn primary" data-act="next">② 다 이었는데 안 켜진다 →</button></div>');
 }
 
 function again(){
@@ -664,9 +705,9 @@ function again(){
 var STEPS = ['문지르기', '뒤집어 놓기', '접시 올리기', '전구 대기'];
 function drawSteps(){
   document.getElementById('steps').innerHTML = STEPS.map(function(t, i){
-    var cls = S.step > i ? 'done' : (S.step === i ? 'now' : '');
+    var cls = (S.step > i || (i === 3 && S.lit > 0)) ? 'done' : (S.step === i ? 'now' : '');
     return '<div class="st '+cls+'"><span class="no">'+(i+1)+'</span><span>'+t+'</span></div>';
-  }).join('');
+  }).join('') + (S.lit > 0 ? '<div class="st success"><span class="no">🎉</span><span>성공!</span></div>' : '');
 }
 function updateTodo(){
   var t;
@@ -677,7 +718,7 @@ function updateTodo(){
   else if(S.step === 1) t = '<b>접시 뒤집어 놓기</b>를 누르세요.';
   else if(S.step === 2) t = '<b>수수깡</b>을 잡고 알루미늄 접시를 스타이로폼 접시 위로 옮기세요.';
   else if(S.step === 3 && S.armed) t = '네온전구 끝을 <b>알루미늄 접시 가장자리(○ 표시)</b>에 대세요.';
-  else t = '켜졌습니다. <b>접시를 들었다 다시 놓기</b>를 누르면 또 할 수 있어요.';
+  else t = '✅ <b>성공!</b> 전구가 켜졌어요 — <b>접시를 들었다 다시 놓기</b>로 몇 번이고 다시, 아니면 위의 <b>② 다 이었는데 안 켜진다</b>로 넘어가세요.';
   document.getElementById('todoTx').innerHTML = t;
   document.getElementById('btnFlip').hidden = (S.step !== 1);
   drawSteps();
@@ -723,6 +764,17 @@ contact = function(){
 };
 
 draw(); updateTodo(); updateCount(); brief(0);
+
+/* 검증용 훅 — 다른 시뮬의 __step 과 같은 관례 */
+window.__eph = {
+  state:function(){ return {step:S.step, lit:S.lit, aluT:aluT, armed:S.armed, aluOn:S.aluOn}; },
+  toStep3:function(){ S.rub = RUB_NEED; S.flipped = true; S.aluOn = true; S.armed = true; S.step = 3;
+    aluT = 0; draw(); updateTodo(); startAnim(); },
+  touch:function(){ contact(); },
+  chgHtml:function(){ return {a:document.getElementById('chgA').innerHTML,
+                              s:document.getElementById('chgS').innerHTML}; },
+  setT:function(v){ aluT = v; paintChg(); }
+};
 })();
 </script>
 </body>

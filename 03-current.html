@@ -176,6 +176,16 @@ body.teacher .note.class{display:flex}
 .lab h3{font-family:var(--jua);font-size:18px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
 .simgrid{display:grid;gap:16px;grid-template-columns:1fr;margin-top:14px}
 @media(min-width:900px){.simgrid{grid-template-columns:minmax(0,1fr) 268px;align-items:start}}
+/* ── 샤프심 조광기 안내 팝업 ── */
+.dmpops{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.dpop{max-width:560px;background:rgba(255,253,247,.96);border:1.5px solid var(--line);border-radius:12px;
+ padding:7px 12px;font-size:14px;line-height:1.55;color:var(--ink-dim);box-shadow:0 3px 10px rgba(23,52,80,.14);
+ opacity:0;transform:translateY(-6px);transition:opacity .3s,transform .3s}
+.dpop.on{opacity:1;transform:none}
+.dpop.dim{opacity:.62}
+.dpop b{color:var(--accent)}
+.dpop.key{border-color:var(--accent);background:#fff6e6}
+
 .simstage{background:#faf4e6;border:1px solid var(--line);border-radius:13px;overflow:hidden}
 .simstage canvas{display:block;width:100%;height:auto}
 .simctl{background:#efe4c9;border:1px solid var(--line);border-radius:13px;padding:16px}
@@ -1882,8 +1892,18 @@ body.teacher .keyline-s{display:none}
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🔦 도입 — 전지는 그대로인데, 왜 밝기가 변할까?</h3>
  <p class="lead say" style="font-size:17px;margin-top:8px">샤프심 하나와 집게 두 개면 됩니다.
- 집게 하나를 심 위에서 <b class="k">밀기만</b> 하면 전구가 서서히 어두워지고, 되돌리면 다시 밝아집니다.
- 그동안 <b>전지도 전구도 손대지 않았습니다.</b></p>
+ 아래에서 <b class="k">오른쪽 집게를 직접 끌어</b> 보세요 — 화면의 안내를 따라 하나씩 하면 됩니다.
+ 미리 말해 두자면, 실험 내내 <b>전지도 전구도 손대지 않습니다.</b></p>
+ <div class="simstage" style="margin-top:14px"><canvas id="dmCv" width="660" height="300"></canvas></div>
+ <div style="display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap">
+  <label for="dmR" style="font-weight:700;color:var(--ink-dim);font-size:14.5px">🤏 오른쪽 집게</label>
+  <input type="range" id="dmR" min="0" max="100" value="8" step="1" style="flex:1;min-width:180px"
+   aria-label="오른쪽 집게 위치 — 오른쪽으로 밀수록 집게 사이가 넓어집니다">
+  <span id="dmRead" style="font-weight:800;color:var(--accent);font-size:14.5px"></span>
+ </div>
+ <div class="dmpops" id="dmPops" aria-live="polite"></div>
+
+ <details class="exp" style="margin-top:14px"><summary class="exp-h"><span class="n">🧪</span><h4>실물로도 해 보기 — 교사 시연</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in">
  <div class="exp-prep">🧰 <b>준비물</b> · 0.9 mm 샤프심(굵을수록 좋습니다) 1~2개, 꼬마전구와 소켓,
  건전지 2개(직렬), 집게 전선 2개</div>
  <ol>
@@ -1892,13 +1912,13 @@ body.teacher .keyline-s{display:none}
  <li>집게 하나를 심을 따라 <b>천천히 밀어</b> 두 집게 사이를 넓힙니다.</li>
  <li>다시 되돌립니다. 여러 번 왕복해서 보여 주세요.</li>
  </ol>
- <svg viewBox="0 0 620 248" style="max-width:620px;width:100%;height:auto;display:block;margin:14px auto 2px" width="620" height="248" role="img" aria-label="샤프심 조광기 두 컷 비교. 왼쪽은 두 집게가 가까워 전류가 심을 지나는 길이가 짧고 전구가 밝다. 오른쪽은 집게를 멀리 벌려 심을 지나는 길이가 길어졌고 전구가 어둡다. 전지와 전구는 두 컷에서 똑같다."><g transform="translate(0,0)"><rect x="40" y="57" width="210" height="10" rx="5" fill="#3f3f47"/><rect x="43" y="58" width="204" height="3" rx="1.5" fill="#6d6d78"/><line x1="52" y1="62" x2="52" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="96" y1="62" x2="96" y2="122" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="96" y1="122" x2="232" y2="122" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="232" y1="122" x2="232" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="52" y1="176" x2="90" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="134" y1="176" x2="163" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="199" y1="176" x2="232" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><circle cx="112" cy="176" r="33" fill="#e0952f" opacity=".24"/><circle cx="112" cy="176" r="22" fill="#ffe9b4"/><circle cx="112" cy="176" r="22" fill="none" stroke="#c67a12" stroke-width="2.6"/><line x1="90" y1="176" x2="100" y2="176" stroke="#c67a12" stroke-width="2.6" stroke-linecap="round"/><line x1="124" y1="176" x2="134" y2="176" stroke="#c67a12" stroke-width="2.6" stroke-linecap="round"/><path d="M100 176 A 12 12 0 0 1 124 176" fill="none" stroke="#c67a12" stroke-width="2.6" stroke-linecap="round"/><line x1="168" y1="161" x2="168" y2="191" stroke="#b23a30" stroke-width="2.6" stroke-linecap="round"/><line x1="177" y1="168" x2="177" y2="184" stroke="#2e5f8f" stroke-width="6.5" stroke-linecap="round"/><line x1="190" y1="161" x2="190" y2="191" stroke="#b23a30" stroke-width="2.6" stroke-linecap="round"/><line x1="199" y1="168" x2="199" y2="184" stroke="#2e5f8f" stroke-width="6.5" stroke-linecap="round"/><path d="M43 48 L61 48 L57 58 L47 58 Z" fill="#5d6b7d"/><path d="M43 76 L61 76 L57 66 L47 66 Z" fill="#5d6b7d"/><path d="M87 48 L105 48 L101 58 L91 58 Z" fill="#5d6b7d"/><path d="M87 76 L105 76 L101 66 L91 66 Z" fill="#5d6b7d"/><line x1="52" y1="36" x2="96" y2="36" stroke="#a05c2c" stroke-width="2" stroke-dasharray="6 5"/><text x="74.0" y="29" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#a05c2c" font-weight="800">지나는 길</text><text x="145" y="232" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#4a3a26" font-weight="800">집게가 가까울 때 · 길이 짧다 — 밝다</text></g><g transform="translate(310,0)"><rect x="40" y="57" width="210" height="10" rx="5" fill="#3f3f47"/><rect x="43" y="58" width="204" height="3" rx="1.5" fill="#6d6d78"/><line x1="52" y1="62" x2="52" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="214" y1="62" x2="214" y2="122" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="214" y1="122" x2="232" y2="122" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="232" y1="122" x2="232" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="52" y1="176" x2="90" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="134" y1="176" x2="163" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="199" y1="176" x2="232" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><circle cx="112" cy="176" r="22" fill="#f7f0df"/><circle cx="112" cy="176" r="22" fill="none" stroke="#6b573f" stroke-width="2.6"/><line x1="90" y1="176" x2="100" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="124" y1="176" x2="134" y2="176" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><path d="M100 176 A 12 12 0 0 1 124 176" fill="none" stroke="#6b573f" stroke-width="2.6" stroke-linecap="round"/><line x1="168" y1="161" x2="168" y2="191" stroke="#b23a30" stroke-width="2.6" stroke-linecap="round"/><line x1="177" y1="168" x2="177" y2="184" stroke="#2e5f8f" stroke-width="6.5" stroke-linecap="round"/><line x1="190" y1="161" x2="190" y2="191" stroke="#b23a30" stroke-width="2.6" stroke-linecap="round"/><line x1="199" y1="168" x2="199" y2="184" stroke="#2e5f8f" stroke-width="6.5" stroke-linecap="round"/><path d="M43 48 L61 48 L57 58 L47 58 Z" fill="#5d6b7d"/><path d="M43 76 L61 76 L57 66 L47 66 Z" fill="#5d6b7d"/><path d="M205 48 L223 48 L219 58 L209 58 Z" fill="#5d6b7d"/><path d="M205 76 L223 76 L219 66 L209 66 Z" fill="#5d6b7d"/><line x1="52" y1="36" x2="214" y2="36" stroke="#a05c2c" stroke-width="2" stroke-dasharray="6 5"/><text x="133.0" y="29" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#a05c2c" font-weight="800">지나는 길</text><text x="145" y="232" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#4a3a26" font-weight="800">집게를 벌렸을 때 · 길이 길다 — 어둡다</text></g><line x1="303" y1="30" x2="303" y2="220" stroke="#dccfae" stroke-width="2" stroke-dasharray="5 6"/></svg>
- <p class="exp-eye">👀 <b>여기를 보세요</b> — 밝기가 <b>딸깍 하고 꺼지는 것이 아니라 서서히</b> 변합니다.
- 켜짐과 꺼짐 사이에 <b>중간이 있다</b>는 것이 오늘의 출발점입니다.</p>
  <p class="exp-tip"><span>💡</span><span>심이 잘 안 물리면 집게 날을 심에 <b>수직으로</b> 세워 무세요.
  심은 쉽게 부러지니 종이 위에서 다루고, 여분을 준비하세요.</span></p>
  <div class="note"><span class="ic">⚠️</span><div><b>전구를 빼고 심만 전지에 물리지 마세요.</b>
  심이 빨갛게 달아올라 부러지고 화상을 입을 수 있습니다. 전구가 회로에 있어야 전류가 알맞게 제한됩니다.</div></div>
+ </div></details>
+ <p class="exp-eye">👀 <b>여기를 보세요</b> — 밝기가 <b>딸깍 하고 꺼지는 것이 아니라 서서히</b> 변합니다.
+ 켜짐과 꺼짐 사이에 <b>중간이 있다</b>는 것이 오늘의 출발점입니다.</p>
  <div class="qbox-lite">
  <b>🤔 그래서, 오늘의 질문</b>
  <p>전지도 그대로, 전구도 그대로입니다. 그런데 밝기가 변했어요.<br>
@@ -3012,6 +3032,130 @@ const GAME_QS=[
 /* ── 엔진 ── */
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── 4단계 도입 · 샤프심 조광기 — 절차를 팝업으로 하나씩 ── */
+(function(){
+const cv=$('#dmCv');if(!cv)return;
+const ctx=cv.getContext('2d');
+const W=660,H=300;
+const CLIP_L=170,CMIN=205,CMAX=505,LEAD_X1=150,LEAD_X2=520,LEAD_Y=64;
+let clipX=CMIN+(CMAX-CMIN)*0.08,drag=false,booted=false,st=0,moved=false,tPulse=0;
+const frac=()=> (clipX-CMIN)/(CMAX-CMIN);
+const bright=()=> 1/(1+2.6*frac());          /* 길이 ↑ → 저항 ↑ → 전류 ↓. 완전히 꺼지지는 않는다 */
+const mm=()=> Math.round(6+(clipX-CLIP_L)/(CMAX-CLIP_L)*54);
+const pops=$('#dmPops');
+function dpop(html,cls){
+ [...pops.children].forEach(c=>c.classList.add('dim'));
+ const d=document.createElement('div');d.className='dpop'+(cls?' '+cls:'');d.innerHTML=html;
+ pops.appendChild(d);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('on')));
+ while(pops.children.length>4)pops.firstChild.remove();
+}
+function boot(){
+ dpop('🔌 <b>회로 완성!</b> 건전지 → 전구 → 집게 전선 → 샤프심. 지금은 불이 <b>켜져</b> 있어요.');
+ setTimeout(()=>{if(st===1&&!moved){dpop('🤏 이제 <b>오른쪽 집게</b>를 잡고 오른쪽으로 <b>천천히</b> 밀어 보세요 — 그림에서 끌거나, 아래 슬라이더로.');}st=2;},1700);
+ st=1;
+}
+function chain(){
+ const b=Math.round(bright()*100);
+ if(st<2)return;
+ if(st===2&&frac()>0.62){st=3;
+  dpop('👀 <b>서서히 어두워진다…</b> 밝기 '+b+'%. 딸깍 꺼진 게 아니라 켜짐과 꺼짐 사이에 <b>중간</b>이 있어요! 이제 다시 왼쪽으로 되돌려 보세요.');}
+ else if(st===3&&frac()<0.14){st=4;
+  dpop('💡 다시 <b>밝아졌다!</b> 그동안 전지도, 전구도 손대지 않았습니다.');
+  setTimeout(()=>{if(st===4){st=5;
+   dpop('🤔 그럼 집게를 밀 때 <b>무엇이 달라진 걸까요?</b> — 힌트: 그림 위 눈금, 전기가 <b>지나는 길</b>. 여러 번 왕복하며 지켜보세요.','key');}},1500);}
+}
+function evPos(e){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};}
+cv.addEventListener('pointerdown',e=>{const p=evPos(e);
+ if(Math.abs(p.x-clipX)<34&&p.y<120){drag=true;moved=true;if(st<2)st=2;
+  try{cv.setPointerCapture(e.pointerId);}catch(_){}}
+});
+cv.addEventListener('pointermove',e=>{if(!drag)return;const p=evPos(e);
+ clipX=Math.max(CMIN,Math.min(CMAX,p.x));sync(true);chain();});
+addEventListener('pointerup',()=>{drag=false;});
+const sl=$('#dmR');
+sl.addEventListener('input',()=>{moved=true;if(st<2)st=2;
+ clipX=CMIN+(CMAX-CMIN)*sl.value/100;sync(false);chain();});
+function sync(toSlider){
+ if(toSlider)sl.value=Math.round(frac()*100);
+ $('#dmRead').textContent='지나는 길 '+mm()+' mm · 밝기 '+Math.round(bright()*100)+'%';
+}
+function wire(pts){ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);
+ for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);
+ ctx.strokeStyle='#6b573f';ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();}
+function clip(x){
+ ctx.fillStyle='#5d6b7d';
+ ctx.beginPath();ctx.moveTo(x-10,42);ctx.lineTo(x+10,42);ctx.lineTo(x+5,56);ctx.lineTo(x-5,56);ctx.closePath();ctx.fill();
+ ctx.beginPath();ctx.moveTo(x-10,86);ctx.lineTo(x+10,86);ctx.lineTo(x+5,72);ctx.lineTo(x-5,72);ctx.closePath();ctx.fill();
+}
+function draw(){
+ ctx.clearRect(0,0,W,H);
+ ctx.fillStyle='#fbf6ea';ctx.fillRect(0,0,W,H);
+ const b=bright();
+ /* 지나는 길 눈금 */
+ ctx.strokeStyle='#a05c2c';ctx.lineWidth=2;ctx.setLineDash([6,5]);
+ ctx.beginPath();ctx.moveTo(CLIP_L,30);ctx.lineTo(clipX,30);ctx.stroke();ctx.setLineDash([]);
+ ctx.fillStyle='#a05c2c';ctx.font='700 12.5px Gowun Dodum, Pretendard, sans-serif';ctx.textAlign='center';
+ ctx.fillText('지나는 길 '+mm()+' mm',(CLIP_L+clipX)/2,22);
+ /* 샤프심 */
+ ctx.fillStyle='#3f3f47';ctx.beginPath();ctx.roundRect(LEAD_X1-10,58,LEAD_X2-LEAD_X1+20,12,6);ctx.fill();
+ ctx.fillStyle='#6d6d78';ctx.fillRect(LEAD_X1-6,59,LEAD_X2-LEAD_X1+12,3);
+ ctx.fillText('샤프심',LEAD_X2+62,68);
+ ctx.fillStyle='#96805c';ctx.font='12px Gowun Dodum, sans-serif';
+ /* 전선 — 왼쪽 집게→전지→전구→오른쪽 집게 */
+ wire([[CLIP_L,86],[CLIP_L,235],[252,235]]);
+ wire([[336,235],[392,235]]);
+ wire([[448,235],[560,235],[560,150],[clipX,150],[clipX,86]]);
+ /* 전지 2개(직렬) */
+ for(let i=0;i<2;i++){
+  const bx=254+i*42;
+  ctx.fillStyle='#5d6b7d';ctx.fillRect(bx,220,36,30);
+  ctx.fillStyle='#8fa0b0';ctx.fillRect(bx+30,228,8,14);
+ }
+ ctx.fillStyle='#96805c';ctx.textAlign='center';
+ ctx.fillText('전지 — 그대로',296,272);
+ /* 전구 */
+ const gx=420,gy=228;
+ if(b>0.06){ctx.fillStyle='rgba(224,149,47,'+(0.30*b)+')';
+  ctx.beginPath();ctx.arc(gx,gy,30+36*b,0,6.2832);ctx.fill();}
+ ctx.fillStyle='rgb(255,'+Math.round(233-90*(1-b))+','+Math.round(180-90*(1-b))+')';
+ ctx.beginPath();ctx.arc(gx,gy,28,0,6.2832);ctx.fill();
+ ctx.strokeStyle=b>0.4?'#c67a12':'#6b573f';ctx.lineWidth=2.6;
+ ctx.beginPath();ctx.arc(gx,gy,28,0,6.2832);ctx.stroke();
+ ctx.beginPath();ctx.moveTo(gx-14,gy);ctx.arc(gx,gy,14,3.1416,0,true);ctx.stroke();
+ ctx.fillStyle='#96805c';ctx.fillText('전구 — 그대로',gx,272);
+ ctx.fillStyle=b>0.5?'#c67a12':'#96805c';
+ ctx.font='800 15px Gowun Dodum, sans-serif';
+ ctx.fillText('밝기 '+Math.round(b*100)+'%',gx,gy-42);
+ /* 집게 */
+ clip(CLIP_L);clip(clipX);
+ /* 오른쪽 집게 잡는 곳 표시 — 아직 안 밀어 봤으면 깜빡임 */
+ if(!moved){
+  tPulse+=0.05;
+  const o=0.45+0.35*Math.sin(tPulse*2.2);
+  ctx.strokeStyle='rgba(160,92,44,'+o.toFixed(2)+')';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.arc(clipX,64,26,0,6.2832);ctx.stroke();
+  ctx.fillStyle='rgba(160,92,44,'+o.toFixed(2)+')';
+  ctx.font='800 14px Gowun Dodum, sans-serif';
+  ctx.fillText('← 잡고 밀기 →',clipX,116);
+ }
+ ctx.font='12px Gowun Dodum, sans-serif';ctx.fillStyle='#96805c';
+ ctx.fillText('왼쪽 집게(고정)',CLIP_L,104);
+}
+let last=0;
+function frame(t){
+ if(cv.offsetParent){
+  if(!booted){booted=true;boot();sync(true);}
+  draw();
+ }
+ requestAnimationFrame(frame);
+}
+cv.__set=function(f){clipX=CMIN+(CMAX-CMIN)*f;moved=true;if(st<2)st=2;sync(true);chain();draw();};
+cv.__state=function(){return {frac:frac(),bright:bright(),mm:mm(),st:st,pops:pops.children.length};};
+sync(true);requestAnimationFrame(frame);
+})();
+
 const TAU=Math.PI*2;
 const TABS=['see','model','direction','vr','apply','check','sum','beyond'];
 const CS=getComputedStyle(document.documentElement);

@@ -54,6 +54,15 @@ header.top p{color:var(--ink-dim); margin-top:8px; font-size:clamp(13.5px,2.4vw,
  line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;
  border-top:1px solid rgba(128,128,128,.25)}
 
+/* ① 성공 → ② 로 부르는 반짝임·안내 띠 */
+.tb.pulse{animation:tbpulse 1.15s infinite}
+@keyframes tbpulse{0%,100%{box-shadow:0 0 0 0 rgba(160,92,44,.55)}55%{box-shadow:0 0 0 11px rgba(160,92,44,0)}}
+#nextUp{max-width:720px; margin:0 auto 12px; text-align:center; font-family:var(--gowun);
+ font-size:14.5px; line-height:1.6; color:#2c6e5f; background:rgba(44,110,95,.11);
+ border:1.5px solid #2c6e5f; border-radius:12px; padding:10px 16px}
+#nextUp b{font-family:var(--disp)}
+#nextUp[hidden]{display:none}
+
 /* 수업 페이지 안에 끼워 넣을 때 */
 html.embed body{background:none}
 html.embed header.top, html.embed .backline, html.embed #app-credit{display:none}
@@ -75,6 +84,7 @@ html.embed .frame{border:0; border-radius:0; box-shadow:none}
     <button class="tb" data-k="cir"><span class="n">②</span>🔌 다 이었는데 안 켜진다</button>
   </div>
 
+  <div id="nextUp" hidden>🎉 <b>① 성공!</b> 이제 위의 <b>② 다 이었는데 안 켜진다</b> 단추를 누르세요 — 이번엔 전지가 있는데도 안 켜집니다.</div>
   <p class="lead" id="lead"></p>
 
   <div class="frame" id="fr-eph"><iframe id="if-eph" title="정전기로 네온전구 켜기 가상 실험실"></iframe></div>
@@ -118,6 +128,11 @@ function show(k){
     b.classList.toggle('on', b.dataset.k === k);
   });
   document.getElementById('lead').innerHTML = LEAD[k];
+  if(k === 'cir'){                          /* ② 로 들어오면 부르기를 멈춘다 */
+    document.getElementById('nextUp').hidden = true;
+    var tb2 = document.querySelector('.tb[data-k="cir"]');
+    if(tb2) tb2.classList.remove('pulse');
+  }
   load(k);
 }
 
@@ -126,9 +141,16 @@ document.getElementById('tabs').addEventListener('click', function(e){
   if(b) show(b.dataset.k);
 });
 
-/* 실험실이 보내는 알림을 수업 페이지까지 그대로 넘겨 준다 */
+/* 실험실이 보내는 알림 — 여기서도 쓰고, 수업 페이지까지 그대로 넘겨 준다 */
 addEventListener('message', function(e){
   if(!e.data || !e.data.t) return;
+  if(e.data.t === 'electrophorusLit' && cur === 'eph'){
+    /* ① 성공 — ② 를 반짝이며 부른다 */
+    document.getElementById('nextUp').hidden = false;
+    var tb2 = document.querySelector('.tb[data-k="cir"]');
+    if(tb2) tb2.classList.add('pulse');
+  }
+  if(e.data.t === 'gotoCircuit') show('cir');
   try{ if(parent !== window) parent.postMessage(e.data, '*'); }catch(_){}
 });
 
