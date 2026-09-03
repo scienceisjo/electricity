@@ -301,6 +301,21 @@ body.teacher .fig.slot{display:block}
 .miniquiz .mq-head{display:flex;align-items:center;gap:9px;margin-bottom:4px;flex-wrap:wrap}
 .miniquiz .mq-badge{font-size:12px;font-weight:800;color:#fff;background:linear-gradient(180deg,#a05c2c,var(--accent));padding:4px 10px;border-radius:99px}
 .miniquiz .mq-prog{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink-mute)}
+/* ── 서술형(자기 채점) ── */
+.eq-ta{width:100%;min-height:104px;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-family:var(--body);
+ font-size:15.5px;line-height:1.6;color:var(--ink);background:var(--surface2);resize:vertical;margin-top:6px;box-sizing:border-box}
+.eq-keys{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.eq-key{font-size:12.5px;padding:3px 10px;border-radius:99px;border:1.5px solid var(--line);color:var(--ink-mute);background:var(--surface2)}
+.eq-key.on{border-color:var(--ok);color:var(--ok);font-weight:700}
+.eq-rub{margin-top:12px;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(138,95,36,.06)}
+.eq-rub[hidden]{display:none}
+.eq-model{font-size:15px;line-height:1.65;padding:10px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--line);margin:6px 0 12px}
+.eq-item{display:flex;align-items:flex-start;gap:9px;font-size:14.5px;line-height:1.5;padding:6px 0;cursor:pointer}
+.eq-item input{margin-top:4px;width:17px;height:17px;accent-color:var(--ok);flex:none}
+.eq-item .p{margin-left:auto;font-family:var(--mono);font-size:12.5px;color:var(--ink-mute);white-space:nowrap}
+.eq-rej{font-size:13.5px;color:var(--ink-mute);margin-top:8px;display:none;line-height:1.55}
+body.teacher .eq-rej{display:block}
+.eq-sum{margin-top:10px;font-weight:800;color:var(--ink-dim)}
 .mq-q{margin-top:14px}
 .mq-q .mq-text{font-size:15px;font-weight:600;margin-bottom:9px}
 .mq-q .mq-text .qn{font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-right:6px}
@@ -2011,69 +2026,129 @@ const QUIZ_SETS={
 };
 
 const GAME_QS=[
- {id:"o1",difficulty:"하",
- intent:"자기장과 자기력선의 기본 성질을 알고, 자기력선이 N극에서 나와 S극으로 들어간다는 약속을 확인한다.",
- stem:"자기장과 자기력선에 대한 설명으로 옳지 <u>않은</u> 것은?",
- ch:[{t:"그 지점에 놓은 나침반에서 N극이 향하는 쪽이 자기장의 방향이다.",ok:0},{t:"자기력선은 도중에 끊기거나 서로 엇갈려 지나가지 않는다.",ok:0},{t:"자기력선이 촘촘하게 그려진 곳일수록 자기장이 세다.",ok:0},{t:"자기력선은 자석의 S극에서 시작해 N극에서 끝난다.",ok:1},{t:"자석 주위에 놓은 나침반 바늘은 그 지점을 지나는 자기력선과 나란히 선다.",ok:0}],
- why:"자기력선은 <b>N극에서 나와 S극으로</b> 들어가도록 약속했으므로, ④는 방향이 거꾸로 된 설명입니다.<br>①은 자기장 방향의 정의 그대로이고, ③처럼 <b>간격이 촘촘할수록 자기장이 세다</b>는 점도 함께 기억해 두세요."},
+ {id:"m1",
+  difficulty:"하",
+  intent:"자기력·자기장의 뜻과 자기장의 방향 약속을 아는지 확인한다.",
+  stem:"자기력과 자기장에 대한 설명으로 옳지 <u>않은</u> 것은?",
+  ch:[{t:"자기장의 방향은 나침반 바늘의 S극이 가리키는 방향이다.",ok:1},{t:"자석 주위에 놓은 나침반으로 자기장의 방향을 확인할 수 있다.",ok:0},{t:"막대자석 주위에서 자기장의 방향은 N극에서 나와서 S극으로 향한다.",ok:0},{t:"자기력은 자석과 자석 사이에 작용하는 힘이다.",ok:0},{t:"자기력이 작용하는 공간을 자기장이라고 한다.",ok:0}],
+  why:"자기장의 방향은 나침반 바늘의 <b>N극</b>이 가리키는 방향으로 정합니다 — ③은 극을 뒤바꾼 문장이에요. 나머지는 모두 옳습니다."},
 
- {id:"q1",difficulty:"하",
- intent:"전류가 흐르는 동안에만 코일 주위에 자기장이 생긴다는 핵심 사실을 확인한다.",
- stem:"코일을 전지와 스위치에 연결하고 스위치를 닫았더니, 코일 옆에 놓아 둔 나침반 바늘이 돌아갔다. 이 현상에 대한 설명으로 옳은 것은?",
- ch:[{t:"한 번 전류를 흘리고 나면 스위치를 열어도 코일은 계속 자석으로 남는다.",ok:0},{t:"전류가 흐르는 도선에는 나침반 바늘이 끌려가 그대로 달라붙는다.",ok:0},{t:"전류가 흐르는 동안에만 코일 주위에 자기장이 생긴다.",ok:1},{t:"자기장의 방향은 나침반 바늘의 S극이 가리키는 방향으로 정한다.",ok:0},{t:"전류의 방향을 반대로 바꾸어도 코일이 만드는 자기장의 방향은 그대로이다.",ok:0}],
- why:"코일 주위의 자기장은 <b>전류가 흐르는 동안에만</b> 생기고, 전류를 끊으면 곧바로 사라집니다.<br>①은 '전류를 끊어도 자석으로 남는다'는 대표적인 오해이고, ②처럼 바늘이 도선에 달라붙는 것이 아니라 <b>방향만 돌아갑니다</b>. ④의 자기장 방향은 <b>N극</b>이 가리키는 쪽이며, ⑤는 전류 방향을 바꾸면 자기장 방향도 <b>반대</b>가 되므로 틀립니다."},
+ {id:"m2",
+  difficulty:"하",
+  intent:"막대자석 주위 자기장의 방향(N극에서 나와 S극으로)을 나침반 바늘의 방향으로 판단하는지 확인한다.",
+  svg:"<svg viewBox=\"0 0 560 262\" width=\"560\" height=\"262\" role=\"img\" aria-label=\"막대자석(왼쪽 S, 오른쪽 N) 주위 다섯 곳에 놓인 나침반. (가)는 왼쪽 끝 옆, (나)는 위 가운데, (다)는 오른쪽 끝 옆, (라)는 아래 가운데, (마)는 오른쪽 위. 바늘의 N극이 (가) 왼쪽, (나) 오른쪽, (다) 오른쪽, (라) 위, (마) 왼쪽 아래를 향한다.\" style=\"max-width:560px;width:100%;height:auto;display:block;margin:0 auto\"><rect x=\"180\" y=\"128\" width=\"100\" height=\"36\" fill=\"#3f6fb5\" stroke=\"#2e2315\" stroke-width=\"1.6\"/><rect x=\"280\" y=\"128\" width=\"100\" height=\"36\" fill=\"#d9534f\" stroke=\"#2e2315\" stroke-width=\"1.6\"/><text x=\"230.0\" y=\"152.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" fill=\"#fff\" font-weight=\"800\">S</text><text x=\"330.0\" y=\"152.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" fill=\"#fff\" font-weight=\"800\">N</text><circle cx=\"130\" cy=\"146\" r=\"20\" fill=\"#fdfbf6\" stroke=\"#2e2315\" stroke-width=\"2\"/><polygon points=\"114.0,146.0 130.0,142.0 130.0,150.0\" fill=\"#d9534f\"/><polygon points=\"146.0,146.0 130.0,142.0 130.0,150.0\" fill=\"#cfcfcf\"/><circle cx=\"130\" cy=\"146\" r=\"2.5\" fill=\"#2e2315\"/><text x=\"130\" y=\"181\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2e2315\" font-weight=\"800\">(가)</text><circle cx=\"280\" cy=\"74\" r=\"20\" fill=\"#fdfbf6\" stroke=\"#2e2315\" stroke-width=\"2\"/><polygon points=\"296.0,74.0 280.0,78.0 280.0,70.0\" fill=\"#d9534f\"/><polygon points=\"264.0,74.0 280.0,78.0 280.0,70.0\" fill=\"#cfcfcf\"/><circle cx=\"280\" cy=\"74\" r=\"2.5\" fill=\"#2e2315\"/><text x=\"280\" y=\"109\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2e2315\" font-weight=\"800\">(나)</text><circle cx=\"430\" cy=\"146\" r=\"20\" fill=\"#fdfbf6\" stroke=\"#2e2315\" stroke-width=\"2\"/><polygon points=\"446.0,146.0 430.0,150.0 430.0,142.0\" fill=\"#d9534f\"/><polygon points=\"414.0,146.0 430.0,150.0 430.0,142.0\" fill=\"#cfcfcf\"/><circle cx=\"430\" cy=\"146\" r=\"2.5\" fill=\"#2e2315\"/><text x=\"430\" y=\"181\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2e2315\" font-weight=\"800\">(다)</text><circle cx=\"280\" cy=\"220\" r=\"20\" fill=\"#fdfbf6\" stroke=\"#2e2315\" stroke-width=\"2\"/><polygon points=\"280.0,204.0 284.0,220.0 276.0,220.0\" fill=\"#d9534f\"/><polygon points=\"280.0,236.0 284.0,220.0 276.0,220.0\" fill=\"#cfcfcf\"/><circle cx=\"280\" cy=\"220\" r=\"2.5\" fill=\"#2e2315\"/><text x=\"280\" y=\"255\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2e2315\" font-weight=\"800\">(라)</text><circle cx=\"392\" cy=\"74\" r=\"20\" fill=\"#fdfbf6\" stroke=\"#2e2315\" stroke-width=\"2\"/><polygon points=\"380.7,85.3 389.2,71.2 394.8,76.8\" fill=\"#d9534f\"/><polygon points=\"403.3,62.7 389.2,71.2 394.8,76.8\" fill=\"#cfcfcf\"/><circle cx=\"392\" cy=\"74\" r=\"2.5\" fill=\"#2e2315\"/><text x=\"392\" y=\"109\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2e2315\" font-weight=\"800\">(마)</text><text x=\"280\" y=\"34\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#96805c\">막대자석 주위에 놓인 나침반 (가)~(마) — 붉은 쪽이 바늘의 N극</text></svg>",
+  stem:"그림은 막대자석 주위에 놓인 나침반 (가)~(마)의 모습이다. 나침반 바늘이 가리키는 방향이 옳은 것은? (단, 지구 자기장은 무시한다.)",
+  ch:[{t:"(나)",ok:0},{t:"(다)",ok:1},{t:"(라)",ok:0},{t:"(마)",ok:0},{t:"(가)",ok:0}],
+  why:"자기장은 <b>N극에서 나와 S극으로</b> 들어갑니다. N극 오른쪽에 있는 (다)는 바늘의 N극이 자석에서 멀어지는 오른쪽을 가리키므로 옳아요. (가)는 S극으로 들어가는 방향(오른쪽), (나)·(라)는 자석 바깥을 따라 N→S(왼쪽)를 가리켜야 합니다."},
 
- {id:"o3",difficulty:"하",
- intent:"전류로 자기장을 만드는 전자석을 이용한 사례와, 전류 없이도 자석인 영구 자석을 구별한다.",
- stem:"다음 중 <b>전자석</b>을 이용한 것은?",
- ch:[{t:"냉장고 문에 붙여 두는 자석 스티커",ok:0},{t:"폐차장에서 스위치를 눌러 철판을 들었다 내려놓는 기중기",ok:1},{t:"실험실에서 쇳가루를 붙여 보는 말굽자석",ok:0},{t:"방향을 찾을 때 쓰는 나침반의 바늘",ok:0},{t:"필통 뚜껑을 닫아 주는 자석 단추",ok:0}],
- why:"폐차장 기중기는 코일에 <b>전류를 흘려 자석이 되고 전류를 끊으면 자기력이 사라지는</b> 전자석이라서, 철판을 들어 올렸다가 원하는 자리에 내려놓을 수 있습니다.<br>①·③·④·⑤는 모두 전류 없이도 늘 자석인 <b>영구 자석</b>이라 세기나 극을 마음대로 바꿀 수 없습니다."},
+ {id:"m3",
+  difficulty:"하",
+  intent:"전류가 흐르는 코일 주위 자기장의 생성 조건·방향·세기의 관계를 아는지 확인한다.",
+  stem:"전류가 흐르는 코일 주위에 생기는 자기장에 대한 설명으로 옳은 것은?",
+  ch:[{t:"코일 내부의 자기장은 막대자석 주위에 생기는 자기장과 비슷한 모양이다.",ok:0},{t:"코일 외부의 자기장은 직선 모양이다.",ok:0},{t:"코일에 전류가 흐를 때 코일 주위에 자기장이 생긴다.",ok:1},{t:"전류의 세기가 바뀌면 자기장의 방향이 바뀐다.",ok:0},{t:"전류의 방향이 바뀌면 자기장의 세기가 바뀐다.",ok:0}],
+  why:"코일에 <b>전류가 흐를 때만</b> 자기장이 생깁니다(②). 전류의 <b>방향</b>이 바뀌면 자기장의 <b>방향</b>이, 전류의 <b>세기</b>가 바뀌면 자기장의 <b>세기</b>가 바뀝니다(③·④는 짝을 바꿔 놓은 문장). 막대자석과 비슷한 모양은 코일 <b>외부</b>의 자기장이고, 내부는 직선 모양입니다(①·⑤ ✗)."},
 
- {id:"q2",difficulty:"중",
- intent:"관찰 기록표에서 '전류가 흐르는 동안에만 자기장이 생긴다'와 '전류 방향을 바꾸면 자기장 방향도 바뀐다'를 도출한다.",
- svg:"<svg viewBox=\"0 0 560 230\" role=\"img\" aria-label=\"코일 P 옆 지점 ㉠에 나침반 (가)를 고정해 두고 조건을 바꾸어 가며 바늘의 N극이 가리키는 방향을 관찰한 기록표. 스위치를 열었을 때는 북쪽, 스위치를 닫고 처음대로 연결했을 때는 서쪽, 스위치를 닫고 두 전선을 바꾸어 연결했을 때는 동쪽을 가리켰다.\"><rect x=\"52\" y=\"34\" width=\"456\" height=\"154\" rx=\"10\" fill=\"#faf4e6\" stroke=\"#cbb894\" stroke-width=\"1.8\"/><line x1=\"52\" y1=\"72\" x2=\"508\" y2=\"72\" stroke=\"#cbb894\" stroke-width=\"1.6\"/><line x1=\"52\" y1=\"110\" x2=\"508\" y2=\"110\" stroke=\"#dccfae\" stroke-width=\"1.4\"/><line x1=\"52\" y1=\"148\" x2=\"508\" y2=\"148\" stroke=\"#dccfae\" stroke-width=\"1.4\"/><line x1=\"332\" y1=\"34\" x2=\"332\" y2=\"188\" stroke=\"#cbb894\" stroke-width=\"1.6\"/><text x=\"192\" y=\"59\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">조건</text><text x=\"420\" y=\"59\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#4a3a26\">나침반 (가)의 N극</text><text x=\"192\" y=\"98\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">스위치를 열었을 때</text><text x=\"420\" y=\"98\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#4a3a26\">북쪽</text><text x=\"192\" y=\"136\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">스위치를 닫음 (처음 연결)</text><text x=\"420\" y=\"136\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#a05c2c\">서쪽</text><text x=\"192\" y=\"174\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#4a3a26\">스위치를 닫음 (두 전선을 바꿈)</text><text x=\"420\" y=\"174\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#2c6e5f\">동쪽</text><text x=\"280\" y=\"216\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#6b573f\">※ 나침반 (가)는 코일 P 옆 지점 ㉠에 고정해 두고 관찰했다.</text></svg>",
- stem:"그림과 같이 코일 P 옆의 지점 ㉠에 나침반 (가)를 고정해 놓고, 연결 방법을 바꾸어 가며 바늘의 N극이 가리키는 방향을 관찰하여 다음과 같이 기록하였다.<br><br>[조건 1] 스위치를 열었을 때 → 북쪽<br>[조건 2] 스위치를 닫고 처음대로 연결했을 때 → 서쪽<br>[조건 3] 스위치를 닫고 두 전선을 서로 바꾸어 연결했을 때 → 동쪽<br><br>이 기록에서 알 수 있는 것을 <보기>에서 모두 고른 것은?",
- boxes:["코일 P 주위에 자기장이 생기는 것은 전류가 흐르는 동안뿐이다.","스위치를 열어도 코일 P는 자석의 성질을 그대로 지닌다.","코일에 흐르는 전류의 방향을 반대로 하면 자기장의 방향도 반대가 된다."],
- boxVerdicts:[true,false,true],
- ch:[{t:"ㄱ",ok:0},{t:"ㄴ",ok:0},{t:"ㄱ, ㄷ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
- why:"조건 1에서 바늘이 지구 자기장을 따라 <b>북쪽</b>을 그대로 가리켰다는 것은 전류가 끊긴 코일 주위에는 자기장이 없다는 뜻이므로 ㄱ이 옳고, 조건 2·3에서 전선을 바꾸어 <b>전류의 방향을 반대로</b> 하자 바늘이 서쪽에서 동쪽으로 뒤집혔으므로 ㄷ도 옳습니다.<br>ㄴ은 '전류를 끊어도 자석으로 남는다'는 오해인데, 조건 1의 관찰이 바로 그 반례입니다. 코일이 자석으로 남아 있었다면 바늘이 북쪽이 아닌 서쪽을 계속 가리켰겠지요."},
+ {id:"m4",
+  difficulty:"하",
+  intent:"전자석이 이용되는 예를 영구 자석이 쓰이는 예와 구별하는지 확인한다.",
+  stem:"전자석을 이용한 예만을 <보기>에서 있는 대로 고른 것은?",
+  boxes:["방향을 찾는 나침반", "스피커", "냉장고 문에 붙이는 자석", "자기 부상 열차"],
+  boxVerdicts:[false, true, false, true],
+  ch:[{t:"ㄱ, ㄴ",ok:0},{t:"ㄱ, ㄷ",ok:0},{t:"ㄱ, ㄹ",ok:0},{t:"ㄴ, ㄷ",ok:0},{t:"ㄴ, ㄹ",ok:1}],
+  why:"스피커와 자기 부상 열차는 <b>전류를 흘려 만든 전자석</b>을 이용합니다. 나침반 바늘과 냉장고 자석은 <b>영구 자석</b>이에요."},
 
- {id:"q3",difficulty:"중",
- intent:"코일에 대한 오른손 규칙(네 손가락=전류, 엄지=N극)으로 코일 양 끝의 극을 판정한다.",
- svg:"<svg viewBox=\"0 0 560 230\" role=\"img\" aria-label=\"옆에서 본 코일 P. 앞쪽 도선마다 아래쪽을 향한 화살표가 그려져 있어, 코일 앞면에는 아래 방향으로 전류가 흐른다. 왼쪽 끝이 지점 ㉠, 오른쪽 끝이 지점 ㉡이다.\"><rect x=\"196\" y=\"72\" width=\"220\" height=\"80\" rx=\"12\" fill=\"#f6f1e8\" stroke=\"#c9b68e\" stroke-width=\"2\"/><line x1=\"232\" y1=\"76\" x2=\"224\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><polygon points=\"226.6,125.0 222.4,108.4 234.3,109.7\" fill=\"#a05c2c\"/><path d=\"M224.6 135.0 L221.1 126.6 L229.9 127.5 z\" fill=\"#a05c2c\"/><line x1=\"272\" y1=\"76\" x2=\"264\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><polygon points=\"266.6,125.0 262.4,108.4 274.3,109.7\" fill=\"#a05c2c\"/><path d=\"M264.6 135.0 L261.1 126.6 L269.9 127.5 z\" fill=\"#a05c2c\"/><line x1=\"312\" y1=\"76\" x2=\"304\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><polygon points=\"306.6,125.0 302.4,108.4 314.3,109.7\" fill=\"#a05c2c\"/><path d=\"M304.6 135.0 L301.1 126.6 L309.9 127.5 z\" fill=\"#a05c2c\"/><line x1=\"352\" y1=\"76\" x2=\"344\" y2=\"148\" stroke=\"#a05c2c\" stroke-width=\"5\" stroke-linecap=\"round\"/><polygon points=\"346.6,125.0 342.4,108.4 354.3,109.7\" fill=\"#a05c2c\"/><path d=\"M344.6 135.0 L341.1 126.6 L349.9 127.5 z\" fill=\"#a05c2c\"/><text x=\"306\" y=\"44\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#a05c2c\" font-weight=\"700\">전류</text><line x1=\"150\" y1=\"112\" x2=\"196\" y2=\"112\" stroke=\"#8a7a5e\" stroke-width=\"2\" stroke-dasharray=\"5 4\"/><line x1=\"416\" y1=\"112\" x2=\"462\" y2=\"112\" stroke=\"#8a7a5e\" stroke-width=\"2\" stroke-dasharray=\"5 4\"/><circle cx=\"136\" cy=\"112\" r=\"13\" fill=\"#fffdf6\" stroke=\"#4a3a26\" stroke-width=\"1.8\"/><text x=\"136\" y=\"117\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">㉠</text><circle cx=\"476\" cy=\"112\" r=\"13\" fill=\"#fffdf6\" stroke=\"#4a3a26\" stroke-width=\"1.8\"/><text x=\"476\" y=\"117\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#4a3a26\">㉡</text><text x=\"306\" y=\"178\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#4a3a26\">전류가 흐르는 코일 P</text><text x=\"306\" y=\"222\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 화살표는 코일 앞쪽 도선에 흐르는 전류의 방향이다</text></svg>",
- stem:"그림은 옆에서 본 코일 P를 나타낸 것이다. 코일의 앞쪽 도선에는 모두 <b>아래 방향</b>으로 전류가 흐르고 있으며, 코일의 왼쪽 끝은 지점 ㉠, 오른쪽 끝은 지점 ㉡이다. 이에 대한 설명으로 옳은 것은?",
- ch:[{t:"지점 ㉠ 쪽이 N극이 된다.",ok:0},{t:"지점 ㉡ 쪽이 N극이 된다.",ok:1},{t:"코일에는 N극과 S극이 생기지 않는다.",ok:0},{t:"코일은 감은 방향과 상관없이 언제나 위쪽이 N극이 된다.",ok:0},{t:"전류의 방향을 반대로 바꾸어도 N극이 생기는 쪽은 변하지 않는다.",ok:0}],
- why:"코일에서는 <b>오른손 네 손가락을 전류의 방향으로 감아쥐면 엄지가 N극</b> 쪽을 가리킵니다. 코일 앞면의 전류가 아래로 흐르도록 네 손가락을 감아쥐면 엄지는 <b>오른쪽, 즉 ㉡</b>을 향하므로 ㉡ 쪽이 N극입니다.<br>①은 엄지와 네 손가락의 역할을 맞바꾼 결과이고, ④의 '항상 위쪽이 N극'이나 ③의 '코일에는 극이 없다'는 잘못된 생각입니다. ⑤도 전류 방향을 바꾸면 <b>N극과 S극이 서로 바뀌므로</b> 틀립니다."},
+ {id:"m5",
+  difficulty:"중",
+  intent:"실험 기록으로 코일 주위 자기장이 전류가 흐를 때만 생기고, 전류 방향에 따라 자기장 방향이 바뀜을 추론하는지 확인한다.",
+  stem:"코일 P 옆의 지점 ㉠에 나침반을 고정해 놓고, 연결 방법을 바꾸어 가며 바늘의 N극이 가리키는 방향을 관찰하여 다음과 같이 기록하였다.<br><span style=\"display:inline-block;margin-top:6px;padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;line-height:1.7\">· 스위치를 열었을 때: 북쪽<br>· 스위치를 닫았을 때: 동쪽<br>· 전지의 극을 바꾸고 스위치를 닫았을 때: 서쪽</span><br>이에 대한 설명으로 옳은 것만을 <보기>에서 있는 대로 고른 것은?",
+  boxes:["코일 P 주위에 자기장이 생기는 것은 전류가 흐르는 동안뿐이다.", "스위치를 열어도 코일 P는 자석의 성질을 그대로 지닌다.", "코일에 흐르는 전류의 방향을 반대로 하면 자기장의 방향도 반대가 된다."],
+  boxVerdicts:[true, false, true],
+  ch:[{t:"ㄱ",ok:0},{t:"ㄱ, ㄴ",ok:0},{t:"ㄱ, ㄷ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+  why:"스위치를 열면 바늘이 지구 자기장대로 북쪽을 가리키니 코일의 자기장은 <b>전류가 흐를 때만</b> 있습니다(ㄱ ○, ㄴ ✗). 전지 극을 바꾸자 동쪽 → 서쪽으로 <b>반대</b>가 되었죠(ㄷ)."},
 
- {id:"q6",difficulty:"중",
- intent:"클립 개수 자료에서 전류의 세기와 코일을 감은 수가 전자석의 세기를 결정하고, 전류의 방향은 세기와 무관함을 판단한다.",
- svg:"<svg viewBox=\"0 0 560 200\" role=\"img\" aria-label=\"쇠못에 에나멜선을 감아 전지에 연결하고, 못 끝에 클립이 몇 개나 붙는지 세는 실험 장치.\"><rect x=\"150\" y=\"76\" width=\"220\" height=\"18\" rx=\"9\" fill=\"#c9ccd2\" stroke=\"#5c6b78\" stroke-width=\"2.2\"/><path d=\"M370 76 L392 85 L370 94 z\" fill=\"#c9ccd2\" stroke=\"#5c6b78\" stroke-width=\"2\"/><path d=\"M198 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M220 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M242 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M264 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M286 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M308 76 a11 16 0 1 0 11 0\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.6\"/><path d=\"M 198 90 L 198 142 L 248 142\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><path d=\"M 272 142 L 320 142 L 320 92\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><line x1=\"255\" y1=\"126\" x2=\"255\" y2=\"158\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"265\" y1=\"134\"  x2=\"265\" y2=\"150\"  stroke=\"#4a3a26\" stroke-width=\"4.5\"/><text x=\"255\" y=\"120\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">+</text><text x=\"267\" y=\"120\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">−</text><text x=\"228\" y=\"172\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#6b573f\">전지</text><text x=\"258\" y=\"40\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">못에 감은 코일</text><rect x=\"378\" y=\"92\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(-14 382 92)\"/><rect x=\"386\" y=\"94\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(6 390 94)\"/><rect x=\"371\" y=\"90\" width=\"9\" height=\"20\" rx=\"4.5\" fill=\"none\" stroke=\"#5c6b78\" stroke-width=\"2\" transform=\"rotate(-30 375 90)\"/><text x=\"416\" y=\"122\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">클립</text><text x=\"280\" y=\"192\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 전류의 세기, 감은 정도를 바꾸어 가며 클립 수를 센다</text></svg>",
- stem:"그림과 같이 쇠못에 에나멜선을 감아 전지에 연결한 뒤, 못 끝에 붙는 클립의 개수를 세어 다음과 같이 기록하였다.<br><br>A: 전지 1개, 50번 감음 → 클립 3개<br>B: 전지 2개(직렬), 50번 감음 → 클립 7개<br>C: 전지 2개(직렬), 100번 감음 → 클립 12개<br>D: 전지 2개(직렬), 100번 감음, 전지의 두 극을 바꾸어 연결 → 클립 12개<br><br>이 결과에서 알 수 있는 것을 <보기>에서 모두 고른 것은?",
- boxes:["코일에 흐르는 전류가 셀수록 전자석이 세진다.","코일을 많이 감을수록 전자석이 세진다.","전류의 방향을 반대로 바꾸면 전자석의 세기도 약해진다."],
- boxVerdicts:[true,true,false],
- ch:[{t:"ㄱ",ok:0},{t:"ㄷ",ok:0},{t:"ㄱ, ㄴ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
- why:"감은 수가 같은 A와 B를 비교하면 전지를 늘려 <b>전류를 세게</b> 했을 때 클립이 3개에서 7개로 늘었으므로 ㄱ이 옳고, 전지가 같은 B와 C를 비교하면 <b>감은 수</b>를 늘렸을 때 7개에서 12개로 늘었으므로 ㄴ도 옳습니다.<br>ㄷ은 C와 D가 모두 12개로 같다는 점이 반례입니다. 전류의 방향을 바꾸면 <b>N극과 S극의 위치(방향)</b>만 바뀔 뿐 <b>세기</b>는 달라지지 않습니다. 방향 손잡이와 세기 손잡이를 헷갈리지 마세요."},
+ {id:"m6",
+  difficulty:"중",
+  intent:"오른손 규칙으로 코일의 극을 판단하고, 나침반 바늘의 방향을 예측하는지 확인한다.",
+  svg:"<svg viewBox=\"0 0 560 240\" width=\"560\" height=\"240\" role=\"img\" aria-label=\"전지에 연결한 코일의 오른쪽에 나침반을 놓은 모습. 코일 앞쪽 도선에는 전류가 아래로 흐른다.\" style=\"max-width:560px;width:100%;height:auto;display:block;margin:0 auto\"><ellipse cx=\"200\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"217\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"234\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"251\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"268\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"285\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><polyline points=\"161,144 191,144\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polyline points=\"294,96 324,96\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"190.0\" y1=\"113.0\" x2=\"190.0\" y2=\"122.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"190.0,127.0 187.0,118.0 193.0,118.0\" fill=\"#b23a30\"/><line x1=\"241.0\" y1=\"113.0\" x2=\"241.0\" y2=\"122.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"241.0,127.0 238.0,118.0 244.0,118.0\" fill=\"#b23a30\"/><line x1=\"275.0\" y1=\"113.0\" x2=\"275.0\" y2=\"122.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"275.0,127.0 272.0,118.0 278.0,118.0\" fill=\"#b23a30\"/><text x=\"242.5\" y=\"170\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#b23a30\" font-weight=\"800\">앞쪽 도선의 전류 방향: 아래 ↓</text><circle cx=\"370\" cy=\"120\" r=\"22\" fill=\"#fdfbf6\" stroke=\"#2e2315\" stroke-width=\"2\"/><polygon points=\"388.0,120.0 370.0,124.0 370.0,116.0\" fill=\"#d9534f\"/><polygon points=\"352.0,120.0 370.0,124.0 370.0,116.0\" fill=\"#cfcfcf\"/><circle cx=\"370\" cy=\"120\" r=\"2.5\" fill=\"#2e2315\"/><text x=\"370\" y=\"166\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#96805c\">나침반</text><polyline points=\"161,144 161,200 250,200\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polyline points=\"310,200 324,200 324,96\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"275.5\" y1=\"184\" x2=\"275.5\" y2=\"216\" stroke=\"#2e2315\" stroke-width=\"3.2\"/><line x1=\"284.5\" y1=\"192\" x2=\"284.5\" y2=\"208\" stroke=\"#2e2315\" stroke-width=\"5\"/></svg>",
+  stem:"그림과 같이 전지에 연결한 코일의 오른쪽에 나침반을 놓았다. 코일 앞쪽 도선에는 전류가 아래 방향으로 흐른다. 이에 대한 설명으로 옳은 것만을 <보기>에서 있는 대로 고른 것은? (단, 지구 자기장은 무시한다.)",
+  boxes:["코일 주위에 자기장이 생긴다.", "나침반 바늘의 N극은 코일 쪽(왼쪽)을 가리킨다.", "전류의 방향을 반대로 바꾸면 나침반 바늘의 N극이 가리키는 방향도 반대가 된다."],
+  boxVerdicts:[true, false, true],
+  ch:[{t:"ㄱ",ok:0},{t:"ㄱ, ㄴ",ok:0},{t:"ㄱ, ㄷ",ok:1},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+  why:"앞쪽 도선의 전류가 아래로 흐르면 오른손 네 손가락을 그 방향으로 감았을 때 엄지가 <b>오른쪽</b>을 가리키므로 코일의 오른쪽 끝이 <b>N극</b>입니다. N극 앞에 놓인 나침반의 N극은 코일에서 <b>멀어지는 오른쪽</b>을 가리켜요(ㄴ ✗). 전류를 반대로 하면 극이 바뀌어 바늘도 반대(ㄷ)."},
 
- {id:"o2",difficulty:"중",
- intent:"전자석의 세기를 키우는 방법과, 전류를 끊으면 자석의 성질이 사라진다는 성질을 종합적으로 판단한다.",
- stem:"전자석의 성질에 대한 설명으로 옳지 <u>않은</u> 것은?",
- ch:[{t:"코일을 감은 수를 늘리면 전자석이 더 세진다.",ok:0},{t:"코일에 흐르는 전류가 셀수록 전자석이 더 세진다.",ok:0},{t:"전류의 방향을 반대로 하면 N극과 S극의 위치가 서로 바뀐다.",ok:0},{t:"스위치를 열어 전류를 끊어도 전자석은 자석의 성질을 그대로 지닌다.",ok:1},{t:"코일 속에 쇠못을 넣으면 넣지 않았을 때보다 자기장이 세진다.",ok:0}],
- why:"전자석은 <b>전류를 끊는 순간 자석의 성질이 사라지는</b> 것이 가장 큰 특징이므로 ④가 옳지 않습니다.<br>①·②는 전자석을 세게 만드는 두 가지 방법이고, ③처럼 전류 방향을 바꾸면 오른손 규칙에 따라 <b>엄지가 가리키는 쪽이 반대</b>가 되어 두 극이 맞바뀝니다."},
+ {id:"m7",
+  difficulty:"중",
+  intent:"코일에 흐르는 전류의 방향으로 코일의 N극·S극을 판단하는지 확인한다.",
+  stem:"옆에서 본 코일 P의 앞쪽 도선에는 모두 아래 방향으로 전류가 흐르고 있으며, 코일의 왼쪽 끝은 지점 ㉠, 오른쪽 끝은 지점 ㉡이다. 이에 대한 설명으로 옳은 것은?",
+  ch:[{t:"코일은 감은 방향과 상관없이 언제나 위쪽이 N극이 된다.",ok:0},{t:"전류의 방향을 반대로 바꾸어도 N극이 생기는 쪽은 변하지 않는다.",ok:0},{t:"지점 ㉠ 쪽이 N극이 된다.",ok:0},{t:"지점 ㉡ 쪽이 N극이 된다.",ok:1},{t:"코일에는 N극과 S극이 생기지 않는다.",ok:0}],
+  why:"오른손 네 손가락을 전류 방향(앞쪽 아래)으로 감으면 엄지가 <b>오른쪽(㉡)</b>을 향하므로 ㉡ 쪽이 N극입니다. 전류가 흐르는 코일은 양 끝에 <b>극이 생기고</b>, 전류 방향을 바꾸면 극도 바뀝니다."},
 
- {id:"q7",difficulty:"중",
- intent:"폐차장 기중기 맥락에서 영구 자석과 구별되는 전자석의 이점(켜고 끄기·세기 조절)을 설명한다.",
- stem:"폐차장에서는 커다란 코일을 감은 기중기로 고철 더미를 들어 올린 뒤, 트럭 위에 옮겨 내려놓는다. 이 기중기에 영구 자석 대신 전자석을 쓰는 까닭으로 가장 옳은 것은?",
- ch:[{t:"전류를 끊어도 자석의 성질이 남아 고철을 계속 붙잡아 두기 때문이다.",ok:0},{t:"전류를 끊으면 자기력이 사라져 원하는 자리에 고철을 내려놓을 수 있기 때문이다.",ok:1},{t:"전류의 세기를 바꾸어도 끌어당기는 힘의 크기가 늘 일정하기 때문이다.",ok:0},{t:"영구 자석은 언제나 전자석보다 세므로 무거운 고철에는 쓸 수 없기 때문이다.",ok:0},{t:"코일을 적게 감을수록 더 무거운 고철을 들어 올릴 수 있기 때문이다.",ok:0}],
- why:"전자석은 <b>스위치로 자기력을 켜고 끌 수 있어서</b> 고철을 들어 올렸다가 원하는 곳에서 놓을 수 있습니다. 영구 자석이라면 한 번 붙은 고철을 떼어 내기 어렵겠지요.<br>①은 '전류를 끊어도 자석으로 남는다'는 오해이고, ③은 전류가 셀수록 자기력이 <b>세지므로</b> 틀립니다. ④처럼 영구 자석이 항상 더 세다는 근거는 없으며, ⑤는 감은 수를 <b>늘릴수록</b> 세지므로 반대로 말한 설명입니다."},
+ {id:"m8",
+  difficulty:"중",
+  intent:"실험 기록으로 전자석의 세기를 정하는 요인(전류의 세기·감은 수)을 추론하는지 확인한다.",
+  stem:"쇠못에 에나멜선을 감아 전지에 연결한 뒤, 못 끝에 붙는 클립의 개수를 세어 다음과 같이 기록하였다.<br><span style=\"display:inline-block;margin-top:6px;padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;line-height:1.7\">A: 전지 1개, 50번 감음 → 클립 4개<br>B: 전지 2개(직렬), 50번 감음 → 클립 8개<br>C: 전지 1개, 100번 감음 → 클립 7개</span><br>이에 대한 설명으로 옳은 것만을 <보기>에서 있는 대로 고른 것은?",
+  boxes:["코일에 흐르는 전류가 셀수록 전자석이 세진다.", "코일을 많이 감을수록 전자석이 세진다.", "전류의 방향을 반대로 바꾸면 전자석의 세기도 약해진다."],
+  boxVerdicts:[true, true, false],
+  ch:[{t:"ㄱ",ok:0},{t:"ㄱ, ㄴ",ok:1},{t:"ㄱ, ㄷ",ok:0},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+  why:"A와 B(전지 수만 다름)에서 <b>전류가 셀수록</b>, A와 C(감은 수만 다름)에서 <b>많이 감을수록</b> 클립이 더 붙었습니다(ㄱ·ㄴ). 전류의 방향을 바꾸면 <b>극만 바뀔 뿐</b> 세기는 그대로예요(ㄷ ✗)."},
 
- {id:"s1",difficulty:"상",
- intent:"전자석의 극이 정해진 상황에서 막대자석과의 자기력, 전류 방향 반전, 전류 세기 변화를 한꺼번에 추론한다.",
- stem:"오른손 규칙으로 확인해 보니, 전지에 연결한 전자석 A의 <b>오른쪽 끝이 N극</b>이었다. 그 오른쪽에 막대자석을 두어 막대자석의 <b>N극이 전자석 A를 마주 보게</b> 고정하였다. 이에 대한 설명으로 옳은 것을 <보기>에서 모두 고른 것은?",
- boxes:["전자석 A와 막대자석 사이에는 서로 밀어내는 자기력이 작용한다.","전지의 두 극만 반대로 바꾸어 연결하면 두 자석은 서로 끌어당긴다.","전지를 하나 더 직렬로 연결하면 두 자석 사이에 작용하는 자기력이 커진다.","스위치를 열어 전류를 끊어도 전자석 A의 오른쪽 끝은 N극으로 남는다."],
- boxVerdicts:[true,true,true,false],
- ch:[{t:"ㄱ, ㄴ",ok:0},{t:"ㄱ, ㄹ",ok:0},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:1},{t:"ㄴ, ㄷ, ㄹ",ok:0}],
- why:"전자석의 오른쪽 끝(N극)과 막대자석의 N극이 마주 보므로 <b>같은 극끼리 밀어내어</b> ㄱ이 옳습니다. 전지의 극을 바꾸면 오른손 네 손가락을 감아쥐는 방향이 반대가 되어 엄지가 왼쪽을 가리키므로 오른쪽 끝이 <b>S극</b>이 되어 서로 끌어당기니 ㄴ도 옳고, 전지를 직렬로 늘리면 전류가 세져 자기장이 강해지므로 ㄷ도 옳습니다.<br>ㄹ은 틀립니다. 전자석은 <b>전류를 끊으면 자석의 성질이 사라져</b> 극도 함께 없어집니다."}
- ];
+ {id:"m9",
+  difficulty:"중",
+  intent:"전자석의 성질을 영구 자석과 견주어 아는지 확인한다.",
+  stem:"전자석의 성질에 대한 설명으로 옳지 <u>않은</u> 것은?",
+  ch:[{t:"코일 속에 쇠못을 넣으면 넣지 않았을 때보다 자기장이 세진다.",ok:0},{t:"코일을 감은 수를 늘리면 전자석이 더 세진다.",ok:0},{t:"코일에 흐르는 전류가 셀수록 전자석이 더 세진다.",ok:0},{t:"전류의 방향을 반대로 하면 N극과 S극의 위치가 서로 바뀐다.",ok:0},{t:"스위치를 열어 전류를 끊어도 전자석은 자석의 성질을 그대로 지닌다.",ok:1}],
+  why:"전자석은 <b>전류가 흐르는 동안에만</b> 자석입니다 — 전류를 끊으면 자석의 성질이 사라져요(④ ✗). 그래서 켜고 끄고, 극을 바꾸고, 세기를 조절할 수 있는 것이 전자석의 장점입니다."},
+
+ {id:"m10",
+  difficulty:"중",
+  intent:"오른손 규칙으로 여러 코일의 전류 방향과 극의 짝이 옳은 것을 가려내는지 확인한다.",
+  svg:"<svg viewBox=\"0 0 560 184\" width=\"560\" height=\"184\" role=\"img\" aria-label=\"코일 다섯 개 (가)~(마). 각각 앞쪽 도선의 전류 방향(위 또는 아래)과 양 끝의 극이 표시되어 있다.\" style=\"max-width:560px;width:100%;height:auto;display:block;margin:0 auto\"><ellipse cx=\"52\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"66\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"80\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"94\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><line x1=\"44.0\" y1=\"83.0\" x2=\"44.0\" y2=\"92.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"44.0,97.0 41.0,88.0 47.0,88.0\" fill=\"#b23a30\"/><line x1=\"72.0\" y1=\"83.0\" x2=\"72.0\" y2=\"92.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"72.0,97.0 69.0,88.0 75.0,88.0\" fill=\"#b23a30\"/><line x1=\"86.0\" y1=\"83.0\" x2=\"86.0\" y2=\"92.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"86.0,97.0 83.0,88.0 89.0,88.0\" fill=\"#b23a30\"/><text x=\"37\" y=\"95\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#d9534f\" font-weight=\"800\">N</text><text x=\"109\" y=\"95\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#3f6fb5\" font-weight=\"800\">S</text><text x=\"74\" y=\"150\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#2e2315\" font-weight=\"800\">(가)</text><text x=\"74\" y=\"168\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#b23a30\" font-weight=\"800\">전류 ↓</text><ellipse cx=\"160\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"174\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"188\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"202\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><line x1=\"152.0\" y1=\"97.0\" x2=\"152.0\" y2=\"88.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"152.0,83.0 155.0,92.0 149.0,92.0\" fill=\"#b23a30\"/><line x1=\"180.0\" y1=\"97.0\" x2=\"180.0\" y2=\"88.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"180.0,83.0 183.0,92.0 177.0,92.0\" fill=\"#b23a30\"/><line x1=\"194.0\" y1=\"97.0\" x2=\"194.0\" y2=\"88.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"194.0,83.0 197.0,92.0 191.0,92.0\" fill=\"#b23a30\"/><text x=\"145\" y=\"95\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#3f6fb5\" font-weight=\"800\">S</text><text x=\"217\" y=\"95\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#d9534f\" font-weight=\"800\">N</text><text x=\"182\" y=\"150\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#2e2315\" font-weight=\"800\">(나)</text><text x=\"182\" y=\"168\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#b23a30\" font-weight=\"800\">전류 ↑</text><ellipse cx=\"268\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"282\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"296\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"310\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><line x1=\"260.0\" y1=\"83.0\" x2=\"260.0\" y2=\"92.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"260.0,97.0 257.0,88.0 263.0,88.0\" fill=\"#b23a30\"/><line x1=\"288.0\" y1=\"83.0\" x2=\"288.0\" y2=\"92.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"288.0,97.0 285.0,88.0 291.0,88.0\" fill=\"#b23a30\"/><line x1=\"302.0\" y1=\"83.0\" x2=\"302.0\" y2=\"92.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"302.0,97.0 299.0,88.0 305.0,88.0\" fill=\"#b23a30\"/><text x=\"253\" y=\"95\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#3f6fb5\" font-weight=\"800\">S</text><text x=\"325\" y=\"95\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#d9534f\" font-weight=\"800\">N</text><text x=\"290\" y=\"150\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#2e2315\" font-weight=\"800\">(다)</text><text x=\"290\" y=\"168\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#b23a30\" font-weight=\"800\">전류 ↓</text><ellipse cx=\"376\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"390\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"404\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"418\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><line x1=\"368.0\" y1=\"97.0\" x2=\"368.0\" y2=\"88.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"368.0,83.0 371.0,92.0 365.0,92.0\" fill=\"#b23a30\"/><line x1=\"396.0\" y1=\"97.0\" x2=\"396.0\" y2=\"88.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"396.0,83.0 399.0,92.0 393.0,92.0\" fill=\"#b23a30\"/><line x1=\"410.0\" y1=\"97.0\" x2=\"410.0\" y2=\"88.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"410.0,83.0 413.0,92.0 407.0,92.0\" fill=\"#b23a30\"/><text x=\"361\" y=\"95\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#d9534f\" font-weight=\"800\">N</text><text x=\"433\" y=\"95\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#d9534f\" font-weight=\"800\">N</text><text x=\"398\" y=\"150\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#2e2315\" font-weight=\"800\">(라)</text><text x=\"398\" y=\"168\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#b23a30\" font-weight=\"800\">전류 ↑</text><ellipse cx=\"484\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"498\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"512\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"526\" cy=\"90\" rx=\"7\" ry=\"18\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><line x1=\"476.0\" y1=\"83.0\" x2=\"476.0\" y2=\"92.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"476.0,97.0 473.0,88.0 479.0,88.0\" fill=\"#b23a30\"/><line x1=\"504.0\" y1=\"83.0\" x2=\"504.0\" y2=\"92.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"504.0,97.0 501.0,88.0 507.0,88.0\" fill=\"#b23a30\"/><line x1=\"518.0\" y1=\"83.0\" x2=\"518.0\" y2=\"92.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"518.0,97.0 515.0,88.0 521.0,88.0\" fill=\"#b23a30\"/><text x=\"469\" y=\"95\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#3f6fb5\" font-weight=\"800\">S</text><text x=\"541\" y=\"95\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#3f6fb5\" font-weight=\"800\">S</text><text x=\"506\" y=\"150\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#2e2315\" font-weight=\"800\">(마)</text><text x=\"506\" y=\"168\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#b23a30\" font-weight=\"800\">전류 ↓</text><text x=\"280\" y=\"26\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#96805c\">앞쪽 도선의 전류 방향과 코일 양 끝의 극</text></svg>",
+  stem:"그림은 전류가 흐르는 코일 (가)~(마)의 앞쪽 도선의 전류 방향과 양 끝의 극을 나타낸 것이다. 전류의 방향과 극을 옳게 나타낸 것은?",
+  ch:[{t:"(다)",ok:1},{t:"(라)",ok:0},{t:"(마)",ok:0},{t:"(가)",ok:0},{t:"(나)",ok:0}],
+  why:"앞쪽 도선의 전류가 <b>아래</b>면 오른쪽 끝이 N극, <b>위</b>면 왼쪽 끝이 N극입니다. 이 약속에 맞는 것은 <b>(다)</b>뿐이에요. (가)·(나)는 극이 거꾸로이고, (라)·(마)처럼 양 끝이 같은 극일 수는 없습니다."},
+
+ {id:"m11",
+  difficulty:"상",
+  intent:"전자석을 쓰는 까닭을 「전류로 자기력을 켜고 끌 수 있다」는 성질로 설명하는지 확인한다.",
+  stem:"폐차장에서는 커다란 코일을 감은 기중기로 고철 더미를 들어 올린 뒤, 트럭 위에 옮겨 내려놓는다. 이 기중기에 영구 자석 대신 전자석을 쓰는 까닭으로 가장 옳은 것은?",
+  ch:[{t:"전류를 끊어도 자석의 성질이 남아 고철을 계속 붙잡아 두기 때문이다.",ok:0},{t:"전류를 끊으면 자기력이 사라져 원하는 자리에 고철을 내려놓을 수 있기 때문이다.",ok:1},{t:"전류의 세기를 바꾸어도 끌어당기는 힘의 크기가 늘 일정하기 때문이다.",ok:0},{t:"영구 자석은 언제나 전자석보다 세므로 무거운 고철에는 쓸 수 없기 때문이다.",ok:0},{t:"코일을 적게 감을수록 더 무거운 고철을 들어 올릴 수 있기 때문이다.",ok:0}],
+  why:"전자석은 <b>전류를 끊으면 자기력이 사라집니다</b>. 그래서 들어 올렸다가 원하는 자리에서 <b>놓을 수</b> 있어요 — 영구 자석이라면 붙은 고철을 떼어 내기 어렵습니다."},
+
+ {id:"m12",
+  difficulty:"상",
+  intent:"전자석과 영구 자석 사이의 자기력을 극·전류 방향·전류 세기와 연결해 추론하는지 확인한다.",
+  stem:"오른손 규칙으로 확인해 보니, 전지에 연결한 전자석 A의 오른쪽 끝이 N극이었다. 그 오른쪽에 막대자석을 두어 막대자석의 N극이 전자석 A를 마주 보게 하였다. 이에 대한 설명으로 옳은 것만을 <보기>에서 있는 대로 고른 것은?",
+  boxes:["전자석 A와 막대자석 사이에는 서로 밀어내는 자기력이 작용한다.", "전지의 두 극만 반대로 바꾸어 연결하면 두 자석은 서로 끌어당긴다.", "전지를 하나 더 직렬로 연결하면 두 자석 사이에 작용하는 자기력이 커진다.", "스위치를 열어 전류를 끊어도 전자석 A의 오른쪽 끝은 N극으로 남는다."],
+  boxVerdicts:[true, true, true, false],
+  ch:[{t:"ㄱ, ㄴ",ok:0},{t:"ㄱ, ㄷ",ok:0},{t:"ㄱ, ㄹ",ok:0},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:1}],
+  why:"N극끼리 마주 보니 <b>밀어냅니다</b>(ㄱ). 전지 극을 바꾸면 A의 극이 뒤집혀 S극이 N극을 마주 보아 <b>끌어당기고</b>(ㄴ), 전류가 세지면 자기력도 커집니다(ㄷ). 전류를 끊으면 극이 <b>사라집니다</b>(ㄹ ✗)."},
+
+ {id:"e1",
+  difficulty:"중",
+  type:"essay",
+  intent:"오른손 규칙으로 코일의 극을 판단하고, 자석과 코일 사이의 힘을 극의 관계로 설명하는지 확인한다.",
+  svg:"<svg viewBox=\"0 0 560 240\" width=\"560\" height=\"240\" role=\"img\" aria-label=\"전지에 연결한 코일(앞쪽 도선 전류 아래)의 왼쪽 끝에 막대자석의 N극을 가까이 가져가는 모습.\" style=\"max-width:560px;width:100%;height:auto;display:block;margin:0 auto\"><ellipse cx=\"250\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"267\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"284\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"301\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"318\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"335\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><polyline points=\"211,144 241,144\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polyline points=\"344,96 374,96\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"240.0\" y1=\"113.0\" x2=\"240.0\" y2=\"122.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"240.0,127.0 237.0,118.0 243.0,118.0\" fill=\"#b23a30\"/><line x1=\"291.0\" y1=\"113.0\" x2=\"291.0\" y2=\"122.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"291.0,127.0 288.0,118.0 294.0,118.0\" fill=\"#b23a30\"/><line x1=\"325.0\" y1=\"113.0\" x2=\"325.0\" y2=\"122.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"325.0,127.0 322.0,118.0 328.0,118.0\" fill=\"#b23a30\"/><text x=\"292.5\" y=\"170\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#b23a30\" font-weight=\"800\">앞쪽 도선의 전류 방향: 아래 ↓</text><rect x=\"40\" y=\"102\" width=\"60\" height=\"36\" fill=\"#3f6fb5\" stroke=\"#2e2315\" stroke-width=\"1.6\"/><rect x=\"100\" y=\"102\" width=\"60\" height=\"36\" fill=\"#d9534f\" stroke=\"#2e2315\" stroke-width=\"1.6\"/><text x=\"70.0\" y=\"126.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" fill=\"#fff\" font-weight=\"800\">S</text><text x=\"130.0\" y=\"126.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" fill=\"#fff\" font-weight=\"800\">N</text><line x1=\"170.0\" y1=\"120.0\" x2=\"194.0\" y2=\"120.0\" stroke=\"#2e2315\" stroke-width=\"2.4\" stroke-linecap=\"round\"/><polygon points=\"201.0,120.0 188.4,124.2 188.4,115.8\" fill=\"#2e2315\"/><text x=\"184\" y=\"96\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#96805c\">가까이 댄다</text><polyline points=\"211,144 211,200 260,200\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polyline points=\"320,200 374,200 374,96\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"285.5\" y1=\"184\" x2=\"285.5\" y2=\"216\" stroke=\"#2e2315\" stroke-width=\"3.2\"/><line x1=\"294.5\" y1=\"192\" x2=\"294.5\" y2=\"208\" stroke=\"#2e2315\" stroke-width=\"5\"/></svg>",
+  stem:"그림과 같이 앞쪽 도선에 전류가 아래로 흐르는 코일의 왼쪽 끝에 막대자석의 N극을 가까이 가져갔다. 코일의 왼쪽 끝에 생기는 <b>극</b>을 <b>오른손</b> 규칙으로 판단하여 쓰고, 코일과 자석 사이에 어떤 힘이 작용하는지 그 까닭과 함께 서술하시오.",
+  model:"오른손 네 손가락을 전류의 방향(앞쪽 도선에서 아래)으로 감으면 엄지가 오른쪽을 가리키므로 코일의 오른쪽 끝이 N극, 왼쪽 끝은 S극이다. 왼쪽 끝의 S극과 막대자석의 N극이 마주 보므로, 서로 다른 극 사이에 작용하는 끌어당기는 힘(인력)이 작용한다.",
+  rubric:[{t:"오른손 규칙(손가락=전류 방향, 엄지=N극)을 근거로 왼쪽 끝이 S극이라고 씀",p:2},{t:"서로 끌어당기는 힘이 작용한다고 씀",p:1},{t:"까닭: 서로 다른 극(S극과 N극)이 마주 보기 때문이라고 설명함",p:2}],
+  reject:["왼쪽 끝을 N극이라고 쓴 답", "같은 극이 마주 보아 밀어낸다고 쓴 답", "극만 쓰고 힘의 종류를 안 쓴 답(3점 감점)"],
+  keys:["극", "오른손"],
+  lines:4,
+  why:""},
+
+ {id:"e2",
+  difficulty:"상",
+  type:"essay",
+  intent:"두 코일이 밀어낸다는 사실에서 극을 추론하고, 오른손 규칙을 거꾸로 적용해 전류의 방향을 정하는지 확인한다.",
+  svg:"<svg viewBox=\"0 0 560 236\" width=\"560\" height=\"236\" role=\"img\" aria-label=\"나란히 놓은 두 코일 (가), (나). (가)에는 앞쪽 도선에 위 방향으로 전류가 흐르고 양 끝이 A, B이다. 두 코일은 서로 밀어낸다. (나)의 앞쪽 도선 전류 방향은 a(아래) 또는 b(위).\" style=\"max-width:560px;width:100%;height:auto;display:block;margin:0 auto\"><ellipse cx=\"80\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"97\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"114\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"131\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"148\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><polyline points=\"41,144 71,144\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polyline points=\"157,96 187,96\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"70.0\" y1=\"127.0\" x2=\"70.0\" y2=\"118.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"70.0,113.0 73.0,122.0 67.0,122.0\" fill=\"#b23a30\"/><line x1=\"104.0\" y1=\"127.0\" x2=\"104.0\" y2=\"118.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"104.0,113.0 107.0,122.0 101.0,122.0\" fill=\"#b23a30\"/><line x1=\"138.0\" y1=\"127.0\" x2=\"138.0\" y2=\"118.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"138.0,113.0 141.0,122.0 135.0,122.0\" fill=\"#b23a30\"/><text x=\"114.0\" y=\"170\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#b23a30\" font-weight=\"800\">앞쪽 도선의 전류 방향: 위 ↑</text><ellipse cx=\"340\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"357\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"374\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"391\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"408\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><polyline points=\"301,144 331,144\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polyline points=\"417,96 447,96\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"330.0\" y1=\"113.0\" x2=\"330.0\" y2=\"122.0\" stroke=\"none\" stroke-width=\"0\" stroke-linecap=\"round\"/><polygon points=\"330.0,127.0 327.0,118.0 333.0,118.0\" fill=\"none\"/><line x1=\"364.0\" y1=\"113.0\" x2=\"364.0\" y2=\"122.0\" stroke=\"none\" stroke-width=\"0\" stroke-linecap=\"round\"/><polygon points=\"364.0,127.0 361.0,118.0 367.0,118.0\" fill=\"none\"/><line x1=\"398.0\" y1=\"113.0\" x2=\"398.0\" y2=\"122.0\" stroke=\"none\" stroke-width=\"0\" stroke-linecap=\"round\"/><polygon points=\"398.0,127.0 395.0,118.0 401.0,118.0\" fill=\"none\"/><text x=\"59\" y=\"84\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#2e2315\" font-weight=\"800\">A</text><text x=\"169\" y=\"84\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#2e2315\" font-weight=\"800\">B</text><text x=\"160\" y=\"40\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#2e2315\" font-weight=\"800\">(가)</text><text x=\"420\" y=\"40\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"15\" fill=\"#2e2315\" font-weight=\"800\">(나)</text><line x1=\"392.0\" y1=\"176.0\" x2=\"392.0\" y2=\"188.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"392.0,195.0 387.8,182.4 396.2,182.4\" fill=\"#b23a30\"/><text x=\"406\" y=\"186\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#b23a30\" font-weight=\"800\">a (아래)</text><line x1=\"462.0\" y1=\"190.0\" x2=\"462.0\" y2=\"178.0\" stroke=\"#2f6ea8\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"462.0,171.0 466.2,183.6 457.8,183.6\" fill=\"#2f6ea8\"/><text x=\"476\" y=\"186\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2f6ea8\" font-weight=\"800\">b (위)</text><text x=\"280\" y=\"216\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\" font-weight=\"800\">⇦ 서로 밀어내는 힘 ⇨</text><text x=\"280\" y=\"236\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#96805c\">(나)의 앞쪽 도선 전류는 a(아래) 또는 b(위) 중 하나</text></svg>",
+  stem:"그림과 같이 전류가 흐르는 코일 (가)와 (나)를 나란히 놓았더니 두 코일 사이에 서로 밀어내는 힘이 작용하였다. (가)의 앞쪽 도선에는 전류가 위로 흐른다. (가)의 A, B가 각각 어떤 극인지 <b>오른손</b> 규칙으로 쓰고, (나)의 앞쪽 도선에 흐르는 <b>전류</b>의 방향이 a, b 중 어느 것인지 그 까닭과 함께 서술하시오.",
+  model:"(가)의 앞쪽 도선에 전류가 위로 흐르므로 오른손 규칙에 따라 엄지는 왼쪽을 가리켜 A가 N극, B가 S극이다. 두 코일이 밀어내려면 마주 보는 극이 같아야 하므로 (나)의 왼쪽 끝은 B와 같은 S극이고, 오른쪽 끝이 N극이다. 오른쪽 끝이 N극이 되려면 (나)의 앞쪽 도선에는 전류가 아래로 흘러야 하므로 a이다.",
+  rubric:[{t:"A는 N극, B는 S극이라고 씀(오른손 규칙 근거)",p:2},{t:"밀어내려면 마주 보는 극이 같아야 하므로 (나)의 왼쪽 끝이 S극이라고 추론함",p:2},{t:"(나)의 전류 방향은 a(아래)라고 씀",p:1}],
+  reject:["A를 S극으로 쓴 답", "밀어내는 힘을 다른 극이 마주 본 것으로 설명한 답", "전류 방향만 쓰고 까닭이 없는 답(2점 감점)"],
+  keys:["오른손", "전류"],
+  lines:5,
+  why:""}
+];
 
 /* ── 엔진 ── */
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -2517,7 +2592,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
 
 /* 확인 문제 */
 (function(){
- const body=$('#gameBody');let i=0,score=0,lives=3,order=[];
+ const body=$('#gameBody');let i=0,score=0,lives=3,order=[];S.eq=S.eq||{};
  function medal(k){if(S.medals[k])return;S.medals[k]=1;save();
  const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');}
  function paint(){Object.keys(S.medals).forEach(k=>{const el=$(`.medal[data-medal="${k}"]`);if(el)el.classList.add('got');});}
@@ -2541,9 +2616,43 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     lives=(MODE==='full')?3:Infinity;
     const lv=$('#lives');if(lv)lv.style.display=(MODE==='full')?'':'none';
     hud();next();}
+  function nextEssay(q){
+    const saved=(S.eq[q.id]||'');
+    const total=q.rubric.reduce((a,r)=>a+r.p,0);
+    body.innerHTML='<div class="mq-q" style="margin-top:0">'
+      + '<div class="mq-meta"><span class="mq-lv" data-lv="'+(q.difficulty||'중')+'">난이도 '+(q.difficulty||'중')+'</span>'
+      + '<span class="mq-lv" style="color:var(--accent2)">서술형 · 자기 채점</span>'
+      + (q.svg?'<span class="mq-lv" style="color:var(--ink-mute)">자료 해석</span>':'')+'</div>'
+      + (q.svg?'<div class="qfig">'+q.svg+'</div>':'')
+      + '<div class="mq-text" style="font-size:18px"><span class="qn">Q'+(i+1)+'.</span>'+q.stem+'</div>'
+      + '<textarea class="eq-ta" id="eqTa" rows="'+(q.lines||4)+'" placeholder="내 문장으로 써 보세요 — 꼭 들어갈 낱말: '+q.keys.join(', ')+'"></textarea>'
+      + '<div class="eq-keys" id="eqKeys"></div>'
+      + '<div class="mq-next show" id="eqOpenRow"><button class="btn primary sm" id="eqOpen">✍️ 다 썼어요 — 채점 기준 열기</button></div>'
+      + '<div class="eq-rub" id="eqRub" hidden><div class="why">✍️ 모범 답안</div><div class="eq-model">'+q.model+'</div>'
+      + '<div class="why">✅ 채점 기준 — 내 답에 들어 있으면 체크</div>'
+      + q.rubric.map(r=>'<label class="eq-item"><input type="checkbox" data-p="'+r.p+'"><span>'+r.t+'</span><span class="p">'+r.p+'점</span></label>').join('')
+      + (q.reject&&q.reject.length?'<div class="eq-rej">🧑‍🏫 불인정·감점 예 — '+q.reject.join(' · ')+'</div>':'')
+      + '<div class="eq-sum" id="eqSum">0점 / '+total+'점</div>'
+      + '<div class="mq-next show"><button class="btn primary sm" id="eqDone">채점 완료 → 다음</button></div></div></div>';
+    const ta=$('#eqTa'),keys=$('#eqKeys');ta.value=saved;
+    function paintKeys(){keys.innerHTML=q.keys.map(k=>'<span class="eq-key'+(ta.value.indexOf(k)>=0?' on':'')+'">'+(ta.value.indexOf(k)>=0?'✓ ':'')+k+'</span>').join('');}
+    ta.addEventListener('input',()=>{S.eq[q.id]=ta.value;save();paintKeys();});paintKeys();
+    function pts(){let p=0;$$('.eq-item input',body).forEach(c=>{if(c.checked)p+=+c.dataset.p;});return p;}
+    body.onchange=e=>{if(e.target.matches&&e.target.matches('.eq-item input'))$('#eqSum').textContent=pts()+'점 / '+total+'점';};
+    $('#eqOpen').addEventListener('click',()=>{
+      if(ta.value.trim().length<10){toast('먼저 <b>한두 문장</b>이라도 써 본 뒤 열어요 ✍️');return;}
+      $('#eqRub').hidden=false;$('#eqOpenRow').style.display='none';A.pop();});
+    $('#eqDone').addEventListener('click',()=>{
+      const p=pts(),pass=p/total>=0.6;
+      if(pass){score+=20;A.correct();medal('first');}else A.wrong();
+      toast(pass?'서술형 <b>'+p+'점 / '+total+'점</b> — 통과! ✅':'서술형 <b>'+p+'점 / '+total+'점</b> — 모범 답안과 견주어 보완해 보세요 ✍️');
+      i++;next();
+      scrollTo({top:document.querySelector('#panel-check').offsetTop-70,behavior:reduceMotion?'auto':'smooth'});});
+  }
  function next(){
  if(i>=order.length||lives<=0)return end();
  hud();const q=GAME_QS[order[i]];
+    if(q.type==='essay')return nextEssay(q);
  const bg=(q.boxes&&q.boxes.length)
  ? '<div class="bogi" id="bogiBox"><div class="bogi-t">보 기</div><ul>'
  + q.boxes.map(function(b,n){return '<li data-bi="'+n+'"><span class="bk">'+'\u3131\u3134\u3137\u3139'[n]+'</span><span>'+b+'</span><span class="bv"></span></li>';}).join('')
