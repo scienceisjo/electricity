@@ -1552,7 +1552,7 @@ body.teacher .wlockmsg{display:none}
  🔗 <b>직렬</b> — 차례대로 다 지나야 한다 → 길이가 길어진 효과 → <b class="t1">전체 저항이 커진다</b> → 전체 전류는 작아진다<br>
  🔀 <b>병렬</b> — 지나갈 통로가 늘어난다 → 굵어진 효과 → <b class="t1">전체 저항이 작아진다</b> → 전체 전류는 커진다</p>
  </div>
- <details class="wfold"><summary>계산식은 왜 그렇게 되는지 보기 (중3 이후 내용)</summary>
+ <details class="wfold"><summary>계산식은 왜 그렇게 되는지 보기 (고등학교 내용 · 시험 X)</summary>
  <div class="fold-in">
  <b>직렬</b> — 길이 하나라 전류가 같고, 전압은 나뉘어 걸립니다.
  <div class="eqline">I = I₁ = I₂ ,  V = V₁ + V₂</div>
@@ -2232,14 +2232,14 @@ const GAME_QS=[
   why:"㉮를 빼면 ㉯가 꺼지는 (가)는 <b>직렬</b>(ㄱ). 병렬인 (나)에서 갈래 하나를 없애면 길이 줄어 전체 전류는 0.8 A에서 <b>작아집니다</b>(ㄴ). 같은 전지에서 전체 전류가 작은 (가)가 <b>전체 저항이 큽니다</b>(ㄷ ✗)."},
 
  {id:"s11",
-  difficulty:"상",
-  intent:"(도전) 직렬 회로에서 전류가 같음을 이용해 각 저항의 전압을 옴의 법칙으로 나누어 계산하는지 확인한다.",
+  difficulty:"중",
+  intent:"직렬에서 전류가 같고, 저항이 큰 쪽에 큰 전압이 걸리며, 각 전압의 합이 전원 전압과 같음을 계산 없이 판단하는지 확인한다.",
   svg:"<svg viewBox=\"0 0 560 240\" width=\"560\" height=\"240\" role=\"img\" aria-label=\"5 옴과 15 옴인 두 니크롬선을 직렬로 연결하고 8 V의 전압을 건 회로.\" style=\"max-width:560px;width:100%;height:auto;display:block;margin:0 auto\"><polyline points=\"120,60 120,190 250,190\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polyline points=\"310,190 440,190 440,60 350,60\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polyline points=\"120,60 170,60\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"170\" y=\"52\" width=\"44\" height=\"16\" fill=\"#fdfbf6\" stroke=\"#2e2315\" stroke-width=\"2.4\"/><text x=\"192\" y=\"44\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2e2315\" font-weight=\"800\">5 Ω</text><polyline points=\"214,60 280,60\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"280\" y=\"52\" width=\"44\" height=\"16\" fill=\"#fdfbf6\" stroke=\"#2e2315\" stroke-width=\"2.4\"/><text x=\"302\" y=\"44\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2e2315\" font-weight=\"800\">15 Ω</text><polyline points=\"324,60 350,60\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"275.5\" y1=\"174\" x2=\"275.5\" y2=\"206\" stroke=\"#2e2315\" stroke-width=\"3.2\"/><line x1=\"284.5\" y1=\"182\" x2=\"284.5\" y2=\"198\" stroke=\"#2e2315\" stroke-width=\"5\"/><text x=\"280\" y=\"224\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"14\" fill=\"#2e2315\" font-weight=\"800\">8 V</text></svg>",
-  stem:"🚀 <b>도전</b> — 그림과 같이 저항이 5 Ω과 15 Ω인 두 니크롬선을 직렬로 연결하고 8 V의 전압을 걸었다. 이에 대한 설명으로 옳은 것만을 <보기>에서 있는 대로 고른 것은?",
-  boxes:["저항이 5 Ω인 니크롬선에 걸리는 전압은 2 V이다.", "저항이 15 Ω인 니크롬선에 흐르는 전류의 세기는 0.4 A이다.", "저항이 5 Ω인 니크롬선에 걸리는 전압은 15 Ω인 니크롬선에 걸리는 전압보다 작다."],
-  boxVerdicts:[true, true, true],
-  ch:[{t:"ㄱ",ok:0},{t:"ㄱ, ㄴ",ok:0},{t:"ㄱ, ㄷ",ok:0},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:1}],
-  why:"직렬이므로 전체 저항은 5 + 15 = 20 Ω, 전체 전류는 8 ÷ 20 = <b>0.4 A</b>로 두 저항에 똑같이 흐릅니다(ㄴ). 각 전압은 V = IR: 5 Ω에 <b>2 V</b>, 15 Ω에 6 V(ㄱ·ㄷ). 직렬에서는 <b>저항이 클수록 더 큰 전압</b>이 걸립니다."},
+  stem:"그림과 같이 저항이 5 Ω과 15 Ω인 두 니크롬선을 직렬로 연결하고 8 V의 전압을 걸었다. 이에 대한 설명으로 옳은 것만을 <보기>에서 있는 대로 고른 것은?",
+  boxes:["두 니크롬선에 흐르는 전류의 세기는 서로 같다.", "저항이 15 Ω인 니크롬선에 걸리는 전압은 5 Ω인 니크롬선에 걸리는 전압보다 크다.", "두 니크롬선에 걸리는 전압을 합하면 8 V보다 크다."],
+  boxVerdicts:[true, true, false],
+  ch:[{t:"ㄱ",ok:0},{t:"ㄱ, ㄴ",ok:1},{t:"ㄱ, ㄷ",ok:0},{t:"ㄴ, ㄷ",ok:0},{t:"ㄱ, ㄴ, ㄷ",ok:0}],
+  why:"직렬은 전류가 흐르는 길이 하나라 두 니크롬선에 <b>같은 전류</b>가 흐릅니다(ㄱ). 같은 전류가 흐르면 V = IR에서 <b>저항이 큰 15 Ω 쪽에 더 큰 전압</b>이 걸립니다(ㄴ). 각 니크롬선에 걸리는 전압을 합하면 전원의 전압 <b>8 V와 같습니다</b>(ㄷ ✗). 전체 저항이나 전류 값을 계산하지 않아도 판단할 수 있어요."},
 
  {id:"e1",
   difficulty:"중",
