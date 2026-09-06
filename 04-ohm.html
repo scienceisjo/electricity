@@ -741,6 +741,24 @@ body.teacher #dashLink{display:inline-flex}
 .lab.lab-fs .readout .v{font-size:24px}
 @media(max-width:980px){.lab.lab-fs .simgrid{grid-template-columns:1fr}.lab.lab-fs .stage2{grid-template-columns:1fr}}
 body.lab-fs-open{overflow:hidden}
+/* ── 🛤️ 직렬·병렬 이름만 먼저 ── */
+.sp-duo{display:grid;gap:12px;grid-template-columns:1fr;margin-top:12px}
+@media(min-width:700px){.sp-duo{grid-template-columns:1fr 1fr}}
+.sp-box{background:#faf4e6;border:1px solid var(--line);border-radius:13px;padding:12px 14px 6px}
+.sp-box h4{font-family:var(--jua);font-size:17px;margin:0 0 6px;color:var(--ink)}
+.sp-box svg{display:block;width:100%;height:auto;max-width:360px;margin:0 auto}
+.sp-box p{font-size:14.5px;line-height:1.65;color:var(--ink-dim);margin:8px 0 6px}
+.sp-h{font-family:var(--jua);font-size:17px;margin:18px 0 4px;color:var(--ink)}
+.sp-quiz{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));margin-top:10px}
+.spq{background:#faf4e6;border:1.5px solid var(--line);border-radius:13px;padding:10px 12px 8px;transition:.2s}
+.spq svg{display:block;width:100%;height:auto;max-width:240px;margin:2px auto}
+.spq-t{font-size:13.5px;font-weight:800;color:var(--ink-dim)}
+.spq .spq-b{margin-top:6px;gap:6px}
+.spq .spq-b .btn{flex:1}
+.spq .spfb{font-size:13px;line-height:1.55;color:var(--ink-dim);margin-top:6px;min-height:0}
+.spq.ok{border-color:#7fae8a;background:#f2f8f1}
+.spq.ok .spq-b{display:none}
+.spq.bad{border-color:#d08a7a}
 /* ── 🧩 회로 조립 ── */
 .board-wrap{margin-top:12px;background:#f7f1e4;border:1px solid var(--line);border-radius:13px;padding:8px}
 .board-wrap svg{display:block;width:100%;height:auto;max-width:640px;margin:0 auto}
@@ -1272,11 +1290,44 @@ body.solo .stu-badge{display:inline-flex}
  <div class="note class"><span class="ic">💬</span><div><b>탐구 지도 유의점(교과서 명시)</b> — ① 전류가 흐르는 니크롬선은 <b>뜨겁습니다.</b> 면장갑을 끼고, 값을 읽은 뒤 <b>바로 스위치를 열게</b> 하세요(열이 나면 저항값이 달라져 오차가 커집니다). ② 전압은 0부터 조금씩 높입니다. ③ 젖은 손·젖은 물건은 감전 위험이 있으니 회로에 대지 않게 합니다. ④ 아래 가상 실험대는 교과서 「다르게 해 보기」의 가상 실험에 해당합니다 — 실제 실험을 대신하는 게 아니라 예습·복습용입니다.</div></div>
  </div>
 
+ <!-- 🛤️ 직렬·병렬 이름만 먼저 -->
+ <div class="card" style="margin-top:18px" id="spCard">
+ <div class="badge" style="margin-bottom:12px">🛤️ 이름만 먼저 — 직렬과 병렬</div>
+ <p class="lead say" style="font-size:17px">회로를 조립하려면 부품을 잇는 두 가지 방법에 이름이 필요합니다. 자세한 것은 <b>다음 시간</b>에 배우니, 오늘은 <b class="k">이름과 구별법</b>만 챙깁니다.
+ 기준은 딱 하나예요. <b class="k">전류가 갈 길이 하나뿐인가, 갈림길이 있는가.</b></p>
+ <div class="keyline-s"><span class="kw">직렬</span><span class="arw">=</span><span class="kw hi">외길</span><span class="kw">병렬</span><span class="arw">=</span><span class="kw hi">갈림길</span><span class="kw">손가락으로 따라가 보기</span><span class="memo"></span></div>
+ <div class="sp-duo">
+ <div class="sp-box">
+ <h4>직렬 — 외길</h4>
+<svg viewBox="0 0 250 150" role="img" aria-label="전지 하나에 전구 두 개를 한 줄로 이은 직렬 회로"><path id="spSerP" d="M30 69 V30 H220 V120 H30 V81" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="17" y1="69" x2="43" y2="69" stroke="#3b2f1e" stroke-width="2.4"/><line x1="23" y1="81" x2="37" y2="81" stroke="#3b2f1e" stroke-width="5"/><text x="14" y="71" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="14" y="87" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><circle cx="95" cy="30" r="11" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><line x1="87.5" y1="22.5" x2="102.5" y2="37.5" stroke="#3b2f1e" stroke-width="2"/><line x1="87.5" y1="37.5" x2="102.5" y2="22.5" stroke="#3b2f1e" stroke-width="2"/><circle cx="155" cy="30" r="11" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><line x1="147.5" y1="22.5" x2="162.5" y2="37.5" stroke="#3b2f1e" stroke-width="2"/><line x1="147.5" y1="37.5" x2="162.5" y2="22.5" stroke="#3b2f1e" stroke-width="2"/><text x="125" y="60" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#8a5f24">길이 하나 — 갈림길 없음</text><text x="125" y="143" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11.5" fill="#6b573f">전구 두 개가 한 길 위에 한 줄로</text><circle id="spSerDot" cx="30" cy="69" r="6" fill="#a05c2c" opacity="0"/></svg>
+ <p class="say">전지에서 나온 전류가 갈 길이 <b>딱 하나</b>라서, 부품이 모두 그 한 길 위에 <b>한 줄로</b> 섭니다. 기차 칸을 앞뒤로 이어 붙인 모양이에요.</p>
+ </div>
+ <div class="sp-box">
+ <h4>병렬 — 갈림길</h4>
+<svg viewBox="0 0 250 150" role="img" aria-label="전지 하나에 전구 두 개를 나란히 이은 병렬 회로"><path d="M30 69 V30 H190 V120 H30 V81 M110 30 V120" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path id="spParA" d="M30 69 V30 H110" fill="none" stroke="none"/><path id="spParB1" d="M110 30 V120" fill="none" stroke="none"/><path id="spParB2" d="M110 30 H190 V120 H110" fill="none" stroke="none"/><path id="spParC" d="M110 120 H30 V81" fill="none" stroke="none"/><line x1="17" y1="69" x2="43" y2="69" stroke="#3b2f1e" stroke-width="2.4"/><line x1="23" y1="81" x2="37" y2="81" stroke="#3b2f1e" stroke-width="5"/><text x="14" y="71" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="14" y="87" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><circle cx="110" cy="75" r="11" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><line x1="102.5" y1="67.5" x2="117.5" y2="82.5" stroke="#3b2f1e" stroke-width="2"/><line x1="102.5" y1="82.5" x2="117.5" y2="67.5" stroke="#3b2f1e" stroke-width="2"/><circle cx="190" cy="75" r="11" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><line x1="182.5" y1="67.5" x2="197.5" y2="82.5" stroke="#3b2f1e" stroke-width="2"/><line x1="182.5" y1="82.5" x2="197.5" y2="67.5" stroke="#3b2f1e" stroke-width="2"/><circle cx="110" cy="30" r="3.6" fill="#3b2f1e"/><circle cx="110" cy="120" r="3.6" fill="#3b2f1e"/><text x="110" y="20" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#a05c2c">갈림길</text><text x="110" y="140" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#a05c2c">다시 만남</text><text x="70" y="105" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11.5" fill="#8a5f24">길이 둘 —</text><text x="70" y="118" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11.5" font-weight="800" fill="#8a5f24">나란히</text><circle id="spParDot1" cx="30" cy="69" r="6" fill="#a05c2c" opacity="0"/><circle id="spParDot2" cx="30" cy="69" r="6" fill="#a05c2c" opacity="0"/></svg>
+ <p class="say">길이 중간에 <b>둘로 갈라졌다가 다시 만납니다.</b> 부품이 각자 길을 하나씩 차지하고 <b>나란히</b> 놓여요. 산길이 두 갈래로 갈라졌다가 아래에서 합쳐지는 모양입니다.</p>
+ </div>
+ </div>
+ <div class="btn-row" style="margin-top:12px"><button class="btn primary sm" id="spPlay">▶ 손가락 대신 전류 따라가기</button></div>
+ <div class="verdict" id="spMsg"><b>판별법</b> — 전지의 한쪽 극에서 출발해 손가락으로 도선을 따라가 보세요. 갈림길을 한 번도 안 만나면 <b>직렬</b>, 갈림길에서 「어느 쪽으로 가지?」 하고 멈추면 <b>병렬</b>입니다.</div>
+ <h4 class="sp-h">🔍 가려내기 — 이 연결은 직렬일까, 병렬일까?</h4>
+ <p class="help say">모양이 아니라 <b>길</b>로 판단하세요. 손가락으로 따라가면서 갈림길이 있는지만 봅니다. ④와 ⑤는 잠시 뒤 조립할 오늘의 회로 한 조각이에요.</p>
+ <div class="sp-quiz" id="spQuiz">
+<div class="spq" data-i="0"><div class="spq-t">① 전구 두 개를 이은 회로</div><svg viewBox="0 0 200 120"><path d="M20 54 V20 H180 V100 H20 V66" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="7" y1="54" x2="33" y2="54" stroke="#3b2f1e" stroke-width="2.4"/><line x1="13" y1="66" x2="27" y2="66" stroke="#3b2f1e" stroke-width="5"/><text x="4" y="56" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="4" y="72" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><circle cx="70" cy="20" r="11" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><line x1="62.5" y1="12.5" x2="77.5" y2="27.5" stroke="#3b2f1e" stroke-width="2"/><line x1="62.5" y1="27.5" x2="77.5" y2="12.5" stroke="#3b2f1e" stroke-width="2"/><circle cx="130" cy="20" r="11" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><line x1="122.5" y1="12.5" x2="137.5" y2="27.5" stroke="#3b2f1e" stroke-width="2"/><line x1="122.5" y1="27.5" x2="137.5" y2="12.5" stroke="#3b2f1e" stroke-width="2"/></svg><div class="btn-row spq-b"><button class="btn ghost sm" data-ans="ser">직렬</button><button class="btn ghost sm" data-ans="par">병렬</button></div><div class="spfb"></div></div>
+<div class="spq" data-i="1"><div class="spq-t">② 전구 두 개를 이은 회로</div><svg viewBox="0 0 200 120"><path d="M20 54 V20 H150 V100 H20 V66 M90 20 V100" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="7" y1="54" x2="33" y2="54" stroke="#3b2f1e" stroke-width="2.4"/><line x1="13" y1="66" x2="27" y2="66" stroke="#3b2f1e" stroke-width="5"/><text x="4" y="56" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="4" y="72" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><circle cx="90" cy="60" r="11" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><line x1="82.5" y1="52.5" x2="97.5" y2="67.5" stroke="#3b2f1e" stroke-width="2"/><line x1="82.5" y1="67.5" x2="97.5" y2="52.5" stroke="#3b2f1e" stroke-width="2"/><circle cx="150" cy="60" r="11" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><line x1="142.5" y1="52.5" x2="157.5" y2="67.5" stroke="#3b2f1e" stroke-width="2"/><line x1="142.5" y1="67.5" x2="157.5" y2="52.5" stroke="#3b2f1e" stroke-width="2"/><circle cx="90" cy="20" r="3.6" fill="#3b2f1e"/><circle cx="90" cy="100" r="3.6" fill="#3b2f1e"/></svg><div class="btn-row spq-b"><button class="btn ghost sm" data-ans="ser">직렬</button><button class="btn ghost sm" data-ans="par">병렬</button></div><div class="spfb"></div></div>
+<div class="spq" data-i="2"><div class="spq-t">③ 전구가 위아래로 놓인 회로</div><svg viewBox="0 0 200 120"><path d="M20 54 V20 H180 V100 H20 V66" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="7" y1="54" x2="33" y2="54" stroke="#3b2f1e" stroke-width="2.4"/><line x1="13" y1="66" x2="27" y2="66" stroke="#3b2f1e" stroke-width="5"/><text x="4" y="56" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="4" y="72" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><circle cx="100" cy="20" r="11" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><line x1="92.5" y1="12.5" x2="107.5" y2="27.5" stroke="#3b2f1e" stroke-width="2"/><line x1="92.5" y1="27.5" x2="107.5" y2="12.5" stroke="#3b2f1e" stroke-width="2"/><circle cx="100" cy="100" r="11" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><line x1="92.5" y1="92.5" x2="107.5" y2="107.5" stroke="#3b2f1e" stroke-width="2"/><line x1="92.5" y1="107.5" x2="107.5" y2="92.5" stroke="#3b2f1e" stroke-width="2"/></svg><div class="btn-row spq-b"><button class="btn ghost sm" data-ans="ser">직렬</button><button class="btn ghost sm" data-ans="par">병렬</button></div><div class="spfb"></div></div>
+<div class="spq" data-i="3"><div class="spq-t">④ 니크롬선과 전압계</div><svg viewBox="0 0 200 120"><path d="M8 78 H192 M60 78 V30 H140 V78" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="75" y="67" width="50" height="22" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="100" y="106" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#8a5f24">니크롬선</text><circle cx="60" cy="78" r="3.6" fill="#3b2f1e"/><circle cx="140" cy="78" r="3.6" fill="#3b2f1e"/><circle cx="100" cy="30" r="14" fill="#fff" stroke="#7d5ba6" stroke-width="2.4"/><text x="100" y="31" text-anchor="middle" dominant-baseline="central" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="800" fill="#7d5ba6">V</text><text x="8" y="112" text-anchor="start" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="9.5" fill="#a08b64">회로의 나머지 부분으로</text></svg><div class="btn-row spq-b"><button class="btn ghost sm" data-ans="ser">직렬</button><button class="btn ghost sm" data-ans="par">병렬</button></div><div class="spfb"></div></div>
+<div class="spq" data-i="4"><div class="spq-t">⑤ 니크롬선과 전류계</div><svg viewBox="0 0 200 120"><path d="M8 60 H192" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="45" y="49" width="50" height="22" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="70" y="90" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#8a5f24">니크롬선</text><circle cx="145" cy="60" r="14" fill="#fff" stroke="#a05c2c" stroke-width="2.4"/><text x="145" y="61" text-anchor="middle" dominant-baseline="central" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14" font-weight="800" fill="#a05c2c">A</text><text x="8" y="108" text-anchor="start" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="9.5" fill="#a08b64">회로의 나머지 부분으로</text></svg><div class="btn-row spq-b"><button class="btn ghost sm" data-ans="ser">직렬</button><button class="btn ghost sm" data-ans="par">병렬</button></div><div class="spfb"></div></div>
+ </div>
+ <div class="verdict" id="spQMsg">다섯 개를 모두 가려내면 회로 조립으로 넘어갑니다.</div>
+ <div class="note class"><span class="ic">💬</span><div><b>지도 포인트</b> — 정의는 「갈림길이 있나」 하나로만 합니다. <b>모양으로 정의하지 않기</b>(③처럼 위아래로 나란히 그려져도 갈림길이 없으면 직렬), <b>밝기로 정의하지 않기</b>(「직렬은 어둡다」는 결과이지 정의가 아님), <b>물이 나뉜다는 말 피하기</b>(전류가 써서 없어진다는 오개념으로 흐름). 전류가 어떻게 나뉘는지는 다음 차시에 실험으로 봅니다. 마무리 예고 질문: 「우리 집 전등 스무 개 중 하나를 빼면 다 꺼질까?」</div></div>
+ </div>
+
  <!-- 🧩 회로 조립 -->
  <div class="card" style="margin-top:18px" id="bdCard">
  <div class="badge" style="margin-bottom:12px">🧩 회로 조립 연습 — 부품을 끌어 회로 완성하기</div>
  <p class="lead say" style="font-size:17px">실험대에 앉기 전에 <b class="k">회로부터 직접 이어</b> 봅시다. 쟁반의 부품 다섯 개를 회로도의 빈 자리에 끌어다 놓으세요.
- <b>전류계</b>와 <b>전압계</b>는 들어갈 자리가 정해져 있습니다 — 잘못 놓으면 왜 안 되는지 알려 줘요.</p>
+ 방금 배운 말로 하면 — <b>전류계</b>는 외길 위에 <b>한 줄로(직렬)</b>, <b>전압계</b>는 니크롬선 양 끝에 갈림길을 만들어 <b>나란히(병렬)</b>. 잘못 놓으면 왜 안 되는지 알려 줘요.</p>
  <div class="keyline-s"><span class="kw">전류계</span><span class="arw">→</span><span class="kw hi">한 줄로(직렬)</span><span class="kw">전압계</span><span class="arw">→</span><span class="kw hi">양 끝에 나란히(병렬)</span><span class="memo"></span></div>
  <div class="board-wrap">
 <svg id="bdSvg" viewBox="0 0 560 372" role="img" aria-label="부품을 끌어다 놓는 회로 조립판" style="touch-action:none;user-select:none">
@@ -2287,6 +2338,7 @@ function progChecks(){
  {label:'1단계 · 내 생각 쓰기 — 밝기를 줄이는 방법', ok:thinkLen('open')>=10},
  {label:'2단계 · 결과 예상하기', ok:!!S.poe},
  {label:'2단계 · 예상한 까닭 쓰기', ok:thinkLen('why')>=10},
+ {label:'2단계 · 직렬·병렬 가려내기', ok:!!S.spDone},
  {label:'2단계 · 회로 조립 완성', ok:!!S.build},
  {label:'2단계 · 두 니크롬선 모두 측정·기록', ok:labOk()},
  {label:'2단계 · 니크롬선 길이·굵기 각각 바꿔 보기', ok:!!S.wwLen&&!!S.wwThk},
@@ -2317,10 +2369,10 @@ function toast(msg,kind=''){const el=$('#toast');el.innerHTML=msg;el.className='
 /* ── 🎯 미션 잠금 — 혼자 탐구 모드에서만. 강의식·교사 모드는 전부 열린다 ── */
 const MSN=[
  {tab:'open',   name:'미션 1 · 내 생각 꺼내기',    items:[0,1]},
- {tab:'explore',name:'미션 2 · 예상하고 실험하기', items:[2,3,4,5,6,7]},
- {tab:'law',    name:'미션 3 · 법칙으로 묶기',     items:[8,9,10]},
- {tab:'sort',   name:'미션 4 · 물질 가려내기',     items:[11,12]},
- {tab:'check',  name:'미션 5 · 확인 문제 완주',    items:[13]}];   /* items = progChecks() 번호 */
+ {tab:'explore',name:'미션 2 · 예상하고 실험하기', items:[2,3,4,5,6,7,8]},
+ {tab:'law',    name:'미션 3 · 법칙으로 묶기',     items:[9,10,11]},
+ {tab:'sort',   name:'미션 4 · 물질 가려내기',     items:[12,13]},
+ {tab:'check',  name:'미션 5 · 확인 문제 완주',    items:[14]}];   /* items = progChecks() 번호 */
 const teacherOn=()=>document.body.classList.contains('teacher');
 const soloOn=()=>document.body.classList.contains('solo');
 function msnDone(m,c){c=c||progChecks();return m.items.every(i=>c[i].ok);}
@@ -2538,6 +2590,54 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  const g=$('#labGraph');if(g)g.dataset.fsDone=1;
 })();
 
+/* ── 🛤️ 직렬·병렬 이름만 먼저 — 전류 따라가기 + 가려내기 ── */
+(function(){
+ const card=$('#spCard');if(!card)return;
+ S.sp=S.sp||{};
+ /* 전류 따라가기 — 숨긴 path 위를 점이 달린다 */
+ const at=id=>{const p=$('#'+id);const L=p.getTotalLength();return f=>p.getPointAtLength(Math.max(0,Math.min(1,f))*L);};
+ const sA=at('spSerP'), pA=at('spParA'), pB1=at('spParB1'), pB2=at('spParB2'), pC=at('spParC');
+ const dS=$('#spSerDot'), d1=$('#spParDot1'), d2=$('#spParDot2'), play=$('#spPlay');
+ const put=(d,q)=>{d.setAttribute('cx',q.x.toFixed(1));d.setAttribute('cy',q.y.toFixed(1));};
+ const DUR=3600;let raf=null,t0=null;
+ function frame(ts){
+  if(t0==null)t0=ts;const f=Math.min(1,(ts-t0)/DUR);
+  put(dS,sA(f));
+  let q1,q2;
+  if(f<.3){q1=q2=pA(f/.3);}else if(f<.72){const g=(f-.3)/.42;q1=pB1(g);q2=pB2(g);}else{q1=q2=pC((f-.72)/.28);}
+  put(d1,q1);put(d2,q2);
+  if(f<1)raf=requestAnimationFrame(frame);else{raf=null;play.textContent='▶ 다시 보기';}
+ }
+ play.addEventListener('click',()=>{
+  if(raf)cancelAnimationFrame(raf);t0=null;[dS,d1,d2].forEach(d=>d.setAttribute('opacity','1'));
+  play.textContent='… 따라가는 중';raf=requestAnimationFrame(frame);A.pop();
+  $('#spMsg').innerHTML='왼쪽은 갈림길 없이 한 바퀴 — <b>직렬</b>. 오른쪽은 위쪽 점에서 <b>두 갈래로 갈라졌다가</b> 아래쪽 점에서 다시 만남 — <b>병렬</b>. 전류가 어떻게 나뉘는지는 다음 시간에 실험으로 확인해요.';
+ });
+ /* 가려내기 */
+ const Q=[
+  {a:'ser',ok:'갈림길 없이 한 바퀴 — 전구 두 개가 한 길 위에 한 줄로. <b>직렬</b>.',no:'손가락으로 따라가 보세요. 갈림길이 한 번도 없죠? 길이 하나면 <b>직렬</b>이에요.'},
+  {a:'par',ok:'위 점에서 두 갈래로 갈라졌다가 아래 점에서 다시 만나요. <b>병렬</b>.',no:'위쪽 점에서 손가락이 멈추죠? 어느 쪽으로 갈지 골라야 하면 <b>병렬</b>이에요.'},
+  {a:'ser',ok:'위아래로 나란히 보이지만 갈림길이 없어요. 모양이 아니라 <b>길</b>로 판단 — <b>직렬</b>.',no:'나란히 그려졌다고 병렬이 아니에요. 따라가 보면 갈림길 없이 한 바퀴 — <b>직렬</b>.'},
+  {a:'par',ok:'니크롬선 양 끝에서 길이 갈라져 전압계 쪽과 니크롬선 쪽으로 나뉘어요. 오늘 회로에서 전압계는 <b>병렬</b>.',no:'니크롬선 왼쪽 끝 점에서 길이 둘로 갈라지죠? 전압계 쪽과 니크롬선 쪽. 그래서 <b>병렬</b>이에요.'},
+  {a:'ser',ok:'갈림길 없이 전류계와 니크롬선이 한 길 위에. 오늘 회로에서 전류계는 <b>직렬</b>.',no:'갈림길이 없어요. 전류계와 니크롬선이 한 줄로 — <b>직렬</b>.'}];
+ const items=$$('#spQuiz .spq');
+ function paintAll(){
+  const n=Object.keys(S.sp).length;
+  $('#spQMsg').innerHTML=n>=Q.length?'✅ <b>다섯 개 모두 가려냈어요!</b> 이제 아래에서 회로를 조립해 봅시다.':'가려낸 것 '+n+' / '+Q.length+' — 손가락으로 따라가 보면서 갈림길이 있는지만 보세요.';
+ }
+ items.forEach((el,i)=>{
+  const fb=el.querySelector('.spfb');
+  if(S.sp[i]){el.classList.add('ok');fb.innerHTML='✅ '+Q[i].ok;}
+  el.querySelectorAll('button[data-ans]').forEach(b=>b.addEventListener('click',()=>{
+   if(b.dataset.ans===Q[i].a){S.sp[i]=1;el.classList.add('ok');el.classList.remove('bad');fb.innerHTML='✅ '+Q[i].ok;A.correct();}
+   else{el.classList.add('bad');fb.innerHTML='❌ '+Q[i].no;A.wrong();}
+   if(Object.keys(S.sp).length>=Q.length&&!S.spDone){S.spDone=1;toast('🛤️ <b>직렬·병렬 가려내기 완료!</b> 이제 회로 조립으로 🧩');}
+   save();updateProgress();paintAll();
+  }));
+ });
+ paintAll();
+})();
+
 /* ── 🧩 회로 조립 — 포인터 드래그(마우스·터치) ── */
 (function(){
  const svg=$('#bdSvg');if(!svg)return;
@@ -2742,7 +2842,7 @@ const OHM={
   return {sid:S.stu&&S.stu.sid,name:S.stu&&S.stu.name,tab:S.tab,progress:done,total:c.length,
    pct:Math.round(done/c.length*100),seen:S.seen,think:S.think,poe:S.poe,rows:S.rows,concl:S.concl,
    cloze:Object.keys(S.cloze||{}).length,clozeTotal:CLOZE_TOTAL,mini:S.mini,sortDone:Object.keys(S.sortDone||{}).length,
-   essay:S.essay,eq:S.eq||{},best:S.best,medals:S.medals,msn:S.msn,wwLen:!!S.wwLen,wwThk:!!S.wwThk,build:!!S.build,
+   essay:S.essay,eq:S.eq||{},best:S.best,medals:S.medals,msn:S.msn,wwLen:!!S.wwLen,wwThk:!!S.wwThk,build:!!S.build,spDone:!!S.spDone,sp:S.sp||{},
    checks:c.map(x=>x.ok?1:0),savedAt:new Date().toISOString()};
  },
  touch(){
@@ -2767,7 +2867,7 @@ const OHM={
  },
  restore(st){
   if(!st)return;
-  ['seen','think','poe','rows','concl','mini','essay','eq','best','medals','msn','build'].forEach(k=>{if(st[k]!==undefined&&st[k]!==null)S[k]=st[k];});
+  ['seen','think','poe','rows','concl','mini','essay','eq','best','medals','msn','build','spDone','sp'].forEach(k=>{if(st[k]!==undefined&&st[k]!==null)S[k]=st[k];});
   if(st.wwLen)S.wwLen=1;if(st.wwThk)S.wwThk=1;
   save();location.reload();
  },
