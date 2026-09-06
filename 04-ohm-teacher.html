@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>학생 기록 보기 · 같은 전지인데 왜 밝기가 다를까 (교사용)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&family=Nanum+Gothic+Coding:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f3ede3;--paper-hi:#fbf7ee;--ink:#2a2119;--ink-dim:#4a3a26;--ink-mute:#7a6a54;--line:#d9cdb4;--brass:#c9a15a;--brass-dk:#8a5a12;
+ --accent:#a05c2c;--ok:#2c7a44;--danger:#b23a30;--jua:'Jua',sans-serif;--body:'Gowun Dodum','Pretendard',sans-serif;--mono:'Nanum Gothic Coding',monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.6}
+header{background:linear-gradient(180deg,#3b2f1e,#2a2119);color:#fff;padding:16px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header h1{font-family:var(--jua);font-size:22px;margin:0;font-weight:400}
+header .sub{font-size:13px;opacity:.75}
+header a{color:#ffd37a;font-size:13.5px;margin-left:auto}
+main{max-width:1180px;margin:0 auto;padding:18px 18px 60px}
+.card{background:var(--paper-hi);border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;margin-top:16px;box-shadow:0 8px 24px -18px rgba(0,0,0,.3)}
+.card h2{font-family:var(--jua);font-size:19px;margin:0 0 8px;font-weight:400;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h2 .r{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input,select{font-family:var(--body);font-size:15px;padding:9px 12px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(160,92,44,.16)}
+.btn{font-family:var(--body);font-size:14px;font-weight:700;padding:9px 14px;border-radius:10px;border:1.5px solid var(--brass-dk);background:linear-gradient(178deg,#ffd37a,#e7a93a 50%,#b9782a);color:#2c1c06;cursor:pointer}
+.btn.ghost{background:#fff;border-color:var(--line);color:var(--ink-dim)}
+.btn.sm{font-size:12.5px;padding:5px 10px}
+.btn.danger{background:#fff;border-color:#d08a7a;color:var(--danger)}
+.btn:disabled{opacity:.5;cursor:default}
+.msg{font-size:14px;color:var(--ink-mute);margin-top:8px;min-height:20px}
+.msg.err{color:var(--danger);font-weight:700}
+.msg.ok{color:var(--ok);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+th,td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{font-size:12.5px;color:var(--ink-mute);font-weight:700;background:#efe6d3}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+.code{font-family:var(--mono);font-weight:700;font-size:16px;letter-spacing:.06em}
+.bar{height:9px;background:#e6dcc6;border-radius:99px;overflow:hidden;min-width:90px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#e7a93a,#a05c2c);border-radius:99px}
+.tag{display:inline-block;font-size:11.5px;font-weight:800;border-radius:99px;padding:2px 8px;background:#fff1cf;border:1px solid var(--brass-dk);color:#2c1c06}
+.tag.off{background:#eee;border-color:#bbb;color:#666}
+.tag.done{background:#e6f3e8;border-color:#7fae8a;color:#2c7a44}
+.tbl-wrap{overflow-x:auto}
+.empty{color:var(--ink-mute);padding:14px 4px;font-size:14px}
+.detail{position:fixed;inset:0;z-index:100;background:rgba(30,22,10,.55);display:none;align-items:flex-start;justify-content:center;padding:24px 14px;overflow:auto}
+.detail.show{display:flex}
+.detail .box{width:min(860px,100%);background:var(--paper-hi);border:2px solid var(--brass-dk);border-radius:18px;padding:20px 22px;box-shadow:0 24px 60px -20px rgba(0,0,0,.55)}
+.detail h3{font-family:var(--jua);font-weight:400;font-size:21px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.detail h3 .x{margin-left:auto}
+.q{margin-top:12px;padding:11px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff}
+.q .qt{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:4px}
+.q .qa{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.65}
+.q .qa.none{color:#aaa;font-style:italic}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.chk{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:13px;margin-top:6px}
+.chk span{color:var(--ink-mute)}.chk span.on{color:var(--ok);font-weight:700}
+.note{font-size:13.5px;color:var(--ink-mute);line-height:1.6;margin-top:8px}
+.note b{color:var(--ink-dim)}
+#app-credit{margin-top:40px;text-align:center;font-size:12.5px;color:var(--ink-mute)}
+</style>
+</head>
+<body>
+<header>
+ <div><h1>📊 학생 기록 보기 — 같은 전지인데 왜 밝기가 다를까</h1><div class="sub">옴의 법칙 · 혼자 탐구 모드 기록 (교사용) · 표를 직접 읽는 길은 없고 관리 코드로만 열립니다</div></div>
+ <a href="04-ohm.html">← 수업 페이지로</a>
+</header>
+<main>
+ <div class="card">
+ <h2>🔑 관리 코드</h2>
+ <div class="row">
+ <input id="adm" placeholder="관리 코드 10자리 (SQL 실행 결과창에 나온 코드)" maxlength="12" style="min-width:320px;text-transform:uppercase;letter-spacing:.08em" data-ime="off" autocomplete="off">
+ <button class="btn" id="admGo">불러오기</button>
+ <label style="font-size:13px;color:var(--ink-mute)"><input type="checkbox" id="admKeep" checked style="padding:0;vertical-align:middle"> 이 기기에 기억</label>
+ </div>
+ <div class="msg" id="admMsg">코드를 넣고 불러오기를 누르세요. 표는 서버에서 관리 코드가 맞을 때만 내려옵니다.</div>
+ </div>
+
+ <div class="card" id="codesCard" hidden>
+ <h2>🎟️ 참여 코드 <span class="r"><input id="newLabel" placeholder="이름표 (예: 2-3반)" maxlength="40" style="width:170px"><input id="newDays" type="number" value="120" min="1" max="365" style="width:84px" title="유효 기간(일)"><button class="btn sm" id="newCode">+ 새 코드</button></span></h2>
+ <div class="note">학생은 수업 페이지 오른쪽 위 🎯 버튼 → <b>학번·이름·참여 코드</b>를 넣고 혼자 탐구를 시작합니다. 코드를 끄면 그 코드로는 더 저장되지 않아요(있는 기록은 남습니다). 삭제하면 그 코드의 학생 기록도 함께 지워집니다.</div>
+ <div class="tbl-wrap"><table id="codesTbl"><thead><tr><th>코드</th><th>이름표</th><th>상태</th><th class="num">학생 수</th><th>마지막 저장</th><th>기한</th><th></th></tr></thead><tbody></tbody></table></div>
+ <div class="msg" id="codesMsg"></div>
+ </div>
+
+ <div class="card" id="stuCard" hidden>
+ <h2>🎒 학생 기록 <span class="r"><select id="codeSel"><option value="">모든 코드</option></select><button class="btn ghost sm" id="reload">↻ 새로고침</button><button class="btn sm" id="csv">⬇️ CSV 내려받기</button></span></h2>
+ <div class="tbl-wrap"><table id="stuTbl"><thead><tr><th>코드</th><th>학번</th><th>이름</th><th>진행</th><th class="num">%</th><th>현재 탭</th><th>예상</th><th class="num">기록</th><th class="num">확인문제</th><th>마지막 저장</th><th></th></tr></thead><tbody></tbody></table></div>
+ <div class="empty" id="stuEmpty" hidden>아직 기록이 없어요.</div>
+ <div class="msg" id="stuMsg"></div>
+ </div>
+
+ <div id="app-credit">© 2026 조승재 (과학이조선생) · 해누리중학교 · 최종 업데이트 2026-09-06</div>
+</main>
+
+<div class="detail" id="detail"><div class="box">
+ <h3><span id="dTitle">학생</span><button class="btn ghost sm x" id="dClose">✕ 닫기</button></h3>
+ <div class="chk" id="dChk"></div>
+ <div class="grid2" id="dBody"></div>
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script>
+"use strict";
+const URL_='https://vbvtnmnodeoocbbjauap.supabase.co';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZidnRubW5vZGVvb2NiYmphdWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTQ0OTYsImV4cCI6MjA5NTA3MDQ5Nn0.dvuRrt3qw2Tya_QwGbcXrmGPdfDgI4xmgyH8UjU73Nc';
+const sb=window.supabase.createClient(URL_,KEY,{auth:{persistSession:false}});
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtT=t=>{if(!t)return '—';const d=new Date(t);return d.toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});};
+const CHECKS=['1 겪어 본 장면','1 내 생각(밝기 줄이기)','2 결과 예상','2 예상 까닭','2 회로 조립','2 두 니크롬선 측정','2 길이·굵기 바꿔 보기','2 나의 결론','3 빈칸','3 개념 확인','3 내 말로 옴의 법칙','4 물질 8개','4 사고력 답','5 확인 문제'];
+const POE={up:'① 더 세진다',same:'② 변화 없다',down:'③ 약해진다'};
+let ADMIN='', CODES=[], STU=[];
+async function rpc(n,a){const r=await sb.rpc(n,a);if(r.error)throw new Error(r.error.message||String(r.error));return r.data;}
+const say=(id,t,c)=>{const m=$(id);m.textContent=t;m.className='msg '+(c||'');};
+
+$('#admGo').addEventListener('click',load);
+$('#adm').addEventListener('keydown',e=>{if(e.key==='Enter')load();});
+$('#reload').addEventListener('click',()=>loadStudents());
+$('#codeSel').addEventListener('change',()=>paintStudents());
+try{const k=localStorage.getItem('ohm_admin');if(k){$('#adm').value=k;}}catch(e){}
+
+async function load(){
+ ADMIN=$('#adm').value.trim().toUpperCase();
+ if(ADMIN.length<6){say('#admMsg','관리 코드를 넣어 주세요','err');return;}
+ $('#admGo').disabled=true;say('#admMsg','확인하는 중…');
+ try{
+  CODES=await rpc('ohm_admin_codes',{p_admin:ADMIN});
+  try{if($('#admKeep').checked)localStorage.setItem('ohm_admin',ADMIN);else localStorage.removeItem('ohm_admin');}catch(e){}
+  say('#admMsg','✅ 관리 코드 확인 — 참여 코드 '+CODES.length+'개','ok');
+  $('#codesCard').hidden=false;$('#stuCard').hidden=false;
+  paintCodes();await loadStudents();
+ }catch(e){
+  const m=String(e.message||e);
+  say('#admMsg',/function|404|not find/i.test(m)?'서버에 아직 표가 없어요 — 옴의법칙_Supabase_SETUP.sql 을 먼저 실행하세요':'❌ '+m,'err');
+ }finally{$('#admGo').disabled=false;}
+}
+function paintCodes(){
+ const tb=$('#codesTbl tbody');tb.innerHTML='';
+ const sel=$('#codeSel');const cur=sel.value;sel.innerHTML='<option value="">모든 코드</option>';
+ CODES.forEach(c=>{
+  const exp=new Date(c.expires_at), expired=exp<new Date();
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td class="code">'+esc(c.code)+'</td><td>'+esc(c.label)+'</td>'
+   +'<td>'+(c.active&&!expired?'<span class="tag">사용 중</span>':'<span class="tag off">'+(expired?'기한 지남':'꺼짐')+'</span>')+'</td>'
+   +'<td class="num">'+c.students+'</td><td>'+fmtT(c.last_seen)+'</td><td>'+exp.toLocaleDateString('ko-KR')+'</td>'
+   +'<td class="row" style="justify-content:flex-end">'
+   +'<button class="btn ghost sm" data-act="toggle" data-code="'+c.code+'">'+(c.active?'끄기':'켜기')+'</button>'
+   +'<button class="btn ghost sm" data-act="extend" data-code="'+c.code+'">+30일</button>'
+   +'<button class="btn danger sm" data-act="del" data-code="'+c.code+'">삭제</button></td>';
+  tb.appendChild(tr);
+  const o=document.createElement('option');o.value=c.code;o.textContent=c.code+' · '+c.label;sel.appendChild(o);
+ });
+ sel.value=cur;
+}
+$('#codesTbl').addEventListener('click',async e=>{
+ const b=e.target.closest('button[data-act]');if(!b)return;
+ const code=b.dataset.code, c=CODES.find(x=>x.code===code);
+ try{
+  if(b.dataset.act==='toggle'){await rpc('ohm_set_code',{p_admin:ADMIN,p_code:code,p_active:!c.active});}
+  else if(b.dataset.act==='extend'){await rpc('ohm_set_code',{p_admin:ADMIN,p_code:code,p_extend_days:30});}
+  else if(b.dataset.act==='del'){if(!confirm('참여 코드 '+code+' 와 그 코드의 학생 기록 '+c.students+'건을 모두 지울까요?\n되돌릴 수 없어요.'))return;await rpc('ohm_delete_code',{p_admin:ADMIN,p_code:code});}
+  CODES=await rpc('ohm_admin_codes',{p_admin:ADMIN});paintCodes();await loadStudents();say('#codesMsg','✅ 반영됐어요','ok');
+ }catch(err){say('#codesMsg','❌ '+(err.message||err),'err');}
+});
+$('#newCode').addEventListener('click',async()=>{
+ try{
+  const r=await rpc('ohm_make_code',{p_admin:ADMIN,p_label:$('#newLabel').value.trim(),p_days:+$('#newDays').value||120});
+  CODES=await rpc('ohm_admin_codes',{p_admin:ADMIN});paintCodes();
+  say('#codesMsg','✅ 새 참여 코드 '+r.code+' — 학생에게 알려 주세요','ok');$('#newLabel').value='';
+ }catch(err){say('#codesMsg','❌ '+(err.message||err),'err');}
+});
+async function loadStudents(){
+ try{STU=await rpc('ohm_admin_students',{p_admin:ADMIN});paintStudents();}
+ catch(err){say('#stuMsg','❌ '+(err.message||err),'err');}
+}
+function rowsOf(s){return Array.isArray(s.rows)?s.rows.length:0;}
+function paintStudents(){
+ const code=$('#codeSel').value;const list=STU.filter(x=>!code||x.code===code);
+ const tb=$('#stuTbl tbody');tb.innerHTML='';
+ $('#stuEmpty').hidden=list.length>0;
+ list.forEach((x,i)=>{
+  const st=x.state||{};const tot=st.total||CHECKS.length;
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td class="code" style="font-size:13px">'+esc(x.code)+'</td><td class="code" style="font-size:14px">'+esc(x.sid)+'</td><td><b>'+esc(x.name)+'</b></td>'
+   +'<td><div class="bar" title="'+x.progress+'/'+tot+'"><i style="width:'+Math.round(x.progress/tot*100)+'%"></i></div></td>'
+   +'<td class="num">'+x.pct+'</td><td>'+esc(x.tab||'—')+'</td><td>'+esc(POE[st.poe]||'—')+'</td><td class="num">'+rowsOf(st)+'</td>'
+   +'<td class="num">'+(st.best!=null?st.best:'—')+'</td><td>'+fmtT(x.updated_at)+'</td>'
+   +'<td class="row" style="justify-content:flex-end"><button class="btn sm" data-view="'+i+'">보기</button><button class="btn danger sm" data-del="'+x.token+'">삭제</button></td>';
+  tr.dataset.i=i;tb.appendChild(tr);
+ });
+ tb._list=list;
+ say('#stuMsg',list.length?'학생 '+list.length+'명 · 보기를 누르면 쓴 글 전체가 보여요':'');
+}
+$('#stuTbl').addEventListener('click',async e=>{
+ const v=e.target.closest('button[data-view]');if(v){openDetail($('#stuTbl tbody')._list[+v.dataset.view]);return;}
+ const d=e.target.closest('button[data-del]');if(d){
+  if(!confirm('이 학생 기록을 지울까요? 되돌릴 수 없어요.'))return;
+  try{await rpc('ohm_delete_student',{p_admin:ADMIN,p_token:d.dataset.del});await loadStudents();CODES=await rpc('ohm_admin_codes',{p_admin:ADMIN});paintCodes();}
+  catch(err){say('#stuMsg','❌ '+(err.message||err),'err');}
+ }
+});
+function q(t,a){return '<div class="q"><div class="qt">'+esc(t)+'</div><div class="qa'+(a?'':' none')+'">'+(a?esc(a):'(아직 안 씀)')+'</div></div>';}
+function openDetail(x){
+ const st=x.state||{}, th=st.think||{}, eq=st.eq||{};
+ $('#dTitle').textContent='🎒 '+x.sid+' '+x.name+' · '+x.code+(x.label?' ('+x.label+')':'')+' · 진행 '+x.pct+'%';
+ const ch=st.checks||[];
+ $('#dChk').innerHTML=CHECKS.map((c,i)=>'<span class="'+(ch[i]?'on':'')+'">'+(ch[i]?'✅':'⬜')+' '+esc(c)+'</span>').join('');
+ const rows=Array.isArray(st.rows)?st.rows:[];
+ const rowsTxt=rows.length?rows.map(r=>r.v+' V · '+({s_t:'짧다·가늘다',s_m:'짧다·보통',s_k:'짧다·굵다',l_t:'길다·가늘다',l_m:'길다·보통',l_k:'길다·굵다'}[r.w]||r.w)).join('\n'):'';
+ const eqTxt=Object.keys(eq).length?Object.keys(eq).map(k=>'['+k+'] '+(typeof eq[k]==='string'?eq[k]:JSON.stringify(eq[k]))).join('\n'):'';
+ $('#dBody').innerHTML=
+  q('1단계 · 전구를 어둡게 하려면 무엇을 바꾸면 될까?',th.open)+
+  q('2단계 · 예상 — '+(POE[st.poe]||'(선택 안 함)')+' / 왜 그렇게 예상했나?',th.why)+
+  q('2단계 · 나의 결론',st.concl)+
+  q('2단계 · 측정 기록 '+rows.length+'건 · 회로 조립 '+(st.build?'완성':'미완'),rowsTxt)+
+  q('3단계 · 내 말로 옴의 법칙',th.law)+
+  q('3단계 · 빈칸 '+(st.cloze||0)+'/'+(st.clozeTotal||'?')+' · 개념 확인 '+(st.mini&&st.mini.law?'완료':'미완')+' · 4단계 물질 가려내기 '+(st.sortDone||0)+'/8','')+
+  q('4단계 · 사고력 문제 답',st.essay)+
+  q('5단계 · 확인 문제 최고 점수 '+(st.best!=null?st.best:'—')+' · 메달 '+JSON.stringify(st.medals||{}),eqTxt?('서술형 답:\n'+eqTxt):'')+
+  q('마지막 저장',fmtT(x.updated_at)+' · 처음 참여 '+fmtT(x.created_at));
+ $('#detail').classList.add('show');
+}
+$('#dClose').addEventListener('click',()=>$('#detail').classList.remove('show'));
+$('#detail').addEventListener('click',e=>{if(e.target===$('#detail'))$('#detail').classList.remove('show');});
+addEventListener('keydown',e=>{if(e.key==='Escape')$('#detail').classList.remove('show');});
+$('#csv').addEventListener('click',()=>{
+ const code=$('#codeSel').value;const list=STU.filter(x=>!code||x.code===code);
+ const H=['코드','이름표','학번','이름','진행(단계)','진행(%)','현재 탭','예상','예상 까닭','1단계 내 생각','나의 결론','내 말로 옴의 법칙','사고력 답','회로 조립','측정 기록 수','빈칸','개념 확인','물질 가려내기','확인문제 최고점','마지막 저장'];
+ const cell=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+ const lines=[H.map(cell).join(',')];
+ list.forEach(x=>{const st=x.state||{},th=st.think||{};
+  lines.push([x.code,x.label,x.sid,x.name,x.progress,x.pct,x.tab,POE[st.poe]||'',th.why,th.open,st.concl,th.law,st.essay,st.build?'완성':'',rowsOf(st),(st.cloze||0)+'/'+(st.clozeTotal||''),st.mini&&st.mini.law?'완료':'',st.sortDone||0,st.best,x.updated_at].map(cell).join(','));});
+ const blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='옴의법칙_학생기록_'+(code||'전체')+'_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+});
+if($('#adm').value)load();
+</script>
+</body>
+</html>
