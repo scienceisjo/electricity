@@ -755,12 +755,12 @@ b.k[style*="color"], .k[style*="color"]{background:none}
    학생 화면 = 키워드만. 글자가 적어야 아이들이 화면을 읽느라 지치지 않고,
    빈 자리에 선생님이 판서하며 설명을 이어 갈 수 있다.
    🧑‍🏫 교사 모드를 켜면 원래의 문장형 설명이 나온다. */
-.say{display:none}
+.say{display:revert}
 body.teacher .say{display:revert}
 
 /* 키워드 줄 — 크고 시원하게, 아래에 판서 여백 */
 .keyline-s{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 20px}
-body.teacher .keyline-s{display:none}
+body:not(.lecture) .keyline-s{display:none}
 .keyline-s .kw{font-family:var(--jua);font-size:clamp(19px,2.6vw,25px);font-weight:800;color:var(--ink);
   background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;
   border-radius:12px;padding:9px 18px;line-height:1.35}
@@ -1378,6 +1378,73 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
 .seg button.on,.seg .on{background:var(--m-ink-deep)!important;color:#fff!important;border-color:var(--m-ink-deep)!important}
 @media print{#toast,.prog-list{display:none}}
 </style>
+
+<style id="solo-kit">
+/* ── 🎯 혼자 탐구 키트 — 미션 잠금·관문·생각 쓰기·제출 (Meta 색) ── */
+#tabNav button.locked{opacity:.45;filter:none}
+#tabNav button.locked .sn{position:relative}
+#tabNav button.locked .sn::after{content:'🔒';position:absolute;right:-8px;top:-9px;font-size:12px}
+#tabNav button.shake{animation:msnshake .4s}
+@keyframes msnshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}55%{transform:translateX(4px)}80%{transform:translateX(-2px)}}
+#tabNav button.justopen{animation:msnopenM 1s}
+@keyframes msnopenM{0%{box-shadow:0 0 0 0 rgba(0,100,224,.6)}100%{box-shadow:0 0 0 16px rgba(0,100,224,0)}}
+.msn-banner{display:flex;flex-wrap:wrap;align-items:center;gap:7px 16px;margin:14px 0 2px;padding:10px 15px;border:1px solid var(--m-hair-soft,#dee3e9);border-radius:16px;background:var(--m-soft,#f1f4f7);font-size:14.5px;color:var(--m-ink,#1c1e21)}
+.msn-banner .mt{font-weight:800;color:var(--m-primary-deep,#0457cb)}
+.msn-banner .mi{display:inline-flex;align-items:center;gap:5px}
+.msn-banner .mi.on{color:var(--m-success,#31a24c);font-weight:700}
+.msn-banner.alldone{background:rgba(49,162,76,.08);border-color:rgba(49,162,76,.55)}
+body:not(.solo) .msn-banner{display:none}
+.sum-guard{margin:14px 0 4px;padding:12px 16px;border-radius:16px;background:#fff8dc;border:1px solid var(--m-warn,#f7b928);font-size:15px;line-height:1.7;color:var(--m-ink,#1c1e21)}
+body:not(.solo) .sum-guard{display:none}
+.think{margin-top:16px;padding:14px 16px;border-radius:16px;border:1px solid var(--m-hair-soft,#dee3e9);background:#fff}
+.think .th{font-weight:700;font-size:17.5px;color:var(--m-ink-deep,#0a1317);display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:-.3px}
+.think .th .req{margin-left:auto;font-size:12px;font-weight:800;color:var(--m-primary-deep,#0457cb);background:#fff;border:1px solid var(--m-primary,#0064e0);border-radius:99px;padding:2px 9px}
+.think .hint{font-size:14px;color:var(--m-steel,#5d6c7b);margin-top:4px;line-height:1.6}
+.think textarea{margin-top:10px;min-height:96px}
+.think .cnt{font-size:12.5px;color:var(--m-steel,#5d6c7b);margin-top:4px;display:flex;gap:10px;align-items:center}
+.think .cnt.ok{color:var(--m-success,#31a24c);font-weight:700}
+.sub-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.sub-st{font-size:13.5px;font-weight:700;color:var(--m-steel,#5d6c7b)}
+.sub-st.ok{color:var(--m-success,#31a24c)}
+.sub-st.edit{color:#c47f00}
+.ime-chip{margin:6px 0 2px;padding:10px 12px;border:1px solid var(--m-warn,#f7b928);border-radius:12px;background:#fff8dc;animation:icIn .18s ease both}
+.ime-chip.sub-chip{margin:10px 0 0;flex:1 1 100%}
+@keyframes icIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+.ime-chip .ic-t{font-size:12.5px;font-weight:700;color:var(--m-ink,#1c1e21);margin-bottom:6px;line-height:1.5}
+.ime-chip .ic-g{font-size:14.5px;font-weight:700;color:var(--m-ink-deep,#0a1317);background:#fff;border-radius:7px;padding:8px 11px;line-height:1.55;word-break:break-all}
+.ime-chip .ic-b{display:flex;gap:6px;margin-top:8px}
+.ime-chip .ic-yes{padding:7px 13px;border-radius:100px;border:none;background:var(--m-ink-deep,#0a1317);color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+.ime-chip .ic-no{padding:7px 13px;border-radius:100px;border:1px solid var(--m-hair,#ced0d4);background:#fff;color:var(--m-ink,#1c1e21);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+#modeBtn.solo{background:var(--m-primary,#0064e0);border-color:var(--m-primary,#0064e0);color:#fff}
+.stu-badge{display:none;align-items:center;gap:6px;font-size:12.5px;font-weight:800;color:var(--m-ink,#1c1e21);background:var(--m-soft,#f1f4f7);border:1px solid var(--m-hair,#ced0d4);border-radius:100px;padding:4px 10px;white-space:nowrap}
+body.solo .stu-badge{display:inline-flex}
+.hb-wrap:has(#dashLink){display:none}
+body.teacher .hb-wrap:has(#dashLink){display:flex}
+#dashLink{display:none}
+body.teacher #dashLink{display:inline-flex}
+.gate{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(10,19,23,.55);backdrop-filter:blur(3px)}
+.gate.show{display:flex}
+.gate .gbox{width:min(460px,100%);background:#fff;border:1px solid var(--m-hair-soft,#dee3e9);border-radius:24px;padding:22px 22px 18px;box-shadow:rgba(20,22,26,.3) 0 1px 4px 0}
+.gate h3{font-size:22px;font-weight:700;margin:0 0 4px;letter-spacing:-.4px}
+.gate .gsub{font-size:14px;color:var(--m-steel,#5d6c7b);line-height:1.6;margin-bottom:12px}
+.gate label{display:block;font-size:13.5px;font-weight:800;color:var(--m-ink,#1c1e21);margin-top:10px}
+.gate input{width:100%;box-sizing:border-box;margin-top:5px;font-family:inherit;font-size:17px;padding:11px 13px;border-radius:8px;border:1px solid var(--m-hair,#ced0d4);background:#fff;color:var(--m-ink,#1c1e21);height:44px}
+.gate input:focus{outline:none;border:2px solid #1876f2}
+.gate .gmsg{min-height:22px;font-size:14px;margin-top:10px;line-height:1.55;color:var(--m-ink,#1c1e21)}
+.gate .gmsg.err{color:var(--m-crit,#e41e3f);font-weight:700}
+.gate .gmsg.ok{color:var(--m-success,#31a24c);font-weight:700}
+.gate .gbtns{display:flex;gap:8px;margin-top:12px}
+.gate .gbtns .btn{flex:1}
+.gate .gnote{font-size:12.5px;color:var(--m-steel,#5d6c7b);margin-top:12px;line-height:1.55;border-top:1px dashed var(--m-hair-soft,#dee3e9);padding-top:10px}
+#gGo{background:var(--m-primary,#0064e0);border-color:var(--m-primary,#0064e0);color:#fff}
+.moved-note{margin-top:14px;padding:12px 15px;border-radius:16px;background:var(--m-soft,#f1f4f7);border:1px dashed var(--m-hair,#ced0d4);font-size:14px;color:var(--m-ink,#1c1e21);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+</style>
+<style id="circ-fig-css">
+.circ-fig{margin-top:14px;padding:12px 14px 10px;border-radius:16px;background:#fff;border:1px solid #dee3e9}
+.circ-fig svg{display:block;width:100%;height:auto;max-width:620px;margin:4px auto 0}
+.circ-h{font-weight:700;font-size:16.5px;color:#0a1317;display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:-.3px}
+.circ-cap{font-size:13.5px;color:#1c1e21;line-height:1.65;margin-top:8px;border-top:1px dashed #dee3e9;padding-top:8px}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1419,6 +1486,7 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="cover-cta">
  <button class="btn primary xl" id="coverGo">회로 이으러 가기 💡</button>
  <span class="cover-hint">진행 상황은 이 기기에 자동 저장돼요 · 왼쪽 위 제목을 누르면 이 화면으로 돌아옵니다</span>
+ <span class="cover-hint" id="coverModeHint">🎯 <b>혼자 탐구</b>로 하려면 오른쪽 위 🎯 버튼을 눌러 <b>학번·이름·참여 코드</b>를 넣어요 — 미션을 하나씩 깨며 나아가고, 쓴 글은 선생님에게 전해집니다.</span>
  </div>
  </div>
 </div>
@@ -1433,6 +1501,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="head-right">
  <a class="hbtn" href="index.html" title="단원 허브로">⚡</a>
  <button class="hbtn" id="tmodeBtn" title="교사 모드 — 문장 설명과 교실 노트 보기">🧑‍🏫</button>
+ <button class="hbtn" id="modeBtn" title="수업 방식 — 🎯 혼자 탐구(학번·코드 필요) / 🧑‍🏫 강의식">🎯</button>
+ <span class="stu-badge" id="stuBadge"></span>
+ <a class="hbtn" id="dashLink" href="04-ohm-teacher.html" target="_blank" rel="noopener" title="학생 기록 보기 (교사 페이지 · 관리 코드 필요)">📊</a>
  <div class="progress-mini" id="progWrap" title="진행도 — 누르면 남은 활동이 보여요">
  <svg class="pgauge" viewBox="0 0 96 56" aria-hidden="true">
  <path d="M10 50 A38 38 0 0 1 86 50" fill="#f6eedb" stroke="#7d541e" stroke-width="2.5"/>
@@ -1598,9 +1669,11 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <li>같은 전구 두 개를 <b class="k">병렬</b>로 바꿔 연결하고 밝기를 관찰한다.</li>
  <li>각 회로에서 전구 <b class="k">한 개의 연결을 끊고</b>, 나머지 전구에 어떤 변화가 나타나는지 관찰한다.</li>
  </ol>
- <figure class="fig" data-fig="lab"
- data-alt="전원 장치와 전구 두 개, 스위치를 집게 달린 전선으로 연결해 놓은 실험 장면"
- data-cap="준비물: 전구 2개, 전원 장치, 집게 달린 전선, 스위치, 면장갑 "></figure>
+<div class="circ-fig">
+ <div class="circ-h">📐 실험 회로 두 가지</div>
+<svg viewBox="0 0 560 280" role="img" aria-label="왼쪽은 전구 두 개를 한 줄로 이은 직렬, 오른쪽은 두 갈래로 나누어 이은 병렬입니다. 두 회로에서 전구 하나를 빼 보고 남은 전구가 어떻게 되는지 견줍니다."><text x="150" y="26" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#0a1317">🔗 직렬 — 한 줄로</text><path d="M120 100 H140 V60 H250 V150 H200 M156 150 H140 V126" fill="none" stroke="#0a1317" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="30" y="80" width="90" height="60" rx="10" fill="#f1f4f7" stroke="#0a1317" stroke-width="2.5"/><circle cx="60" cy="120" r="11" fill="#fff" stroke="#0a1317" stroke-width="2.5"/><line x1="60" y1="120" x2="66" y2="112" stroke="#0a1317" stroke-width="2.5"/><circle cx="104" cy="102" r="6" fill="#b23a30"/><circle cx="104" cy="118" r="6" fill="#2e5f8f"/><text x="94" y="107" text-anchor="end" font-family="Pretendard, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#b23a30">+</text><text x="94" y="123" text-anchor="end" font-family="Pretendard, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#2e5f8f">−</text><text x="75.0" y="158" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="12.5" font-weight="700" fill="#0a1317">전원 장치</text><circle cx="175" cy="60" r="25" fill="rgba(247,185,40,.28)"/><circle cx="175" cy="60" r="16" fill="#fff7dc" stroke="#0a1317" stroke-width="2.2"/><path d="M168 62 q3 -9 7 0 q3 9 7 0" fill="none" stroke="#e0932e" stroke-width="2"/><rect x="167" y="75" width="16" height="9" fill="#ced0d4" stroke="#0a1317" stroke-width="1.5"/><circle cx="225" cy="60" r="25" fill="rgba(247,185,40,.28)"/><circle cx="225" cy="60" r="16" fill="#fff7dc" stroke="#0a1317" stroke-width="2.2"/><path d="M218 62 q3 -9 7 0 q3 9 7 0" fill="none" stroke="#e0932e" stroke-width="2"/><rect x="217" y="75" width="16" height="9" fill="#ced0d4" stroke="#0a1317" stroke-width="1.5"/><circle cx="156" cy="150" r="5" fill="#0a1317"/><circle cx="200" cy="150" r="5" fill="#0a1317"/><g transform="rotate(0 156 150)"><line x1="156" y1="150" x2="196" y2="150" stroke="#0a1317" stroke-width="4" stroke-linecap="round"/></g><rect x="144" y="158" width="68" height="10" rx="3" fill="#f1f4f7" stroke="#ced0d4" stroke-width="1.5"/><text x="178" y="184" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="11.5" fill="#5d6c7b">스위치(닫힘)</text><text x="150" y="200" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="12" fill="#5d6c7b">전구 두 개가 한 길 위에</text><text x="410" y="26" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#0a1317">🔀 병렬 — 나란히</text><path d="M390 100 H410 V60 H520 V150 H460 M416 150 H410 V126 M465 60 V150" fill="none" stroke="#0a1317" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="465" cy="60" r="4.5" fill="#0a1317"/><circle cx="465" cy="150" r="4.5" fill="#0a1317"/><rect x="300" y="80" width="90" height="60" rx="10" fill="#f1f4f7" stroke="#0a1317" stroke-width="2.5"/><circle cx="330" cy="120" r="11" fill="#fff" stroke="#0a1317" stroke-width="2.5"/><line x1="330" y1="120" x2="336" y2="112" stroke="#0a1317" stroke-width="2.5"/><circle cx="374" cy="102" r="6" fill="#b23a30"/><circle cx="374" cy="118" r="6" fill="#2e5f8f"/><text x="364" y="107" text-anchor="end" font-family="Pretendard, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#b23a30">+</text><text x="364" y="123" text-anchor="end" font-family="Pretendard, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#2e5f8f">−</text><text x="345.0" y="158" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="12.5" font-weight="700" fill="#0a1317">전원 장치</text><circle cx="465" cy="105" r="25" fill="rgba(247,185,40,.28)"/><circle cx="465" cy="105" r="16" fill="#fff7dc" stroke="#0a1317" stroke-width="2.2"/><path d="M458 107 q3 -9 7 0 q3 9 7 0" fill="none" stroke="#e0932e" stroke-width="2"/><rect x="457" y="120" width="16" height="9" fill="#ced0d4" stroke="#0a1317" stroke-width="1.5"/><circle cx="520" cy="105" r="25" fill="rgba(247,185,40,.28)"/><circle cx="520" cy="105" r="16" fill="#fff7dc" stroke="#0a1317" stroke-width="2.2"/><path d="M513 107 q3 -9 7 0 q3 9 7 0" fill="none" stroke="#e0932e" stroke-width="2"/><rect x="512" y="120" width="16" height="9" fill="#ced0d4" stroke="#0a1317" stroke-width="1.5"/><circle cx="416" cy="150" r="5" fill="#0a1317"/><circle cx="460" cy="150" r="5" fill="#0a1317"/><g transform="rotate(0 416 150)"><line x1="416" y1="150" x2="456" y2="150" stroke="#0a1317" stroke-width="4" stroke-linecap="round"/></g><rect x="404" y="158" width="68" height="10" rx="3" fill="#f1f4f7" stroke="#ced0d4" stroke-width="1.5"/><text x="438" y="184" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="11.5" fill="#5d6c7b">스위치(닫힘)</text><text x="410" y="200" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="12" fill="#5d6c7b">길이 두 갈래로 갈라짐</text><text x="280" y="262" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="12.5" font-weight="700" fill="#0a1317">준비물 — 전구 2개, 전원 장치, 스위치, 집게 달린 전선, 면장갑</text></svg>
+ <div class="circ-cap">왼쪽은 전구 두 개를 한 줄로 이은 직렬, 오른쪽은 두 갈래로 나누어 이은 병렬입니다. 두 회로에서 전구 하나를 빼 보고 남은 전구가 어떻게 되는지 견줍니다.</div>
+ </div>
  <div class="note class"><span class="ic">💬</span><div><b>탐구 지도 유의점(교과서)</b> — ① 감전 위험 — 젖은 손·젖은 물건을 회로에 접촉하지 않게 합니다. ② 전구의 <b>정격 전압</b>을 확인하고 너무 높은 전압을 걸지 않게 하세요(전구 고장). ③ 밝기 '비교'가 목적이므로 <b>전구 한 개짜리 회로를 먼저 사진으로</b> 찍어 두게 하면 좋습니다. ④ 전지는 내부 저항 때문에 오류가 생기므로 <b>직류 전원 장치</b>를 사용합니다. ⑤ 관찰 후에는 스위치를 바로 열어 두게 하세요.</div></div>
  </div>
 
@@ -1713,8 +1786,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="rb-h">🔎 표를 보니 어떤 규칙이 보이나요?</div>
  <p class="help say" style="margin-top:6px">전구 하나를 뺐을 때 <b>나머지 전구가 어떻게 되는지</b>를 직렬과 병렬로 나누어, 내 문장으로 적어 보세요.</p>
  <div class="keyline-s"><span class="kw">하나 뺐을 때 나머지는?</span><span class="arw">→</span><span class="kw">직렬·병렬 나눠 쓰기</span><span class="memo"></span></div>
- <textarea id="ruleTxt" placeholder="예) 직렬에서는 전구 하나를 빼면 ○○○. 왜냐하면 전류가 지나갈 길이 ○○이기 때문이다. 병렬에서는 …"></textarea>
+ <textarea data-ime="submit" id="ruleTxt" placeholder="예) 직렬에서는 전구 하나를 빼면 ○○○. 왜냐하면 전류가 지나갈 길이 ○○이기 때문이다. 병렬에서는 …"></textarea>
  <span class="savemark" id="ruleSaved">✔ 저장됨</span>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="rule">📮 제출하기</button><span class="sub-st" data-substatus="rule"></span></div>
  <div class="btn-row"><button class="btn ghost sm" id="ruleBtn">모범 답안 확인하기</button></div>
  <div class="explain" id="ruleAns">
  <div class="why">✍️ 이렇게 정리할 수 있어요</div>
@@ -1979,62 +2053,16 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  🔗 <b>직렬</b> — 차례대로 다 지나야 한다 → 길이가 길어진 효과 → <b class="t1">전체 저항이 커진다</b> → 전체 전류는 작아진다<br>
  🔀 <b>병렬</b> — 지나갈 통로가 늘어난다 → 굵어진 효과 → <b class="t1">전체 저항이 작아진다</b> → 전체 전류는 커진다</p>
  </div>
- <details class="wfold"><summary>계산식은 왜 그렇게 되는지 보기 (고등학교 내용 · 시험 X)</summary>
- <div class="fold-in">
- <b>직렬</b> — 길이 하나라 전류가 같고, 전압은 나뉘어 걸립니다.
- <div class="eqline">I = I₁ = I₂ ,  V = V₁ + V₂</div>
- 각 저항에서 V₁ = I R₁, V₂ = I R₂ 이므로 I R전체 = I R₁ + I R₂ →
- <div class="eqline">R전체 = R₁ + R₂</div>
- <b>병렬</b> — 각 갈래에 같은 전압이 걸리고, 갈래 전류를 합하면 전체 전류입니다.
- <div class="eqline">V = V₁ = V₂ ,  I = I₁ + I₂</div>
- 각 갈래에서 I₁ = V/R₁, I₂ = V/R₂ 이므로 V/R전체 = V/R₁ + V/R₂ →
- <div class="eqline">1/R전체 = 1/R₁ + 1/R₂</div>
- 역수를 쓰는 이유는 규칙을 외운 것이 아니라, <b>더해지는 것이 저항이 아니라 '갈래를 흐르는 전류'</b>이기 때문입니다.
- <span class="tip" style="display:block;margin-top:10px;font-size:13.5px;color:var(--ink-mute)">※ 중학교 2학년에서는 여기까지 계산하지 않습니다. 커진다·작아진다까지만 알면 충분해요.</span>
- </div>
- </details>
+ 
+ <div class="moved-note">📦 <b>「계산식은 왜 그렇게 되는지 보기」</b>은 교과서 밖 내용이라 <button type="button" class="btn ghost sm" onclick="showTab('beyond')">⚡ 더 알아보기</button>로 옮겼어요.</div>
+
  </div>
  </div>
 </div>
 
- <div class="card" style="margin-top:20px" id="numCard">
- <div class="badge" style="margin-bottom:8px">🔢 숫자로 한 번만 따라가 보기 — 30 V 전지에 5 Ω과 10 Ω</div>
- <div><span class="pill" style="background:#efe6f5;border-color:#7d5ba6;color:#4c3470;font-weight:700">🚀 계산은 성취기준 밖 — 값을 외우지 말고 흐름만 따라가요</span></div>
- <p class="lead say" style="font-size:17px;margin-top:10px">위에서는 <b>같은 저항끼리</b> 이었습니다. 이번엔 <b class="k">다른 저항 둘</b>을 이어 봅니다.
- 직렬에서 무엇이 같고 무엇이 나뉘는지, 병렬에서는 어떤지가 또렷해져요. 전지는 30 V, 저항은 5 Ω과 10 Ω입니다.</p>
- <div class="keyline-s"><span class="kw">직렬 — 전류 같고 전압 나뉨</span><span class="kw">병렬 — 전압 같고 전류 나뉨</span><span class="memo"></span></div>
- <div class="grid c2" style="margin-top:14px">
- <div class="forcecard num-col">
- <div class="fc-t">🔗 직렬 — 한 줄로</div>
-<svg viewBox="0 0 300 170" role="img" aria-label="30 V 전지에 5 Ω과 10 Ω 저항을 한 줄로 이은 직렬 회로. 전류 2 A가 회로 전체에 같고, 5 Ω에 10 V, 10 Ω에 20 V가 걸린다."><path d="M40 79 V30 H270 V140 H40 V91" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="27" y1="79" x2="53" y2="79" stroke="#3b2f1e" stroke-width="2.4"/><line x1="33" y1="91" x2="47" y2="91" stroke="#3b2f1e" stroke-width="5"/><text x="24" y="81" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="24" y="97" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><text x="48" y="89" font-family="Nanum Gothic Coding, monospace" font-size="13" font-weight="800" fill="#7d5ba6">30 V</text><rect x="94" y="20" width="52" height="20" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="120" y="14" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">5 Ω</text><rect x="189" y="20" width="52" height="20" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="215" y="14" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">10 Ω</text><polygon points="40,45 34,57 46,57" fill="#a05c2c"/><text x="52" y="58" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">2 A</text><polygon points="270,97 264,85 276,85" fill="#a05c2c"/><text x="258" y="94" text-anchor="end" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">2 A</text><polygon points="148,140 160,134 160,146" fill="#a05c2c"/><text x="155" y="158" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#a05c2c">2 A — 어디서나 같다</text><path d="M96 52 H144" stroke="#7d5ba6" stroke-width="1.6" fill="none"/><path d="M191 52 H239" stroke="#7d5ba6" stroke-width="1.6" fill="none"/><text x="120" y="68" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#7d5ba6">10 V</text><text x="215" y="68" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#7d5ba6">20 V</text><text x="168" y="100" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#7d5ba6">10 V + 20 V = 30 V</text></svg>
- <ol class="num-steps">
- <li><b>외길이니 전류는 하나.</b> 전하는 5 Ω도 지나고 10 Ω도 지나야 해요. 회로 전체의 방해는 <b class="t1">5 + 10 = 15 Ω</b> — 차례로 다 지나야 하니 길이가 길어진 셈입니다.</li>
- <li><b>전체 전류</b> = 30 V ÷ 15 Ω = <b class="t6">2 A</b>. 갈림길이 없으니 5 Ω에도 2 A, 10 Ω에도 2 A.</li>
- <li><b>각 저항에 걸리는 전압</b> — 5 Ω: 2 A × 5 Ω = <b class="t2">10 V</b>, 10 Ω: 2 A × 10 Ω = <b class="t2">20 V</b>. 둘을 합하면 30 V, 전지 전압 그대로.</li>
- </ol>
- <div class="num-sum">직렬 — <b class="t6">전류는 같고</b>, <b class="t2">전압은 저항이 큰 쪽에 크게</b> 나뉜다.</div>
- </div>
- <div class="forcecard num-col">
- <div class="fc-t">🔀 병렬 — 나란히</div>
-<svg viewBox="0 0 300 170" role="img" aria-label="30 V 전지에 5 Ω과 10 Ω 저항을 나란히 이은 병렬 회로. 두 저항 모두 30 V가 걸리고, 5 Ω에 6 A, 10 Ω에 3 A가 흘러 전체 전류는 9 A다."><path d="M40 79 V30 H250 V140 H40 V91 M160 30 V140" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="27" y1="79" x2="53" y2="79" stroke="#3b2f1e" stroke-width="2.4"/><line x1="33" y1="91" x2="47" y2="91" stroke="#3b2f1e" stroke-width="5"/><text x="24" y="81" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="24" y="97" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><text x="48" y="89" font-family="Nanum Gothic Coding, monospace" font-size="13" font-weight="800" fill="#7d5ba6">30 V</text><rect x="150" y="63" width="20" height="44" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="176" y="89" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">5 Ω</text><rect x="240" y="63" width="20" height="44" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="266" y="89" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">10 Ω</text><circle cx="160" cy="30" r="3.6" fill="#3b2f1e"/><circle cx="160" cy="140" r="3.6" fill="#3b2f1e"/><polygon points="40,45 34,57 46,57" fill="#a05c2c"/><text x="52" y="56" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">9 A</text><polygon points="107,30 95,24 95,36" fill="#a05c2c"/><text x="100" y="22" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="11.5" font-weight="800" fill="#a05c2c">9 A</text><polygon points="160,69 154,57 166,57" fill="#a05c2c"/><text x="138" y="66" text-anchor="end" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">6 A</text><polygon points="250,69 244,57 256,57" fill="#a05c2c"/><text x="272" y="66" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">3 A</text><text x="138" y="110" text-anchor="end" font-family="Nanum Gothic Coding, monospace" font-size="12" font-weight="800" fill="#7d5ba6">30 V</text><text x="272" y="110" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12" font-weight="800" fill="#7d5ba6">30 V</text><polygon points="93,140 105,134 105,146" fill="#a05c2c"/><text x="100" y="158" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#a05c2c">6 A + 3 A = 9 A</text></svg>
- <ol class="num-steps">
- <li><b>두 저항의 양 끝이 같은 두 점에 붙어 있다.</b> 전압은 두 점 사이의 차이라서 어느 길로 재든 같아요 — 5 Ω에도 <b class="t2">30 V</b>, 10 Ω에도 <b class="t2">30 V</b>.</li>
- <li><b>갈래마다 전류</b> — 5 Ω: 30 ÷ 5 = <b class="t6">6 A</b>, 10 Ω: 30 ÷ 10 = <b class="t6">3 A</b>. 같은 전압이니 저항이 작은 쪽에 큰 전류.</li>
- <li><b>갈림길에서 나뉜 전류가 다시 만나</b> 전체 전류 6 + 3 = <b class="t6">9 A</b>. 전하가 사라지거나 생긴 것이 아니라, 나뉘었다가 합쳐진 것뿐이에요.</li>
- <li><b>전지의 눈으로</b> — 30 V로 밀었더니 9 A가 나갔다. 전체 저항 = 30 ÷ 9 ≈ <b class="t1">3.3 Ω</b>. 5 Ω 하나만 있을 때(6 A)보다 작고, <b class="k">가장 작은 저항 5 Ω보다도 작다!</b></li>
- </ol>
- <div class="num-sum">병렬 — <b class="t2">전압은 같고</b>, <b class="t6">전류는 저항이 작은 쪽에 크게</b> 나뉜다.</div>
- </div>
- </div>
- <div class="note" style="margin-top:14px"><span class="ic">🔎</span><div><b>왜 병렬은 가장 작은 저항보다도 작아질까</b> — 「넓은 길이라 편하다」로는 부족합니다.
- 전지가 미는 전압은 30 V <b>그대로</b>인데, 5 Ω 길 하나뿐일 때 6 A가 나가던 회로에 10 Ω 길이 하나 더 생겨 3 A가 <b>더</b> 나갑니다.
- 같은 전압에서 전류가 커졌다는 것은 전지 입장에서 <b class="k">방해가 줄었다</b>는 뜻이고, 그래서 가지를 더할수록 전체 저항은 작아집니다. 어떤 길을 더해도 전류는 늘기만 하니, 전체 저항은 언제나 가장 작은 갈래보다 작아요.</div></div>
- <div class="note myth"><span class="ic">⚠️</span><div><b>「저항이 크면 언제나 더 많은 에너지를 쓴다」고 외우면 안 됩니다.</b><br>
- 직렬에서는 같은 전류가 흐르니 큰 저항(10 Ω)에 큰 전압(20 V)이 걸려 그쪽이 더 일하지만,
- 병렬에서는 같은 전압이 걸리니 작은 저항(5 Ω)에 큰 전류(6 A)가 흘러 그쪽이 더 일합니다. <b class="k">어떻게 이었는지를 먼저 봐야 해요.</b></div></div>
- <div class="note class"><span class="ic">💬</span><div><b>지도 범위</b> — 교과서(2022 개정 중2)는 합성 저항 계산을 다루지 않습니다. 이 카드는 「직렬은 전류가 같고 전압이 나뉜다 / 병렬은 전압이 같고 전류가 나뉜다」를 숫자로 한 번 느껴 보게 하는 용도이고, 15 Ω·3.3 Ω 같은 값을 외우게 하거나 평가하지 않습니다.
- 학생이 「병렬인데 왜 전압이 같아요?」라고 물으면 ①번 문장으로 — <b>도선으로 이어진 곳은 같은 점</b>이고, 두 저항의 왼쪽 끝은 모두 전지 (+)에, 오른쪽 끝은 모두 (−)에 붙어 있어 <b>같은 두 점 사이</b>에 걸려 있다고 답합니다.</div></div>
- </div>
+ 
+ <div class="moved-note">📦 <b>「🔢 숫자로 한 번만 따라가 보기 — 30 V 전지에 5 Ω과 10 Ω」</b>은 교과서 밖 내용이라 <button type="button" class="btn ghost sm" onclick="showTab('beyond')">⚡ 더 알아보기</button>로 옮겼어요.</div>
+
 
  <div class="card" style="margin-top:20px">
  <div class="badge" style="margin-bottom:6px">🧾 내가 채우는 비교표</div>
@@ -2276,6 +2304,16 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  </a>
  </div>
 
+ <div class="card" style="margin-top:18px">
+ <h3 class="card-t">✍️ 내 말로 정리</h3>
+ <div class="think" data-stage="3">
+ <div class="th">✍️ 내 말로 정리 — 직렬과 병렬, 무엇이 같고 무엇이 나뉘나<span class="req">10자 이상</span></div>
+ <div class="hint">「전류」「전압」「전체 저항」 세 낱말을 넣어 직렬과 병렬을 한 문장씩.</div>
+ <textarea data-think="summary" data-ime="submit" rows="3" placeholder="예) 직렬은 전류가 … 전압은 … / 병렬은 …"></textarea>
+ <div class="cnt"><span class="n">0자</span><span class="savemark">✔ 저장됨</span></div>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="think">📮 제출하기</button><span class="sub-st" data-substatus="think"></span></div>
+ </div>
+ </div>
  <div class="miniquiz" data-quiz="compare"></div>
  <div class="cta-row"><button class="btn primary" data-go="apply">4단계 · 생활 속에서 찾아보기 →</button></div>
 </section>
@@ -2355,8 +2393,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  이 조명은 일부를 잘라 내도 <b class="k">나머지 엘이디의 밝기가 변하지 않아요.</b>
  그 까닭을 엘이디의 연결 방법과 관련지어 설명해 보세요.</p>
  <div class="keyline-s"><span class="kw">LED 띠 조명 — 잘라 써도 밝기 그대로</span><span class="arw">→</span><span class="kw q">연결 방법으로 설명</span><span class="memo"></span></div>
- <textarea id="essay" placeholder="힌트: 엘이디들이 직렬로 이어져 있다면 자르는 순간 어떻게 될까요? 잘라도 밝기가 그대로이려면, 각 엘이디에 걸리는 전압이 어때야 할까요?"></textarea>
+ <textarea data-ime="submit" id="essay" placeholder="힌트: 엘이디들이 직렬로 이어져 있다면 자르는 순간 어떻게 될까요? 잘라도 밝기가 그대로이려면, 각 엘이디에 걸리는 전압이 어때야 할까요?"></textarea>
  <span class="savemark" id="essaySaved">✔ 저장됨</span>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="essay">📮 제출하기</button><span class="sub-st" data-substatus="essay"></span></div>
  <div class="btn-row"><button class="btn ghost sm" id="ansBtn">모범 답안 확인하기</button></div>
  <div class="explain" id="modelAns" style="margin-top:12px">
  <div class="why">✍️ 모범 답안</div>
@@ -2454,6 +2493,62 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="stepline opt"><span class="sbadge">선택</span><span class="swhat">더 알아보기 · 시험에 나오지 않습니다</span></div>
  <h2 class="sec">옛날 트리 전구는 왜 한꺼번에 꺼졌을까</h2>
  <p class="lead">여기서부터는 <b class="k">교과서 밖 이야기</b>입니다. 시험에 나오지 않아요. 외우지 말고 그냥 읽어 보세요.</p>
+ <div class="card" style="margin-top:18px"><div class="badge" style="margin-bottom:10px">📦 본문에서 옮겨 온 것 · 시험 X</div>
+<details class="wfold"><summary>계산식은 왜 그렇게 되는지 보기 (고등학교 내용 · 시험 X)</summary>
+ <div class="fold-in">
+ <b>직렬</b> — 길이 하나라 전류가 같고, 전압은 나뉘어 걸립니다.
+ <div class="eqline">I = I₁ = I₂ ,  V = V₁ + V₂</div>
+ 각 저항에서 V₁ = I R₁, V₂ = I R₂ 이므로 I R전체 = I R₁ + I R₂ →
+ <div class="eqline">R전체 = R₁ + R₂</div>
+ <b>병렬</b> — 각 갈래에 같은 전압이 걸리고, 갈래 전류를 합하면 전체 전류입니다.
+ <div class="eqline">V = V₁ = V₂ ,  I = I₁ + I₂</div>
+ 각 갈래에서 I₁ = V/R₁, I₂ = V/R₂ 이므로 V/R전체 = V/R₁ + V/R₂ →
+ <div class="eqline">1/R전체 = 1/R₁ + 1/R₂</div>
+ 역수를 쓰는 이유는 규칙을 외운 것이 아니라, <b>더해지는 것이 저항이 아니라 '갈래를 흐르는 전류'</b>이기 때문입니다.
+ <span class="tip" style="display:block;margin-top:10px;font-size:13.5px;color:var(--ink-mute)">※ 중학교 2학년에서는 여기까지 계산하지 않습니다. 커진다·작아진다까지만 알면 충분해요.</span>
+ </div>
+ </details>
+ </div>
+
+<div class="card" style="margin-top:20px" id="numCard">
+ <div class="badge" style="margin-bottom:8px">🔢 숫자로 한 번만 따라가 보기 — 30 V 전지에 5 Ω과 10 Ω</div>
+ <div><span class="pill" style="background:#efe6f5;border-color:#7d5ba6;color:#4c3470;font-weight:700">🚀 계산은 성취기준 밖 — 값을 외우지 말고 흐름만 따라가요</span></div>
+ <p class="lead say" style="font-size:17px;margin-top:10px">위에서는 <b>같은 저항끼리</b> 이었습니다. 이번엔 <b class="k">다른 저항 둘</b>을 이어 봅니다.
+ 직렬에서 무엇이 같고 무엇이 나뉘는지, 병렬에서는 어떤지가 또렷해져요. 전지는 30 V, 저항은 5 Ω과 10 Ω입니다.</p>
+ <div class="keyline-s"><span class="kw">직렬 — 전류 같고 전압 나뉨</span><span class="kw">병렬 — 전압 같고 전류 나뉨</span><span class="memo"></span></div>
+ <div class="grid c2" style="margin-top:14px">
+ <div class="forcecard num-col">
+ <div class="fc-t">🔗 직렬 — 한 줄로</div>
+<svg viewBox="0 0 300 170" role="img" aria-label="30 V 전지에 5 Ω과 10 Ω 저항을 한 줄로 이은 직렬 회로. 전류 2 A가 회로 전체에 같고, 5 Ω에 10 V, 10 Ω에 20 V가 걸린다."><path d="M40 79 V30 H270 V140 H40 V91" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="27" y1="79" x2="53" y2="79" stroke="#3b2f1e" stroke-width="2.4"/><line x1="33" y1="91" x2="47" y2="91" stroke="#3b2f1e" stroke-width="5"/><text x="24" y="81" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="24" y="97" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><text x="48" y="89" font-family="Nanum Gothic Coding, monospace" font-size="13" font-weight="800" fill="#7d5ba6">30 V</text><rect x="94" y="20" width="52" height="20" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="120" y="14" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">5 Ω</text><rect x="189" y="20" width="52" height="20" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="215" y="14" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">10 Ω</text><polygon points="40,45 34,57 46,57" fill="#a05c2c"/><text x="52" y="58" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">2 A</text><polygon points="270,97 264,85 276,85" fill="#a05c2c"/><text x="258" y="94" text-anchor="end" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">2 A</text><polygon points="148,140 160,134 160,146" fill="#a05c2c"/><text x="155" y="158" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#a05c2c">2 A — 어디서나 같다</text><path d="M96 52 H144" stroke="#7d5ba6" stroke-width="1.6" fill="none"/><path d="M191 52 H239" stroke="#7d5ba6" stroke-width="1.6" fill="none"/><text x="120" y="68" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#7d5ba6">10 V</text><text x="215" y="68" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#7d5ba6">20 V</text><text x="168" y="100" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#7d5ba6">10 V + 20 V = 30 V</text></svg>
+ <ol class="num-steps">
+ <li><b>외길이니 전류는 하나.</b> 전하는 5 Ω도 지나고 10 Ω도 지나야 해요. 회로 전체의 방해는 <b class="t1">5 + 10 = 15 Ω</b> — 차례로 다 지나야 하니 길이가 길어진 셈입니다.</li>
+ <li><b>전체 전류</b> = 30 V ÷ 15 Ω = <b class="t6">2 A</b>. 갈림길이 없으니 5 Ω에도 2 A, 10 Ω에도 2 A.</li>
+ <li><b>각 저항에 걸리는 전압</b> — 5 Ω: 2 A × 5 Ω = <b class="t2">10 V</b>, 10 Ω: 2 A × 10 Ω = <b class="t2">20 V</b>. 둘을 합하면 30 V, 전지 전압 그대로.</li>
+ </ol>
+ <div class="num-sum">직렬 — <b class="t6">전류는 같고</b>, <b class="t2">전압은 저항이 큰 쪽에 크게</b> 나뉜다.</div>
+ </div>
+ <div class="forcecard num-col">
+ <div class="fc-t">🔀 병렬 — 나란히</div>
+<svg viewBox="0 0 300 170" role="img" aria-label="30 V 전지에 5 Ω과 10 Ω 저항을 나란히 이은 병렬 회로. 두 저항 모두 30 V가 걸리고, 5 Ω에 6 A, 10 Ω에 3 A가 흘러 전체 전류는 9 A다."><path d="M40 79 V30 H250 V140 H40 V91 M160 30 V140" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="27" y1="79" x2="53" y2="79" stroke="#3b2f1e" stroke-width="2.4"/><line x1="33" y1="91" x2="47" y2="91" stroke="#3b2f1e" stroke-width="5"/><text x="24" y="81" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="24" y="97" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><text x="48" y="89" font-family="Nanum Gothic Coding, monospace" font-size="13" font-weight="800" fill="#7d5ba6">30 V</text><rect x="150" y="63" width="20" height="44" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="176" y="89" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">5 Ω</text><rect x="240" y="63" width="20" height="44" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="266" y="89" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">10 Ω</text><circle cx="160" cy="30" r="3.6" fill="#3b2f1e"/><circle cx="160" cy="140" r="3.6" fill="#3b2f1e"/><polygon points="40,45 34,57 46,57" fill="#a05c2c"/><text x="52" y="56" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">9 A</text><polygon points="107,30 95,24 95,36" fill="#a05c2c"/><text x="100" y="22" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="11.5" font-weight="800" fill="#a05c2c">9 A</text><polygon points="160,69 154,57 166,57" fill="#a05c2c"/><text x="138" y="66" text-anchor="end" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">6 A</text><polygon points="250,69 244,57 256,57" fill="#a05c2c"/><text x="272" y="66" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">3 A</text><text x="138" y="110" text-anchor="end" font-family="Nanum Gothic Coding, monospace" font-size="12" font-weight="800" fill="#7d5ba6">30 V</text><text x="272" y="110" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12" font-weight="800" fill="#7d5ba6">30 V</text><polygon points="93,140 105,134 105,146" fill="#a05c2c"/><text x="100" y="158" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#a05c2c">6 A + 3 A = 9 A</text></svg>
+ <ol class="num-steps">
+ <li><b>두 저항의 양 끝이 같은 두 점에 붙어 있다.</b> 전압은 두 점 사이의 차이라서 어느 길로 재든 같아요 — 5 Ω에도 <b class="t2">30 V</b>, 10 Ω에도 <b class="t2">30 V</b>.</li>
+ <li><b>갈래마다 전류</b> — 5 Ω: 30 ÷ 5 = <b class="t6">6 A</b>, 10 Ω: 30 ÷ 10 = <b class="t6">3 A</b>. 같은 전압이니 저항이 작은 쪽에 큰 전류.</li>
+ <li><b>갈림길에서 나뉜 전류가 다시 만나</b> 전체 전류 6 + 3 = <b class="t6">9 A</b>. 전하가 사라지거나 생긴 것이 아니라, 나뉘었다가 합쳐진 것뿐이에요.</li>
+ <li><b>전지의 눈으로</b> — 30 V로 밀었더니 9 A가 나갔다. 전체 저항 = 30 ÷ 9 ≈ <b class="t1">3.3 Ω</b>. 5 Ω 하나만 있을 때(6 A)보다 작고, <b class="k">가장 작은 저항 5 Ω보다도 작다!</b></li>
+ </ol>
+ <div class="num-sum">병렬 — <b class="t2">전압은 같고</b>, <b class="t6">전류는 저항이 작은 쪽에 크게</b> 나뉜다.</div>
+ </div>
+ </div>
+ <div class="note" style="margin-top:14px"><span class="ic">🔎</span><div><b>왜 병렬은 가장 작은 저항보다도 작아질까</b> — 「넓은 길이라 편하다」로는 부족합니다.
+ 전지가 미는 전압은 30 V <b>그대로</b>인데, 5 Ω 길 하나뿐일 때 6 A가 나가던 회로에 10 Ω 길이 하나 더 생겨 3 A가 <b>더</b> 나갑니다.
+ 같은 전압에서 전류가 커졌다는 것은 전지 입장에서 <b class="k">방해가 줄었다</b>는 뜻이고, 그래서 가지를 더할수록 전체 저항은 작아집니다. 어떤 길을 더해도 전류는 늘기만 하니, 전체 저항은 언제나 가장 작은 갈래보다 작아요.</div></div>
+ <div class="note myth"><span class="ic">⚠️</span><div><b>「저항이 크면 언제나 더 많은 에너지를 쓴다」고 외우면 안 됩니다.</b><br>
+ 직렬에서는 같은 전류가 흐르니 큰 저항(10 Ω)에 큰 전압(20 V)이 걸려 그쪽이 더 일하지만,
+ 병렬에서는 같은 전압이 걸리니 작은 저항(5 Ω)에 큰 전류(6 A)가 흘러 그쪽이 더 일합니다. <b class="k">어떻게 이었는지를 먼저 봐야 해요.</b></div></div>
+ <div class="note class"><span class="ic">💬</span><div><b>지도 범위</b> — 교과서(2022 개정 중2)는 합성 저항 계산을 다루지 않습니다. 이 카드는 「직렬은 전류가 같고 전압이 나뉜다 / 병렬은 전압이 같고 전류가 나뉜다」를 숫자로 한 번 느껴 보게 하는 용도이고, 15 Ω·3.3 Ω 같은 값을 외우게 하거나 평가하지 않습니다.
+ 학생이 「병렬인데 왜 전압이 같아요?」라고 물으면 ①번 문장으로 — <b>도선으로 이어진 곳은 같은 점</b>이고, 두 저항의 왼쪽 끝은 모두 전지 (+)에, 오른쪽 끝은 모두 (−)에 붙어 있어 <b>같은 두 점 사이</b>에 걸려 있다고 답합니다.</div></div>
+ </div>
+
  <div class="expc"><h3 class="expc-t">🧪 집에서 찾아보기 — 우리 주변의 직렬</h3><p class="expc-s">가방 속에도 <b>직렬 연결</b>이 들어 있습니다<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">2</span><h4>리모컨 건전지 칸 들여다보기</h4><span class="exp-tag live">교실에서 직접</span></summary><div class="exp-in"><div class="exp-prep">🧰 <b>준비물</b> · TV 리모컨, 손전등, 무선 마우스 — 건전지 2개 이상 쓰는 아무 물건</div><ol><li>건전지 뚜껑을 열고 <b>+ 와 − 표시</b>가 어떻게 그려져 있는지 봅니다.</li><li>건전지 하나를 <b>거꾸로</b> 끼워 보세요. 작동할까요?</li><li>건전지 하나를 <b>빼고</b> 작동시켜 봅니다.</li><li>이 기구는 1.5 V 건전지 2개를 쓰는데, 실제로는 <b>몇 V</b>로 작동하는 걸까요?</li></ol><p class="exp-eye">👀 <b>여기를 보세요</b> — 대부분 <b>+−+−</b> 로 엇갈려 있습니다. 하나만 거꾸로 끼거나 빼도 <b>전혀 작동하지 않아요</b>.</p><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">엇갈려 놓는 건 <b>직렬로 잇기 위해서</b>입니다. 한 전지의 (+)가 다음 전지의 (−)에 닿아야 전압이 더해지거든요.<br>1.5 V 건전지 2개를 직렬로 이으면 <b>3 V</b>가 됩니다. 리모컨은 3 V로 작동하도록 만들어진 거예요.<br>하나를 빼면 길이 끊기고, 거꾸로 끼우면 서로 밀어내는 방향이 되어 <b>0 V</b>가 됩니다. 전기뱀장어가 0.15 V 세포를 수천 개 쌓아 600 V를 만든 것과 완전히 같은 방법이죠.</div></details></div></details></div>
 
 
@@ -2521,13 +2616,29 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
 </section>
 
 </main>
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT">
+ <div class="gbox">
+ <h3 id="gateT">🎯 혼자 탐구 시작하기</h3>
+ <div class="gsub">학번과 이름, 선생님이 알려 준 <b>참여 코드</b>를 넣으면 미션이 열려요. 한 번 넣으면 이 기기에서는 다른 차시도 그대로 이어집니다.</div>
+ <label for="gSid">학번 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(학년·반·번호 — 예: 2학년 3반 15번 → 20315)</span></label>
+ <input id="gSid" inputmode="numeric" maxlength="6" placeholder="20315" data-ime="off" autocomplete="off">
+ <label for="gName">이름</label>
+ <input id="gName" maxlength="12" placeholder="홍길동" autocomplete="off">
+ <label for="gCode">참여 코드</label>
+ <input id="gCode" maxlength="12" placeholder="선생님이 알려 준 코드" data-ime="off" autocomplete="off" style="text-transform:uppercase;letter-spacing:.08em">
+ <div class="gmsg" id="gMsg"></div>
+ <div class="gbtns"><button class="btn primary" id="gGo">시작 🎯</button><button class="btn ghost" id="gCancel">취소</button></div>
+ <div class="gnote">참여 코드가 없으면 <b>🧑‍🏫 강의식</b>으로도 모든 내용을 볼 수 있어요(기록은 이 기기에만 남습니다).</div>
+ </div>
+</div>
 <div id="toast"></div>
 <footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#ced0d4;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-08-30</span></footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 <script>
 "use strict";
 const FIGS={
- sign:'img/sp-sign.jpg', lab:'img/sp-lab.jpg', multitap:'img/sp-multitap.jpg'
+ sign:'img/sp-sign.jpg', multitap:'img/sp-multitap.jpg'
 };
 const BG_IMAGES={cover:'',open:'',predict:'',compare:'',apply:'',check:'',sum:'',beyond:''};
 const BG_FALLBACK={
@@ -2726,6 +2837,7 @@ const A={ctx:null,
 ['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>A.ensure(),{once:true}));
 
 let S=load()||{tab:'open',visited:{},seen:{},poe1:null,poe2:null,obs:{},lab:{},cmp:{},cloze:{},mini:{},essay:'',best:0,medals:{}};
+S.think=S.think||{};S.stu=S.stu||null;S.msn=S.msn||{};S.sub=S.sub||{};S.subTxt=S.subTxt||{};S.visited=S.visited||{};
 S.visited=S.visited||{};S.seen=S.seen||{};S.obs=S.obs||{};S.lab=S.lab||{};S.cmp=S.cmp||{};
 S.cloze=S.cloze||{};S.mini=S.mini||{};S.medals=S.medals||{};S.essay=S.essay||'';
 S.rec=Array.isArray(S.rec)?S.rec:[];S.rule=S.rule||'';
@@ -2761,25 +2873,80 @@ function progChecks(){
  {label:'5단계 · 확인 문제 완주', ok:S.best>0}
  ];
 }
+
+/* ── 🎯 혼자 탐구: 서술 항목은 제출해야 완료 + 생각 쓰기 칸 항목 (단계 순으로 정렬) ── */
+const SOLO_SUB={'2단계 · 표에서 규칙 찾아 적기':'rule','4단계 · 사고력 문제 답쓰기':'essay'}, SOLO_THINK=[{key:'summary',stage:3,label:'내 말로 정리 — 직렬과 병렬, 무엇이 같고 무엇이 나뉘나'}];
+const thinkLen=k=>((S.think||{})[k]||'').trim().length;
+const _progChecks0=progChecks;
+progChecks=function(){const c=_progChecks0();c.forEach(x=>{const k=SOLO_SUB[x.label];if(k){x.ok=x.ok&&!!(S.sub||{})[k];x.label=x.label+' → 제출';}});SOLO_THINK.forEach(t=>c.push({label:t.stage+'단계 · '+t.label+' → 제출',ok:thinkLen(t.key)>=10&&!!(S.sub||{})[t.key]}));const st=l=>{const d=(String(l).split('단계')[0].match(/\d/g)||[]).map(Number);return d.length?Math.max(...d):0;};return c.map((x,i)=>({x,i,s:st(x.label)})).sort((a,b)=>a.s-b.s||a.i-b.i).map(o=>o.x);};
 function updateProgress(){
  const c=progChecks(), pct=Math.round(c.filter(x=>x.ok).length/c.length*100);
  $('#progBar').style.width=pct+'%';$('#progPct').textContent=pct+'%';
  const _pn=$('#progNeedle'); if(_pn)_pn.style.transform='rotate('+(pct*1.8-90)+'deg)';
  const ul=$('#progItems');
  if(ul)ul.innerHTML=c.map(x=>`<li class="${x.ok?'on':''}"><span class="mk">${x.ok?'✔':'○'}</span>${x.label}</li>`).join('');
- const done={open:Object.keys(S.seen||{}).length>=1,
- predict:!!S.poe1&&!!S.obs.o1&&!!S.poe2&&!!S.obs.o2&&!!(S.lab.sRem&&S.lab.pRem)
- &&recCondsDone()>=REC_CONDS.length&&(S.rule||'').trim().length>=15,
- compare:!!S.wTriedS&&!!S.wTriedP&&Object.keys(S.cmp||{}).length>=CMP_TOTAL&&CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL&&!!S.mini.compare,
- apply:(S.essay||'').trim().length>=15, check:S.best>0, beyond:!!S.visited.beyond};
+ const done={};MSN.forEach(m=>{done[m.tab]=msnDone(m,c);});done.beyond=!!S.visited.beyond;
  $$('#tabNav button').forEach(b=>b.classList.toggle('done',!!done[b.dataset.tab]));
+ checkMsnClear();paintLocks();paintMissions();
 }
 let toastT;
 function toast(msg,kind=''){const el=$('#toast');el.innerHTML=msg;el.className='show '+kind;
  clearTimeout(toastT);toastT=setTimeout(()=>el.className='',2300);}
 
+
+/* ── 🎯 미션 잠금 — 혼자 탐구 모드에서만. 진행 항목의 「N단계」 숫자로 자동 묶는다 ── */
+const MAIN_TABS=TABS.filter(t=>t!=='sum'&&t!=='beyond');
+const stageOf=l=>{const d=(String(l).split('단계')[0].match(/\d/g)||[]).map(Number);return d.length?Math.max(...d):0;};
+const tabName=t=>{const b=$('#tabNav button[data-tab="'+t+'"]');return b?b.textContent.replace(/^\s*\d+\s*/,'').trim():t;};
+const MSN=MAIN_TABS.map((t,k)=>({tab:t,stage:k+1,name:'미션 '+(k+1)+' · '+tabName(t)}));
+const teacherOn=()=>document.body.classList.contains('teacher');
+const soloOn=()=>document.body.classList.contains('solo');
+function msnItems(m,c){c=c||progChecks();return c.filter(x=>stageOf(x.label)===m.stage);}
+function msnDone(m,c){return msnItems(m,c).every(x=>x.ok);}
+function gateOf(id){
+ if(!soloOn()||teacherOn()||id==='beyond')return null;
+ const c=progChecks();
+ if(id==='sum'){const m=MSN.find(x=>!msnDone(x,c));return m?{sum:true,m:m}:null;}
+ const k=MSN.findIndex(x=>x.tab===id);
+ if(k<=0)return null;
+ for(let i=0;i<k;i++)if(!msnDone(MSN[i],c))return {m:MSN[i]};
+ return null;
+}
+function landTab(){const c=progChecks();for(const m of MSN)if(!msnDone(m,c))return m.tab;return 'sum';}
+function paintLocks(){
+ $$('#tabNav button').forEach(b=>{
+ const locked=!!gateOf(b.dataset.tab), was=b.classList.contains('locked');
+ b.classList.toggle('locked',locked);b.setAttribute('aria-disabled',locked?'true':'false');
+ if(was&&!locked){b.classList.remove('justopen');void b.offsetWidth;b.classList.add('justopen');}
+ });
+}
+function paintMissions(){
+ const c=progChecks();
+ MSN.forEach(m=>{
+ let bn=$('#msnb-'+m.tab);
+ if(!bn){const sl=$('#panel-'+m.tab+' .stepline');if(!sl)return;bn=document.createElement('div');bn.className='msn-banner';bn.id='msnb-'+m.tab;sl.insertAdjacentElement('afterend',bn);}
+ const items=msnItems(m,c), ok=items.every(x=>x.ok);
+ bn.classList.toggle('alldone',ok);
+ bn.innerHTML='<span class="mt">🎯 '+m.name+(ok?' — 완수! 🎉':'')+'</span>'+items.map(x=>'<span class="mi'+(x.ok?' on':'')+'">'+(x.ok?'✅':'⬜')+' '+x.label.replace(/^[\d·~]+단계 · /,'').replace(/ \([\d·~]+단계\)$/,'')+'</span>').join('');
+ });
+ if(!$('#sumGuard')){const sl=$('#panel-sum .stepline');if(sl){const g=document.createElement('div');g.className='sum-guard';g.id='sumGuard';g.innerHTML='🧑‍🏫 <b>여기는 선생님과 함께 여는 마지막 방!</b> 미션을 모두 깬 사람만 들어올 수 있어요. 빈칸은 수업에서 선생님과 <b>하나씩 같이</b> 채웁니다.';sl.insertAdjacentElement('afterend',g);}}
+}
+function checkMsnClear(){
+ if(!soloOn())return;
+ const c=progChecks();
+ MSN.forEach((m,mi)=>{
+ if(!msnDone(m,c)||S.msn[m.tab])return;
+ S.msn[m.tab]=1;save();A.win();
+ const nxt=mi<MSN.length-1?MSN[mi+1]:null;
+ toast(nxt?'🎉 <b>'+m.name+'</b> 완수! — 「'+nxt.name.split(' · ')[1]+'」의 문이 열렸어요 🔓':'🏆 <b>미션을 모두 완수!</b> 이제 📝 개념 정리를 <b>선생님과 함께</b> 열 수 있어요');
+ });
+}
 function showTab(id,noScroll){
  if(!TABS.includes(id))return;
+ const g=gateOf(id);
+ if(g){const b=$('#tabNav button[data-tab="'+id+'"]');if(b){b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');}
+  A.blip(210,.14,'sawtooth',.06);
+  toast(g.sum?'🧑‍🏫 <b>개념 정리하기</b>는 미션을 모두 깬 뒤 <b>선생님과 함께</b> 열어요! (남은 미션: '+g.m.name+')':'🔒 아직 잠긴 방이에요 — <b>'+g.m.name+'</b>부터 완수!');return;}
  $$('.panel').forEach(p=>p.classList.remove('show'));
  $('#panel-'+id).classList.add('show');
  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
@@ -2795,7 +2962,7 @@ function refreshCover(){
  $('#coverGo').textContent=any?`이어서 하기 (${$('#progPct').textContent}) 💡`:'회로 이으러 가기 💡';
 }
 $('#coverGo').addEventListener('click',()=>{$('#cover').classList.add('hide');
- document.body.classList.remove('cover-on');A.ensure();A.pop();showTab(S.tab||'open',true);});
+ document.body.classList.remove('cover-on');A.ensure();A.pop();showTab(gateOf(S.tab||'open')?landTab():(S.tab||'open'),true);});
 $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classList.remove('hide');
  document.body.classList.add('cover-on');setBg('cover');});
 
@@ -2804,7 +2971,270 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  $('#tmodeBtn').addEventListener('click',()=>{
  const on=!document.body.classList.contains('teacher');
  document.body.classList.toggle('teacher',on);localStorage.setItem(KEY,on?'1':'0');
- toast(on?'교사 모드 ON — 문장 설명과 교실 노트가 보입니다 🧑‍🏫':'학생 화면 — 키워드만 보입니다 🎒');});})();
+ updateProgress();
+  toast(on?'교사 모드 ON — 교실 노트가 보이고 미션 잠금이 풀립니다 🧑‍🏫':'교사 노트를 숨겼어요 🎒');});})();
+
+/* ── ✍️ 생각 쓰기 칸 — 자동 저장 ── */
+(function(){
+ $$('textarea[data-think]').forEach(ta=>{
+ const k=ta.dataset.think, box=ta.closest('.think'), n=box&&box.querySelector('.cnt .n'), mark=box&&box.querySelector('.savemark'), cnt=box&&box.querySelector('.cnt');
+ let t;const paint=()=>{const L=(ta.value||'').trim().length;if(n)n.textContent=L+'자';if(cnt)cnt.classList.toggle('ok',L>=10);};
+ ta.value=(S.think||{})[k]||'';paint();
+ ta.addEventListener('input',()=>{S.think[k]=ta.value;save();updateProgress();paint();if(mark){mark.classList.add('on');clearTimeout(t);t=setTimeout(()=>mark.classList.remove('on'),1400);}});
+ });
+})();
+
+/* ── 🎯 수업 방식: 혼자 탐구(관문 + 미션 잠금 + 서버 기록) ↔ 🧑‍🏫 강의식(전부 개방) ── */
+const MODE_KEY='elec_mode', STU_KEY='elec_stu';
+const stuGlobal=()=>{try{return JSON.parse(localStorage.getItem(STU_KEY)||'null');}catch(e){return null;}};
+function paintMode(){
+ const solo=soloOn(), b=$('#modeBtn');
+ if(b){b.textContent=solo?'🎯':'🧑‍🏫';b.classList.toggle('solo',solo);b.title=solo?'지금: 혼자 탐구 — 미션을 깨야 다음이 열림. 누르면 강의식(전부 개방)으로':'지금: 강의식 — 모든 단계 개방. 누르면 혼자 탐구(학번·코드 필요)로';}
+ const bd=$('#stuBadge');if(bd&&S.stu)bd.textContent='🎒 '+S.stu.sid+' '+S.stu.name;
+ const lab=document.querySelector('.hb-wrap .hb-lab[data-for="modeBtn"]');if(lab)lab.textContent=solo?'혼자 탐구':'강의식';
+}
+function setMode(m){
+ document.body.classList.toggle('solo',m==='solo');document.body.classList.toggle('lecture',m!=='solo');
+ try{localStorage.setItem(MODE_KEY,m);}catch(e){}
+ paintMode();updateProgress();
+}
+function openGate(){
+ const g=$('#gate');g.classList.add('show');$('#gMsg').textContent='';$('#gMsg').className='gmsg';
+ const st=S.stu||stuGlobal();
+ if(st){$('#gSid').value=st.sid||'';$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
+ setTimeout(()=>$('#gSid').focus(),50);
+}
+function closeGate(){$('#gate').classList.remove('show');}
+$('#gCancel').addEventListener('click',closeGate);
+$('#gate').addEventListener('click',e=>{if(e.target===$('#gate'))closeGate();});
+['gSid','gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
+$('#gGo').addEventListener('click',async()=>{
+ const sid=$('#gSid').value.replace(/[^0-9]/g,''), name=$('#gName').value.trim(), code=$('#gCode').value.trim().toUpperCase();
+ const msg=$('#gMsg');const say=(t,c)=>{msg.innerHTML=t;msg.className='gmsg '+(c||'');};
+ if(!/^\d{4,6}$/.test(sid)){say('학번은 숫자 4~6자리로 써 주세요 — 예: 2학년 3반 15번 → <b>20315</b>','err');$('#gSid').focus();return;}
+ if(name.length<1){say('이름을 써 주세요','err');$('#gName').focus();return;}
+ if(code.length<3){say('참여 코드를 써 주세요 — 선생님이 칠판에 적어 준 그 코드예요','err');$('#gCode').focus();return;}
+ $('#gGo').disabled=true;say('확인하는 중…');
+ try{
+  const r=await OHM.join(code,sid,name);
+  if(r.error){say(r.error,'err');$('#gGo').disabled=false;return;}
+  S.stu={token:r.token,sid:sid,name:name,code:code,label:r.label||''};save();
+  try{localStorage.setItem(STU_KEY,JSON.stringify({sid:sid,name:name,code:code}));}catch(e){}
+  say('✅ '+name+' 님, 환영해요!','ok');
+  const pulled=await OHM.pull();
+  if(pulled&&pulled.state&&(pulled.progress||0)>0){
+   const mine=progChecks().filter(x=>x.ok).length;
+   if(pulled.progress>mine&&confirm('이전에 하던 기록('+pulled.progress+'단계 완료)이 서버에 있어요. 불러올까요?\n(이 기기의 기록은 덮어씁니다)'))OHM.restore(pulled.state);
+  }
+  setTimeout(()=>{closeGate();$('#gGo').disabled=false;setMode('solo');
+   toast('🎯 <b>혼자 탐구 시작!</b> 미션 1부터 하나씩 깨 보세요');
+   if(!$('#cover').classList.contains('hide')){$('#coverGo').click();}else showTab(gateOf(S.tab||MAIN_TABS[0])?landTab():(S.tab||MAIN_TABS[0]),true);
+  },500);
+ }catch(e){say('연결에 실패했어요 — 인터넷을 확인하고 다시 눌러 주세요 ('+(e&&e.message||e)+')','err');$('#gGo').disabled=false;}
+});
+
+/* ── ☁️ 서버 기록 (Supabase · 과학이조선생) — 표는 RPC 로만 ── */
+const OHM={
+ url:'https://vbvtnmnodeoocbbjauap.supabase.co',
+ key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZidnRubW5vZGVvb2NiYmphdWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTQ0OTYsImV4cCI6MjA5NTA3MDQ5Nn0.dvuRrt3qw2Tya_QwGbcXrmGPdfDgI4xmgyH8UjU73Nc',
+ page:'elec-series', sb:null, timer:null, last:'', busy:false, dirty:false,
+ client(){if(this.sb)return this.sb;if(!window.supabase||!window.supabase.createClient)return null;this.sb=window.supabase.createClient(this.url,this.key,{auth:{persistSession:false}});return this.sb;},
+ device(){try{let d=localStorage.getItem('elec_device');if(!d){d=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('elec_device',d);}return d;}catch(e){return 'na';}},
+ async rpc(name,args){const c=this.client();if(!c)throw new Error('supabase 라이브러리를 불러오지 못했어요');const r=await c.rpc(name,args);if(r.error)throw new Error(r.error.message||String(r.error));return r.data;},
+ async join(code,sid,name){
+  try{const d=await this.rpc('ohm_join',{p_code:code,p_sid:sid,p_name:name,p_page:this.page,p_device:this.device()});
+   if(!d||d.error)return {error:(d&&d.error)||'참여 코드를 확인해 주세요'};return d;}
+  catch(e){const m=String(e.message||e);if(/function .*ohm_join|404|not find/i.test(m))return {error:'선생님이 아직 서버(참여 코드)를 준비하지 않았어요. 강의식으로 먼저 보세요.'};return {error:'연결 오류 — '+m};}
+ },
+ snapshot(){
+  const c=progChecks(), done=c.filter(x=>x.ok).length, texts={};
+  $$('textarea').forEach(t=>{const k=t.dataset.think||t.id;if(k&&!t.closest('.gate'))texts[k]=t.value;});
+  return {sid:S.stu&&S.stu.sid,name:S.stu&&S.stu.name,page:this.page,tab:S.tab,progress:done,total:c.length,pct:Math.round(done/c.length*100),
+   checks:c.map(x=>({l:x.label,ok:x.ok?1:0})),texts:texts,sub:S.sub||{},best:S.best,medals:S.medals||{},msn:S.msn||{},s:S,savedAt:new Date().toISOString()};
+ },
+ touch(){if(!S.stu||!S.stu.token)return;this.dirty=true;clearTimeout(this.timer);this.timer=setTimeout(()=>this.flush(),1500);},
+ async flush(){
+  if(!S.stu||!S.stu.token||this.busy)return;
+  const snap=this.snapshot(), js=JSON.stringify(snap);if(js===this.last){this.dirty=false;return;}
+  this.busy=true;
+  try{await this.rpc('ohm_save',{p_token:S.stu.token,p_state:snap,p_progress:snap.progress,p_pct:snap.pct,p_tab:S.tab||''});this.last=js;this.dirty=false;this.paintCloud('ok');}
+  catch(e){this.paintCloud('err');console.warn('[기록 저장]',e);}
+  finally{this.busy=false;if(this.dirty)this.touch();}
+ },
+ async pull(){if(!S.stu||!S.stu.token)return null;try{return await this.rpc('ohm_pull',{p_token:S.stu.token});}catch(e){return null;}},
+ restore(st){if(!st)return;const src=st.s||st;Object.keys(src).forEach(k=>{if(k!=='stu'&&src[k]!==undefined&&src[k]!==null)S[k]=src[k];});save();location.reload();},
+ paintCloud(k){const bd=$('#stuBadge');if(!bd||!S.stu)return;bd.textContent=(k==='ok'?'☁️ ':k==='err'?'⚠️ ':'🎒 ')+S.stu.sid+' '+S.stu.name;bd.title=k==='ok'?'서버에 저장됨':k==='err'?'서버 저장 실패 — 이 기기에는 저장돼 있어요':'';},
+ /* 다른 차시에서 이미 참여했으면 여기서는 조용히 이어 붙인다 */
+ async autoJoin(){
+  const g=stuGlobal();if(!g||(S.stu&&S.stu.token))return false;
+  const r=await this.join(g.code,g.sid,g.name);
+  if(r.error)return false;
+  S.stu={token:r.token,sid:g.sid,name:g.name,code:g.code,label:r.label||''};save();paintMode();return true;
+ }
+};
+(function(){const _save=save;window.save=function(){_save();try{OHM.touch();}catch(e){}};})();
+addEventListener('visibilitychange',()=>{if(document.hidden&&OHM.dirty)OHM.flush();});
+addEventListener('pagehide',()=>{if(OHM.dirty)OHM.flush();});
+(function(){
+ const want=(function(){try{return localStorage.getItem(MODE_KEY);}catch(e){return null;}})();
+ setMode(want==='solo'&&S.stu&&S.stu.token?'solo':'lecture');
+ if(want==='solo'&&!(S.stu&&S.stu.token)&&stuGlobal()){OHM.autoJoin().then(ok=>{if(ok){setMode('solo');toast('🎯 <b>'+S.stu.name+'</b> 님, 혼자 탐구로 이어서 갑니다');}});}
+ $('#modeBtn').addEventListener('click',()=>{
+  if(soloOn()){if(!confirm('강의식(전부 개방)으로 바꿀까요?\n미션 잠금이 풀립니다. 지금까지 쓴 글은 그대로 남아요.'))return;setMode('lecture');toast('🧑‍🏫 <b>강의식</b> — 모든 단계가 열려 있어요');}
+  else if(S.stu&&S.stu.token){setMode('solo');toast('🎯 <b>혼자 탐구</b> — '+S.stu.name+' 님, 미션을 하나씩 깨며 나아가요!');}
+  else if(stuGlobal()){OHM.autoJoin().then(ok=>{if(ok){setMode('solo');toast('🎯 <b>혼자 탐구</b> — '+S.stu.name+' 님, 이어서 갑니다');}else openGate();});}
+  else openGate();
+ });
+})();
+
+/* ══ ⌨️ 깨진 한글 입력 되살리기 (질문과수원에서 이식) ═══════════════════════
+   디벗(윈도우 한글 IME)이 모드를 잃으면 세 가지로 깨진다.
+     ① 전각        ｐｕｓｈ　ｅａｃｈ   → 조용히 고친다
+     ② 반각 자모   ﾡￜﾵﾼ                → 조용히 고친다
+     ③ 한영전환 실패 dkssud             → 진짜 영어일 수 있으니 «혹시 이거예요?» 하고 물어본다
+   칸을 떠날 때(focusout) 처리한다 — 타이핑 중에 value 를 갈아끼우면 커서가 튄다. */
+(function(){
+ const _JL='ᄀᄁᄂᄃᄄᄅᄆᄇᄈᄉᄊᄋᄌᄍᄎᄏᄐᄑᄒ', _JV='ᅡᅢᅣᅤᅥᅦᅧᅨᅩᅪᅫᅬᅭᅮᅯᅰᅱᅲᅳᅴᅵ', _JT='ᆨᆩᆪᆫᆬᆭᆮᆯᆰᆱᆲᆳᆴᆵᆶᆷᆸᆹᆺᆻᆼᆽᆾᆿᇀᇁᇂ';
+ const _VMERGE={'ᅩᅡ':'ᅪ','ᅩᅢ':'ᅫ','ᅩᅵ':'ᅬ','ᅮᅥ':'ᅯ','ᅮᅦ':'ᅰ','ᅮᅵ':'ᅱ','ᅳᅵ':'ᅴ'};
+ const _TMERGE={'ᆨᆺ':'ᆪ','ᆫᆽ':'ᆬ','ᆫᇂ':'ᆭ','ᆯᆨ':'ᆰ','ᆯᆷ':'ᆱ','ᆯᆸ':'ᆲ','ᆯᆺ':'ᆳ','ᆯᇀ':'ᆴ','ᆯᇁ':'ᆵ','ᆯᇂ':'ᆶ','ᆸᆺ':'ᆹ'};
+ const _L2T={'ᄀ':'ᆨ','ᄁ':'ᆩ','ᄂ':'ᆫ','ᄃ':'ᆮ','ᄅ':'ᆯ','ᄆ':'ᆷ','ᄇ':'ᆸ','ᄉ':'ᆺ','ᄊ':'ᆻ','ᄋ':'ᆼ','ᄌ':'ᆽ','ᄎ':'ᆾ','ᄏ':'ᆿ','ᄐ':'ᇀ','ᄑ':'ᇁ','ᄒ':'ᇂ'};
+ const _isSyl=c=>{const o=c.charCodeAt(0);return o>=0xAC00&&o<=0xD7A3;};
+ const _split=c=>{const i=c.charCodeAt(0)-0xAC00;return {l:_JL[Math.floor(i/588)],v:_JV[Math.floor((i%588)/28)],t:(i%28)?_JT[i%28-1]:''};};
+ const _join=(l,v,t)=>String.fromCharCode(0xAC00+(_JL.indexOf(l)*21+_JV.indexOf(v))*28+(t?_JT.indexOf(t)+1:0));
+ function fixWidth(src){
+  const s=String(src||'').normalize('NFKC'), out=[];
+  for(const ch of s){
+   const prev=out.length?out[out.length-1]:'';
+   if(prev&&_isSyl(prev)){
+    const p=_split(prev);
+    if(!p.t&&_JV.indexOf(ch)>=0){const nv=_VMERGE[p.v+ch];if(nv){out[out.length-1]=_join(p.l,nv,'');continue;}}
+    if(!p.t&&_L2T[ch]){out[out.length-1]=_join(p.l,p.v,_L2T[ch]);continue;}
+    if(p.t&&_L2T[ch]){const nt=_TMERGE[p.t+_L2T[ch]];if(nt){out[out.length-1]=_join(p.l,p.v,nt);continue;}}
+   }
+   out.push(ch);
+  }
+  return out.join('');
+ }
+ const _QK={q:'ᄇ',w:'ᄌ',e:'ᄃ',r:'ᄀ',t:'ᄉ',y:'ᅭ',u:'ᅧ',i:'ᅣ',o:'ᅢ',p:'ᅦ',a:'ᄆ',s:'ᄂ',d:'ᄋ',f:'ᄅ',g:'ᄒ',h:'ᅩ',j:'ᅥ',k:'ᅡ',l:'ᅵ',
+  z:'ᄏ',x:'ᄐ',c:'ᄎ',v:'ᄑ',b:'ᅲ',n:'ᅮ',m:'ᅳ',Q:'ᄈ',W:'ᄍ',E:'ᄄ',R:'ᄁ',T:'ᄊ',O:'ᅤ',P:'ᅨ'};
+ for(const k in _QK){const U=k.toUpperCase();if(!(U in _QK))_QK[U]=_QK[k];}
+ function _assemble(buf){
+  const out=[];let made=0,orphan=0,i=0;
+  while(i<buf.length){
+   const c=buf[i];
+   if(_JL.indexOf(c)>=0&&i+1<buf.length&&_JV.indexOf(buf[i+1])>=0){
+    const l=c;i++;let v=buf[i];i++;
+    if(i<buf.length&&_VMERGE[v+buf[i]]){v=_VMERGE[v+buf[i]];i++;}
+    let t='';
+    if(i<buf.length&&_L2T[buf[i]]){
+     if(!(i+1<buf.length&&_JV.indexOf(buf[i+1])>=0)){
+      t=_L2T[buf[i]];i++;
+      if(i<buf.length&&_L2T[buf[i]]&&_TMERGE[t+_L2T[buf[i]]]&&!(i+1<buf.length&&_JV.indexOf(buf[i+1])>=0)){t=_TMERGE[t+_L2T[buf[i]]];i++;}
+     }
+    }
+    out.push(_join(l,v,t));made++;
+   }else{out.push(c);orphan++;i++;}
+  }
+  return {text:out.join(''),made,orphan};
+ }
+ function qwertyToHan(src){
+  const s=String(src||'');let out='',buf=[],made=0,orphan=0;
+  const flush=()=>{const r=_assemble(buf);out+=r.text;made+=r.made;orphan+=r.orphan;buf=[];};
+  for(const ch of s){if(_QK[ch])buf.push(_QK[ch]);else{flush();out+=ch;}}
+  flush();return {text:out,made,orphan};
+ }
+ const hanScore=s=>{const r=qwertyToHan(s);const t=r.made+r.orphan;return t?r.made/t:0;};
+ /* 실측(진짜 영어 29문장 vs 영어로 친 한글 8문장): 0.75 면 양쪽 다 오판 0건 */
+ const IME_MIN_LEN=6, IME_MIN_SCORE=0.75;
+ function maybeKorean(src){
+  const s=String(src||'');const letters=(s.match(/[A-Za-z]/g)||[]).length;
+  if(letters<IME_MIN_LEN)return null;
+  if(letters/s.length<0.6)return null;
+  const sc=hanScore(s);if(sc<IME_MIN_SCORE)return null;
+  const r=qwertyToHan(s);if(r.text===s)return null;
+  return {text:r.text,score:sc};
+ }
+ const keep=new Set();
+ const escH=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ function chipClose(){const c=document.getElementById('_imeChip');if(c)c.remove();}
+ function chip(el,fixed){
+  chipClose();
+  const box=document.createElement('div');box.className='ime-chip';box.id='_imeChip';
+  box.innerHTML='<div class="ic-t">⌨️ 자판이 영어로 되어 있었나 봐요. 혹시 이거예요?</div><div class="ic-g">'+escH(fixed)+'</div>'
+   +'<div class="ic-b"><button type="button" class="ic-yes">네, 고쳐줘</button><button type="button" class="ic-no">영어 맞아요</button></div>';
+  el.parentNode.insertBefore(box,el.nextSibling);
+  box.querySelector('.ic-yes').onclick=()=>{el.value=fixed;el.dispatchEvent(new Event('input',{bubbles:true}));chipClose();el.focus();};
+  box.querySelector('.ic-no').onclick=()=>{keep.add(el.value);chipClose();};
+ }
+ function fixField(el){
+  const raw=el.value||'';if(!raw.trim()){chipClose();return;}
+  const w=fixWidth(raw);
+  if(w!==raw){el.value=w;el.dispatchEvent(new Event('input',{bubbles:true}));}
+  const ko=maybeKorean(el.value);
+  if(ko&&!keep.has(el.value))chip(el,ko.text);else chipClose();
+ }
+ document.addEventListener('focusout',e=>{
+  const el=e.target;if(!el||!el.tagName)return;
+  if(el.tagName!=='INPUT'&&el.tagName!=='TEXTAREA')return;
+  if(el.dataset&&(el.dataset.ime==='off'||el.dataset.ime==='submit'))return;   /* 제출 칸은 제출 버튼에서 확인한다 */
+  const ty=(el.type||'text').toLowerCase();
+  if(ty==='password'||ty==='number'||ty==='email'||ty==='date'||ty==='range')return;
+  setTimeout(()=>fixField(el),0);
+ },true);
+ window.__ime={fixWidth,qwertyToHan,maybeKorean};   /* 검증용 */
+})();
+
+/* ── 📮 제출하기 — 깨진 글자·영타 한글을 확인한 뒤 제출 ── */
+(function(){
+ S.sub=S.sub||{};S.subTxt=S.subTxt||{};
+ const I=window.__ime, SUBMAP={'ruleTxt':'rule','essay':'essay'}, MIN={essay:15,blockAns:15};
+ const escH=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const taOf=key=>{const t=$('textarea[data-think="'+key+'"]');if(t)return t;const id=Object.keys(SUBMAP).find(i=>SUBMAP[i]===key);return id?$('#'+id):null;};
+ const cur=key=>{const t=taOf(key);return t?(t.value||''):'';};
+ function keyOf(el){const k=el.dataset.submit||el.dataset.substatus;if(k!=='think')return k;const t=el.closest('.think').querySelector('textarea[data-think]');return t.dataset.think;}
+ function closeChip(){const c=document.getElementById('_subChip');if(c)c.remove();}
+ function chip(anchor,title,fixed,yes,no,onYes,onNo){
+  closeChip();const box=document.createElement('div');box.className='ime-chip sub-chip';box.id='_subChip';
+  box.innerHTML='<div class="ic-t">'+title+'</div><div class="ic-g">'+escH(fixed)+'</div><div class="ic-b"><button type="button" class="ic-yes">'+yes+'</button><button type="button" class="ic-no">'+no+'</button></div>';
+  anchor.insertAdjacentElement('afterend',box);
+  box.querySelector('.ic-yes').onclick=()=>{closeChip();onYes();};box.querySelector('.ic-no').onclick=()=>{closeChip();onNo();};
+  box.scrollIntoView({block:'nearest',behavior:'smooth'});
+ }
+ function check(ta,anchor,done){
+  const raw=ta.value||'';
+  const step2=text=>{const ko=I.maybeKorean(text);if(ko)chip(anchor,'⌨️ 자판이 영어로 되어 있었나 봐요. 혹시 이거예요?',ko.text,'네, 고쳐서 제출','영어 맞아요, 그대로 제출',()=>done(ko.text),()=>done(text));else done(text);};
+  const w=I.fixWidth(raw);
+  if(w!==raw)chip(anchor,'글자가 깨져 있었어요. 이렇게 고친 게 맞나요?',w,'네, 이걸로 제출','원래대로 제출',()=>step2(w),()=>step2(raw));else step2(raw);
+ }
+ function apply(key,text){
+  const ta=taOf(key);if(ta){ta.value=text;ta.dispatchEvent(new Event('input',{bubbles:true}));}
+  S.sub[key]=1;S.subTxt[key]=text;save();updateProgress();paintAll();A.correct();
+  toast('📮 <b>제출했어요!</b>'+(S.stu&&S.stu.token?' 선생님에게 전해집니다':' 이 기기에 저장됐어요'));
+ }
+ function paintAll(){
+  $$('[data-substatus]').forEach(el=>{const key=keyOf(el);
+   if(!S.sub[key]){el.textContent='';el.className='sub-st';return;}
+   const same=(S.subTxt[key]||'').trim()===cur(key).trim();el.textContent=same?'✅ 제출됨':'✏️ 고쳤어요 — 다시 제출해 주세요';el.className='sub-st '+(same?'ok':'edit');});
+ }
+ document.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-submit]');if(!b)return;
+  const key=keyOf(b), ta=taOf(key);if(!ta)return;
+  const t=(ta.value||'').trim(), min=MIN[key]||10;
+  if(t.length<min){toast('먼저 <b>'+min+'자 이상</b> 써 주세요 ✍️');A.blip(220,.12,'sawtooth',.06);ta.focus();return;}
+  check(ta,b.parentElement,txt=>apply(key,txt.trim()));
+ });
+ document.addEventListener('input',e=>{const el=e.target;if(el&&el.tagName==='TEXTAREA')setTimeout(paintAll,0);});
+ paintAll();
+ window.imeSubmit=(ta,anchor,done)=>check(ta,anchor,done);
+ /* 모범 답안은 제출한 뒤에만(혼자 탐구) */
+ const LOCK={'ruleBtn':'rule','ansBtn':'essay'};
+ document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||!b.id||!LOCK[b.id])return;
+  if(soloOn()&&!teacherOn()&&!S.sub[LOCK[b.id]]){e.stopPropagation();e.preventDefault();toast('먼저 📮 <b>제출</b>한 뒤에 모범 답안을 열 수 있어요');A.blip(220,.12,'sawtooth',.06);}
+ },true);
+})();
+paintMode();
+
 
 (function(){const wrap=$('#progWrap'),list=$('#progList');
  wrap.addEventListener('click',()=>list.classList.toggle('show'));
@@ -3237,7 +3667,7 @@ function circuitAria(mode,remA,remB){
       + (q.svg?'<span class="mq-lv" style="color:var(--ink-mute)">자료 해석</span>':'')+'</div>'
       + (q.svg?'<div class="qfig">'+q.svg+'</div>':'')
       + '<div class="mq-text" style="font-size:18px"><span class="qn">Q'+(i+1)+'.</span>'+q.stem+'</div>'
-      + '<textarea class="eq-ta" id="eqTa" rows="'+(q.lines||4)+'" placeholder="내 문장으로 써 보세요 — 꼭 들어갈 낱말: '+q.keys.join(', ')+'"></textarea>'
+      + '<textarea class="eq-ta" id="eqTa" data-ime="submit" rows="'+(q.lines||4)+'" placeholder="내 문장으로 써 보세요 — 꼭 들어갈 낱말: '+q.keys.join(', ')+'"></textarea>'
       + '<div class="eq-keys" id="eqKeys"></div>'
       + '<div class="mq-next show" id="eqOpenRow"><button class="btn primary sm" id="eqOpen">✍️ 다 썼어요 — 채점 기준 열기</button></div>'
       + '<div class="eq-rub" id="eqRub" hidden><div class="why">✍️ 모범 답안</div><div class="eq-model">'+q.model+'</div>'
@@ -3253,7 +3683,8 @@ function circuitAria(mode,remA,remB){
     body.onchange=e=>{if(e.target.matches&&e.target.matches('.eq-item input'))$('#eqSum').textContent=pts()+'점 / '+total+'점';};
     $('#eqOpen').addEventListener('click',()=>{
       if(ta.value.trim().length<10){toast('먼저 <b>한두 문장</b>이라도 써 본 뒤 열어요 ✍️');return;}
-      $('#eqRub').hidden=false;$('#eqOpenRow').style.display='none';A.pop();});
+      window.imeSubmit(ta,$('#eqOpenRow'),txt=>{ta.value=txt;S.eq[q.id]=txt;save();paintKeys();
+        $('#eqRub').hidden=false;$('#eqOpenRow').style.display='none';A.pop();});});
     $('#eqDone').addEventListener('click',()=>{
       const p=pts(),pass=p/total>=0.6;
       if(pass){score+=20;A.correct();medal('first');}else A.wrong();
@@ -3730,7 +4161,7 @@ function circuitAria(mode,remA,remB){
   document.head.appendChild(st);
 
   /* ── ① 키워드 클릭 → 바로 위 .say 문단 펼치기 ── */
-  document.querySelectorAll('.keyline-s').forEach(function(line){
+  document.querySelectorAll('.keyline-s.__peek-off').forEach(function(line){
     /* 이 키워드 줄 바로 앞에 오는 교사용 설명(.say)들을 모은다 */
     var says = [], p = line.previousElementSibling;
     while (p && (p.classList.contains('say') || p.tagName === 'BR')){
@@ -3764,7 +4195,10 @@ function circuitAria(mode,remA,remB){
   }
   var hubBtn = document.querySelector('a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
   label(hubBtn, '허브페이지로 이동');
-  label(document.getElementById('tmodeBtn'), '교사용 on/off');
+  label(document.getElementById('tmodeBtn'), '교사노트 on/off');
+  label(document.getElementById('modeBtn'), document.body.classList.contains('solo')?'혼자 탐구':'강의식');
+  var _ml=document.querySelector('#modeBtn')&&document.querySelector('#modeBtn').parentNode.querySelector('.hb-lab'); if(_ml)_ml.dataset.for='modeBtn';
+  label(document.getElementById('dashLink'), '학생 기록');
 })();
 </script>
 

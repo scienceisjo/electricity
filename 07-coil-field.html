@@ -680,12 +680,12 @@ b.k[style*="color"], .k[style*="color"]{background:none}
    학생 화면 = 키워드만. 글자가 적어야 아이들이 화면을 읽느라 지치지 않고,
    빈 자리에 선생님이 판서하며 설명을 이어 갈 수 있다.
    🧑‍🏫 교사 모드를 켜면 원래의 문장형 설명이 나온다. */
-.say{display:none}
+.say{display:revert}
 body.teacher .say{display:revert}
 
 /* 키워드 줄 — 크고 시원하게, 아래에 판서 여백 */
 .keyline-s{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0 20px}
-body.teacher .keyline-s{display:none}
+body:not(.lecture) .keyline-s{display:none}
 .keyline-s .kw{font-family:var(--jua);font-size:clamp(19px,2.6vw,25px);font-weight:800;color:var(--ink);
   background:var(--paper-hi);border:2px solid var(--line);border-bottom-width:4px;
   border-radius:12px;padding:9px 18px;line-height:1.35}
@@ -1317,6 +1317,73 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
 .seg button.on,.seg .on{background:var(--m-ink-deep)!important;color:#fff!important;border-color:var(--m-ink-deep)!important}
 @media print{#toast,.prog-list{display:none}}
 </style>
+
+<style id="solo-kit">
+/* ── 🎯 혼자 탐구 키트 — 미션 잠금·관문·생각 쓰기·제출 (Meta 색) ── */
+#tabNav button.locked{opacity:.45;filter:none}
+#tabNav button.locked .sn{position:relative}
+#tabNav button.locked .sn::after{content:'🔒';position:absolute;right:-8px;top:-9px;font-size:12px}
+#tabNav button.shake{animation:msnshake .4s}
+@keyframes msnshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}55%{transform:translateX(4px)}80%{transform:translateX(-2px)}}
+#tabNav button.justopen{animation:msnopenM 1s}
+@keyframes msnopenM{0%{box-shadow:0 0 0 0 rgba(0,100,224,.6)}100%{box-shadow:0 0 0 16px rgba(0,100,224,0)}}
+.msn-banner{display:flex;flex-wrap:wrap;align-items:center;gap:7px 16px;margin:14px 0 2px;padding:10px 15px;border:1px solid var(--m-hair-soft,#dee3e9);border-radius:16px;background:var(--m-soft,#f1f4f7);font-size:14.5px;color:var(--m-ink,#1c1e21)}
+.msn-banner .mt{font-weight:800;color:var(--m-primary-deep,#0457cb)}
+.msn-banner .mi{display:inline-flex;align-items:center;gap:5px}
+.msn-banner .mi.on{color:var(--m-success,#31a24c);font-weight:700}
+.msn-banner.alldone{background:rgba(49,162,76,.08);border-color:rgba(49,162,76,.55)}
+body:not(.solo) .msn-banner{display:none}
+.sum-guard{margin:14px 0 4px;padding:12px 16px;border-radius:16px;background:#fff8dc;border:1px solid var(--m-warn,#f7b928);font-size:15px;line-height:1.7;color:var(--m-ink,#1c1e21)}
+body:not(.solo) .sum-guard{display:none}
+.think{margin-top:16px;padding:14px 16px;border-radius:16px;border:1px solid var(--m-hair-soft,#dee3e9);background:#fff}
+.think .th{font-weight:700;font-size:17.5px;color:var(--m-ink-deep,#0a1317);display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:-.3px}
+.think .th .req{margin-left:auto;font-size:12px;font-weight:800;color:var(--m-primary-deep,#0457cb);background:#fff;border:1px solid var(--m-primary,#0064e0);border-radius:99px;padding:2px 9px}
+.think .hint{font-size:14px;color:var(--m-steel,#5d6c7b);margin-top:4px;line-height:1.6}
+.think textarea{margin-top:10px;min-height:96px}
+.think .cnt{font-size:12.5px;color:var(--m-steel,#5d6c7b);margin-top:4px;display:flex;gap:10px;align-items:center}
+.think .cnt.ok{color:var(--m-success,#31a24c);font-weight:700}
+.sub-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.sub-st{font-size:13.5px;font-weight:700;color:var(--m-steel,#5d6c7b)}
+.sub-st.ok{color:var(--m-success,#31a24c)}
+.sub-st.edit{color:#c47f00}
+.ime-chip{margin:6px 0 2px;padding:10px 12px;border:1px solid var(--m-warn,#f7b928);border-radius:12px;background:#fff8dc;animation:icIn .18s ease both}
+.ime-chip.sub-chip{margin:10px 0 0;flex:1 1 100%}
+@keyframes icIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+.ime-chip .ic-t{font-size:12.5px;font-weight:700;color:var(--m-ink,#1c1e21);margin-bottom:6px;line-height:1.5}
+.ime-chip .ic-g{font-size:14.5px;font-weight:700;color:var(--m-ink-deep,#0a1317);background:#fff;border-radius:7px;padding:8px 11px;line-height:1.55;word-break:break-all}
+.ime-chip .ic-b{display:flex;gap:6px;margin-top:8px}
+.ime-chip .ic-yes{padding:7px 13px;border-radius:100px;border:none;background:var(--m-ink-deep,#0a1317);color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+.ime-chip .ic-no{padding:7px 13px;border-radius:100px;border:1px solid var(--m-hair,#ced0d4);background:#fff;color:var(--m-ink,#1c1e21);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+#modeBtn.solo{background:var(--m-primary,#0064e0);border-color:var(--m-primary,#0064e0);color:#fff}
+.stu-badge{display:none;align-items:center;gap:6px;font-size:12.5px;font-weight:800;color:var(--m-ink,#1c1e21);background:var(--m-soft,#f1f4f7);border:1px solid var(--m-hair,#ced0d4);border-radius:100px;padding:4px 10px;white-space:nowrap}
+body.solo .stu-badge{display:inline-flex}
+.hb-wrap:has(#dashLink){display:none}
+body.teacher .hb-wrap:has(#dashLink){display:flex}
+#dashLink{display:none}
+body.teacher #dashLink{display:inline-flex}
+.gate{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(10,19,23,.55);backdrop-filter:blur(3px)}
+.gate.show{display:flex}
+.gate .gbox{width:min(460px,100%);background:#fff;border:1px solid var(--m-hair-soft,#dee3e9);border-radius:24px;padding:22px 22px 18px;box-shadow:rgba(20,22,26,.3) 0 1px 4px 0}
+.gate h3{font-size:22px;font-weight:700;margin:0 0 4px;letter-spacing:-.4px}
+.gate .gsub{font-size:14px;color:var(--m-steel,#5d6c7b);line-height:1.6;margin-bottom:12px}
+.gate label{display:block;font-size:13.5px;font-weight:800;color:var(--m-ink,#1c1e21);margin-top:10px}
+.gate input{width:100%;box-sizing:border-box;margin-top:5px;font-family:inherit;font-size:17px;padding:11px 13px;border-radius:8px;border:1px solid var(--m-hair,#ced0d4);background:#fff;color:var(--m-ink,#1c1e21);height:44px}
+.gate input:focus{outline:none;border:2px solid #1876f2}
+.gate .gmsg{min-height:22px;font-size:14px;margin-top:10px;line-height:1.55;color:var(--m-ink,#1c1e21)}
+.gate .gmsg.err{color:var(--m-crit,#e41e3f);font-weight:700}
+.gate .gmsg.ok{color:var(--m-success,#31a24c);font-weight:700}
+.gate .gbtns{display:flex;gap:8px;margin-top:12px}
+.gate .gbtns .btn{flex:1}
+.gate .gnote{font-size:12.5px;color:var(--m-steel,#5d6c7b);margin-top:12px;line-height:1.55;border-top:1px dashed var(--m-hair-soft,#dee3e9);padding-top:10px}
+#gGo{background:var(--m-primary,#0064e0);border-color:var(--m-primary,#0064e0);color:#fff}
+.moved-note{margin-top:14px;padding:12px 15px;border-radius:16px;background:var(--m-soft,#f1f4f7);border:1px dashed var(--m-hair,#ced0d4);font-size:14px;color:var(--m-ink,#1c1e21);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+</style>
+<style id="circ-fig-css">
+.circ-fig{margin-top:14px;padding:12px 14px 10px;border-radius:16px;background:#fff;border:1px solid #dee3e9}
+.circ-fig svg{display:block;width:100%;height:auto;max-width:620px;margin:4px auto 0}
+.circ-h{font-weight:700;font-size:16.5px;color:#0a1317;display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:-.3px}
+.circ-cap{font-size:13.5px;color:#1c1e21;line-height:1.65;margin-top:8px;border-top:1px dashed #dee3e9;padding-top:8px}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1357,6 +1424,7 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="cover-cta">
  <button class="btn primary xl" id="coverGo">스위치 켜러 가기 🧭</button>
  <span class="cover-hint">진행 상황은 이 기기에 자동 저장돼요 · 왼쪽 위 제목을 누르면 이 화면으로 돌아옵니다</span>
+ <span class="cover-hint" id="coverModeHint">🎯 <b>혼자 탐구</b>로 하려면 오른쪽 위 🎯 버튼을 눌러 <b>학번·이름·참여 코드</b>를 넣어요 — 미션을 하나씩 깨며 나아가고, 쓴 글은 선생님에게 전해집니다.</span>
  </div>
  </div>
 </div>
@@ -1371,6 +1439,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="head-right">
  <a class="hbtn" href="index.html" title="단원 허브로">⚡</a>
  <button class="hbtn" id="tmodeBtn" title="교사 모드 — 문장 설명과 교실 노트 보기">🧑‍🏫</button>
+ <button class="hbtn" id="modeBtn" title="수업 방식 — 🎯 혼자 탐구(학번·코드 필요) / 🧑‍🏫 강의식">🎯</button>
+ <span class="stu-badge" id="stuBadge"></span>
+ <a class="hbtn" id="dashLink" href="04-ohm-teacher.html" target="_blank" rel="noopener" title="학생 기록 보기 (교사 페이지 · 관리 코드 필요)">📊</a>
  <div class="progress-mini" id="progWrap" title="진행도 — 누르면 남은 활동이 보여요">
  <svg class="pgauge" viewBox="0 0 96 56" aria-hidden="true">
  <path d="M10 50 A38 38 0 0 1 86 50" fill="#f6eedb" stroke="#7d541e" stroke-width="2.5"/>
@@ -1514,6 +1585,13 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <button class="btn ghost sm" data-poe="none">③ 바늘이 움직이지 않는다</button>
  </div>
  <div class="verdict" id="poeMsg">셋 중 하나를 골라 보세요. <b>지금은 틀려도 됩니다.</b> 실험이 심판을 봐 줄 거예요.</div>
+ <div class="think" data-stage="2">
+ <div class="th">✍️ 왜 그렇게 예상했나요?<span class="req">10자 이상</span></div>
+ <div class="hint">지난 시간 배운 것이나 겪어 본 것을 끌어와 까닭을 쓰세요.</div>
+ <textarea data-think="why" data-ime="submit" rows="3" placeholder="예) 전류의 방향이 바뀌면 … 것 같아서"></textarea>
+ <div class="cnt"><span class="n">0자</span><span class="savemark">✔ 저장됨</span></div>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="think">📮 제출하기</button><span class="sub-st" data-substatus="think"></span></div>
+ </div>
  <div class="note class"><span class="ic">💬</span><div><b>POE 운영</b> — 손들기로 세 예상의 분포를 칠판에 적어 두세요. 근거를 물으면 "전기가 반대로 가니까 바늘도 반대", "자석은 그대로니까 변화 없다" 같은 생각이 나옵니다. 판정하지 말고 기록만 해 두고, 실험 후 자기 예상과 결과를 비교하게 하는 것이 핵심입니다.</div></div>
  </div>
 
@@ -1526,9 +1604,11 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <li>클립을 스탠드에 실로 매달아 코일에 가까이 가져간 뒤, 스위치를 닫아 <b class="k">클립의 움직임</b>을 관찰한다.</li>
  <li>코일에 흐르는 <b class="k">전류의 세기</b>를 세게 했을 때와 약하게 했을 때 클립의 움직임을 관찰한다.</li>
  </ol>
- <figure class="fig" data-fig="co-setup"
- data-alt="코일, 디지털 전류계, 전원 장치, 스위치를 집게 달린 전선으로 연결하고 코일 옆에 나침반을 놓은 실험 장치"
- data-cap="준비물: 코일, 디지털 전류계, 전원 장치, 스위치, 집게 달린 전선, 나침반, 클립, 실, 스탠드, 면장갑 "></figure>
+<div class="circ-fig">
+ <div class="circ-h">📐 실험 장치 — 코일 옆의 나침반</div>
+<svg viewBox="0 0 560 300" role="img" aria-label="전원 장치 → 스위치 → 전류계 → 코일이 한 줄로(직렬) 이어지고, 나침반은 코일 끝의 축 위에 놓습니다. 스위치를 닫아 전류가 흐르면 나침반 바늘이 돌아갑니다. 실물 실험에서는 값을 읽은 뒤 바로 스위치를 열어 코일이 뜨거워지지 않게 합니다."><path d="M140 172 H190 V96 H240" fill="none" stroke="#0a1317" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M350 96 H400 V232 H384" fill="none" stroke="#0a1317" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M340 232 V262 H280" fill="none" stroke="#0a1317" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M232 262 H180 V222 H140" fill="none" stroke="#0a1317" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="30" y="150" width="110" height="76" rx="10" fill="#f1f4f7" stroke="#0a1317" stroke-width="2.5"/><circle cx="60" cy="190" r="11" fill="#fff" stroke="#0a1317" stroke-width="2.5"/><line x1="60" y1="190" x2="66" y2="182" stroke="#0a1317" stroke-width="2.5"/><circle cx="124" cy="172" r="6" fill="#b23a30"/><circle cx="124" cy="204" r="6" fill="#2e5f8f"/><text x="114" y="177" text-anchor="end" font-family="Pretendard, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#b23a30">+</text><text x="114" y="209" text-anchor="end" font-family="Pretendard, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#2e5f8f">−</text><text x="85.0" y="244" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="12.5" font-weight="700" fill="#0a1317">전원 장치</text><rect x="240" y="70" width="110" height="52" rx="26" fill="#e9dcc6" stroke="#8a5f24" stroke-width="2"/><line x1="250.0" y1="73" x2="250.0" y2="119" stroke="#8a5f24" stroke-width="3"/><line x1="261.2" y1="73" x2="261.2" y2="119" stroke="#8a5f24" stroke-width="3"/><line x1="272.5" y1="73" x2="272.5" y2="119" stroke="#8a5f24" stroke-width="3"/><line x1="283.8" y1="73" x2="283.8" y2="119" stroke="#8a5f24" stroke-width="3"/><line x1="295.0" y1="73" x2="295.0" y2="119" stroke="#8a5f24" stroke-width="3"/><line x1="306.2" y1="73" x2="306.2" y2="119" stroke="#8a5f24" stroke-width="3"/><line x1="317.5" y1="73" x2="317.5" y2="119" stroke="#8a5f24" stroke-width="3"/><line x1="328.8" y1="73" x2="328.8" y2="119" stroke="#8a5f24" stroke-width="3"/><line x1="340.0" y1="73" x2="340.0" y2="119" stroke="#8a5f24" stroke-width="3"/><text x="295" y="58" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#8a5f24">코일</text><rect x="262" y="122" width="66" height="8" rx="2" fill="#ced0d4" stroke="#5d6c7b" stroke-width="1.5"/><rect x="310" y="180" width="104" height="62" rx="10" fill="#f1f4f7" stroke="#0a1317" stroke-width="2.5"/><rect x="326" y="190" width="72" height="30" rx="5" fill="#fff" stroke="#ced0d4" stroke-width="1.5"/><text x="362" y="211" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-size="15" font-weight="700" fill="#a05c2c">0.50 A</text><circle cx="340" cy="232" r="5" fill="#b23a30"/><circle cx="384" cy="232" r="5" fill="#2e5f8f"/><text x="362" y="260" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="12.5" font-weight="700" fill="#0a1317">디지털 전류계</text><circle cx="232" cy="262" r="5" fill="#0a1317"/><circle cx="276" cy="262" r="5" fill="#0a1317"/><g transform="rotate(0 232 262)"><line x1="232" y1="262" x2="272" y2="262" stroke="#0a1317" stroke-width="4" stroke-linecap="round"/></g><rect x="220" y="270" width="68" height="10" rx="3" fill="#f1f4f7" stroke="#ced0d4" stroke-width="1.5"/><text x="254" y="296" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="11.5" fill="#5d6c7b">스위치(닫힘)</text><circle cx="455" cy="96" r="28" fill="#fff" stroke="#0a1317" stroke-width="2.5"/><circle cx="455" cy="96" r="22" fill="none" stroke="#ced0d4" stroke-width="1"/><g transform="rotate(-35 455 96)"><polygon points="455,76 450,96 460,96" fill="#b23a30"/><polygon points="455,116 450,96 460,96" fill="#2e5f8f"/></g><circle cx="455" cy="96" r="3" fill="#0a1317"/><text x="455" y="62" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#b23a30">N</text><text x="455" y="140" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="11.5" fill="#5d6c7b">나침반 — 코일 끝(축) 옆에</text><line x1="410" y1="96" x2="415.0" y2="96.0" stroke="#2c6e5f" stroke-width="2"/><polygon points="424,96 412.0,91.0 412.0,101.0" fill="#2c6e5f"/><text x="180" y="84" text-anchor="middle" font-family="Pretendard, -apple-system, sans-serif" font-size="11.5" font-weight="700" fill="#a05c2c">전류의 방향</text><line x1="190" y1="130" x2="190.0" y2="117.0" stroke="#a05c2c" stroke-width="2.5"/><polygon points="190,108 185.0,120.0 195.0,120.0" fill="#a05c2c"/></svg>
+ <div class="circ-cap">전원 장치 → 스위치 → 전류계 → 코일이 한 줄로(직렬) 이어지고, 나침반은 코일 끝의 축 위에 놓습니다. 스위치를 닫아 전류가 흐르면 나침반 바늘이 돌아갑니다. 실물 실험에서는 값을 읽은 뒤 바로 스위치를 열어 코일이 뜨거워지지 않게 합니다.</div>
+ </div>
  <div class="note class"><span class="ic">💬</span><div><b>탐구 지도 유의점(교과서 명시)</b> — ① 스위치를 오래 누르면 코일에 열이 나 <b>화상 위험</b>이 있습니다. <b>관찰할 때만 스위치를 닫게</b> 하세요. ② 전류가 흐르는 동안 코일이나 전선을 만지지 않게 합니다. ③ 나침반은 지름 20 mm 정도로 작은 것을 코일 <b>가까이</b> 둡니다. ④ 전류가 약하면 지구 자기장의 영향이 상대적으로 커져 결과가 잘 안 나옵니다 — 전원 장치·코일·스위치로만 회로를 만들어 충분히 센 전류를 흘리고, 코일의 중심축은 동서(또는 남북) 방향으로 놓으세요. ⑤ 아래 가상 실험대는 실제 실험을 대신하지 않습니다 — 예습·복습용입니다.</div></div>
  </div>
 
@@ -1628,8 +1708,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <p class="rg-q">네 가지를 바꿔 보았습니다 — <b>스위치 · 전류의 방향 · 전류의 세기 · 감은 수</b>.
  이 중 <b>코일의 N극 위치</b>를 바꾼 것은 무엇이고, <b>자기장의 세기</b>를 바꾼 것은 무엇인가요?
  표를 세로로 훑어보며 <b>한 번에 하나씩만</b> 달라진 두 줄을 찾아 견주어 보세요.</p>
- <textarea id="ruleTa" placeholder="예: 전원 연결만 바꾼 두 줄을 보니 코일의 N극이 …, 전류의 세기만 바꾼 두 줄을 보니 자기장 세기가 …"></textarea>
+ <textarea data-ime="submit" id="ruleTa" placeholder="예: 전원 연결만 바꾼 두 줄을 보니 코일의 N극이 …, 전류의 세기만 바꾼 두 줄을 보니 자기장 세기가 …"></textarea>
  <span class="savemark" id="ruleSaved">✔ 저장됨</span>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="rule">📮 제출하기</button><span class="sub-st" data-substatus="rule"></span></div>
  <div class="btn-row"><button class="btn ghost sm" id="ruleAnsBtn">모범 답안 확인하기</button></div>
  <div class="explain" id="ruleAns" style="margin-top:12px">
  <div class="why">✍️ 모범 답안</div>
@@ -1685,47 +1766,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  </div>
  </div>
 
-<div class="card xsim" id="dom-card">
- <span class="xsim-scope">🔎 왜 그럴까 · 성취기준 밖 보조 자료</span>
- <h3 class="card-t">🧭 철 속에는 이미 작은 자석들이 있다 — 자기 구역</h3>
- <p class="lead say">철은 원래 자석이 아닌데 왜 자석에 <b>붙을까요?</b> 그리고 전자석은 왜 전류를 끊으면 <b>자석이 아니게</b> 될까요?
- 답은 철 안에 있는 <b class="k">자기 구역</b>에 있습니다. 아래 작은 화살표 하나하나가 <b>아주 작은 자석</b>이에요.</p>
- <div class="keyline-s"><span class="kw">철 속 작은 자석들</span><span class="kw">평소엔 제멋대로 → 상쇄</span><span class="arw">→</span><span class="kw hi">정렬되면 하나의 큰 자석</span><span class="memo"></span></div>
 
- <div class="xsim-stage"><canvas id="domCv" height="240" aria-label="철 조각 속 작은 자석(자기 구역)들이 제멋대로 있다가, 외부 자기장을 걸면 한 방향으로 정렬되어 전체가 자석이 되는 모습."></canvas></div>
+ <div class="moved-note">📦 <b>「🧭 철 속에는 이미 작은 자석들이 있다 — 자기 구역」</b>은 교과서 밖 내용이라 <button type="button" class="btn ghost sm" onclick="showTab('beyond')">⚡ 더 알아보기</button>로 옮겼어요.</div>
 
- <div class="xsim-ctl">
-  <button class="xsim-btn" id="domField">🔋 전류 켜기 (외부 자기장 걸기)</button>
-  <span class="xsim-lab" style="margin-left:14px"><b>재료:</b></span>
-  <button class="xsim-btn on" data-mat="soft">🔩 연철 (전자석 심)</button>
-  <button class="xsim-btn" data-mat="hard">🧲 강철 (영구자석 재료)</button>
-  <button class="xsim-btn" id="domShake" style="margin-left:auto">🔨 두들기기</button>
- </div>
-
- <div class="xsim-read">
-  <div class="xsim-r"><div class="k">정렬된 정도</div><div class="v" id="domAlign">0<small> %</small></div></div>
-  <div class="xsim-r"><div class="k">전체 자기력</div><div class="v" id="domForce">없음</div></div>
-  <div class="xsim-r"><div class="k">지금 이 물체는</div><div class="v" id="domIs">그냥 철</div></div>
- </div>
- <div class="xsim-msg" id="domMsg">지금은 작은 자석들이 <b>제멋대로</b>입니다. 서로 방향이 달라 효과가 <b>상쇄</b>되어, 전체로는 자석이 아니에요.</div>
-
- <div class="xsim-why"><div class="h">🤔 정렬되면 왜 자석이 될까?</div>
- 작은 자석 하나하나는 <b>원래부터</b> N극과 S극을 가지고 있습니다. 그런데 방향이 제각각이면
- 어떤 것은 오른쪽, 어떤 것은 왼쪽을 향해 <b>서로의 효과를 지워 버립니다.</b> 전체로 보면 0이 되는 거죠.<br>
- 외부 자기장이 걸리면 이 작은 자석들이 <b>같은 방향으로 돌아섭니다.</b> 그러면 효과가 지워지지 않고
- <b>모두 더해져서</b>, 물체의 한쪽 끝에는 N극이, 반대쪽 끝에는 S극이 나타나요.
- <b>작은 자석들의 합 = 전체 자석</b> — 이것이 자석이 되는 원리입니다.</div>
-
- <div class="xsim-why"><div class="h">🧲 영구자석과 철 속 작은 자석은 뭐가 다를까?</div>
- <b>둘 다 작은 자석(자기 구역)을 가지고 있다는 점은 똑같습니다.</b> 차이는 <b>정렬을 유지하는 능력</b>이에요.<br>
- · <b>연철(전자석의 심)</b> — 작은 자석들이 <b>쉽게 돌아서고, 쉽게 흐트러집니다.</b> 그래서 전류를 켜면 곧바로 세게 정렬되어 강한 자석이 되고,
- 전류를 끊으면 열운동 때문에 금방 제멋대로로 돌아가 자석이 아니게 됩니다. <b>껐다 켰다 할 수 있어야 하는</b> 전자석에 딱 맞죠.<br>
- · <b>강철·영구자석</b> — 작은 자석들이 <b>한 번 정렬되면 그 자리에 고정</b>됩니다. 그래서 외부 자기장을 없애도 자석으로 남아요.
- 대신 껐다 켰다 할 수 없습니다.<br>
- <b>「두들기기」를 눌러 보세요</b> — 강한 충격을 주면 영구자석도 정렬이 흐트러져 자기력이 약해집니다. 자석을 떨어뜨리면 안 되는 이유예요.</div>
-
- <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① 연철 상태로 "지금은 그냥 철입니다. 화살표가 제멋대로죠?" ② 전류 켜기 → "정렬! 이제 자석입니다." ③ 전류 끄기 → "다시 흐트러집니다 — <b>오해①의 답</b>." ④ 강철로 바꿔 같은 실험 → "이번엔 꺼도 남아 있죠? 이게 영구자석." ⑤ 「두들기기」 → "영구자석도 흐트러뜨릴 수 있습니다."</div></div>
-</div>
 
 <script>
 (function(){
@@ -1852,8 +1895,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <span class="pill">① <b>전류의 방향</b>을 바꿨을 때 : 나침반 바늘은 어떻게 됐나?</span>
  <span class="pill">② <b>전류의 세기</b>를 키웠을 때 : 자기장 세기(클립의 움직임)는?</span>
  </div>
- <textarea id="conclTa" placeholder="예: 전류의 방향을 바꾸면 나침반 바늘이 …, 전류를 세게 하면 클립이 …"></textarea>
+ <textarea data-ime="submit" id="conclTa" placeholder="예: 전류의 방향을 바꾸면 나침반 바늘이 …, 전류를 세게 하면 클립이 …"></textarea>
  <span class="savemark" id="conclSaved">✔ 저장됨</span>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="concl">📮 제출하기</button><span class="sub-st" data-substatus="concl"></span></div>
  <div class="btn-row"><button class="btn ghost sm" id="conclAnsBtn">모범 답안 확인하기</button></div>
  <div class="explain" id="conclAns" style="margin-top:12px">
  <div class="why">✍️ 모범 답안</div>
@@ -2101,6 +2145,16 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <p class="cloze-hint">빈칸을 그냥 눌러 답만 보면 남지 않아요. 소리 내어 답해 보고 누르세요.</p>
  </div>
 
+ <div class="card" style="margin-top:18px">
+ <h3 class="card-t">✍️ 내 말로 정리</h3>
+ <div class="think" data-stage="3">
+ <div class="th">✍️ 내 말로 정리 — 코일 주위 자기장의 방향과 세기<span class="req">10자 이상</span></div>
+ <div class="hint">「전류의 방향」「감은 수」「전류의 세기」 중 둘 이상을 넣어서.</div>
+ <textarea data-think="summary" data-ime="submit" rows="3" placeholder="예) 전류의 방향을 바꾸면 … 감은 수를 늘리면 …"></textarea>
+ <div class="cnt"><span class="n">0자</span><span class="savemark">✔ 저장됨</span></div>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="think">📮 제출하기</button><span class="sub-st" data-substatus="think"></span></div>
+ </div>
+ </div>
  <div class="miniquiz" data-quiz="rule"></div>
  <div class="cta-row"><button class="btn primary" data-go="apply">4단계 · 어디에 쓰일까 →</button></div>
 </section>
@@ -2201,8 +2255,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <text x="280" y="88" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="14.5" font-weight="700" fill="#2c7a44">서로 끌어당긴다</text>
  </svg>
  </div>
- <textarea id="essay" placeholder="힌트: 먼저 오른손 규칙으로 (가)의 N극과 S극을 찾으세요. 그다음, 끌어당기려면 (나)의 왼쪽 끝이 무슨 극이어야 할지 따져 보세요."></textarea>
+ <textarea data-ime="submit" id="essay" placeholder="힌트: 먼저 오른손 규칙으로 (가)의 N극과 S극을 찾으세요. 그다음, 끌어당기려면 (나)의 왼쪽 끝이 무슨 극이어야 할지 따져 보세요."></textarea>
  <span class="savemark" id="essaySaved">✔ 저장됨</span>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="essay">📮 제출하기</button><span class="sub-st" data-substatus="essay"></span></div>
  <div class="btn-row"><button class="btn ghost sm" id="ansBtn">모범 답안 확인하기</button></div>
  <div class="explain" id="modelAns" style="margin-top:12px">
  <div class="why">✍️ 모범 답안 </div>
@@ -2309,6 +2364,48 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="stepline opt"><span class="sbadge">선택</span><span class="swhat">더 알아보기 · 시험에 나오지 않습니다</span></div>
  <h2 class="sec">나침반을 움직인 우연, 그리고 켜고 끄는 자석의 세계</h2>
  <p class="lead">여기서부터는 <b class="k">교과서 밖 이야기</b>입니다. 시험에 나오지 않아요. 외우지 말고 그냥 읽어 보세요.</p>
+<div class="card xsim" id="dom-card">
+ <span class="xsim-scope">🔎 왜 그럴까 · 성취기준 밖 보조 자료</span>
+ <h3 class="card-t">🧭 철 속에는 이미 작은 자석들이 있다 — 자기 구역</h3>
+ <p class="lead say">철은 원래 자석이 아닌데 왜 자석에 <b>붙을까요?</b> 그리고 전자석은 왜 전류를 끊으면 <b>자석이 아니게</b> 될까요?
+ 답은 철 안에 있는 <b class="k">자기 구역</b>에 있습니다. 아래 작은 화살표 하나하나가 <b>아주 작은 자석</b>이에요.</p>
+ <div class="keyline-s"><span class="kw">철 속 작은 자석들</span><span class="kw">평소엔 제멋대로 → 상쇄</span><span class="arw">→</span><span class="kw hi">정렬되면 하나의 큰 자석</span><span class="memo"></span></div>
+
+ <div class="xsim-stage"><canvas id="domCv" height="240" aria-label="철 조각 속 작은 자석(자기 구역)들이 제멋대로 있다가, 외부 자기장을 걸면 한 방향으로 정렬되어 전체가 자석이 되는 모습."></canvas></div>
+
+ <div class="xsim-ctl">
+  <button class="xsim-btn" id="domField">🔋 전류 켜기 (외부 자기장 걸기)</button>
+  <span class="xsim-lab" style="margin-left:14px"><b>재료:</b></span>
+  <button class="xsim-btn on" data-mat="soft">🔩 연철 (전자석 심)</button>
+  <button class="xsim-btn" data-mat="hard">🧲 강철 (영구자석 재료)</button>
+  <button class="xsim-btn" id="domShake" style="margin-left:auto">🔨 두들기기</button>
+ </div>
+
+ <div class="xsim-read">
+  <div class="xsim-r"><div class="k">정렬된 정도</div><div class="v" id="domAlign">0<small> %</small></div></div>
+  <div class="xsim-r"><div class="k">전체 자기력</div><div class="v" id="domForce">없음</div></div>
+  <div class="xsim-r"><div class="k">지금 이 물체는</div><div class="v" id="domIs">그냥 철</div></div>
+ </div>
+ <div class="xsim-msg" id="domMsg">지금은 작은 자석들이 <b>제멋대로</b>입니다. 서로 방향이 달라 효과가 <b>상쇄</b>되어, 전체로는 자석이 아니에요.</div>
+
+ <div class="xsim-why"><div class="h">🤔 정렬되면 왜 자석이 될까?</div>
+ 작은 자석 하나하나는 <b>원래부터</b> N극과 S극을 가지고 있습니다. 그런데 방향이 제각각이면
+ 어떤 것은 오른쪽, 어떤 것은 왼쪽을 향해 <b>서로의 효과를 지워 버립니다.</b> 전체로 보면 0이 되는 거죠.<br>
+ 외부 자기장이 걸리면 이 작은 자석들이 <b>같은 방향으로 돌아섭니다.</b> 그러면 효과가 지워지지 않고
+ <b>모두 더해져서</b>, 물체의 한쪽 끝에는 N극이, 반대쪽 끝에는 S극이 나타나요.
+ <b>작은 자석들의 합 = 전체 자석</b> — 이것이 자석이 되는 원리입니다.</div>
+
+ <div class="xsim-why"><div class="h">🧲 영구자석과 철 속 작은 자석은 뭐가 다를까?</div>
+ <b>둘 다 작은 자석(자기 구역)을 가지고 있다는 점은 똑같습니다.</b> 차이는 <b>정렬을 유지하는 능력</b>이에요.<br>
+ · <b>연철(전자석의 심)</b> — 작은 자석들이 <b>쉽게 돌아서고, 쉽게 흐트러집니다.</b> 그래서 전류를 켜면 곧바로 세게 정렬되어 강한 자석이 되고,
+ 전류를 끊으면 열운동 때문에 금방 제멋대로로 돌아가 자석이 아니게 됩니다. <b>껐다 켰다 할 수 있어야 하는</b> 전자석에 딱 맞죠.<br>
+ · <b>강철·영구자석</b> — 작은 자석들이 <b>한 번 정렬되면 그 자리에 고정</b>됩니다. 그래서 외부 자기장을 없애도 자석으로 남아요.
+ 대신 껐다 켰다 할 수 없습니다.<br>
+ <b>「두들기기」를 눌러 보세요</b> — 강한 충격을 주면 영구자석도 정렬이 흐트러져 자기력이 약해집니다. 자석을 떨어뜨리면 안 되는 이유예요.</div>
+
+ <div class="note class"><span class="ic">💬</span><div><b>이야기 각본</b> — ① 연철 상태로 "지금은 그냥 철입니다. 화살표가 제멋대로죠?" ② 전류 켜기 → "정렬! 이제 자석입니다." ③ 전류 끄기 → "다시 흐트러집니다 — <b>오해①의 답</b>." ④ 강철로 바꿔 같은 실험 → "이번엔 꺼도 남아 있죠? 이게 영구자석." ⑤ 「두들기기」 → "영구자석도 흐트러뜨릴 수 있습니다."</div></div>
+</div>
+
  <div class="expc"><h3 class="expc-t">🧪 더 알아보기 — 껐다 켤 수 있다는 것</h3><p class="expc-s">고철장 크레인이 <b>영구자석을 쓰지 않는</b> 이유<span class="toghint">실험 이름을 누르면 준비물과 방법이 펼쳐집니다.</span></p><details class="exp"><summary class="exp-h"><span class="n">2</span><h4>고철을 들어 올리는 전자석 크레인</h4><span class="exp-tag vid">영상으로</span></summary><div class="exp-in"><p class="exp-eye">👀 <b>여기를 보세요</b> — 크레인이 고철 더미를 <b>한 번에</b> 들어 올렸다가, 옮긴 자리에서 <b>툭 떨어뜨립니다</b>.</p><a class="exp-yt" href="https://www.youtube.com/results?search_query=%EA%B3%A0%EC%B2%A0%EC%9E%A5%20%EC%A0%84%EC%9E%90%EC%84%9D%20%ED%81%AC%EB%A0%88%EC%9D%B8" target="_blank" rel="noopener">📺 유튜브에서 찾기 — «고철장 전자석 크레인»</a><details class="exp-why"><summary>왜 그럴까?</summary><div class="in">질문 하나 — 왜 그냥 <b>센 영구자석</b>을 쓰지 않을까요?<br>들어 올리는 건 영구자석도 할 수 있습니다. 문제는 <b>놓는 것</b>이에요. 한 번 붙으면 뗄 방법이 없죠.<br>전자석은 <b>스위치 하나로</b> 자석이 됐다 안 됐다 합니다. 세기도 전류로 조절할 수 있고요. 방금 클립 낚시에서 스위치를 껐을 때 우수수 떨어지던 그 장면이, 저 크레인이 하는 일 전부입니다.<br>전자석이 쓰이는 곳을 이 기준으로 찾아보세요 — <b>껐다 켜야 하는 곳</b>에 어김없이 있습니다.</div></details></div></details></div>
 
 
@@ -2384,13 +2481,29 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
 </section>
 
 </main>
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT">
+ <div class="gbox">
+ <h3 id="gateT">🎯 혼자 탐구 시작하기</h3>
+ <div class="gsub">학번과 이름, 선생님이 알려 준 <b>참여 코드</b>를 넣으면 미션이 열려요. 한 번 넣으면 이 기기에서는 다른 차시도 그대로 이어집니다.</div>
+ <label for="gSid">학번 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(학년·반·번호 — 예: 2학년 3반 15번 → 20315)</span></label>
+ <input id="gSid" inputmode="numeric" maxlength="6" placeholder="20315" data-ime="off" autocomplete="off">
+ <label for="gName">이름</label>
+ <input id="gName" maxlength="12" placeholder="홍길동" autocomplete="off">
+ <label for="gCode">참여 코드</label>
+ <input id="gCode" maxlength="12" placeholder="선생님이 알려 준 코드" data-ime="off" autocomplete="off" style="text-transform:uppercase;letter-spacing:.08em">
+ <div class="gmsg" id="gMsg"></div>
+ <div class="gbtns"><button class="btn primary" id="gGo">시작 🎯</button><button class="btn ghost" id="gCancel">취소</button></div>
+ <div class="gnote">참여 코드가 없으면 <b>🧑‍🏫 강의식</b>으로도 모든 내용을 볼 수 있어요(기록은 이 기기에만 남습니다).</div>
+ </div>
+</div>
 <div id="toast"></div>
 <footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#ced0d4;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-08-08</span></footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 <script>
 "use strict";
 const FIGS={
- 'co-frame':'img/co-frame.jpg', 'co-setup':'img/co-setup.jpg', 'co-crane':'img/co-crane.jpg', 'co-induction':'img/co-induction.jpg'
+ 'co-frame':'img/co-frame.jpg', 'co-crane':'img/co-crane.jpg', 'co-induction':'img/co-induction.jpg'
 };
 const BG_IMAGES={cover:'',open:'',explore:'',rule:'',apply:'',check:'',sum:'',beyond:''};
 const BG_FALLBACK={
@@ -2600,6 +2713,7 @@ const A={ctx:null,
 ['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>A.ensure(),{once:true}));
 
 let S=load()||{tab:'open',visited:{},seen:{},warm:'',poe:'',rows:[],concl:'',cloze:{},mini:{},rh:{},essay:'',best:0,medals:{}};
+S.think=S.think||{};S.stu=S.stu||null;S.msn=S.msn||{};S.sub=S.sub||{};S.subTxt=S.subTxt||{};S.visited=S.visited||{};
 S.visited=S.visited||{};S.seen=S.seen||{};S.rows=S.rows||[];S.cloze=S.cloze||{};S.mini=S.mini||{};
 S.medals=S.medals||{};S.essay=S.essay||'';S.poe=S.poe||'';S.concl=S.concl||'';S.rh=S.rh||{};S.warm=S.warm||'';
 S.ruleTxt=S.ruleTxt||'';
@@ -2626,25 +2740,80 @@ function progChecks(){
  {label:'5단계 · 확인 문제 완주', ok:S.best>0}
  ];
 }
+
+/* ── 🎯 혼자 탐구: 서술 항목은 제출해야 완료 + 생각 쓰기 칸 항목 (단계 순으로 정렬) ── */
+const SOLO_SUB={'2단계 · 표에서 규칙 찾아 쓰기':'rule','2단계 · 나의 결론 써 보기':'concl','4단계 · 사고력 문제 답쓰기':'essay'}, SOLO_THINK=[{key:'why',stage:2,label:'왜 그렇게 예상했나요?'},{key:'summary',stage:3,label:'내 말로 정리 — 코일 주위 자기장의 방향과 세기'}];
+const thinkLen=k=>((S.think||{})[k]||'').trim().length;
+const _progChecks0=progChecks;
+progChecks=function(){const c=_progChecks0();c.forEach(x=>{const k=SOLO_SUB[x.label];if(k){x.ok=x.ok&&!!(S.sub||{})[k];x.label=x.label+' → 제출';}});SOLO_THINK.forEach(t=>c.push({label:t.stage+'단계 · '+t.label+' → 제출',ok:thinkLen(t.key)>=10&&!!(S.sub||{})[t.key]}));const st=l=>{const d=(String(l).split('단계')[0].match(/\d/g)||[]).map(Number);return d.length?Math.max(...d):0;};return c.map((x,i)=>({x,i,s:st(x.label)})).sort((a,b)=>a.s-b.s||a.i-b.i).map(o=>o.x);};
 function updateProgress(){
  const c=progChecks(), pct=Math.round(c.filter(x=>x.ok).length/c.length*100);
  $('#progBar').style.width=pct+'%';$('#progPct').textContent=pct+'%';
  const _pn=$('#progNeedle'); if(_pn)_pn.style.transform='rotate('+(pct*1.8-90)+'deg)';
  const ul=$('#progItems');
  if(ul)ul.innerHTML=c.map(x=>`<li class="${x.ok?'on':''}"><span class="mk">${x.ok?'✔':'○'}</span>${x.label}</li>`).join('');
- const done={open:Object.keys(S.seen||{}).length>=1&&!!S.warm,
- explore:!!S.poe&&labOk()&&(S.ruleTxt||'').trim().length>=10&&(S.concl||'').trim().length>=10,
- rule:CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL&&!!S.mini.rule&&Object.keys(S.rh||{}).length>=2,
- apply:(S.essay||'').trim().length>=15,
- check:S.best>0, beyond:!!S.visited.beyond};
+ const done={};MSN.forEach(m=>{done[m.tab]=msnDone(m,c);});done.beyond=!!S.visited.beyond;
  $$('#tabNav button').forEach(b=>b.classList.toggle('done',!!done[b.dataset.tab]));
+ checkMsnClear();paintLocks();paintMissions();
 }
 let toastT;
 function toast(msg,kind=''){const el=$('#toast');el.innerHTML=msg;el.className='show '+kind;
  clearTimeout(toastT);toastT=setTimeout(()=>el.className='',2300);}
 
+
+/* ── 🎯 미션 잠금 — 혼자 탐구 모드에서만. 진행 항목의 「N단계」 숫자로 자동 묶는다 ── */
+const MAIN_TABS=TABS.filter(t=>t!=='sum'&&t!=='beyond');
+const stageOf=l=>{const d=(String(l).split('단계')[0].match(/\d/g)||[]).map(Number);return d.length?Math.max(...d):0;};
+const tabName=t=>{const b=$('#tabNav button[data-tab="'+t+'"]');return b?b.textContent.replace(/^\s*\d+\s*/,'').trim():t;};
+const MSN=MAIN_TABS.map((t,k)=>({tab:t,stage:k+1,name:'미션 '+(k+1)+' · '+tabName(t)}));
+const teacherOn=()=>document.body.classList.contains('teacher');
+const soloOn=()=>document.body.classList.contains('solo');
+function msnItems(m,c){c=c||progChecks();return c.filter(x=>stageOf(x.label)===m.stage);}
+function msnDone(m,c){return msnItems(m,c).every(x=>x.ok);}
+function gateOf(id){
+ if(!soloOn()||teacherOn()||id==='beyond')return null;
+ const c=progChecks();
+ if(id==='sum'){const m=MSN.find(x=>!msnDone(x,c));return m?{sum:true,m:m}:null;}
+ const k=MSN.findIndex(x=>x.tab===id);
+ if(k<=0)return null;
+ for(let i=0;i<k;i++)if(!msnDone(MSN[i],c))return {m:MSN[i]};
+ return null;
+}
+function landTab(){const c=progChecks();for(const m of MSN)if(!msnDone(m,c))return m.tab;return 'sum';}
+function paintLocks(){
+ $$('#tabNav button').forEach(b=>{
+ const locked=!!gateOf(b.dataset.tab), was=b.classList.contains('locked');
+ b.classList.toggle('locked',locked);b.setAttribute('aria-disabled',locked?'true':'false');
+ if(was&&!locked){b.classList.remove('justopen');void b.offsetWidth;b.classList.add('justopen');}
+ });
+}
+function paintMissions(){
+ const c=progChecks();
+ MSN.forEach(m=>{
+ let bn=$('#msnb-'+m.tab);
+ if(!bn){const sl=$('#panel-'+m.tab+' .stepline');if(!sl)return;bn=document.createElement('div');bn.className='msn-banner';bn.id='msnb-'+m.tab;sl.insertAdjacentElement('afterend',bn);}
+ const items=msnItems(m,c), ok=items.every(x=>x.ok);
+ bn.classList.toggle('alldone',ok);
+ bn.innerHTML='<span class="mt">🎯 '+m.name+(ok?' — 완수! 🎉':'')+'</span>'+items.map(x=>'<span class="mi'+(x.ok?' on':'')+'">'+(x.ok?'✅':'⬜')+' '+x.label.replace(/^[\d·~]+단계 · /,'').replace(/ \([\d·~]+단계\)$/,'')+'</span>').join('');
+ });
+ if(!$('#sumGuard')){const sl=$('#panel-sum .stepline');if(sl){const g=document.createElement('div');g.className='sum-guard';g.id='sumGuard';g.innerHTML='🧑‍🏫 <b>여기는 선생님과 함께 여는 마지막 방!</b> 미션을 모두 깬 사람만 들어올 수 있어요. 빈칸은 수업에서 선생님과 <b>하나씩 같이</b> 채웁니다.';sl.insertAdjacentElement('afterend',g);}}
+}
+function checkMsnClear(){
+ if(!soloOn())return;
+ const c=progChecks();
+ MSN.forEach((m,mi)=>{
+ if(!msnDone(m,c)||S.msn[m.tab])return;
+ S.msn[m.tab]=1;save();A.win();
+ const nxt=mi<MSN.length-1?MSN[mi+1]:null;
+ toast(nxt?'🎉 <b>'+m.name+'</b> 완수! — 「'+nxt.name.split(' · ')[1]+'」의 문이 열렸어요 🔓':'🏆 <b>미션을 모두 완수!</b> 이제 📝 개념 정리를 <b>선생님과 함께</b> 열 수 있어요');
+ });
+}
 function showTab(id,noScroll){
  if(!TABS.includes(id))return;
+ const g=gateOf(id);
+ if(g){const b=$('#tabNav button[data-tab="'+id+'"]');if(b){b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');}
+  A.blip(210,.14,'sawtooth',.06);
+  toast(g.sum?'🧑‍🏫 <b>개념 정리하기</b>는 미션을 모두 깬 뒤 <b>선생님과 함께</b> 열어요! (남은 미션: '+g.m.name+')':'🔒 아직 잠긴 방이에요 — <b>'+g.m.name+'</b>부터 완수!');return;}
  $$('.panel').forEach(p=>p.classList.remove('show'));
  $('#panel-'+id).classList.add('show');
  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
@@ -2660,7 +2829,7 @@ function refreshCover(){
  $('#coverGo').textContent=any?`이어서 하기 (${$('#progPct').textContent}) 🧭`:'스위치 켜러 가기 🧭';
 }
 $('#coverGo').addEventListener('click',()=>{$('#cover').classList.add('hide');
- document.body.classList.remove('cover-on');A.ensure();A.pop();showTab(S.tab||'open',true);});
+ document.body.classList.remove('cover-on');A.ensure();A.pop();showTab(gateOf(S.tab||'open')?landTab():(S.tab||'open'),true);});
 $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classList.remove('hide');
  document.body.classList.add('cover-on');setBg('cover');});
 
@@ -2669,7 +2838,270 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  $('#tmodeBtn').addEventListener('click',()=>{
  const on=!document.body.classList.contains('teacher');
  document.body.classList.toggle('teacher',on);localStorage.setItem(KEY,on?'1':'0');
- toast(on?'교사 모드 ON — 문장 설명과 교실 노트가 보입니다 🧑‍🏫':'학생 화면 — 키워드만 보입니다 🎒');});})();
+ updateProgress();
+  toast(on?'교사 모드 ON — 교실 노트가 보이고 미션 잠금이 풀립니다 🧑‍🏫':'교사 노트를 숨겼어요 🎒');});})();
+
+/* ── ✍️ 생각 쓰기 칸 — 자동 저장 ── */
+(function(){
+ $$('textarea[data-think]').forEach(ta=>{
+ const k=ta.dataset.think, box=ta.closest('.think'), n=box&&box.querySelector('.cnt .n'), mark=box&&box.querySelector('.savemark'), cnt=box&&box.querySelector('.cnt');
+ let t;const paint=()=>{const L=(ta.value||'').trim().length;if(n)n.textContent=L+'자';if(cnt)cnt.classList.toggle('ok',L>=10);};
+ ta.value=(S.think||{})[k]||'';paint();
+ ta.addEventListener('input',()=>{S.think[k]=ta.value;save();updateProgress();paint();if(mark){mark.classList.add('on');clearTimeout(t);t=setTimeout(()=>mark.classList.remove('on'),1400);}});
+ });
+})();
+
+/* ── 🎯 수업 방식: 혼자 탐구(관문 + 미션 잠금 + 서버 기록) ↔ 🧑‍🏫 강의식(전부 개방) ── */
+const MODE_KEY='elec_mode', STU_KEY='elec_stu';
+const stuGlobal=()=>{try{return JSON.parse(localStorage.getItem(STU_KEY)||'null');}catch(e){return null;}};
+function paintMode(){
+ const solo=soloOn(), b=$('#modeBtn');
+ if(b){b.textContent=solo?'🎯':'🧑‍🏫';b.classList.toggle('solo',solo);b.title=solo?'지금: 혼자 탐구 — 미션을 깨야 다음이 열림. 누르면 강의식(전부 개방)으로':'지금: 강의식 — 모든 단계 개방. 누르면 혼자 탐구(학번·코드 필요)로';}
+ const bd=$('#stuBadge');if(bd&&S.stu)bd.textContent='🎒 '+S.stu.sid+' '+S.stu.name;
+ const lab=document.querySelector('.hb-wrap .hb-lab[data-for="modeBtn"]');if(lab)lab.textContent=solo?'혼자 탐구':'강의식';
+}
+function setMode(m){
+ document.body.classList.toggle('solo',m==='solo');document.body.classList.toggle('lecture',m!=='solo');
+ try{localStorage.setItem(MODE_KEY,m);}catch(e){}
+ paintMode();updateProgress();
+}
+function openGate(){
+ const g=$('#gate');g.classList.add('show');$('#gMsg').textContent='';$('#gMsg').className='gmsg';
+ const st=S.stu||stuGlobal();
+ if(st){$('#gSid').value=st.sid||'';$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
+ setTimeout(()=>$('#gSid').focus(),50);
+}
+function closeGate(){$('#gate').classList.remove('show');}
+$('#gCancel').addEventListener('click',closeGate);
+$('#gate').addEventListener('click',e=>{if(e.target===$('#gate'))closeGate();});
+['gSid','gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
+$('#gGo').addEventListener('click',async()=>{
+ const sid=$('#gSid').value.replace(/[^0-9]/g,''), name=$('#gName').value.trim(), code=$('#gCode').value.trim().toUpperCase();
+ const msg=$('#gMsg');const say=(t,c)=>{msg.innerHTML=t;msg.className='gmsg '+(c||'');};
+ if(!/^\d{4,6}$/.test(sid)){say('학번은 숫자 4~6자리로 써 주세요 — 예: 2학년 3반 15번 → <b>20315</b>','err');$('#gSid').focus();return;}
+ if(name.length<1){say('이름을 써 주세요','err');$('#gName').focus();return;}
+ if(code.length<3){say('참여 코드를 써 주세요 — 선생님이 칠판에 적어 준 그 코드예요','err');$('#gCode').focus();return;}
+ $('#gGo').disabled=true;say('확인하는 중…');
+ try{
+  const r=await OHM.join(code,sid,name);
+  if(r.error){say(r.error,'err');$('#gGo').disabled=false;return;}
+  S.stu={token:r.token,sid:sid,name:name,code:code,label:r.label||''};save();
+  try{localStorage.setItem(STU_KEY,JSON.stringify({sid:sid,name:name,code:code}));}catch(e){}
+  say('✅ '+name+' 님, 환영해요!','ok');
+  const pulled=await OHM.pull();
+  if(pulled&&pulled.state&&(pulled.progress||0)>0){
+   const mine=progChecks().filter(x=>x.ok).length;
+   if(pulled.progress>mine&&confirm('이전에 하던 기록('+pulled.progress+'단계 완료)이 서버에 있어요. 불러올까요?\n(이 기기의 기록은 덮어씁니다)'))OHM.restore(pulled.state);
+  }
+  setTimeout(()=>{closeGate();$('#gGo').disabled=false;setMode('solo');
+   toast('🎯 <b>혼자 탐구 시작!</b> 미션 1부터 하나씩 깨 보세요');
+   if(!$('#cover').classList.contains('hide')){$('#coverGo').click();}else showTab(gateOf(S.tab||MAIN_TABS[0])?landTab():(S.tab||MAIN_TABS[0]),true);
+  },500);
+ }catch(e){say('연결에 실패했어요 — 인터넷을 확인하고 다시 눌러 주세요 ('+(e&&e.message||e)+')','err');$('#gGo').disabled=false;}
+});
+
+/* ── ☁️ 서버 기록 (Supabase · 과학이조선생) — 표는 RPC 로만 ── */
+const OHM={
+ url:'https://vbvtnmnodeoocbbjauap.supabase.co',
+ key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZidnRubW5vZGVvb2NiYmphdWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTQ0OTYsImV4cCI6MjA5NTA3MDQ5Nn0.dvuRrt3qw2Tya_QwGbcXrmGPdfDgI4xmgyH8UjU73Nc',
+ page:'elec-coil', sb:null, timer:null, last:'', busy:false, dirty:false,
+ client(){if(this.sb)return this.sb;if(!window.supabase||!window.supabase.createClient)return null;this.sb=window.supabase.createClient(this.url,this.key,{auth:{persistSession:false}});return this.sb;},
+ device(){try{let d=localStorage.getItem('elec_device');if(!d){d=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('elec_device',d);}return d;}catch(e){return 'na';}},
+ async rpc(name,args){const c=this.client();if(!c)throw new Error('supabase 라이브러리를 불러오지 못했어요');const r=await c.rpc(name,args);if(r.error)throw new Error(r.error.message||String(r.error));return r.data;},
+ async join(code,sid,name){
+  try{const d=await this.rpc('ohm_join',{p_code:code,p_sid:sid,p_name:name,p_page:this.page,p_device:this.device()});
+   if(!d||d.error)return {error:(d&&d.error)||'참여 코드를 확인해 주세요'};return d;}
+  catch(e){const m=String(e.message||e);if(/function .*ohm_join|404|not find/i.test(m))return {error:'선생님이 아직 서버(참여 코드)를 준비하지 않았어요. 강의식으로 먼저 보세요.'};return {error:'연결 오류 — '+m};}
+ },
+ snapshot(){
+  const c=progChecks(), done=c.filter(x=>x.ok).length, texts={};
+  $$('textarea').forEach(t=>{const k=t.dataset.think||t.id;if(k&&!t.closest('.gate'))texts[k]=t.value;});
+  return {sid:S.stu&&S.stu.sid,name:S.stu&&S.stu.name,page:this.page,tab:S.tab,progress:done,total:c.length,pct:Math.round(done/c.length*100),
+   checks:c.map(x=>({l:x.label,ok:x.ok?1:0})),texts:texts,sub:S.sub||{},best:S.best,medals:S.medals||{},msn:S.msn||{},s:S,savedAt:new Date().toISOString()};
+ },
+ touch(){if(!S.stu||!S.stu.token)return;this.dirty=true;clearTimeout(this.timer);this.timer=setTimeout(()=>this.flush(),1500);},
+ async flush(){
+  if(!S.stu||!S.stu.token||this.busy)return;
+  const snap=this.snapshot(), js=JSON.stringify(snap);if(js===this.last){this.dirty=false;return;}
+  this.busy=true;
+  try{await this.rpc('ohm_save',{p_token:S.stu.token,p_state:snap,p_progress:snap.progress,p_pct:snap.pct,p_tab:S.tab||''});this.last=js;this.dirty=false;this.paintCloud('ok');}
+  catch(e){this.paintCloud('err');console.warn('[기록 저장]',e);}
+  finally{this.busy=false;if(this.dirty)this.touch();}
+ },
+ async pull(){if(!S.stu||!S.stu.token)return null;try{return await this.rpc('ohm_pull',{p_token:S.stu.token});}catch(e){return null;}},
+ restore(st){if(!st)return;const src=st.s||st;Object.keys(src).forEach(k=>{if(k!=='stu'&&src[k]!==undefined&&src[k]!==null)S[k]=src[k];});save();location.reload();},
+ paintCloud(k){const bd=$('#stuBadge');if(!bd||!S.stu)return;bd.textContent=(k==='ok'?'☁️ ':k==='err'?'⚠️ ':'🎒 ')+S.stu.sid+' '+S.stu.name;bd.title=k==='ok'?'서버에 저장됨':k==='err'?'서버 저장 실패 — 이 기기에는 저장돼 있어요':'';},
+ /* 다른 차시에서 이미 참여했으면 여기서는 조용히 이어 붙인다 */
+ async autoJoin(){
+  const g=stuGlobal();if(!g||(S.stu&&S.stu.token))return false;
+  const r=await this.join(g.code,g.sid,g.name);
+  if(r.error)return false;
+  S.stu={token:r.token,sid:g.sid,name:g.name,code:g.code,label:r.label||''};save();paintMode();return true;
+ }
+};
+(function(){const _save=save;window.save=function(){_save();try{OHM.touch();}catch(e){}};})();
+addEventListener('visibilitychange',()=>{if(document.hidden&&OHM.dirty)OHM.flush();});
+addEventListener('pagehide',()=>{if(OHM.dirty)OHM.flush();});
+(function(){
+ const want=(function(){try{return localStorage.getItem(MODE_KEY);}catch(e){return null;}})();
+ setMode(want==='solo'&&S.stu&&S.stu.token?'solo':'lecture');
+ if(want==='solo'&&!(S.stu&&S.stu.token)&&stuGlobal()){OHM.autoJoin().then(ok=>{if(ok){setMode('solo');toast('🎯 <b>'+S.stu.name+'</b> 님, 혼자 탐구로 이어서 갑니다');}});}
+ $('#modeBtn').addEventListener('click',()=>{
+  if(soloOn()){if(!confirm('강의식(전부 개방)으로 바꿀까요?\n미션 잠금이 풀립니다. 지금까지 쓴 글은 그대로 남아요.'))return;setMode('lecture');toast('🧑‍🏫 <b>강의식</b> — 모든 단계가 열려 있어요');}
+  else if(S.stu&&S.stu.token){setMode('solo');toast('🎯 <b>혼자 탐구</b> — '+S.stu.name+' 님, 미션을 하나씩 깨며 나아가요!');}
+  else if(stuGlobal()){OHM.autoJoin().then(ok=>{if(ok){setMode('solo');toast('🎯 <b>혼자 탐구</b> — '+S.stu.name+' 님, 이어서 갑니다');}else openGate();});}
+  else openGate();
+ });
+})();
+
+/* ══ ⌨️ 깨진 한글 입력 되살리기 (질문과수원에서 이식) ═══════════════════════
+   디벗(윈도우 한글 IME)이 모드를 잃으면 세 가지로 깨진다.
+     ① 전각        ｐｕｓｈ　ｅａｃｈ   → 조용히 고친다
+     ② 반각 자모   ﾡￜﾵﾼ                → 조용히 고친다
+     ③ 한영전환 실패 dkssud             → 진짜 영어일 수 있으니 «혹시 이거예요?» 하고 물어본다
+   칸을 떠날 때(focusout) 처리한다 — 타이핑 중에 value 를 갈아끼우면 커서가 튄다. */
+(function(){
+ const _JL='ᄀᄁᄂᄃᄄᄅᄆᄇᄈᄉᄊᄋᄌᄍᄎᄏᄐᄑᄒ', _JV='ᅡᅢᅣᅤᅥᅦᅧᅨᅩᅪᅫᅬᅭᅮᅯᅰᅱᅲᅳᅴᅵ', _JT='ᆨᆩᆪᆫᆬᆭᆮᆯᆰᆱᆲᆳᆴᆵᆶᆷᆸᆹᆺᆻᆼᆽᆾᆿᇀᇁᇂ';
+ const _VMERGE={'ᅩᅡ':'ᅪ','ᅩᅢ':'ᅫ','ᅩᅵ':'ᅬ','ᅮᅥ':'ᅯ','ᅮᅦ':'ᅰ','ᅮᅵ':'ᅱ','ᅳᅵ':'ᅴ'};
+ const _TMERGE={'ᆨᆺ':'ᆪ','ᆫᆽ':'ᆬ','ᆫᇂ':'ᆭ','ᆯᆨ':'ᆰ','ᆯᆷ':'ᆱ','ᆯᆸ':'ᆲ','ᆯᆺ':'ᆳ','ᆯᇀ':'ᆴ','ᆯᇁ':'ᆵ','ᆯᇂ':'ᆶ','ᆸᆺ':'ᆹ'};
+ const _L2T={'ᄀ':'ᆨ','ᄁ':'ᆩ','ᄂ':'ᆫ','ᄃ':'ᆮ','ᄅ':'ᆯ','ᄆ':'ᆷ','ᄇ':'ᆸ','ᄉ':'ᆺ','ᄊ':'ᆻ','ᄋ':'ᆼ','ᄌ':'ᆽ','ᄎ':'ᆾ','ᄏ':'ᆿ','ᄐ':'ᇀ','ᄑ':'ᇁ','ᄒ':'ᇂ'};
+ const _isSyl=c=>{const o=c.charCodeAt(0);return o>=0xAC00&&o<=0xD7A3;};
+ const _split=c=>{const i=c.charCodeAt(0)-0xAC00;return {l:_JL[Math.floor(i/588)],v:_JV[Math.floor((i%588)/28)],t:(i%28)?_JT[i%28-1]:''};};
+ const _join=(l,v,t)=>String.fromCharCode(0xAC00+(_JL.indexOf(l)*21+_JV.indexOf(v))*28+(t?_JT.indexOf(t)+1:0));
+ function fixWidth(src){
+  const s=String(src||'').normalize('NFKC'), out=[];
+  for(const ch of s){
+   const prev=out.length?out[out.length-1]:'';
+   if(prev&&_isSyl(prev)){
+    const p=_split(prev);
+    if(!p.t&&_JV.indexOf(ch)>=0){const nv=_VMERGE[p.v+ch];if(nv){out[out.length-1]=_join(p.l,nv,'');continue;}}
+    if(!p.t&&_L2T[ch]){out[out.length-1]=_join(p.l,p.v,_L2T[ch]);continue;}
+    if(p.t&&_L2T[ch]){const nt=_TMERGE[p.t+_L2T[ch]];if(nt){out[out.length-1]=_join(p.l,p.v,nt);continue;}}
+   }
+   out.push(ch);
+  }
+  return out.join('');
+ }
+ const _QK={q:'ᄇ',w:'ᄌ',e:'ᄃ',r:'ᄀ',t:'ᄉ',y:'ᅭ',u:'ᅧ',i:'ᅣ',o:'ᅢ',p:'ᅦ',a:'ᄆ',s:'ᄂ',d:'ᄋ',f:'ᄅ',g:'ᄒ',h:'ᅩ',j:'ᅥ',k:'ᅡ',l:'ᅵ',
+  z:'ᄏ',x:'ᄐ',c:'ᄎ',v:'ᄑ',b:'ᅲ',n:'ᅮ',m:'ᅳ',Q:'ᄈ',W:'ᄍ',E:'ᄄ',R:'ᄁ',T:'ᄊ',O:'ᅤ',P:'ᅨ'};
+ for(const k in _QK){const U=k.toUpperCase();if(!(U in _QK))_QK[U]=_QK[k];}
+ function _assemble(buf){
+  const out=[];let made=0,orphan=0,i=0;
+  while(i<buf.length){
+   const c=buf[i];
+   if(_JL.indexOf(c)>=0&&i+1<buf.length&&_JV.indexOf(buf[i+1])>=0){
+    const l=c;i++;let v=buf[i];i++;
+    if(i<buf.length&&_VMERGE[v+buf[i]]){v=_VMERGE[v+buf[i]];i++;}
+    let t='';
+    if(i<buf.length&&_L2T[buf[i]]){
+     if(!(i+1<buf.length&&_JV.indexOf(buf[i+1])>=0)){
+      t=_L2T[buf[i]];i++;
+      if(i<buf.length&&_L2T[buf[i]]&&_TMERGE[t+_L2T[buf[i]]]&&!(i+1<buf.length&&_JV.indexOf(buf[i+1])>=0)){t=_TMERGE[t+_L2T[buf[i]]];i++;}
+     }
+    }
+    out.push(_join(l,v,t));made++;
+   }else{out.push(c);orphan++;i++;}
+  }
+  return {text:out.join(''),made,orphan};
+ }
+ function qwertyToHan(src){
+  const s=String(src||'');let out='',buf=[],made=0,orphan=0;
+  const flush=()=>{const r=_assemble(buf);out+=r.text;made+=r.made;orphan+=r.orphan;buf=[];};
+  for(const ch of s){if(_QK[ch])buf.push(_QK[ch]);else{flush();out+=ch;}}
+  flush();return {text:out,made,orphan};
+ }
+ const hanScore=s=>{const r=qwertyToHan(s);const t=r.made+r.orphan;return t?r.made/t:0;};
+ /* 실측(진짜 영어 29문장 vs 영어로 친 한글 8문장): 0.75 면 양쪽 다 오판 0건 */
+ const IME_MIN_LEN=6, IME_MIN_SCORE=0.75;
+ function maybeKorean(src){
+  const s=String(src||'');const letters=(s.match(/[A-Za-z]/g)||[]).length;
+  if(letters<IME_MIN_LEN)return null;
+  if(letters/s.length<0.6)return null;
+  const sc=hanScore(s);if(sc<IME_MIN_SCORE)return null;
+  const r=qwertyToHan(s);if(r.text===s)return null;
+  return {text:r.text,score:sc};
+ }
+ const keep=new Set();
+ const escH=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ function chipClose(){const c=document.getElementById('_imeChip');if(c)c.remove();}
+ function chip(el,fixed){
+  chipClose();
+  const box=document.createElement('div');box.className='ime-chip';box.id='_imeChip';
+  box.innerHTML='<div class="ic-t">⌨️ 자판이 영어로 되어 있었나 봐요. 혹시 이거예요?</div><div class="ic-g">'+escH(fixed)+'</div>'
+   +'<div class="ic-b"><button type="button" class="ic-yes">네, 고쳐줘</button><button type="button" class="ic-no">영어 맞아요</button></div>';
+  el.parentNode.insertBefore(box,el.nextSibling);
+  box.querySelector('.ic-yes').onclick=()=>{el.value=fixed;el.dispatchEvent(new Event('input',{bubbles:true}));chipClose();el.focus();};
+  box.querySelector('.ic-no').onclick=()=>{keep.add(el.value);chipClose();};
+ }
+ function fixField(el){
+  const raw=el.value||'';if(!raw.trim()){chipClose();return;}
+  const w=fixWidth(raw);
+  if(w!==raw){el.value=w;el.dispatchEvent(new Event('input',{bubbles:true}));}
+  const ko=maybeKorean(el.value);
+  if(ko&&!keep.has(el.value))chip(el,ko.text);else chipClose();
+ }
+ document.addEventListener('focusout',e=>{
+  const el=e.target;if(!el||!el.tagName)return;
+  if(el.tagName!=='INPUT'&&el.tagName!=='TEXTAREA')return;
+  if(el.dataset&&(el.dataset.ime==='off'||el.dataset.ime==='submit'))return;   /* 제출 칸은 제출 버튼에서 확인한다 */
+  const ty=(el.type||'text').toLowerCase();
+  if(ty==='password'||ty==='number'||ty==='email'||ty==='date'||ty==='range')return;
+  setTimeout(()=>fixField(el),0);
+ },true);
+ window.__ime={fixWidth,qwertyToHan,maybeKorean};   /* 검증용 */
+})();
+
+/* ── 📮 제출하기 — 깨진 글자·영타 한글을 확인한 뒤 제출 ── */
+(function(){
+ S.sub=S.sub||{};S.subTxt=S.subTxt||{};
+ const I=window.__ime, SUBMAP={'ruleTa':'rule','conclTa':'concl','essay':'essay'}, MIN={essay:15,blockAns:15};
+ const escH=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const taOf=key=>{const t=$('textarea[data-think="'+key+'"]');if(t)return t;const id=Object.keys(SUBMAP).find(i=>SUBMAP[i]===key);return id?$('#'+id):null;};
+ const cur=key=>{const t=taOf(key);return t?(t.value||''):'';};
+ function keyOf(el){const k=el.dataset.submit||el.dataset.substatus;if(k!=='think')return k;const t=el.closest('.think').querySelector('textarea[data-think]');return t.dataset.think;}
+ function closeChip(){const c=document.getElementById('_subChip');if(c)c.remove();}
+ function chip(anchor,title,fixed,yes,no,onYes,onNo){
+  closeChip();const box=document.createElement('div');box.className='ime-chip sub-chip';box.id='_subChip';
+  box.innerHTML='<div class="ic-t">'+title+'</div><div class="ic-g">'+escH(fixed)+'</div><div class="ic-b"><button type="button" class="ic-yes">'+yes+'</button><button type="button" class="ic-no">'+no+'</button></div>';
+  anchor.insertAdjacentElement('afterend',box);
+  box.querySelector('.ic-yes').onclick=()=>{closeChip();onYes();};box.querySelector('.ic-no').onclick=()=>{closeChip();onNo();};
+  box.scrollIntoView({block:'nearest',behavior:'smooth'});
+ }
+ function check(ta,anchor,done){
+  const raw=ta.value||'';
+  const step2=text=>{const ko=I.maybeKorean(text);if(ko)chip(anchor,'⌨️ 자판이 영어로 되어 있었나 봐요. 혹시 이거예요?',ko.text,'네, 고쳐서 제출','영어 맞아요, 그대로 제출',()=>done(ko.text),()=>done(text));else done(text);};
+  const w=I.fixWidth(raw);
+  if(w!==raw)chip(anchor,'글자가 깨져 있었어요. 이렇게 고친 게 맞나요?',w,'네, 이걸로 제출','원래대로 제출',()=>step2(w),()=>step2(raw));else step2(raw);
+ }
+ function apply(key,text){
+  const ta=taOf(key);if(ta){ta.value=text;ta.dispatchEvent(new Event('input',{bubbles:true}));}
+  S.sub[key]=1;S.subTxt[key]=text;save();updateProgress();paintAll();A.correct();
+  toast('📮 <b>제출했어요!</b>'+(S.stu&&S.stu.token?' 선생님에게 전해집니다':' 이 기기에 저장됐어요'));
+ }
+ function paintAll(){
+  $$('[data-substatus]').forEach(el=>{const key=keyOf(el);
+   if(!S.sub[key]){el.textContent='';el.className='sub-st';return;}
+   const same=(S.subTxt[key]||'').trim()===cur(key).trim();el.textContent=same?'✅ 제출됨':'✏️ 고쳤어요 — 다시 제출해 주세요';el.className='sub-st '+(same?'ok':'edit');});
+ }
+ document.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-submit]');if(!b)return;
+  const key=keyOf(b), ta=taOf(key);if(!ta)return;
+  const t=(ta.value||'').trim(), min=MIN[key]||10;
+  if(t.length<min){toast('먼저 <b>'+min+'자 이상</b> 써 주세요 ✍️');A.blip(220,.12,'sawtooth',.06);ta.focus();return;}
+  check(ta,b.parentElement,txt=>apply(key,txt.trim()));
+ });
+ document.addEventListener('input',e=>{const el=e.target;if(el&&el.tagName==='TEXTAREA')setTimeout(paintAll,0);});
+ paintAll();
+ window.imeSubmit=(ta,anchor,done)=>check(ta,anchor,done);
+ /* 모범 답안은 제출한 뒤에만(혼자 탐구) */
+ const LOCK={'ruleAnsBtn':'rule','conclAnsBtn':'concl','ansBtn':'essay'};
+ document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||!b.id||!LOCK[b.id])return;
+  if(soloOn()&&!teacherOn()&&!S.sub[LOCK[b.id]]){e.stopPropagation();e.preventDefault();toast('먼저 📮 <b>제출</b>한 뒤에 모범 답안을 열 수 있어요');A.blip(220,.12,'sawtooth',.06);}
+ },true);
+})();
+paintMode();
+
 
 (function(){const wrap=$('#progWrap'),list=$('#progList');
  wrap.addEventListener('click',()=>list.classList.toggle('show'));
@@ -3037,7 +3469,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
       + (q.svg?'<span class="mq-lv" style="color:var(--ink-mute)">자료 해석</span>':'')+'</div>'
       + (q.svg?'<div class="qfig">'+q.svg+'</div>':'')
       + '<div class="mq-text" style="font-size:18px"><span class="qn">Q'+(i+1)+'.</span>'+q.stem+'</div>'
-      + '<textarea class="eq-ta" id="eqTa" rows="'+(q.lines||4)+'" placeholder="내 문장으로 써 보세요 — 꼭 들어갈 낱말: '+q.keys.join(', ')+'"></textarea>'
+      + '<textarea class="eq-ta" id="eqTa" data-ime="submit" rows="'+(q.lines||4)+'" placeholder="내 문장으로 써 보세요 — 꼭 들어갈 낱말: '+q.keys.join(', ')+'"></textarea>'
       + '<div class="eq-keys" id="eqKeys"></div>'
       + '<div class="mq-next show" id="eqOpenRow"><button class="btn primary sm" id="eqOpen">✍️ 다 썼어요 — 채점 기준 열기</button></div>'
       + '<div class="eq-rub" id="eqRub" hidden><div class="why">✍️ 모범 답안</div><div class="eq-model">'+q.model+'</div>'
@@ -3053,7 +3485,8 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
     body.onchange=e=>{if(e.target.matches&&e.target.matches('.eq-item input'))$('#eqSum').textContent=pts()+'점 / '+total+'점';};
     $('#eqOpen').addEventListener('click',()=>{
       if(ta.value.trim().length<10){toast('먼저 <b>한두 문장</b>이라도 써 본 뒤 열어요 ✍️');return;}
-      $('#eqRub').hidden=false;$('#eqOpenRow').style.display='none';A.pop();});
+      window.imeSubmit(ta,$('#eqOpenRow'),txt=>{ta.value=txt;S.eq[q.id]=txt;save();paintKeys();
+        $('#eqRub').hidden=false;$('#eqOpenRow').style.display='none';A.pop();});});
     $('#eqDone').addEventListener('click',()=>{
       const p=pts(),pass=p/total>=0.6;
       if(pass){score+=20;A.correct();medal('first');}else A.wrong();
@@ -3273,7 +3706,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
   document.head.appendChild(st);
 
   /* ── ① 키워드 클릭 → 바로 위 .say 문단 펼치기 ── */
-  document.querySelectorAll('.keyline-s').forEach(function(line){
+  document.querySelectorAll('.keyline-s.__peek-off').forEach(function(line){
     /* 이 키워드 줄 바로 앞에 오는 교사용 설명(.say)들을 모은다 */
     var says = [], p = line.previousElementSibling;
     while (p && (p.classList.contains('say') || p.tagName === 'BR')){
@@ -3307,7 +3740,10 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
   }
   var hubBtn = document.querySelector('a.hbtn[href$="index.html"], a.hbtn[href*="허브"], a.hbtn[href*="index"]');
   label(hubBtn, '허브페이지로 이동');
-  label(document.getElementById('tmodeBtn'), '교사용 on/off');
+  label(document.getElementById('tmodeBtn'), '교사노트 on/off');
+  label(document.getElementById('modeBtn'), document.body.classList.contains('solo')?'혼자 탐구':'강의식');
+  var _ml=document.querySelector('#modeBtn')&&document.querySelector('#modeBtn').parentNode.querySelector('.hb-lab'); if(_ml)_ml.dataset.for='modeBtn';
+  label(document.getElementById('dashLink'), '학생 기록');
 })();
 </script>
 

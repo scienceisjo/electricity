@@ -3080,7 +3080,8 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
 })();
 
 /* ── 🎯 수업 방식: 혼자 탐구(학번·코드 관문 + 미션 잠금 + 서버 기록) ↔ 🧑‍🏫 강의식(전부 개방) ── */
-const MODE_KEY='elec_ohm_mode';
+const MODE_KEY='elec_mode', STU_KEY='elec_stu';
+const stuGlobal=()=>{try{return JSON.parse(localStorage.getItem(STU_KEY)||'null');}catch(e){return null;}};
 function paintMode(){
  const solo=soloOn(), b=$('#modeBtn');
  if(b){b.textContent=solo?'🎯':'🧑‍🏫';b.classList.toggle('solo',solo);
@@ -3103,15 +3104,18 @@ function setMode(m){
    setMode('lecture');toast('🧑‍🏫 <b>강의식</b> — 모든 단계가 열려 있어요');
   }else if(S.stu&&S.stu.token){
    setMode('solo');toast('🎯 <b>혼자 탐구</b> — '+S.stu.name+' 님, 미션을 하나씩 깨며 나아가요!');
+  }else if(stuGlobal()){OHM.autoJoin().then(ok=>{if(ok){setMode('solo');toast('🎯 <b>혼자 탐구</b> — '+S.stu.name+' 님, 이어서 갑니다');}else openGate();});
   }else openGate();
  });
+ if(want==='solo'&&!(S.stu&&S.stu.token)&&stuGlobal()){OHM.autoJoin().then(ok=>{if(ok){setMode('solo');toast('🎯 <b>'+S.stu.name+'</b> 님, 혼자 탐구로 이어서 갑니다');}});}
 })();
 
 /* ── 관문 ── */
 function openGate(){
  const g=$('#gate');g.classList.add('show');
  $('#gMsg').textContent='';$('#gMsg').className='gmsg';
- if(S.stu){$('#gSid').value=S.stu.sid||'';$('#gName').value=S.stu.name||'';$('#gCode').value=S.stu.code||'';}
+ const st=S.stu||stuGlobal();
+ if(st){$('#gSid').value=st.sid||'';$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
  setTimeout(()=>$('#gSid').focus(),50);
 }
 function closeGate(){$('#gate').classList.remove('show');}
@@ -3129,6 +3133,7 @@ $('#gGo').addEventListener('click',async()=>{
   const r=await OHM.join(code,sid,name);
   if(r.error){say(r.error,'err');$('#gGo').disabled=false;return;}
   S.stu={token:r.token,sid:sid,name:name,code:code,label:r.label||''};save();
+  try{localStorage.setItem(STU_KEY,JSON.stringify({sid:sid,name:name,code:code}));}catch(e){}
   say('✅ '+name+' 님, 환영해요!','ok');
   /* 이전에 하던 기록이 서버에 있으면 되살릴지 묻는다 */
   const pulled=await OHM.pull();
@@ -3181,7 +3186,7 @@ const OHM={
    pct:Math.round(done/c.length*100),seen:S.seen,think:S.think,poe:S.poe,rows:S.rows,concl:S.concl,
    cloze:Object.keys(S.cloze||{}).length,clozeTotal:CLOZE_TOTAL,mini:S.mini,sortDone:Object.keys(S.sortDone||{}).length,
    essay:S.essay,eq:S.eq||{},sub:S.sub||{},best:S.best,medals:S.medals,msn:S.msn,wwLen:!!S.wwLen,wwThk:!!S.wwThk,build:!!S.build,spDone:!!S.spDone,sp:S.sp||{},
-   checks:c.map(x=>x.ok?1:0),savedAt:new Date().toISOString()};
+   checks:c.map(x=>({l:x.label,ok:x.ok?1:0})),texts:(function(){const t={};$$('textarea').forEach(x=>{const k=x.dataset.think||x.id;if(k&&!x.closest('.gate'))t[k]=x.value;});return t;})(),page:this.page,s:S,savedAt:new Date().toISOString()};
  },
  touch(){
   if(!S.stu||!S.stu.token)return;
@@ -3204,10 +3209,15 @@ const OHM={
   try{return await this.rpc('ohm_pull',{p_token:S.stu.token});}catch(e){return null;}
  },
  restore(st){
-  if(!st)return;
-  ['seen','think','poe','rows','concl','mini','essay','eq','best','medals','msn','build','spDone','sp','sub','subTxt'].forEach(k=>{if(st[k]!==undefined&&st[k]!==null)S[k]=st[k];});
-  if(st.wwLen)S.wwLen=1;if(st.wwThk)S.wwThk=1;
+  if(!st)return;const src=st.s||st;
+  Object.keys(src).forEach(k=>{if(k!=='stu'&&src[k]!==undefined&&src[k]!==null)S[k]=src[k];});
+  if(src.wwLen)S.wwLen=1;if(src.wwThk)S.wwThk=1;
   save();location.reload();
+ },
+ async autoJoin(){
+  const g=stuGlobal();if(!g||(S.stu&&S.stu.token))return false;
+  const r=await this.join(g.code,g.sid,g.name);if(r.error)return false;
+  S.stu={token:r.token,sid:g.sid,name:g.name,code:g.code,label:r.label||''};save();paintMode();return true;
  },
  paintCloud(k){
   const bd=$('#stuBadge');if(!bd||!S.stu)return;
