@@ -586,6 +586,17 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px;border-width:4px}
 .stbadge.on{border-color:#2c7a44;background:rgba(44,122,68,.13);color:var(--ok)}
 .stbadge.dimlit{border-color:#c9ae7c;background:rgba(138,95,36,.12);color:var(--gold)}
 .stbadge.offb{border-color:#c99a94;background:rgba(179,54,46,.12);color:var(--danger)}
+/* ── 🧠 되짚기 네 가지 · 🔢 숫자 카드 ── */
+.rk{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.rk-i{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:13px;background:var(--surface2);border:1px solid var(--line)}
+.rk-n{flex:none;width:30px;height:30px;border-radius:9px;background:var(--accent);color:#f6ecd2;display:grid;place-items:center;font-family:var(--mono);font-weight:700;margin-top:2px}
+.rk-t{font-family:var(--jua);font-size:17.5px;color:var(--ink);margin-bottom:4px}
+.rk-i p.say{margin:0;font-size:15.5px;line-height:1.75;color:var(--ink-dim)}
+.rk-i .keyline-s{margin:8px 0 0}
+.num-col svg{max-width:340px;margin:6px auto 0}
+.num-steps{margin:10px 0 0;padding-left:22px;font-size:14.5px;line-height:1.7;color:var(--ink-dim);text-align:left}
+.num-steps li{margin:6px 0}
+.num-sum{margin-top:10px;padding:8px 12px;border-radius:10px;background:#fff6e6;border:1.5px solid var(--accent);font-size:14.5px;font-weight:700;text-align:center;color:var(--ink)}
 .rulebox{margin-top:16px;background:var(--surface2);border:1.5px solid var(--c2);border-radius:14px;padding:16px 18px}
 .rulebox .rb-h{font-family:var(--jua);font-size:18px;color:var(--c2);display:flex;align-items:center;gap:8px}
 @media print{.rulebox{border-color:#ccc}}
@@ -1116,7 +1127,7 @@ body.teacher .wlockmsg{display:none}
  </div>
  <p class="help say">그런데 왜 '전구의 연결'이 아니라 <b>저항의 연결</b>이라고 부를까요?
  전구도 니크롬선처럼 전류의 흐름을 방해하는 <b class="t1">저항</b>이기 때문입니다.
- 전기 기구는 모두 저항의 일종으로 볼 수 있어요.</p>
+ 전기 기구는 모두 저항의 일종으로 볼 수 있어요. 저항은 없애야 할 방해꾼이 아니라 <b class="k">전기 에너지가 빛·열·움직임으로 바뀌는 「일하는 곳」</b>입니다 — 3단계 첫머리에서 다시 짚습니다.</p>
  <div class="keyline-s"><span class="kw q">왜 '저항의 연결'일까?</span><span class="arw">→</span><span class="kw">전구도 저항</span><span class="kw">전기 기구 = 저항의 일종</span><span class="memo"></span></div>
  <div class="note myth"><span class="ic">⚠️</span><div><b>오해 주의</b> — "직렬로 이으면 더 밝아진다?"<br>
  → 그건 초등학교 때 배운 <b>전지</b>의 직렬연결 이야기입니다.
@@ -1307,6 +1318,52 @@ body.teacher .wlockmsg{display:none}
  다섯 줄을 다 채우면 이 차시의 절반이 끝난 겁니다.</p>
  <div class="keyline-s"><span class="kw">실험대에서 본 것을 표로</span><span class="arw">→</span><span class="kw hi">먼저 고르고 확인</span><span class="memo"></span></div>
 
+
+ <div class="card" style="margin-top:16px" id="recallCard">
+ <div class="badge" style="margin-bottom:10px">🧠 시작하기 전에 — 꼭 기억할 네 가지</div>
+ <p class="lead say" style="font-size:17px">저항을 잇는 이야기는 새로 외울 것이 거의 없습니다. 지난 시간에 배운 것 세 가지와 낱말 하나만 단단히 잡으면, 직렬과 병렬은 그 위에서 저절로 풀립니다.</p>
+ <div class="keyline-s"><span class="kw">저항 = 일하는 곳</span><span class="kw">외길에선 전류 같다</span><span class="kw">V = IR</span><span class="kw hi">'전체' = 전지의 눈</span><span class="memo"></span></div>
+
+ <div class="rk">
+ <div class="rk-i"><div class="rk-n">1</div><div>
+ <div class="rk-t">저항은 방해꾼이 아니라 「일하는 곳」이다</div>
+ <p class="say">지난 시간에 저항은 「전류의 흐름을 방해하는 정도」라고 했죠. 그러면 저항은 없을수록 좋은 걸까요? 아닙니다.
+ 전구의 필라멘트, 전기난로의 니크롬선, 선풍기 모터의 코일, 스마트폰 속 부품 — 우리가 쓰는 모든 전기 기구는 <b class="k">전류가 저항을 지나는 동안 전기 에너지가 빛·열·움직임으로 바뀌는 곳</b>입니다.
+ 저항이 0이면 전류는 흐르되 아무 일도 하지 않고, 오히려 지나치게 센 전류가 흘러 전선만 뜨거워집니다(합선). 그래서 전기 기구를 잇는 것을 <b>「저항의 연결」</b>이라고 부릅니다.</p>
+ <div class="keyline-s"><span class="kw">저항 = 전기 에너지가 바뀌는 곳</span><span class="kw">저항 0 = 아무 일도 안 함 · 합선</span><span class="memo"></span></div>
+ </div></div>
+
+ <div class="rk-i"><div class="rk-n">2</div><div>
+ <div class="rk-t">갈림길이 없는 길에서 전류의 세기는 어디에서나 같다</div>
+ <p class="say">전류의 세기는 <b>1초 동안 한 곳을 지나가는 전하의 양</b>입니다. 외길에서는 앞에서 들어온 만큼 뒤로 나가야 해요 — <b class="k">어느 한 곳에 전하가 계속 쌓일 수는 없으니까요.</b>
+ 그래서 한 줄짜리 회로에서는 어디에서 재도 전류의 세기가 같습니다. 전구를 지난 뒤 전류가 「닳아서」 줄어드는 것이 아닙니다.</p>
+ <div class="keyline-s"><span class="kw">전류 = 1초에 지나가는 전하량</span><span class="arw">→</span><span class="kw">쌓일 수 없다</span><span class="arw">→</span><span class="kw hi">어디서나 같다</span><span class="memo"></span></div>
+ <details class="wfold" style="margin-top:8px"><summary>「저항이 다른 두 곳인데 전류가 왜 같아야 하죠?」 — 한 걸음 더</summary>
+ <div class="fold-in">5 Ω과 10 Ω이 한 줄로 있을 때, 5 Ω 쪽에 전류가 더 세게 흐른다고 해 봅시다. 그러면 두 저항 사이의 도선에 1초마다 전하가 남아 쌓여야 합니다.
+ 쌓인 전하는 <b>뒤에서 오는 전하를 밀어내 늦추고, 앞으로 가는 전하를 밀어 재촉</b>합니다. 이 조절은 눈 깜짝할 새 끝나서, 회로에는 <b class="k">하나의 전류</b>만 남아요.<br>
+ 그 하나의 전류를 정하는 것이 「회로 전체가 얼마나 방해하느냐」, 곧 <b>전체 저항</b>입니다. 저항이 서로 다르면 달라지는 것은 전류가 아니라 <b class="k">각 저항에 걸리는 전압</b>이에요 — 아래 숫자 카드에서 확인합니다.</div>
+ </details>
+ </div></div>
+
+ <div class="rk-i"><div class="rk-n">3</div><div>
+ <div class="rk-t">전압·전류·저항의 관계 — V = I R</div>
+ <p class="say">같은 저항이라면 <b class="t2">전압</b>(전류를 흐르게 하는 능력)이 클수록 전류가 세지고, 같은 전압이라면 <b class="t1">저항</b>(전류를 방해하는 정도)이 클수록 전류가 약해집니다.
+ 오늘은 이 관계를 <b>저항 하나</b>에도 쓰고, <b>회로 전체</b>에도 씁니다.</p>
+ <div class="keyline-s"><span class="kw">같은 저항 · 전압 ↑ → 전류 ↑</span><span class="kw">같은 전압 · 저항 ↑ → 전류 ↓</span><span class="memo"></span></div>
+ </div></div>
+
+ <div class="rk-i"><div class="rk-n">4</div><div>
+ <div class="rk-t">「전체」라는 말 — 전지의 눈으로 본 회로</div>
+ <p class="say">오늘 자주 나오는 말이 <b>전체 전류·전체 전압·전체 저항</b>입니다. 전지 입장에서 보면 회로 안에 저항이 몇 개든 상관없어요.
+ 전지는 자기 전압(<b class="t2">전체 전압</b>)으로 밀어서 <b>얼마만큼의 전류가 나가는지</b>(<b class="t6">전체 전류</b>)만 느낍니다.
+ 그 둘로 V = IR을 쓰면 나오는 저항이 <b class="t1">전체 저항</b> — <b class="k">회로 전체를 저항 하나로 바꿔 끼워도 전지가 눈치채지 못할 값</b>입니다.
+ 저항 하나하나의 값이 변하는 것이 아니에요.</p>
+ <div class="keyline-s"><span class="kw">전지가 느끼는 것</span><span class="arw">→</span><span class="kw">전체 전압 · 전체 전류</span><span class="arw">→</span><span class="kw hi">전체 저항 = 저항 하나로 바꿔 끼운 값</span><span class="memo"></span></div>
+ </div></div>
+ </div>
+ <div class="note class"><span class="ic">💬</span><div><b>진행 대본</b> — 이 네 가지를 칠판 한쪽에 판서로 남기고 시작하세요. 순서는 ① 저항은 없애야 하나? → ② 외길에서 전류는 같다(전하가 쌓일 수 없으니까) → ③ V = IR → ④ '전체'의 뜻.
+ ②의 접힘은 「그래도 저항이 다른데 왜 같아요?」가 나올 때만 엽니다. ④는 뒤에서 「전체 저항이 3.3 Ω」 같은 숫자가 나올 때 되돌아오는 기준점입니다.</div></div>
+ </div>
 
 <!-- ═══════ '왜 그럴까?' — 저항의 연결 ═══════ -->
 <div class="why-mod" id="whyRes">
@@ -1513,6 +1570,45 @@ body.teacher .wlockmsg{display:none}
  </div>
 </div>
 
+ <div class="card" style="margin-top:20px" id="numCard">
+ <div class="badge" style="margin-bottom:8px">🔢 숫자로 한 번만 따라가 보기 — 30 V 전지에 5 Ω과 10 Ω</div>
+ <div><span class="pill" style="background:#efe6f5;border-color:#7d5ba6;color:#4c3470;font-weight:700">🚀 계산은 성취기준 밖 — 값을 외우지 말고 흐름만 따라가요</span></div>
+ <p class="lead say" style="font-size:17px;margin-top:10px">위에서는 <b>같은 저항끼리</b> 이었습니다. 이번엔 <b class="k">다른 저항 둘</b>을 이어 봅니다.
+ 직렬에서 무엇이 같고 무엇이 나뉘는지, 병렬에서는 어떤지가 또렷해져요. 전지는 30 V, 저항은 5 Ω과 10 Ω입니다.</p>
+ <div class="keyline-s"><span class="kw">직렬 — 전류 같고 전압 나뉨</span><span class="kw">병렬 — 전압 같고 전류 나뉨</span><span class="memo"></span></div>
+ <div class="grid c2" style="margin-top:14px">
+ <div class="forcecard num-col">
+ <div class="fc-t">🔗 직렬 — 한 줄로</div>
+<svg viewBox="0 0 300 170" role="img" aria-label="30 V 전지에 5 Ω과 10 Ω 저항을 한 줄로 이은 직렬 회로. 전류 2 A가 회로 전체에 같고, 5 Ω에 10 V, 10 Ω에 20 V가 걸린다."><path d="M40 79 V30 H270 V140 H40 V91" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="27" y1="79" x2="53" y2="79" stroke="#3b2f1e" stroke-width="2.4"/><line x1="33" y1="91" x2="47" y2="91" stroke="#3b2f1e" stroke-width="5"/><text x="24" y="81" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="24" y="97" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><text x="48" y="89" font-family="Nanum Gothic Coding, monospace" font-size="13" font-weight="800" fill="#7d5ba6">30 V</text><rect x="94" y="20" width="52" height="20" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="120" y="14" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">5 Ω</text><rect x="189" y="20" width="52" height="20" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="215" y="14" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">10 Ω</text><polygon points="40,45 34,57 46,57" fill="#a05c2c"/><text x="52" y="58" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">2 A</text><polygon points="270,97 264,85 276,85" fill="#a05c2c"/><text x="258" y="94" text-anchor="end" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">2 A</text><polygon points="148,140 160,134 160,146" fill="#a05c2c"/><text x="155" y="158" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#a05c2c">2 A — 어디서나 같다</text><path d="M96 52 H144" stroke="#7d5ba6" stroke-width="1.6" fill="none"/><path d="M191 52 H239" stroke="#7d5ba6" stroke-width="1.6" fill="none"/><text x="120" y="68" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#7d5ba6">10 V</text><text x="215" y="68" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#7d5ba6">20 V</text><text x="168" y="100" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#7d5ba6">10 V + 20 V = 30 V</text></svg>
+ <ol class="num-steps">
+ <li><b>외길이니 전류는 하나.</b> 전하는 5 Ω도 지나고 10 Ω도 지나야 해요. 회로 전체의 방해는 <b class="t1">5 + 10 = 15 Ω</b> — 차례로 다 지나야 하니 길이가 길어진 셈입니다.</li>
+ <li><b>전체 전류</b> = 30 V ÷ 15 Ω = <b class="t6">2 A</b>. 갈림길이 없으니 5 Ω에도 2 A, 10 Ω에도 2 A.</li>
+ <li><b>각 저항에 걸리는 전압</b> — 5 Ω: 2 A × 5 Ω = <b class="t2">10 V</b>, 10 Ω: 2 A × 10 Ω = <b class="t2">20 V</b>. 둘을 합하면 30 V, 전지 전압 그대로.</li>
+ </ol>
+ <div class="num-sum">직렬 — <b class="t6">전류는 같고</b>, <b class="t2">전압은 저항이 큰 쪽에 크게</b> 나뉜다.</div>
+ </div>
+ <div class="forcecard num-col">
+ <div class="fc-t">🔀 병렬 — 나란히</div>
+<svg viewBox="0 0 300 170" role="img" aria-label="30 V 전지에 5 Ω과 10 Ω 저항을 나란히 이은 병렬 회로. 두 저항 모두 30 V가 걸리고, 5 Ω에 6 A, 10 Ω에 3 A가 흘러 전체 전류는 9 A다."><path d="M40 79 V30 H250 V140 H40 V91 M160 30 V140" fill="none" stroke="#3b2f1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="27" y1="79" x2="53" y2="79" stroke="#3b2f1e" stroke-width="2.4"/><line x1="33" y1="91" x2="47" y2="91" stroke="#3b2f1e" stroke-width="5"/><text x="24" y="81" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#b23a30">+</text><text x="24" y="97" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="11" font-weight="800" fill="#2e5f8f">−</text><text x="48" y="89" font-family="Nanum Gothic Coding, monospace" font-size="13" font-weight="800" fill="#7d5ba6">30 V</text><rect x="150" y="63" width="20" height="44" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="176" y="89" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">5 Ω</text><rect x="240" y="63" width="20" height="44" fill="#fff" stroke="#3b2f1e" stroke-width="2.4"/><text x="266" y="89" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#8a5f24">10 Ω</text><circle cx="160" cy="30" r="3.6" fill="#3b2f1e"/><circle cx="160" cy="140" r="3.6" fill="#3b2f1e"/><polygon points="40,45 34,57 46,57" fill="#a05c2c"/><text x="52" y="56" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">9 A</text><polygon points="107,30 95,24 95,36" fill="#a05c2c"/><text x="100" y="22" text-anchor="middle" font-family="Nanum Gothic Coding, monospace" font-size="11.5" font-weight="800" fill="#a05c2c">9 A</text><polygon points="160,69 154,57 166,57" fill="#a05c2c"/><text x="138" y="66" text-anchor="end" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">6 A</text><polygon points="250,69 244,57 256,57" fill="#a05c2c"/><text x="272" y="66" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12.5" font-weight="800" fill="#a05c2c">3 A</text><text x="138" y="110" text-anchor="end" font-family="Nanum Gothic Coding, monospace" font-size="12" font-weight="800" fill="#7d5ba6">30 V</text><text x="272" y="110" text-anchor="start" font-family="Nanum Gothic Coding, monospace" font-size="12" font-weight="800" fill="#7d5ba6">30 V</text><polygon points="93,140 105,134 105,146" fill="#a05c2c"/><text x="100" y="158" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12" font-weight="800" fill="#a05c2c">6 A + 3 A = 9 A</text></svg>
+ <ol class="num-steps">
+ <li><b>두 저항의 양 끝이 같은 두 점에 붙어 있다.</b> 전압은 두 점 사이의 차이라서 어느 길로 재든 같아요 — 5 Ω에도 <b class="t2">30 V</b>, 10 Ω에도 <b class="t2">30 V</b>.</li>
+ <li><b>갈래마다 전류</b> — 5 Ω: 30 ÷ 5 = <b class="t6">6 A</b>, 10 Ω: 30 ÷ 10 = <b class="t6">3 A</b>. 같은 전압이니 저항이 작은 쪽에 큰 전류.</li>
+ <li><b>갈림길에서 나뉜 전류가 다시 만나</b> 전체 전류 6 + 3 = <b class="t6">9 A</b>. 전하가 사라지거나 생긴 것이 아니라, 나뉘었다가 합쳐진 것뿐이에요.</li>
+ <li><b>전지의 눈으로</b> — 30 V로 밀었더니 9 A가 나갔다. 전체 저항 = 30 ÷ 9 ≈ <b class="t1">3.3 Ω</b>. 5 Ω 하나만 있을 때(6 A)보다 작고, <b class="k">가장 작은 저항 5 Ω보다도 작다!</b></li>
+ </ol>
+ <div class="num-sum">병렬 — <b class="t2">전압은 같고</b>, <b class="t6">전류는 저항이 작은 쪽에 크게</b> 나뉜다.</div>
+ </div>
+ </div>
+ <div class="note" style="margin-top:14px"><span class="ic">🔎</span><div><b>왜 병렬은 가장 작은 저항보다도 작아질까</b> — 「넓은 길이라 편하다」로는 부족합니다.
+ 전지가 미는 전압은 30 V <b>그대로</b>인데, 5 Ω 길 하나뿐일 때 6 A가 나가던 회로에 10 Ω 길이 하나 더 생겨 3 A가 <b>더</b> 나갑니다.
+ 같은 전압에서 전류가 커졌다는 것은 전지 입장에서 <b class="k">방해가 줄었다</b>는 뜻이고, 그래서 가지를 더할수록 전체 저항은 작아집니다. 어떤 길을 더해도 전류는 늘기만 하니, 전체 저항은 언제나 가장 작은 갈래보다 작아요.</div></div>
+ <div class="note myth"><span class="ic">⚠️</span><div><b>「저항이 크면 언제나 더 많은 에너지를 쓴다」고 외우면 안 됩니다.</b><br>
+ 직렬에서는 같은 전류가 흐르니 큰 저항(10 Ω)에 큰 전압(20 V)이 걸려 그쪽이 더 일하지만,
+ 병렬에서는 같은 전압이 걸리니 작은 저항(5 Ω)에 큰 전류(6 A)가 흘러 그쪽이 더 일합니다. <b class="k">어떻게 이었는지를 먼저 봐야 해요.</b></div></div>
+ <div class="note class"><span class="ic">💬</span><div><b>지도 범위</b> — 교과서(2022 개정 중2)는 합성 저항 계산을 다루지 않습니다. 이 카드는 「직렬은 전류가 같고 전압이 나뉜다 / 병렬은 전압이 같고 전류가 나뉜다」를 숫자로 한 번 느껴 보게 하는 용도이고, 15 Ω·3.3 Ω 같은 값을 외우게 하거나 평가하지 않습니다.
+ 학생이 「병렬인데 왜 전압이 같아요?」라고 물으면 ①번 문장으로 — <b>도선으로 이어진 곳은 같은 점</b>이고, 두 저항의 왼쪽 끝은 모두 전지 (+)에, 오른쪽 끝은 모두 (−)에 붙어 있어 <b>같은 두 점 사이</b>에 걸려 있다고 답합니다.</div></div>
+ </div>
+
  <div class="card" style="margin-top:20px">
  <div class="badge" style="margin-bottom:6px">🧾 내가 채우는 비교표</div>
  <div class="note" style="margin:0 0 10px"><span class="ic">📋</span><div><b>이 표의 조건</b> —
@@ -1616,7 +1712,9 @@ body.teacher .wlockmsg{display:none}
  <button data-ok="1">나머지 전구는 켜져 있다</button>
  </div></div>
  </div>
- <div class="cmpwhy">💡 2단계 POE에서 직접 본 그대로입니다. 직렬은 경로가 하나라 한 곳만 끊겨도 전체가 끊기고, 병렬은 남은 갈래로 전류가 계속 흐릅니다.</div>
+ <div class="cmpwhy">💡 2단계 POE에서 직접 본 그대로입니다. <b>직렬은 외길</b>이라 한 곳이 끊기면 회로가 끊긴 것 — 전류가 아예 돌 수 없어 전부 꺼집니다.
+ <b>병렬은 길이 여럿</b>이라 한 길이 끊겨도 <b class="k">남은 길이 전지의 양 끝을 여전히 잇고 있어요.</b> 그 길에 걸리는 전압은 그대로이니 남은 기구는 그대로 켜집니다.<br>
+ 집의 전기 기구를 병렬로 잇는 까닭이 바로 이것 — 기구마다 같은 전압을 받고, 하나를 끄거나 고장 나도 나머지는 계속 쓸 수 있습니다.</div>
  </div>
 
  </div>
