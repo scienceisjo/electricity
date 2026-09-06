@@ -1299,6 +1299,8 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
 .simfs-btn{border-radius:9999px}
 /* 패널 등장 애니메이션에서 transform 을 뺀다 — transform 이 걸린 조상 안의 position:fixed(실험대 전체 화면)가 어긋나는 것을 막는다 */
 @keyframes fade{from{opacity:0;transform:none}to{opacity:1;transform:none}}
+/* 분절 토글(.seg) 활성 = 잉크 채움 — 자동 치환에서 밝은 글자가 연회색 위에 남는 것 방지 */
+.seg button.on,.seg .on{background:var(--m-ink-deep)!important;color:#fff!important;border-color:var(--m-ink-deep)!important}
 @media print{#toast,.prog-list{display:none}}
 </style>
 </head>
