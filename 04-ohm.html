@@ -708,6 +708,12 @@ body:not(.lecture) .keyline-s{display:none}
 @media(max-width:520px){.keyline-s{gap:8px}.keyline-s .kw{padding:8px 14px}}
 
 /* 인쇄物에서는 둘 다 보이게 — 학습지로 뽑을 때 설명이 사라지면 곤란하다 */
+/* ── 📮 제출 줄 ── */
+.sub-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.sub-st{font-size:13.5px;font-weight:700;color:#5d6c7b}
+.sub-st.ok{color:#31a24c}
+.sub-st.edit{color:#c47f00}
+.ime-chip.sub-chip{margin:10px 0 0;flex:1 1 100%}
 /* ── ⌨️ 한글 입력 보정 칩 ── */
 .ime-chip{margin:6px 0 2px;padding:10px 12px;border:1.5px solid #F0B357;border-radius:9px;background:#FFF8E9;animation:icIn .18s ease both}
 @keyframes icIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
@@ -1446,8 +1452,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="think">
  <div class="th">✍️ 전구를 어둡게 하려면 무엇을 바꾸면 될까?<span class="req">10자 이상</span></div>
  <div class="hint">「~를 …하면 전류가 줄어서 어두워질 것 같다」처럼, 바꾸는 것과 그 까닭을 함께 쓰면 좋아요. 두 가지 이상이면 더 좋습니다.</div>
- <textarea data-think="open" rows="3" placeholder="예) 전지를 하나 빼면 … / 전선을 … 로 바꾸면 …"></textarea>
+ <textarea data-think="open" data-ime="submit" rows="3" placeholder="예) 전지를 하나 빼면 … / 전선을 … 로 바꾸면 …"></textarea>
  <div class="cnt"><span class="n">0자</span><span class="savemark">✔ 저장됨</span></div>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="think">📮 제출하기</button><span class="sub-st" data-substatus="think"></span></div>
  </div>
  </div>
 
@@ -1502,8 +1509,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="think">
  <div class="th">✍️ 왜 그렇게 예상했나요?<span class="req">10자 이상</span></div>
  <div class="hint">지난 시간에 배운 「길이와 저항」을 끌어와 쓰면 근거가 됩니다. 「니크롬선이 길어지면 저항이 … 그래서 전류가 …」</div>
- <textarea data-think="why" rows="3" placeholder="예) 니크롬선이 길어지면 저항이 … 지니까 전류가 … 것 같다."></textarea>
+ <textarea data-think="why" data-ime="submit" rows="3" placeholder="예) 니크롬선이 길어지면 저항이 … 지니까 전류가 … 것 같다."></textarea>
  <div class="cnt"><span class="n">0자</span><span class="savemark">✔ 저장됨</span></div>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="think">📮 제출하기</button><span class="sub-st" data-substatus="think"></span></div>
  </div>
  <div class="note class"><span class="ic">💬</span><div><b>POE 운영</b> — 손들기로 세 예상의 분포를 칠판에 적어 두세요. 실험 후 자기 예상과 결과를 비교하는 것이 핵심입니다. 근거를 물으면 "길면 전기가 더 많이 지나간다", "길이는 상관없다" 같은 생각이 나옵니다. 판정하지 말고 기록만 해 두세요. 혼자 탐구 모드에서는 이 칸에 쓴 근거가 그대로 선생님에게 옵니다.</div></div>
  </div>
@@ -1799,8 +1807,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="lab-concl" id="labConcl">
  <div class="th">✍️ 실험하며 알게 된 것 — 나의 결론 메모 <span class="req">10자 이상</span></div>
  <div class="hint">「전압을 …로 하니 전류가 …」 「긴 니크롬선으로 바꾸니 …」처럼 본 것을 그대로 적어도 좋아요. 아래 「나의 결론」 칸과 같은 글이에요.</div>
- <textarea id="conclTaFs" rows="3" placeholder="예) 전압을 2배로 올리니 전류도 2배가 됐다. 긴 니크롬선은 …"></textarea>
+ <textarea id="conclTaFs" data-ime="submit" rows="3" placeholder="예) 전압을 2배로 올리니 전류도 2배가 됐다. 긴 니크롬선은 …"></textarea>
  <div class="cnt"><span class="n" id="conclFsN">0자</span><span class="savemark" id="conclFsSaved">✔ 저장됨</span></div>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="concl">📮 결론 제출하기</button><span class="sub-st" data-substatus="concl"></span></div>
  </div>
  <p class="honest"><span class="ic">📌</span>이 실험대의 니크롬선은 열이 나지 않는 이상적인 니크롬선입니다.
  실제 실험에서는 니크롬선에서 열이 나면서 측정값에 오차가 생겨요. <b>진짜 실험을 꼭 해 보세요.</b> 이 화면은 예습·복습용입니다.</p>
@@ -1820,8 +1829,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <span class="pill">① <b>같은 전압</b>, 니크롬선만 짧다→길다 : 전류는 어떻게 됐나?</span>
  <span class="pill">② <b>같은 니크롬선</b>, 전압만 2배 : 전류는 어떻게 됐나?</span>
  </div>
- <textarea id="conclTa" placeholder="예: 전압이 같을 때 긴 니크롬선에서는 전류가 …해졌고, 니크롬선이 같을 때 전압을 2배로 하면 전류가 …해졌다."></textarea>
+ <textarea id="conclTa" data-ime="submit" placeholder="예: 전압이 같을 때 긴 니크롬선에서는 전류가 …해졌고, 니크롬선이 같을 때 전압을 2배로 하면 전류가 …해졌다."></textarea>
  <span class="savemark" id="conclSaved">✔ 저장됨</span>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="concl">📮 결론 제출하기</button><span class="sub-st" data-substatus="concl"></span></div>
  <div class="btn-row"><button class="btn ghost sm" id="conclAnsBtn">모범 답안 확인하기</button></div>
  <div class="explain" id="conclAns" style="margin-top:12px">
  <div class="why">✍️ 모범 답안</div>
@@ -1900,8 +1910,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  <div class="think">
  <div class="th">✍️ 전압·저항·전류로 쓰는 옴의 법칙<span class="req">10자 이상</span></div>
  <div class="hint">실험 장면을 떠올리세요 — 전압을 2배로 했을 때, 긴 니크롬선으로 바꿨을 때 전류계가 어떻게 됐나요?</div>
- <textarea data-think="law" rows="3" placeholder="예) 전압이 커지면 전류가 … 지고, 저항이 커지면 전류가 … 진다. 그래서 …"></textarea>
+ <textarea data-think="law" data-ime="submit" rows="3" placeholder="예) 전압이 커지면 전류가 … 지고, 저항이 커지면 전류가 … 진다. 그래서 …"></textarea>
  <div class="cnt"><span class="n">0자</span><span class="savemark">✔ 저장됨</span></div>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="think">📮 제출하기</button><span class="sub-st" data-substatus="think"></span></div>
  </div>
  </div>
 
@@ -2169,8 +2180,9 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
  스피커의 소리를 크게 하려면 스피커에 흐르는 <b style="color:#a05c2c">전류의 세기</b>가 증가해야 합니다.
  스피커의 소리를 크게 할 때 <b class="t1">저항</b>을 어떻게 조절해야 하는지 설명해 보세요.</p>
  <div class="keyline-s"><span class="kw">소리 크게 = 전류 세게</span><span class="arw">→</span><span class="kw q">저항은 어떻게 해야 하나?</span><span class="memo"></span></div>
- <textarea id="essay" placeholder="힌트: 옴의 법칙을 떠올려 보세요. 전압이 그대로일 때, 전류를 세게 하려면 저항이 어떻게 되어야 할까요?"></textarea>
+ <textarea id="essay" data-ime="submit" placeholder="힌트: 옴의 법칙을 떠올려 보세요. 전압이 그대로일 때, 전류를 세게 하려면 저항이 어떻게 되어야 할까요?"></textarea>
  <span class="savemark" id="essaySaved">✔ 저장됨</span>
+ <div class="sub-row"><button type="button" class="btn primary sm" data-submit="essay">📮 답 제출하기</button><span class="sub-st" data-substatus="essay"></span></div>
  <div class="btn-row"><button class="btn ghost sm" id="ansBtn">모범 답안 확인하기</button></div>
  <div class="explain" id="modelAns" style="margin-top:12px">
  <div class="why">✍️ 모범 답안</div>
@@ -2601,19 +2613,19 @@ const thinkLen=k=>((S.think||{})[k]||'').trim().length;
 function progChecks(){
  return [
  {label:'1단계 · 겪어 본 장면 고르기', ok:Object.keys(S.seen||{}).length>=1},
- {label:'1단계 · 내 생각 쓰기 — 밝기를 줄이는 방법', ok:thinkLen('open')>=10},
+ {label:'1단계 · 내 생각 쓰고 제출 — 밝기를 줄이는 방법', ok:thinkLen('open')>=10&&!!(S.sub||{}).open},
  {label:'2단계 · 결과 예상하기', ok:!!S.poe},
- {label:'2단계 · 예상한 까닭 쓰기', ok:thinkLen('why')>=10},
+ {label:'2단계 · 예상한 까닭 쓰고 제출', ok:thinkLen('why')>=10&&!!(S.sub||{}).why},
  {label:'2단계 · 직렬·병렬 가려내기', ok:!!S.spDone},
  {label:'2단계 · 회로 조립 완성', ok:!!S.build},
  {label:'2단계 · 두 니크롬선 모두 측정·기록', ok:labOk()},
  {label:'2단계 · 니크롬선 길이·굵기 각각 바꿔 보기', ok:!!S.wwLen&&!!S.wwThk},
- {label:'2단계 · 나의 결론 써 보기', ok:(S.concl||'').trim().length>=10},
+ {label:'2단계 · 나의 결론 쓰고 제출', ok:(S.concl||'').trim().length>=10&&!!(S.sub||{}).concl},
  {label:'3단계 · 빈칸 모두 채우기', ok:CLOZE_TOTAL>0&&Object.keys(S.cloze).length>=CLOZE_TOTAL},
  {label:'3단계 · 개념 확인 퀴즈', ok:!!S.mini.law},
- {label:'3단계 · 내 말로 옴의 법칙 쓰기', ok:thinkLen('law')>=10},
+ {label:'3단계 · 내 말로 옴의 법칙 쓰고 제출', ok:thinkLen('law')>=10&&!!(S.sub||{}).law},
  {label:'4단계 · 물질 8개 가려내기', ok:Object.keys(S.sortDone||{}).length>=8},
- {label:'4단계 · 사고력 문제 답쓰기', ok:(S.essay||'').trim().length>=15},
+ {label:'4단계 · 사고력 문제 답 쓰고 제출', ok:(S.essay||'').trim().length>=15&&!!(S.sub||{}).essay},
  {label:'5단계 · 확인 문제 완주', ok:S.best>0}
  ];
 }
@@ -2816,7 +2828,7 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  document.addEventListener('focusout',e=>{
   const el=e.target;if(!el||!el.tagName)return;
   if(el.tagName!=='INPUT'&&el.tagName!=='TEXTAREA')return;
-  if(el.dataset&&el.dataset.ime==='off')return;
+  if(el.dataset&&(el.dataset.ime==='off'||el.dataset.ime==='submit'))return;   /* 제출 칸은 제출 버튼에서 확인한다 */
   const ty=(el.type||'text').toLowerCase();
   if(ty==='password'||ty==='number'||ty==='email'||ty==='date'||ty==='range')return;
   setTimeout(()=>fixField(el),0);
@@ -2995,6 +3007,66 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  }
 })();
 
+/* ── 📮 제출하기 — 깨진 글자·영타 한글을 확인한 뒤 제출 (질문과수원 방식) ── */
+(function(){
+ S.sub=S.sub||{};S.subTxt=S.subTxt||{};
+ const I=window.__ime;
+ const escH=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const TA={open:()=>[$('textarea[data-think="open"]')],why:()=>[$('textarea[data-think="why"]')],law:()=>[$('textarea[data-think="law"]')],
+  concl:()=>[$('#conclTa'),$('#conclTaFs')],essay:()=>[$('#essay')]};
+ const MIN={essay:15};
+ const cur=key=>key==='concl'?(S.concl||''):key==='essay'?(S.essay||''):((S.think||{})[key]||'');
+ function keyOf(el){const k=el.dataset.submit||el.dataset.substatus;if(k!=='think')return k;const t=el.closest('.think').querySelector('textarea[data-think]');return t.dataset.think;}
+ function closeChip(){const c=document.getElementById('_subChip');if(c)c.remove();}
+ function chip(anchor,title,fixed,yes,no,onYes,onNo){
+  closeChip();
+  const box=document.createElement('div');box.className='ime-chip sub-chip';box.id='_subChip';
+  box.innerHTML='<div class="ic-t">'+title+'</div><div class="ic-g">'+escH(fixed)+'</div>'
+   +'<div class="ic-b"><button type="button" class="ic-yes">'+yes+'</button><button type="button" class="ic-no">'+no+'</button></div>';
+  anchor.insertAdjacentElement('afterend',box);
+  box.querySelector('.ic-yes').onclick=()=>{closeChip();onYes();};
+  box.querySelector('.ic-no').onclick=()=>{closeChip();onNo();};
+  box.scrollIntoView({block:'nearest',behavior:'smooth'});
+ }
+ /* 확인 흐름: ① 전각·반각으로 깨진 글자 → ② 영어 자판으로 친 한글 → 확정 */
+ function check(ta,anchor,done){
+  const raw=ta.value||'';
+  const step2=text=>{
+   const ko=I.maybeKorean(text);
+   if(ko)chip(anchor,'⌨️ 자판이 영어로 되어 있었나 봐요. 혹시 이거예요?',ko.text,'네, 고쳐서 제출','영어 맞아요, 그대로 제출',()=>done(ko.text),()=>done(text));
+   else done(text);
+  };
+  const w=I.fixWidth(raw);
+  if(w!==raw)chip(anchor,'글자가 깨져 있었어요. 이렇게 고친 게 맞나요?',w,'네, 이걸로 제출','원래대로 제출',()=>step2(w),()=>step2(raw));
+  else step2(raw);
+ }
+ function apply(key,text){
+  TA[key]().forEach(t=>{if(t)t.value=text;});
+  if(key==='concl')S.concl=text;else if(key==='essay')S.essay=text;else S.think[key]=text;
+  S.sub[key]=1;S.subTxt[key]=text;save();updateProgress();paintAll();A.correct();
+  toast('📮 <b>제출했어요!</b>'+(S.stu&&S.stu.token?' 선생님에게 전해집니다':' 이 기기에 저장됐어요'));
+ }
+ function paintAll(){
+  $$('[data-substatus]').forEach(el=>{
+   const key=keyOf(el);
+   if(!S.sub[key]){el.textContent='';el.className='sub-st';return;}
+   const same=(S.subTxt[key]||'').trim()===cur(key).trim();
+   el.textContent=same?'✅ 제출됨':'✏️ 고쳤어요 — 다시 제출해 주세요';el.className='sub-st '+(same?'ok':'edit');
+  });
+ }
+ document.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-submit]');if(!b)return;
+  const key=keyOf(b), tas=TA[key]().filter(Boolean);if(!tas.length)return;
+  const ta=tas.find(t=>t.offsetParent!==null)||tas[0];
+  const t=(ta.value||'').trim(), min=MIN[key]||10;
+  if(t.length<min){toast('먼저 <b>'+min+'자 이상</b> 써 주세요 ✍️');A.blip(220,.12,'sawtooth',.06);ta.focus();return;}
+  check(ta,b.parentElement,txt=>apply(key,txt.trim()));
+ });
+ document.addEventListener('input',e=>{const el=e.target;if(el&&el.matches&&el.matches('textarea[data-think],#conclTa,#conclTaFs,#essay'))setTimeout(paintAll,0);});
+ paintAll();
+ window.imeSubmit=(ta,anchor,done)=>check(ta,anchor,done);
+})();
+
 /* ── ✍️ 자기 생각 쓰기 칸 — 자동 저장 ── */
 (function(){
  $$('textarea[data-think]').forEach(ta=>{
@@ -3108,7 +3180,7 @@ const OHM={
   return {sid:S.stu&&S.stu.sid,name:S.stu&&S.stu.name,tab:S.tab,progress:done,total:c.length,
    pct:Math.round(done/c.length*100),seen:S.seen,think:S.think,poe:S.poe,rows:S.rows,concl:S.concl,
    cloze:Object.keys(S.cloze||{}).length,clozeTotal:CLOZE_TOTAL,mini:S.mini,sortDone:Object.keys(S.sortDone||{}).length,
-   essay:S.essay,eq:S.eq||{},best:S.best,medals:S.medals,msn:S.msn,wwLen:!!S.wwLen,wwThk:!!S.wwThk,build:!!S.build,spDone:!!S.spDone,sp:S.sp||{},
+   essay:S.essay,eq:S.eq||{},sub:S.sub||{},best:S.best,medals:S.medals,msn:S.msn,wwLen:!!S.wwLen,wwThk:!!S.wwThk,build:!!S.build,spDone:!!S.spDone,sp:S.sp||{},
    checks:c.map(x=>x.ok?1:0),savedAt:new Date().toISOString()};
  },
  touch(){
@@ -3133,7 +3205,7 @@ const OHM={
  },
  restore(st){
   if(!st)return;
-  ['seen','think','poe','rows','concl','mini','essay','eq','best','medals','msn','build','spDone','sp'].forEach(k=>{if(st[k]!==undefined&&st[k]!==null)S[k]=st[k];});
+  ['seen','think','poe','rows','concl','mini','essay','eq','best','medals','msn','build','spDone','sp','sub','subTxt'].forEach(k=>{if(st[k]!==undefined&&st[k]!==null)S[k]=st[k];});
   if(st.wwLen)S.wwLen=1;if(st.wwThk)S.wwThk=1;
   save();location.reload();
  },
@@ -3587,7 +3659,7 @@ paintMode();
       + (q.svg?'<span class="mq-lv" style="color:var(--ink-mute)">자료 해석</span>':'')+'</div>'
       + (q.svg?'<div class="qfig">'+q.svg+'</div>':'')
       + '<div class="mq-text" style="font-size:18px"><span class="qn">Q'+(i+1)+'.</span>'+q.stem+'</div>'
-      + '<textarea class="eq-ta" id="eqTa" rows="'+(q.lines||4)+'" placeholder="내 문장으로 써 보세요 — 꼭 들어갈 낱말: '+q.keys.join(', ')+'"></textarea>'
+      + '<textarea class="eq-ta" id="eqTa" data-ime="submit" rows="'+(q.lines||4)+'" placeholder="내 문장으로 써 보세요 — 꼭 들어갈 낱말: '+q.keys.join(', ')+'"></textarea>'
       + '<div class="eq-keys" id="eqKeys"></div>'
       + '<div class="mq-next show" id="eqOpenRow"><button class="btn primary sm" id="eqOpen">✍️ 다 썼어요 — 채점 기준 열기</button></div>'
       + '<div class="eq-rub" id="eqRub" hidden><div class="why">✍️ 모범 답안</div><div class="eq-model">'+q.model+'</div>'
@@ -3603,7 +3675,8 @@ paintMode();
     body.onchange=e=>{if(e.target.matches&&e.target.matches('.eq-item input'))$('#eqSum').textContent=pts()+'점 / '+total+'점';};
     $('#eqOpen').addEventListener('click',()=>{
       if(ta.value.trim().length<10){toast('먼저 <b>한두 문장</b>이라도 써 본 뒤 열어요 ✍️');return;}
-      $('#eqRub').hidden=false;$('#eqOpenRow').style.display='none';A.pop();});
+      window.imeSubmit(ta,$('#eqOpenRow'),txt=>{ta.value=txt;S.eq[q.id]=txt;save();paintKeys();
+        $('#eqRub').hidden=false;$('#eqOpenRow').style.display='none';A.pop();});});
     $('#eqDone').addEventListener('click',()=>{
       const p=pts(),pass=p/total>=0.6;
       if(pass){score+=20;A.correct();medal('first');}else A.wrong();
