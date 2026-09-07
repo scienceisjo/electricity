@@ -299,6 +299,8 @@ body.teacher .fig.slot{display:block}
 @media(min-width:760px){.workgrid{grid-template-columns:repeat(4,1fr)}}
 .workgrid .fig{margin:0}
 .workgrid .fig figcaption{font-size:12px;padding:8px 9px;line-height:1.45}
+/* 본문 보조 삽화 — 화면을 다 먹지 않도록 높이 제한 */
+.fig.mid img{width:auto;max-width:100%;height:auto;max-height:300px;margin:0 auto}
 
 .cloze-line{font-size:15.5px;line-height:2.05;color:var(--ink-dim)}
 .cloze-line+.cloze-line{margin-top:6px}
@@ -450,6 +452,7 @@ b.k{color:#fff}
 .eqbox .eqn{font-size:14px}
 .eqtab{font-size:15px}
 .workgrid .fig figcaption{font-size:13.5px}
+.fig.mid img{max-height:340px}
 h3.card-t{font-size:22px}
 .stepline .swhat{font-size:14.5px}
 .stepline .sbadge{font-size:13px}
@@ -1961,7 +1964,7 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  그 둘로 V = IR을 쓰면 나오는 저항이 <b class="t1">전체 저항</b> — <b class="k">회로 전체를 저항 하나로 바꿔 끼워도 전지가 눈치채지 못할 값</b>입니다.
  저항 하나하나의 값이 변하는 것이 아니에요.</p>
  <div class="keyline-s"><span class="kw">전지가 느끼는 것</span><span class="arw">→</span><span class="kw">전체 전압 · 전체 전류</span><span class="arw">→</span><span class="kw hi">전체 저항 = 저항 하나로 바꿔 끼운 값</span><span class="memo"></span></div>
- <figure class="fig" data-fig="totalR"
+ <figure class="fig mid" data-fig="totalR"
  data-alt="전지가 회로를 바라보는 그림. 저항 여러 개가 든 상자를 저항 하나로 바꿔 끼워도 전지가 내보내는 전류는 그대로다."
  data-cap="전체 저항 — 회로를 저항 하나로 바꿔 끼워도 전지가 눈치채지 못할 값"></figure>
  </div></div>
@@ -2288,7 +2291,7 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  두 전구는 우리 눈에는 <b>거의 동시에</b> 켜집니다.
  전자가 전지에서 출발해 첫 번째 전구를 지나 두 번째 전구까지 <b>이동한 뒤에야</b> 두 번째 전구가 켜지는 것이 아니에요.
  수도관에 이미 물이 차 있어 수도꼭지를 열면 바로 물이 나오는 것과 비슷합니다.</div></div>
- <figure class="fig" data-fig="pipeWater"
+ <figure class="fig mid" data-fig="pipeWater"
  data-alt="이미 물이 가득 찬 수도관. 꼭지를 열자마자 끝에서 물이 쏟아져 나오는 모습"
  data-cap="도선 속 전자는 이미 가득 차 있다 — 그래서 두 전구가 거의 동시에 켜진다"></figure>
  <div class="note myth"><span class="ic">⚠️</span><div><b>오해 ②</b> — "전구를 늘리면 <b>무조건</b> 어두워진다."<br>
@@ -2497,7 +2500,7 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  <div class="card" style="margin-top:18px">
  <h3 class="card-t">🔢 숫자로 확인 — 문어발이 왜 위험한가</h3>
  <p class="help say">멀티탭 옆면에는 <b>250 V 15 A</b> 같은 글씨가 적혀 있습니다. 그 멀티탭의 전선이 <b class="k">견딜 수 있는 전류의 한계</b>예요. 꽂은 기구들의 전류를 더해 봅시다. <span class="muted">(저항은 어림값입니다.)</span></p>
- <figure class="fig" data-fig="octopus"
+ <figure class="fig mid" data-fig="octopus"
  data-alt="한 멀티탭에 여러 기구의 플러그가 겹겹이 꽂혀 있고, 멀티탭에서 콘센트로 가는 한 가닥 전선이 뜨겁게 달아오르는 모습"
  data-cap="갈래는 여럿이지만, 콘센트로 돌아가는 길은 한 가닥뿐이다"></figure>
  <div class="eqtab-wrap">
