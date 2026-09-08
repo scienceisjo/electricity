@@ -292,6 +292,7 @@ body.teacher .fig.slot{display:block}
 .eqtab th:first-child,.eqtab td:first-child{text-align:left;white-space:normal}
 .eqtab thead th{font-size:12.5px;color:var(--ink-mute);font-weight:700}
 .eqtab td.num{font-family:var(--mono);font-weight:700}
+.eqtab.lt td,.eqtab.lt th{text-align:left}
 .eqtab tr.sum td{border-top:2px solid var(--line);border-bottom:none;font-weight:800;color:var(--ink)}
 .eqtab tr.sum td.num{color:var(--danger)}
 /* ── 저항은 「일하는 곳」 · 4칸 그림 ── */
@@ -299,6 +300,21 @@ body.teacher .fig.slot{display:block}
 @media(min-width:760px){.workgrid{grid-template-columns:repeat(4,1fr)}}
 .workgrid .fig{margin:0}
 .workgrid .fig figcaption{font-size:12px;padding:8px 9px;line-height:1.45}
+/* ── 왜 그럴까 ② — 비유 그림·묶음 ── */
+.wfig{display:grid;gap:12px;grid-template-columns:1fr;margin-top:12px}
+@media(min-width:760px){.wfig.two{grid-template-columns:1fr 1fr}}
+.wfig figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 10px 8px}
+.wfig figure svg{display:block;width:100%;max-width:420px;height:auto;margin:0 auto}
+.wfig figcaption{font-size:12.5px;font-weight:800;color:var(--ink-mute);text-align:center;margin-bottom:7px}
+.wgroup{margin-top:22px;border-top:2px dashed var(--line);padding-top:18px}
+.wgroup-h{display:inline-flex;align-items:center;gap:8px;font-family:var(--jua);font-size:19px;
+ padding:6px 15px;border-radius:100px;margin-bottom:2px}
+.wgroup-h.sc{background:rgba(160,92,44,.12);color:var(--accent)}
+.wgroup-h.pc{background:rgba(125,91,166,.14);color:var(--c2)}
+.lifebox{background:rgba(125,125,125,.07);border:1px solid var(--line-soft);border-radius:12px;padding:13px 15px;margin-top:12px}
+.lifebox .lb-t{font-size:13px;font-weight:800;color:var(--ink-mute);margin-bottom:6px}
+.lifebox p{margin:0;font-size:14.5px;line-height:1.78;color:var(--ink-dim)}
+.lifebox p+p{margin-top:8px}
 /* 본문 보조 삽화 — 화면을 다 먹지 않도록 높이 제한 */
 .fig.mid img{width:auto;max-width:100%;height:auto;max-height:300px;margin:0 auto}
 /* ── 교과서 그림 3컷 × 2줄 ── */
@@ -469,6 +485,10 @@ b.k{color:#fff}
 .eqbox .eqn{font-size:14px}
 .eqtab{font-size:15px}
 .workgrid .fig figcaption{font-size:13.5px}
+.wfig figcaption{font-size:14px}
+.wgroup-h{font-size:21px}
+.lifebox p{font-size:16px}
+.lifebox .lb-t{font-size:14.5px}
 .fig.mid img{max-height:340px}
 .tbrow-h{font-size:19px}
 .tbfig .tbt{font-size:14px}
@@ -1765,6 +1785,27 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  </div>
 
  <div class="card" style="margin-top:18px">
+ <h3 class="card-t">🤔 그런데 이걸 왜 배울까?</h3>
+ <p class="lead say" style="font-size:17.5px;margin-top:10px">
+ <b class="k">저항은 곧 전기 기구입니다.</b>
+ 전구, 전기난로, 선풍기 모터, 휴대전화 충전기 — 우리가 쓰는 전기 기구는 전부 <b class="t1">전류를 방해하는 저항</b>이에요.
+ 그리고 저항은 방해만 하는 것이 아닙니다. <b>전압을 나눠 받으면서</b> 바로 그 자리에서
+ 전기 에너지를 <b>빛·열·움직임</b>으로 바꿔요. <b class="k">저항이 있어야 기구가 작동합니다.</b></p>
+ <p class="lead say" style="font-size:17.5px">
+ 그러니 <b class="k">「저항을 어떻게 잇는가」는 곧 「전기 기구를 어떻게 연결하는가」</b>입니다.
+ 집 안의 콘센트도, 멀티탭도, 자동차 전조등도, 휴대전화 속 부품도 —
+ 결국 오늘 배울 <b>두 가지 중 하나</b>로 이어져 있어요.</p>
+ <div class="note"><span class="ic">🎯</span><div><b>오늘 배우는 것은 회로도 그리는 법이 아닙니다.</b><br>
+ 「어떻게 이어야 <b class="k">내가 원하는 대로</b> 작동할까」 — 그것을 정하는 법을 배웁니다.<br>
+ · 방마다 <b>따로</b> 켜고 끄고 싶다 → 어떻게 이어야 할까?<br>
+ · 위험할 때 <b>한 번에 전부</b> 끊고 싶다 → 어떻게 이어야 할까?</div></div>
+ <div class="keyline-s"><span class="kw">저항 = 전기 기구</span><span class="arw">→</span><span class="kw">저항을 잇는 법 = 기구를 연결하는 법</span><span class="arw">→</span><span class="kw hi">어떻게 이을지는 목적이 정한다</span><span class="memo"></span></div>
+ <div class="note class"><span class="ic">💬</span><div><b>여기서 한 번 멈추세요</b> — 「왜 배우나」를 묻는 학생이 꼭 있습니다.
+ <b>저항 = 전기 기구</b>라는 한 줄만 세워 주면 이 차시 전체가 「남의 이야기」에서 「우리 집 이야기」로 바뀝니다.
+ 4단계(멀티탭·퓨즈)가 이 문장의 답이라는 것도 미리 말해 두면 좋습니다.</div></div>
+ </div>
+
+ <div class="card" style="margin-top:18px">
  <div class="eyebrow" style="margin-bottom:8px">오늘의 목표</div>
  <h3 class="card-t" style="margin-bottom:14px">이번 시간이 끝나면 이걸 할 수 있다</h3>
  <div class="grid c2">
@@ -2235,6 +2276,247 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
 </div>
 
  
+<!-- ═══════ '왜 그럴까 ②' — 나뉘는 것과 같은 것 ═══════ -->
+<div class="why-mod" id="whyVI">
+ <div class="why-q"><span class="qi">💡</span><span class="qt">같은 회로 안인데, 왜 어떤 것은 <span class="t6">나뉘고</span><br>어떤 것은 <span class="t2">똑같을까?</span></span></div>
+
+ <div class="why-step" style="border-top:0;padding-top:16px">
+ <div class="why-h"><span class="no">1</span>먼저 낱말 두 개를 바로잡습니다</div>
+ <p>이 둘이 어긋나 있으면 뒤의 설명이 하나도 들어오지 않습니다.</p>
+ <p class="wsub">하나 — 전압은 「어디」의 값이 아니라 <b class="k">「어디부터 어디까지」의 값</b>입니다.</p>
+ <p>키가 150 cm라고 하면 그건 한 사람의 값이지만, 「두 사람의 키 <b>차이</b>가 10 cm」는 두 사람이 있어야 나오는 값이죠.
+ 전압이 그렇습니다. <b class="k">한 점에는 전압이 없습니다.</b> 전압계를 한 점에 대지 않고 <b>양 끝 두 곳에</b> 대는 이유예요.</p>
+ <p class="wsub">둘 — 도선은 「길」이 아니라 <b class="k">「같은 자리」</b>입니다.</p>
+ <p>도선은 저항이 거의 0입니다. <b>지나가도 전압이 떨어지지 않아요.</b>
+ 지나가도 아무 일이 일어나지 않는다면, 전기 입장에서 그곳은 <b class="k">그냥 같은 자리</b>입니다.</p>
+ <div class="note"><span class="ic">🖍️</span><div><b>해 보기</b> — 회로도에 형광펜 두 색으로 칠해 보세요.
+ 전지 (+)에서 나와 저항에 닿기 전까지 <b>노랑</b>, 저항을 지나 (−)로 돌아가는 길 전부 <b>파랑</b>.
+ 병렬 회로를 칠하면 <b class="k">두 저항의 왼쪽 끝이 둘 다 노랑, 오른쪽 끝이 둘 다 파랑</b>인 것이 보입니다.</div></div>
+ <div class="keyline-s"><span class="kw">전압 = 두 점 사이의 값</span><span class="kw hi">도선 = 이어져 있으면 한 자리</span><span class="memo"></span></div>
+ </div>
+
+ <div class="why-step">
+ <div class="why-h"><span class="no">2</span>공통 무대 — 회로를 「건물」로 봅니다</div>
+ <p>앞으로 나올 이야기를 하나의 그림 위에서 합니다. 회로를 <b class="k">층이 있는 건물</b>로 바꿔 보세요.</p>
+ <div class="eqtab-wrap">
+ <table class="eqtab lt" style="min-width:0">
+ <thead><tr><th>회로</th><th>건물</th></tr></thead>
+ <tbody>
+ <tr><td>전지</td><td><b>엘리베이터</b> — 아래층에서 위층으로 올려 준다</td></tr>
+ <tr><td>도선</td><td><b>평평한 복도</b> — 걸어도 높이가 안 변한다</td></tr>
+ <tr><td>저항</td><td><b>미끄럼틀</b> — 여기서만 아래로 내려간다</td></tr>
+ <tr><td>전압</td><td><b>내려온 높이</b></td></tr>
+ <tr><td>전류</td><td><b>1초에 지나간 사람 수</b></td></tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="note"><span class="ic">💡</span><div>미끄럼틀을 하나 더 놓는다고 <b class="k">건물이 2층이 되지 않습니다.</b>
+ 높이는 <b>나눠 갖는 것이 아니라 이미 정해져 있는 것</b>이에요. 이 한 문장이 오늘의 열쇠입니다.</div></div>
+ </div>
+
+ <div class="wgroup">
+ <div class="wgroup-h sc">🔗 직렬 — 한 줄로 이었을 때</div>
+
+ <div class="why-step" style="border-top:0;padding-top:12px">
+ <div class="why-h"><span class="no">3</span>전압은 왜 나뉠까</div>
+ <div class="wfig two">
+ <figure>
+
+ <figcaption>🔗 직렬 — 미끄럼틀이 연달아</figcaption>
+
+ <svg viewBox="0 0 340 250" role="img" aria-label="직렬을 건물로 나타낸 그림. 엘리베이터가 1층에서 5층으로 올려 주고, 미끄럼틀 두 개가 연달아 있어 5층에서 3층, 3층에서 1층으로 내려온다. 내려온 높이 2층과 2층을 합하면 4층이고, 지나가는 사람 수는 어디서나 같다."><text x="48" y="67" text-anchor="end" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="600" fill="#6b573f">5층</text><text x="48" y="223" text-anchor="end" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="600" fill="#6b573f">1층</text><text x="225" y="160" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="600" fill="#6b573f">3층</text><line x1="56" y1="62" x2="150" y2="62" stroke="#a08b64" stroke-width="2.6" stroke-linecap="round"/><path d="M150 62 L206 140" fill="none" stroke="#8a5f24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="206" y1="140" x2="244" y2="140" stroke="#a08b64" stroke-width="2.6" stroke-linecap="round"/><path d="M244 140 L300 218" fill="none" stroke="#8a5f24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="300" y1="218" x2="56" y2="218" stroke="#a08b64" stroke-width="2.6" stroke-linecap="round"/><line x1="56" y1="218" x2="56" y2="62" stroke="#a08b64" stroke-width="2.6" stroke-linecap="round"/><rect x="40" y="128" width="32" height="44" rx="7" fill="#faf4e6" stroke="#3b2f1e" stroke-width="2.2"/><line x1="56" y1="166" x2="56.0" y2="139.0" stroke="#a05c2c" stroke-width="2.6" stroke-linecap="round"/><polygon points="56.0,132.0 60.7,144.2 51.3,144.2" fill="#a05c2c"/><text x="56" y="190" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12" font-weight="700" fill="#6b573f">전지</text><circle cx="86.0" cy="53.0" r="4.2" fill="#a05c2c"/><circle cx="112.0" cy="53.0" r="4.2" fill="#a05c2c"/><circle cx="216.0" cy="131.0" r="4.2" fill="#a05c2c"/><circle cx="234.0" cy="131.0" r="4.2" fill="#a05c2c"/><circle cx="100.0" cy="209.0" r="4.2" fill="#a05c2c"/><circle cx="126.0" cy="209.0" r="4.2" fill="#a05c2c"/><text x="178" y="44" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12" font-weight="700" fill="#a05c2c">사람 수는 어디서나 같다</text><line x1="322" y1="62" x2="322.0" y2="133.0" stroke="#7d5ba6" stroke-width="2.2" stroke-linecap="round"/><polygon points="322.0,140.0 317.3,127.8 326.7,127.8" fill="#7d5ba6"/><line x1="322" y1="140" x2="322.0" y2="211.0" stroke="#7d5ba6" stroke-width="2.2" stroke-linecap="round"/><polygon points="322.0,218.0 317.3,205.8 326.7,205.8" fill="#7d5ba6"/><text x="316" y="105" text-anchor="end" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#7d5ba6">2층</text><text x="316" y="183" text-anchor="end" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#7d5ba6">2층</text><text x="178" y="238" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="13" font-weight="800" fill="#7d5ba6">2층 + 2층 = 4층 — 나눠서 내려온다</text></svg>
+
+ </figure>
+ <figure>
+
+ <figcaption>🔗 직렬 — 좁은 관과 넓은 관</figcaption>
+
+ <svg viewBox="0 0 340 224" role="img" aria-label="직렬을 수도관으로 나타낸 그림. 좁은 관과 넓은 관이 한 줄로 이어져 있고 압력계가 3, 1, 0을 가리킨다. 좁은 관에서 2, 넓은 관에서 1만큼 압력이 떨어진다. 흐르는 물의 양은 어디서나 같다."><path d="M60 122 H176 V142 H60 Z" fill="#f6f1e8" stroke="#8a5f24" stroke-width="2.2"/><path d="M176 108 H296 V156 H176 Z" fill="#f6f1e8" stroke="#8a5f24" stroke-width="2.2"/><text x="118" y="166" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#8a5f24">좁은 관 = 저항 20 Ω</text><text x="236" y="178" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#8a5f24">넓은 관 = 저항 10 Ω</text><circle cx="60" cy="62" r="17" fill="#faf4e6" stroke="#7d5ba6" stroke-width="2.2"/><text x="60" y="68" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="16" font-weight="800" fill="#7d5ba6">3</text><circle cx="176" cy="62" r="17" fill="#faf4e6" stroke="#7d5ba6" stroke-width="2.2"/><text x="176" y="68" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="16" font-weight="800" fill="#7d5ba6">1</text><circle cx="296" cy="62" r="17" fill="#faf4e6" stroke="#7d5ba6" stroke-width="2.2"/><text x="296" y="68" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="16" font-weight="800" fill="#7d5ba6">0</text><text x="178" y="26" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12" font-weight="700" fill="#7d5ba6">압력계 — 지점마다 값이 다르다</text><line x1="60" y1="79" x2="60" y2="120" stroke="#7d5ba6" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 3"/><line x1="176" y1="79" x2="176" y2="120" stroke="#7d5ba6" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 3"/><line x1="296" y1="79" x2="296" y2="106" stroke="#7d5ba6" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 3"/><text x="118" y="100" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="13" font-weight="800" fill="#7d5ba6">2 떨어짐</text><text x="236" y="100" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="13" font-weight="800" fill="#7d5ba6">1 떨어짐</text><circle cx="86.0" cy="132.0" r="4" fill="#a05c2c"/><circle cx="112.0" cy="132.0" r="4" fill="#a05c2c"/><circle cx="138.0" cy="132.0" r="4" fill="#a05c2c"/><circle cx="206.0" cy="132.0" r="4" fill="#a05c2c"/><circle cx="236.0" cy="132.0" r="4" fill="#a05c2c"/><circle cx="266.0" cy="132.0" r="4" fill="#a05c2c"/><line x1="150" y1="132" x2="161.0" y2="132.0" stroke="#a05c2c" stroke-width="2.2" stroke-linecap="round"/><polygon points="168.0,132.0 155.8,136.7 155.8,127.3" fill="#a05c2c"/><line x1="276" y1="132" x2="285.0" y2="132.0" stroke="#a05c2c" stroke-width="2.2" stroke-linecap="round"/><polygon points="292.0,132.0 279.8,136.7 279.8,127.3" fill="#a05c2c"/><text x="178" y="210" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12" font-weight="800" fill="#a05c2c">흐르는 물의 양은 같은데, 좁은 쪽에 더 큰 압력이 든다</text></svg>
+
+ </figure>
+ </div>
+ <p style="margin-top:12px">미끄럼틀이 <b>연달아</b> 있으면 5층 → 3층 → 1층으로 <b class="k">나눠서</b> 내려옵니다. 내려온 높이를 다 더하면 엘리베이터가 올려 준 만큼이 되고요.</p>
+ <p>수도관으로 보면 더 또렷합니다. <b class="t1">저항이 큰 곳 = 좁은 관</b>, 작은 곳 = 넓은 관이에요.
+ 같은 관이니 <b>흐르는 물의 양은 어디서나 같습니다.</b> 그런데 같은 양을 좁은 곳으로 밀어 넣으려면 <b class="k">더 큰 압력을 써야 해요.</b>
+ 그래서 저항이 큰 쪽에 전압이 더 크게 걸립니다.</p>
+ <p class="wsub">숫자로 확인 — 전지 3 V, 저항 20 Ω과 10 Ω</p>
+ <div class="eqtab-wrap">
+ <table class="eqtab" style="min-width:0">
+ <tbody>
+ <tr><td>전체 저항</td><td class="num">20 + 10 = 30 Ω</td></tr>
+ <tr><td>회로에 흐르는 전류 (어디서나 같음)</td><td class="num">3 ÷ 30 = 0.1 A</td></tr>
+ <tr><td>20 Ω에 걸리는 전압</td><td class="num">0.1 × 20 = 2 V</td></tr>
+ <tr><td>10 Ω에 걸리는 전압</td><td class="num">0.1 × 10 = 1 V</td></tr>
+ <tr class="sum"><td>합</td><td class="num">2 + 1 = 3 V ✅</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p><b class="k">저항이 2배면 전압도 2배.</b> 저항의 비가 그대로 전압의 비가 됩니다.</p>
+ <div class="lifebox">
+ <div class="lb-t">🏠 일상에서 확인하기 — 전기난로는 왜 열선만 뜨거울까</div>
+ <p>전기난로를 켜면 <b>니크롬선은 새빨갛게 달아오르는데, 거기까지 오는 전선은 미지근</b>하죠. 같은 전류가 흐르는데 왜 한쪽만 뜨거울까요?</p>
+ <p>전선은 <b>아주 넓은 관</b>이고 니크롬선은 <b>아주 좁은 관</b>입니다. 그래서 전압이 <b class="k">거의 전부 니크롬선에</b> 걸려요.
+ 전기 에너지가 열로 바뀌는 일은 <b>전압이 걸린 곳에서</b> 일어납니다 — 3단계 첫머리의 「저항은 일하는 곳」이 바로 이 뜻이에요.</p>
+ </div>
+ <div class="keyline-s"><span class="kw">좁은 관에 더 큰 압력</span><span class="arw">→</span><span class="kw">저항 큰 쪽에 전압 크게</span><span class="arw">→</span><span class="kw hi">거기서 일이 일어난다</span><span class="memo"></span></div>
+ </div>
+
+ <div class="why-step">
+ <div class="why-h"><span class="no">4</span>전류는 왜 어디서나 같을까</div>
+ <div class="wfig">
+ <figure>
+
+ <figcaption>🔗 직렬 — 막힌 도로</figcaption>
+
+ <svg viewBox="0 0 340 262" role="img" aria-label="직렬 전류를 도로로 나타낸 그림. 3차선 도로가 공사 구간에서 1차선으로 좁아졌다가 다시 3차선이 된다. 1시간에 지나가는 차의 수는 세 구간 모두 600대로 같다."><rect x="44" y="74" width="78" height="78" rx="4" fill="#f6f1e8" stroke="#6b573f" stroke-width="2"/><line x1="48" y1="100.0" x2="118" y2="100.0" stroke="#6b573f" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="7 6"/><line x1="48" y1="126.0" x2="118" y2="126.0" stroke="#6b573f" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="7 6"/><rect x="144" y="113" width="72" height="26" rx="4" fill="#f6f1e8" stroke="#6b573f" stroke-width="2"/><rect x="238" y="74" width="68" height="78" rx="4" fill="#f6f1e8" stroke="#6b573f" stroke-width="2"/><line x1="242" y1="100.0" x2="302" y2="100.0" stroke="#6b573f" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="7 6"/><line x1="242" y1="126.0" x2="302" y2="126.0" stroke="#6b573f" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="7 6"/><text x="83" y="62" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#6b573f">3차선</text><text x="180" y="100" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#e41e3f">공사 — 1차선</text><text x="272" y="62" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#6b573f">3차선</text><rect x="52" y="82" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="84" y="82" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="52" y="108" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="84" y="108" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="52" y="134" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="84" y="134" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="152" y="119" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="180" y="119" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="250" y="82" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="280" y="82" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="250" y="108" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="280" y="108" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="250" y="134" width="17" height="10" rx="3" fill="#a05c2c"/><rect x="280" y="134" width="17" height="10" rx="3" fill="#a05c2c"/><line x1="124" y1="113" x2="135.0" y2="113.0" stroke="#a05c2c" stroke-width="2.4" stroke-linecap="round"/><polygon points="142.0,113.0 129.8,117.7 129.8,108.3" fill="#a05c2c"/><line x1="218" y1="113" x2="229.0" y2="113.0" stroke="#a05c2c" stroke-width="2.4" stroke-linecap="round"/><polygon points="236.0,113.0 223.8,117.7 223.8,108.3" fill="#a05c2c"/><text x="83" y="182" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12" font-weight="700" fill="#a05c2c">1시간에</text><text x="83" y="199" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="14" font-weight="800" fill="#a05c2c">600대</text><text x="180" y="182" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12" font-weight="700" fill="#a05c2c">1시간에</text><text x="180" y="199" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="14" font-weight="800" fill="#a05c2c">600대</text><text x="272" y="182" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12" font-weight="700" fill="#a05c2c">1시간에</text><text x="272" y="199" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="14" font-weight="800" fill="#a05c2c">600대</text><text x="178" y="228" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="800" fill="#a05c2c">좁은 곳이 「전체 통과량」을 정한다</text><text x="178" y="249" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="800" fill="#a05c2c">어디서 세도 지나가는 차 수는 같다</text></svg>
+
+ </figure>
+ </div>
+ <p style="margin-top:12px">편도 3차선인데 중간에 공사로 <b>1차선</b>이 되었습니다. 1시간에 공사 구간을 600대가 지나간다면,
+ <b class="k">3차선 구간도 1시간에 600대</b>입니다. 그렇지 않으면 공사 구간 앞에 차가 <b>무한히 쌓여야</b> 하니까요.</p>
+ <p>좁은 곳이 정하는 것은 <b class="k">회로 전체의 통과량</b>이지, 구간마다 다른 통과량이 아닙니다.
+ 외길에서는 <b>전하가 중간에 쌓이거나 사라질 수 없어요.</b></p>
+ <div class="note myth"><span class="ic">⚠️</span><div>좁은 곳에서 물이 <b>빠른 것은 맞습니다.</b> 하지만 관이 좁으니 <b class="k">1초에 지나가는 양은 똑같아요.</b>
+ <b>빠른 것과 많은 것은 다릅니다.</b></div></div>
+ <div class="lifebox">
+ <div class="lb-t">🏠 일상에서 확인하기 — 수도꼭지를 반쯤 잠그면</div>
+ <p>세면대 수도꼭지를 반쯤 잠가 보세요. 물이 졸졸 나오죠. 그런데 <b class="k">벽 속 굵은 관에서도 그만큼 덜 흐르고 있습니다.</b>
+ 꼭지 하나가 좁아진 것뿐인데 <b>관 전체의 물의 양</b>이 줄어든 거예요.</p>
+ <p>회로도 똑같습니다. 전류계를 <b>전지 옆에 끼우든, 두 저항 사이에 끼우든 눈금이 같습니다.</b> 한 줄이니까요.</p>
+ </div>
+ <div class="keyline-s"><span class="kw">좁은 곳이 전체를 정한다</span><span class="arw">→</span><span class="kw hi">어디서 재도 전류는 하나</span><span class="memo"></span></div>
+ </div>
+ </div>
+
+ <div class="wgroup">
+ <div class="wgroup-h pc">🔀 병렬 — 나란히 이었을 때</div>
+
+ <div class="why-step" style="border-top:0;padding-top:12px">
+ <div class="why-h"><span class="no">5</span>전압은 왜 같을까</div>
+ <div class="wfig">
+ <figure>
+
+ <figcaption>🔀 병렬 — 미끄럼틀이 나란히</figcaption>
+
+ <svg viewBox="0 0 340 252" role="img" aria-label="병렬을 건물로 나타낸 그림. 미끄럼틀 두 개가 모두 같은 5층 복도에서 출발해 같은 1층 복도로 내려온다. 내려오는 높이는 둘 다 4층으로 같고, 가파른 미끄럼틀로 사람이 더 많이 내려온다."><text x="48" y="71" text-anchor="end" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="600" fill="#6b573f">5층</text><text x="48" y="219" text-anchor="end" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="600" fill="#6b573f">1층</text><line x1="56" y1="66" x2="300" y2="66" stroke="#a08b64" stroke-width="2.6" stroke-linecap="round"/><line x1="56" y1="214" x2="300" y2="214" stroke="#a08b64" stroke-width="2.6" stroke-linecap="round"/><line x1="56" y1="214" x2="56" y2="66" stroke="#a08b64" stroke-width="2.6" stroke-linecap="round"/><rect x="40" y="122" width="32" height="44" rx="7" fill="#faf4e6" stroke="#3b2f1e" stroke-width="2.2"/><line x1="56" y1="160" x2="56.0" y2="133.0" stroke="#a05c2c" stroke-width="2.6" stroke-linecap="round"/><polygon points="56.0,126.0 60.7,138.2 51.3,138.2" fill="#a05c2c"/><text x="56" y="186" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12" font-weight="700" fill="#6b573f">전지</text><path d="M150 66 L176 214" fill="none" stroke="#8a5f24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M226 66 L296 214" fill="none" stroke="#8a5f24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="150" y="44" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12" font-weight="700" fill="#8a5f24">가파름 = 저항 작음</text><text x="268" y="44" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12" font-weight="700" fill="#8a5f24">완만함 = 저항 큼</text><circle cx="155.3" cy="96.0" r="4.2" fill="#a05c2c" stroke="#faf4e6" stroke-width="1.6"/><circle cx="160.5" cy="126.0" r="4.2" fill="#a05c2c" stroke="#faf4e6" stroke-width="1.6"/><circle cx="165.8" cy="156.0" r="4.2" fill="#a05c2c" stroke="#faf4e6" stroke-width="1.6"/><circle cx="171.1" cy="186.0" r="4.2" fill="#a05c2c" stroke="#faf4e6" stroke-width="1.6"/><circle cx="248.7" cy="114.0" r="4.2" fill="#a05c2c" stroke="#faf4e6" stroke-width="1.6"/><circle cx="276.1" cy="172.0" r="4.2" fill="#a05c2c" stroke="#faf4e6" stroke-width="1.6"/><line x1="320" y1="66" x2="320.0" y2="207.0" stroke="#7d5ba6" stroke-width="2.2" stroke-linecap="round"/><polygon points="320.0,214.0 315.3,201.8 324.7,201.8" fill="#7d5ba6"/><text x="314" y="144" text-anchor="end" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#7d5ba6">4층</text><text x="178" y="240" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="13" font-weight="800" fill="#7d5ba6">어느 쪽을 타든 내려오는 높이는 똑같이 4층</text></svg>
+
+ </figure>
+ </div>
+ <p style="margin-top:12px">두 미끄럼틀이 <b class="k">같은 5층 복도에서 출발해 같은 1층 복도로</b> 내려옵니다.
+ 어느 쪽을 타든 <b>내려오는 높이는 똑같이 4층.</b> 그래서 전압이 같습니다.</p>
+ <p>낱말 ②를 여기서 씁니다 — 도선으로 이어진 곳은 <b>같은 자리</b>였죠.
+ 병렬로 이었다는 말은 <b class="k">두 저항의 왼쪽 끝끼리 한 덩어리, 오른쪽 끝끼리 한 덩어리</b>로 묶여 있다는 뜻입니다.
+ <b>출발선도 같고 도착선도 같으니</b> 건너뛴 거리가 같을 수밖에 없어요.</p>
+ <div class="lifebox">
+ <div class="lb-t">🏠 일상에서 확인하기 — 콘센트</div>
+ <p>집에 콘센트가 몇 개인가요? 거실에도, 방에도, 부엌에도 있죠. 그런데 그 콘센트들은 <b class="k">결국 같은 두 가닥에 붙어 있습니다.</b>
+ 5층 복도와 1층 복도처럼요.</p>
+ <p>그래서 <b>어디에 꽂아도 220 V</b>입니다. 두 개 꽂았다고 110 V가 되지 않아요 —
+ 그러면 형이 컴퓨터를 켤 때마다 <b class="k">온 집 전등이 반씩 어두워져야</b> 하니까요.</p>
+ </div>
+ <div class="keyline-s"><span class="kw">같은 층에서 같은 층으로</span><span class="arw">→</span><span class="kw">높이 같다</span><span class="arw">→</span><span class="kw hi">어디 꽂아도 220 V</span><span class="memo"></span></div>
+ </div>
+
+ <div class="why-step">
+ <div class="why-h"><span class="no">6</span>전류는 왜 나뉠까</div>
+ <p>갈림길이 있으니 <b>물이 나뉘는 것은 당연</b>합니다. 진짜 물어야 할 것은 이거예요 —
+ <b class="k">왜 똑같이 반씩 나뉘지 않을까?</b></p>
+ <div class="wfig">
+ <figure>
+
+ <figcaption>🔀 병렬 — 굵은 갈래와 가는 갈래</figcaption>
+
+ <svg viewBox="0 0 340 258" role="img" aria-label="병렬 전류를 수도관으로 나타낸 그림. 관이 두 갈래로 갈라지는데 위는 넓고 아래는 좁다. 두 갈래의 양 끝 압력차는 똑같이 3이지만, 넓은 갈래로 0.3 A, 좁은 갈래로 0.15 A가 흘러 넓은 쪽에 더 많이 지나간다."><circle cx="46" cy="128" r="17" fill="#faf4e6" stroke="#7d5ba6" stroke-width="2.2"/><text x="46" y="134" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="16" font-weight="800" fill="#7d5ba6">3</text><circle cx="310" cy="128" r="17" fill="#faf4e6" stroke="#7d5ba6" stroke-width="2.2"/><text x="310" y="134" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="16" font-weight="800" fill="#7d5ba6">0</text><line x1="63" y1="128" x2="96" y2="128" stroke="#a08b64" stroke-width="2.4" stroke-linecap="round"/><line x1="276" y1="128" x2="293" y2="128" stroke="#a08b64" stroke-width="2.4" stroke-linecap="round"/><path d="M96 128 L120 72 H252 L276 128" fill="none" stroke="#a08b64" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M120 52 H252 V92 H120 Z" fill="#f6f1e8" stroke="#8a5f24" stroke-width="2.2"/><path d="M96 128 L120 190 H252 L276 128" fill="none" stroke="#a08b64" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M120 181 H252 V199 H120 Z" fill="#f6f1e8" stroke="#8a5f24" stroke-width="2.2"/><text x="186" y="44" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#8a5f24">넓은 갈래 = 10 Ω</text><text x="186" y="222" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#8a5f24">좁은 갈래 = 20 Ω</text><circle cx="140.0" cy="72.0" r="5" fill="#a05c2c"/><circle cx="168.0" cy="72.0" r="5" fill="#a05c2c"/><circle cx="196.0" cy="72.0" r="5" fill="#a05c2c"/><circle cx="224.0" cy="72.0" r="5" fill="#a05c2c"/><circle cx="154.0" cy="190.0" r="4" fill="#a05c2c"/><circle cx="210.0" cy="190.0" r="4" fill="#a05c2c"/><text x="290" y="72" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="13" font-weight="800" fill="#a05c2c">0.3 A</text><text x="290" y="190" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="13" font-weight="800" fill="#a05c2c">0.15 A</text><rect x="108" y="112" width="140" height="28" rx="8" fill="#faf4e6"/><text x="178" y="132" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="800" fill="#7d5ba6">압력차는 둘 다 3 — 같다</text><text x="178" y="246" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="13" font-weight="800" fill="#a05c2c">같은 압력인데 넓은 쪽으로 물이 더 많이 지나간다</text></svg>
+
+ </figure>
+ </div>
+ <p style="margin-top:12px">③에서 쓴 관을 그대로 가져옵시다. <b>두 갈래인데 하나는 굵고 하나는 가늡니다.</b>
+ 두 갈래의 양 끝은 <b class="k">같은 두 자리</b>에 붙어 있으니 밀어 주는 압력은 똑같아요.
+ 같은 압력으로 밀어도 <b>넓은 관으로 더 많은 물이</b> 지나갑니다. 그래서 <b class="t1">저항이 작은 갈래로 전류가 더 많이</b> 흘러요.</p>
+ <div class="note myth"><span class="ic">⚠️</span><div>전하가 <b>어느 쪽이 편할지 고르는 것이 아닙니다.</b> 넓은 길로는 <b class="k">그냥 더 많이 지나갈 수 있을 뿐</b>이에요.</div></div>
+ <p class="wsub">숫자로 확인 — 전지 3 V에 <b>③과 같은 부품</b>(20 Ω · 10 Ω)을 병렬로</p>
+ <div class="eqtab-wrap">
+ <table class="eqtab" style="min-width:0">
+ <tbody>
+ <tr><td>두 갈래에 걸리는 전압</td><td class="num">둘 다 3 V</td></tr>
+ <tr><td>10 Ω 갈래에 흐르는 전류</td><td class="num">3 ÷ 10 = 0.3 A</td></tr>
+ <tr><td>20 Ω 갈래에 흐르는 전류</td><td class="num">3 ÷ 20 = 0.15 A</td></tr>
+ <tr class="sum"><td>합 = 전지에서 나가는 전류</td><td class="num">0.45 A ✅</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p><b class="k">저항이 2배면 전류는 절반.</b> 저항에 <b>반비례</b>합니다.</p>
+ <div class="note"><span class="ic">💡</span><div><b>③과 견주어 보세요. 부품은 똑같습니다.</b><br>
+ 🔗 <b>직렬</b>로 이었더니 → <b class="t2">전압</b>이 2 : 1로 나뉘었습니다 (저항에 <b>비례</b>)<br>
+ 🔀 <b>병렬</b>로 이었더니 → <b class="t6">전류</b>가 1 : 2로 나뉩니다 (저항에 <b>반비례</b>)<br>
+ 같은 20 Ω과 10 Ω인데 <b class="k">잇는 방법만 바꿨더니 나뉘는 것이 뒤바뀌었어요.</b></div></div>
+ <div class="lifebox">
+ <div class="lb-t">🏠 일상에서 확인하기 — 멀티탭</div>
+ <p>멀티탭에 꽂은 기구들은 <b>다 같은 220 V</b>를 받습니다. 그런데 <b class="k">쓰는 전류는 제각각</b>이에요 —
+ 휴대전화 충전기는 저항이 커서(좁은 관) <b>0.1 A</b>, 전기주전자는 저항이 작아서(넓은 관) <b>10 A</b>. <b>같은 전압인데 100배 차이</b>입니다.</p>
+ <p>기구가 스스로 전류를 끌어가는 것이 아니라, <b>저항이 작아서 많이 지나가는 것</b>뿐이에요.
+ 4단계에서 볼 <b>문어발이 위험한 이유</b>가 여기서 나옵니다 — 갈래가 늘수록 더해지는 전류가 늘고, 그것이 전부 <b class="k">한 가닥 전선</b>에 모이니까요.</p>
+ </div>
+ <div class="keyline-s"><span class="kw">같은 압력 · 다른 굵기</span><span class="arw">→</span><span class="kw">넓은 쪽으로 더 많이</span><span class="arw">→</span><span class="kw hi">저항에 반비례</span><span class="memo"></span></div>
+ </div>
+ </div>
+
+ <div class="why-step">
+ <div class="why-h"><span class="no">7</span>한눈에 — 나뉘는 것과 같은 것</div>
+ <div class="eqtab-wrap">
+ <table class="eqtab" style="min-width:420px">
+ <thead><tr><th></th><th>전압</th><th>전류</th></tr></thead>
+ <tbody>
+ <tr><td><b class="t6">🔗 직렬</b> — 한 줄</td><td><b>나뉜다</b> · 저항에 비례<br><span class="num">V₁ + V₂ = V</span></td><td><b>같다</b><br><span class="num">I₁ = I₂ = I</span></td></tr>
+ <tr><td><b class="t2">🔀 병렬</b> — 나란히</td><td><b>같다</b><br><span class="num">V₁ = V₂ = V</span></td><td><b>나뉜다</b> · 저항에 반비례<br><span class="num">I₁ + I₂ = I</span></td></tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="note"><span class="ic">🗝️</span><div><b>외우지 마세요. 이렇게 읽으면 됩니다.</b><br>
+ <b>한 줄</b>로 이으면 → 길이 하나니 <b class="t6">전류는 하나</b>, 대신 <b>높이를 나눠</b> 내려옵니다.<br>
+ <b>나란히</b> 이으면 → 같은 두 자리니 <b class="t2">전압은 하나</b>, 대신 <b>양을 나눠</b> 흐릅니다.<br>
+ <b class="k">길이 하나면 전류를 나눌 수 없고, 자리가 하나면 전압을 나눌 수 없습니다.</b></div></div>
+ </div>
+
+ <div class="why-step">
+ <div class="why-h"><span class="no">＋</span>이런 질문이 나오면</div>
+ <details class="wfold"><summary>「펌프가 한 줄로 압력을 뱉어내면, 압력은 다 같아야 하는 것 아닌가요?」</summary>
+ <div class="fold-in"><b>압력은 같지 않습니다. 지점마다 다릅니다.</b> 다만 펌프가 만드는 것도 압력 하나가 아니라
+ <b>출구와 입구의 압력 「차이」</b>예요.
+ <div class="eqtab-wrap"><table class="eqtab" style="min-width:0"><tbody>
+ <tr><td>펌프 출구</td><td class="num">3</td></tr>
+ <tr><td>좁은 관을 지난 뒤</td><td class="num">1 &nbsp;← 2만큼 떨어짐</td></tr>
+ <tr><td>넓은 관을 지난 뒤 (펌프 입구)</td><td class="num">0 &nbsp;← 1만큼 떨어짐</td></tr>
+ </tbody></table></div>
+ 압력이 같은 것이 아니라, <b>압력이 얼마나 떨어졌는지</b>가 구간마다 다른 것입니다.
+ 떨어진 것을 다 더하면 펌프가 만든 3이 그대로 나오고요.</div>
+ </details>
+ <details class="wfold"><summary>「치약을 짜는 힘이 두 갈래로 나뉘면, 압력도 절반이 되는 것 아닌가요?」</summary>
+ <div class="fold-in"><b>나뉘는 것은 「양」이지 「압력」이 아닙니다.</b>
+ 치약은 <b>출구가 하나</b>인 비유라 갈래가 생기면 맞지 않아요. 그래서 병렬에서는 비유를 바꿉니다.
+ <div class="wfig" style="margin-top:10px">
+ <figure>
+
+ <figcaption>물탱크와 수도꼭지 두 개</figcaption>
+
+ <svg viewBox="0 0 340 300" role="img" aria-label="옥상 물탱크에 수도꼭지 두 개가 나란히 달린 그림. 물을 미는 압력은 물탱크의 높이가 정하고, 꼭지를 하나 더 연다고 탱크가 낮아지지 않는다."><rect x="96" y="34" width="148" height="52" rx="8" fill="#f6f1e8" stroke="#3b2f1e" stroke-width="2.4"/><rect x="102" y="52" width="136" height="30" rx="4" fill="#a05c2c" opacity=".35"/><text x="170" y="26" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#6b573f">옥상 물탱크</text><line x1="170" y1="86" x2="170" y2="132" stroke="#a08b64" stroke-width="3" stroke-linecap="round"/><line x1="104" y1="132" x2="236" y2="132" stroke="#a08b64" stroke-width="3" stroke-linecap="round"/><line x1="104" y1="132" x2="104" y2="176" stroke="#a08b64" stroke-width="3" stroke-linecap="round"/><rect x="91" y="176" width="26" height="16" rx="4" fill="#faf4e6" stroke="#3b2f1e" stroke-width="2.2"/><circle cx="104.0" cy="202.0" r="4" fill="#a05c2c"/><circle cx="104.0" cy="216.0" r="4" fill="#a05c2c"/><circle cx="104.0" cy="230.0" r="4" fill="#a05c2c"/><line x1="236" y1="132" x2="236" y2="176" stroke="#a08b64" stroke-width="3" stroke-linecap="round"/><rect x="223" y="176" width="26" height="16" rx="4" fill="#faf4e6" stroke="#3b2f1e" stroke-width="2.2"/><circle cx="236.0" cy="202.0" r="4" fill="#a05c2c"/><circle cx="236.0" cy="216.0" r="4" fill="#a05c2c"/><circle cx="236.0" cy="230.0" r="4" fill="#a05c2c"/><text x="104" y="250" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#6b573f">꼭지 A</text><text x="236" y="250" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="700" fill="#6b573f">꼭지 B</text><line x1="62" y1="88" x2="62.0" y2="167.0" stroke="#7d5ba6" stroke-width="2.2" stroke-linecap="round"/><polygon points="62.0,174.0 57.3,161.8 66.7,161.8" fill="#7d5ba6"/><text x="54" y="136" text-anchor="end" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="800" fill="#7d5ba6">압력</text><text x="170" y="268" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="800" fill="#7d5ba6">이 높이가 압력을 정한다</text><text x="170" y="286" text-anchor="middle" font-family="Pretendard, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="12.5" font-weight="800" fill="#7d5ba6">꼭지를 하나 더 연다고 물탱크는 낮아지지 않는다</text></svg>
+
+ </figure>
+ </div>
+ 물을 미는 압력은 <b>물탱크의 높이</b>가 정합니다. 꼭지를 하나 더 연다고 <b>물탱크가 낮아지지 않아요.</b>
+ 나뉘는 것은 <b>나오는 물의 양</b>입니다.</div>
+ </details>
+ </div>
+
+ <div class="note class"><span class="ic">💬</span><div><b>진행 대본</b> — ①의 두 낱말을 칠판에 먼저 남기고 시작하세요.
+ 특히 <b>「도선 = 같은 자리」</b>를 세우지 않으면 ⑤가 통째로 미끄러집니다. 형광펜 칠하기를 1분만 시켜 보세요.<br>
+ 비유가 셋이지만 <b>각각 맡은 질문이 다릅니다</b> — 층은 병렬 전압, 관은 전압·전류 분배, 도로는 직렬 전류. 하나로 합치려 하지 마세요.<br>
+ <b>③과 ⑥에 같은 부품(20 Ω·10 Ω, 3 V)을 쓴 것이 이 모듈의 핵심</b>입니다. 칠판 왼쪽에 직렬 결과(2 V·1 V), 오른쪽에 병렬 결과(0.3 A·0.15 A)를 나란히 남겨,
+ <b>잇는 방법만 바꿨는데 나뉘는 대상이 뒤바뀐 것</b>을 학생이 직접 보게 하세요.<br>
+ ⑦의 마지막 두 줄은 판서로 남기시면 시험 직전까지 씁니다. 접힘 둘은 질문이 나올 때만 여세요 —
+ 치약 반론은 앞 시간에 그 비유를 쓰셨다면 반드시 나옵니다. 학생이 틀린 것이 아니라 <b>비유를 정직하게 끝까지 밀어붙인 것</b>이니 그렇게 말해 주세요.</div></div>
+</div>
+
  <div class="moved-note">📦 <b>「🔢 숫자로 한 번만 따라가 보기 — 30 V 전지에 5 Ω과 10 Ω」</b>은 교과서 밖 내용이라 <button type="button" class="btn ghost sm" onclick="showTab('beyond')">⚡ 더 알아보기</button>로 옮겼어요.</div>
 
 
