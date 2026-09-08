@@ -466,7 +466,7 @@ body.teacher .tmode{background:rgba(0,100,224,.14)}
 .progress-mini .bar{background:#ffffff}
 .progress-mini .bar>i{background:#0a1317}
 .lesson .thumb{background:#ffffff}
-.lesson .thumb::after{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.72))}
+.lesson .thumb::after{background:none}
 .hero h1{text-shadow:0 0 30px rgba(0,100,224,.25),0 2px 14px rgba(20,22,26,.14)}
 .hero.has-img p{border:1px solid rgba(0,100,224,.20)}
 .badge.gold{background:rgba(0,100,224,.1);border-color:#ced0d4}
@@ -1164,13 +1164,13 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 const HUB_IMG={
   hero:'img/e-hub-hero.jpg',
   page:'img/e-bg-hub.jpg',
-  /* l0(기본 다지기)은 사진 없이 글자만 — 차시가 아니라 준비 시간이라 카드를 가볍게 둔다 */
-  l1:'img/e-hub-l1.jpg',  // 마찰 전기와 전기력
-  l2:'img/e-hub-l2.jpg',  // 정전기 유도
+  l0:'img/e-hub-l0.svg',  // 기본 다지기 — 전기 기호
+  l1:'img/e-hub-l1.svg',  // 마찰 전기와 전기력
+  l2:'img/e-hub-l2.svg',  // 정전기 유도
   l3:'img/e-hub-l3.svg',  // 전하의 이동과 전류
   l4:'img/e-hub-l4.svg',  // 전압·저항과 옴의 법칙
   l5:'img/e-hub-l5.svg',  // 저항의 직렬연결과 병렬연결
-  l6:'img/e-hub-l6.jpg',  // 전기 에너지의 전환과 소비 전력
+  l6:'img/e-hub-l6.svg',  // 전기 에너지의 전환과 소비 전력
   l7:'img/e-hub-l7.svg',  // 전류가 흐르는 코일 주위의 자기장
   l8:'img/e-hub-l8.svg'   // 코일이 받는 힘 — 전동기와 스피커
 };
