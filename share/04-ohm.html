@@ -1337,6 +1337,29 @@ body.solo:not(.teacher) .lab.gated::after{background:rgba(241,244,247,.92);borde
 body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;border-color:#b7cff5}
 #modeBtn.mode-sw{width:auto;min-width:0;padding:0 13px;font-size:13px;font-weight:800;white-space:nowrap;letter-spacing:-.2px;border-radius:100px}
 .msn-goto{margin-left:auto}
+.msn-help{margin-left:8px}
+.btn.shake{animation:msnshake .4s}
+/* ── ❓ 지금 뭘 해야 하나요 — 단계 안내 팝업 ── */
+#guide .gbox{width:min(580px,100%);max-height:86vh;overflow:auto;text-align:left}
+.gd-goal{background:rgba(0,100,224,.07);border:1px solid var(--line-soft);border-radius:14px;padding:14px 15px;margin:2px 0 14px}
+.gd-goal .gg-t{font-family:var(--jua);font-size:16.5px;margin-bottom:8px}
+.gd-goal ol{margin:0;padding-left:20px;font-size:14.5px;line-height:1.8;color:var(--ink-dim)}
+.gd-goal .gg-n{margin-top:10px;font-size:13.5px;line-height:1.65;color:var(--ink-mute)}
+.gd-now{border:2px solid var(--accent);border-radius:14px;padding:14px 15px;margin-bottom:12px;background:var(--surface)}
+.gd-now .gn-h{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.6px;margin-bottom:3px}
+.gd-now .gn-t{font-family:var(--jua);font-size:17.5px;margin-bottom:7px;color:var(--ink)}
+.gd-now .gn-b{font-size:14.5px;line-height:1.8;color:var(--ink-dim)}
+.gd-now .gn-b b{color:var(--ink)}
+.gd-list{list-style:none;margin:0;padding:0;font-size:14px}
+.gd-list li{display:flex;gap:8px;align-items:flex-start;padding:5px 2px;line-height:1.5;color:var(--ink-mute)}
+.gd-list li.on{color:var(--ok)}
+.gd-list li.cur{color:var(--ink);font-weight:800}
+.gd-done{text-align:center;padding:12px 0 6px;font-size:15.5px;font-weight:800;color:var(--ok)}
+.labcnt{font-size:12.5px;color:var(--ink-mute);margin-left:auto;white-space:nowrap}
+.labcnt b{color:var(--ink-dim)}
+.labcnt.full b{color:var(--danger)}
+.cnt-essay{display:flex;gap:10px;align-items:center;margin-top:7px;font-size:12.5px;color:var(--ink-mute)}
+.cnt-essay .n.ok{color:var(--ok);font-weight:800}
 .goto-flash{animation:gotoflash 1.8s ease}
 @keyframes gotoflash{0%{box-shadow:0 0 0 4px rgba(0,100,224,.6)}100%{box-shadow:0 0 0 16px rgba(0,100,224,0)}}
 #skipGate .gbox{border:2px solid var(--m-warn,#f7b928)}
@@ -1588,6 +1611,31 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  <b class="t1">니크롬선의 길이</b>를 바꿔 가면서 회로에 흐르는 <b style="color:#a05c2c">전류</b>를 측정합니다.
  단, <b class="k">측정하기 전에 예상부터</b> 합니다.</p>
  <div class="keyline-s"><span class="kw">전압</span><span class="kw">·</span><span class="kw">니크롬선 길이</span><span class="arw">→</span><span class="kw">전류 측정</span><span class="arw">→</span><span class="kw hi">예상 먼저</span><span class="memo"></span></div>
+
+ <div class="card" style="margin-top:18px">
+ <div class="badge" style="margin-bottom:10px">📌 시작하기 전에 — 낱말 두 개만 풀고 갑니다</div>
+ <h3 class="card-t">「니크롬선의 길이를 다르게 한다」가 대체 무슨 뜻일까?</h3>
+ <div class="grid c2" style="margin-top:14px">
+ <div class="term" style="--c:var(--c1)">
+ <div class="nm">니크롬선이란?</div>
+ <div class="de">니켈과 크로뮴을 섞어 만든 <b>금속선</b>입니다. 같은 굵기·같은 길이의 구리선과 견주면
+ 전류를 훨씬 많이 방해해요 — 곧 <b class="k">저항이 큰 물질</b>입니다.
+ 그래서 전기난로·토스터의 열선, 볼륨 손잡이 속 저항체에 씁니다.
+ 구리선으로는 이 실험을 할 수 없어요. 저항이 너무 작아 <b>바꿔도 차이가 보이지 않기</b> 때문입니다.</div>
+ </div>
+ <div class="term" style="--c:var(--c2)">
+ <div class="nm">길이·굵기를 바꾼다 = ?</div>
+ <div class="de">지난 시간에 도선의 저항은 <b>길수록 커지고, 굵을수록 작아진다</b>고 했죠.
+ 그러니 「짧은 니크롬선을 긴 것으로 바꾼다」는 말은 사실
+ <b class="k">저항을 크게 한다</b>는 말과 똑같습니다.
+ 실험대에서 길이·굵기 단추를 누르는 것은 <b>저항 값을 바꾸는 것</b>이고,
+ 누를 때마다 옆의 <b>Ω 숫자</b>가 함께 바뀌는 것을 꼭 보세요.</div>
+ </div>
+ </div>
+ <div class="keyline-s"><span class="kw">니크롬선 = 저항이 큰 금속선</span><span class="arw">→</span><span class="kw hi">길이·굵기를 바꾼다 = 저항을 바꾼다</span><span class="memo"></span></div>
+ <div class="note class"><span class="ic">💬</span><div><b>여기서 한 번 짚고 가세요</b> — 「니크롬선을 바꾼다」를 학생들은 <b>새로운 변인</b>으로 받아들입니다.
+ 칠판에 「니크롬선 길이 ↑ = 저항 ↑」이라고 한 줄 써 두면, 뒤의 표와 그래프를 읽을 때 저항으로 번역해서 봅니다.</div></div>
+ </div>
 
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🔮 먼저 예상해 봅시다</h3>
@@ -1859,11 +1907,14 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  <button class="btn primary sm" id="labRec">📌 기록</button>
  <button class="btn ghost sm" id="labClear">기록 지우기</button>
  </div>
+ <span class="labcnt" id="labCnt"><b>0</b> / 12</span>
  </div>
+ <p class="help" style="margin-top:8px">누른 <b>순서대로 위에서 아래로</b> 쌓입니다. 같은 조건을 또 눌러도 새 줄로 남아요 —
+ 값이 똑같이 나오는지 확인해 보세요. <b>12개</b>가 차면 「기록 지우기」로 비우고 다시 시작합니다.</p>
  <div class="dtable-wrap">
  <table class="dtable" id="labTable">
- <tr><th>전압 (V)</th><th>니크롬선</th><th>저항 (Ω)</th><th>전류의 세기 (A)</th><th>전류의 세기 (mA)</th><th></th></tr>
- <tr><td class="empty" colspan="6">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 눌러 보세요</td></tr>
+ <tr><th style="width:36px">#</th><th>전압 (V)</th><th>니크롬선</th><th>저항 (Ω)</th><th>전류의 세기 (A)</th><th>전류의 세기 (mA)</th><th></th></tr>
+ <tr><td class="empty" colspan="7">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 눌러 보세요</td></tr>
  </table>
  </div>
  <div class="graph-wrap"><canvas id="labGraph" height="280"></canvas></div>
@@ -2279,20 +2330,27 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  <div class="card" style="margin-top:20px">
  <h3 class="card-t">🤔 생각해 보기 <span class="badge" style="vertical-align:middle">사고력</span></h3>
  <p class="lead say" style="font-size:17.5px;margin-top:10px">
- 스피커의 소리를 크게 하려면 스피커에 흐르는 <b style="color:#a05c2c">전류의 세기</b>가 증가해야 합니다.
- 스피커의 소리를 크게 할 때 <b class="t1">저항</b>을 어떻게 조절해야 하는지 설명해 보세요.</p>
- <div class="keyline-s"><span class="kw">소리 크게 = 전류 세게</span><span class="arw">→</span><span class="kw q">저항은 어떻게 해야 하나?</span><span class="memo"></span></div>
- <textarea id="essay" data-ime="submit" placeholder="힌트: 옴의 법칙을 떠올려 보세요. 전압이 그대로일 때, 전류를 세게 하려면 저항이 어떻게 되어야 할까요?"></textarea>
- <span class="savemark" id="essaySaved">✔ 저장됨</span>
+ 스피커의 소리를 크게 하려면 스피커에 흐르는 <b style="color:#a05c2c">전류의 세기</b>가 커져야 합니다.
+ 스피커의 <b class="k">볼륨 손잡이</b> 속에는 저항체가 들어 있어서, 손잡이를 돌리면
+ <b>전류가 지나가는 저항체의 길이</b>가 달라집니다. 전원의 <b class="t2">전압은 그대로</b>예요.</p>
+ <div class="note" style="margin:12px 0 10px"><span class="ic">✍️</span><div><b>세 가지를 모두 담아</b> 한 문단으로 쓰세요.<br>
+ <b>①</b> 소리를 크게 하려면 저항을 <b>크게</b> 해야 할까요, <b>작게</b> 해야 할까요?<br>
+ <b>②</b> 왜 그런지 <b>옴의 법칙(I = V ÷ R)</b>으로 설명하세요.<br>
+ <b>③</b> 손잡이를 돌려 저항체의 길이를 <b>짧게</b> 했다면 소리는 커질까요, 작아질까요? 까닭도 함께 쓰세요.</div></div>
+ <div class="keyline-s"><span class="kw">소리 크게 = 전류 세게</span><span class="arw">→</span><span class="kw q">저항은?</span><span class="arw">→</span><span class="kw q">손잡이를 돌리면 길이가?</span><span class="memo"></span></div>
+ <textarea id="essay" data-ime="submit" rows="5" placeholder="예) 소리를 크게 하려면 저항을 … 해야 한다. 왜냐하면 전압이 일정할 때 전류는 저항에 … 하기 때문이다(I = V ÷ R). 손잡이를 돌려 저항체의 길이를 짧게 하면 저항이 … 지므로 소리는 … 진다."></textarea>
+ <div class="cnt-essay"><span class="n" id="essayN">0자</span><span>· ①②③을 다 쓰면 자연스럽게 넘습니다 (<b>15자 이상</b>이면 제출할 수 있어요)</span><span class="savemark" id="essaySaved">✔ 저장됨</span></div>
  <div class="sub-row"><button type="button" class="btn primary sm" data-submit="essay">📮 답 제출하기</button><span class="sub-st" data-substatus="essay"></span></div>
  <div class="btn-row"><button class="btn ghost sm" id="ansBtn">모범 답안 확인하기</button></div>
  <div class="explain" id="modelAns" style="margin-top:12px">
  <div class="why">✍️ 모범 답안</div>
- 스피커의 소리를 크게 하려면 스피커의 <b>저항을 작게</b> 조절하여
- 스피커에 흐르는 <b>전류의 세기를 증가</b>시켜야 한다.
- 전류의 세기는 저항에 반비례하기 때문이다.
+ <b>①</b> 소리를 크게 하려면 스피커의 <b>저항을 작게</b> 조절해야 한다.<br>
+ <b>②</b> 전압이 일정할 때 전류의 세기는 저항에 <b>반비례</b>하기 때문이다(I = V ÷ R).
+ 저항이 작아지면 같은 전압에서도 <b>전류가 세져</b> 소리가 커진다.<br>
+ <b>③</b> 손잡이를 돌려 저항체의 길이를 <b>짧게</b> 하면 저항이 <b>작아지므로</b> 전류가 세져 <b>소리가 커진다</b>.
  </div>
- <div class="note class"><span class="ic">💬</span><div><b>채점 포인트</b> — ① <b>저항을 작게</b> 한다는 방향이 맞는가 ② 그 근거로 <b>전류가 저항에 반비례</b>함(옴의 법칙)을 들었는가. "전압을 높인다"라고만 쓴 답은 문제 조건(저항을 어떻게 조절?)을 벗어난 것이니 다시 읽게 하세요.</div></div>
+ <div class="note class"><span class="ic">💬</span><div><b>채점 포인트</b> — ① <b>저항을 작게</b>라는 방향 ② 근거로 <b>전류가 저항에 반비례</b>함(옴의 법칙) ③ <b>길이가 짧아지면 저항이 작아져</b> 소리가 커진다는 연결. 세 가지 중 ②가 빠지고 방향만 맞힌 답은 절반입니다.<br>
+ 「전압을 높인다」라고만 쓴 답은 문제 조건(<b>전압은 그대로</b>)을 벗어난 것이니 문제를 다시 읽게 하세요. 예전 문항은 ①만 물어 답이 한 줄로 끝나는 바람에 글자 수를 채우지 못하는 학생이 많았습니다.</div></div>
  </div>
   <div class="card" style="margin-top:18px">
     <h3 class="card-t">🎲 한 문제 더 <span class="badge" style="vertical-align:middle">사고력</span></h3>
@@ -2477,6 +2535,14 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  <div class="gsub" id="skipMsg"></div>
  <div class="gbtns"><button class="btn primary" id="skipBack">🙋 돌아가서 마저 하기</button><button class="btn ghost" id="skipGo">그래도 넘어가기</button></div>
  <div class="gnote">넘어간 기록(어느 단계를 다 하지 않았는지)은 학습 결과 PDF와 선생님 화면에 함께 표시돼요.</div>
+ </div>
+</div>
+<div class="gate" id="guide" role="dialog" aria-modal="true" aria-labelledby="guideT">
+ <div class="gbox">
+ <h3 id="guideT">❓ 지금 무엇을 하면 되나요?</h3>
+ <div id="guideBody"></div>
+ <div class="gbtns"><button class="btn primary" id="guideGo">🧭 그 자리로 데려다줘</button><button class="btn ghost" id="guideClose">닫기</button></div>
+ <div class="gnote">막힐 때마다 각 단계 위쪽의 <b>❓ 뭘 해야 하죠?</b> 단추를 누르면 다시 볼 수 있어요.</div>
  </div>
 </div>
 <div class="ztip" id="zoomTip" role="status" aria-live="polite">
@@ -2817,7 +2883,8 @@ function paintMissions(){
  bn.classList.toggle('alldone',ok);
  bn.innerHTML='<span class="mt">🎯 '+m.name+(ok?' — 완수! 🎉':'')+'</span>'
   +m.items.map(i=>'<span class="mi'+(c[i].ok?' on':'')+'">'+(c[i].ok?'✅':'⬜')+' '
-  +c[i].label.replace(/^\d단계 · /,'')+'</span>').join('')+(ok?'':'<button type="button" class="btn ghost sm msn-goto" data-goto="'+m.tab+'">🧭 아직 안 한 곳으로</button>');
+  +c[i].label.replace(/^\d단계 · /,'')+'</span>').join('')+'<button type="button" class="btn ghost sm msn-help" data-help="'+m.tab+'">❓ 뭘 해야 하죠?</button>'
+  +(ok?'':'<button type="button" class="btn ghost sm msn-goto" data-goto="'+m.tab+'">🧭 아직 안 한 곳으로</button>');
  });
 }
 function checkMsnClear(){
@@ -2841,6 +2908,10 @@ function showTab(id,noScroll,force){
  $$('#tabNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
  setBg(id);S.tab=id;S.visited[id]=true;save();updateProgress();
  if(!noScroll)scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
+ /* 이 단계에 처음 들어왔다면 「무엇을 하면 되나요」를 한 번 띄운다 */
+ S.guide=S.guide||{};
+ if(MSN.some(m=>m.tab===id)&&!S.guide[id]){S.guide[id]=1;save();
+  setTimeout(()=>{try{openGuide(id);}catch(e){}},480);}
 }
 $('#tabNav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.tab);});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){A.ensure();showTab(b.dataset.go);}});
@@ -3181,6 +3252,82 @@ function gotoUndone(tab){
  toast('🧭 아직 안 한 곳 — <b>'+t.label.replace(/^[\d·~]+단계 · /,'').replace(/^[\d·~]+단계 /,'')+'</b>');
 }
 document.addEventListener('click',e=>{const b=e.target.closest('button.msn-goto');if(b)gotoUndone(b.dataset.goto);});
+
+/* ── ❓ 지금 뭘 해야 하나요 — 단계마다 「무엇을·어디서·어떻게」를 아주 자세히 ──
+   학생들이 가장 많이 한 질문이 「이 페이지에서는 뭐 해야 해요?」였다.
+   단계에 처음 들어오면 자동으로 한 번 뜨고, 그 뒤로는 ❓ 단추로 다시 볼 수 있다. */
+const TAB_GOAL={
+ open:{t:'1단계에서 할 일',
+  li:['전기 기구의 밝기·세기가 <b>서서히 변하는 장면</b>을 떠올려 고른다',
+      '「밝기를 줄이려면 무엇을 바꿔야 할까?」에 <b>내 생각</b>을 쓴다'],
+  note:'정답을 맞히는 칸이 아닙니다. <b>지금 내 생각</b>을 적어 두었다가 뒤에서 확인하는 것이 목적이에요.'},
+ explore:{t:'🎯 2단계에서 알아낼 것 — 딱 두 가지입니다',
+  li:['<b>저항이 일정할 때</b>, 전압을 조절하면 전류는 어떻게 되는가?',
+      '<b>전압이 일정할 때</b>, 저항을 조절하면 전류는 어떻게 되는가?'],
+  note:'이 두 질문의 답을 <b>실험대에서 직접 재서</b> 찾습니다. 외우러 온 것이 아니에요.<br>'
+      +'실험대에서 <b>니크롬선의 길이·굵기를 바꾸는 것</b>이 곧 <b>저항을 바꾸는 것</b>입니다.'},
+ law:{t:'3단계에서 할 일',
+  li:['2단계에서 잰 값을 <b>하나의 식</b>으로 묶는다 — 옴의 법칙',
+      '빈칸을 채우고 퀴즈로 확인한 뒤, <b>내 말로</b> 다시 쓴다'],
+  note:'새로 외울 것은 없습니다. 앞에서 <b>직접 본 것</b>에 이름을 붙이는 단계예요.'},
+ sort:{t:'4단계에서 할 일',
+  li:['물질 여덟 가지를 <b>도체·부도체</b>로 가려낸다',
+      '스피커 사고력 문제에 <b>①②③을 모두 담아</b> 답을 쓰고 제출한다'],
+  note:'사고력 문제는 세 가지를 묻습니다. 한 가지만 쓰면 글자 수가 모자라 제출이 되지 않아요.'},
+ check:{t:'5단계에서 할 일',
+  li:['확인 문제 5문항을 <b>끝까지</b> 푼다'],
+  note:'점수는 성적에 들어가지 않습니다. <b>어디가 헷갈리는지</b> 찾는 것이 목적이에요.'}};
+
+const HOWTO=[
+ /* 0 */ '1단계 「👀 이런 적, 있나요?」 상자에서 <b>내가 겪어 본 장면을 눌러</b> 표시하세요. 하나만 골라도 됩니다.',
+ /* 1 */ '그 아래 <b>✍️ 칸에 10자 이상</b> 쓰고, 반드시 <b>📮 제출하기</b>까지 누르세요. 쓰기만 하고 제출을 안 누르면 아직 안 한 것으로 남습니다.',
+ /* 2 */ '「🔮 먼저 예상해 봅시다」에서 <b>① 더 세진다 · ② 변화 없다 · ③ 약해진다</b> 중 하나를 누르세요. <b>틀려도 괜찮습니다</b> — 고르지 않으면 다음으로 갈 수 없어요.',
+ /* 3 */ '예상을 고른 바로 아래 <b>「왜 그렇게 예상했나요?」</b> 칸에 10자 이상 쓰고 <b>📮 제출하기</b>를 누르세요. 「니크롬선이 길어지면 저항이 … 그래서 전류가 …」처럼 쓰면 됩니다.',
+ /* 4 */ '「직렬·병렬 가려내기」에서 보기를 <b>알맞은 칸으로 모두</b> 옮기세요. 하나라도 남아 있으면 완성이 아닙니다.',
+ /* 5 */ '「🔧 회로 조립하기」에서 <b>전원 장치·스위치·전류계·전압계·니크롬선</b>을 제자리에 끌어다 놓아 회로를 완성하세요. <b>회로를 완성해야 아래 실험대가 열립니다.</b>',
+ /* 6 */ '실험대에서 ① <b>전압 손잡이</b>를 움직여 전압을 정하고 ② <b>니크롬선</b>을 고른 다음 ③ <b>📌 기록</b>을 누릅니다.<br>'
+        +'<b>같은 전압에서 짧은 니크롬선과 긴 니크롬선을 각각</b> 기록해야 비교 판정이 나옵니다. 기록은 3개 이상 필요해요.',
+ /* 7 */ '실험대의 <b>「길이」 단추</b>와 <b>「굵기」 단추</b>를 <b>각각 최소 한 번씩</b> 눌러 바꿔 보세요. 길이만 바꾸면 절반만 한 것입니다. 누를 때마다 옆의 <b>Ω 숫자</b>가 어떻게 변하는지 보세요.',
+ /* 8 */ '실험대 아래 <b>「나의 결론」</b> 칸에 10자 이상 쓰고 <b>📮 제출하기</b>를 누르세요. 위의 두 질문(전압을 바꾸면? 저항을 바꾸면?)에 답하듯 쓰면 됩니다.',
+ /* 9 */ '3단계의 <b>빈칸(밑줄 친 곳)을 하나씩 눌러</b> 모두 채우세요. 머릿속으로 먼저 답한 뒤 누르는 것이 좋아요.',
+ /* 10 */ '<b>개념 확인 퀴즈</b>의 문항을 끝까지 풀어 <b>모두 정답</b>으로 만드세요. 틀리면 다시 고를 수 있습니다.',
+ /* 11 */ '<b>「내 말로 옴의 법칙」</b> 칸에 10자 이상 쓰고 <b>📮 제출하기</b>를 누르세요. 식을 그대로 옮겨 적기보다 <b>내 문장</b>으로 풀어 쓰세요.',
+ /* 12 */ '4단계에서 물질 <b>여덟 가지를 모두</b> 도체·부도체 칸으로 옮기세요. 여덟 개를 다 옮겨야 완료됩니다.',
+ /* 13 */ '<b>🤔 생각해 보기(스피커)</b> 문제에 <b>①②③을 모두 담아</b> 쓰고 <b>📮 답 제출하기</b>를 누르세요.<br>'
+        +'① 저항을 크게? 작게? ② 왜 그런지 옴의 법칙으로 ③ 손잡이로 길이를 짧게 하면 소리는? — 세 가지를 쓰면 글자 수는 저절로 넘습니다.',
+ /* 14 */ '5단계에서 <b>📗 필수 문제</b>를 눌러 확인 문제를 <b>끝까지</b> 푸세요. 중간에 그만두면 완주로 치지 않습니다.'];
+
+let _guideTab=null,_guideNeed=false;
+function openGuide(tab){
+ tab=tab||S.tab||'open';
+ const c=progChecks(), m=MSN.find(x=>x.tab===tab), g=TAB_GOAL[tab];
+ let h='';
+ if(g)h+='<div class="gd-goal"><div class="gg-t">'+g.t+'</div><ol><li>'+g.li.join('</li><li>')+'</li></ol>'
+   +(g.note?'<div class="gg-n">'+g.note+'</div>':'')+'</div>';
+ _guideTab=tab;_guideNeed=false;
+ if(m){
+  let cur=-1;for(const i of m.items){if(!c[i].ok){cur=i;break;}}
+  if(cur<0)h+='<div class="gd-done">✅ 이 단계는 다 했어요! 다음 단계로 넘어가도 좋아요.</div>';
+  else{_guideNeed=true;
+   h+='<div class="gd-now"><div class="gn-h">지금 할 일</div>'
+     +'<div class="gn-t">'+c[cur].label.replace(/^\d단계 · /,'')+'</div>'
+     +'<div class="gn-b">'+(HOWTO[cur]||'')+'</div></div>';}
+  h+='<div style="font-size:12.5px;font-weight:800;color:var(--ink-mute);margin:4px 0 6px">이 단계에서 해야 할 것 전부</div>'
+    +'<ul class="gd-list">'+m.items.map(i=>'<li class="'+(c[i].ok?'on':(i===cur?'cur':''))+'">'
+      +'<span>'+(c[i].ok?'✅':(i===cur?'👉':'⬜'))+'</span><span>'+c[i].label.replace(/^\d단계 · /,'')+'</span></li>').join('')+'</ul>';
+ }
+ $('#guideBody').innerHTML=h;
+ $('#guideGo').style.display=_guideNeed?'':'none';
+ $('#guide').classList.add('show');
+}
+function closeGuide(){$('#guide').classList.remove('show');}
+$('#guideClose').addEventListener('click',closeGuide);
+$('#guide').addEventListener('click',e=>{if(e.target===$('#guide'))closeGuide();});
+$('#guideGo').addEventListener('click',()=>{const t=_guideTab;closeGuide();
+ if(t&&t!==S.tab)showTab(t,false,true);
+ setTimeout(()=>gotoUndone(t),t&&t!==S.tab?380:60);});
+document.addEventListener('click',e=>{const b=e.target.closest('button.msn-help');if(b){A.ensure&&A.ensure();openGuide(b.dataset.help);}});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#guide').classList.contains('show'))closeGuide();});
 
 /* ── 📄 학습 결과 PDF — 인쇄 화면(PDF로 저장) ── */
 (function(){
@@ -3643,17 +3790,21 @@ paintMode();
    toast(rs+' · '+is+'<br>'+why, i>i0?'good':(i<i0?'warn':''));
  }
 
+ const LAB_MAX=12;
  function paintTable(){
    const tb=$('#labTable');
-   const rows=S.rows.slice().sort((a,b)=>(LAB_R[a.w]-LAB_R[b.w])||(a.v-b.v));
-   let html='<tr><th>전압 (V)</th><th>니크롬선</th><th>저항 (Ω)</th><th>전류의 세기 (A)</th><th>전류의 세기 (mA)</th><th></th></tr>';
-   if(!rows.length)html+='<tr><td class="empty" colspan="6">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 눌러 보세요</td></tr>';
-   rows.forEach(r=>{const i=r.v/LAB_R[r.w];
-     html+='<tr><td>'+r.v.toFixed(1)+'</td>'
+   const rows=S.rows;   /* 정렬하지 않는다 — 누른 순서 그대로 위에서 아래로 */
+   let html='<tr><th style="width:36px">#</th><th>전압 (V)</th><th>니크롬선</th><th>저항 (Ω)</th><th>전류의 세기 (A)</th><th>전류의 세기 (mA)</th><th></th></tr>';
+   if(!rows.length)html+='<tr><td class="empty" colspan="7">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 눌러 보세요</td></tr>';
+   rows.forEach((r,idx)=>{const i=r.v/LAB_R[r.w];
+     const same=rows.filter((x,k)=>k<idx&&x.v===r.v&&x.w===r.w).length;
+     html+='<tr><td>'+(idx+1)+'</td><td>'+r.v.toFixed(1)+(same?' <span style="font-size:11px;color:var(--ink-mute)">재측정</span>':'')+'</td>'
        +'<td style="color:'+LAB_COL[r.w]+';font-weight:700">'+LAB_NAME[r.w]+'</td>'
        +'<td>'+LAB_R[r.w]+'</td><td>'+fmtA(i)+'</td><td>'+Math.round(i*1000)+'</td>'
-       +'<td class="del" data-del="'+r.v+'|'+r.w+'">✕</td></tr>';});
+       +'<td class="del" data-del="'+idx+'">✕</td></tr>';});
    tb.innerHTML=html;
+   const cn=$('#labCnt');
+   if(cn){cn.innerHTML='<b>'+rows.length+'</b> / '+LAB_MAX;cn.classList.toggle('full',rows.length>=LAB_MAX);}
    const used=[...new Set(S.rows.map(r=>r.w))];
    const lg=$('#labLegend');
    if(lg)lg.innerHTML=used.map(k=>'<span><i style="background:'+LAB_COL[k]+'"></i>'
@@ -3686,7 +3837,7 @@ paintMode();
    ctx.textAlign='right';ctx.fillText('전압 V (V)',w-6,h-8);
    [...new Set(S.rows.map(r=>r.w))].forEach(k=>{
      const pts=S.rows.filter(r=>r.w===k);
-     if(pts.length>=2){ctx.strokeStyle=LAB_COL[k];ctx.globalAlpha=.4;ctx.lineWidth=2;
+     if(new Set(pts.map(p=>p.v)).size>=2){ctx.strokeStyle=LAB_COL[k];ctx.globalAlpha=.4;ctx.lineWidth=2;
        ctx.beginPath();ctx.moveTo(X(0),Y(0));ctx.lineTo(X(6),Y(6/LAB_R[k]));ctx.stroke();
        ctx.globalAlpha=1;}
      pts.forEach(r=>{const i=r.v/LAB_R[k];
@@ -3732,17 +3883,26 @@ paintMode();
 
  function redraw(){paintTable();paintGraph();judge();updateProgress();}
  $('#labRec').addEventListener('click',()=>{
-   S.rows=S.rows.filter(r=>!(r.v===V&&r.w===key()));
+   if(S.rows.length>=LAB_MAX){
+     const cb=$('#labClear');
+     if(cb){cb.classList.remove('shake');void cb.offsetWidth;cb.classList.add('shake');
+       setTimeout(()=>cb.classList.remove('shake'),600);}
+     toast('기록이 <b>'+LAB_MAX+'개</b>로 가득 찼어요.<br>「<b>기록 지우기</b>」를 눌러 표를 비우고 <b>처음부터 다시</b> 해 보세요.','warn');
+     A.wrong&&A.wrong();
+     return;
+   }
+   const dup=S.rows.filter(r=>r.v===V&&r.w===key()).length;
    S.rows.push({v:V,w:key()});
    save();redraw();A.pop();
-   toast(V===0?'0 V → 0 A — 원점도 훌륭한 데이터입니다 📌'
-     :'기록! '+LAB_NAME[key()]+' ('+Rv()+' Ω) · '+V.toFixed(1)+' V → '+fmtA(cur())+' A','good');
+   const head=V===0?'0 V → 0 A — 원점도 훌륭한 데이터입니다 📌'
+     :'<b>'+S.rows.length+'번째</b> 기록 — '+LAB_NAME[key()]+' ('+Rv()+' Ω) · '+V.toFixed(1)+' V → '+fmtA(cur())+' A';
+   toast(head+(dup?'<br>같은 조건을 <b>'+(dup+1)+'번째</b> 재었어요. 값이 똑같이 나오나요?':''),'good');
  });
- $('#labClear').addEventListener('click',()=>{S.rows=[];save();redraw();A.pop();});
+ $('#labClear').addEventListener('click',()=>{S.rows=[];save();redraw();A.pop();
+   toast('기록을 모두 비웠어요 — 다시 처음부터 재 보세요 🧹');});
  $('#labTable').addEventListener('click',e=>{
    const d=e.target.closest('[data-del]');if(!d)return;
-   const p=d.dataset.del.split('|');
-   S.rows=S.rows.filter(r=>!(r.v===parseFloat(p[0])&&r.w===p[1]));
+   S.rows.splice(parseInt(d.dataset.del,10),1);
    save();redraw();A.pop();});
 
  let r0=Rv(), i0=cur();
@@ -3870,7 +4030,10 @@ paintMode();
 (function(){
  const ta=$('#essay'),mark=$('#essaySaved');let t;
  ta.value=S.essay||'';
- ta.addEventListener('input',()=>{S.essay=ta.value;save();updateProgress();
+ const eN=$('#essayN'), paintEssayN=()=>{if(!eN)return;const n=(ta.value||'').trim().length;
+  eN.textContent=n+'자';eN.classList.toggle('ok',n>=15);};
+ paintEssayN();
+ ta.addEventListener('input',()=>{S.essay=ta.value;save();updateProgress();paintEssayN();
  mark.classList.add('on');clearTimeout(t);t=setTimeout(()=>mark.classList.remove('on'),1400);});
  $('#ansBtn').addEventListener('click',()=>{
  const box=$('#modelAns'),open=box.classList.toggle('show');
