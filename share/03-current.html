@@ -1588,6 +1588,17 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
 @media print{.ztip{display:none!important}}
 @media (max-width:560px){.ztip .zt-b{font-size:13.5px}}
 </style>
+<style id="gate-class">
+.gate .grow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:5px}
+.gate .grow3 select{width:100%;box-sizing:border-box;font-family:inherit;font-size:17px;
+ padding:11px 9px;border-radius:8px;border:1px solid var(--m-hair,#ced0d4);background:#fff;
+ color:var(--m-ink,#1c1e21);height:44px;appearance:none;
+ background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235d6c7b' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+ background-repeat:no-repeat;background-position:right 10px center}
+.gate .grow3 select:focus{outline:none;border:2px solid #1876f2}
+.gate .gwho{margin-top:7px;font-size:13.5px;color:var(--m-steel,#5d6c7b);min-height:18px}
+.gate .gwho b{color:var(--m-ink,#1c1e21)}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -3061,6 +3072,19 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
    </div>
   </div>
 
+  <details class="wfold" style="margin-top:14px"><summary>「저항이 0이면 전선이 뜨거워진다」 — 이 말은 왜 정확하지 않을까 (뒤에 배울 내용 · 시험 X)</summary>
+  <div class="fold-in">
+  <p style="margin:0 0 10px"><b>✕ 저항이 0이 되면 전류가 너무 많이 흘러 전선이 뜨거워진다.</b><br>
+  엄밀히 말하면 <b>틀린 설명</b>입니다. 저항이 <b>정말로 0</b>이라면 전기 에너지가 열로 바뀔 곳 자체가 없습니다.</p>
+  <p style="margin:0 0 10px"><b class="k">○ 전선의 저항이 매우 작아진 상태에서 매우 큰 전류가 흐르면, 실제 전선에는 여전히 작은 저항이 남아 있으므로 그만큼 큰 열이 난다.</b></p>
+  <p style="margin:0 0 10px">합선에서는 회로의 <b>전체 저항이 급격히 작아져 전류가 매우 커집니다.</b> 뜨거워지는 까닭은 「저항이 0이라서」가 아니라
+  <b class="k">「저항이 매우 작아져 매우 큰 전류가 흐르기 때문」</b>이에요. 실제 전선의 저항 R이 완전히 0은 아니기 때문에 열이 생깁니다.</p>
+  <p style="margin:0 0 8px">전선에서 나는 열은 <b class="k">전류의 제곱 × 저항</b>에 비례합니다.</p>
+  <div class="eqline">I² × R</div>
+  <p style="margin:10px 0 0">전류 I가 2배가 되면 열은 <b>4배</b>가 됩니다. 저항 R이 작아도 전류가 매우 커지면 열은 크게 늘어나요.</p>
+  <span class="tip" style="display:block;margin-top:10px;font-size:13.5px;color:var(--ink-mute)">※ 이 식은 <b>이 단원 뒤쪽 「전기 회로와 에너지」 차시</b>에서 배웁니다. 지금은 <b>「저항이 아주 작아도, 전류가 매우 크면 열이 난다」</b>까지만 알면 충분해요.</span>
+  </div></details>
+
   <div class="rq-sum">
    <b>한 줄 정리</b><br>
    전류를 흐르게 하는 것은 <b>전압</b>이고, 저항은 전류의 크기를 조절하거나
@@ -3514,10 +3538,16 @@ details.ansd>.in b{color:var(--accent);font-family:var(--disp)}
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT">
  <div class="gbox">
  <h3 id="gateT">🎯 혼자 탐구 시작하기</h3>
- <div class="gsub">학번과 이름을 넣어요. 선생님이 알려 준 <b>참여 코드</b>가 있으면 쓴 글이 선생님에게 전해지고, 코드가 없어도 <b>이 기기에만 저장</b>하며 끝까지 할 수 있어요. 한 번 넣으면 다른 차시도 그대로 이어집니다.</div>
- <label for="gSid">학번 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(학년·반·번호 — 예: 2학년 3반 15번 → 20315)</span></label>
- <input id="gSid" inputmode="numeric" maxlength="6" placeholder="20315" data-ime="off" autocomplete="off">
- <label for="gName">이름</label>
+ <div class="gsub">학년·반·번호를 고르세요. 선생님이 알려 준 <b>참여 코드</b>가 있으면 쓴 글이 선생님에게 전해지고, 코드가 없어도 <b>이 기기에만 저장</b>하며 끝까지 할 수 있어요. 한 번 넣으면 다른 차시도 그대로 이어집니다.</div>
+ <label for="gGrade">학년 · 반 · 번호</label>
+ <div class="grow3">
+  <select id="gGrade" aria-label="학년"></select>
+  <select id="gClass" aria-label="반"></select>
+  <select id="gNum" aria-label="번호"></select>
+ </div>
+ <input id="gSid" type="hidden" value="">
+ <div class="gwho" id="gWho"></div>
+ <label for="gName">이름 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(명단에 있으면 안 써도 됩니다)</span></label>이름</label>
  <input id="gName" maxlength="12" placeholder="홍길동" autocomplete="off">
  <label for="gCode">참여 코드 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(선생님이 알려 준 숫자 · 없으면 비워 두세요)</span></label>
  <input id="gCode" inputmode="numeric" maxlength="12" placeholder="선생님이 알려 준 숫자" data-ime="off" autocomplete="off" style="letter-spacing:.08em">
@@ -3550,7 +3580,7 @@ details.ansd>.in b{color:var(--accent);font-family:var(--disp)}
  <div class="zt-r"><button type="button" class="btn primary sm" id="ztOk">알겠어요</button><button type="button" class="zt-x" id="ztNever">다시 보지 않기</button></div>
 </div>
 <div id="toast"></div>
-<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#ced0d4;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-09-01</span></footer>
+<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#ced0d4;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-09-09</span></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 <script>
@@ -3666,14 +3696,14 @@ const GAME_QS=[
   intent:"물의 흐름 비유를 전기 회로의 현상으로 옮겨 해석하는지 확인한다.",
   stem:"다음에서 설명하는 현상을 전기 회로에 옳게 비유한 것은?<br><span style=\"display:inline-block;margin-top:6px;padding:6px 12px;border:1.5px solid var(--line);border-radius:10px\">물의 흐름이 세지면 물레방아가 빠르게 회전한다.</span>",
   ch:[{t:"전류의 세기가 커질수록 전구의 밝기가 밝아진다.",ok:1},{t:"전지의 전압이 클수록 도선에 흐르는 전류가 세진다.",ok:0},{t:"전지가 전압을 일정하게 유지한다.",ok:0},{t:"스위치를 닫으면 도선에 전류가 흐른다.",ok:0},{t:"전구의 저항이 전류가 흐르는 것을 방해한다.",ok:0}],
-  why:"물의 흐름은 <b>전류</b>, 물레방아는 <b>전구</b>에 해당합니다. 흐름이 세져 물레방아가 빨리 도는 것은 <b>전류가 세져 전구가 밝아지는</b> 것과 같아요. ⑤는 펌프의 압력(전압)이 커지면 흐름이 세진다는 다른 문장에 해당합니다."},
+  why:"물의 흐름은 전류, 물레방아는 전구에 해당합니다. 흐름이 세져 물레방아가 빨리 도는 것은 전류가 세져 전구가 밝아지는 것과 같아요(① ○). ②는 펌프의 압력(전압)이 커지면 흐름이 세진다는 다른 문장에 해당합니다."},
 
  {id:"c9",
   difficulty:"상",
   intent:"전류·전압·저항의 뜻과 단위를 한꺼번에 점검하고, 전압을 저항의 뜻과 뒤바꾸지 않는지 확인한다.",
   stem:"전류와 전압에 대한 설명으로 옳지 <u>않은</u> 것은?",
   ch:[{t:"전류의 단위로 A(암페어)를 사용한다.",ok:0},{t:"전압은 전류의 흐름을 방해하는 정도이다.",ok:1},{t:"전기 회로에서는 전자의 이동으로 전류가 흐른다.",ok:0},{t:"저항이 일정할 때 전압이 커질수록 전류의 세기가 커진다.",ok:0},{t:"전압의 단위로 V(볼트)를 사용한다.",ok:0}],
-  why:"전류의 흐름을 <b>방해하는 정도</b>는 저항이고, 전압은 전류를 <b>흐르게 하는 능력</b>입니다 — ③은 둘을 뒤바꾼 문장입니다. 나머지는 모두 옳습니다. 같은 도선에 전압을 높이면 더 센 전류가 흐르지요(4단계 도선 실험대)."},
+  why:"전류의 흐름을 방해하는 정도는 저항이고, 전압은 전류를 흐르게 하는 능력입니다 — ②는 둘을 뒤바꾼 문장입니다. 나머지는 모두 옳습니다. 같은 도선에 전압을 높이면 더 센 전류가 흐르지요(4단계 도선 실험대)."},
 
  {id:"c10",
   difficulty:"상",
@@ -4059,8 +4089,8 @@ function setMode(m,persist){
 function openGate(){
  const g=$('#gate');g.classList.add('show');$('#gMsg').textContent='';$('#gMsg').className='gmsg';
  const st=S.stu||stuGlobal();
- if(st){$('#gSid').value=st.sid||'';$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
- setTimeout(()=>$('#gSid').focus(),50);
+ if(st){$('#gSid').value=st.sid||'';if(window.gateSetSid)window.gateSetSid(st.sid||'');$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
+ setTimeout(()=>{const g=$('#gGrade');(g||$('#gName')).focus();},50);
 }
 function closeGate(){$('#gate').classList.remove('show');}
 function afterJoin(msg){
@@ -4072,12 +4102,12 @@ function afterJoin(msg){
 }
 $('#gCancel').addEventListener('click',closeGate);
 $('#gate').addEventListener('click',e=>{if(e.target===$('#gate'))closeGate();});
-['gSid','gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
+['gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
 $('#gGo').addEventListener('click',async()=>{
  const sid=$('#gSid').value.replace(/[^0-9]/g,''), name=$('#gName').value.trim(), code=$('#gCode').value.trim().toUpperCase();
  const msg=$('#gMsg');const say=(t,c)=>{msg.innerHTML=t;msg.className='gmsg '+(c||'');};
- if(!/^\d{4,6}$/.test(sid)){say('학번은 숫자 4~6자리로 써 주세요 — 예: 2학년 3반 15번 → <b>20315</b>','err');$('#gSid').focus();return;}
- if(name.length<1){say('이름을 써 주세요','err');$('#gName').focus();return;}
+ if(!/^\d{4,6}$/.test(sid)){say('학년·반·번호를 모두 골라 주세요','err');const g=$('#gGrade');if(g)g.focus();return;}
+ if(name.length<1&&!code){say('이름을 써 주세요','err');$('#gName').focus();return;}
  if(code.length<3){say('참여 코드를 써 주세요. 코드가 없으면 아래 <b>🔓 코드 없이 혼자 탐구</b>를 누르세요','err');$('#gCode').focus();return;}
  $('#gGo').disabled=true;say('확인하는 중…');
  try{
@@ -5811,6 +5841,97 @@ document.addEventListener('click',function(e){
  pin();
  document.addEventListener('DOMContentLoaded',pin);
  addEventListener('load',pin);
+})();
+</script>
+<script id="gate-class-js">
+/* 🎒 관문 — 학년·반·번호 드롭다운 */
+(function(){
+ const G=document.getElementById('gGrade'), C=document.getElementById('gClass'),
+       N=document.getElementById('gNum'),   S=document.getElementById('gSid');
+ if(!G||!C||!N||!S)return;
+ let CLASSES=[{g:1,c:5,n:40},{g:1,c:6,n:40}].concat(Array.from({length:12},(_,i)=>({g:2,c:i+1,n:40})));
+
+ const opt=(v,t)=>{const o=document.createElement('option');o.value=v;o.textContent=t;return o;};
+ function grades(){
+  const gs=[...new Set(CLASSES.map(x=>x.g))].sort();
+  G.innerHTML=''; G.appendChild(opt('','학년'));
+  gs.forEach(g=>G.appendChild(opt(g,g+'학년')));
+ }
+ function classes(){
+  const g=+G.value; C.innerHTML=''; C.appendChild(opt('','반'));
+  if(!g)return;
+  CLASSES.filter(x=>x.g===g).sort((a,b)=>a.c-b.c).forEach(x=>C.appendChild(opt(x.c,x.c+'반')));
+ }
+ function nums(){
+  const g=+G.value, c=+C.value; N.innerHTML=''; N.appendChild(opt('','번호'));
+  if(!g||!c)return;
+  const row=CLASSES.find(x=>x.g===g&&x.c===c);
+  const max=Math.max((row&&row.n)||0,30);
+  for(let i=1;i<=max;i++)N.appendChild(opt(i,i+'번'));
+ }
+ function sync(){
+  const g=G.value,c=C.value,n=N.value;
+  S.value=(g&&c&&n)?(g+String(c).padStart(2,'0')+String(n).padStart(2,'0')):'';
+  const w=document.getElementById('gWho');
+  if(w)w.innerHTML=S.value?('학번 <b>'+S.value+'</b> 으로 시작합니다'):'';
+ }
+ G.addEventListener('change',()=>{classes();nums();sync();});
+ C.addEventListener('change',()=>{nums();sync();});
+ N.addEventListener('change',sync);
+
+ grades(); classes(); nums();
+
+ /* 저장된 학번이 있으면 드롭다운을 그대로 맞춰 준다 */
+ window.gateSetSid=function(sid){
+  sid=String(sid||'').replace(/[^0-9]/g,'');
+  let g,c,n;
+  if(/^[1-9]\d{4}$/.test(sid)){g=+sid[0];c=+sid.slice(1,3);n=+sid.slice(3,5);}
+  else if(/^[1-9]\d{3}$/.test(sid)){g=+sid[0];c=+sid[1];n=+sid.slice(2,4);}
+  else {G.value='';classes();nums();sync();return;}
+  if(!CLASSES.some(x=>x.g===g))CLASSES.push({g:g,c:c,n:40});
+  else if(!CLASSES.some(x=>x.g===g&&x.c===c))CLASSES.push({g:g,c:c,n:40});
+  grades(); G.value=g; classes(); C.value=c; nums(); N.value=n; sync();
+ };
+
+ /* 명렬이 있으면 진짜 학급으로 갈아 끼운다 (없어도 그대로 동작) */
+ (async function(){
+  try{
+   if(typeof OHM==='undefined'||!OHM.rpc)return;
+   const d=await OHM.rpc('ohm_roster_classes',{});
+   if(Array.isArray(d)&&d.length){
+    CLASSES=d.map(x=>({g:+x.g,c:+x.c,n:+x.n||40}));
+    const keep=S.value; grades(); classes(); nums();
+    if(keep)window.gateSetSid(keep);
+   }
+  }catch(e){/* 명렬 없이도 그대로 씁니다 */}
+ })();
+})();
+</script>
+<script id="sim-deeplink">
+/* 🔗 ?tab=탭id(&to=요소id) 로 열면 표지를 건너뛰고 그 탭을 바로 보여 준다 — 시뮬레이터 모음에서 씀 */
+(function(){
+ try{
+  var q=new URLSearchParams(location.search), tab=q.get('tab'), to=q.get('to');
+  if(!tab) return;
+  function go(){
+   try{
+    var c=document.getElementById('cover'); if(c) c.classList.add('hide');
+    document.body.classList.remove('cover-on');
+    if(typeof S!=='undefined'&&S){ S.entered=true; }
+    if(typeof showTab==='function') showTab(tab,true,true);
+    else{
+      document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('show',p.id==='panel-'+tab);});
+      document.querySelectorAll('#tabNav button').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});
+    }
+    if(to){ var e=document.getElementById(to); if(e) setTimeout(function(){e.scrollIntoView({block:'center'});},150); }
+    if(typeof showTab==='function') done=true;
+   }catch(e){}
+  }
+  var done=false;
+  /* 스크립트가 본문에 인라인이라 DOM 준비 즉시 실행 — 폰트·CDN 기다리느라 표지가 잠깐 보이는 것을 막는다. load 는 예비. */
+  if(document.readyState!=='loading') setTimeout(go,30); else document.addEventListener('DOMContentLoaded',function(){setTimeout(go,30);});
+  window.addEventListener('load',function(){ if(!done) setTimeout(go,60); });
+ }catch(e){}
 })();
 </script>
 </body>

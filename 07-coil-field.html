@@ -1459,6 +1459,34 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
 @media print{.ztip{display:none!important}}
 @media (max-width:560px){.ztip .zt-b{font-size:13.5px}}
 </style>
+<style id="gate-class">
+.gate .grow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:5px}
+.gate .grow3 select{width:100%;box-sizing:border-box;font-family:inherit;font-size:17px;
+ padding:11px 9px;border-radius:8px;border:1px solid var(--m-hair,#ced0d4);background:#fff;
+ color:var(--m-ink,#1c1e21);height:44px;appearance:none;
+ background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235d6c7b' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+ background-repeat:no-repeat;background-position:right 10px center}
+.gate .grow3 select:focus{outline:none;border:2px solid #1876f2}
+.gate .gwho{margin-top:7px;font-size:13.5px;color:var(--m-steel,#5d6c7b);min-height:18px}
+.gate .gwho b{color:var(--m-ink,#1c1e21)}
+</style>
+<style id="obs-kit">
+.obs-in{margin-top:11px;border:1px solid var(--accent,#a05c2c);border-radius:12px;
+ padding:13px 15px;background:rgba(160,92,44,.06)}
+.obs-in[hidden]{display:none}
+.obs-in .obs-q{font-size:14.5px;line-height:1.6;margin-bottom:4px}
+.obs-in .obs-q b{font-weight:800}
+.obs-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.obs-btns button{appearance:none;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer;
+ padding:10px 16px;border-radius:9999px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.obs-btns button:hover{border-color:var(--accent);color:var(--accent)}
+.obs-btns button:active{transform:scale(.95)}
+.obs-msg{margin-top:9px;font-size:14px;line-height:1.6;min-height:20px}
+.obs-msg.err{color:var(--danger)}
+.shakex{animation:shakex .45s}
+@keyframes shakex{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}
+ 60%{transform:translateX(7px)}80%{transform:translateX(-3px)}}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1765,6 +1793,12 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  <div class="btn-row">
  <button class="btn primary sm" id="labRec">📌 기록</button>
  <button class="btn ghost sm" id="labClear">기록 지우기</button>
+ </div>
+
+ <div class="obs-in" id="obsIn" hidden>
+ <div class="obs-q" id="obsQ"></div>
+ <div class="obs-btns" id="obsBtns"></div>
+ <div class="obs-msg" id="obsMsg"></div>
  </div>
  </div>
  <div class="dtable-wrap">
@@ -2561,10 +2595,16 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT">
  <div class="gbox">
  <h3 id="gateT">🎯 혼자 탐구 시작하기</h3>
- <div class="gsub">학번과 이름을 넣어요. 선생님이 알려 준 <b>참여 코드</b>가 있으면 쓴 글이 선생님에게 전해지고, 코드가 없어도 <b>이 기기에만 저장</b>하며 끝까지 할 수 있어요. 한 번 넣으면 다른 차시도 그대로 이어집니다.</div>
- <label for="gSid">학번 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(학년·반·번호 — 예: 2학년 3반 15번 → 20315)</span></label>
- <input id="gSid" inputmode="numeric" maxlength="6" placeholder="20315" data-ime="off" autocomplete="off">
- <label for="gName">이름</label>
+ <div class="gsub">학년·반·번호를 고르세요. 선생님이 알려 준 <b>참여 코드</b>가 있으면 쓴 글이 선생님에게 전해지고, 코드가 없어도 <b>이 기기에만 저장</b>하며 끝까지 할 수 있어요. 한 번 넣으면 다른 차시도 그대로 이어집니다.</div>
+ <label for="gGrade">학년 · 반 · 번호</label>
+ <div class="grow3">
+  <select id="gGrade" aria-label="학년"></select>
+  <select id="gClass" aria-label="반"></select>
+  <select id="gNum" aria-label="번호"></select>
+ </div>
+ <input id="gSid" type="hidden" value="">
+ <div class="gwho" id="gWho"></div>
+ <label for="gName">이름 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(명단에 있으면 안 써도 됩니다)</span></label>이름</label>
  <input id="gName" maxlength="12" placeholder="홍길동" autocomplete="off">
  <label for="gCode">참여 코드 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(선생님이 알려 준 숫자 · 없으면 비워 두세요)</span></label>
  <input id="gCode" inputmode="numeric" maxlength="12" placeholder="선생님이 알려 준 숫자" data-ime="off" autocomplete="off" style="letter-spacing:.08em">
@@ -2597,7 +2637,7 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  <div class="zt-r"><button type="button" class="btn primary sm" id="ztOk">알겠어요</button><button type="button" class="zt-x" id="ztNever">다시 보지 않기</button></div>
 </div>
 <div id="toast"></div>
-<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#ced0d4;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-08-08</span></footer>
+<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#ced0d4;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-09-09</span></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 <script>
@@ -2656,7 +2696,7 @@ const GAME_QS=[
   intent:"자기력·자기장의 뜻과 자기장의 방향 약속을 아는지 확인한다.",
   stem:"자기력과 자기장에 대한 설명으로 옳지 <u>않은</u> 것은?",
   ch:[{t:"자기장의 방향은 나침반 바늘의 S극이 가리키는 방향이다.",ok:1},{t:"자석 주위에 놓은 나침반으로 자기장의 방향을 확인할 수 있다.",ok:0},{t:"막대자석 주위에서 자기장의 방향은 N극에서 나와서 S극으로 향한다.",ok:0},{t:"자기력은 자석과 자석 사이에 작용하는 힘이다.",ok:0},{t:"자기력이 작용하는 공간을 자기장이라고 한다.",ok:0}],
-  why:"자기장의 방향은 나침반 바늘의 <b>N극</b>이 가리키는 방향으로 정합니다 — ③은 극을 뒤바꾼 문장이에요. 나머지는 모두 옳습니다."},
+  why:"자기장의 방향은 나침반 바늘의 N극이 가리키는 방향으로 정합니다 — ①은 극을 뒤바꾼 문장이에요. 나머지는 모두 옳습니다."},
 
  {id:"m2",
   difficulty:"하",
@@ -2671,7 +2711,7 @@ const GAME_QS=[
   intent:"전류가 흐르는 코일 주위 자기장의 생성 조건·방향·세기의 관계를 아는지 확인한다.",
   stem:"전류가 흐르는 코일 주위에 생기는 자기장에 대한 설명으로 옳은 것은?",
   ch:[{t:"코일 내부의 자기장은 막대자석 주위에 생기는 자기장과 비슷한 모양이다.",ok:0},{t:"코일 외부의 자기장은 직선 모양이다.",ok:0},{t:"코일에 전류가 흐를 때 코일 주위에 자기장이 생긴다.",ok:1},{t:"전류의 세기가 바뀌면 자기장의 방향이 바뀐다.",ok:0},{t:"전류의 방향이 바뀌면 자기장의 세기가 바뀐다.",ok:0}],
-  why:"코일에 <b>전류가 흐를 때만</b> 자기장이 생깁니다(②). 전류의 <b>방향</b>이 바뀌면 자기장의 <b>방향</b>이, 전류의 <b>세기</b>가 바뀌면 자기장의 <b>세기</b>가 바뀝니다(③·④는 짝을 바꿔 놓은 문장). 막대자석과 비슷한 모양은 코일 <b>외부</b>의 자기장이고, 내부는 직선 모양입니다(①·⑤ ✗)."},
+  why:"코일에 전류가 흐를 때만 자기장이 생깁니다(③ ○). 전류의 방향이 바뀌면 자기장의 방향이, 전류의 세기가 바뀌면 자기장의 세기가 바뀝니다(④·⑤는 짝을 바꿔 놓은 문장). 막대자석과 비슷한 모양은 코일 외부의 자기장이고, 내부는 직선 모양입니다(①·② ✗)."},
 
  {id:"m4",
   difficulty:"하",
@@ -2725,7 +2765,7 @@ const GAME_QS=[
   intent:"전자석의 성질을 영구 자석과 견주어 아는지 확인한다.",
   stem:"전자석의 성질에 대한 설명으로 옳지 <u>않은</u> 것은?",
   ch:[{t:"코일 속에 쇠못을 넣으면 넣지 않았을 때보다 자기장이 세진다.",ok:0},{t:"코일을 감은 수를 늘리면 전자석이 더 세진다.",ok:0},{t:"코일에 흐르는 전류가 셀수록 전자석이 더 세진다.",ok:0},{t:"전류의 방향을 반대로 하면 N극과 S극의 위치가 서로 바뀐다.",ok:0},{t:"스위치를 열어 전류를 끊어도 전자석은 자석의 성질을 그대로 지닌다.",ok:1}],
-  why:"전자석은 <b>전류가 흐르는 동안에만</b> 자석입니다 — 전류를 끊으면 자석의 성질이 사라져요(④ ✗). 그래서 켜고 끄고, 극을 바꾸고, 세기를 조절할 수 있는 것이 전자석의 장점입니다."},
+  why:"전자석은 전류가 흐르는 동안에만 자석입니다 — 전류를 끊으면 자석의 성질이 사라져요(⑤ ✗). 그래서 켜고 끄고, 극을 바꾸고, 세기를 조절할 수 있는 것이 전자석의 장점입니다."},
 
  {id:"m10",
   difficulty:"중",
@@ -2982,8 +3022,8 @@ function setMode(m,persist){
 function openGate(){
  const g=$('#gate');g.classList.add('show');$('#gMsg').textContent='';$('#gMsg').className='gmsg';
  const st=S.stu||stuGlobal();
- if(st){$('#gSid').value=st.sid||'';$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
- setTimeout(()=>$('#gSid').focus(),50);
+ if(st){$('#gSid').value=st.sid||'';if(window.gateSetSid)window.gateSetSid(st.sid||'');$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
+ setTimeout(()=>{const g=$('#gGrade');(g||$('#gName')).focus();},50);
 }
 function closeGate(){$('#gate').classList.remove('show');}
 function afterJoin(msg){
@@ -2995,12 +3035,12 @@ function afterJoin(msg){
 }
 $('#gCancel').addEventListener('click',closeGate);
 $('#gate').addEventListener('click',e=>{if(e.target===$('#gate'))closeGate();});
-['gSid','gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
+['gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
 $('#gGo').addEventListener('click',async()=>{
  const sid=$('#gSid').value.replace(/[^0-9]/g,''), name=$('#gName').value.trim(), code=$('#gCode').value.trim().toUpperCase();
  const msg=$('#gMsg');const say=(t,c)=>{msg.innerHTML=t;msg.className='gmsg '+(c||'');};
- if(!/^\d{4,6}$/.test(sid)){say('학번은 숫자 4~6자리로 써 주세요 — 예: 2학년 3반 15번 → <b>20315</b>','err');$('#gSid').focus();return;}
- if(name.length<1){say('이름을 써 주세요','err');$('#gName').focus();return;}
+ if(!/^\d{4,6}$/.test(sid)){say('학년·반·번호를 모두 골라 주세요','err');const g=$('#gGrade');if(g)g.focus();return;}
+ if(name.length<1&&!code){say('이름을 써 주세요','err');$('#gName').focus();return;}
  if(code.length<3){say('참여 코드를 써 주세요. 코드가 없으면 아래 <b>🔓 코드 없이 혼자 탐구</b>를 누르세요','err');$('#gCode').focus();return;}
  $('#gGo').disabled=true;say('확인하는 중…');
  try{
@@ -3645,16 +3685,38 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('gui
  document.addEventListener('click',e=>{
  const b=e.target.closest('[data-coil]');if(!b)return;
  COIL=b.dataset.coil;paint();A.pop();});
+ /* ── 👀 자료 수집 — 관찰한 것을 학생이 고른다 ── */
+ (function(){
+ const q=$('#obsQ'), bs=$('#obsBtns'), ms=$('#obsMsg');
+ function close(){$('#obsIn').hidden=true;ms.textContent='';ms.className='obs-msg';}
+ window.obsClose=close;
  $('#labRec').addEventListener('click',()=>{
- S.rows=S.rows.filter(r=>ON
- ? !(r.sw===1&&r.dir===DIR&&r.i===I&&r.c===COIL)
- : r.sw===1);
- S.rows.push({sw:ON?1:0,dir:DIR,i:I,c:COIL});
- save();paintTable();drawGraph();judge();updateProgress();A.pop();
- toast(ON?`기록! ${dirName(DIR)} · ${I.toFixed(1)} A → 나침반 N극 ${needleOf(true,DIR)}`:'기록! 스위치 열림 → 나침반은 북쪽 그대로 — 이것도 훌륭한 데이터입니다 📌','good');
+  const CTX={sw:ON?1:0,dir:DIR,i:I,c:COIL};
+  q.innerHTML=(ON?'지금 조건 — <b>'+dirName(DIR)+'</b> · <b>'+I.toFixed(1)+' A</b>':'지금 조건 — <b>스위치 열림</b>')+'<br><b>나침반 N극</b>이 어느 쪽을 가리켰나요? 실험대를 보고 고르세요.';
+  const opts=['북쪽 (남북 방향)','서쪽 (코일 반대쪽)','동쪽 (코일 쪽)'], ans=needleOf(ON,DIR);
+  bs.innerHTML='';
+  opts.forEach(o=>{const b=document.createElement('button');b.textContent=o;
+   b.addEventListener('click',()=>{
+    if(o!==ans){
+     ms.className='obs-msg err';const _h=(o.match(/[가-힣]/g)||[]).pop()||'',_j=_h&&((_h.charCodeAt(0)-0xAC00)%28)?'이':'가';
+     ms.innerHTML='<b>'+o+'</b> '+_j+' 맞나요? 실험대를 <b>다시 한 번</b> 보고 고르세요.';
+     b.classList.add('shakex');setTimeout(()=>b.classList.remove('shakex'),460);
+     A.wrong&&A.wrong();return;}
+    close();
+    S.rows=S.rows.filter(r=>CTX.sw
+     ? !(r.sw===1&&r.dir===CTX.dir&&r.i===CTX.i&&r.c===CTX.c)
+     : r.sw===1);
+    S.rows.push(CTX);
+    save();paintTable();drawGraph();judge();updateProgress();A.pop();
+    toast('관찰한 대로 표에 넣었어요 — 나침반 N극 <b>'+ans+'</b>','good');
+   });
+   bs.appendChild(b);});
+  ms.textContent='';ms.className='obs-msg';
+  $('#obsIn').hidden=false;
  });
+ })();
  $('#labClear').addEventListener('click',()=>{
- S.rows=[];save();paintTable();drawGraph();judge();updateProgress();A.pop();});
+ S.rows=[];window.obsClose&&obsClose();save();paintTable();drawGraph();judge();updateProgress();A.pop();});
  $('#labTable').addEventListener('click',e=>{
  const d=e.target.closest('[data-del]');if(!d)return;
  S.rows.splice(parseInt(d.dataset.del),1);
@@ -4286,6 +4348,97 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('gui
  pin();
  document.addEventListener('DOMContentLoaded',pin);
  addEventListener('load',pin);
+})();
+</script>
+<script id="gate-class-js">
+/* 🎒 관문 — 학년·반·번호 드롭다운 */
+(function(){
+ const G=document.getElementById('gGrade'), C=document.getElementById('gClass'),
+       N=document.getElementById('gNum'),   S=document.getElementById('gSid');
+ if(!G||!C||!N||!S)return;
+ let CLASSES=[{g:1,c:5,n:40},{g:1,c:6,n:40}].concat(Array.from({length:12},(_,i)=>({g:2,c:i+1,n:40})));
+
+ const opt=(v,t)=>{const o=document.createElement('option');o.value=v;o.textContent=t;return o;};
+ function grades(){
+  const gs=[...new Set(CLASSES.map(x=>x.g))].sort();
+  G.innerHTML=''; G.appendChild(opt('','학년'));
+  gs.forEach(g=>G.appendChild(opt(g,g+'학년')));
+ }
+ function classes(){
+  const g=+G.value; C.innerHTML=''; C.appendChild(opt('','반'));
+  if(!g)return;
+  CLASSES.filter(x=>x.g===g).sort((a,b)=>a.c-b.c).forEach(x=>C.appendChild(opt(x.c,x.c+'반')));
+ }
+ function nums(){
+  const g=+G.value, c=+C.value; N.innerHTML=''; N.appendChild(opt('','번호'));
+  if(!g||!c)return;
+  const row=CLASSES.find(x=>x.g===g&&x.c===c);
+  const max=Math.max((row&&row.n)||0,30);
+  for(let i=1;i<=max;i++)N.appendChild(opt(i,i+'번'));
+ }
+ function sync(){
+  const g=G.value,c=C.value,n=N.value;
+  S.value=(g&&c&&n)?(g+String(c).padStart(2,'0')+String(n).padStart(2,'0')):'';
+  const w=document.getElementById('gWho');
+  if(w)w.innerHTML=S.value?('학번 <b>'+S.value+'</b> 으로 시작합니다'):'';
+ }
+ G.addEventListener('change',()=>{classes();nums();sync();});
+ C.addEventListener('change',()=>{nums();sync();});
+ N.addEventListener('change',sync);
+
+ grades(); classes(); nums();
+
+ /* 저장된 학번이 있으면 드롭다운을 그대로 맞춰 준다 */
+ window.gateSetSid=function(sid){
+  sid=String(sid||'').replace(/[^0-9]/g,'');
+  let g,c,n;
+  if(/^[1-9]\d{4}$/.test(sid)){g=+sid[0];c=+sid.slice(1,3);n=+sid.slice(3,5);}
+  else if(/^[1-9]\d{3}$/.test(sid)){g=+sid[0];c=+sid[1];n=+sid.slice(2,4);}
+  else {G.value='';classes();nums();sync();return;}
+  if(!CLASSES.some(x=>x.g===g))CLASSES.push({g:g,c:c,n:40});
+  else if(!CLASSES.some(x=>x.g===g&&x.c===c))CLASSES.push({g:g,c:c,n:40});
+  grades(); G.value=g; classes(); C.value=c; nums(); N.value=n; sync();
+ };
+
+ /* 명렬이 있으면 진짜 학급으로 갈아 끼운다 (없어도 그대로 동작) */
+ (async function(){
+  try{
+   if(typeof OHM==='undefined'||!OHM.rpc)return;
+   const d=await OHM.rpc('ohm_roster_classes',{});
+   if(Array.isArray(d)&&d.length){
+    CLASSES=d.map(x=>({g:+x.g,c:+x.c,n:+x.n||40}));
+    const keep=S.value; grades(); classes(); nums();
+    if(keep)window.gateSetSid(keep);
+   }
+  }catch(e){/* 명렬 없이도 그대로 씁니다 */}
+ })();
+})();
+</script>
+<script id="sim-deeplink">
+/* 🔗 ?tab=탭id(&to=요소id) 로 열면 표지를 건너뛰고 그 탭을 바로 보여 준다 — 시뮬레이터 모음에서 씀 */
+(function(){
+ try{
+  var q=new URLSearchParams(location.search), tab=q.get('tab'), to=q.get('to');
+  if(!tab) return;
+  function go(){
+   try{
+    var c=document.getElementById('cover'); if(c) c.classList.add('hide');
+    document.body.classList.remove('cover-on');
+    if(typeof S!=='undefined'&&S){ S.entered=true; }
+    if(typeof showTab==='function') showTab(tab,true,true);
+    else{
+      document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('show',p.id==='panel-'+tab);});
+      document.querySelectorAll('#tabNav button').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});
+    }
+    if(to){ var e=document.getElementById(to); if(e) setTimeout(function(){e.scrollIntoView({block:'center'});},150); }
+    if(typeof showTab==='function') done=true;
+   }catch(e){}
+  }
+  var done=false;
+  /* 스크립트가 본문에 인라인이라 DOM 준비 즉시 실행 — 폰트·CDN 기다리느라 표지가 잠깐 보이는 것을 막는다. load 는 예비. */
+  if(document.readyState!=='loading') setTimeout(go,30); else document.addEventListener('DOMContentLoaded',function(){setTimeout(go,30);});
+  window.addEventListener('load',function(){ if(!done) setTimeout(go,60); });
+ }catch(e){}
 })();
 </script>
 </body>

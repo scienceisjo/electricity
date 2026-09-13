@@ -1431,6 +1431,44 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
 @media print{.ztip{display:none!important}}
 @media (max-width:560px){.ztip .zt-b{font-size:13.5px}}
 </style>
+<style id="gate-class">
+.gate .grow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:5px}
+.gate .grow3 select{width:100%;box-sizing:border-box;font-family:inherit;font-size:17px;
+ padding:11px 9px;border-radius:8px;border:1px solid var(--m-hair,#ced0d4);background:#fff;
+ color:var(--m-ink,#1c1e21);height:44px;appearance:none;
+ background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235d6c7b' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+ background-repeat:no-repeat;background-position:right 10px center}
+.gate .grow3 select:focus{outline:none;border:2px solid #1876f2}
+.gate .gwho{margin-top:7px;font-size:13.5px;color:var(--m-steel,#5d6c7b);min-height:18px}
+.gate .gwho b{color:var(--m-ink,#1c1e21)}
+</style>
+<style id="data-kit">
+/* 📥 자료 수집 — 직접 읽어 적기 */
+.rec-in{margin-top:10px;border:1px solid var(--m-primary,#0064e0);border-radius:12px;
+ padding:13px 15px;background:rgba(0,100,224,.05)}
+.rec-in[hidden]{display:none}
+.rec-in .rec-q{font-size:14.5px;line-height:1.6;margin-bottom:10px}
+.rec-in .rec-q b{font-weight:800}
+.rec-in .rec-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rec-in .rec-row label{font-size:14px;font-weight:700}
+.rec-in input{width:126px;font-family:var(--mono);font-size:19px;text-align:right;
+ padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.rec-in input:focus{outline:none;border:2px solid var(--m-primary,#0064e0)}
+.rec-in .unit{font-weight:800;font-size:15px;margin-right:4px}
+.rec-msg{margin-top:9px;font-size:14px;line-height:1.6;min-height:20px}
+.rec-msg.err{color:var(--danger)}
+.rec-msg.ok{color:var(--ok)}
+.shakex{animation:shakex .45s}
+@keyframes shakex{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}
+ 60%{transform:translateX(7px)}80%{transform:translateX(-3px)}}
+/* 📈 자료 변환 — 직접 찍기 */
+.plot-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:9px;font-size:14px}
+.plot-bar .ph{flex:1;min-width:180px;color:var(--ink-mute);line-height:1.55}
+.plot-bar .ph b{color:var(--ink);font-weight:800}
+.graph-wrap.plotting canvas{cursor:crosshair}
+.dtable tr.plotting td{background:rgba(0,100,224,.10)}
+.dtable td .pdot{color:var(--ok,#2c7a44);font-size:11px}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1909,15 +1947,30 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  </div>
  <span class="labcnt" id="labCnt"><b>0</b> / 12</span>
  </div>
+ <div class="rec-in" id="labIn" hidden>
+ <div class="rec-q" id="labQ"></div>
+ <div class="rec-row">
+ <label for="labVal">전류계 눈금</label>
+ <input id="labVal" inputmode="decimal" data-ime="off" autocomplete="off" placeholder="0.000">
+ <span class="unit">A</span>
+ <button class="btn primary sm" id="labOk">표에 넣기</button>
+ <button class="btn ghost sm" id="labNo">취소</button>
+ </div>
+ <div class="rec-msg" id="labInMsg"></div>
+ </div>
  <p class="help" style="margin-top:8px">누른 <b>순서대로 위에서 아래로</b> 쌓입니다. 같은 조건을 또 눌러도 새 줄로 남아요 —
  값이 똑같이 나오는지 확인해 보세요. <b>12개</b>가 차면 「기록 지우기」로 비우고 다시 시작합니다.</p>
  <div class="dtable-wrap">
  <table class="dtable" id="labTable">
  <tr><th style="width:36px">#</th><th>전압 (V)</th><th>니크롬선</th><th>저항 (Ω)</th><th>전류의 세기 (A)</th><th>전류의 세기 (mA)</th><th></th></tr>
- <tr><td class="empty" colspan="7">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 눌러 보세요</td></tr>
+ <tr><td class="empty" colspan="7">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 누르고 <b>전류계를 읽어 적어</b> 보세요</td></tr>
  </table>
  </div>
  <div class="graph-wrap"><canvas id="labGraph" height="280"></canvas></div>
+ <div class="plot-bar" id="plotBar">
+ <span class="ph" id="plotHint"></span>
+ <button class="btn sm" id="plotDone" disabled>그래프 완성하기</button>
+ </div>
  <div class="legend" id="labLegend"><span>가로축 전압(V) · 세로축 전류(A)</span></div>
  </div>
  <div class="simctl">
@@ -2517,10 +2570,16 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT">
  <div class="gbox">
  <h3 id="gateT">🎯 혼자 탐구 시작하기</h3>
- <div class="gsub">학번과 이름을 넣어요. 선생님이 알려 준 <b>참여 코드</b>가 있으면 쓴 글이 선생님에게 전해지고, 코드가 없어도 <b>이 기기에만 저장</b>하며 끝까지 할 수 있어요. 한 번 넣으면 다른 차시도 그대로 이어집니다.</div>
- <label for="gSid">학번 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(학년·반·번호 — 예: 2학년 3반 15번 → 20315)</span></label>
- <input id="gSid" inputmode="numeric" maxlength="6" placeholder="20315" data-ime="off" autocomplete="off">
- <label for="gName">이름</label>
+ <div class="gsub">학년·반·번호를 고르세요. 선생님이 알려 준 <b>참여 코드</b>가 있으면 쓴 글이 선생님에게 전해지고, 코드가 없어도 <b>이 기기에만 저장</b>하며 끝까지 할 수 있어요. 한 번 넣으면 다른 차시도 그대로 이어집니다.</div>
+ <label for="gGrade">학년 · 반 · 번호</label>
+ <div class="grow3">
+  <select id="gGrade" aria-label="학년"></select>
+  <select id="gClass" aria-label="반"></select>
+  <select id="gNum" aria-label="번호"></select>
+ </div>
+ <input id="gSid" type="hidden" value="">
+ <div class="gwho" id="gWho"></div>
+ <label for="gName">이름 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(명단에 있으면 안 써도 됩니다)</span></label>이름</label>
  <input id="gName" maxlength="12" placeholder="홍길동" autocomplete="off">
  <label for="gCode">참여 코드 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(선생님이 알려 준 숫자 · 없으면 비워 두세요)</span></label>
  <input id="gCode" inputmode="numeric" maxlength="12" placeholder="선생님이 알려 준 숫자" data-ime="off" autocomplete="off" style="letter-spacing:.08em">
@@ -2553,7 +2612,7 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  <div class="zt-r"><button type="button" class="btn primary sm" id="ztOk">알겠어요</button><button type="button" class="zt-x" id="ztNever">다시 보지 않기</button></div>
 </div>
 <div id="toast"></div>
-<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-08-08</span></footer>
+<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-09-09</span></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 <script>
@@ -2658,7 +2717,7 @@ const GAME_QS=[
   svg:"<svg viewBox=\"0 0 440 250\" width=\"440\" height=\"250\" role=\"img\" aria-label=\"전압에 따른 전류의 세기 그래프. (가)는 5 V에서 2 A, (나)는 5 V에서 1 A인 원점을 지나는 직선.\" style=\"max-width:440px;width:100%;height:auto;display:block;margin:0 auto\"><line x1=\"70\" y1=\"220\" x2=\"370\" y2=\"220\" stroke=\"#2e2315\" stroke-width=\"2\"/><line x1=\"70\" y1=\"220\" x2=\"70\" y2=\"50\" stroke=\"#2e2315\" stroke-width=\"2\"/><text x=\"374\" y=\"225\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#5c4a33\">전압(V)</text><text x=\"70\" y=\"42\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#5c4a33\">전류(A)</text><line x1=\"130.0\" y1=\"220\" x2=\"130.0\" y2=\"224\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"130.0\" y=\"237\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">1</text><line x1=\"130.0\" y1=\"220\" x2=\"130.0\" y2=\"50\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"190.0\" y1=\"220\" x2=\"190.0\" y2=\"224\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"190.0\" y=\"237\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">2</text><line x1=\"190.0\" y1=\"220\" x2=\"190.0\" y2=\"50\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"250.0\" y1=\"220\" x2=\"250.0\" y2=\"224\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"250.0\" y=\"237\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">3</text><line x1=\"250.0\" y1=\"220\" x2=\"250.0\" y2=\"50\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"310.0\" y1=\"220\" x2=\"310.0\" y2=\"224\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"310.0\" y=\"237\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">4</text><line x1=\"310.0\" y1=\"220\" x2=\"310.0\" y2=\"50\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"370.0\" y1=\"220\" x2=\"370.0\" y2=\"224\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"370.0\" y=\"237\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">5</text><line x1=\"370.0\" y1=\"220\" x2=\"370.0\" y2=\"50\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"66\" y1=\"186.0\" x2=\"70\" y2=\"186.0\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"63\" y=\"190.0\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">0.4</text><line x1=\"70\" y1=\"186.0\" x2=\"370\" y2=\"186.0\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"66\" y1=\"152.0\" x2=\"70\" y2=\"152.0\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"63\" y=\"156.0\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">0.8</text><line x1=\"70\" y1=\"152.0\" x2=\"370\" y2=\"152.0\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"66\" y1=\"118.0\" x2=\"70\" y2=\"118.0\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"63\" y=\"122.0\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">1.2</text><line x1=\"70\" y1=\"118.0\" x2=\"370\" y2=\"118.0\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"66\" y1=\"84.0\" x2=\"70\" y2=\"84.0\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"63\" y=\"88.0\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">1.6</text><line x1=\"70\" y1=\"84.0\" x2=\"370\" y2=\"84.0\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"66\" y1=\"50.0\" x2=\"70\" y2=\"50.0\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"63\" y=\"54.0\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">2.0</text><line x1=\"70\" y1=\"50.0\" x2=\"370\" y2=\"50.0\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><text x=\"64\" y=\"237\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">0</text><polyline points=\"70.0,220.0 370.0,50.0\" fill=\"none\" stroke=\"#b23a30\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><text x=\"376.0\" y=\"54.0\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#b23a30\" font-weight=\"800\">(가)</text><polyline points=\"70.0,220.0 370.0,135.0\" fill=\"none\" stroke=\"#2f6ea8\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><text x=\"376.0\" y=\"139.0\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2f6ea8\" font-weight=\"800\">(나)</text></svg>",
   stem:"그림은 굵기가 같은 두 니크롬선 (가), (나)에 걸어 준 전압에 따른 전류의 세기를 나타낸 것이다. 이에 대한 설명으로 옳지 <u>않은</u> 것은?",
   ch:[{t:"(나)에 7 V의 전압을 걸면 1.4 A의 전류가 흐른다.",ok:0},{t:"두 니크롬선의 재질이 같다면 길이는 (가)가 (나)보다 짧다.",ok:0},{t:"(가)에 2.4 A의 전류가 흐르게 하려면 6 V의 전압을 걸어야 한다.",ok:0},{t:"같은 전압을 걸었을 때 흐르는 전류의 세기는 (나)가 (가)의 2배이다.",ok:1},{t:"(가)의 저항은 2.5 Ω이다.",ok:0}],
-  why:"(가)는 5 V에서 2 A이므로 저항 2.5 Ω, (나)는 5 V에서 1 A이므로 5 Ω입니다. 같은 전압에서는 저항이 작은 <b>(가)에 (나)의 2배</b>인 전류가 흐르므로 ⑤가 거꾸로 된 문장이에요. ②는 7 ÷ 5 = 1.4 A, ④는 2.4 × 2.5 = 6 V로 옳고, 굵기·재질이 같으면 저항이 작은 (가)가 더 짧습니다(③)."},
+  why:"(가)는 5 V에서 2 A이므로 저항 2.5 Ω(⑤ ○), (나)는 5 V에서 1 A이므로 5 Ω입니다. 같은 전압에서는 저항이 작은 (가)에 (나)의 2배인 전류가 흐르므로 ④가 거꾸로 된 문장이에요. ①은 7 ÷ 5 = 1.4 A, ③은 2.4 × 2.5 = 6 V로 옳고, 굵기·재질이 같으면 저항이 작은 (가)가 더 짧습니다(② ○)."},
 
  {id:"o6",
   difficulty:"중",
@@ -2691,7 +2750,7 @@ const GAME_QS=[
   svg:"<svg viewBox=\"0 0 560 118\" width=\"560\" height=\"118\" role=\"img\" aria-label=\"표: 니크롬선 A는 3·6·9·12 V에서 1.5·3·㉠·6 A, B는 0.5·1·1.5·2 A.\" style=\"max-width:560px;width:100%;height:auto;display:block;margin:0 auto\"><rect x=\"60\" y=\"12\" width=\"120\" height=\"28\" fill=\"#efe6d3\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"120.0\" y=\"31.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\" font-weight=\"800\">전압(V)</text><rect x=\"180\" y=\"12\" width=\"80\" height=\"28\" fill=\"#efe6d3\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"220.0\" y=\"31.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\" font-weight=\"800\">3</text><rect x=\"260\" y=\"12\" width=\"80\" height=\"28\" fill=\"#efe6d3\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"300.0\" y=\"31.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\" font-weight=\"800\">6</text><rect x=\"340\" y=\"12\" width=\"80\" height=\"28\" fill=\"#efe6d3\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"380.0\" y=\"31.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\" font-weight=\"800\">9</text><rect x=\"420\" y=\"12\" width=\"80\" height=\"28\" fill=\"#efe6d3\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"460.0\" y=\"31.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\" font-weight=\"800\">12</text><rect x=\"60\" y=\"40\" width=\"120\" height=\"28\" fill=\"#efe6d3\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"120.0\" y=\"59.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\" font-weight=\"800\">전류 A(A)</text><rect x=\"180\" y=\"40\" width=\"80\" height=\"28\" fill=\"#fdfbf6\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"220.0\" y=\"59.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\">1.5</text><rect x=\"260\" y=\"40\" width=\"80\" height=\"28\" fill=\"#fdfbf6\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"300.0\" y=\"59.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\">3</text><rect x=\"340\" y=\"40\" width=\"80\" height=\"28\" fill=\"#fdfbf6\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"380.0\" y=\"59.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\">㉠</text><rect x=\"420\" y=\"40\" width=\"80\" height=\"28\" fill=\"#fdfbf6\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"460.0\" y=\"59.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\">6</text><rect x=\"60\" y=\"68\" width=\"120\" height=\"28\" fill=\"#efe6d3\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"120.0\" y=\"87.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\" font-weight=\"800\">전류 B(A)</text><rect x=\"180\" y=\"68\" width=\"80\" height=\"28\" fill=\"#fdfbf6\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"220.0\" y=\"87.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\">0.5</text><rect x=\"260\" y=\"68\" width=\"80\" height=\"28\" fill=\"#fdfbf6\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"300.0\" y=\"87.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\">1</text><rect x=\"340\" y=\"68\" width=\"80\" height=\"28\" fill=\"#fdfbf6\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"380.0\" y=\"87.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\">1.5</text><rect x=\"420\" y=\"68\" width=\"80\" height=\"28\" fill=\"#fdfbf6\" stroke=\"#c1ac82\" stroke-width=\"1.4\"/><text x=\"460.0\" y=\"87.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#2e2315\">2</text></svg>",
   stem:"표는 길이가 다른 두 니크롬선 A, B에 전압을 걸었을 때 흐르는 전류의 세기를 측정한 결과이다. (단, 두 니크롬선의 재질과 굵기는 같다.) 이에 대한 설명으로 옳지 <u>않은</u> 것은?",
   ch:[{t:"A의 저항은 2 Ω이다.",ok:0},{t:"저항은 B가 A의 1/3배이다.",ok:1},{t:"니크롬선의 길이는 A가 B보다 짧다.",ok:0},{t:"A, B에 같은 전압을 걸었을 때 B에 6 A의 전류가 흐른다면 A에는 18 A의 전류가 흐른다.",ok:0},{t:"㉠은 4.5이다.",ok:0}],
-  why:"A는 3 V에서 1.5 A → 2 Ω, B는 3 V에서 0.5 A → 6 Ω. 저항은 <b>B가 A의 3배</b>이지 1/3배가 아닙니다(③ ✗). ㉠ = 9 ÷ 2 = 4.5 A(①), 재질·굵기가 같으면 저항이 작은 A가 짧고(④), 같은 전압에서 전류는 A가 B의 3배이므로 6 A ↔ 18 A(⑤)입니다."},
+  why:"A는 3 V에서 1.5 A → 2 Ω(① ○), B는 3 V에서 0.5 A → 6 Ω. 저항은 B가 A의 3배이지 1/3배가 아닙니다(② ✗). ㉠ = 9 ÷ 2 = 4.5 A(⑤ ○), 재질·굵기가 같으면 저항이 작은 A가 짧고(③ ○), 같은 전압에서 전류는 A가 B의 3배이므로 6 A ↔ 18 A(④ ○)입니다."},
 
  {id:"o10",
   difficulty:"상",
@@ -2707,7 +2766,7 @@ const GAME_QS=[
   svg:"<svg viewBox=\"0 0 440 258\" width=\"440\" height=\"258\" role=\"img\" aria-label=\"도선 A, B, C의 전압-전류 그래프. 세 직선 모두 원점을 지나며 기울기는 A가 가장 크고 C가 가장 작다.\" style=\"max-width:440px;width:100%;height:auto;display:block;margin:0 auto\"><line x1=\"70\" y1=\"220\" x2=\"370\" y2=\"220\" stroke=\"#2e2315\" stroke-width=\"2\"/><line x1=\"70\" y1=\"220\" x2=\"70\" y2=\"50\" stroke=\"#2e2315\" stroke-width=\"2\"/><text x=\"374\" y=\"225\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#5c4a33\">전압(V)</text><text x=\"70\" y=\"42\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#5c4a33\">전류(A)</text><line x1=\"170.0\" y1=\"220\" x2=\"170.0\" y2=\"224\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"170.0\" y=\"237\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">2</text><line x1=\"170.0\" y1=\"220\" x2=\"170.0\" y2=\"50\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"270.0\" y1=\"220\" x2=\"270.0\" y2=\"224\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"270.0\" y=\"237\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">4</text><line x1=\"270.0\" y1=\"220\" x2=\"270.0\" y2=\"50\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"370.0\" y1=\"220\" x2=\"370.0\" y2=\"224\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"370.0\" y=\"237\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">6</text><line x1=\"370.0\" y1=\"220\" x2=\"370.0\" y2=\"50\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"66\" y1=\"163.3\" x2=\"70\" y2=\"163.3\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"63\" y=\"167.33333333333334\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">0.5</text><line x1=\"70\" y1=\"163.3\" x2=\"370\" y2=\"163.3\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"66\" y1=\"106.7\" x2=\"70\" y2=\"106.7\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"63\" y=\"110.66666666666667\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">1.0</text><line x1=\"70\" y1=\"106.7\" x2=\"370\" y2=\"106.7\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><line x1=\"66\" y1=\"50.0\" x2=\"70\" y2=\"50.0\" stroke=\"#2e2315\" stroke-width=\"1.2\"/><text x=\"63\" y=\"54.0\" text-anchor=\"end\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">1.5</text><line x1=\"70\" y1=\"50.0\" x2=\"370\" y2=\"50.0\" stroke=\"#c1ac82\" stroke-width=\".7\" stroke-dasharray=\"3 3\"/><text x=\"64\" y=\"237\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"11.5\" fill=\"#5c4a33\">0</text><polyline points=\"70.0,220.0 370.0,50.0\" fill=\"none\" stroke=\"#b23a30\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><text x=\"376.0\" y=\"54.0\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#b23a30\" font-weight=\"800\">A</text><polyline points=\"70.0,220.0 370.0,106.66666666666667\" fill=\"none\" stroke=\"#2f7d3f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><text x=\"376.0\" y=\"110.66666666666667\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2f7d3f\" font-weight=\"800\">B</text><polyline points=\"70.0,220.0 370.0,163.33333333333334\" fill=\"none\" stroke=\"#2f6ea8\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><text x=\"376.0\" y=\"167.33333333333334\" text-anchor=\"start\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13\" fill=\"#2f6ea8\" font-weight=\"800\">C</text><text x=\"220\" y=\"244\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#96805c\">A·B: 재질·길이 같고 굵기만 다름 / B·C: 재질·굵기 같고 길이만 다름</text></svg>",
   stem:"그림은 도선 A, B, C에 걸어 준 전압과 흐르는 전류의 세기를 나타낸 것이다. A와 B는 재질과 길이가 같고 굵기만 다르며, B와 C는 재질과 굵기가 같고 길이만 다르다. 이에 대한 설명으로 옳은 것은?",
   ch:[{t:"같은 전압을 걸어 주면 C에 가장 센 전류가 흐른다.",ok:0},{t:"기울기가 가장 완만한 C의 저항이 가장 작다.",ok:0},{t:"저항의 크기는 A가 가장 크고 C가 가장 작다.",ok:0},{t:"도선의 굵기는 A가 B보다 굵다.",ok:1},{t:"도선의 길이는 C가 B보다 짧다.",ok:0}],
-  why:"기울기가 클수록 저항이 <b>작습니다</b>: A(4 Ω) < B(6 Ω) < C(12 Ω). A와 B는 굵기만 다르니 저항이 작은 <b>A가 더 굵고</b>(②), B와 C는 길이만 다르니 저항이 큰 C가 더 깁니다(③ ✗). 같은 전압에서 가장 센 전류는 저항이 가장 작은 A에 흐릅니다(④ ✗)."},
+  why:"기울기가 클수록 저항이 작습니다: 저항은 A < B < C. A와 B는 굵기만 다르니 저항이 작은 A가 더 굵고(④ ○), B와 C는 길이만 다르니 저항이 큰 C가 더 깁니다(⑤ ✗). 저항이 가장 큰 것은 C이고(②·③ ✗), 같은 전압에서 가장 센 전류는 저항이 가장 작은 A에 흐릅니다(① ✗)."},
 
  {id:"o12",
   difficulty:"상",
@@ -3487,13 +3546,13 @@ function openGate(){
  const g=$('#gate');g.classList.add('show');
  $('#gMsg').textContent='';$('#gMsg').className='gmsg';
  const st=S.stu||stuGlobal();
- if(st){$('#gSid').value=st.sid||'';$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
- setTimeout(()=>$('#gSid').focus(),50);
+ if(st){$('#gSid').value=st.sid||'';if(window.gateSetSid)window.gateSetSid(st.sid||'');$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
+ setTimeout(()=>{const g=$('#gGrade');(g||$('#gName')).focus();},50);
 }
 function closeGate(){$('#gate').classList.remove('show');}
 $('#gCancel').addEventListener('click',closeGate);
 $('#gate').addEventListener('click',e=>{if(e.target===$('#gate'))closeGate();});
-['gSid','gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
+['gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
 const MAIN_TABS=MSN.map(m=>m.tab);
 function afterJoin(msg){
  setTimeout(()=>{closeGate();$('#gGo').disabled=false;setMode('solo');
@@ -3505,8 +3564,8 @@ function afterJoin(msg){
 $('#gGo').addEventListener('click',async()=>{
  const sid=$('#gSid').value.replace(/[^0-9]/g,''), name=$('#gName').value.trim(), code=$('#gCode').value.trim().toUpperCase();
  const msg=$('#gMsg');const say=(t,c)=>{msg.innerHTML=t;msg.className='gmsg '+(c||'');};
- if(!/^\d{4,6}$/.test(sid)){say('학번은 숫자 4~6자리로 써 주세요 — 예: 2학년 3반 15번 → <b>20315</b>','err');$('#gSid').focus();return;}
- if(name.length<1){say('이름을 써 주세요','err');$('#gName').focus();return;}
+ if(!/^\d{4,6}$/.test(sid)){say('학년·반·번호를 모두 골라 주세요','err');const g=$('#gGrade');if(g)g.focus();return;}
+ if(name.length<1&&!code){say('이름을 써 주세요','err');$('#gName').focus();return;}
  if(code.length<3){say('참여 코드를 써 주세요. 코드가 없으면 아래 <b>🔓 코드 없이 혼자 탐구</b>를 누르세요','err');$('#gCode').focus();return;}
  $('#gGo').disabled=true;say('확인하는 중…');
  try{
@@ -3796,9 +3855,9 @@ paintMode();
    const rows=S.rows;   /* 정렬하지 않는다 — 누른 순서 그대로 위에서 아래로 */
    let html='<tr><th style="width:36px">#</th><th>전압 (V)</th><th>니크롬선</th><th>저항 (Ω)</th><th>전류의 세기 (A)</th><th>전류의 세기 (mA)</th><th></th></tr>';
    if(!rows.length)html+='<tr><td class="empty" colspan="7">아직 기록이 없어요 — 전압과 니크롬선을 정한 뒤 📌 기록을 눌러 보세요</td></tr>';
-   rows.forEach((r,idx)=>{const i=r.v/LAB_R[r.w];
+   rows.forEach((r,idx)=>{const i=(r.i!=null?r.i:r.v/LAB_R[r.w]);
      const same=rows.filter((x,k)=>k<idx&&x.v===r.v&&x.w===r.w).length;
-     html+='<tr><td>'+(idx+1)+'</td><td>'+r.v.toFixed(1)+(same?' <span style="font-size:11px;color:var(--ink-mute)">재측정</span>':'')+'</td>'
+     html+='<tr'+(idx===plotIdx()?' class="plotting"':'')+'><td>'+(idx+1)+(r.p?' <span class="pdot">●</span>':'')+'</td><td>'+r.v.toFixed(1)+(same?' <span style="font-size:11px;color:var(--ink-mute)">재측정</span>':'')+'</td>'
        +'<td style="color:'+LAB_COL[r.w]+';font-weight:700">'+LAB_NAME[r.w]+'</td>'
        +'<td>'+LAB_R[r.w]+'</td><td>'+fmtA(i)+'</td><td>'+Math.round(i*1000)+'</td>'
        +'<td class="del" data-del="'+idx+'">✕</td></tr>';});
@@ -3816,10 +3875,11 @@ paintMode();
  function paintGraph(){
    if(!gcv)return;
    const f=fit(gcv),ctx=f.ctx,w=f.w,h=f.h;
-   const maxI=Math.max(3.2,...S.rows.map(r=>r.v/LAB_R[r.w]),cur());
+   const maxI=Math.max(3.2,...S.rows.map(r=>(r.i!=null?r.i:r.v/LAB_R[r.w])),cur());
    const YM=Math.ceil(maxI*1.08*2)/2, YS=YM>4?1:0.5;
    const L=58,Rm=18,T=24,B=40,gw=w-L-Rm,gh=h-T-B,XM=6;
    const X=v=>L+v/XM*gw, Y=i=>T+gh-(i/YM)*gh;
+   _GEO={X:X,Y:Y};
    ctx.clearRect(0,0,w,h);
    ctx.font='12px "Nanum Gothic Coding",monospace';ctx.fillStyle=C.inkmute;
    ctx.strokeStyle=C.line;ctx.lineWidth=1;ctx.textAlign='center';
@@ -3835,15 +3895,28 @@ paintMode();
    ctx.fillStyle=C.inkdim;ctx.font='12.5px "Gowun Dodum",sans-serif';
    ctx.textAlign='left';ctx.fillText('전류의 세기 I (A)',6,15);
    ctx.textAlign='right';ctx.fillText('전압 V (V)',w-6,h-8);
-   [...new Set(S.rows.map(r=>r.w))].forEach(k=>{
-     const pts=S.rows.filter(r=>r.w===k);
-     if(new Set(pts.map(p=>p.v)).size>=2){ctx.strokeStyle=LAB_COL[k];ctx.globalAlpha=.4;ctx.lineWidth=2;
-       ctx.beginPath();ctx.moveTo(X(0),Y(0));ctx.lineTo(X(6),Y(6/LAB_R[k]));ctx.stroke();
-       ctx.globalAlpha=1;}
-     pts.forEach(r=>{const i=r.v/LAB_R[k];
-       ctx.fillStyle=LAB_COL[k];ctx.beginPath();ctx.arc(X(r.v),Y(i),5,0,TAU);ctx.fill();
-       ctx.strokeStyle='#faf4e6';ctx.lineWidth=1.5;ctx.stroke();});
+   /* 학생이 찍은 점만 그린다 — 다 찍고 「그래프 완성하기」를 눌러야 선이 이어진다 */
+   const IV=r=>(r.i!=null?r.i:r.v/LAB_R[r.w]);
+   if(S.plotDone){
+     [...new Set(S.rows.map(r=>r.w))].forEach(k=>{
+       const pts=S.rows.filter(r=>r.w===k&&r.p).sort((a,b)=>a.v-b.v);
+       if(pts.length>=2){ctx.strokeStyle=LAB_COL[k];ctx.globalAlpha=.55;ctx.lineWidth=2.2;
+         ctx.beginPath();pts.forEach((p,j)=>{const fn=j?'lineTo':'moveTo';ctx[fn](X(p.v),Y(IV(p)));});
+         ctx.stroke();ctx.globalAlpha=1;}
+     });
+   }
+   S.rows.forEach((r,idx)=>{
+     if(!r.p)return;
+     ctx.fillStyle=LAB_COL[r.w];ctx.beginPath();ctx.arc(X(r.v),Y(IV(r)),5.5,0,TAU);ctx.fill();
+     ctx.strokeStyle='#fff';ctx.lineWidth=1.6;ctx.stroke();
    });
+   /* 다음에 찍을 자리 — 세로선만 살짝 비춰 준다(정답을 찍어 주지는 않는다) */
+   const ni=plotIdx();
+   if(ni>=0){
+     const r=S.rows[ni];
+     ctx.save();ctx.setLineDash([4,4]);ctx.strokeStyle=LAB_COL[r.w];ctx.globalAlpha=.5;ctx.lineWidth=1.4;
+     ctx.beginPath();ctx.moveTo(X(r.v),T);ctx.lineTo(X(r.v),T+gh);ctx.stroke();ctx.restore();
+   }
  }
 
  /* 창 크기가 바뀌면 그래프 폭도 바뀌므로 다시 그린다 */
@@ -3881,7 +3954,12 @@ paintMode();
    }
  }
 
- function redraw(){paintTable();paintGraph();judge();updateProgress();}
+ let _GEO=null;
+ function plotIdx(){return S.rows.findIndex(r=>!r.p);}
+ function redraw(){paintTable();paintGraph();judge();paintPlot();updateProgress();}
+ /* ── 📥 자료 수집 — 눈금을 학생이 읽어 적는다 ── */
+ let _pend=null;
+ function closeIn(){_pend=null;$('#labIn').hidden=true;$('#labVal').value='';$('#labInMsg').textContent='';}
  $('#labRec').addEventListener('click',()=>{
    if(S.rows.length>=LAB_MAX){
      const cb=$('#labClear');
@@ -3891,19 +3969,88 @@ paintMode();
      A.wrong&&A.wrong();
      return;
    }
-   const dup=S.rows.filter(r=>r.v===V&&r.w===key()).length;
-   S.rows.push({v:V,w:key()});
-   save();redraw();A.pop();
-   const head=V===0?'0 V → 0 A — 원점도 훌륭한 데이터입니다 📌'
-     :'<b>'+S.rows.length+'번째</b> 기록 — '+LAB_NAME[key()]+' ('+Rv()+' Ω) · '+V.toFixed(1)+' V → '+fmtA(cur())+' A';
-   toast(head+(dup?'<br>같은 조건을 <b>'+(dup+1)+'번째</b> 재었어요. 값이 똑같이 나오나요?':''),'good');
+   _pend={v:V,w:key(),t:cur()};
+   $('#labQ').innerHTML='지금 조건 — <b>'+LAB_NAME[key()]+'</b> ('+Rv()+' Ω) · 전압 <b>'+V.toFixed(1)+' V</b><br>'
+     +'실험대의 <b>전류계 눈금을 읽어</b> 아래에 적으세요.';
+   $('#labIn').hidden=false;$('#labInMsg').textContent='';$('#labVal').value='';
+   setTimeout(()=>$('#labVal').focus(),40);
  });
- $('#labClear').addEventListener('click',()=>{S.rows=[];save();redraw();A.pop();
+ $('#labNo').addEventListener('click',closeIn);
+ $('#labVal').addEventListener('keydown',e=>{if(e.key==='Enter')$('#labOk').click();
+   if(e.key==='Escape')closeIn();});
+ $('#labOk').addEventListener('click',()=>{
+   if(!_pend)return;
+   const raw=($('#labVal').value||'').trim();
+   const m=$('#labInMsg');
+   if(!/^[0-9]*\.?[0-9]+$/.test(raw)){
+     m.className='rec-msg err';m.innerHTML='숫자로 적어 주세요 — 예: <b>0.3</b>';
+     $('#labVal').classList.add('shakex');setTimeout(()=>$('#labVal').classList.remove('shakex'),460);
+     A.wrong&&A.wrong();return;}
+   const x=parseFloat(raw), t=_pend.t;
+   if(Math.abs(x-t)>Math.max(t*0.05,0.005)){
+     m.className='rec-msg err';
+     m.innerHTML='<b>'+raw+' A</b> 는 눈금과 달라요. 전류계를 <b>다시 한 번</b> 보고 적어 주세요.'
+       +(x>t*2?'<br>자리를 하나 더 본 건 아닐까요?':(x<t/2?'<br>자리를 하나 덜 본 건 아닐까요?':''));
+     $('#labVal').classList.add('shakex');setTimeout(()=>$('#labVal').classList.remove('shakex'),460);
+     $('#labVal').select();A.wrong&&A.wrong();return;}
+   const dup=S.rows.filter(r=>r.v===_pend.v&&r.w===_pend.w).length;
+   S.rows.push({v:_pend.v,w:_pend.w,i:x,p:0});
+   S.plotDone=0;
+   closeIn();save();redraw();A.pop();
+   toast('<b>'+S.rows.length+'번째</b> 자료를 표에 넣었어요 — 이제 <b>그래프에 점을 찍어</b> 보세요 📈'
+     +(dup?'<br>같은 조건을 <b>'+(dup+1)+'번째</b> 재었어요. 값이 똑같이 나오나요?':''),'good');
+ });
+
+ /* ── 📈 자료 변환 — 표의 값을 보고 그래프에 직접 찍는다 ── */
+ function paintPlot(){
+   const gw=$('#labGraph')&&$('#labGraph').closest('.graph-wrap');
+   const hint=$('#plotHint'), btn=$('#plotDone');
+   if(!hint||!btn)return;
+   const ni=plotIdx(), n=S.rows.length;
+   if(gw)gw.classList.toggle('plotting',ni>=0);
+   btn.disabled=!(n>=2&&ni<0&&!S.plotDone);
+   if(!n){hint.innerHTML='표에 자료가 쌓이면 여기에 <b>직접 점을 찍습니다.</b>';return;}
+   if(ni>=0){
+     const r=S.rows[ni], iv=(r.i!=null?r.i:r.v/LAB_R[r.w]);
+     hint.innerHTML='<b>'+(ni+1)+'번째 자료</b>를 찍을 차례 — 전압 <b>'+r.v.toFixed(1)+' V</b> · 전류 <b>'+fmtA(iv)
+       +' A</b> 자리를 그래프에서 눌러 주세요. <span style="opacity:.75">(점선이 전압 자리입니다)</span>';
+   }else if(S.plotDone){
+     hint.innerHTML='그래프를 완성했어요. 점들이 <b>어떤 모양</b>으로 놓였는지 보세요 ✅';
+   }else if(n<2){
+     hint.innerHTML='찍었어요. 선을 그으려면 <b>자료가 최소 2개</b>는 있어야 해요 — 조건을 바꿔 한 번 더 재 보세요.';
+   }else{
+     hint.innerHTML='점을 다 찍었어요 — <b>「그래프 완성하기」</b>를 눌러 이어 보세요.';
+   }
+ }
+ gcv&&gcv.addEventListener('click',e=>{
+   if(!_GEO)return;
+   const ni=plotIdx(); if(ni<0)return;
+   const rc=gcv.getBoundingClientRect();
+   const kx=gcv.clientWidth/rc.width, ky=gcv.clientHeight/rc.height;
+   const px=(e.clientX-rc.left)*kx, py=(e.clientY-rc.top)*ky;
+   const r=S.rows[ni], iv=(r.i!=null?r.i:r.v/LAB_R[r.w]);
+   const d=Math.hypot(px-_GEO.X(r.v),py-_GEO.Y(iv));
+   if(d<=24){
+     r.p=1;save();redraw();A.pop();
+     const left=plotIdx();
+     toast(left<0?'점을 다 찍었어요 — <b>그래프 완성하기</b>를 눌러 보세요 📈'
+                 :'좋아요! 다음 자료를 찍어 보세요 ('+(left+1)+'번째)','good');
+   }else{
+     toast('그 자리가 아니에요 — <b>표의 전압과 전류</b>를 보고 두 축이 만나는 곳을 눌러 주세요','warn');
+     A.wrong&&A.wrong();
+   }
+ });
+ $('#plotDone')&&$('#plotDone').addEventListener('click',()=>{
+   if(plotIdx()>=0||S.rows.length<2)return;
+   S.plotDone=1;save();redraw();A.win?A.win():A.pop();
+   toast('그래프 완성! 같은 니크롬선끼리 이어 보니 <b>어떤 모양</b>인가요?','good');
+ });
+ $('#labClear').addEventListener('click',()=>{S.rows=[];S.plotDone=0;closeIn();save();redraw();A.pop();
    toast('기록을 모두 비웠어요 — 다시 처음부터 재 보세요 🧹');});
  $('#labTable').addEventListener('click',e=>{
    const d=e.target.closest('[data-del]');if(!d)return;
    S.rows.splice(parseInt(d.dataset.del,10),1);
-   save();redraw();A.pop();});
+   S.plotDone=0;save();redraw();A.pop();});
 
  let r0=Rv(), i0=cur();
  slider.addEventListener('input',()=>{V=parseFloat(slider.value);paintMeter();});
@@ -3920,7 +4067,7 @@ paintMode();
  let rz2;addEventListener('resize',()=>{clearTimeout(rz2);rz2=setTimeout(paintGraph,220);});
  document.addEventListener('click',e=>{
    if(e.target.closest('[data-tab="explore"],[data-go="explore"]'))setTimeout(paintGraph,80);});
- paintMeter();paintTable();paintGraph();judge();placeEls();
+ paintMeter();paintTable();paintGraph();judge();paintPlot();placeEls();
  requestAnimationFrame(tick);
 })();
 
@@ -4545,6 +4692,97 @@ paintMode();
  pin();
  document.addEventListener('DOMContentLoaded',pin);
  addEventListener('load',pin);
+})();
+</script>
+<script id="gate-class-js">
+/* 🎒 관문 — 학년·반·번호 드롭다운 */
+(function(){
+ const G=document.getElementById('gGrade'), C=document.getElementById('gClass'),
+       N=document.getElementById('gNum'),   S=document.getElementById('gSid');
+ if(!G||!C||!N||!S)return;
+ let CLASSES=[{g:1,c:5,n:40},{g:1,c:6,n:40}].concat(Array.from({length:12},(_,i)=>({g:2,c:i+1,n:40})));
+
+ const opt=(v,t)=>{const o=document.createElement('option');o.value=v;o.textContent=t;return o;};
+ function grades(){
+  const gs=[...new Set(CLASSES.map(x=>x.g))].sort();
+  G.innerHTML=''; G.appendChild(opt('','학년'));
+  gs.forEach(g=>G.appendChild(opt(g,g+'학년')));
+ }
+ function classes(){
+  const g=+G.value; C.innerHTML=''; C.appendChild(opt('','반'));
+  if(!g)return;
+  CLASSES.filter(x=>x.g===g).sort((a,b)=>a.c-b.c).forEach(x=>C.appendChild(opt(x.c,x.c+'반')));
+ }
+ function nums(){
+  const g=+G.value, c=+C.value; N.innerHTML=''; N.appendChild(opt('','번호'));
+  if(!g||!c)return;
+  const row=CLASSES.find(x=>x.g===g&&x.c===c);
+  const max=Math.max((row&&row.n)||0,30);
+  for(let i=1;i<=max;i++)N.appendChild(opt(i,i+'번'));
+ }
+ function sync(){
+  const g=G.value,c=C.value,n=N.value;
+  S.value=(g&&c&&n)?(g+String(c).padStart(2,'0')+String(n).padStart(2,'0')):'';
+  const w=document.getElementById('gWho');
+  if(w)w.innerHTML=S.value?('학번 <b>'+S.value+'</b> 으로 시작합니다'):'';
+ }
+ G.addEventListener('change',()=>{classes();nums();sync();});
+ C.addEventListener('change',()=>{nums();sync();});
+ N.addEventListener('change',sync);
+
+ grades(); classes(); nums();
+
+ /* 저장된 학번이 있으면 드롭다운을 그대로 맞춰 준다 */
+ window.gateSetSid=function(sid){
+  sid=String(sid||'').replace(/[^0-9]/g,'');
+  let g,c,n;
+  if(/^[1-9]\d{4}$/.test(sid)){g=+sid[0];c=+sid.slice(1,3);n=+sid.slice(3,5);}
+  else if(/^[1-9]\d{3}$/.test(sid)){g=+sid[0];c=+sid[1];n=+sid.slice(2,4);}
+  else {G.value='';classes();nums();sync();return;}
+  if(!CLASSES.some(x=>x.g===g))CLASSES.push({g:g,c:c,n:40});
+  else if(!CLASSES.some(x=>x.g===g&&x.c===c))CLASSES.push({g:g,c:c,n:40});
+  grades(); G.value=g; classes(); C.value=c; nums(); N.value=n; sync();
+ };
+
+ /* 명렬이 있으면 진짜 학급으로 갈아 끼운다 (없어도 그대로 동작) */
+ (async function(){
+  try{
+   if(typeof OHM==='undefined'||!OHM.rpc)return;
+   const d=await OHM.rpc('ohm_roster_classes',{});
+   if(Array.isArray(d)&&d.length){
+    CLASSES=d.map(x=>({g:+x.g,c:+x.c,n:+x.n||40}));
+    const keep=S.value; grades(); classes(); nums();
+    if(keep)window.gateSetSid(keep);
+   }
+  }catch(e){/* 명렬 없이도 그대로 씁니다 */}
+ })();
+})();
+</script>
+<script id="sim-deeplink">
+/* 🔗 ?tab=탭id(&to=요소id) 로 열면 표지를 건너뛰고 그 탭을 바로 보여 준다 — 시뮬레이터 모음에서 씀 */
+(function(){
+ try{
+  var q=new URLSearchParams(location.search), tab=q.get('tab'), to=q.get('to');
+  if(!tab) return;
+  function go(){
+   try{
+    var c=document.getElementById('cover'); if(c) c.classList.add('hide');
+    document.body.classList.remove('cover-on');
+    if(typeof S!=='undefined'&&S){ S.entered=true; }
+    if(typeof showTab==='function') showTab(tab,true,true);
+    else{
+      document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('show',p.id==='panel-'+tab);});
+      document.querySelectorAll('#tabNav button').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});
+    }
+    if(to){ var e=document.getElementById(to); if(e) setTimeout(function(){e.scrollIntoView({block:'center'});},150); }
+    if(typeof showTab==='function') done=true;
+   }catch(e){}
+  }
+  var done=false;
+  /* 스크립트가 본문에 인라인이라 DOM 준비 즉시 실행 — 폰트·CDN 기다리느라 표지가 잠깐 보이는 것을 막는다. load 는 예비. */
+  if(document.readyState!=='loading') setTimeout(go,30); else document.addEventListener('DOMContentLoaded',function(){setTimeout(go,30);});
+  window.addEventListener('load',function(){ if(!done) setTimeout(go,60); });
+ }catch(e){}
 })();
 </script>
 </body>

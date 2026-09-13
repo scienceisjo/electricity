@@ -1772,5 +1772,32 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
   label(document.getElementById('tmodeBtn'), '교사용 on/off');
 })();
 </script>
+<script id="sim-deeplink">
+/* 🔗 ?tab=탭id(&to=요소id) 로 열면 표지를 건너뛰고 그 탭을 바로 보여 준다 — 시뮬레이터 모음에서 씀 */
+(function(){
+ try{
+  var q=new URLSearchParams(location.search), tab=q.get('tab'), to=q.get('to');
+  if(!tab) return;
+  function go(){
+   try{
+    var c=document.getElementById('cover'); if(c) c.classList.add('hide');
+    document.body.classList.remove('cover-on');
+    if(typeof S!=='undefined'&&S){ S.entered=true; }
+    if(typeof showTab==='function') showTab(tab,true,true);
+    else{
+      document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('show',p.id==='panel-'+tab);});
+      document.querySelectorAll('#tabNav button').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});
+    }
+    if(to){ var e=document.getElementById(to); if(e) setTimeout(function(){e.scrollIntoView({block:'center'});},150); }
+    if(typeof showTab==='function') done=true;
+   }catch(e){}
+  }
+  var done=false;
+  /* 스크립트가 본문에 인라인이라 DOM 준비 즉시 실행 — 폰트·CDN 기다리느라 표지가 잠깐 보이는 것을 막는다. load 는 예비. */
+  if(document.readyState!=='loading') setTimeout(go,30); else document.addEventListener('DOMContentLoaded',function(){setTimeout(go,30);});
+  window.addEventListener('load',function(){ if(!done) setTimeout(go,60); });
+ }catch(e){}
+})();
+</script>
 </body>
 </html>

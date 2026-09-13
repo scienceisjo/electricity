@@ -1441,6 +1441,34 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
 @media print{.ztip{display:none!important}}
 @media (max-width:560px){.ztip .zt-b{font-size:13.5px}}
 </style>
+<style id="gate-class">
+.gate .grow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:5px}
+.gate .grow3 select{width:100%;box-sizing:border-box;font-family:inherit;font-size:17px;
+ padding:11px 9px;border-radius:8px;border:1px solid var(--m-hair,#ced0d4);background:#fff;
+ color:var(--m-ink,#1c1e21);height:44px;appearance:none;
+ background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235d6c7b' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+ background-repeat:no-repeat;background-position:right 10px center}
+.gate .grow3 select:focus{outline:none;border:2px solid #1876f2}
+.gate .gwho{margin-top:7px;font-size:13.5px;color:var(--m-steel,#5d6c7b);min-height:18px}
+.gate .gwho b{color:var(--m-ink,#1c1e21)}
+</style>
+<style id="obs-kit">
+.obs-in{margin-top:11px;border:1px solid var(--accent,#a05c2c);border-radius:12px;
+ padding:13px 15px;background:rgba(160,92,44,.06)}
+.obs-in[hidden]{display:none}
+.obs-in .obs-q{font-size:14.5px;line-height:1.6;margin-bottom:4px}
+.obs-in .obs-q b{font-weight:800}
+.obs-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.obs-btns button{appearance:none;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer;
+ padding:10px 16px;border-radius:9999px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.obs-btns button:hover{border-color:var(--accent);color:var(--accent)}
+.obs-btns button:active{transform:scale(.95)}
+.obs-msg{margin-top:9px;font-size:14px;line-height:1.6;min-height:20px}
+.obs-msg.err{color:var(--danger)}
+.shakex{animation:shakex .45s}
+@keyframes shakex{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}
+ 60%{transform:translateX(7px)}80%{transform:translateX(-3px)}}
+</style>
 </head>
 <body><!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
@@ -1718,6 +1746,12 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  <div class="btn-row">
  <button class="btn primary sm" id="labRec">📌 기록</button>
  <button class="btn ghost sm" id="labClear">기록 지우기</button>
+ </div>
+
+ <div class="obs-in" id="obsIn" hidden>
+ <div class="obs-q" id="obsQ"></div>
+ <div class="obs-btns" id="obsBtns"></div>
+ <div class="obs-msg" id="obsMsg"></div>
  </div>
  </div>
  <div class="dtable-wrap">
@@ -2414,10 +2448,16 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT">
  <div class="gbox">
  <h3 id="gateT">🎯 혼자 탐구 시작하기</h3>
- <div class="gsub">학번과 이름을 넣어요. 선생님이 알려 준 <b>참여 코드</b>가 있으면 쓴 글이 선생님에게 전해지고, 코드가 없어도 <b>이 기기에만 저장</b>하며 끝까지 할 수 있어요. 한 번 넣으면 다른 차시도 그대로 이어집니다.</div>
- <label for="gSid">학번 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(학년·반·번호 — 예: 2학년 3반 15번 → 20315)</span></label>
- <input id="gSid" inputmode="numeric" maxlength="6" placeholder="20315" data-ime="off" autocomplete="off">
- <label for="gName">이름</label>
+ <div class="gsub">학년·반·번호를 고르세요. 선생님이 알려 준 <b>참여 코드</b>가 있으면 쓴 글이 선생님에게 전해지고, 코드가 없어도 <b>이 기기에만 저장</b>하며 끝까지 할 수 있어요. 한 번 넣으면 다른 차시도 그대로 이어집니다.</div>
+ <label for="gGrade">학년 · 반 · 번호</label>
+ <div class="grow3">
+  <select id="gGrade" aria-label="학년"></select>
+  <select id="gClass" aria-label="반"></select>
+  <select id="gNum" aria-label="번호"></select>
+ </div>
+ <input id="gSid" type="hidden" value="">
+ <div class="gwho" id="gWho"></div>
+ <label for="gName">이름 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(명단에 있으면 안 써도 됩니다)</span></label>이름</label>
  <input id="gName" maxlength="12" placeholder="홍길동" autocomplete="off">
  <label for="gCode">참여 코드 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(선생님이 알려 준 숫자 · 없으면 비워 두세요)</span></label>
  <input id="gCode" inputmode="numeric" maxlength="12" placeholder="선생님이 알려 준 숫자" data-ime="off" autocomplete="off" style="letter-spacing:.08em">
@@ -2450,7 +2490,7 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  <div class="zt-r"><button type="button" class="btn primary sm" id="ztOk">알겠어요</button><button type="button" class="zt-x" id="ztNever">다시 보지 않기</button></div>
 </div>
 <div id="toast"></div>
-<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#ced0d4;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-08-08</span></footer>
+<footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;line-height:1.6;color:#ced0d4;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-09-09</span></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 <script>
@@ -2535,7 +2575,7 @@ const GAME_QS=[
   stem:"철제 스탠드에 그네처럼 매단 코일을 전지에 연결하고, 코일 앞에 말굽자석을 놓았다. 이 장치에 대한 설명으로 옳지 <u>않은</u> 것은?",
   svg:"<svg viewBox=\"0 0 560 215\" width=\"560\" height=\"215\" role=\"img\" aria-label=\"철제 스탠드에 코일을 그네처럼 매달고, 코일 앞에 말굽자석을 둔 실험 장치. 코일은 전지에 연결되어 있다.\" style=\"max-width:560px;width:100%;height:auto;display:block;margin:0 auto\"><line x1=\"150\" y1=\"36\" x2=\"440\" y2=\"36\" stroke=\"#8a7a5e\" stroke-width=\"4\"/><line x1=\"150\" y1=\"36\" x2=\"150\" y2=\"188\" stroke=\"#8a7a5e\" stroke-width=\"4\"/><rect x=\"116\" y=\"188\" width=\"68\" height=\"9\" rx=\"4\" fill=\"#c9b691\" stroke=\"#8a7a5e\" stroke-width=\"1.6\"/><line x1=\"308\" y1=\"36\" x2=\"308\" y2=\"96\" stroke=\"#a05c2c\" stroke-width=\"2\"/><line x1=\"352\" y1=\"36\" x2=\"352\" y2=\"96\" stroke=\"#a05c2c\" stroke-width=\"2\"/><rect x=\"296\" y=\"96\" width=\"68\" height=\"52\" rx=\"6\" fill=\"none\" stroke=\"#a05c2c\" stroke-width=\"3.4\"/><text x=\"330\" y=\"170\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#4a3a26\">코일</text><path d=\"M200 96 h56 v14 h-38 v24 h38 v14 h-56 z\" fill=\"#b23a30\" stroke=\"#7c221b\" stroke-width=\"2\"/><text x=\"228\" y=\"88\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">자석</text><path d=\"M 308 36 L 308 22 L 470 22 L 470 150 L 455 150\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><path d=\"M 352 36 L 352 14 L 482 14 L 482 150 L 505 150\" fill=\"none\" stroke=\"#4a3a26\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><line x1=\"475\" y1=\"134\" x2=\"475\" y2=\"166\" stroke=\"#4a3a26\" stroke-width=\"2.2\"/><line x1=\"485\" y1=\"142\"  x2=\"485\" y2=\"158\"  stroke=\"#4a3a26\" stroke-width=\"4.5\"/><text x=\"480\" y=\"190\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"13.5\" fill=\"#6b573f\">전지</text><text x=\"475\" y=\"128\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">+</text><text x=\"487\" y=\"128\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#6b573f\">−</text><text x=\"330\" y=\"210\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#6b573f\">※ 코일은 앞뒤로 자유롭게 흔들릴 수 있다 · ●는 도선의 연결점</text><circle cx=\"308\" cy=\"36\" r=\"4\" fill=\"#4a3a26\"/><circle cx=\"352\" cy=\"36\" r=\"4\" fill=\"#4a3a26\"/><text x=\"243\" y=\"108\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#ffffff\" font-weight=\"800\">N</text><text x=\"243\" y=\"148\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#ffffff\" font-weight=\"800\">S</text></svg>",
   ch:[{t:"전지의 극과 말굽자석의 극을 동시에 바꾸면 코일은 처음과 같은 쪽으로 움직인다.",ok:0},{t:"스위치를 열어 전류를 끊어도 코일은 같은 쪽으로 계속 움직인다.",ok:1},{t:"스위치를 닫아 전류를 흘리면 코일이 한쪽으로 움직인다.",ok:0},{t:"전지의 두 극을 바꾸어 연결하면 코일은 반대쪽으로 움직인다.",ok:0},{t:"말굽자석을 뒤집어 극의 위치를 바꾸면 코일은 반대쪽으로 움직인다.",ok:0}],
-  why:"코일이 받는 힘은 <b>전류가 흐를 때만</b> 생기므로 전류를 끊으면 힘이 사라져 코일은 제자리로 돌아옵니다(⑤ ✗). 전류의 방향이나 자석의 극 <b>하나만</b> 바꾸면 힘의 방향이 반대가 되고, <b>둘 다</b> 바꾸면 원래 방향으로 돌아옵니다(②~④ ○)."},
+  why:"코일이 받는 힘은 전류가 흐를 때만 생기므로 전류를 끊으면 힘이 사라져 코일은 제자리로 돌아옵니다(② ✗). 스위치를 닫으면 힘을 받아 움직이고(③ ○), 전류의 방향이나 자석의 극 하나만 바꾸면 힘의 방향이 반대가 되며(④·⑤ ○), 둘 다 바꾸면 원래 방향으로 돌아옵니다(① ○)."},
 
  {id:"t4",
   difficulty:"중",
@@ -2562,8 +2602,8 @@ const GAME_QS=[
   intent:"오른손 규칙으로 코일의 극을 정하고, 고정된 자석과의 사이에 작용하는 힘의 방향을 판단하는지 확인한다.",
   svg:"<svg viewBox=\"0 0 560 240\" width=\"560\" height=\"240\" role=\"img\" aria-label=\"고정된 막대자석의 N극 오른쪽에 전지에 연결한 코일을 놓은 모습. 코일 앞쪽 도선에는 전류가 아래로 흐른다.\" style=\"max-width:560px;width:100%;height:auto;display:block;margin:0 auto\"><ellipse cx=\"300\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"317\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"334\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"351\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"368\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><ellipse cx=\"385\" cy=\"120\" rx=\"9\" ry=\"24\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.4\"/><polyline points=\"261,144 291,144\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polyline points=\"394,96 424,96\" fill=\"none\" stroke=\"#8a5a2b\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"290.0\" y1=\"113.0\" x2=\"290.0\" y2=\"122.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"290.0,127.0 287.0,118.0 293.0,118.0\" fill=\"#b23a30\"/><line x1=\"341.0\" y1=\"113.0\" x2=\"341.0\" y2=\"122.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"341.0,127.0 338.0,118.0 344.0,118.0\" fill=\"#b23a30\"/><line x1=\"375.0\" y1=\"113.0\" x2=\"375.0\" y2=\"122.0\" stroke=\"#b23a30\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><polygon points=\"375.0,127.0 372.0,118.0 378.0,118.0\" fill=\"#b23a30\"/><text x=\"342.5\" y=\"170\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12\" fill=\"#b23a30\" font-weight=\"800\">앞쪽 도선의 전류 방향: 아래 ↓</text><rect x=\"40\" y=\"102\" width=\"65\" height=\"36\" fill=\"#3f6fb5\" stroke=\"#2e2315\" stroke-width=\"1.6\"/><rect x=\"105\" y=\"102\" width=\"65\" height=\"36\" fill=\"#d9534f\" stroke=\"#2e2315\" stroke-width=\"1.6\"/><text x=\"72.5\" y=\"126.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" fill=\"#fff\" font-weight=\"800\">S</text><text x=\"137.5\" y=\"126.0\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"16\" fill=\"#fff\" font-weight=\"800\">N</text><text x=\"105\" y=\"160\" text-anchor=\"middle\" font-family=\"Gowun Dodum, Pretendard, sans-serif\" font-size=\"12.5\" fill=\"#96805c\">막대자석(고정)</text><polyline points=\"261,144 261,200 310,200\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polyline points=\"370,200 424,200 424,96\" fill=\"none\" stroke=\"#6b573f\" stroke-width=\"2.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"335.5\" y1=\"184\" x2=\"335.5\" y2=\"216\" stroke=\"#2e2315\" stroke-width=\"3.2\"/><line x1=\"344.5\" y1=\"192\" x2=\"344.5\" y2=\"208\" stroke=\"#2e2315\" stroke-width=\"5\"/></svg>",
   stem:"그림은 고정된 막대자석의 N극 오른쪽에 코일을 놓고 전류를 흘린 모습이다. 코일 앞쪽 도선에는 전류가 아래로 흐른다. 이에 대한 설명으로 옳은 것은?",
-  ch:[{t:"전류의 세기를 크게 하여도 코일이 받는 힘의 크기는 변하지 않는다.",ok:0},{t:"코일의 왼쪽 끝은 N극, 오른쪽 끝은 S극이다.",ok:0},{t:"코일의 왼쪽 끝은 S극이므로 코일은 자석 쪽(왼쪽)으로 끌려간다.",ok:1},{t:"코일과 자석 사이에는 서로 밀어내는 힘이 작용한다.",ok:0},{t:"전류의 방향을 반대로 바꾸면 코일은 자석 쪽으로 더 세게 끌려간다.",ok:0}],
-  why:"앞쪽 전류가 아래 → 오른쪽 끝 N극, <b>왼쪽 끝 S극</b>. 왼쪽의 자석 N극과 마주 보므로 <b>끌려갑니다</b>(②). 전류를 반대로 하면 극이 바뀌어 <b>밀려나고</b>(④ ✗), 전류가 세지면 힘도 커집니다(⑤ ✗)."},
+  ch:[{t:"전류의 세기를 크게 하여도 코일이 받는 힘의 크기는 변하지 않는다.",ok:0},{t:"코일의 왼쪽 끝은 N극, 오른쪽 끝은 S극이다.",ok:0},{t:"코일의 왼쪽 끝은 S극이므로 코일은 자석 쪽(왼쪽)으로 끌려간다.",ok:1},{t:"코일 속에 쇠못을 넣으면 코일이 받는 힘이 작아진다.",ok:0},{t:"전류의 방향을 반대로 바꾸면 코일은 자석 쪽으로 더 세게 끌려간다.",ok:0}],
+  why:"앞쪽 전류가 아래 → 오른쪽 끝 N극, 왼쪽 끝 S극(② ✗). 왼쪽의 자석 N극과 마주 보므로 끌려갑니다(③ ○). 전류를 반대로 하면 극이 바뀌어 밀려나고(⑤ ✗), 전류가 세지면 힘도 커지며(① ✗), 쇠못을 넣으면 자기장이 세져 힘도 커집니다(④ ✗)."},
 
  {id:"t7",
   difficulty:"중",
@@ -2834,8 +2874,8 @@ function setMode(m,persist){
 function openGate(){
  const g=$('#gate');g.classList.add('show');$('#gMsg').textContent='';$('#gMsg').className='gmsg';
  const st=S.stu||stuGlobal();
- if(st){$('#gSid').value=st.sid||'';$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
- setTimeout(()=>$('#gSid').focus(),50);
+ if(st){$('#gSid').value=st.sid||'';if(window.gateSetSid)window.gateSetSid(st.sid||'');$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
+ setTimeout(()=>{const g=$('#gGrade');(g||$('#gName')).focus();},50);
 }
 function closeGate(){$('#gate').classList.remove('show');}
 function afterJoin(msg){
@@ -2847,12 +2887,12 @@ function afterJoin(msg){
 }
 $('#gCancel').addEventListener('click',closeGate);
 $('#gate').addEventListener('click',e=>{if(e.target===$('#gate'))closeGate();});
-['gSid','gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
+['gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
 $('#gGo').addEventListener('click',async()=>{
  const sid=$('#gSid').value.replace(/[^0-9]/g,''), name=$('#gName').value.trim(), code=$('#gCode').value.trim().toUpperCase();
  const msg=$('#gMsg');const say=(t,c)=>{msg.innerHTML=t;msg.className='gmsg '+(c||'');};
- if(!/^\d{4,6}$/.test(sid)){say('학번은 숫자 4~6자리로 써 주세요 — 예: 2학년 3반 15번 → <b>20315</b>','err');$('#gSid').focus();return;}
- if(name.length<1){say('이름을 써 주세요','err');$('#gName').focus();return;}
+ if(!/^\d{4,6}$/.test(sid)){say('학년·반·번호를 모두 골라 주세요','err');const g=$('#gGrade');if(g)g.focus();return;}
+ if(name.length<1&&!code){say('이름을 써 주세요','err');$('#gName').focus();return;}
  if(code.length<3){say('참여 코드를 써 주세요. 코드가 없으면 아래 <b>🔓 코드 없이 혼자 탐구</b>를 누르세요','err');$('#gCode').focus();return;}
  $('#gGo').disabled=true;say('확인하는 중…');
  try{
@@ -3447,16 +3487,37 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('gui
       msg.innerHTML='먼저 <b>스위치를 닫아</b> 보세요. 그다음 자석의 극과 전류의 방향을 바꿔 가며 <b>네 가지 조합</b>을 모두 기록해 봅시다.';
     }
   }
-  $('#labRec').addEventListener('click',()=>{
-    if(!ON){toast('스위치를 닫아야 코일의 움직임을 관찰할 수 있어요 🔘','bad');return;}
-    /* 같은 조합이라도 전류의 세기가 다르면 따로 한 줄 — 세기와 힘의 크기 관계를 표에서 읽게 한다 */
-    S.rows=S.rows.filter(r=>!(r.m===M&&r.c===CDIR&&(r.i||2)===I));
-    S.rows.push({m:M,c:CDIR,i:I});
+  /* ── 👀 자료 수집 — 관찰한 것을 학생이 고른다 ── */
+ (function(){
+ const q=$('#obsQ'), bs=$('#obsBtns'), ms=$('#obsMsg');
+ function close(){$('#obsIn').hidden=true;ms.textContent='';ms.className='obs-msg';}
+ window.obsClose=close;
+ $('#labRec').addEventListener('click',()=>{
+  if(!ON){toast('스위치를 닫아야 코일의 움직임을 관찰할 수 있어요 🔘','bad');return;}
+  const CTX={m:M,c:CDIR,i:I};
+  q.innerHTML='지금 조건 — 자석 <b>'+M+'극</b> · 전류 <b>'+CUR_NAME[CDIR]+'</b> · 세기 <b>'+I_NAME[I]+'</b><br>코일이 <b>어떻게 움직였나요?</b> 실험대를 보고 고르세요.';
+  const opts=['자석 쪽으로 끌려감','자석에서 밀려남'], ans=moveName(M,CDIR);
+  bs.innerHTML='';
+  opts.forEach(o=>{const b=document.createElement('button');b.textContent=o;
+   b.addEventListener('click',()=>{
+    if(o!==ans){
+     ms.className='obs-msg err';const _h=(o.match(/[가-힣]/g)||[]).pop()||'',_j=_h&&((_h.charCodeAt(0)-0xAC00)%28)?'이':'가';
+     ms.innerHTML='<b>'+o+'</b> '+_j+' 맞나요? 실험대를 <b>다시 한 번</b> 보고 고르세요.';
+     b.classList.add('shakex');setTimeout(()=>b.classList.remove('shakex'),460);
+     A.wrong&&A.wrong();return;}
+    close();
+    S.rows=S.rows.filter(r=>!(r.m===CTX.m&&r.c===CTX.c&&(r.i||2)===CTX.i));
+    S.rows.push({m:CTX.m,c:CTX.c,i:CTX.i});
     save();paintTable();judge();updateProgress();A.pop();
-    toast(`기록! 자석 ${M}극 · 전류 ${CUR_NAME[CDIR]} · 세기 ${I_NAME[I]} → ${moveName(M,CDIR)}`,'good');
-  });
+    toast('관찰한 대로 표에 넣었어요 — <b>'+ans+'</b>','good');
+   });
+   bs.appendChild(b);});
+  ms.textContent='';ms.className='obs-msg';
+  $('#obsIn').hidden=false;
+ });
+ })();
   $('#labClear').addEventListener('click',()=>{
-    S.rows=[];save();paintTable();judge();updateProgress();A.pop();});
+    S.rows=[];window.obsClose&&obsClose();save();paintTable();judge();updateProgress();A.pop();});
   $('#labTable').addEventListener('click',e=>{
     const d=e.target.closest('[data-del]');if(!d)return;
     const parts=d.dataset.del.split('|');
@@ -4189,6 +4250,97 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('gui
  pin();
  document.addEventListener('DOMContentLoaded',pin);
  addEventListener('load',pin);
+})();
+</script>
+<script id="gate-class-js">
+/* 🎒 관문 — 학년·반·번호 드롭다운 */
+(function(){
+ const G=document.getElementById('gGrade'), C=document.getElementById('gClass'),
+       N=document.getElementById('gNum'),   S=document.getElementById('gSid');
+ if(!G||!C||!N||!S)return;
+ let CLASSES=[{g:1,c:5,n:40},{g:1,c:6,n:40}].concat(Array.from({length:12},(_,i)=>({g:2,c:i+1,n:40})));
+
+ const opt=(v,t)=>{const o=document.createElement('option');o.value=v;o.textContent=t;return o;};
+ function grades(){
+  const gs=[...new Set(CLASSES.map(x=>x.g))].sort();
+  G.innerHTML=''; G.appendChild(opt('','학년'));
+  gs.forEach(g=>G.appendChild(opt(g,g+'학년')));
+ }
+ function classes(){
+  const g=+G.value; C.innerHTML=''; C.appendChild(opt('','반'));
+  if(!g)return;
+  CLASSES.filter(x=>x.g===g).sort((a,b)=>a.c-b.c).forEach(x=>C.appendChild(opt(x.c,x.c+'반')));
+ }
+ function nums(){
+  const g=+G.value, c=+C.value; N.innerHTML=''; N.appendChild(opt('','번호'));
+  if(!g||!c)return;
+  const row=CLASSES.find(x=>x.g===g&&x.c===c);
+  const max=Math.max((row&&row.n)||0,30);
+  for(let i=1;i<=max;i++)N.appendChild(opt(i,i+'번'));
+ }
+ function sync(){
+  const g=G.value,c=C.value,n=N.value;
+  S.value=(g&&c&&n)?(g+String(c).padStart(2,'0')+String(n).padStart(2,'0')):'';
+  const w=document.getElementById('gWho');
+  if(w)w.innerHTML=S.value?('학번 <b>'+S.value+'</b> 으로 시작합니다'):'';
+ }
+ G.addEventListener('change',()=>{classes();nums();sync();});
+ C.addEventListener('change',()=>{nums();sync();});
+ N.addEventListener('change',sync);
+
+ grades(); classes(); nums();
+
+ /* 저장된 학번이 있으면 드롭다운을 그대로 맞춰 준다 */
+ window.gateSetSid=function(sid){
+  sid=String(sid||'').replace(/[^0-9]/g,'');
+  let g,c,n;
+  if(/^[1-9]\d{4}$/.test(sid)){g=+sid[0];c=+sid.slice(1,3);n=+sid.slice(3,5);}
+  else if(/^[1-9]\d{3}$/.test(sid)){g=+sid[0];c=+sid[1];n=+sid.slice(2,4);}
+  else {G.value='';classes();nums();sync();return;}
+  if(!CLASSES.some(x=>x.g===g))CLASSES.push({g:g,c:c,n:40});
+  else if(!CLASSES.some(x=>x.g===g&&x.c===c))CLASSES.push({g:g,c:c,n:40});
+  grades(); G.value=g; classes(); C.value=c; nums(); N.value=n; sync();
+ };
+
+ /* 명렬이 있으면 진짜 학급으로 갈아 끼운다 (없어도 그대로 동작) */
+ (async function(){
+  try{
+   if(typeof OHM==='undefined'||!OHM.rpc)return;
+   const d=await OHM.rpc('ohm_roster_classes',{});
+   if(Array.isArray(d)&&d.length){
+    CLASSES=d.map(x=>({g:+x.g,c:+x.c,n:+x.n||40}));
+    const keep=S.value; grades(); classes(); nums();
+    if(keep)window.gateSetSid(keep);
+   }
+  }catch(e){/* 명렬 없이도 그대로 씁니다 */}
+ })();
+})();
+</script>
+<script id="sim-deeplink">
+/* 🔗 ?tab=탭id(&to=요소id) 로 열면 표지를 건너뛰고 그 탭을 바로 보여 준다 — 시뮬레이터 모음에서 씀 */
+(function(){
+ try{
+  var q=new URLSearchParams(location.search), tab=q.get('tab'), to=q.get('to');
+  if(!tab) return;
+  function go(){
+   try{
+    var c=document.getElementById('cover'); if(c) c.classList.add('hide');
+    document.body.classList.remove('cover-on');
+    if(typeof S!=='undefined'&&S){ S.entered=true; }
+    if(typeof showTab==='function') showTab(tab,true,true);
+    else{
+      document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('show',p.id==='panel-'+tab);});
+      document.querySelectorAll('#tabNav button').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});
+    }
+    if(to){ var e=document.getElementById(to); if(e) setTimeout(function(){e.scrollIntoView({block:'center'});},150); }
+    if(typeof showTab==='function') done=true;
+   }catch(e){}
+  }
+  var done=false;
+  /* 스크립트가 본문에 인라인이라 DOM 준비 즉시 실행 — 폰트·CDN 기다리느라 표지가 잠깐 보이는 것을 막는다. load 는 예비. */
+  if(document.readyState!=='loading') setTimeout(go,30); else document.addEventListener('DOMContentLoaded',function(){setTimeout(go,30);});
+  window.addEventListener('load',function(){ if(!done) setTimeout(go,60); });
+ }catch(e){}
 })();
 </script>
 </body>
