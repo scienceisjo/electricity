@@ -2330,7 +2330,7 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT">
  <div class="gbox">
  <h3 id="gateT">🎯 혼자 탐구 시작하기</h3>
- <div class="gsub">학년·반·번호를 고르세요. 선생님이 알려 준 <b>참여 코드</b>가 있으면 쓴 글이 선생님에게 전해지고, 코드가 없어도 <b>이 기기에만 저장</b>하며 끝까지 할 수 있어요. 한 번 넣으면 다른 차시도 그대로 이어집니다.</div>
+ <div class="gsub">학년·반·번호를 고르세요. <b>질문나무 비밀번호</b>로 로그인하면 쓴 글이 선생님에게 전해지고(허브에서 로그인했으면 이 창이 안 떠요), 코드가 없어도 <b>이 기기에만 저장</b>하며 끝까지 할 수 있어요. 한 번 넣으면 다른 차시도 그대로 이어집니다.</div>
  <label for="gGrade">학년 · 반 · 번호</label>
  <div class="grow3">
   <select id="gGrade" aria-label="학년"></select>
@@ -2339,12 +2339,12 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
  </div>
  <input id="gSid" type="hidden" value="">
  <div class="gwho" id="gWho"></div>
- <label for="gName">이름 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(명단에 있으면 안 써도 됩니다)</span></label>이름</label>
+ <label for="gName">이름 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(로그인하면 자동 · 코드 없이 할 때만 씁니다)</span></label>이름</label>
  <input id="gName" maxlength="12" placeholder="홍길동" autocomplete="off">
- <label for="gCode">참여 코드 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(선생님이 알려 준 숫자 · 없으면 비워 두세요)</span></label>
- <input id="gCode" inputmode="numeric" maxlength="12" placeholder="선생님이 알려 준 숫자" data-ime="off" autocomplete="off" style="letter-spacing:.08em">
+ <label for="gPw">비밀번호 <span style="font-weight:400;color:var(--m-steel,#5d6c7b)">(질문나무와 같은 비밀번호)</span></label>
+ <input id="gPw" type="password" maxlength="40" placeholder="질문나무 비밀번호" data-ime="off" autocomplete="current-password">
  <div class="gmsg" id="gMsg"></div>
- <div class="gbtns"><button class="btn primary" id="gGo">코드로 시작 🎯</button><button class="btn" id="gLocal">🔓 코드 없이 혼자 탐구</button><button class="btn ghost" id="gCancel">취소</button></div>
+ <div class="gbtns"><button class="btn primary" id="gGo">로그인하고 시작 🎯</button><button class="btn" id="gLocal">🔓 코드 없이 혼자 탐구</button><button class="btn ghost" id="gCancel">취소</button></div>
  <div class="gnote">코드 없이 하면 서버에 기록되지 않아요. 다 마친 뒤 오른쪽 위 📄 버튼으로 <b>학습 결과를 PDF</b>로 저장해 선생님께 내세요. 참여 코드 없이 <b>🧑‍🏫 강의식</b>으로도 모든 내용을 볼 수 있어요.</div>
  </div>
 </div>
@@ -2646,7 +2646,7 @@ function setMode(m,persist){
 function openGate(){
  const g=$('#gate');g.classList.add('show');$('#gMsg').textContent='';$('#gMsg').className='gmsg';
  const st=S.stu||stuGlobal();
- if(st){$('#gSid').value=st.sid||'';if(window.gateSetSid)window.gateSetSid(st.sid||'');$('#gName').value=st.name||'';$('#gCode').value=st.code||'';}
+ if(st){$('#gSid').value=st.sid||'';if(window.gateSetSid)window.gateSetSid(st.sid||'');$('#gName').value=st.name||'';}
  setTimeout(()=>{const g=$('#gGrade');(g||$('#gName')).focus();},50);
 }
 function closeGate(){$('#gate').classList.remove('show');}
@@ -2659,27 +2659,30 @@ function afterJoin(msg){
 }
 $('#gCancel').addEventListener('click',closeGate);
 $('#gate').addEventListener('click',e=>{if(e.target===$('#gate'))closeGate();});
-['gName','gCode'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
+['gName','gPw'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#gGo').click();}));
 $('#gGo').addEventListener('click',async()=>{
- const sid=$('#gSid').value.replace(/[^0-9]/g,''), name=$('#gName').value.trim(), code=$('#gCode').value.trim().toUpperCase();
+ const sid=$('#gSid').value.replace(/[^0-9]/g,''), pw=$('#gPw').value;
  const msg=$('#gMsg');const say=(t,c)=>{msg.innerHTML=t;msg.className='gmsg '+(c||'');};
  if(!/^\d{4,6}$/.test(sid)){say('학년·반·번호를 모두 골라 주세요','err');const g=$('#gGrade');if(g)g.focus();return;}
- if(name.length<1&&!code){say('이름을 써 주세요','err');$('#gName').focus();return;}
- if(code.length<3){say('참여 코드를 써 주세요. 코드가 없으면 아래 <b>🔓 코드 없이 혼자 탐구</b>를 누르세요','err');$('#gCode').focus();return;}
- $('#gGo').disabled=true;say('확인하는 중…');
+ if(!pw){say('비밀번호를 써 주세요 (질문나무와 같아요). 계정이 없으면 아래 <b>🔓 코드 없이 혼자 탐구</b>를 누르세요','err');$('#gPw').focus();return;}
+ $('#gGo').disabled=true;say('로그인하는 중…');
  try{
-  const r=await OHM.join(code,sid,name);
+  const g=+($('#gGrade')||{}).value||+sid[0], c=+($('#gClass')||{}).value||+(sid.length===5?sid.slice(1,3):sid[1]), n=+($('#gNum')||{}).value||+sid.slice(-2);
+  await OHM.login(g,c,n,pw);
+  const r=await OHM.join();
   if(r.error){say(r.error,'err');$('#gGo').disabled=false;return;}
-  S.stu={token:r.token,sid:sid,name:name,code:code,label:r.label||''};save();
-  try{localStorage.setItem(STU_KEY,JSON.stringify({sid:sid,name:name,code:code}));}catch(e){}
-  say('✅ '+name+' 님, 환영해요!','ok');
+  S.stu={token:r.id,uid:r.uid,sid:r.sid,name:r.name};save();
+  try{localStorage.setItem(STU_KEY,JSON.stringify({sid:r.sid,name:r.name,uid:r.uid}));localStorage.setItem(MODE_KEY,'solo');}catch(e){}
+  $('#gPw').value='';
+  say('✅ '+r.name+' 님, 환영해요!','ok');
   const pulled=await OHM.pull();
   if(pulled&&pulled.state&&(pulled.progress||0)>0){
    const mine=progChecks().filter(x=>x.ok).length;
    if(pulled.progress>mine&&confirm('이전에 하던 기록('+pulled.progress+'단계 완료)이 서버에 있어요. 불러올까요?\n(이 기기의 기록은 덮어씁니다)'))OHM.restore(pulled.state);
   }
+  OHM.applyRevisions();
   afterJoin('🎯 <b>혼자 탐구 시작!</b> 미션 1부터 하나씩 깨 보세요 — 쓴 글은 선생님에게 전해집니다');
- }catch(e){say('연결에 실패했어요 — 인터넷을 확인하고 다시 눌러 주세요 ('+(e&&e.message||e)+')','err');$('#gGo').disabled=false;}
+ }catch(e){say(String(e&&e.message||e),'err');$('#gGo').disabled=false;}
 });
 $('#gLocal').addEventListener('click',()=>{
  const sid=$('#gSid').value.replace(/[^0-9]/g,''), name=$('#gName').value.trim();
@@ -2694,16 +2697,47 @@ $('#gLocal').addEventListener('click',()=>{
 
 /* ── ☁️ 서버 기록 (Supabase · 선생님) — 표는 RPC 로만. 코드 없이(local)면 아무것도 보내지 않는다 ── */
 const OHM={
- url:'https://vbvtnmnodeoocbbjauap.supabase.co',
- key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZidnRubW5vZGVvb2NiYmphdWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTQ0OTYsImV4cCI6MjA5NTA3MDQ5Nn0.dvuRrt3qw2Tya_QwGbcXrmGPdfDgI4xmgyH8UjU73Nc',
+ url:'https://hmzklbrksfdhzsgwzfyg.supabase.co',
+ key:'sb_publishable_OFVhbjVPbJiMWXVz2nKQuw_m6RmVVZE',
  page:'elec-power', sb:null, timer:null, last:'', busy:false, dirty:false,
- client(){if(this.sb)return this.sb;if(!window.supabase||!window.supabase.createClient)return null;this.sb=window.supabase.createClient(this.url,this.key,{auth:{persistSession:false}});return this.sb;},
+ client(){if(this.sb)return this.sb;if(!window.supabase||!window.supabase.createClient)return null;this.sb=window.supabase.createClient(this.url,this.key,{auth:{persistSession:true,autoRefreshToken:true}});return this.sb;},
  device(){try{let d=localStorage.getItem('elec_device');if(!d){d=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('elec_device',d);}return d;}catch(e){return 'na';}},
  async rpc(name,args){const c=this.client();if(!c)throw new Error('supabase 라이브러리를 불러오지 못했어요');const r=await c.rpc(name,args);if(r.error)throw new Error(r.error.message||String(r.error));return r.data;},
- async join(code,sid,name){
-  try{const d=await this.rpc('ohm_join',{p_code:code,p_sid:sid,p_name:name,p_page:this.page,p_device:this.device()});
-   if(!d||d.error)return {error:(d&&d.error)||'참여 코드를 확인해 주세요'};return d;}
-  catch(e){const m=String(e.message||e);if(/function .*ohm_join|404|not find/i.test(m))return {error:'선생님이 아직 서버(참여 코드)를 준비하지 않았어요. 「코드 없이 혼자 탐구」나 강의식으로 보세요.'};return {error:'연결 오류 — '+m};}
+ /* 로그인(학년·반·번호 + 질문나무 비밀번호) — 세션은 허브·질문나무·도장판과 같은 키에 저장된다 */
+ async login(g,c,n,pw){
+  const cl=this.client();if(!cl)throw new Error('supabase 라이브러리를 불러오지 못했어요');
+  const email='s'+(+g)+'_'+(+c)+'_'+(+n)+'@haenuri.app';
+  const r=await cl.auth.signInWithPassword({email:email,password:pw});
+  if(r.error)throw new Error(/invalid|credential/i.test(r.error.message)?'학년·반·번호 또는 비밀번호가 맞지 않아요':r.error.message);
+  return r.data.session;
+ },
+ async session(){const cl=this.client();if(!cl)return null;try{const r=await cl.auth.getSession();return (r.data&&r.data.session)||null;}catch(e){return null;}},
+ /* 참여: 로그인돼 있으면 내 (차시) 줄을 만들거나 이어 붙인다 */
+ async join(){
+  try{const d=await this.rpc('solo_join',{p_page:this.page,p_device:this.device()});
+   if(!d||d.error)return {error:(d&&d.error)||'참여하지 못했어요'};return d;}
+  catch(e){const m=String(e.message||e);
+   if(/function .*solo_join|404|not find|PGRST202/i.test(m))return {error:'선생님이 아직 서버를 준비하지 않았어요. 「코드 없이 혼자 탐구」나 강의식으로 보세요.'};
+   if(/JWT|not authenticated|auth|401/i.test(m))return {error:'로그인이 풀렸어요. 다시 로그인해 주세요.'};
+   return {error:'연결 오류 — '+m};}
+ },
+ /* 제출한 글의 판본을 남긴다 (선생님 피드백은 이 판본에 붙는다) */
+ async submit(key,text,label){
+  if(!S.stu||!S.stu.token||S.stu.local)return;
+  try{await this.rpc('solo_submit',{p_page:this.page,p_key:key,p_label:label||key,p_text:text});}catch(e){console.warn('[제출 기록]',e);}
+ },
+ /* 허브에서 고쳐 쓴 답을 페이지에 반영 */
+ async applyRevisions(){
+  if(!S.stu||!S.stu.token||S.stu.local)return;
+  const st=await this.pull();if(!st||!st.revised)return;
+  const rv=st.revised, seen=+(S.revSeen||0);let mx=seen,n=0;
+  Object.keys(rv).forEach(k=>{const it=rv[k]||{},ts=+it.t||0;if(ts<=seen)return;const text=String(it.text||'');
+   S.sub=S.sub||{};S.subTxt=S.subTxt||{};S.sub[k]=1;S.subTxt[k]=text;
+   if(S.think&&(k in S.think))S.think[k]=text;if(k==='concl'&&'concl' in S)S.concl=text;if(k==='essay'&&'essay' in S)S.essay=text;
+   const ta=document.querySelector('textarea[data-think="'+k+'"],textarea[data-essay="'+k+'"]')||document.getElementById(k);
+   if(ta&&ta.tagName==='TEXTAREA'){ta.value=text;}
+   mx=Math.max(mx,ts);n++;});
+  if(n){S.revSeen=mx;save();try{if(typeof paintAll==='function')paintAll();}catch(e){}toast('허브에서 고쳐 쓴 답 '+n+'개를 가져왔어요 ✍️');}
  },
  snapshot(){
   const c=progChecks(), done=c.filter(x=>x.ok).length, texts={};
@@ -2720,20 +2754,23 @@ const OHM={
   if(!S.stu||!S.stu.token||this.busy)return;
   const snap=this.snapshot(), js=JSON.stringify(snap);if(js===this.last){this.dirty=false;return;}
   this.busy=true;
-  try{await this.rpc('ohm_save',{p_token:S.stu.token,p_state:snap,p_progress:snap.progress,p_pct:snap.pct,p_tab:S.tab||''});this.last=js;this.dirty=false;this.paintCloud('ok');}
+  try{await this.rpc('solo_save',{p_page:this.page,p_state:snap,p_progress:snap.progress,p_pct:snap.pct,p_tab:S.tab||''});this.last=js;this.dirty=false;this.paintCloud('ok');}
   catch(e){this.paintCloud('err');console.warn('[기록 저장]',e);}
   finally{this.busy=false;if(this.dirty)this.touch();}
  },
- async pull(){if(!S.stu||!S.stu.token)return null;try{return await this.rpc('ohm_pull',{p_token:S.stu.token});}catch(e){return null;}},
+ async pull(){if(!S.stu||!S.stu.token)return null;try{return await this.rpc('solo_pull',{p_page:this.page});}catch(e){return null;}},
  restore(st){if(!st)return;const src=st.s||st;Object.keys(src).forEach(k=>{if(k!=='stu'&&src[k]!==undefined&&src[k]!==null)S[k]=src[k];});save();location.reload();},
  paintCloud(k){const bd=$('#stuBadge');if(!bd||!S.stu||S.stu.local)return;bd.textContent=(k==='ok'?'☁️ ':k==='err'?'⚠️ ':'🎒 ')+S.stu.sid+' '+S.stu.name;bd.title=k==='ok'?'서버에 저장됨':k==='err'?'서버 저장 실패 — 이 기기에는 저장돼 있어요':'';},
  /* 다른 차시에서 이미 참여했으면 여기서는 조용히 이어 붙인다 (코드 없이도) */
  async autoJoin(){
-  const g=stuGlobal();if(!g||joined())return false;
-  if(g.local){S.stu={local:1,sid:g.sid||'',name:g.name};save();paintMode();return true;}
-  const r=await this.join(g.code,g.sid,g.name);
-  if(r.error)return false;
-  S.stu={token:r.token,sid:g.sid,name:g.name,code:g.code,label:r.label||''};save();paintMode();return true;
+  if(joined())return false;
+  const g=stuGlobal();
+  if(g&&g.local&&!(await this.session())){S.stu={local:1,sid:g.sid||'',name:g.name};save();paintMode();return true;}
+  if(!(await this.session()))return false;
+  const r=await this.join();if(r.error)return false;
+  S.stu={token:r.id,uid:r.uid,sid:r.sid,name:r.name};save();paintMode();
+  try{localStorage.setItem(STU_KEY,JSON.stringify({sid:r.sid,name:r.name,uid:r.uid}));}catch(e){}
+  this.applyRevisions();return true;
  }
 };
 (function(){const _save=save;window.save=function(){_save();try{OHM.touch();}catch(e){}};})();
@@ -2742,12 +2779,13 @@ addEventListener('pagehide',()=>{if(OHM.dirty)OHM.flush();});
 (function(){
  const want=(function(){try{return localStorage.getItem(MODE_KEY);}catch(e){return null;}})();
  setMode(want==='solo'&&joined()?'solo':'lecture',false);
- if(want==='solo'&&!joined()&&stuGlobal()){OHM.autoJoin().then(ok=>{if(ok){setMode('solo');toast('🎯 <b>'+S.stu.name+'</b> 님, 혼자 탐구로 이어서 갑니다');}});}
+ if(S.stu&&S.stu.token&&!S.stu.uid&&!S.stu.local){delete S.stu;save();}   /* 옛 서버(A) 참여 기록 — 계정으로 다시 참여 */
+ if(S.stu&&S.stu.local&&localStorage.getItem('sb-hmzklbrksfdhzsgwzfyg-auth-token')){delete S.stu;save();}   /* 코드 없이 하다가 로그인했으면 계정으로 — 이 기기 기록은 그대로 서버에 올라간다 */
+ if(want==='solo'&&!joined()){setTimeout(()=>OHM.autoJoin().then(ok=>{if(ok){setMode('solo');toast('🎯 <b>'+S.stu.name+'</b> 님, 혼자 탐구로 이어서 갑니다');}}),0);}
  $('#modeBtn').addEventListener('click',()=>{
   if(soloOn()){if(!confirm('강의식(전부 개방)으로 바꿀까요?\n미션 잠금이 풀립니다. 지금까지 쓴 글은 그대로 남아요.'))return;setMode('lecture');toast('🧑‍🏫 <b>강의식</b> — 모든 단계가 열려 있어요');}
   else if(joined()){setMode('solo');toast('🎯 <b>혼자 탐구</b> — '+S.stu.name+' 님, 미션을 하나씩 깨며 나아가요!');}
-  else if(stuGlobal()){OHM.autoJoin().then(ok=>{if(ok){setMode('solo');toast('🎯 <b>혼자 탐구</b> — '+S.stu.name+' 님, 이어서 갑니다');}else openGate();});}
-  else openGate();
+  else {OHM.autoJoin().then(ok=>{if(ok){setMode('solo');toast('🎯 <b>혼자 탐구</b> — '+S.stu.name+' 님, 이어서 갑니다');}else openGate();});}
  });
 })();
 
@@ -2870,9 +2908,11 @@ addEventListener('pagehide',()=>{if(OHM.dirty)OHM.flush();});
   const w=I.fixWidth(raw);
   if(w!==raw)chip(anchor,'글자가 깨져 있었어요. 이렇게 고친 게 맞나요?',w,'네, 이걸로 제출','원래대로 제출',()=>step2(w),()=>step2(raw));else step2(raw);
  }
+const labelOf=key=>{try{const ta=document.querySelector('textarea[data-think="'+key+'"],textarea[data-essay="'+key+'"]')||document.getElementById(key);const box=ta&&(ta.closest('.think,.card,.q,.block,section'));const h=box&&box.querySelector('h2,h3,h4,.card-t,.qt,label,.lab');return (h?h.textContent:key).replace(/\s+/g,' ').trim().slice(0,80)||key;}catch(e){return key;}};
+
  function apply(key,text){
   const ta=taOf(key);if(ta){ta.value=text;ta.dispatchEvent(new Event('input',{bubbles:true}));}
-  S.sub[key]=1;S.subTxt[key]=text;save();updateProgress();paintAll();A.correct();
+  S.sub[key]=1;S.subTxt[key]=text;save();updateProgress();paintAll();A.correct();try{OHM.submit(key,text,labelOf(key));}catch(e){}
   toast('📮 <b>제출했어요!</b>'+(S.stu&&S.stu.token?' 선생님에게 전해집니다':' 이 기기에 저장됐어요'));
  }
  function paintAll(){

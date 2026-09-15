@@ -122,35 +122,52 @@ td.num,th.num{text-align:right;font-family:var(--mono)}
 .cls-panel .st .bar{flex:1;min-width:44px}
 .cls-panel .st .mini{display:inline-flex;gap:3px}
 .cls-panel .st .mini .btn{padding:2px 8px;font-family:var(--mono);font-size:12px}
+.fbx{margin-top:8px;border:1px dashed var(--hair);border-radius:12px;padding:10px 12px;background:#fafbfc}
+.fbx .ver{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px dotted var(--line);font-size:13.5px}
+.fbx .ver:first-child{border-top:0}
+.fbx .ver .vn{font-family:var(--mono);font-size:11.5px;color:var(--ink-mute);min-width:88px;white-space:nowrap}
+.fbx .ver .vt{white-space:pre-wrap;word-break:break-word;flex:1;line-height:1.6}
+.fbx .ver.fb{background:#fff7e0;border-radius:8px;padding:7px 9px;border-top:0}
+.fbx .ver.fb .vn{color:var(--warn)}
+ins{background:#dcf5e3;text-decoration:none;color:#0f6b2b;border-radius:3px;padding:0 1px}
+del{background:#ffe0e6;color:#a0142c;border-radius:3px;padding:0 1px}
+.fbx textarea{font-family:var(--body);font-size:14px;width:100%;min-height:58px;border:1px solid var(--hair);border-radius:10px;padding:8px 10px;resize:vertical;margin-top:6px}
+.fbx .fbrow{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.fbx .st{font-size:12px;color:var(--ink-mute)}
+.fbx .st b{color:var(--ink)}
+.fbtbl td.tx{white-space:pre-wrap;word-break:break-word;font-size:13.5px;line-height:1.55;max-width:320px}
+.fbtbl td.stt{white-space:nowrap;font-size:12.5px}
+.tag.acc{background:#e8f0fc;color:var(--accent-deep)}.tag.noacc{background:#fff2cc;color:#7a5200}
 #app-credit{margin-top:40px;text-align:center;font-size:12.5px;color:var(--ink-mute);border-top:1px solid var(--line);padding-top:20px}
 </style>
 </head>
 <body>
 <header>
- <div><h1>📊 학생 기록 보기 — 전기와 자기 · 혼자 탐구</h1><div class="sub">전기와 자기 · 기체의 성질 · 별과 우주 모든 차시가 이 표 하나에 · 표를 직접 읽는 길은 없고 관리 코드로만 열립니다</div></div>
+ <div><h1>📊 학생 기록 보기 — 전기와 자기 · 혼자 탐구</h1><div class="sub">전기와 자기 · 기체의 성질 · 별과 우주 모든 차시가 이 표 하나에 · 질문나무 프로젝트에 계정 기준으로 저장 · 교사 계정으로만 열립니다</div></div>
  <a href="index.html">← 단원 허브로</a>
 </header>
 <main>
- <div class="card">
- <h2>🔑 관리 코드</h2>
- <div class="row">
- <input id="adm" placeholder="관리 코드 10자리 (SQL 실행 결과창에 나온 코드)" maxlength="12" style="min-width:320px;text-transform:uppercase;letter-spacing:.08em" autocomplete="off">
- <button class="btn cta" id="admGo">불러오기</button>
- <label style="font-size:13px;color:var(--ink-mute)"><input type="checkbox" id="admKeep" checked style="height:auto;padding:0;vertical-align:middle"> 이 기기에 기억</label>
+
+ <div class="card" id="loginCard">
+ <h2>🔑 교사 로그인 <span class="r" id="whoami"></span></h2>
+ <div class="row" id="loginRow">
+ <input id="tEmail" type="email" placeholder="교사 이메일 (칭찬 도장판·진도 트래커와 같은 계정)" style="min-width:300px" autocomplete="username">
+ <input id="tPw" type="password" placeholder="비밀번호" style="min-width:180px" autocomplete="current-password">
+ <button class="btn cta" id="tGo">로그인</button>
+ <button class="btn ghost" id="tOut" hidden>로그아웃</button>
  </div>
- <div class="msg" id="admMsg">코드를 넣고 불러오기를 누르세요.</div>
+ <div class="msg" id="admMsg">교사 계정으로 로그인하면 모든 학생 기록이 보입니다. 학생은 자기 기록만 볼 수 있어요.</div>
  </div>
 
- <div class="card" id="codesCard" hidden>
- <h2>🎟️ 참여 코드 <span class="r"><input id="newCustom" placeholder="원하는 코드 (숫자·영문 3~12자)" maxlength="12" style="width:160px;letter-spacing:.06em" autocomplete="off"><input id="newLabel" placeholder="이름표 (예: 2-3반)" maxlength="40" style="width:150px"><input id="newDays" type="number" value="120" min="1" max="365" style="width:84px" title="유효 기간(일)"><button class="btn cta sm" id="addCode">+ 이 코드로 발급</button><button class="btn ghost sm" id="newCode">🎲 무작위 코드</button></span></h2>
- <div class="note">학생은 수업 페이지 오른쪽 위 🎯 버튼 → <b>학번·이름·참여 코드</b>를 넣습니다(숫자 코드가 치기 쉬워요). 한 기기에서 한 번 넣으면 다른 차시·다른 단원도 자동으로 이어집니다. <b>코드 없이 혼자 탐구</b>한 학생은 서버에 남지 않고 📄 PDF로 제출합니다. 코드를 끄면 그 코드로는 더 저장되지 않아요(있는 기록은 남습니다). 삭제하면 그 코드의 학생 기록도 함께 지워집니다.</div>
- <div class="tbl-wrap"><table id="codesTbl"><thead><tr><th>코드</th><th>이름표</th><th>상태</th><th class="num">기록 수</th><th>마지막 저장</th><th>기한</th><th></th></tr></thead><tbody></tbody></table></div>
- <div class="msg" id="codesMsg"></div>
+ <div class="card" id="importCard" hidden>
+ <h2>📦 옛 서버(A 프로젝트)에서 옮겨오기 <span class="r"><input id="admA" placeholder="A 관리 코드 10자리" maxlength="12" style="width:220px;text-transform:uppercase;letter-spacing:.08em" autocomplete="off"><button class="btn sm" id="importGo">옮겨오기</button></span></h2>
+ <div class="note">지난 학기부터 A 프로젝트(코드 8314)에 쌓인 기록을 이쪽으로 가져옵니다. 학년·반·번호로 계정을 찾아 붙이고, 못 찾은 줄은 <b>⚠️ 계정 없음</b>으로 두었다가 그 학생이 처음 로그인할 때 저절로 붙어요. 제출했던 글은 판본 1이 됩니다. 여러 번 눌러도 안전합니다(진행률이 더 높은 쪽만 남음).</div>
+ <div class="msg" id="importMsg"></div>
  </div>
 
  <div class="card" id="stuCard" hidden>
- <h2>🎒 학생 기록 <span class="r"><div class="seg" id="viewSeg" title="보기 방식"><button data-v="table" class="on">☰ 표</button><button data-v="cards">▦ 카드</button><button data-v="board">▥ 보드</button><button data-v="classes">🏫 반별</button></div><select id="unitSel"><option value="">모든 단원</option></select><select id="pageSel"><option value="">모든 차시</option></select><select id="classSel"><option value="">모든 반</option></select><select id="codeSel"><option value="">모든 코드</option></select><button class="btn ghost sm" id="reload">↻ 새로고침</button><button class="btn sm" id="csv">⬇️ CSV 내려받기</button></span></h2>
- <div class="tbl-wrap" id="viewTable"><table id="stuTbl"><thead><tr><th>차시</th><th>코드</th><th>학번</th><th>이름</th><th>진행</th><th class="num">%</th><th>현재 탭</th><th class="num">제출</th><th>확인문제 <small>첫시도 정답/응답 · 최고점</small></th><th>마지막 저장</th><th></th></tr></thead><tbody></tbody></table></div>
+ <h2>🎒 학생 기록 <span class="r"><div class="seg" id="viewSeg" title="보기 방식"><button data-v="table" class="on">☰ 표</button><button data-v="cards">▦ 카드</button><button data-v="board">▥ 보드</button><button data-v="classes">🏫 반별</button></div><select id="unitSel"><option value="">모든 단원</option></select><select id="pageSel"><option value="">모든 차시</option></select><select id="classSel"><option value="">모든 반</option></select><select id="codeSel"><option value="">계정 전체</option><option value="🎒">🎒 계정 연결됨</option><option value="⚠️">⚠️ 계정 없음(옮긴 기록)</option></select><button class="btn ghost sm" id="reload">↻ 새로고침</button><button class="btn sm" id="csv">⬇️ CSV 내려받기</button></span></h2>
+ <div class="tbl-wrap" id="viewTable"><table id="stuTbl"><thead><tr><th>차시</th><th>계정</th><th>학번</th><th>이름</th><th>진행</th><th class="num">%</th><th>현재 탭</th><th class="num">제출</th><th>확인문제 <small>첫시도 정답/응답 · 최고점</small></th><th>마지막 저장</th><th></th></tr></thead><tbody></tbody></table></div>
  <div id="viewCards" class="cards" hidden></div>
  <div id="viewBoard" hidden><div class="row" style="margin-top:10px"><span class="note" style="margin:0">열 기준</span><select id="boardBy" style="height:38px;padding:5px 10px"><option value="status">진행 상태</option><option value="class">반</option><option value="page">차시</option></select></div><div class="board" id="boardCols"></div></div>
  <div id="viewClasses" hidden></div>
@@ -158,12 +175,19 @@ td.num,th.num{text-align:right;font-family:var(--mono)}
  <div class="msg" id="stuMsg"></div>
  </div>
 
+ <div class="card" id="fbCard" hidden>
+ <h2>✏️ 피드백 뒤 달라진 답 <span class="r"><select id="fbState"><option value="">전부</option><option value="wait">⏳ 아직 안 고침</option><option value="done">✏️ 고침</option><option value="unseen">👀 아직 안 봄</option></select><button class="btn ghost sm" id="fbReload">↻</button></span></h2>
+ <div class="note">피드백을 단 답마다 <b>피드백 전 답 → 피드백 → 고친 답</b>을 나란히 보여 줍니다(바뀐 낱말은 <ins>초록</ins>·<del>빨강</del>). 위 단원·차시·반 거름망이 같이 적용돼요.</div>
+ <div class="tbl-wrap"><table id="fbTbl" class="fbtbl"><thead><tr><th>학생</th><th>차시 · 답</th><th>피드백 전</th><th>💬 피드백</th><th>고친 답</th><th>상태</th></tr></thead><tbody></tbody></table></div>
+ <div class="empty" id="fbEmpty" hidden>아직 피드백을 단 답이 없어요. 학생 기록 「보기」에서 답 아래에 피드백을 쓸 수 있어요.</div>
+ </div>
+
  <div class="card" id="qaCard" hidden>
  <h2>📝 문항별 정오표 <span class="r"><span class="note" style="margin:0">차시를 하나 고르면 보여요 · ⭕ 첫 시도 정답 · 🔺 다시 풀어 맞힘 · ❌ 틀림 · ✍️ 서술형 씀 · — 아직</span></span></h2>
  <div class="tbl-wrap"><table id="qaTbl" class="qa-tbl"><thead></thead><tbody></tbody></table></div>
  </div>
 
- <div id="app-credit">제작 : 과학을 사랑하는 선생님 · 최종 업데이트 2026-09-12</div>
+ <div id="app-credit">제작 : 과학을 사랑하는 선생님 · 최종 업데이트 2026-09-16</div>
 </main>
 
 <div class="detail" id="detail"><div class="box">
@@ -174,9 +198,12 @@ td.num,th.num{text-align:right;font-family:var(--mono)}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 <script>
 "use strict";
-const URL_='https://vbvtnmnodeoocbbjauap.supabase.co';
-const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZidnRubW5vZGVvb2NiYmphdWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTQ0OTYsImV4cCI6MjA5NTA3MDQ5Nn0.dvuRrt3qw2Tya_QwGbcXrmGPdfDgI4xmgyH8UjU73Nc';
-const sb=window.supabase.createClient(URL_,KEY,{auth:{persistSession:false}});
+const URL_='https://hmzklbrksfdhzsgwzfyg.supabase.co';
+const KEY='sb_publishable_OFVhbjVPbJiMWXVz2nKQuw_m6RmVVZE';
+const sb=window.supabase.createClient(URL_,KEY);   /* 기본 저장 키 — 허브·질문나무·도장판과 세션을 나눠 쓴다 */
+/* 옛 서버(A) — 옮겨오기에만 쓴다 */
+const A_URL='https://vbvtnmnodeoocbbjauap.supabase.co', A_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZidnRubW5vZGVvb2NiYmphdWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTQ0OTYsImV4cCI6MjA5NTA3MDQ5Nn0.dvuRrt3qw2Tya_QwGbcXrmGPdfDgI4xmgyH8UjU73Nc';
+let sbA=null;const clientA=()=>sbA||(sbA=window.supabase.createClient(A_URL,A_KEY,{auth:{persistSession:false}}));
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtT=t=>{if(!t)return '—';const d=new Date(t);return d.toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});};
@@ -189,17 +216,18 @@ const PAGES={
 const pageName=k=>PAGES[k]?PAGES[k][1]:k, pageUnit=k=>PAGES[k]?PAGES[k][0]:(String(k).split('-')[0]);
 const TEXT_LABEL={askTa:'나의 질문/생각',emRule:'표에서 찾은 규칙',essay:'사고력·블록 답',labRule:'실험 규칙',blockAns:'블록 질문 답',ruleTa:'표에서 찾은 규칙',ruleTxt:'표에서 찾은 규칙',conclTa:'나의 결론',conclTaFs:'(전체 화면 결론 메모)',eqTa:'확인 문제 서술형',open:'내 생각(밝기 줄이기)',why:'예상한 까닭',law:'내 말로 옴의 법칙',guess:'내 생각(예상)',summary:'내 말로 정리',note:'표에서 읽어 낸 것',
  rule:'표에서 찾은 규칙',pin:'누름못 풍선 설명',obs:'관찰 기록',balloon:'풍선 설명',block1:'블록 답(공기가 미는 까닭)',conclusion:'결론 문장',jtube:'J자 관 설명',block2:'봉지 여행 블록',compare:'보일·샤를 구분',topic:'영상 주제',principle:'원리 한 줄',sb1:'스토리보드 1',sb2:'스토리보드 2',sb3:'스토리보드 3',sb4:'스토리보드 4',sb5:'스토리보드 5',sb6:'스토리보드 6',roles:'역할 나누기',review:'오늘의 한 줄'};
-let ADMIN='', CODES=[], STU=[];
+let ADMIN='', CODES=[], STU=[], FB=[], ME=null;
 async function rpc(n,a){const r=await sb.rpc(n,a);if(r.error)throw new Error(r.error.message||String(r.error));return r.data;}
 const say=(id,t,c)=>{const m=$(id);m.textContent=t;m.className='msg '+(c||'');};
-$('#admGo').addEventListener('click',load);
-$('#adm').addEventListener('keydown',e=>{if(e.key==='Enter')load();});
+$('#tGo').addEventListener('click',login);
+$('#tPw').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+$('#tOut').addEventListener('click',async()=>{await sb.auth.signOut();location.reload();});
 $('#reload').addEventListener('click',()=>loadStudents());
 $('#codeSel').addEventListener('change',()=>paintStudents());
 $('#classSel').addEventListener('change',()=>paintStudents());
 $('#pageSel').addEventListener('change',()=>paintStudents());
 $('#unitSel').addEventListener('change',()=>{fillPages();paintStudents();});
-try{const k=localStorage.getItem('ohm_admin');if(k){$('#adm').value=k;}}catch(e){}
+
 Object.keys(UNITS).forEach(u=>{const o=document.createElement('option');o.value=u;o.textContent=UNITS[u];$('#unitSel').appendChild(o);});
 $('#unitSel').value=UNIT_DEFAULT;
 function fillPages(){
@@ -209,68 +237,63 @@ function fillPages(){
 }
 fillPages();
 
+async function login(){
+ const em=$('#tEmail').value.trim(), pw=$('#tPw').value;
+ if(!em||!pw){say('#admMsg','이메일과 비밀번호를 적어 주세요','err');return;}
+ $('#tGo').disabled=true;say('#admMsg','로그인하는 중…');
+ const r=await sb.auth.signInWithPassword({email:em,password:pw});
+ $('#tGo').disabled=false;
+ if(r.error){say('#admMsg',/invalid/i.test(r.error.message)?'이메일이나 비밀번호가 맞지 않아요':'❌ '+r.error.message,'err');return;}
+ $('#tPw').value='';await load();
+}
 async function load(){
- ADMIN=$('#adm').value.trim().toUpperCase();
- if(ADMIN.length<6){say('#admMsg','관리 코드를 넣어 주세요','err');return;}
- $('#admGo').disabled=true;say('#admMsg','확인하는 중…');
- try{
-  CODES=await rpc('ohm_admin_codes',{p_admin:ADMIN});
-  try{if($('#admKeep').checked)localStorage.setItem('ohm_admin',ADMIN);else localStorage.removeItem('ohm_admin');}catch(e){}
-  say('#admMsg','✅ 관리 코드 확인 — 참여 코드 '+CODES.length+'개','ok');
-  $('#codesCard').hidden=false;$('#stuCard').hidden=false;
-  paintCodes();await loadStudents();
- }catch(e){
-  const m=String(e.message||e);
-  say('#admMsg',/function|404|not find/i.test(m)?'서버에 아직 표가 없어요 — 옴의법칙_Supabase_SETUP.sql 을 먼저 실행하세요':'❌ '+m,'err');
- }finally{$('#admGo').disabled=false;}
+ const s=await sb.auth.getSession();ME=s.data&&s.data.session&&s.data.session.user||null;
+ if(!ME){say('#admMsg','교사 계정으로 로그인하면 모든 학생 기록이 보입니다. 학생은 자기 기록만 볼 수 있어요.');return;}
+ let ok=false;try{const r=await sb.rpc('is_teacher');ok=!!r.data;}catch(e){}
+ $('#whoami').innerHTML='<span class="tag'+(ok?' acc':' noacc')+'">'+esc(ME.email||'')+(ok?' · 교사':' · 교사 계정이 아니에요')+'</span>';
+ $('#loginRow').hidden=true;$('#tOut').hidden=false;$('#loginRow').parentElement.appendChild($('#tOut'));
+ if(!ok){say('#admMsg','이 계정은 teachers 표에 없어요 — 칭찬 도장판에서 쓰는 교사 계정으로 로그인해 주세요','err');return;}
+ say('#admMsg','✅ 교사 로그인','ok');
+ $('#importCard').hidden=false;$('#stuCard').hidden=false;$('#fbCard').hidden=false;
+ await loadStudents();
 }
-function paintCodes(){
- const tb=$('#codesTbl tbody');tb.innerHTML='';
- const sel=$('#codeSel');const cur=sel.value;sel.innerHTML='<option value="">모든 코드</option>';
- CODES.forEach(c=>{
-  const exp=new Date(c.expires_at), expired=exp<new Date();
-  const tr=document.createElement('tr');
-  tr.innerHTML='<td class="code">'+esc(c.code)+'</td><td>'+esc(c.label)+'</td>'
-   +'<td>'+(c.active&&!expired?'<span class="tag">사용 중</span>':'<span class="tag off">'+(expired?'기한 지남':'꺼짐')+'</span>')+'</td>'
-   +'<td class="num">'+c.students+'</td><td>'+fmtT(c.last_seen)+'</td><td>'+exp.toLocaleDateString('ko-KR')+'</td>'
-   +'<td class="row" style="justify-content:flex-end">'
-   +'<button class="btn ghost sm" data-act="toggle" data-code="'+c.code+'">'+(c.active?'끄기':'켜기')+'</button>'
-   +'<button class="btn ghost sm" data-act="extend" data-code="'+c.code+'">+30일</button>'
-   +'<button class="btn danger sm" data-act="del" data-code="'+c.code+'">삭제</button></td>';
-  tb.appendChild(tr);
-  const o=document.createElement('option');o.value=c.code;o.textContent=c.code+' · '+c.label;sel.appendChild(o);
- });
- sel.value=cur;
-}
-$('#codesTbl').addEventListener('click',async e=>{
- const b=e.target.closest('button[data-act]');if(!b)return;
- const code=b.dataset.code, c=CODES.find(x=>x.code===code);
+/* ── 📦 옛 서버에서 옮겨오기 ── */
+$('#importGo').addEventListener('click',async()=>{
+ const adm=$('#admA').value.trim().toUpperCase();
+ if(adm.length<6){say('#importMsg','A 프로젝트 관리 코드를 넣어 주세요','err');return;}
+ $('#importGo').disabled=true;say('#importMsg','옛 서버에서 읽는 중…');
  try{
-  if(b.dataset.act==='toggle'){await rpc('ohm_set_code',{p_admin:ADMIN,p_code:code,p_active:!c.active});}
-  else if(b.dataset.act==='extend'){await rpc('ohm_set_code',{p_admin:ADMIN,p_code:code,p_extend_days:30});}
-  else if(b.dataset.act==='del'){if(!confirm('참여 코드 '+code+' 와 그 코드의 기록 '+c.students+'건을 모두 지울까요?\n되돌릴 수 없어요.'))return;await rpc('ohm_delete_code',{p_admin:ADMIN,p_code:code});}
-  CODES=await rpc('ohm_admin_codes',{p_admin:ADMIN});paintCodes();await loadStudents();say('#codesMsg','✅ 반영됐어요','ok');
- }catch(err){say('#codesMsg','❌ '+(err.message||err),'err');}
+  const r=await clientA().rpc('ohm_admin_students',{p_admin:adm});
+  if(r.error)throw new Error(r.error.message);
+  const rows=(r.data||[]).map(x=>({page:x.page,sid:x.sid,name:x.name,grade:x.grade,class_no:x.class_no,number:x.number,device:'',state:x.state||{},progress:x.progress||0,pct:x.pct||0,tab:x.tab||'',created_at:x.created_at,updated_at:x.updated_at}));
+  let tot={inserted:0,updated:0,skipped:0,answers:0,no_account:0};
+  for(let i=0;i<rows.length;i+=25){
+   say('#importMsg','옮기는 중… '+Math.min(i+25,rows.length)+'/'+rows.length);
+   const q=await sb.rpc('solo_import',{p_rows:rows.slice(i,i+25)});
+   if(q.error)throw new Error(q.error.message);
+   Object.keys(tot).forEach(k=>tot[k]+=(q.data&&q.data[k])||0);
+  }
+  say('#importMsg','✅ '+rows.length+'줄 읽음 → 새로 '+tot.inserted+' · 갱신 '+tot.updated+' · 건너뜀 '+tot.skipped+' · 제출 글 판본 '+tot.answers+' · 계정 못 찾음 '+tot.no_account+'(그 학생이 로그인하면 붙어요)','ok');
+  await loadStudents();
+ }catch(e){say('#importMsg','❌ '+(e.message||e),'err');}
+ finally{$('#importGo').disabled=false;}
 });
-$('#newCode').addEventListener('click',async()=>{
- try{
-  const r=await rpc('ohm_make_code',{p_admin:ADMIN,p_label:$('#newLabel').value.trim(),p_days:+$('#newDays').value||120});
-  CODES=await rpc('ohm_admin_codes',{p_admin:ADMIN});paintCodes();
-  say('#codesMsg','✅ 새 참여 코드 '+r.code+' — 학생에게 알려 주세요','ok');$('#newLabel').value='';
- }catch(err){say('#codesMsg','❌ '+(err.message||err),'err');}
-});
-$('#addCode').addEventListener('click',async()=>{
- const want=$('#newCustom').value.trim();
- if(!want){say('#codesMsg','원하는 코드를 먼저 적어 주세요 (예: 8314)','err');$('#newCustom').focus();return;}
- try{
-  const r=await rpc('ohm_add_code',{p_admin:ADMIN,p_code:want,p_label:$('#newLabel').value.trim(),p_days:+$('#newDays').value||120});
-  CODES=await rpc('ohm_admin_codes',{p_admin:ADMIN});paintCodes();
-  say('#codesMsg','✅ 참여 코드 '+r.code+' 발급 — 학생에게 알려 주세요','ok');$('#newLabel').value='';$('#newCustom').value='';
- }catch(err){const m=String(err.message||err);say('#codesMsg',/function|404|not find/i.test(m)?'서버에 ohm_add_code 가 아직 없어요 — 혼자탐구_코드8314_추가.sql 을 실행하세요':'❌ '+m,'err');}
-});
+const COLS='id,uid,page,sid,name,grade,class_no,number,progress,pct,tab,src,created_at,updated_at,texts:state->texts,sub:state->sub,qa:state->qa,skip:state->skip,best:state->best,qs:state->qs,mini:state->mini,cloze:state->cloze,clozeTotal:state->clozeTotal,eq:state->eq,checks:state->checks,medals:state->medals,think:state->s->think,concl:state->s->concl,essay:state->s->essay';
 async function loadStudents(){
- try{STU=await rpc('ohm_admin_students',{p_admin:ADMIN});fillClasses();paintStudents();}
- catch(err){say('#stuMsg','❌ '+(err.message||err),'err');}
+ try{
+  let all=[],from=0;
+  while(true){
+   const r=await sb.from('solo_records').select(COLS).order('grade',{nullsFirst:false}).order('class_no',{nullsFirst:false}).order('number',{nullsFirst:false}).order('page').range(from,from+499);
+   if(r.error)throw new Error(r.error.message);
+   all=all.concat(r.data||[]);if((r.data||[]).length<500)break;from+=500;
+  }
+  STU=all.map(x=>({id:x.id,uid:x.uid,token:x.id,page:x.page,sid:x.sid,name:x.name,grade:x.grade,class_no:x.class_no,number:x.number,progress:x.progress,pct:x.pct,tab:x.tab,src:x.src,created_at:x.created_at,updated_at:x.updated_at,
+   code:x.uid?'🎒':'⚠️',
+   state:{texts:x.texts||{},sub:x.sub||{},qa:x.qa||{},skip:x.skip||{},best:x.best,qs:x.qs||[],mini:x.mini||{},cloze:x.cloze,clozeTotal:x.clozeTotal,eq:x.eq||{},checks:x.checks||[],medals:x.medals||{},think:x.think||{},concl:x.concl,essay:x.essay}}));
+  const f=await sb.from('solo_feedback_view').select('*').order('created_at',{ascending:false});
+  FB=f.error?[]:(f.data||[]);
+  fillClasses();paintStudents();paintFb();
+ }catch(err){say('#stuMsg','❌ '+(err.message||err),'err');}
 }
 /* 학년·반·번호 — 서버가 주면 그대로, 없으면 학번에서 뜯는다 */
 function clsOf(x){
@@ -361,14 +384,14 @@ function paintStudents(){
   :VIEW==='cards'?'학생 '+nStu+'명 · 기록 '+list.length+'건 — 카드 하나가 학생 한 명, 카드 속 한 줄이 차시 하나'
   :VIEW==='board'?'기록 '+list.length+'건 — 진행 상태는 진행률 0% · 1~49% · 50~99% · 100% 로 나눕니다. 열 기준을 반·차시로 바꿀 수 있어요'
   :'반 '+nCls+'개 · 학생 '+nStu+'명 · 기록 '+list.length+'건 — 위 표의 칸을 누르면 그 반·그 차시만 표로 봅니다');
- paintQa(list,page);
+ paintQa(list,page);paintFb();
 }
 function paintTable(list,unit){
  const tb=$('#stuTbl tbody');tb.innerHTML='';
  list.forEach((x,i)=>{
   const st=x.state||{};const tot=st.total||((st.checks||[]).length)||1;const qs=qaSummary(st);
   const tr=document.createElement('tr');
-  tr.innerHTML='<td><span class="tag page u-'+pageUnit(x.page)+'">'+esc((unit?'':UNITS[pageUnit(x.page)]+' · ')+pageName(x.page))+'</span></td><td class="code" style="font-size:13px">'+esc(x.code)+'</td><td class="code" style="font-size:14px">'+esc(x.sid)+'</td><td><b>'+esc(x.name)+'</b></td>'
+  tr.innerHTML='<td><span class="tag page u-'+pageUnit(x.page)+'">'+esc((unit?'':UNITS[pageUnit(x.page)]+' · ')+pageName(x.page))+'</span></td><td><span class="tag '+(x.uid?'acc':'noacc')+'" title="'+(x.uid?'질문나무 계정에 연결됨':'옮겨 온 기록 — 그 학생이 로그인하면 붙어요')+'">'+(x.uid?'🎒':'⚠️')+'</span></td><td class="code" style="font-size:14px">'+esc(x.sid)+'</td><td><b>'+esc(x.name)+'</b></td>'
    +'<td><div class="bar" title="'+x.progress+'/'+tot+'"><i style="width:'+Math.round(x.progress/tot*100)+'%"></i></div>'+(Object.keys(st.skip||{}).length?'<span style="font-size:12px;color:var(--warn);font-weight:800" title="다 하지 않고 넘어간 단계 '+Object.keys(st.skip).length+'개">⚠️ 넘어감 '+Object.keys(st.skip).length+'</span>':'')+'</td>'
    +'<td class="num">'+x.pct+'</td><td>'+esc(x.tab||'—')+'</td><td class="num">'+subCount(st)+'</td>'
    +'<td class="num">'+(qs.n?qs.ok+'/'+qs.n:'—')+(st.best!=null&&st.best>0?' · '+st.best+'점':'')+'</td><td>'+fmtT(x.updated_at)+'</td>'
@@ -476,20 +499,21 @@ $('#stuCard').addEventListener('click',async e=>{
  const v=e.target.closest('[data-view]');if(v){openDetail(CUR[+v.dataset.view]);return;}
  const d=e.target.closest('button[data-del]');if(d){
   if(!confirm('이 기록을 지울까요? 되돌릴 수 없어요.'))return;
-  try{await rpc('ohm_delete_student',{p_admin:ADMIN,p_token:d.dataset.del});await loadStudents();CODES=await rpc('ohm_admin_codes',{p_admin:ADMIN});paintCodes();}
+  try{const r=await sb.from('solo_records').delete().eq('id',d.dataset.del);if(r.error)throw new Error(r.error.message);await loadStudents();}
   catch(err){say('#stuMsg','❌ '+(err.message||err),'err');}
  }
 });
-function q(t,a){return '<div class="q"><div class="qt">'+esc(t)+'</div><div class="qa'+(a?'':' none')+'">'+(a?esc(a):'(아직 안 씀)')+'</div></div>';}
+let DKEY='';
+function q(t,a,key){return '<div class="q" data-key="'+esc(key||'')+'"><div class="qt">'+esc(t)+'</div><div class="qa'+(a?'':' none')+'">'+(a?esc(a):'(아직 안 씀)')+'</div><div class="fbslot"></div></div>';}
 function openDetail(x){
  const st=x.state||{}, sub=st.sub||{};
- $('#dTitle').textContent='🎒 '+x.sid+' '+x.name+' · '+UNITS[pageUnit(x.page)]+' '+pageName(x.page)+' · '+x.code+' · 진행 '+x.pct+'%';
+ $('#dTitle').textContent='🎒 '+x.sid+' '+x.name+' · '+UNITS[pageUnit(x.page)]+' '+pageName(x.page)+' · '+(x.uid?'🎒 계정 연결':'⚠️ 계정 없음')+' · 진행 '+x.pct+'%';
  const checks=(st.checks||[]).map(c=>typeof c==='object'?c:{l:'항목',ok:c});
  let html='<h4>🎯 진행 항목</h4><div class="chk">'+checks.map(c=>'<span class="'+(c.ok?'on':'')+'">'+(c.ok?'✅':'⬜')+' '+esc(c.l)+'</span>').join('')+'</div>';
  const sk=st.skip||{};const skKeys=Object.keys(sk);
  if(skKeys.length)html+='<div class="q" style="border-color:#f7b928;background:#fff8dc"><div class="qt">⚠️ 다 하지 않고 넘어간 단계</div><div class="qa">'+esc(skKeys.map(t=>((sk[t]&&sk[t].name)||t)+(sk[t]&&sk[t].t?' ('+fmtT(sk[t].t)+')':'')).join(' · '))+'</div></div>';
  const texts=st.texts||{};let body='';
- Object.keys(texts).forEach(k=>{if(k==='conclTaFs'||k==='eqTa')return;const lab=(TEXT_LABEL[k]||k)+(sub[k]?' · 📮 제출됨':'');body+=q(lab,texts[k]);});
+ Object.keys(texts).forEach(k=>{if(k==='conclTaFs'||k==='eqTa')return;const lab=(TEXT_LABEL[k]||k)+(sub[k]?' · 📮 제출됨':'');body+=q(lab,texts[k],k);});
  if(!Object.keys(texts).length&&st.think){Object.keys(st.think).forEach(k=>{body+=q(TEXT_LABEL[k]||k,st.think[k]);});if(st.concl)body+=q('나의 결론',st.concl);if(st.essay)body+=q('사고력 답',st.essay);}
  const qsList=Array.isArray(st.qs)?st.qs:[];
  Object.keys(st.eq||{}).forEach(id=>{if(!(st.eq[id]||'').trim())return;const qq=qsList.find(z=>z.id===id);body+=q('확인 문제 서술형 '+id+(qq?' — '+qq.t:''),st.eq[id]);});
@@ -502,6 +526,72 @@ function openDetail(x){
  html+='<h4>✅ 개념 확인</h4><div class="chk"><span class="on">개념 확인 퀴즈 완료 '+Object.keys(st.mini||{}).filter(k=>st.mini[k]).length+'개</span><span class="on">빈칸 채움 '+(st.cloze!=null?st.cloze+(st.clozeTotal?'/'+st.clozeTotal:''):'—')+'</span><span>마지막 저장 '+fmtT(x.updated_at)+' · 처음 참여 '+fmtT(x.created_at)+'</span></div>';
  $('#dBody').innerHTML=html;
  $('#detail').classList.add('show');
+ paintVersions(x);
+}
+/* ── 낱말 단위 diff (LCS) ── */
+function diffWords(a,b){
+ const A=String(a||'').split(/(\s+)/).filter(x=>x!==''),B=String(b||'').split(/(\s+)/).filter(x=>x!=='');
+ const n=A.length,m=B.length;if(n*m>250000)return esc(b);
+ const L=Array.from({length:n+1},()=>new Uint16Array(m+1));
+ for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)L[i][j]=A[i]===B[j]?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+ let i=0,j=0,out='';
+ while(i<n&&j<m){if(A[i]===B[j]){out+=esc(A[i]);i++;j++;}else if(L[i+1][j]>=L[i][j+1]){if(A[i].trim())out+='<del>'+esc(A[i])+'</del>';i++;}else{out+=B[j].trim()?'<ins>'+esc(B[j])+'</ins>':esc(B[j]);j++;}}
+ while(i<n){if(A[i].trim())out+='<del>'+esc(A[i])+'</del>';i++;}
+ while(j<m){out+=B[j].trim()?'<ins>'+esc(B[j])+'</ins>':esc(B[j]);j++;}
+ return out;
+}
+let DREC=null;
+async function paintVersions(x){
+ DREC=x;
+ const [a,f]=await Promise.all([sb.from('solo_answers').select('*').eq('rec',x.id).order('key').order('version'),sb.from('solo_feedback').select('*').eq('rec',x.id).order('created_at')]);
+ const ans=a.error?[]:(a.data||[]), fbs=f.error?[]:(f.data||[]);
+ const keys=new Set([...ans.map(z=>z.key),...fbs.map(z=>z.key),...Object.keys((x.state||{}).sub||{})]);
+ keys.forEach(k=>{
+  let box=document.querySelector('#dBody .q[data-key="'+CSS.escape(k)+'"]');
+  if(!box){const grid=$('#dBody .grid2');if(!grid)return;grid.insertAdjacentHTML('beforeend',q((TEXT_LABEL[k]||k)+' · 📮 제출됨',((x.state||{}).texts||{})[k]||'',k));box=grid.lastElementChild;}
+  const slot=box.querySelector('.fbslot');if(!slot)return;
+  const vs=ans.filter(z=>z.key===k), fk=fbs.filter(z=>z.key===k);
+  const items=[...vs.map(v=>({t:v.created_at,kind:'v',v})),...fk.map(b=>({t:b.created_at,kind:'f',b}))].sort((p,q2)=>String(p.t).localeCompare(String(q2.t)));
+  let prev='';let h='<div class="fbx">';
+  items.forEach(it=>{
+   if(it.kind==='v'){h+='<div class="ver"><span class="vn">v'+it.v.version+' · '+fmtT(it.v.created_at)+'</span><span class="vt">'+(prev?diffWords(prev,it.v.text):esc(it.v.text))+'</span></div>';prev=it.v.text;}
+   else{h+='<div class="ver fb"><span class="vn">💬 피드백 · '+fmtT(it.b.created_at)+'</span><span class="vt">'+esc(it.b.note)+'<div class="st">'+(it.b.seen_at?'👀 봄 '+fmtT(it.b.seen_at):'아직 안 봄')+(it.b.answered_at?' · <b>✏️ 고침</b> '+fmtT(it.b.answered_at):' · 아직 안 고침')+'</div></span></div>';}
+  });
+  if(!items.length)h+='<div class="st">아직 제출 판본이 없어요 (제출하면 v1이 생깁니다)</div>';
+  const lastV=vs.length?vs[vs.length-1]:null;
+  h+='<textarea class="fbta" placeholder="이 답에 피드백 쓰기 — 학생 허브 「내 제출물」에 뜨고, 고쳐 쓰면 다음 판본이 됩니다"></textarea><div class="fbrow"><button type="button" class="btn sm cta" data-fbsend="'+esc(k)+'" data-ans="'+(lastV?lastV.id:'')+'">💬 피드백 보내기</button><span class="st">답 판본 '+vs.length+'개 · 피드백 '+fk.length+'개</span></div></div>';
+  slot.innerHTML=h;
+ });
+}
+$('#dBody').addEventListener('click',async e=>{
+ const b=e.target.closest('button[data-fbsend]');if(!b||!DREC)return;
+ const box=b.closest('.fbx'), ta=box.querySelector('.fbta'), note=(ta.value||'').trim();
+ if(!note){ta.focus();return;}
+ b.disabled=true;
+ const r=await sb.from('solo_feedback').insert({rec:DREC.id,uid:DREC.uid,page:DREC.page,key:b.dataset.fbsend,answer_id:b.dataset.ans?+b.dataset.ans:null,teacher:ME&&ME.id,note:note});
+ b.disabled=false;
+ if(r.error){alert('피드백을 저장하지 못했어요: '+r.error.message);return;}
+ ta.value='';paintVersions(DREC);
+ try{const f=await sb.from('solo_feedback_view').select('*').order('created_at',{ascending:false});FB=f.error?FB:(f.data||[]);paintFb();}catch(_){}
+});
+$('#fbReload').addEventListener('click',()=>loadStudents());
+$('#fbState').addEventListener('change',()=>paintFb());
+function paintFb(){
+ const page=$('#pageSel').value, unit=$('#unitSel').value, cls=($('#classSel')||{}).value||'', st=$('#fbState').value;
+ const list=FB.filter(x=>(!page||x.page===page)&&(!unit||pageUnit(x.page)===unit)&&(!cls||(cls==='?'?!clsKey(x):clsKey(x)===cls))
+  &&(!st||(st==='wait'?!x.answered_at:st==='done'?!!x.answered_at:!x.seen_at)));
+ const tb=$('#fbTbl tbody');tb.innerHTML='';
+ $('#fbEmpty').hidden=list.length>0;
+ list.forEach(x=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td>'+clsChip(x)+' <b>'+esc(x.name)+'</b><br><span class="code" style="font-size:12px">'+esc(x.sid)+'</span></td>'
+   +'<td>'+pageTag(x,unit)+'<br><small>'+esc(TEXT_LABEL[x.key]||x.key)+'</small></td>'
+   +'<td class="tx">'+esc(x.before_text||'')+(x.before_version?'<br><small class="code" style="font-size:11px">v'+x.before_version+'</small>':'')+'</td>'
+   +'<td class="tx" style="background:#fff7e0">'+esc(x.note)+'<br><small>'+fmtT(x.created_at)+'</small></td>'
+   +'<td class="tx">'+(x.after_text?diffWords(x.before_text||'',x.after_text)+'<br><small class="code" style="font-size:11px">v'+x.after_version+' · '+fmtT(x.after_at)+'</small>':'<span style="color:#aaa">—</span>')+'</td>'
+   +'<td class="stt">'+(x.answered_at?'<span class="o">✏️ 고침</span>':x.seen_at?'👀 봄 · ⏳':'⏳ 아직 안 봄')+'</td>';
+  tb.appendChild(tr);
+ });
 }
 $('#dClose').addEventListener('click',()=>$('#detail').classList.remove('show'));
 $('#detail').addEventListener('click',e=>{if(e.target===$('#detail'))$('#detail').classList.remove('show');});
@@ -510,15 +600,15 @@ $('#csv').addEventListener('click',()=>{
  const list=CUR||[];
  const keys=[];list.forEach(x=>Object.keys((x.state||{}).texts||{}).forEach(k=>{if(k!=='conclTaFs'&&k!=='eqTa'&&!keys.includes(k))keys.push(k);}));
  const qids=[];list.forEach(x=>Object.keys(((x.state||{}).qa)||{}).forEach(k=>{if(!qids.includes(k))qids.push(k);}));
- const H=['단원','차시','코드','학번','학년','반','번호','이름','진행(단계)','진행(%)','현재 탭','제출 수','확인문제 첫시도 정답','확인문제 응답','최고점','마지막 저장'].concat(qids.map(k=>'문항 '+k)).concat(keys.map(k=>TEXT_LABEL[k]||k));
+ const H=['단원','차시','계정','학번','학년','반','번호','이름','진행(단계)','진행(%)','현재 탭','제출 수','확인문제 첫시도 정답','확인문제 응답','최고점','마지막 저장'].concat(qids.map(k=>'문항 '+k)).concat(keys.map(k=>TEXT_LABEL[k]||k));
  const cell=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
  const lines=[H.map(cell).join(',')];
  list.forEach(x=>{const st=x.state||{},t=st.texts||{},qa=st.qa||{},s=qaSummary(st);
-  lines.push([UNITS[pageUnit(x.page)],pageName(x.page),x.code,x.sid,clsOf(x).g||'',clsOf(x).c||'',clsOf(x).n||'',x.name,x.progress,x.pct,x.tab,subCount(st),s.ok,s.n,st.best,x.updated_at].concat(qids.map(k=>{const r=qa[k];return !r||r.first==null?'':(r.first?'O':(r.ok?'△':'X'));})).concat(keys.map(k=>t[k]||'')).map(cell).join(','));});
+  lines.push([UNITS[pageUnit(x.page)],pageName(x.page),x.uid?'연결':'없음',x.sid,clsOf(x).g||'',clsOf(x).c||'',clsOf(x).n||'',x.name,x.progress,x.pct,x.tab,subCount(st),s.ok,s.n,st.best,x.updated_at].concat(qids.map(k=>{const r=qa[k];return !r||r.first==null?'':(r.first?'O':(r.ok?'△':'X'));})).concat(keys.map(k=>t[k]||'')).map(cell).join(','));});
  const blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='혼자탐구_학생기록_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 });
-if($('#adm').value)load();
+load();
 </script>
 </body>
 </html>
