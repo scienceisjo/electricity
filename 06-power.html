@@ -1478,7 +1478,26 @@ body.solo .mode-now{color:var(--m-primary-deep,#0457cb);background:#e8f0fc;borde
 .sq-ans{font-size:13px;color:#1e7d3a;font-weight:800}
 </style>
 </head>
-<body><!-- board-v2: inline font bumped -->
+<body><script id="hub-sso">
+/* 🎒 과학시간 허브(질문나무 계정)로 로그인돼 있으면 관문 없이 혼자 탐구 — elec_stu 를 만들어 둔다 */
+(function(){try{
+ var q=new URLSearchParams(location.search);
+ if(q.get('solo'))localStorage.setItem('elec_mode','solo');
+ var have=null;try{have=JSON.parse(localStorage.getItem('elec_stu')||'null');}catch(e){}
+ var raw=localStorage.getItem('sb-hmzklbrksfdhzsgwzfyg-auth-token');if(!raw)return;
+ var ses=JSON.parse(raw),m=(ses.user&&ses.user.user_metadata)||{};
+ function put(g,c,n,name){var sid=String(g)+String(c).padStart(2,'0')+String(n).padStart(2,'0');
+  if(have&&have.sid===sid&&have.code)return false;
+  localStorage.setItem('elec_stu',JSON.stringify({sid:sid,name:name||'',code:'8314'}));return true;}
+ if(m.grade&&m.class&&m.number){put(m.grade,m.class,m.number,m.name);return;}
+ if(have&&have.code)return;
+ var tok=ses.access_token,uid=ses.user&&ses.user.id;if(!tok||!uid)return;
+ fetch('https://hmzklbrksfdhzsgwzfyg.supabase.co/rest/v1/profiles?select=name,grade,class_no,number&id=eq.'+uid,{headers:{apikey:'sb_publishable_OFVhbjVPbJiMWXVz2nKQuw_m6RmVVZE',Authorization:'Bearer '+tok}})
+  .then(function(r){return r.json();}).then(function(rows){var p=rows&&rows[0];if(!p||!p.grade)return;
+   if(put(p.grade,p.class_no,p.number,p.name)&&window.OHM&&OHM.autoJoin&&localStorage.getItem('elec_mode')==='solo'){OHM.autoJoin().then(function(ok){if(ok&&typeof setMode==='function')setMode('solo');});}}).catch(function(){});
+}catch(e){}})();
+</script>
+<!-- board-v2: inline font bumped -->
 <div id="bgLayer"></div><div id="bgScrim"></div><canvas id="stars"></canvas>
 
 <div id="cover">
@@ -3927,6 +3946,24 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('gui
   window.addEventListener('load',function(){ if(!done) setTimeout(go,60); });
  }catch(e){}
 })();
+</script>
+<script id="hub-solo-land">
+/* 🎒 ?solo=1 — 허브 「오늘 수업」에서 왔을 때: 표지 없이 혼자 탐구의 첫 미완 단계로 */
+(function(){try{
+ var q=new URLSearchParams(location.search);if(!q.get('solo'))return;
+ var n=0;(function tick(){n++;
+  var on=(typeof soloOn==='function')&&soloOn();
+  if(on||n>20){
+   try{
+    var c=document.getElementById('cover');if(c)c.classList.add('hide');document.body.classList.remove('cover-on');
+    if(typeof S!=='undefined'&&S)S.entered=true;
+    if(on&&typeof landTab==='function'&&typeof showTab==='function'){showTab(landTab(),true,true);if(typeof gotoUndone==='function')setTimeout(function(){gotoUndone(landTab());},400);}
+    else if(typeof openGate==='function'){if(typeof showTab==='function'&&typeof MAIN_TABS!=='undefined')showTab(MAIN_TABS[0],true,true);openGate();}
+   }catch(e){}
+   return;
+  }
+  setTimeout(tick,200);})();
+}catch(e){}})();
 </script>
 </body>
 </html>
