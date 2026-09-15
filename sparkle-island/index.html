@@ -32,6 +32,31 @@ dialog{border:0;border-radius:27px;padding:0;background:var(--paper);color:var(-
 @media(max-height:740px) and (min-width:601px){#coverPanel,.cover-copy{min-height:530px}.cover-copy{padding-top:43px}.story-art{height:250px}.story-caption{padding:20px 28px}.story-caption h2{font-size:25px}.story-caption>p{font-size:14px}}
 @media(max-width:600px){.welcome-dialog{width:calc(100% - 20px)}#coverPanel{min-height:0;padding-top:230px}#coverPanel>img{height:255px;object-position:72% 50%}.cover-copy{min-height:0;width:100%;padding:23px;background:#fff9e8}.cover-copy h1{font-size:32px;margin:8px 0}.cover-copy p{font-size:14px;margin:10px 0}.cover-copy>button{width:100%}.story-art{height:220px}.story-caption{padding:21px}.story-caption h2{font-size:23px}.story-caption>p{font-size:14px}.story-strip{width:100px;height:72px}.mission-steps{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mission-steps li{display:block;padding:9px}.step-number{display:inline-block;margin-bottom:4px}.mission-steps li b{display:none}.mission-steps li p{font-size:11px}.task-heading{font-size:14px;margin:0 0 10px}.lab-side .science-note{font-size:11px}.measurement-fields{gap:10px}.record-form{padding:15px}.record-form h3{font-size:18px}.measurement-fields>label{font-size:11px}.celebration>strong{font-size:17px;padding:13px 19px}.journal-art{height:105px}}
 @media(prefers-reduced-motion:reduce){.hint-target{animation:none!important}.celebration>strong{animation:none}.celebration>i{display:none}}
+
+.lab-task-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.lab-task-head .task-heading{flex:1;margin:0;min-width:170px}.lab-guide{font-size:12px}.lab-guide summary{cursor:pointer;padding:10px;border-radius:10px;background:#e2ead7;min-height:40px;display:flex;align-items:center}.lab-guide-content{padding:15px;background:#fffdf2;border:1px solid #d6dfc7;border-radius:13px}.lab-guide-content p{color:#42563b;font-size:13px}.lab-guide-content h4{margin-bottom:5px}.lab-task-head .hint-button{width:auto}.experiment-workbench{min-width:0}.circuit-pane,.lab-tools{min-width:0}.circuit-note{font-size:12px;line-height:1.65;color:#445c40;margin:7px 0}.circuit-pane .circuit-wrap svg{aspect-ratio:1000/520}.lab-tools .experiment-controls{padding:15px;background:#f0f3e7;border:1px solid #dce3cf;border-radius:16px}.experiment-controls legend{font-weight:700;font-size:15px;padding:0 6px}.record-invite,.compact-rule{font-size:12px;line-height:1.7;color:#4f6449;margin:12px 0 0}.lab-tools .record-form{margin:0}.is-recording .experiment-controls{display:none}.evidence-list summary{cursor:pointer;padding:8px 0;color:#50674a;font-weight:700}.evidence-history{background:#fffdf3;padding:10px;border:1px solid #dce3cf;border-radius:12px}.measure-error:empty{display:none}
+.festival-scene{position:fixed;inset:0;z-index:900;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding:35px 20px;background:linear-gradient(transparent 65%,#142c3d80)}.festival-caption{text-align:center;color:#fff9d9;text-shadow:0 2px 7px #152c34;padding:16px 25px;border-radius:25px;background:#193747a6;max-width:90vw}.festival-caption p{font-size:12px;letter-spacing:2px;margin:0 0 9px}.festival-caption h2{font-size:clamp(18px,2.5vw,29px);margin:0;line-height:1.5}.festival-scene>button{pointer-events:auto;position:absolute;right:20px;top:20px;background:#fff9e9e6;font-size:13px}.festival-running .hud-top,.festival-running .quest-hud,.festival-running .bottom-hud,.festival-running #npcLabels,.festival-running #joystick,.festival-running .save-status{opacity:0;pointer-events:none}.festival-running #game{transition:none}
+@media(min-width:900px) and (orientation:landscape){
+ #lab{width:calc(100vw - 16px);max-width:1450px;height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);margin:auto;overflow:hidden;border-radius:20px}
+ #labContent{height:100%;display:flex;flex-direction:column;min-height:0}
+ #lab .modal-head{padding:9px 16px 8px;flex:none}#lab .modal-head .eyebrow{font-size:10px}#lab .modal-head h2{font-size:20px;margin:2px 45px 0 0}#lab .modal-head p{font-size:12px;margin:3px 45px 0 0;line-height:1.4}#lab .modal-head .close{top:10px;right:12px}
+ #lab .lab-layout{display:flex;flex-direction:column;min-height:0;flex:1}#lab .lab-side{flex:none;padding:7px 14px;border-right:0;border-bottom:1px solid var(--line);position:relative;z-index:3}
+ #lab .lab-task-head{gap:10px;flex-wrap:nowrap}#lab .task-heading{font-size:13px;line-height:1.3}#lab .hint-button{font-size:12px;min-height:36px;padding:7px 12px}#lab .lab-guide summary{min-height:36px;padding:7px 10px}
+ #lab .lab-guide-content{position:absolute;right:14px;top:100%;width:450px;max-width:80vw;max-height:65dvh;overflow:auto;box-shadow:0 8px 20px #304b4130;z-index:8}
+ #lab .mission-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;margin:6px 0 0}#lab .mission-steps li{padding:4px 7px;gap:6px;border-radius:9px}#lab .mission-steps li b{display:none}#lab .mission-steps li p{font-size:11px;line-height:1.45;margin:1px 0}#lab .step-number{font-size:10px;padding:4px 5px}
+ #lab .hint-message{position:absolute;right:14px;top:100%;width:min(420px,80vw);padding:10px 14px;margin:0;background:#fff3c9;border:1px solid #d9bd67;border-radius:12px;z-index:9;box-shadow:0 5px 15px #304b4120}
+ #lab .lab-main{padding:9px 12px;flex:1;min-height:0;display:flex;flex-direction:column}#lab .experiment-workbench{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(310px,1fr);gap:12px;flex:1;min-height:0}
+ #lab .circuit-pane{display:flex;flex-direction:column;min-height:0}#lab .sim-badges{flex:none;gap:6px}#lab .sim-badges .pill{font-size:10px;padding:4px 8px}#lab .circuit-wrap{flex:1;min-height:120px;margin:5px 0;display:flex;align-items:center;justify-content:center;border-radius:12px}#lab .circuit-wrap svg{width:100%;height:100%;min-height:0;aspect-ratio:1000/520}#lab .circuit-wrap text{font-size:inherit}
+ #lab .reading-row{margin:3px 0;gap:6px}#lab .reading{padding:6px 7px;border-radius:10px}#lab .reading small{font-size:10px;margin-bottom:1px}#lab .reading b{font-size:21px}#lab .reading em{font-size:12px}#lab .measure-select{gap:8px;margin-top:4px;flex:none;font-size:11px}#lab .measure-select select{min-height:36px;padding:6px;font-size:12px}#lab .circuit-note{font-size:11px;line-height:1.4;margin:5px 0 0;flex:none}
+ #lab .lab-tools{display:flex;flex-direction:column;gap:7px;min-height:0;position:relative}#lab .experiment-controls{padding:12px;flex:1;min-height:0}#lab .experiment-controls legend{font-size:14px}#lab .control-row{padding:7px 0;gap:8px}#lab .control-row label{font-size:12px}#lab .control-row input{min-width:100px;min-height:36px}#lab .circuit-controls{gap:7px;margin:8px 0}#lab .circuit-controls button,#lab .choices button{font-size:12px;min-height:40px;padding:8px 10px}#lab .circuit-controls .pill{font-size:10px}#lab .action-row{gap:7px;margin-top:12px;flex-wrap:wrap}#lab .action-row button{font-size:12px;min-height:42px;padding:9px 10px}#lab .experiment-controls .action-row{flex-direction:column}#lab .record-invite{font-size:11px;line-height:1.5;margin-top:9px}#lab .compact-rule{font-size:11px;margin-top:8px}
+ #lab .record-form{padding:11px 12px;flex:1;min-height:0;border-radius:14px}#lab .record-form .eyebrow{font-size:10px}#lab .record-form h3{font-size:16px;margin:3px 0 6px}#lab .record-description{font-size:11px;line-height:1.4;margin:5px 0 9px}#lab .measurement-fields{gap:8px 10px}#lab .measurement-fields>label{font-size:11px}#lab .measurement-fields label>span{gap:5px;margin-top:3px}#lab .measurement-fields input{height:40px;min-height:40px;padding:6px 8px;font-size:16px;border-radius:8px}#lab .measure-error{font-size:10px;line-height:1.2;margin-top:3px}#lab .record-error{font-size:11px;line-height:1.3;margin:7px 0}#lab .record-form .action-row{margin-top:9px}#lab .record-form .action-row button{font-size:11px}#lab .evidence-list{margin:0;flex:none;font-size:11px}#lab .evidence-list summary{padding:4px 0}#lab .evidence-history{position:absolute;bottom:30px;right:0;left:0;max-height:200px;overflow:auto;z-index:5;box-shadow:0 5px 15px #304b4120}
+ #lab .prediction{margin:auto;max-width:720px;width:100%}
+}
+@media(max-width:899px),(orientation:portrait){.lab-layout{display:block}.lab-side{padding:16px;border-right:0}.lab-task-head .task-heading{flex-basis:100%}.lab-guide{flex:1}.lab-guide-content{margin-top:8px}.lab-task-head .hint-button{font-size:12px}.experiment-workbench{display:block}.lab-tools{margin-top:15px}.circuit-pane .circuit-wrap svg{aspect-ratio:1000/520}.circuit-pane .circuit-wrap text{font-size:inherit}.festival-caption{padding:14px}.festival-caption p{font-size:10px}.festival-scene{padding:22px 10px}}
+@media(prefers-reduced-motion:reduce){.festival-scene{background:none}}
+@media(min-width:900px) and (orientation:landscape){#lab .record-form{overflow:auto}}
+@media(min-width:900px) and (max-height:499px){#lab{height:auto;overflow:auto}#labContent{height:auto}#lab .experiment-workbench{min-height:400px}#lab .lab-main{flex:none}#lab .lab-layout{flex:none}}
+
+.record-form.has-errors .record-description{display:none}
 </style></head>
 <body>
 <main id="game" aria-label="놀러오세요 전기의 숲 탐험 게임">
@@ -61,6 +86,7 @@ dialog{border:0;border-radius:27px;padding:0;background:var(--paper);color:var(-
 <dialog id="story" class="story-dialog" aria-labelledby="storyTitle"><div id="storyContent"></div></dialog>
 <input type="file" id="importFile" accept="application/json,.json" hidden>
 <input type="file" id="musicFile" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.webm" data-ime="off" hidden>
+<section id="festivalScene" class="festival-scene" role="dialog" aria-modal="true" aria-label="빛 축제 개막" hidden><div class="festival-caption"><p>LIGHTS ON · 우리가 함께 밝힌 숲</p><h2 id="festivalMessage" role="status">빛 축제를 준비하고 있어요.</h2></div><button id="festivalSkip" data-action="festival-skip">개막 연출 건너뛰기 →</button></section>
 <div id="printSheet"></div>
 <script src="lib/three.min.js"></script>
 <script>(function(root){
@@ -137,13 +163,21 @@ class IslandWorld{
   this.camera=new T.OrthographicCamera(-18,18,11,-11,0.1,130);
   this.renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;this.renderer.outputEncoding=T.sRGBEncoding;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.03;
   this.hemi=new T.HemisphereLight(0xf5fcdf,0x5b9383,0.9);this.scene.add(this.hemi);this.sun=new T.DirectionalLight(0xfff2d2,1.55);this.sun.position.set(-13,26,14);this.sun.castShadow=true;this.sun.shadow.mapSize.set(1536,1536);Object.assign(this.sun.shadow.camera,{left:-32,right:32,top:32,bottom:-32,near:1,far:80});this.sun.shadow.bias=-0.0007;this.sun.shadow.normalBias=0.035;this.sun.shadow.radius=3;this.scene.add(this.sun);
-  this.materials={};this.seed=487;this.build();this.batchStatic();
+  this.materials={};this.festivalLights=[];this.festivalRun=null;this.festivalSerial=0;this.motionQuery=window.matchMedia?window.matchMedia('(prefers-reduced-motion:reduce)'):null;this.seed=487;this.build();this.buildFestivalDecor();this.batchStatic();
   this.player=this.character('#5d9db0','#513b30','human');this.player.position.set(state.pos.x,0.43,state.pos.z);this.scene.add(this.player);
   this.camTarget.copy(this.player.position);this.ray=new T.Raycaster();this.mouse=new T.Vector2();this.plane=new T.Plane(new T.Vector3(0,1,0),-0.43);
   this.resize();this.bind();this.applyProgress();this.last=performance.now();this.frame=this.frame.bind(this);requestAnimationFrame(this.frame);
  }
  rnd(){this.seed=(this.seed*16807)%2147483647;return(this.seed-1)/2147483646;}
  mat(color,rough=0.9){const key=color+'_'+rough;return this.materials[key]||(this.materials[key]=new T.MeshStandardMaterial({color:new T.Color(color).convertSRGBToLinear(),roughness:rough}));}
+ regionAt(x,z){let region=0,distance=Infinity;for(const q of IslandModel.quests){const d=Math.hypot(x-q.x,z-q.z);if(d<distance){distance=d;region=q.id;}}return region;}
+ registerFestivalLight(material,q,{off='#506169',on='#ffe3a0',power=1.5,points=false}={}){
+  // Only dedicated window/lantern materials enter this list. Cached scenery materials stay untouched.
+  const light={material,q,off:new T.Color(off).convertSRGBToLinear(),on:new T.Color(on).convertSRGBToLinear(),power,points,level:0};
+  if(material.emissive)material.emissive.copy(new T.Color('#ffc36a').convertSRGBToLinear());this.festivalLights.push(light);return light;
+ }
+ setFestivalLight(light,level){level=Math.max(0,Math.min(1,level));light.level=level;light.material.color.copy(light.off).lerp(light.on,level);if(light.material.emissive)light.material.emissiveIntensity=light.power*level;if(light.points)light.material.opacity=level;}
+ glow(radius,color,x,y,z,q,parent){const material=new T.MeshStandardMaterial({color:new T.Color(color).convertSRGBToLinear(),emissive:0xffbd68,emissiveIntensity:0,roughness:.45});const m=this.ball(radius,material,x,y,z,parent);m.castShadow=false;this.registerFestivalLight(material,q,{on:color});this.lamps.push({m,q});return m;}
  mesh(geo,color,x=0,y=0,z=0,parent=this.scene){const m=new T.Mesh(geo,typeof color==='string'||typeof color==='number'?this.mat(color):color);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
  box(w,h,d,color,x,y,z,parent){return this.mesh(new T.BoxGeometry(w,h,d),color,x,y,z,parent);}
  ball(r,color,x,y,z,parent,sx=1,sy=1,sz=1){const m=this.mesh(new T.SphereGeometry(r,12,9),color,x,y,z,parent);m.scale.set(sx,sy,sz);return m;}
@@ -167,14 +201,15 @@ class IslandWorld{
   this.box(w+.35,.22,d+.4,'#b0a591',0,.12,0,g);this.box(w,2.8,d,wallColor,0,1.55,0,g);
   const vs=new Float32Array([-w/2-.35,2.85,-d/2-.4,w/2+.35,2.85,-d/2-.4,0,4.2,-d/2-.4,-w/2-.35,2.85,d/2+.4,w/2+.35,2.85,d/2+.4,0,4.2,d/2+.4]);const roof=new T.BufferGeometry();roof.setAttribute('position',new T.BufferAttribute(vs,3));roof.setIndex([0,2,1,3,4,5,0,3,5,0,5,2,1,2,5,1,5,4,0,1,4,0,4,3]);roof.computeVertexNormals();this.mesh(roof,roofColor,0,0,0,g);
   for(let i=0;i<7;i++){const xx=-w/2-.28+i*(w+.56)/6,yy=4.22-Math.abs(xx)/(w/2+.35)*1.34;this.box(.045,.045,d+.82,roofColor,xx,yy,0,g);}
-  this.box(.95,1.85,.12,'#866743',-.2,1.1,d/2+.07,g);this.box(.59,.58,.14,'#a7d4ce',-.2,1.5,d/2+.15,g);this.ball(.055,'#f3d087',.12,1,d/2+.18,g);
-  for(const xx of [-1.3,1.25]){this.box(.85,.95,.14,'#f7ebca',xx,1.67,d/2+.08,g);this.box(.64,.72,.16,'#91cbd0',xx,1.67,d/2+.1,g);this.box(.04,.76,.18,'#fff0c9',xx,1.67,d/2+.13,g);this.box(.7,.04,.18,'#fff0c9',xx,1.67,d/2+.13,g);this.box(1,.17,.42,'#a67e54',xx,1.11,d/2+.19,g);for(let f=0;f<3;f++)this.flower(x+xx+(f-1)*.24,z+d/2+.28,'#f5b2ab',1.15);}
+  const windowGlass=new T.MeshStandardMaterial({color:0x738c8b,emissive:0xffbf63,emissiveIntensity:0,roughness:.4}),windows=[];
+  this.box(.95,1.85,.12,'#866743',-.2,1.1,d/2+.07,g);windows.push(this.box(.59,.58,.14,windowGlass,-.2,1.5,d/2+.15,g));this.ball(.055,'#f3d087',.12,1,d/2+.18,g);
+  for(const xx of [-1.3,1.25]){this.box(.85,.95,.14,'#f7ebca',xx,1.67,d/2+.08,g);windows.push(this.box(.64,.72,.16,windowGlass,xx,1.67,d/2+.1,g));this.box(.04,.76,.18,'#fff0c9',xx,1.67,d/2+.13,g);this.box(.7,.04,.18,'#fff0c9',xx,1.67,d/2+.13,g);this.box(1,.17,.42,'#a67e54',xx,1.11,d/2+.19,g);for(let f=0;f<3;f++)this.flower(x+xx+(f-1)*.24,z+d/2+.28,'#f5b2ab',1.15);}
   this.box(.55,1.1,.62,'#b09073',1.25,3.65,-.7,g);
   if(kind==='cafe'){for(let k=0;k<7;k++){const a=this.box(.64,.09,1.1,k%2?'#fff0c9':'#61a8a0',-1.92+k*.64,2.51,d/2+.54,g);a.rotation.x=.14;}this.cylinder(.09,.09,2.4,'#f1dfb2',-2,1.2,d/2+1,g);this.cylinder(.09,.09,2.4,'#f1dfb2',2,1.2,d/2+1,g);}
-  const fadeMaterials=new Map();g.traverse(m=>{if(m.isMesh){if(!fadeMaterials.has(m.material.uuid)){const material=m.material.clone();material.transparent=true;fadeMaterials.set(m.material.uuid,material);}m.material=fadeMaterials.get(m.material.uuid);}});this.houseFades.push({box:new T.Box3(new T.Vector3(x-w/2-.4,.45,z-d/2-.4),new T.Vector3(x+w/2+.4,4.8,z+d/2+.4)),materials:[...fadeMaterials.values()]});this.colliders.push({x,z,w:w/2+.2,d:d/2+.1});return g;
+  const fadeMaterials=new Map();g.traverse(m=>{if(m.isMesh){if(!fadeMaterials.has(m.material.uuid)){const material=m.material.clone();material.transparent=true;fadeMaterials.set(m.material.uuid,material);}m.material=fadeMaterials.get(m.material.uuid);}});for(const material of new Set(windows.map(m=>m.material)))this.registerFestivalLight(material,this.regionAt(x,z),{off:'#627c80',on:'#ffe3a4',power:1.8});windowGlass.dispose();this.houseFades.push({box:new T.Box3(new T.Vector3(x-w/2-.4,.45,z-d/2-.4),new T.Vector3(x+w/2+.4,4.8,z+d/2+.4)),materials:[...fadeMaterials.values()]});this.colliders.push({x,z,w:w/2+.2,d:d/2+.1});return g;
  }
  flower(x,z,color,y=.46){const g=new T.Group();g.position.set(x,y,z);this.scene.add(g);this.cylinder(.026,.028,.27,'#508e44',0,.14,0,g,5);for(let j=0;j<5;j++){const a=j*Math.PI*2/5;this.ball(.085,color,Math.cos(a)*.092,.3,Math.sin(a)*.092,g,1,.6,1);}this.ball(.048,'#f1d470',0,.33,0,g);}
- lamp(x,z,q){this.cylinder(.06,.09,1.65,'#6c7968',x,1.25,z);this.cylinder(.3,.22,.15,'#e1bd7d',x,2.13,z);const mat=new T.MeshStandardMaterial({color:'#ffe6a0',emissive:'#ffc86b',emissiveIntensity:.05,roughness:.5});const m=this.ball(.22,mat,x,1.91,z);this.lamps.push({m,q});}
+ lamp(x,z,q){this.cylinder(.06,.09,1.65,'#6c7968',x,1.25,z);this.cylinder(.3,.22,.15,'#e1bd7d',x,2.13,z);this.glow(.22,'#ffe6a0',x,1.91,z,q);}
  character(shirt,skin,kind){const g=new T.Group();this.cylinder(.3,.4,.7,shirt,0,.73,0,g);this.ball(.44,skin,0,1.38,.02,g,1,1.08,.95);
   if(kind==='human'){this.ball(.445,'#533d32',0,1.56,-.075,g,1,.72,1);this.box(.63,.15,.22,'#533d32',0,1.69,.29,g);this.ball(.1,skin,-.43,1.4,0,g);this.ball(.1,skin,.43,1.4,0,g);this.box(.37,.45,.19,'#d5ba7f',0,.83,-.31,g);}
   else {const earY=kind==='rabbit'?2.02:1.77,earR=kind==='rabbit'?.15:.2;this.ball(earR,skin,-.27,earY,0,g,1,kind==='rabbit'?2.5:1,1);this.ball(earR,skin,.27,earY,0,g,1,kind==='rabbit'?2.5:1,1);this.ball(.24,'#f2dfb9',0,1.23,.31,g,1,.72,.65);this.ball(.07,'#644e40',0,1.37,.44,g);}
@@ -189,8 +224,8 @@ class IslandWorld{
   for(const z of [3,-9]){for(let x=5.8;x<=9.2;x+=.27)this.box(.23,.22,2.7,'#c29a68',x,.57,z);for(const zz of [z-1.4,z+1.4]){this.box(3.8,.12,.12,'#eed5a0',7.5,1.35,zz);for(const x of [5.75,6.9,8.1,9.25])this.box(.14,1.1,.14,'#b88954',x,.93,zz);}}
   this.house(-10,-6,'#b75f50','#f0deb3');this.house(-11,6,'#687f9d','#e7d8b6');this.house(15,0,'#629b90','#f6e9ca','cafe');
   const plaza=this.cylinder(3.4,3.4,.1,'#e5c291',13,.49,-11,undefined,40);plaza.castShadow=false;for(let i=0;i<18;i++){const a=i*Math.PI*2/18;this.box(.55,.018,.6,i%2?'#eacda7':'#d6b181',13+Math.cos(a)*2.8,.555,-11+Math.sin(a)*2.8).rotation.y=-a;}
-  this.cylinder(.4,.7,.48,'#e5d8b3',13,.76,-11);this.cylinder(.09,.12,3.4,'#a87d50',13,2.65,-11);this.ball(.43,'#ffe6a1',13,4.45,-11);this.lamps.push({m:this.scene.children[this.scene.children.length-1],q:4});
-  for(let j=0;j<9;j++){const x=10+j*.75,z=-11.7;this.cylinder(.04,.04,2.8,'#b89163',x,1.9,z);this.ball(.15,j%2?'#f1bc78':'#79b8bc',x,3.2,z);}
+  this.cylinder(.4,.7,.48,'#e5d8b3',13,.76,-11);this.cylinder(.09,.12,3.4,'#a87d50',13,2.65,-11);this.glow(.43,'#ffe6a1',13,4.45,-11,4);
+  for(let j=0;j<9;j++){const x=10+j*.75,z=-11.7;this.cylinder(.04,.04,2.8,'#b89163',x,1.9,z);this.glow(.15,j%2?'#ffdc9c':'#acf0df',x,3.2,z,4);}
   this.fence(-15,-3,3);this.fence(-15,-9,6,'z');this.fence(-15,9,4);this.fence(-5,-11,3,'z');this.fence(17,6,3);this.fence(19,-7,5,'z');
   // A compact vegetable patch and a player campsite are part of the explorable world.
   this.box(3,.08,2.8,'#a9815c',-15,.49,4);for(let i=0;i<4;i++)for(let j=0;j<3;j++){this.ball(.2,'#83b25a',-16+i*.65,.7,3.2+j*.73);if(j%2===0)this.ball(.11,'#dd8764',-16+i*.65,.66,3.4+j*.73);}
@@ -202,10 +237,16 @@ class IslandWorld{
   for(const [cx,cz] of [[-5,8],[-12,-2],[2,-7],[11,5],[17,-7],[-3,12]])for(let j=0;j<11;j++){const a=j*2.4,r=.35+Math.sqrt(j)*.22;this.flower(cx+Math.cos(a)*r,cz+Math.sin(a)*r,['#fff0a0','#f2a6be','#adabe9','#fff8ef'][j%4]);}
   for(const [x,z] of [[-5,3],[17,4.3]]){this.box(1.7,.15,.57,'#bf915b',x,.9,z);for(const dx of [-.6,.6])this.box(.12,.65,.45,'#90734e',x+dx,.62,z);this.box(1.7,.42,.12,'#d4a470',x,1.25,z-.22);this.colliders.push({x,z,w:.9,d:.4});}
   for(const [x,z] of [[13.6,5.2],[17.8,3.8]]){this.cylinder(.65,.65,.13,'#efcf8e',x,1.05,z);this.cylinder(.12,.21,.55,'#ac8f64',x,.74,z);this.cylinder(.09,.07,.14,'#f4e5bf',x+.16,1.2,z);this.ball(.14,'#a6be80',x-.18,1.22,z);}
-  for(const [x,z] of [[-6,6],[-11,-2],[-3,-5],[1,-9],[10,4],[17,4],[11,-7],[16,-10]])this.lamp(x,z,x>9?3:z<0?2:0);
+  for(const [x,z] of [[-6,6],[-11,-2],[-3,-5],[1,-9],[10,4],[17,4],[11,-7],[16,-10]])this.lamp(x,z,this.regionAt(x,z));
   for(let i=0;i<10;i++){const g=this.ball(.23,'#cad3ad',-18+i*1.1,.57,15.7,undefined,1.5,.5,1);g.rotation.y=this.rnd()*3;}
   IslandModel.quests.forEach((q,i)=>{const g=this.character(['#e1a668','#7fadb1','#a58fac','#93b69a','#ce9c7b'][i],['#c5c7be','#d69867','#ae8a64','#e3d2bd','#e6c770'][i],i===3?'rabbit':'animal');g.position.set(q.x,.45,q.z);g.rotation.y=.2;this.scene.add(g);const ring=this.mesh(new T.TorusGeometry(.71,.055,8,28),'#fff0ad',0,.02,0,g);ring.rotation.x=Math.PI/2;const marker=this.ball(.18,'#ffdf85',0,2.45,0,g);this.npcs.push({q,g,marker,ring});});
   this.clouds=[];for(let i=0;i<7;i++){const group=new T.Group();group.position.set(-36+i*12,12+this.rnd()*5,-29-this.rnd()*8);this.scene.add(group);for(let j=0;j<4;j++)this.ball(1.3,'#f2f4df',j*1.25,Math.sin(j)*.3,0,group,1.5,.5,.75);this.clouds.push(group);}
+ }
+ buildFestivalDecor(){
+  // Five point batches add tree garlands without dozens of lamps, shadows or draw calls.
+  const positions=Array.from({length:5},()=>[]);this.scene.updateMatrixWorld(true);
+  for(const tree of this.trees){const trunk=tree.g.parent,q=this.regionAt(trunk.position.x,trunk.position.z);for(let k=0;k<7;k++){const a=k*Math.PI*2/7,p=new T.Vector3(Math.cos(a)*1.04,2.2+Math.sin(a*2)*.13,Math.sin(a)*1.04);trunk.localToWorld(p);positions[q].push(p.x,p.y,p.z);}}
+  for(let q=0;q<5;q++){if(!positions[q].length)continue;const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(positions[q],3));const material=new T.PointsMaterial({color:0xffdf9b,size:3.5,sizeAttenuation:false,transparent:true,opacity:0,depthWrite:false});this.scene.add(new T.Points(geometry,material));this.registerFestivalLight(material,q,{on:q%2?'#bdf3d5':'#ffe1a1',points:true});}
  }
  nearPath(x,z,pad=1.6){return Math.abs(z-3)<pad&&x>-5||Math.hypot(x+3,z-5)<4||Math.abs(x+9)<pad&&z>-5&&z<10||Math.abs(z+9)<pad&&x>-4||Math.abs(x-15)<pad&&z>-7&&z<6||Math.hypot(x,z+9)<2.5;}
  blocked(x,z){if(x< -19.5||x>20.5||z< -16.4||z>16.4)return true;if(x>5.45&&x<9.55&&Math.abs(z-3)>1.13&&Math.abs(z+9)>1.13)return true;return this.colliders.some(c=>c.r?Math.hypot(x-c.x,z-c.z)<c.r+.28:Math.abs(x-c.x)<c.w+.28&&Math.abs(z-c.z)<c.d+.28);}
@@ -213,21 +254,49 @@ class IslandWorld{
   if(!end)return[];const path=[];while(end&&end!==key(from)){const p=end.split(',').map(Number);path.push({x:p[0]*size,z:p[1]*size});end=seen.get(end).parent;}return path.reverse();
  }
  go(q){this.path=this.findPath(q.x,q.z+1.6);if(!this.path.length){this.cb.toast('가까운 길을 눌러 이동해 보세요.');return;}this.pendingNpc=q.id;}
- bind(){window.addEventListener('resize',()=>this.resize());window.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.target.isContentEditable)return;if(this.paused)return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();this.keys.add(e.code);if(e.code==='KeyE'||e.code==='Space'){if(this.nearest!=null)this.cb.interact(this.nearest);}if(e.code==='KeyJ')this.cb.journal();});window.addEventListener('keyup',e=>this.keys.delete(e.code));window.addEventListener('blur',()=>{this.keys.clear();this.joy={x:0,z:0};});
-  this.canvas.addEventListener('pointerdown',e=>{this.pointer={x:e.clientX,y:e.clientY,t:performance.now()};});this.canvas.addEventListener('pointerup',e=>{if(this.paused||Math.hypot(e.clientX-this.pointer.x,e.clientY-this.pointer.y)>15)return;const rect=this.canvas.getBoundingClientRect();this.mouse.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);this.ray.setFromCamera(this.mouse,this.camera);const hit=new T.Vector3();if(this.ray.ray.intersectPlane(this.plane,hit)){const npc=this.npcs.find(n=>Math.hypot(n.q.x-hit.x,n.q.z-hit.z)<1.25);if(npc){if(Math.hypot(npc.q.x-this.player.position.x,npc.q.z-this.player.position.z)<3)this.cb.interact(npc.q.id);else this.go(npc.q);}else{this.path=this.findPath(hit.x,hit.z);this.pendingNpc=null;}}});
+ bind(){window.addEventListener('resize',()=>this.resize());window.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.target.isContentEditable)return;if(this.paused||this.festivalRun)return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();this.keys.add(e.code);if(e.code==='KeyE'||e.code==='Space'){if(this.nearest!=null)this.cb.interact(this.nearest);}if(e.code==='KeyJ')this.cb.journal();});window.addEventListener('keyup',e=>this.keys.delete(e.code));window.addEventListener('blur',()=>{this.keys.clear();this.joy={x:0,z:0};});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden&&this.festivalRun)this.finishFestival('hidden');});const reducedChanged=e=>{if(e.matches&&this.festivalRun)this.finishFestival('reduced-motion');};if(this.motionQuery?.addEventListener)this.motionQuery.addEventListener('change',reducedChanged);else this.motionQuery?.addListener?.(reducedChanged);
+  this.canvas.addEventListener('pointerdown',e=>{this.pointer={x:e.clientX,y:e.clientY,t:performance.now()};});this.canvas.addEventListener('pointerup',e=>{if(this.paused||this.festivalRun||Math.hypot(e.clientX-this.pointer.x,e.clientY-this.pointer.y)>15)return;const rect=this.canvas.getBoundingClientRect();this.mouse.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);this.ray.setFromCamera(this.mouse,this.camera);const hit=new T.Vector3();if(this.ray.ray.intersectPlane(this.plane,hit)){const npc=this.npcs.find(n=>Math.hypot(n.q.x-hit.x,n.q.z-hit.z)<1.25);if(npc){if(Math.hypot(npc.q.x-this.player.position.x,npc.q.z-this.player.position.z)<3)this.cb.interact(npc.q.id);else this.go(npc.q);}else{this.path=this.findPath(hit.x,hit.z);this.pendingNpc=null;}}});
  }
  batchStatic(){this.scene.updateMatrixWorld(true);const keep=new Set([this.water,this.campDecor,...this.trees.map(t=>t.g),...this.npcs.map(n=>n.g),...this.lamps.map(l=>l.m),...this.clouds]);const groups=new Map();this.scene.traverse(m=>{if(!m.isMesh||Array.isArray(m.material))return;for(let p=m;p;p=p.parent)if(keep.has(p))return;const key=m.material.uuid+'_'+m.castShadow+'_'+m.receiveShadow;if(!groups.has(key))groups.set(key,{mat:m.material,cast:m.castShadow,receive:m.receiveShadow,meshes:[]});groups.get(key).meshes.push(m);});for(const {mat,cast,receive,meshes} of groups.values()){if(meshes.length<2)continue;let pos=[],normal=[],uv=[];for(const m of meshes){const g=m.geometry.index?m.geometry.toNonIndexed():m.geometry.clone();g.applyMatrix4(m.matrixWorld);const p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv;pos.push(...p.array);normal.push(...(n?n.array:new Float32Array(p.count*3)));uv.push(...(u?u.array:new Float32Array(p.count*2)));g.dispose();m.parent.remove(m);}const merged=new T.BufferGeometry();merged.setAttribute('position',new T.Float32BufferAttribute(pos,3));merged.setAttribute('normal',new T.Float32BufferAttribute(normal,3));merged.setAttribute('uv',new T.Float32BufferAttribute(uv,2));const mesh=new T.Mesh(merged,mat);mesh.castShadow=cast;mesh.receiveShadow=receive;this.scene.add(mesh);}}
  resize(){const w=this.canvas.clientWidth,h=this.canvas.clientHeight;this.renderer.setSize(w,h,false);const hh=w<650?10:9;this.camera.left=-hh*w/h;this.camera.right=hh*w/h;this.camera.top=hh;this.camera.bottom=-hh;this.camera.updateProjectionMatrix();}
- applyProgress(){const done=this.state.completed;for(const l of this.lamps){if(l.m.material.emissive)l.m.material.emissiveIntensity=done.includes(l.q)?1.1:.02;l.m.material.color.set(done.includes(l.q)?'#ffe8a3':'#d0c8a1');}for(const n of this.npcs){n.marker.material=this.mat(done.includes(n.q.id)?'#a7d6b1':'#ffdc80');}while(this.campDecor.children.length)this.campDecor.remove(this.campDecor.children[0]);if(done.includes(1)){this.cylinder(.3,.24,.46,'#c89272',0,.23,0,this.campDecor);this.ball(.4,'#77a45c',0,.65,0,this.campDecor);this.ball(.14,'#f5bd94',.12,.92,.15,this.campDecor);}if(done.includes(2)){this.cylinder(.03,.03,1.9,'#a88964',1,.95,0,this.campDecor);this.box(.65,.45,.035,'#f2cc75',1.32,1.6,0,this.campDecor);}if(done.includes(3))this.ball(.27,{mint:'#8bd6c6',peach:'#efb08e',lemon:'#ebd385'}[this.state.camp],-.8,.27,.2,this.campDecor);}
+ applyProgress(){const done=this.state.completed;if(!this.festivalRun)this.restoreFestivalLights();for(const n of this.npcs){n.marker.material=this.mat(done.includes(n.q.id)?'#a7d6b1':'#ffdc80');}while(this.campDecor.children.length)this.campDecor.remove(this.campDecor.children[0]);if(done.includes(1)){this.cylinder(.3,.24,.46,'#c89272',0,.23,0,this.campDecor);this.ball(.4,'#77a45c',0,.65,0,this.campDecor);this.ball(.14,'#f5bd94',.12,.92,.15,this.campDecor);}if(done.includes(2)){this.cylinder(.03,.03,1.9,'#a88964',1,.95,0,this.campDecor);this.box(.65,.45,.035,'#f2cc75',1.32,1.6,0,this.campDecor);}if(done.includes(3))this.ball(.27,{mint:'#8bd6c6',peach:'#efb08e',lemon:'#ebd385'}[this.state.camp],-.8,.27,.2,this.campDecor);}
+ restoreFestivalLights(){for(const light of this.festivalLights)this.setFestivalLight(light,this.state.festival||this.state.completed.includes(light.q)?1:0);}
+ festivalCallback(callback,detail){if(typeof callback==='function')try{callback(detail);}catch(error){console.error('축제 화면 연결 오류:',error);}}
+ playFestival({onComplete,onStage,calm=this.state.calm}={}){
+  this.cancelFestival();const reduced=!!calm||!!this.motionQuery?.matches;
+  const run={id:++this.festivalSerial,started:performance.now(),duration:reduced?1.5:7.2,calm:reduced,onComplete,onStage,lastStage:'',lastRegion:-1,paused:this.paused,cameraTarget:this.camTarget.clone(),cameraZoom:this.camera.zoom,overview:new T.Vector3(1.5,.45,.8),cameraBlend:0,initialLevels:this.festivalLights.map(l=>l.level),sun:this.sun.intensity,hemi:this.hemi.intensity,sky:this.scene.background.clone(),water:this.waterMat.color.clone(),darkSky:new T.Color('#304867'),darkWater:new T.Color('#345f78').convertSRGBToLinear(),finalSky:new T.Color(this.state.festival?'#aeb9d6':'#9cdbdf'),finalWater:new T.Color(this.state.festival?'#6b95b3':'#60b8c8').convertSRGBToLinear()};
+  this.festivalRun=run;this.keys.clear();this.joy={x:0,z:0};this.path=[];this.pendingNpc=null;
+  // The timeout only completes a suspended/very slow render loop; animation timing uses wall-clock time.
+  run.timer=setTimeout(()=>{if(this.festivalRun===run)this.finishFestival('complete');},run.duration*1000+120);
+  this.updateFestival(run.started);if(document.hidden&&this.festivalRun===run)this.finishFestival('hidden');
+  return {durationMs:run.duration*1000,cancel:()=>{if(this.festivalRun===run)this.cancelFestival();}};
+ }
+ cancelFestival({restore=true}={}){const run=this.festivalRun;if(!run)return false;clearTimeout(run.timer);this.festivalRun=null;this.keys.clear();this.joy={x:0,z:0};if(restore)this.restoreFestivalView(run);return true;}
+ restoreFestivalView(run){
+  this.camTarget.copy(run.cameraTarget);this.camera.zoom=run.cameraZoom;this.camera.updateProjectionMatrix();this.camera.position.set(this.camTarget.x+13,this.camTarget.y+21,this.camTarget.z+19.5);this.camera.lookAt(this.camTarget.x,this.camTarget.y+.1,this.camTarget.z-1);this.paused=run.paused;
+  this.restoreFestivalLights();this.dusk=this.state.festival?1:0;this.sun.intensity=1.45-this.dusk*.24;this.hemi.intensity=1.35-this.dusk*.12;this.scene.background.set(this.state.festival?'#aeb9d6':'#9cdbdf');this.waterMat.color.copy(run.finalWater);
+ }
+ finishFestival(reason='complete'){const run=this.festivalRun;if(!run)return;const detail={stage:'complete',elapsed:run.duration,reason,calm:run.calm};this.cancelFestival();this.festivalCallback(run.onStage,detail);this.festivalCallback(run.onComplete,detail);}
+ updateFestival(now){
+  const run=this.festivalRun;if(!run)return;const elapsed=Math.max(0,(now-run.started)/1000);if(elapsed>=run.duration){this.finishFestival('complete');return;}
+  const smooth=x=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);},dimEnd=run.calm?.35:1.2,step=run.calm?.14:.6,ramp=run.calm?.2:.45,finaleAt=run.calm?1.1:4.2,region=Math.min(4,Math.floor((elapsed-dimEnd)/step)),stage=elapsed<dimEnd?'dim':elapsed<finaleAt?'relight':'finale';
+  if(stage!==run.lastStage||stage==='relight'&&region!==run.lastRegion){run.lastStage=stage;run.lastRegion=region;this.festivalCallback(run.onStage,{stage,region:stage==='relight'?region:undefined,elapsed,calm:run.calm});if(this.festivalRun!==run)return;}
+  const floor=run.calm?.5:0;for(let i=0;i<this.festivalLights.length;i++){const light=this.festivalLights[i],level=elapsed<dimEnd?run.initialLevels[i]*(1-(1-floor)*smooth(elapsed/(run.calm?.35:.7))):floor+(1-floor)*smooth((elapsed-dimEnd-light.q*step)/ramp);this.setFestivalLight(light,level);}
+  const dim=smooth(elapsed/(run.calm?.35:1.0))*(run.calm?.25:1),bright=smooth((elapsed-finaleAt)/(run.duration-finaleAt)),stableDusk=this.state.festival?1:0;
+  this.sun.intensity=(run.sun+(0.32-run.sun)*dim)*(1-bright)+(1.45-stableDusk*.24)*bright;this.hemi.intensity=(run.hemi+(.63-run.hemi)*dim)*(1-bright)+(1.35-stableDusk*.12)*bright;
+  this.scene.background.copy(run.sky).lerp(run.darkSky,dim).lerp(run.finalSky,bright);this.waterMat.color.copy(run.water).lerp(run.darkWater,dim).lerp(run.finalWater,bright);
+  run.cameraBlend=run.calm?0:smooth(elapsed/1.25)*(1-smooth((elapsed-6.1)/1.1));
+ }
  frame(now){requestAnimationFrame(this.frame);const dt=Math.min((now-this.last)/1000,.04);this.last=now;this.time+=dt;
-  let dx=0,dz=0;if(!this.paused){let sx=0,sy=0;if(this.keys.has('KeyW')||this.keys.has('ArrowUp'))sy--;if(this.keys.has('KeyS')||this.keys.has('ArrowDown'))sy++;if(this.keys.has('KeyA')||this.keys.has('ArrowLeft'))sx--;if(this.keys.has('KeyD')||this.keys.has('ArrowRight'))sx++;sx+=this.joy.x;sy+=this.joy.z;if(Math.hypot(sx,sy)>.08){this.path=[];this.pendingNpc=null;dx=sx*.832+sy*.555;dz=-sx*.555+sy*.832;}else if(this.path.length){const p=this.path[0],dist=Math.hypot(p.x-this.player.position.x,p.z-this.player.position.z);if(dist<.2)this.path.shift();else{dx=(p.x-this.player.position.x)/dist;dz=(p.z-this.player.position.z)/dist;}}
+  this.updateFestival(now);let dx=0,dz=0;if(!this.paused&&!this.festivalRun){let sx=0,sy=0;if(this.keys.has('KeyW')||this.keys.has('ArrowUp'))sy--;if(this.keys.has('KeyS')||this.keys.has('ArrowDown'))sy++;if(this.keys.has('KeyA')||this.keys.has('ArrowLeft'))sx--;if(this.keys.has('KeyD')||this.keys.has('ArrowRight'))sx++;sx+=this.joy.x;sy+=this.joy.z;if(Math.hypot(sx,sy)>.08){this.path=[];this.pendingNpc=null;dx=sx*.832+sy*.555;dz=-sx*.555+sy*.832;}else if(this.path.length){const p=this.path[0],dist=Math.hypot(p.x-this.player.position.x,p.z-this.player.position.z);if(dist<.2)this.path.shift();else{dx=(p.x-this.player.position.x)/dist;dz=(p.z-this.player.position.z)/dist;}}
   const len=Math.hypot(dx,dz);if(len>.01){dx/=Math.max(1,len);dz/=Math.max(1,len);const nx=this.player.position.x+dx*4.7*dt,nz=this.player.position.z+dz*4.7*dt;if(!this.blocked(nx,this.player.position.z))this.player.position.x=nx;if(!this.blocked(this.player.position.x,nz))this.player.position.z=nz;const target=Math.atan2(dx,dz);this.player.rotation.y+=Math.atan2(Math.sin(target-this.player.rotation.y),Math.cos(target-this.player.rotation.y))*Math.min(1,dt*15);this.player.position.y=.45+(this.state.calm?0:Math.abs(Math.sin(this.time*12))*.055);}else this.player.position.y=.45;
   this.player.userData.legs.forEach((leg,i)=>leg.rotation.x=len>.01&&!this.state.calm?Math.sin(this.time*12+i*Math.PI)*.45:0);
   let nearest=null,distance=3;for(const n of this.npcs){const d=Math.hypot(n.q.x-this.player.position.x,n.q.z-this.player.position.z);if(d<distance){distance=d;nearest=n.q.id;}}if(nearest!==this.nearest){this.nearest=nearest;this.cb.near(nearest);}if(this.pendingNpc!=null&&!this.path.length&&nearest===this.pendingNpc){const id=this.pendingNpc;this.pendingNpc=null;this.cb.interact(id);}
   }
-  this.camTarget.lerp(this.player.position,1-Math.exp(-dt*3));this.camera.position.set(this.camTarget.x+13,this.camTarget.y+21,this.camTarget.z+19.5);this.camera.lookAt(this.camTarget.x,this.camTarget.y+.1,this.camTarget.z-1);
+  if(this.festivalRun){const run=this.festivalRun;this.camTarget.copy(run.cameraTarget).lerp(run.overview,run.cameraBlend);this.camera.zoom=run.cameraZoom*(1-.46*run.cameraBlend);this.camera.updateProjectionMatrix();}else this.camTarget.lerp(this.player.position,1-Math.exp(-dt*3));this.camera.position.set(this.camTarget.x+13,this.camTarget.y+21,this.camTarget.z+19.5);this.camera.lookAt(this.camTarget.x,this.camTarget.y+.1,this.camTarget.z-1);
   if(!this.state.calm){for(const t of this.trees)t.g.rotation.z=Math.sin(this.time*.8+t.offset)*.016;for(const n of this.npcs){n.marker.position.y=2.5+Math.sin(this.time*2+n.q.id)*.08;n.g.userData.legs[0].rotation.x=Math.sin(this.time+n.q.id)*.04;}for(const c of this.clouds){c.position.x+=dt*.16;if(c.position.x>60)c.position.x=-55;}const a=this.water.geometry.attributes.position;for(let i=0;i<a.count;i++)a.setY(i,Math.sin(a.getX(i)*.6+this.time*.55)*Math.cos(a.getZ(i)*.4+this.time*.3)*.035);a.needsUpdate=true;}
-  const eye=this.player.position.clone().add(new T.Vector3(0,1,0)),sight=new T.Ray(this.camera.position,eye.clone().sub(this.camera.position).normalize()),hit=new T.Vector3();for(const house of this.houseFades){const blocked=sight.intersectBox(house.box,hit)&&hit.distanceTo(this.camera.position)<eye.distanceTo(this.camera.position)-.5;for(const mat of house.materials){mat.opacity+=((blocked?.25:1)-mat.opacity)*Math.min(1,dt*8);mat.depthWrite=mat.opacity>.95;}}this.dusk+=(Number(this.state.festival)-this.dusk)*dt*.35;this.sun.intensity=1.45-this.dusk*.24;this.hemi.intensity=1.35-this.dusk*.12;this.scene.background.lerp(new T.Color(this.state.festival?'#aeb9d6':'#9cdbdf'),dt*.3);this.waterMat.color.lerp(new T.Color(this.state.festival?'#6b95b3':'#60b8c8').convertSRGBToLinear(),dt*.3);
+  const eye=this.player.position.clone().add(new T.Vector3(0,1,0)),sight=new T.Ray(this.camera.position,eye.clone().sub(this.camera.position).normalize()),hit=new T.Vector3();for(const house of this.houseFades){const blocked=!this.festivalRun&&sight.intersectBox(house.box,hit)&&hit.distanceTo(this.camera.position)<eye.distanceTo(this.camera.position)-.5;for(const mat of house.materials){mat.opacity+=((blocked?.25:1)-mat.opacity)*Math.min(1,dt*8);mat.depthWrite=mat.opacity>.95;}}if(!this.festivalRun){this.dusk+=(Number(this.state.festival)-this.dusk)*dt*.35;this.sun.intensity=1.45-this.dusk*.24;this.hemi.intensity=1.35-this.dusk*.12;this.scene.background.lerp(new T.Color(this.state.festival?'#aeb9d6':'#9cdbdf'),dt*.3);this.waterMat.color.lerp(new T.Color(this.state.festival?'#6b95b3':'#60b8c8').convertSRGBToLinear(),dt*.3);}
   this.renderer.render(this.scene,this.camera);if(Math.floor(this.time*8)!==this.lastUi){this.lastUi=Math.floor(this.time*8);this.cb.update(this.player.position,this.npcs.map(n=>{const v=new T.Vector3(n.q.x,3.4,n.q.z);v.project(this.camera);return{id:n.q.id,x:(v.x*.5+.5)*this.canvas.clientWidth,y:(-.5*v.y+.5)*this.canvas.clientHeight,visible:v.z<1};}));}
  }
 }
@@ -521,51 +590,188 @@ class IslandComfort{
 IslandComfort.helpHTML=helpHTML;window.IslandComfort=IslandComfort;
 })();
 </script><script>(function(root){
-'use strict';let serial=0;
-function svg(p,o={}){
- const M=root.IslandModel,v=M.circuit(p),f=M.fmt,par=p.type==='parallel',two=p.count===2,vertical=par&&(o.final||p.layout==='festival'),id='flow-'+(++serial);
- const ink='#56735c',current='#a05c2c',voltage='#7d5ba6';
- const wire=d=>`<path data-wire d="${d}" fill="none" stroke="${ink}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>`;
- const text=(x,y,t,c='#674e2b',anchor='middle')=>`<text x="${x}" y="${y}" fill="${c}" text-anchor="${anchor}">${t}</text>`;
- const dot=(x,y,c=ink,r=5)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`;
- const resistor=(x,y,r,label,rotate=false)=>{
-  const d='M0 0 L8 0 L14 -10 L26 10 L38 -10 L50 10 L62 -10 L72 0 L80 0';
-  return `<path data-resistor d="${d}" transform="translate(${x} ${y})${rotate?' rotate(90)':''}" fill="none" stroke="#8a5f24" stroke-width="4" stroke-linejoin="round"/>`+(rotate?text(x+25,y+25,label+' · '+r+' Ω','#805c2e','start'):text(x+40,y-25,label+' · '+r+' Ω'));
+'use strict';
+let serial=0;
+const SIZE={width:1000,height:520};
+const INK='#56735c',CURRENT='#a05c2c',VOLTAGE='#7d5ba6',PAPER='#fffdf4';
+const pointKey=p=>p.join(',');
+const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pathOf=points=>points.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' ');
+
+/* Geometry and electrical terminals share one plan. Meter leads are real branches;
+   the ideal voltmeter is excluded from the conducting network, never drawn as a bypass. */
+function plan(p,o={}){
+ const M=root.IslandModel,values=M.circuit(p),f=M.fmt;
+ const parallel=p.type==='parallel',two=p.count===2,festival=o.final||p.layout==='festival';
+ const vertical=parallel&&festival,items=[],edges=[],labels=[],arrows=[];
+ const sourceA=[130,220],sourceB=[130,280];
+ let sequence=0;
+ const wire=(points,flow=0,probe=false)=>{
+  const id='wire-'+(++sequence);
+  items.push({id,kind:probe?'probe-wire':'wire',points,flow});
+  for(let i=1;i<points.length;i++)edges.push({id:id+'-'+i,kind:probe?'probe-wire':'wire',a:points[i-1],b:points[i]});
  };
- const sw=(x,y,on,label,rotate=false)=>`<g data-switch="${on?'closed':'open'}" transform="translate(${x} ${y})${rotate?' rotate(90)':''}" stroke="#756c51" stroke-width="4" fill="none"><path d="M0 0L45 ${on?0:-23}"/>${dot(0,0,'#756c51',4)}${dot(45,0,'#756c51',4)}</g>`+(rotate?text(x+22,y+26,label,'#536e57','start'):text(x+23,y+31,label,'#536e57'));
- const arrow=(d)=>`<path d="${d}" fill="none" stroke="${current}" stroke-width="3" marker-end="url(#${id})"/>`;
- const electrons=d=>o.electrons?`<path class="pulse-flow" d="${d}" stroke="#24844c" stroke-width="5" fill="none"/>`:'';
- let body='',probes=[];
- const battery=`<path d="M68 174H112M78 190H102" stroke="#73674e" stroke-width="${4}"/><path d="M78 190H102" stroke="#73674e" stroke-width="8"/>${text(55,173,'+','#b24030')}${text(55,202,'−','#316c95')}${text(90,358,'전원 '+f(p.v)+' V',voltage)}`;
- if(par&&!vertical){
-  body=wire('M90 174V80H220V240')+wire('M90 190V320H670V80');
-  for(const [y,r,on,label,i,n] of [[80,p.r1,p.on1!==false,'실내',v.i1,1],[240,p.r2,p.on2!==false,'테라스',v.i2,2]]){
-   body+=wire(`M220 ${y}H300M380 ${y}H535M580 ${y}H670`)+resistor(300,y,r,label)+sw(535,y,on,label+' 스위치')+dot(220,y)+dot(670,y);
-   body+=text(260,y+42,'I'+(n===1?'₁':'₂')+' '+f(i)+' A',current)+text(625,y-25,'V'+(n===1?'₁':'₂')+' '+f(p.v)+' V',voltage);
-   if(i>0){body+=arrow(`M234 ${y}H279`)+electrons(`M670 ${y}H220`);}
-  }
-  if(o.probe&&o.probe!=='source')probes=[[220,o.probe==='r1'?80:240],[670,o.probe==='r1'?80:240]];
+ const component=(kind,id,a,b,props={})=>{
+  const item={kind,id,a,b,...props};items.push(item);edges.push(item);return item;
+ };
+ const label=(x,y,text,color=INK,anchor='middle',size=22)=>labels.push({x,y,text,color,anchor,size});
+ const ammeter=(id,a,b,value,role,labelText,labelAt)=>{
+  const item=component('ammeter',id,a,b,{value,role});
+  label(...labelAt,labelText+' '+f(value)+' A',CURRENT,'middle',23);return item;
+ };
+ const resistor=(id,a,b,r,name,labelAt,anchor='middle')=>{
+  const item=component('resistor',id,a,b,{resistance:Number(r),name});
+  label(...labelAt,name+' · '+f(Number(r))+' Ω','#8a5f24',anchor);return item;
+ };
+ const switchPart=(id,a,b,on,name,labelAt,anchor='middle')=>{
+  const item=component('switch',id,a,b,{on:!!on});
+  label(...labelAt,name,'#536e57',anchor,21);return item;
+ };
+ component('source','source',sourceA,sourceB,{value:values.source});
+ label(150,337,f(values.source)+' V 전원',VOLTAGE,'start',22);
+ let resistors=[],branchEnds=[];
+
+ if(parallel&&!vertical){
+  const ys=two?[140,320]:[140];
+  wire([sourceA,[130,140],[280,140]],values.total);
+  if(two)wire([[280,140],[280,320]],values.i2);
+  if(two){wire([[940,140],[940,320]],values.i1);wire([[940,320],[940,408],[940,440]],values.total);}
+  else wire([[940,140],[940,440]],values.total);
+  wire([[940,440],[549,440]],values.total);
+  ammeter('a-total',[501,440],[549,440],values.total,'total','전체 I',[525,495]);
+  wire([[501,440],[130,440],sourceB],values.total);
+  ys.forEach((y,i)=>{
+   const number=i+1,current=i?values.i2:values.i1,on=i?p.on2!==false:p.on1!==false;
+   const name=two?(i?'테라스':'실내'):'저항 장치';
+   const a=[280,y],b=[940,y];branchEnds.push([a,b]);
+   wire([a,[350,y]],current);
+   resistors.push(resistor('r'+number,[350,y],[430,y],i?p.r2:p.r1,name,[390,y+53]));
+   wire([[430,y],[560,y]],current);
+   switchPart('s'+number,[560,y],[610,y],on,'스위치 '+number,[585,y+53]);
+   wire([[610,y],[751,y]],current);
+   ammeter('a'+number,[751,y],[799,y],current,'branch-'+number,'I'+(i?'₂':'₁'),[775,y+53]);
+   wire([[799,y],b],current);
+   if(current>0)arrows.push([[305,y-23],[336,y-23]]);
+  });
  }else if(vertical){
-  body=wire('M90 174V60H535')+wire('M90 190V320H535');
-  for(const [x,r,on,label,i,n] of [[285,p.r1,p.on1!==false,'안내등',v.i1,1],[535,p.r2,p.on2!==false,'부스',v.i2,2]]){
-   body+=wire(`M${x} 60V100M${x} 180V225M${x} 270V320`)+resistor(x,100,r,label,true)+sw(x,225,on,label+' 스위치',true)+dot(x,60)+dot(x,320);
-   body+=text(x+24,194,'I'+(n===1?'₁':'₂')+' '+f(i)+' A',current,'start')+text(x+24,301,'가지 '+f(p.v)+' V',voltage,'start');
-   if(i>0)body+=arrow(`M${x} 67V92`)+electrons(`M${x} 320V60`);
-  }
-  if(o.probe&&o.probe!=='source')probes=[[o.probe==='r1'?285:535,60],[o.probe==='r1'?285:535,320]];
+  const xs=two?[420,775]:[600],first=xs[0],last=xs[xs.length-1];
+  wire([sourceA,[130,100],[first,100]],values.total);
+  if(two)wire([[first,100],[last,100]],values.i2);
+  if(two)wire([[last,440],[first,440]],values.i2);
+  wire([[first,440],[249,440]],values.total);
+  ammeter('a-total',[201,440],[249,440],values.total,'total','전체 I',[225,495]);
+  wire([[201,440],[130,440],sourceB],values.total);
+  xs.forEach((x,i)=>{
+   const number=i+1,current=i?values.i2:values.i1,on=i?p.on2!==false:p.on1!==false;
+   const name=two?(i?'부스':'안내등'):'안내등',anchor=i?'end':'start',tx=i?x-35:x+35;
+   const a=[x,100],b=[x,440];branchEnds.push([a,b]);
+   wire([a,[x,150]],current);
+   resistors.push(resistor('r'+number,[x,150],[x,230],i?p.r2:p.r1,name,[tx,182],anchor));
+   wire([[x,230],[x,285]],current);
+   switchPart('s'+number,[x,285],[x,330],on,'스위치 '+number,[tx,313],anchor);
+   wire([[x,330],[x,356]],current);
+   component('ammeter','a'+number,[x,356],[x,404],{value:current,role:'branch-'+number});
+   label(tx,387,'I'+(i?'₂':'₁')+' '+f(current)+' A',CURRENT,anchor,23);
+   wire([[x,404],b],current);
+   if(current>0)arrows.push([[x-23,111],[x-23,137]]);
+  });
  }else{
-  const on=p.on1!==false&&(!two||p.on2!==false);
-  body=wire('M90 174V80H250')+wire(`M330 80H${two?430:535}`)+(two?wire('M510 80H535'):'')+wire('M580 80H670V320H90V190');
-  body+=resistor(250,80,p.r1,two?'장치 1':'저항 장치')+(two?resistor(430,80,p.r2,'장치 2'):'')+sw(535,80,on,'스위치');
-  body+=text(290,133,f(v.v1)+' V',voltage)+(two?text(470,133,f(v.v2)+' V',voltage):'');
-  body+=text(230,290,'앞 '+f(v.i1)+' A',current)+text(530,290,'뒤 '+f(v.i1)+' A',current);
-  if(v.total>0)body+=arrow('M145 80H215')+electrons('M90 190V320H670V80H90V174');
-  if(o.probe&&o.probe!=='source')probes=[[o.probe==='r1'?250:430,80],[o.probe==='r1'?330:510,80]];
+  const closed=p.on1!==false&&(!two||p.on2!==false);
+  wire([sourceA,[130,140],[221,140]],values.total);
+  ammeter('a-total',[221,140],[269,140],values.total,'total',two?'앞 I₁':'전체 I',[245,193]);
+  wire([[269,140],[350,140]],values.total);
+  resistors.push(resistor('r1',[350,140],[430,140],p.r1,two?'장치 1':'저항 장치',[390,193]));
+  if(two){
+   wire([[430,140],[560,140]],values.total);
+   resistors.push(resistor('r2',[560,140],[640,140],p.r2,'장치 2',[600,193]));
+   wire([[640,140],[760,140]],values.total);
+  }else wire([[430,140],[760,140]],values.total);
+  switchPart('s-series',[760,140],[810,140],closed,'스위치',[785,193]);
+  wire([[810,140],[940,140],[940,440]],values.total);
+  if(two){
+   wire([[940,440],[674,440]],values.total);
+   ammeter('a-after',[626,440],[674,440],values.total,'after','뒤 I₂',[650,495]);
+   wire([[626,440],[130,440],sourceB],values.total);
+  }else wire([[940,440],[130,440],sourceB],values.total);
+  if(values.total>0)arrows.push([[147,116],[190,116]]);
  }
- if(o.probe==='source')probes=[[90,153],[90,212]];
- return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 380" width="740" height="380" role="img" aria-label="${par?'병렬':'직렬'} 회로. 전원 ${f(p.v)} 볼트, 전체 전류 ${f(v.total)} 암페어. ${par?'두 가지가 전원의 두 단자에 연결됩니다.':'전류가 흐르는 경로는 하나입니다.'}"><defs><marker id="${id}" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="${current}"/></marker></defs>${body}${battery}${probes.map(a=>dot(...a,voltage,7)).join('')}</svg>`;
+
+ /* Missing/removed second devices cannot leave a voltmeter attached in mid-air. */
+ const probe=['source','r1','r2'].includes(o.probe)?o.probe:'source';
+ const effectiveProbe=probe==='r2'&&!two?'source':probe;
+ let selected=[sourceA,sourceB],scope='전원 양 끝',voltage=values.source,meterA,meterB;
+ if(effectiveProbe==='source'){
+  meterA=[55,226];meterB=[55,274];
+  wire([sourceA,[55,220],meterA],0,true);
+  wire([meterB,[55,280],sourceB],0,true);
+ }else{
+  const n=effectiveProbe==='r2'?1:0;
+  if(parallel){
+   selected=branchEnds[n];scope='가지 '+(n+1)+' 양 끝 (스위치 포함)';voltage=n?values.branch2:values.branch1;
+   if(vertical){
+    meterA=[920,246];meterB=[920,294];
+    wire([selected[0],[selected[0][0],60],[920,60],meterA],0,true);
+    wire([meterB,[920,480],[selected[1][0],480],selected[1]],0,true);
+   }else{
+    const y=n?408:80;meterA=[586,y];meterB=[634,y];
+    /* Tap the same return node below branch 2, with a visible junction instead of
+       crossing the right-hand bus. This node contains no intervening component. */
+    if(n)selected=[selected[0],[940,408]];
+   wire([selected[0],[selected[0][0],y],meterA],0,true);
+    wire(n?[meterB,selected[1]]:[meterB,[940,y],selected[1]],0,true);
+   }
+  }else{
+   const r=resistors[n],x=(r.a[0]+r.b[0])/2;
+   selected=[r.a,r.b];scope='장치 '+(n+1)+' 양 끝';voltage=n?values.v2:values.v1;
+   meterA=[x-24,80];meterB=[x+24,80];
+   wire([r.a,[r.a[0],80],meterA],0,true);
+   wire([meterB,[r.b[0],80],r.b],0,true);
+  }
+ }
+ component('voltmeter','voltmeter',meterA,meterB,{value:voltage,selected,scope});
+ label(605,29,'전압계 · '+scope+' : '+f(voltage)+' V',VOLTAGE,'middle',23);
+ return {size:SIZE,parallel,two,vertical,items,edges,labels,arrows,source:[sourceA,sourceB],selected,probe:effectiveProbe,voltage,scope,values};
 }
-const api={svg};root.IslandCircuit=api;if(typeof module!=='undefined')module.exports=api;
+
+function svg(p,o={}){
+ const d=plan(p,o),id='circuit-'+(++serial),f=root.IslandModel.fmt;
+ const attrs=(a,b)=>`data-from="${pointKey(a)}" data-to="${pointKey(b)}"`;
+ const dot=(a,color=INK,r=5)=>`<circle cx="${a[0]}" cy="${a[1]}" r="${r}" fill="${color}"/>`;
+ const label=(x,y,copy,color=INK,anchor='middle',size=22)=>`<text x="${x}" y="${y}" fill="${color}" text-anchor="${anchor}" style="font-size:${size}px;font-family:'Malgun Gothic',sans-serif">${escape(copy)}</text>`;
+ let body='',flow='';
+ for(const item of d.items){
+  if(item.kind==='wire'||item.kind==='probe-wire'){
+   const probe=item.kind==='probe-wire';
+   body+=`<path data-kind="${item.kind}" data-wire="${item.id}" d="${pathOf(item.points)}" fill="none" stroke="${probe?VOLTAGE:INK}" stroke-width="${probe?3.5:5}" stroke-linejoin="round" stroke-linecap="round"/>`;
+   if(o.electrons&&!probe&&item.flow>0)flow+=`<path data-decoration="electron" class="pulse-flow" d="${pathOf([...item.points].reverse())}" fill="none" stroke="#3a7a3f" stroke-width="5" pointer-events="none"/>`;
+   continue;
+  }
+  const [x,y]=item.a,vertical=item.a[0]===item.b[0],cx=(x+item.b[0])/2,cy=(y+item.b[1])/2;
+  const common=`data-kind="${item.kind}" data-component="${item.id}" ${attrs(item.a,item.b)}`;
+  if(item.kind==='source'){
+   body+=`<g ${common}><path d="M130 220V242M130 258V280" fill="none" stroke="${INK}" stroke-width="5"/><path d="M107 242H153" stroke="#74694f" stroke-width="3"/><path d="M117 258H143" stroke="#74694f" stroke-width="7"/>${label(98,239,'+','#b23a30','middle',23)}${label(98,275,'−','#2e5f8f','middle',23)}</g>`;
+  }else if(item.kind==='resistor'){
+   body+=`<path ${common} data-resistor="${item.id}" d="M0 0L8 0L14 -10L26 10L38 -10L50 10L62 -10L72 0L80 0" transform="translate(${x} ${y})${vertical?' rotate(90)':''}" fill="none" stroke="#8a5f24" stroke-width="4" stroke-linejoin="round"/>`;
+  }else if(item.kind==='switch'){
+   const length=Math.hypot(item.b[0]-x,item.b[1]-y);
+   body+=`<g ${common} data-switch="${item.on?'closed':'open'}"><path d="M0 0L${length} ${item.on?0:-25}" transform="translate(${x} ${y})${vertical?' rotate(90)':''}" fill="none" stroke="#74694f" stroke-width="4" stroke-linecap="round"/>${dot(item.a,'#74694f',4)}${dot(item.b,'#74694f',4)}</g>`;
+  }else{
+   const volt=item.kind==='voltmeter',color=volt?VOLTAGE:CURRENT;
+   body+=`<g ${common} data-meter="${volt?'V':'A'}" data-value="${item.value}"${item.role?' data-role="'+item.role+'"':''}><circle cx="${cx}" cy="${cy}" r="24" fill="${PAPER}" stroke="${color}" stroke-width="4"/>${label(cx,cy+9,volt?'V':'A',color,'middle',28)}</g>`;
+  }
+ }
+ /* Dots identify actual junctions only. Crossing or nearby wires never imply a node. */
+ const counts=new Map();
+ for(const edge of d.edges)for(const point of [edge.a,edge.b])counts.set(pointKey(point),(counts.get(pointKey(point))||0)+1);
+ for(const [key,count] of counts)if(count>=3&&!d.selected.some(p=>pointKey(p)===key))body+=dot(key.split(',').map(Number));
+ for(const a of d.selected)body+=dot(a,VOLTAGE,6);
+ for(const line of d.arrows)body+=`<path data-decoration="current" d="${pathOf(line)}" fill="none" stroke="${CURRENT}" stroke-width="3" marker-end="url(#${id}-arrow)"/>`;
+ body+=flow;
+ body+=d.labels.map(x=>label(x.x,x.y,x.text,x.color,x.anchor,x.size)).join('');
+ const description=`${d.parallel?'병렬':'직렬'} 회로, 장치 ${d.two?2:1}개. 전체 전류 ${f(d.values.total)} 암페어. ${d.scope}의 전압 ${f(d.voltage)} 볼트. 전류계 A는 도선의 중간에 직렬로, 전압계 V는 선택한 두 지점에 병렬로 연결되어 있습니다.`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE.width} ${SIZE.height}" width="${SIZE.width}" height="${SIZE.height}" role="img" aria-label="${escape(description)}" data-circuit="${d.parallel?'parallel':'series'}" data-layout="${d.vertical?'festival':'standard'}" data-probe="${d.probe}"><defs><marker id="${id}-arrow" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="${CURRENT}"/></marker></defs>${body}</svg>`;
+}
+const api={svg,plan};root.IslandCircuit=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
 </script><script>(function(root){
 'use strict';
@@ -591,21 +797,40 @@ function hint(s,t,predicted){
 const api={steps,checks,hint};root.IslandMissions=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
 </script><script>(function(){
-let active,timer;
-function clear(){clearTimeout(timer);active?.remove();active=null;}
+let active,timer,animation=0,cleanup=null;
+const motion=window.matchMedia?window.matchMedia('(prefers-reduced-motion:reduce)'):null;
+function clear(){clearTimeout(timer);cancelAnimationFrame(animation);animation=0;if(cleanup){cleanup();cleanup=null;}if(active){try{if(active.matches?.(':popover-open'))active.hidePopover();}catch{}active.remove();}active=null;}
 function burst(host,calm,message='부탁 해결!'){
  clear();const layer=document.createElement('div');layer.className='celebration';layer.setAttribute('role','status');layer.setAttribute('aria-label',message);const badge=document.createElement('strong');badge.textContent='✦ '+message+' ✦';layer.append(badge);
- const reduced=calm||matchMedia('(prefers-reduced-motion:reduce)').matches;
+ const reduced=calm||motion?.matches;
  if(!reduced)for(let i=0;i<84;i++){const p=document.createElement('i'),angle=i*Math.PI*2/28,dist=130+(i%9)*33;p.style.cssText=`--x:${Math.cos(angle)*dist}px;--y:${Math.sin(angle)*dist}px;--r:${i*47}deg;--delay:${Math.floor(i/28)*.16}s;background:${['#f4c65c','#73c898','#f19ca9','#9cbce9','#cfb0e7','#fff2b6'][i%6]};left:${[27,50,74][Math.floor(i/28)]}%;top:${[50,38,50][Math.floor(i/28)]}%`;layer.append(p);}
  host.append(layer);if(typeof layer.showPopover==='function'){layer.setAttribute('popover','manual');layer.showPopover();}active=layer;timer=setTimeout(clear,reduced?1500:2200);
 }
-document.addEventListener('visibilitychange',()=>{if(document.hidden)clear();});window.IslandCelebrate={burst,clear};
+function festival(host=document.body,calm=false){
+ clear();if(calm||motion?.matches||document.hidden)return {cancel:clear};
+ const layer=document.createElement('div'),canvas=document.createElement('canvas');layer.className='festival-particles';layer.setAttribute('aria-hidden','true');layer.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:transparent;overflow:hidden;pointer-events:none;z-index:2147483000;';canvas.style.cssText='display:block;width:100%;height:100%;pointer-events:none;';layer.append(canvas);host.append(layer);active=layer;
+ if(typeof layer.showPopover==='function')try{layer.setAttribute('popover','manual');layer.showPopover();}catch{}
+ const ctx=canvas.getContext('2d');if(!ctx){clear();return {cancel:clear};}
+ let width=1,height=1;function resize(){const rect=layer.getBoundingClientRect();width=Math.max(1,rect.width||innerWidth);height=Math.max(1,rect.height||innerHeight);const ratio=Math.min(devicePixelRatio||1,1.25,1600/width,1200/height);canvas.width=Math.max(1,Math.round(width*ratio));canvas.height=Math.max(1,Math.round(height*ratio));ctx.setTransform(ratio,0,0,ratio,0,0);}
+ resize();window.addEventListener('resize',resize);cleanup=()=>window.removeEventListener('resize',resize);
+ const colors=['#ffe29a','#a7e4c4','#efb4c6','#bbd9f0','#d6bff0'],confetti=Array.from({length:72},(_,i)=>({x:(i*.61803398875)%1,y:-(i%11)*.035,vx:Math.sin(i*2.4)*34,vy:90+i%7*16,w:4+i%4,h:8+i%5,spin:i*.7,color:colors[i%colors.length]}));
+ const fireworks=[{x:.27,y:.31,at:.1,color:colors[0]},{x:.73,y:.25,at:.68,color:colors[1]},{x:.5,y:.18,at:1.18,color:colors[3]}],started=performance.now();
+ function draw(now){if(active!==layer)return;if(document.hidden||motion?.matches){clear();return;}const elapsed=(now-started)/1000;if(elapsed>=3){clear();return;}ctx.clearRect(0,0,width,height);const fade=Math.min(1,(3-elapsed)/.6);
+  for(const p of confetti){const x=p.x*width+p.vx*elapsed+Math.sin(elapsed*2+p.spin)*12,y=p.y*height+p.vy*elapsed;ctx.save();ctx.translate(x,y);ctx.rotate(p.spin+elapsed*(p.vx<0?-1:1));ctx.globalAlpha=fade*.9;ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();}
+  for(const fire of fireworks){const age=elapsed-fire.at;if(age<0||age>1.75)continue;const opacity=Math.min(1,age/.12)*(1-age/1.75)*fade,cx=width*fire.x,cy=height*fire.y;ctx.strokeStyle=fire.color;ctx.fillStyle=fire.color;ctx.lineWidth=1.8;ctx.globalAlpha=opacity;
+   for(let k=0;k<34;k++){const a=k*Math.PI*2/34,speed=(95+k%5*13)*Math.min(1,width/1000),travel=speed*age*.8,x=cx+Math.cos(a)*travel,y=cy+Math.sin(a)*travel+25*age*age;ctx.beginPath();ctx.moveTo(x-Math.cos(a)*7*(1-age/1.75),y-Math.sin(a)*7*(1-age/1.75));ctx.lineTo(x,y);ctx.stroke();ctx.beginPath();ctx.arc(x,y,1.8,0,Math.PI*2);ctx.fill();}
+  }ctx.globalAlpha=1;animation=requestAnimationFrame(draw);
+ }
+ animation=requestAnimationFrame(draw);timer=setTimeout(()=>{if(active===layer)clear();},3120);return {cancel:()=>{if(active===layer)clear();}};
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)clear();});const reduce=e=>{if(e.matches)clear();};if(motion?.addEventListener)motion.addEventListener('change',reduce);else motion?.addListener?.(reduce);window.IslandCelebrate={burst,festival,clear};
 })();
 </script><script>(function(){
 'use strict';
 const M=IslandModel,$=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),f=M.fmt;
 const disp=x=>esc(__ime.disp(x));
 let comfort;
+let festivalRunning=false;
 let suspendSave=false; let state=M.load(),world,sim=null,journalTab=-1,toastTimer,saveTimer,demo=false,interacting=null;
 const dlgIds=['welcome','dialogue','lab','journal','map','settings','ending','story'];
 const labels=['내가 선택한 해결책','증거와 과학적 이유','다음 부탁에 적용하기'];
@@ -613,7 +838,7 @@ function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clea
 function save(){if(suspendSave)return;if(world){state.pos={x:world.player.position.x,z:world.player.position.z};}const ok=M.save(state);$('saveStatus').textContent=ok?'기기에 저장됨':'기기 저장이 막혀 있어요 · 일지 파일을 저장해 주세요';if(!ok)$('saveStatus').style.color='#9d4a31';}
 function deferSave(){clearTimeout(saveTimer);$('saveStatus').textContent='기록하는 중…';saveTimer=setTimeout(save,450);}
 function beep(){comfort?.audio.chime();}
-function pause(){if(world){world.paused=dlgIds.some(id=>$(id).open)||!state.started;world.keys.clear();world.joy={x:0,z:0};}}
+function pause(){if(world){world.paused=festivalRunning||dlgIds.some(id=>$(id).open)||!state.started;world.keys.clear();world.joy={x:0,z:0};}}
 function show(id){if(id!=='dialogue')comfort?.stopTalk(true);dlgIds.forEach(d=>{if(d!==id&&$(d).open)$(d).close();});if(!$(id).open)$(id).showModal();pause();}
 function close(id){if(id==='dialogue')comfort?.stopTalk(true);$(id).close();pause();}
 dlgIds.forEach(id=>$(id).addEventListener('close',()=>{if(id==='lab')demo=false;pause();}));
@@ -654,7 +879,8 @@ function hintText(){return [
  ][sim.id];}
 function renderLab(){
  const q=M.quests[sim.id],cs=checks(),can=demo||state.predictions[q.id],current=cs.findIndex(c=>!c[0]);
- $('labContent').innerHTML=`<header class="modal-head"><div class="eyebrow">${demo?'교사 시연 · 학생 기록에 저장되지 않아요':esc(q.place)+' · 탐험 '+(q.id+1)}</div><h2 id="labTitle">${esc(q.name)}</h2><button class="close" data-close aria-label="실험 닫기">×</button><p>${esc(q.goal)}</p></header><div class="lab-layout"><aside class="lab-side"><div class="npc-note"><span class="npc-avatar">${q.animal}</span><div><b>${q.npc}의 부탁</b><small>${q.place}</small></div></div><p class="story-copy">${esc(q.story)}</p><h3 class="task-heading">${q.npc}의 부탁을 들어주기 위해 할 일</h3><ol class="mission-steps">${cs.map((c,i)=>`<li class="${c[0]?'done':i===current?'current':''}"><span class="step-number">Step ${i+1}${c[0]?' ✓':''}</span><div><b>${c[0]?'해냈어요':i===current?'지금 할 일':'다음 할 일'}</b><p>${esc(c[1])}</p></div></li>`).join('')}</ol><button class="hint-button" data-action="next-hint">💡 다음에 무엇을 하지?</button><p id="nextHint" class="hint-message" role="status"></p><details class="hint" ${state.mode==='beginner'?'open':''}><summary>원리 다시 살펴보기</summary><p>${hintText()}</p></details><p class="science-note">전압이 일정한 전원과 저항값이 일정한 장치의 모형이에요. 저항에서 전자가 사라지는 것은 아니에요.</p>${sim.id===1&&cs[0][0]&&cs[1][0]?'<div class="notice">발견한 관계<br><b>I = V ÷ R</b><br>같은 저항에서는 전압이 커질수록 전류가 커져요.</div>':''}</aside><section class="lab-main">${!can?`<div class="prediction"><p><b>먼저 나의 예상</b><br>${esc(predictions[q.id][0])}</p><div class="choices">${predictions[q.id][1].map((t,i)=>`<button data-action="predict" data-value="${i}">${esc(t)}</button>`).join('')}</div><p class="muted">예상은 틀려도 괜찮아요. 실험 뒤 생각을 바꿀 수 있어요.</p></div>`:renderExperiment()}<div class="evidence-list">${evid().length?`<b>내가 남긴 증거 ${evid().length}개</b>`:''}${evid().slice(-3).map(e=>`<div class="evidence-item">${e.manual?'✎ 직접 기록':'이전 자동 기록'} · ${esc(e.label)} · 전체 전류 ${f(e.values.total)} A</div>`).join('')}</div></section></div>`;
+ $('labContent').innerHTML=`<header class="modal-head"><div class="eyebrow">${demo?'교사 시연 · 학생 기록에 저장되지 않아요':esc(q.place)+' · 탐험 '+(q.id+1)}</div><h2 id="labTitle">${esc(q.name)}</h2><button class="close" data-close aria-label="실험 닫기">×</button><p>${esc(q.goal)}</p></header><div class="lab-layout"><aside class="lab-side"><div class="lab-task-head"><h3 class="task-heading">${q.npc}의 부탁을 들어주기 위해 할 일</h3><details class="lab-guide"><summary>부탁·원리 다시 보기</summary><div class="lab-guide-content"><b>${q.animal} ${q.npc}의 부탁</b><p>${esc(q.story)}</p><h4>원리 다시 살펴보기</h4><p>${hintText()}</p><p class="science-note">전압이 일정한 전원과 저항값이 일정한 장치의 모형이에요. 저항에서 전자가 사라지는 것은 아니에요.</p><p class="science-note">A 전류계는 전류가 흐르는 길에 직렬로, V 전압계는 측정할 두 지점에 병렬로 연결해요. 이상적인 계기를 사용한 모형이에요.</p></div></details><button class="hint-button" data-action="next-hint">💡 다음에 무엇을 하지?</button></div><ol class="mission-steps">${cs.map((c,i)=>`<li class="${c[0]?'done':i===current?'current':''}"><span class="step-number">Step ${i+1}${c[0]?' ✓':''}</span><div><b>${c[0]?'해냈어요':i===current?'지금 할 일':'다음 할 일'}</b><p>${esc(c[1])}</p></div></li>`).join('')}</ol><p id="nextHint" class="hint-message" role="status"></p></aside><section class="lab-main">${!can?`<div class="prediction"><p><b>먼저 나의 예상</b><br>${esc(predictions[q.id][0])}</p><div class="choices">${predictions[q.id][1].map((t,i)=>`<button data-action="predict" data-value="${i}">${esc(t)}</button>`).join('')}</div><p class="muted">예상은 틀려도 괜찮아요. 실험 뒤 생각을 바꿀 수 있어요.</p></div>`:renderExperiment()}</section></div>`;
+
 }
 function nextHint(){
  document.querySelectorAll('.hint-target').forEach(el=>el.classList.remove('hint-target'));
@@ -670,9 +896,11 @@ function renderExperiment(){const p=simData(),v=M.circuit(p),id=sim.id;let contr
  if(id===2)controls=`<div class="circuit-controls"><button data-action="count" class="${sim.count===2?'switch-on':''}">${sim.count===1?'장치 2 직렬로 추가':'장치 2 빼고 하나로 비교'}</button><button data-action="switch" data-key="on1" class="${sim.on1?'switch-on':'switch-off'}">${sim.on1?'스위치 열어 회로 끊기':'스위치 닫아 회로 잇기'}</button>${sim.count===2?`<button data-action="r2">장치 2: ${sim.r2} Ω · 바꾸기</button>`:''}</div>`;
  if(id===3||id===4)controls=`<div class="control-row"><label>연결 방법</label><div class="choices"><button data-action="connection" data-value="series" class="${sim.type==='series'?'active':''}">직렬 연결</button><button data-action="connection" data-value="parallel" class="${sim.type==='parallel'?'active':''}">병렬 연결</button></div></div><div class="circuit-controls"><button data-action="switch" data-key="on2" class="${sim.on2?'switch-on':'switch-off'}">${id===4?'체험 부스':'테라스'} ${sim.on2?'끄기':'켜기'}</button>${id===3?`<button data-action="r2">테라스 저항: ${sim.r2} Ω · 바꾸기</button>`:''}<span class="pill">${id===4?'공연장 안내등':'실내'} ${v.on1?'켜짐':'꺼짐'} / ${id===4?'부스':'테라스'} ${v.on2?'켜짐':'꺼짐'}</span></div>`;
  let phaseBtn='';if(id===1&&sim.phase<2){const cs=checks();phaseBtn=`<button class="secondary" data-action="next-phase" ${cs[sim.phase][0]?'':'disabled'}>${sim.phase===0?'저항 비교로 →':'목표 전류 맞추기 →'}</button>`;}
- return `<fieldset class="experiment-controls" ${sim.record?'disabled':''}><div class="sim-badges"><span class="pill amber">전류 I</span><span class="pill purple">전압 V</span><span class="pill brown">저항 R</span></div><div id="diagram" class="circuit-wrap">${circuitSvg(p,{probe:sim.probe,electrons:sim.electrons,final:id===4})}</div><div class="measure-select"><span>전압계의 두 탐침</span><select id="probeSelect" aria-label="전압 측정할 두 지점"><option value="source" ${sim.probe==='source'?'selected':''}>전원 양 끝</option><option value="r1" ${sim.probe==='r1'?'selected':''}>${sim.type==='parallel'?(id===4?'안내등 가지 양 끝':'실내 가지 양 끝'):'장치 1 양 끝'}</option>${sim.count===2?`<option value="r2" ${sim.probe==='r2'?'selected':''}>${sim.type==='parallel'?(id===4?'부스 가지 양 끝':'테라스 가지 양 끝'):'장치 2 양 끝'}</option>`:''}</select></div><div id="readings">${readingHtml(v)}</div>${controls}${sim.electrons?'<p class="science-note">초록 점은 전자 이동을 나타내는 모형이에요. 갈색 화살표의 전류 방향과 반대예요. 점의 수와 속도는 실제 축척이 아니에요.</p>':''}${sim.type==='parallel'?'<p class="science-note">V₁·V₂는 각 가지의 양 끝 전압이에요. 열린 가지에도 양 끝 전압은 있지만 그 가지의 전류는 0이에요.</p>':''}<div class="action-row"><button class="secondary" data-action="capture">▣ 증거 남기기</button>${phaseBtn}<button class="primary" data-action="complete" ${doneChecks()?'':'disabled'}>${state.completed.includes(id)?'조사 마치기':'부탁 해결하기 ✓'}</button></div></fieldset>${recorderHTML()}`;
+ return `<div class="experiment-workbench ${sim.record?'is-recording':''}"><section class="circuit-pane" aria-label="회로와 측정값"><div class="sim-badges"><span class="pill amber">A 전류계 · 직렬</span><span class="pill purple">V 전압계 · 병렬</span></div><div id="diagram" class="circuit-wrap">${circuitSvg(p,{probe:sim.probe,electrons:sim.electrons,final:id===4})}</div><div id="readings">${readingHtml(v)}</div><div class="measure-select"><label for="probeSelect">전압 측정 위치</label><select id="probeSelect" aria-label="전압 측정할 두 지점"><option value="source" ${sim.probe==='source'?'selected':''}>전원 양 끝</option><option value="r1" ${sim.probe==='r1'?'selected':''}>${sim.type==='parallel'?(id===4?'안내등 가지 양 끝':'실내 가지 양 끝'):'장치 1 양 끝'}</option>${sim.count===2?`<option value="r2" ${sim.probe==='r2'?'selected':''}>${sim.type==='parallel'?(id===4?'부스 가지 양 끝':'테라스 가지 양 끝'):'장치 2 양 끝'}</option>`:''}</select></div><p id="meterExplanation" class="circuit-note">${meterExplanation()}${sim.electrons?' 초록 점은 전자 이동 모형이며 실제 축척이 아니에요.':''}</p></section><section class="lab-tools" aria-label="회로 조작과 직접 기록"><fieldset class="experiment-controls" ${sim.record?'disabled':''}><legend>회로 조건 바꾸기</legend>${controls}${sim.id===1&&checks()[0][0]&&checks()[1][0]?'<div class="compact-rule">I = V ÷ R · 같은 저항이면 전압이 커질수록 전류가 커져요.</div>':''}<div class="action-row"><button class="secondary" data-action="capture">▣ 증거 남기기</button>${phaseBtn}<button class="primary" data-action="complete" ${doneChecks()?'':'disabled'}>${state.completed.includes(id)?'조사 마치기':'부탁 해결하기 ✓'}</button></div><p class="record-invite">회로를 바꿔 관찰한 뒤 ‘증거 남기기’를 누르면 이 자리에서 값을 기록해요.</p></fieldset>${recorderHTML()}${evid().length?`<details class="evidence-list"><summary>내가 남긴 증거 ${evid().length}개 보기</summary><div class="evidence-history">${evid().slice(-3).map(e=>`<div class="evidence-item">${e.manual?'✎ 직접 기록':'이전 자동 기록'} · ${esc(e.label)} · 전체 전류 ${f(e.values.total)} A</div>`).join('')}</div></details>`:''}</section></div>`;
+
 }
-function readingHtml(v){const voltage=sim.probe==='source'?v.source:sim.probe==='r1'?v.branch1:v.branch2;return `<div class="reading-row"><div class="reading current"><small>전체 전류</small><b>${f(v.total)}</b><em>A</em></div><div class="reading voltage"><small>${sim.probe==='source'?'전원 양 끝':'선택한 두 지점'}</small><b>${f(voltage)}</b><em>V</em></div><div class="reading resistance"><small>${sim.id===1&&sim.phase===2?'목표 전류':'장치 1 저항'}</small><b>${sim.id===1&&sim.phase===2?'0.3':sim.r1}</b><em>${sim.id===1&&sim.phase===2?'A':'Ω'}</em></div></div>`;}
+function meterExplanation(){const v=M.circuit(simData());if(sim.probe==='source')return '전원 양 끝을 측정해요. 스위치를 열어도 전원의 전압은 그대로예요.';if(sim.type==='parallel'){const off=sim.probe==='r1'?!sim.on1:!sim.on2;return off?'열린 가지 전체(스위치 포함)를 측정해요. 전압은 전원과 같고, 열린 스위치 양 끝에 걸려요.':'스위치를 포함한 가지 전체의 양 끝을 측정해요. 전원의 두 단자에 연결돼 전압이 같아요.';}return v.total===0?'저항 장치 양 끝을 측정해요. 전류가 0 A이므로 장치에 걸리는 전압도 0 V예요.':'저항 장치 양 끝을 측정해요. 장치에 걸리는 전압은 전류 × 저항이에요.';}
+function readingHtml(v){const voltage=sim.probe==='source'?v.source:sim.probe==='r1'?v.branch1:v.branch2;return `<div class="reading-row"><div class="reading current"><small>전체 전류</small><b>${f(v.total)}</b><em>A</em></div><div class="reading voltage"><small>${sim.probe==='source'?'전원 양 끝':(sim.type==='parallel'?'가지 ':'장치 ')+(sim.probe==='r1'?'1':'2')+' 양 끝'}</small><b>${f(voltage)}</b><em>V</em></div><div class="reading resistance"><small>${sim.id===1&&sim.phase===2?'목표 전류':'장치 1 저항'}</small><b>${sim.id===1&&sim.phase===2?'0.3':sim.r1}</b><em>${sim.id===1&&sim.phase===2?'A':'Ω'}</em></div></div>`;}
 function capture(){
  if(sim.record)return;const p=simData(),v=M.circuit(p);let tag,label;
  if(sim.id===0){tag=sim.on1?'closed':'open';label=sim.on1?'스위치를 닫은 회로':'스위치를 연 회로';}
@@ -681,16 +909,16 @@ function capture(){
  if(sim.id===3){tag=p.type!=='parallel'?'series':(p.on2?'both-':'one-')+p.r2;label=p.type!=='parallel'?'비교를 위한 직렬 연결':`병렬 · ${p.r2} Ω 테라스 ${p.on2?'켜기':'끄기'}`;}
  if(sim.id===4){if(!(p.type==='parallel'&&p.on1&&!p.on2&&v.i1>0&&v.i2===0)){toast('안내등은 켜고 부스만 꺼 주세요. 힌트 버튼이 다음 조작을 알려 줘요.');return;}tag='festival';label='공연장 유지 · 부스만 끄기';}
  if(evid().some(e=>e.tag===tag&&e.manual)){toast('이 조건은 직접 기록했어요. 다른 조건과 비교해 보세요.');return;}
- sim.record={tag,label,p,values:v};renderLab();$('recordForm')?.scrollIntoView({block:'nearest'});$('recordForm')?.querySelector('input')?.focus();
+ sim.record={tag,label,p,values:v};renderLab();if(!matchMedia('(min-width:900px) and (orientation:landscape)').matches)$('recordForm')?.scrollIntoView({block:'nearest'});$('recordForm')?.querySelector('input')?.focus({preventScroll:true});
 }
 function recorderHTML(){
  const r=sim.record;if(!r)return '';
- return `<form id="recordForm" class="record-form"><div class="eyebrow">나의 관찰을 증거로</div><h3>✎ 계기 값을 직접 기록해요</h3><p>${esc(r.label)}<br>그림과 계기에 표시된 숫자를 아래에 옮겨 적어요. 기록하는 동안 회로 조건은 고정돼요.</p><div class="measurement-fields">${M.measurementSpec(r.p).map(item=>`<label>${esc(item.label)}<span><input id="measure-${item.key}" name="${item.key}" type="number" inputmode="decimal" min="0" step="any" required data-ime="off" aria-label="기록할 ${esc(item.label)}"><b>${item.unit}</b></span><small id="error-${item.key}" class="measure-error"></small></label>`).join('')}</div><p class="record-error" id="recordError" role="alert"></p><div class="action-row"><button type="button" data-action="record-cancel">회로로 돌아가기</button><button type="submit" class="primary">✓ 기록 확인하고 일지에 붙이기</button></div></form>`;
+ return `<form id="recordForm" class="record-form"><div class="eyebrow">나의 관찰을 증거로</div><h3>✎ 계기 값을 직접 기록해요</h3><p class="record-description">${esc(r.label)}<br>회로 조건은 고정돼요. 옆의 계기를 보고 적어요.</p><div class="measurement-fields">${M.measurementSpec(r.p).map(item=>`<label>${esc(item.label)}<span><input id="measure-${item.key}" name="${item.key}" type="number" inputmode="decimal" min="0" step="any" required data-ime="off" aria-label="기록할 ${esc(item.label)}"><b>${item.unit}</b></span><small id="error-${item.key}" class="measure-error"></small></label>`).join('')}</div><p class="record-error" id="recordError" role="alert"></p><div class="action-row"><button type="button" data-action="record-cancel">회로로 돌아가기</button><button type="submit" class="primary">✓ 기록 확인·일지에 붙이기</button></div></form>`;
 }
 function commitRecord(form){
- const r=sim?.record;if(!r)return;const entered=Object.fromEntries(new FormData(form)),check=M.validateMeasurements(r.p,entered);
- M.measurementSpec(r.p).forEach(item=>{const error=check.errors.includes(item.key);$('measure-'+item.key).setAttribute('aria-invalid',String(error));$('error-'+item.key).textContent=error?'이 항목의 계기 값과 단위를 다시 살펴봐요.':'';});
- if(!check.ok){$('recordError').textContent='아직 계기와 다른 값이 있어요. 표시된 항목만 다시 확인해 주세요.';$('measure-'+check.errors[0]).focus();return;}
+ const r=sim?.record;if(!r)return;const entered=Object.fromEntries(new FormData(form)),check=M.validateMeasurements(r.p,entered);form.classList.toggle('has-errors',!check.ok);
+ M.measurementSpec(r.p).forEach(item=>{const error=check.errors.includes(item.key);$('measure-'+item.key).setAttribute('aria-invalid',String(error));$('error-'+item.key).textContent=error?'계기 값·단위를 확인해요.':'';});
+ if(!check.ok){$('recordError').textContent='표시된 칸의 계기 값과 단위를 다시 확인해요.';$('measure-'+check.errors[0]).focus();return;}
  const list=evid(),old=list.findIndex(e=>e.tag===r.tag&&!e.manual);const record={...r,entered:check.entered,enteredRaw:entered,manual:true,time:new Date().toISOString()};if(old>=0)list[old]=record;else list.push(record);
  sim.record=null;if(!demo)save();beep();renderLab();toast('직접 적은 측정값을 탐험일지에 붙였어요.');
 }
@@ -721,7 +949,19 @@ function summaryTable(){const s=state.completed.includes(2),p=state.completed.in
 function drawMap(canvas,large=false){const g=canvas.getContext('2d'),w=canvas.width,h=canvas.height,sx=w/48,sy=h/42,xx=x=>(x+24)*sx,zz=z=>(z+21)*sy;g.clearRect(0,0,w,h);g.fillStyle='#8ac7cd';g.fillRect(0,0,w,h);g.fillStyle='#a4c989';g.beginPath();g.roundRect(xx(-21),zz(-18),27*sx,36*sy,8);g.fill();g.beginPath();g.roundRect(xx(9),zz(-18),13*sx,36*sy,8);g.fill();g.strokeStyle='#e6d4a4';g.lineWidth=large?8:4;g.lineCap='round';for(const pts of [[[-15,14],[-9,8],[-3,5],[3,3],[15,3]],[[-3,5],[-5,0],[-10,-5]],[[-5,0],[0,-9],[13,-9]],[[15,3],[16,-4],[13,-9]]]){g.beginPath();pts.forEach((p,i)=>i?g.lineTo(xx(p[0]),zz(p[1])):g.moveTo(xx(p[0]),zz(p[1])));g.stroke();}for(const q of M.quests){g.fillStyle=state.completed.includes(q.id)?'#6d9c6b':accessible(q.id)?'#e1b875':'#9ab393';g.beginPath();g.arc(xx(q.x),zz(q.z),large?8:4,0,Math.PI*2);g.fill();if(large){g.font='bold 13px "Malgun Gothic"';g.textAlign='center';g.fillStyle='#48654b';g.fillText(q.npc,xx(q.x),zz(q.z)-13);}}const pos=world?world.player.position:state.pos;g.fillStyle='#fffaf0';g.beginPath();g.arc(xx(pos.x),zz(pos.z),large?7:4.5,0,Math.PI*2);g.fill();g.fillStyle='#468f85';g.beginPath();g.arc(xx(pos.x),zz(pos.z),large?4:2.5,0,Math.PI*2);g.fill();}
 function openMap(){const q=next();$('mapContent').innerHTML=`<header class="modal-head"><div class="eyebrow">한 걸음씩 넓어지는 나의 섬</div><h2 id="mapTitle">전기의 숲 지도</h2><button class="close" data-close aria-label="지도 닫기">×</button><p>주민을 고르면 그곳까지 길을 따라 걸어가요.</p></header><div class="map-body"><canvas id="largeMap" class="large-map" width="380" height="400" aria-label="전기의 숲의 다섯 지역과 현재 위치"></canvas><div class="map-list">${M.quests.map(q=>`<button data-action="navigate" data-id="${q.id}" ${accessible(q.id)?'':'disabled'} class="${accessible(q.id)?'':'locked'}">${q.animal} ${q.place}<small>${state.completed.includes(q.id)?'✓ 부탁 해결 · 다시 방문':accessible(q.id)?q.npc+'의 부탁을 들어요':'앞 지역의 부탁을 해결하면 열려요'}</small></button>`).join('')}<button data-action="camp">⛺ 내 캠프<small>탐험하며 받은 선물을 보러 가요</small></button></div></div>`;show('map');drawMap($('largeMap'),true);}
 function openSettings(){ $('settingsContent').innerHTML=`<header class="modal-head"><h2 id="settingsTitle">탐험 설정</h2><button class="close" data-close aria-label="설정 닫기">×</button></header><div class="settings-body">${comfort.settingsHTML()}<label class="setting-row"><span>발견 효과음<small>증거 수집과 부탁 해결을 알리는 소리예요.</small></span><input type="checkbox" data-setting="sound" ${state.sound?'checked':''}></label><label class="setting-row"><span>움직임 줄이기<small>반복 움직임을 줄이고 대사는 한 번에 보여요.</small></span><input type="checkbox" data-setting="calm" ${state.calm?'checked':''}></label><label class="setting-row"><span>탐험 안내</span><select data-setting="mode"><option value="review" ${state.mode==='review'?'selected':''}>복습 · 1차시</option><option value="beginner" ${state.mode==='beginner'?'selected':''}>첫 탐험 · 2차시</option></select></label><label class="setting-row"><span>내 캠프 조명 색<small>해변 찻집의 선물을 받으면 보여요.</small></span><select data-setting="camp"><option value="mint" ${state.camp==='mint'?'selected':''}>바다 민트</option><option value="peach" ${state.camp==='peach'?'selected':''}>복숭아빛</option><option value="lemon" ${state.camp==='lemon'?'selected':''}>레몬빛</option></select></label><div class="notice">방향키·WASD로 걷기 / E로 대화 / J로 일지<br>길을 누르면 걸어가요. 화면 왼쪽 아래 조이스틱도 사용할 수 있어요.</div><details class="teacher-tools"><summary>🧑‍🏫 교사 도구</summary><div class="note class">시연은 학생 진행도와 증거에 저장되지 않아요. 서술형은 자동 채점하지 않아요. 증거의 적절성, 원리로 설명한 이유, 새 상황에 대한 판단을 함께 살펴봐 주세요.</div>${M.quests.map(q=>`<button data-action="demo" data-id="${q.id}">${q.id+1}. ${q.name}</button>`).join('')}<p class="muted">1차시 복습은 필수 부탁 5개와 해결 기록 3개를 완료해요. 첫 탐험은 공방까지 1차시, 숲길부터 2차시로 나눌 수 있어요.</p></details><div class="action-row"><button data-action="story-replay">초대장 이야기 다시 읽기</button><button data-action="export-json">진행 기록 보관</button><button class="danger" data-action="reset">새 탐험 시작</button></div></div>`;show('settings');comfort.updateAudioUI();}
-function finish(){if(!comfort.confirmJournal(true))return;save();if(!M.ready(state)){openJournal(4);toast('주민의 부탁과 세 가지 해결 기록을 먼저 완성해 주세요.');return;}state.festival=true;save();world?.applyProgress();updateHud();beep();$('endingContent').innerHTML=`<div class="eyebrow">다섯 개의 불빛, 한 권의 이야기</div><div class="ending-symbol">✦</div><h2 id="endingTitle">${disp(state.nickname)},<br>축제가 시작됐어!</h2><p>주민의 작은 부탁을 해결하며<br>네가 바꾼 회로와 발견한 이유가<br>한 권의 탐험일지가 되었어.</p><div class="stamps">${M.quests.map(q=>`<span class="stamp done">${q.animal}</span>`).join('')}</div><div class="end-actions"><button class="primary" data-action="export-html">제출용 탐험일지 저장</button><button data-action="print">인쇄 / PDF로 저장</button><button class="secondary" data-action="freeplay">내가 밝힌 섬 둘러보기 →</button></div><p class="muted">저장한 파일은 선생님이 정한 과제 제출처에 올려 주세요.</p>`;show('ending');}
+function showEnding(){
+ $('endingContent').innerHTML=`<div class="eyebrow">다섯 개의 불빛, 한 권의 이야기</div><div class="ending-symbol">✦</div><h2 id="endingTitle">${disp(state.nickname)},<br>축제가 시작됐어!</h2><p>주민의 작은 부탁을 해결하며<br>네가 바꾼 회로와 발견한 이유가<br>한 권의 탐험일지가 되었어.</p><div class="stamps">${M.quests.map(q=>`<span class="stamp done">${q.animal}</span>`).join('')}</div><div class="end-actions"><button class="primary" data-action="export-html">제출용 탐험일지 저장</button><button data-action="print">인쇄 / PDF로 저장</button><button class="secondary" data-action="freeplay">내가 밝힌 섬 둘러보기 →</button></div><p class="muted">저장한 파일은 선생님이 정한 과제 제출처에 올려 주세요.</p>`;show('ending');}
+function festivalDone(){if(!festivalRunning)return;festivalRunning=false;IslandCelebrate.clear();document.body.classList.remove('festival-running');$('festivalScene').hidden=true;$('game').inert=false;updateHud();pause();showEnding();}
+function finish(){
+ if(festivalRunning||!comfort.confirmJournal(true))return;save();if(!M.ready(state)){openJournal(4);toast('주민의 부탁과 세 가지 해결 기록을 먼저 완성해 주세요.');return;}
+ state.festival=true;save();world?.applyProgress();updateHud();comfort.stopTalk(true);dlgIds.forEach(id=>{if($(id).open)$(id).close();});
+ festivalRunning=true;pause();$('game').inert=true;document.body.classList.add('festival-running');$('festivalScene').hidden=false;$('festivalSkip').focus();
+ if(!world?.playFestival){festivalDone();return;}
+ world.playFestival({calm:state.calm,onStage:info=>{if(!festivalRunning)return;const line=info.stage==='dim'?'모두 준비됐나요? 잠시 불을 내려요.':info.stage==='relight'?['두리의 우체국에 첫 불빛이 들어와요!','모아의 공방 창문이 환해져요!','토리의 숲길을 따라 빛이 이어져요!','소담의 찻집에도 불빛이 돌아왔어요!','해온의 축제 광장까지, 모두 연결됐어요!'][info.region]:info.stage==='finale'?'우리가 밝힌 전기의 숲, 빛 축제 시작!':'축제가 시작됐어요!';$('festivalMessage').textContent=line;if(info.stage==='finale'){IslandCelebrate.festival(document.body,state.calm);beep();}},onComplete:festivalDone});
+}
+function skipFestival(){if(!festivalRunning)return;world?.cancelFestival({restore:true});festivalDone();}
+document.addEventListener('keydown',e=>{if(festivalRunning&&e.key==='Escape'){e.preventDefault();skipFestival();}});
+
 function reportBody(){return `<section class="print-cover"><p>놀러오세요 전기의 숲 · 빛 축제를 부탁해</p><h1>${disp(state.nickname)}의<br>전기의 숲 탐험일지</h1><p>학급 ${esc(state.classCode)||'—'} · 번호 ${esc(state.number)||'—'}<br>${state.mode==='beginner'?'첫 탐험':'복습 탐험'} · 부탁 ${state.completed.length}/5 해결</p><p>문제 해결 → 실험 증거 → 과학적 이유 → 새로운 적용</p><p class="print-footer">${M.ready(state)?'완성한 탐험일지':'작성 중인 탐험일지'} · ${new Date().toLocaleDateString('ko-KR',{timeZone:'Asia/Seoul'})}<br>© 2026 조승재(과학이조선생) · 해누리중학교</p></section>${M.entries.map((e,i)=>{const records=e.quests.flatMap(q=>state.evidence[q]);return `<section class="print-page"><h2>${i+1}. ${esc(e.title)}</h2><p>${esc(e.story)}</p><div class="evidence"><b>내가 남긴 실험 증거</b>${records.length?records.map(r=>`<div>${esc(evidenceText(r))}</div>`).join(''):'<p>아직 기록하지 않았어요.</p>'}${records.length?circuitSvg(records[records.length-1].p):''}</div>${e.quests.filter(q=>state.predictions[q]).map(q=>`<p class="print-footer">처음 예상 · ${esc(state.predictions[q])}</p>`).join('')}${labels.map((l,j)=>`<article><h3>${l}</h3><p class="print-footer">${esc(e.questions[j])}</p><p>${disp(state.notes[i][j])||'아직 작성하지 않았어요.'}</p></article>`).join('')}</section>`;}).join('')}<section class="print-page"><h2>두 연결에서 발견한 것</h2>${summaryTable()}<p>전압이 일정한 전원과 저항값이 일정한 장치의 모형에서 비교했어요.</p>${state.evidence[0].length?`<h3>처음 켠 불빛</h3><div class="evidence">${state.evidence[0].map(e=>`<div>${esc(evidenceText(e))}</div>`).join('')}</div>`:''}<p class="print-footer">작성한 설명은 학생의 기록입니다. 자동 채점하거나 대신 작성하지 않았습니다.</p></section>`;}
 function download(name,data,mime){const blob=new Blob([data],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function exportHtml(){if(!comfort.confirmJournal(true))return;save();const css=`body{max-width:820px;margin:40px auto;padding:24px;color:#304b41;font:16px/1.85 'Malgun Gothic',sans-serif;background:#fffdf4}h1,h2{color:#3d795c}h1{font-size:38px}h2{border-bottom:2px solid #b3c8a0;padding-bottom:12px}.print-cover{text-align:center;padding:45px 0}.print-page{margin:35px 0;padding:20px 0;border-top:1px solid #dfe4d0}.print-page p{white-space:pre-wrap}article{break-inside:avoid}.evidence{background:#f0f4e7;padding:20px;border-radius:16px;font-size:14px}.evidence svg{display:block;width:100%;height:auto;max-height:280px}.print-footer{font-size:13px;color:#819073}.summary-table{border-collapse:collapse;width:100%;font-size:14px}.summary-table th,.summary-table td{padding:12px;border:1px solid #dbe2ce;text-align:left}svg text{font-family:'Malgun Gothic',sans-serif}.pulse-flow{animation:none}@media print{@page{size:A4;margin:17mm}body{margin:0;padding:0;background:white;font-size:11pt}.print-cover,.print-page{break-after:page}.print-page{border:0;margin:0}.print-page:last-child{break-after:auto}.evidence{break-inside:avoid}}`;download('전기의숲_탐험일지.html',`<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>놀러오세요 전기의 숲 · 탐험일지</title><style>${css}</style><body>${reportBody()}</body></html>`,'text/html;charset=utf-8');toast('제출용 파일을 저장했어요. 선생님이 정한 제출처에 올려 주세요.');}
@@ -746,7 +986,7 @@ function nextStory(){if(storyPage<3){storyPage++;renderStory();return;}if(storyR
 
 function navigate(id){comfort.stopTalk(true);if(!accessible(id)){const p=pendingEntry();if(p>=0){openJournal(p);toast('주민에게 남길 필수 기록을 먼저 완성해 주세요.');}else toast('앞 지역의 부탁을 먼저 해결해 주세요.');return;}dlgIds.forEach(d=>$(d).open&&$(d).close());pause();world?.go(M.quests[id]);toast(`${M.quests[id].npc}에게 가는 길이에요.`);}
 document.addEventListener('click',e=>{const closeButton=e.target.closest('[data-close]');if(closeButton){const d=closeButton.closest('dialog');if(d.id==='journal'&&!comfort.confirmJournal())return;if(d.id==='dialogue')comfort.stopTalk(true);d.close();updateHud();return;}const b=e.target.closest('[data-action]');if(!b)return;const a=b.dataset.action,id=Number(b.dataset.id);switch(a){
- case 'next-hint':nextHint();break;case 'record-cancel':sim.record=null;renderLab();break;case 'seal-entry':sealEntry();break;
+ case 'festival-skip':skipFestival();break;case 'next-hint':nextHint();break;case 'record-cancel':sim.record=null;renderLab();break;case 'seal-entry':sealEntry();break;
  case 'story-begin':startStory(false);break;case 'story-replay':startStory(true);break;case 'story-next':nextStory();break;case 'story-back':storyPage=Math.max(0,storyPage-1);renderStory();break;
  case 'music-default':comfort.cancelMusicPosition();comfort.audio.useDefault();break;
  case 'music-jump':comfort.commitMusicPosition(comfort.audio.info().currentTime+Number(b.dataset.jump));break;
@@ -765,8 +1005,8 @@ document.addEventListener('click',e=>{const closeButton=e.target.closest('[data-
  case 'camp':comfort.stopTalk(true);dlgIds.forEach(d=>$(d).open&&$(d).close());pause();if(world)world.path=world.findPath(-1,10);toast('내 캠프로 가요. 받은 선물이 기다리고 있어요.');break;
  case 'reset':if(window.confirm('새 탐험을 시작하면 이 기기의 현재 기록이 바뀝니다. 먼저 ‘진행 기록 보관’으로 저장했나요?')){const fresh=M.fresh();if(M.save(fresh)){suspendSave=true;location.reload();}else toast("기기 저장이 막혀 새 탐험을 시작하지 못했어요.");}break;
  }});
-document.addEventListener('input',e=>{const el=e.target;if(el.id==='musicSeek'){comfort.previewMusicPosition(Number(el.value));return;}if(el.dataset.volume){state[el.dataset.volume]=Number(el.value);el.parentElement.querySelector('output').textContent=Math.round(Number(el.value)*100)+'%';comfort.audio.update(state);deferSave();}if(el.dataset.note){const [i,j]=el.dataset.note.split(',').map(Number);if(state.notes[i][j]!==el.value)state.sealedEntries[i]=false;state.notes[i][j]=el.value;deferSave();$('noteBadge').textContent=[0,1,2].filter(i=>M.entryDone(state,i)).length;}if(el.dataset.identity){state[el.dataset.identity]=el.value;deferSave();}if(el.dataset.sim&&sim){sim[el.dataset.sim]=Number(el.value);el.parentElement.querySelector('output').textContent=el.value+(el.dataset.sim==='v'?' V':' Ω');$('diagram').innerHTML=circuitSvg(simData(),{probe:sim.probe});$('readings').innerHTML=readingHtml(M.circuit(simData()));}});
-document.addEventListener('change',e=>{const el=e.target;if(el.id==='musicSeek'){comfort.commitMusicPosition(Number(el.value));return;}if(el.id==='probeSelect'){sim.probe=el.value;renderLab();}if(el.dataset.setting){state[el.dataset.setting]=el.type==='checkbox'?el.checked:el.value;save();updateHud();world?.applyProgress();comfort.audio.update(state);comfort.updateAudioUI();if(state.calm)comfort.stopTalk(true);}if(el.dataset.sim)renderLab();});
+document.addEventListener('input',e=>{const el=e.target;if(el.id==='musicSeek'){comfort.previewMusicPosition(Number(el.value));return;}if(el.dataset.volume){state[el.dataset.volume]=Number(el.value);el.parentElement.querySelector('output').textContent=Math.round(Number(el.value)*100)+'%';comfort.audio.update(state);deferSave();}if(el.dataset.note){const [i,j]=el.dataset.note.split(',').map(Number);if(state.notes[i][j]!==el.value)state.sealedEntries[i]=false;state.notes[i][j]=el.value;deferSave();$('noteBadge').textContent=[0,1,2].filter(i=>M.entryDone(state,i)).length;}if(el.dataset.identity){state[el.dataset.identity]=el.value;deferSave();}if(el.dataset.sim&&sim){sim[el.dataset.sim]=Number(el.value);el.parentElement.querySelector('output').textContent=el.value+(el.dataset.sim==='v'?' V':' Ω');$('diagram').innerHTML=circuitSvg(simData(),{probe:sim.probe});$('readings').innerHTML=readingHtml(M.circuit(simData()));$('meterExplanation').textContent=meterExplanation();}});
+document.addEventListener('change',e=>{const el=e.target;if(el.id==='musicSeek'){comfort.commitMusicPosition(Number(el.value));return;}if(el.id==='probeSelect'){sim.probe=el.value;$('diagram').innerHTML=circuitSvg(simData(),{probe:sim.probe,electrons:sim.electrons,final:sim.id===4});$('readings').innerHTML=readingHtml(M.circuit(simData()));}if(el.dataset.setting){state[el.dataset.setting]=el.type==='checkbox'?el.checked:el.value;save();updateHud();world?.applyProgress();comfort.audio.update(state);comfort.updateAudioUI();if(state.calm)comfort.stopTalk(true);}if(el.dataset.sim)renderLab();});
 document.addEventListener('submit',e=>{if(e.target.id==='recordForm'){e.preventDefault();commitRecord(e.target);}});
 $('story').addEventListener('cancel',e=>{if(!storyReplay)e.preventDefault();});
 $('startForm').addEventListener('submit',e=>{e.preventDefault();const input=$('nickname');if(comfort.composing.has(input))return;state.nickname=comfort.confirmValue(input.value,'탐험가 이름','nickname',input).trim()||'새싹';comfort.audio.unlock();if($('startMusic').checked)comfort.audio.playMusic();state.mode=new FormData(e.target).get('mode');state.started=true;if(matchMedia('(prefers-reduced-motion:reduce)').matches)state.calm=true;save();close('welcome');updateHud();toast('반가워요! 길을 누르거나 방향키로 걸어 보세요.');});
