@@ -100,10 +100,77 @@ dialog{border:0;border-radius:27px;padding:0;background:var(--paper);color:var(-
   {id:4,name:'빛 축제를 부탁해',place:'바다 건너 축제 광장',npc:'해온',animal:'🐤',color:'#e6bd57',x:13,z:-7,story:'공연장 안내등은 계속 켜 두고 체험 부스만 잠깐 끄고 싶어. 건물 배치는 카페와 다르지만 네가 알아낸 방법을 쓸 수 있을까?',goal:'새 배치의 회로를 고르고 부스만 꺼 보세요.',reward:'전기의 숲 탐험가 도장',concept:'문제 해결 · 증거 · 새로운 상황'}
  ];
  const entries=[
-  {title:'모아에게 남긴 작업 메모',quests:[1],icon:'🛠',story:'축제 장치에 필요한 0.3 A를 만들어 주세요.',questions:['나는 무엇을 바꿔 문제를 해결했나요? 비교할 때 같게 둔 조건도 적어 주세요.','어떤 측정 결과가 내 방법을 뒷받침하나요? 전압·전류·저항의 관계로 설명해 주세요.','전압이 더 큰 전원으로 바뀌어도 같은 전류를 유지하려면 무엇을 바꿔야 할까요? 왜 그렇게 생각하나요?'],starts:['나는 전압을 …로 두고, 저항을 …','…와 …를 비교했을 때 전류가 …','전압이 더 커진다면 저항을 …']},
-  {title:'토리와 소담에게 보내는 편지',quests:[2,3],icon:'✉',story:'숲길에서는 함께 꺼졌고, 카페에서는 하나만 꺼야 했어요.',questions:['소담의 부탁을 해결하려고 연결과 스위치 위치를 어떻게 정했나요?','숲길과 카페의 관찰 결과는 어떻게 달랐나요? 전류가 흐를 경로와 전압을 근거로 설명해 주세요.','학교에서 한 장치를 꺼도 다른 장치는 계속 작동해야 하는 상황을 찾아보세요. 내 방법을 어떻게 적용할까요?'],starts:['나는 두 장치를 …로 연결하고 스위치를 …','숲길에서는 …였지만, 카페에서는 …','학교의 …에 적용한다면 …']},
-  {title:'다음 탐험가에게',quests:[4],icon:'✦',story:'공연장 안내등은 유지하고 체험 부스만 꺼야 해요.',questions:['축제 회로를 어떻게 만들었고, 어떤 실험으로 부탁을 해결했는지 확인했나요?','회로의 모양이 달라도 내 방법이 통하는 이유는 무엇인가요?','부스를 하나 더 연결하면 어떨까요? 전원 전압이 일정할 때 기존 가지와 전체 전류가 각각 어떻게 될지 예상하고 이유를 적어 주세요.'],starts:['나는 … 연결을 골라 … 스위치를 …','중요한 것은 모양보다 …','가지 하나를 더 연결하면 …']}
- ];
+  {
+    "title": "모아에게 남긴 작업 메모",
+    "quests": [
+      1
+    ],
+    "icon": "🛠",
+    "story": "모아가 다음에도 장치에 필요한 0.3 A를 만들 수 있도록 작업 메모를 남겨 주세요.",
+    "labels": [
+      "6 V에서 0.3 A를 만든 방법",
+      "내 측정값으로 모아에게 설명하기",
+      "전원이 12 V로 바뀐다면?"
+    ],
+    "questions": [
+      "전원을 6 V로 맞춘 뒤 저항을 몇 Ω으로 정했나요? 그때 측정한 전류는 몇 A였나요? 모아가 따라 할 수 있도록 조절한 순서와 값을 적어 주세요.",
+      "전압을 6 V로 같게 두고 저항만 바꾼 기록 두 개를 골라, 각각의 저항(Ω)과 전류(A)를 적어 주세요. 저항이 몇 배가 되었을 때 전류는 어떻게 달라졌나요? 이 비교를 근거로 내가 고른 저항에서 0.3 A가 흐른 이유를 설명해 주세요.",
+      "모아가 전원을 6 V에서 12 V로 바꾸려고 해요. 내가 고른 저항을 그대로 쓰면 전류는 몇 A가 될까요? 다시 0.3 A가 흐르게 하려면 저항을 몇 Ω으로 바꿔야 할까요? 전압·전류·저항의 관계로 예상한 이유를 적어 주세요."
+    ],
+    "starts": [
+      "모아야, 전원을 6 V로 맞추고 저항을 … Ω으로 정했어. 전류계는 … A였어.",
+      "6 V에서 저항이 … Ω일 때 … A, … Ω일 때 … A였어. 저항이 …배가 되면 전류는 …",
+      "12 V에서 저항을 그대로 두면 … A로 예상해. 0.3 A를 유지하려면 … Ω이 필요해. 왜냐하면 …"
+    ]
+  },
+  {
+    "title": "토리와 소담에게 보내는 편지",
+    "quests": [
+      2,
+      3
+    ],
+    "icon": "✉",
+    "story": "함께 꺼진 숲길을 조사한 경험으로, 테라스만 끄고 싶은 소담의 부탁을 해결했어요.",
+    "labels": [
+      "테라스만 끄도록 연결한 방법",
+      "두 장소에서 스위치를 열었더니",
+      "교실 조명에 내 방법 적용하기"
+    ],
+    "questions": [
+      "실내등과 테라스등을 직렬과 병렬 중 어떻게 연결했나요? 실내등을 켜 둔 채 테라스등만 끄려면 스위치를 어느 도선에 두어야 하나요? 소담이 따라 할 수 있게 연결과 스위치 위치를 설명해 주세요.",
+      "토리의 숲길에서 스위치를 열었을 때 장치 앞·뒤 전류는 각각 몇 A였나요? 소담의 카페에서 테라스 스위치를 열기 전과 후, 실내와 테라스 전류는 각각 어떻게 달라졌나요? 기록의 값을 적고, 스위치를 연 뒤에도 전원으로 이어지는 닫힌 경로가 남는지로 차이를 설명해 주세요.",
+      "교실에서 칠판 쪽 조명만 끄고 학생 자리의 조명은 켜 두고 싶어요. 두 조명과 스위치를 어떻게 연결할까요? 스위치를 두 갈래로 나뉘기 전 공통 도선에 두면 어떤 문제가 생길지, 카페에서 관찰한 결과를 근거로 설명해 주세요."
+    ],
+    "starts": [
+      "소담아, 두 등을 …로 연결했어. 스위치는 … 도선에 두었어.",
+      "토리의 숲길은 스위치를 열자 앞 … A, 뒤 … A였어. 카페의 실내는 … A에서 … A, 테라스는 … A에서 … A였어. 이 차이는 …",
+      "칠판 쪽과 학생 자리 조명을 …로 연결하고 스위치는 …에 둘 거야. 공통 도선에 두면 …"
+    ]
+  },
+  {
+    "title": "다음 탐험가에게",
+    "quests": [
+      4
+    ],
+    "icon": "✦",
+    "story": "카페와 다른 모양의 축제 회로에서도 안내등을 유지하며 부스만 껐어요. 다음 탐험가에게 확인 방법과 새 질문을 남겨 주세요.",
+    "labels": [
+      "안내등을 지킨 실험 증거",
+      "배치가 달라도 같은 해결책인 이유",
+      "새 부스를 더 연결하면?"
+    ],
+    "questions": [
+      "축제에서 어떤 연결을 고르고 어느 스위치를 열었나요? 부스를 끄기 전과 후의 안내등 전류, 부스 전류를 각각 몇 A로 기록했나요? 그 값 중 무엇이 “안내등은 켜 두고 부스만 끈다”는 부탁을 해결했다는 증거인가요?",
+      "카페 회로와 축제 회로에서, 부스나 테라스로 가는 길이 끊겨도 다른 장치의 전류가 흐를 수 있는 길을 찾아 설명해 주세요. 다음 탐험가가 회로를 그릴 때 건물의 위아래 배치보다 어떤 연결을 확인해야 할까요?",
+      "안내등과 기존 부스를 모두 켠 상태에서 새 부스를 병렬로 하나 더 연결하고 켠다고 해요. 전원 전압과 기존 장치의 저항은 그대로일 때, 안내등 전류와 전원에서 나오는 전체 전류는 각각 어떻게 달라질까요? 가지의 전압과 전류가 나뉘고 합쳐지는 관계로 이유를 쓰고, 예상을 확인하려면 전류계를 어디에 두고 무엇을 비교할지도 적어 주세요."
+    ],
+    "starts": [
+      "나는 … 연결에서 … 스위치를 열었어. 안내등 전류는 … A에서 … A, 부스 전류는 … A에서 … A였어. 그래서 …",
+      "스위치를 연 뒤에도 전원에서 …를 지나 다시 전원으로 이어지는 길이 남아 있어. 확인해야 할 연결은 …",
+      "새 부스를 켜면 안내등 전류는 …, 전체 전류는 …로 예상해. 왜냐하면 … 확인하려면 전류계를 …에 연결해 전후 값을 비교할 거야."
+    ]
+  }
+];
  function circuit(p){
   const V=Number(p.v),r1=Number(p.r1),r2=Number(p.r2||10);
   if(!Number.isFinite(V)||V<0||!Number.isFinite(r1)||r1<=0||!Number.isFinite(r2)||r2<=0)throw new Error('전압과 저항 설정을 확인해 주세요.');
@@ -939,7 +1006,7 @@ function evidenceText(e){
 function journalEvidence(ids){const list=ids.flatMap(i=>state.evidence[i]);if(!list.length)return '<div class="notice">주민의 부탁을 살펴보고 ‘증거 남기기’를 누르면 여기에 실험 기록이 붙어요.</div>';return `<details class="journal-evidence"><summary>내가 남긴 실험 증거 ${list.length}개 펼치기</summary>${list.map(e=>`<div class="evidence-item">${esc(evidenceText(e))}</div>`).join('')}<div class="circuit-wrap">${circuitSvg(list[list.length-1].p)}</div></details>`;}
 function renderJournal(tab=journalTab){journalTab=Number(tab);const finished=[0,1,2].filter(i=>M.entryDone(state,i)).length;let body='';
  if(journalTab===-1){body=`<div class="journal-cover"><div class="eyebrow">놀러오세요 전기의 숲</div><div class="big-symbol">✦</div><h3>${disp(state.nickname)}의<br>전기의 숲 탐험일지</h3><p>작은 부탁에서 시작된, 나의 과학 이야기</p><div class="stamps">${M.quests.map(q=>`<span class="stamp ${state.completed.includes(q.id)?'done':''}" title="${q.name}">${q.animal}</span>`).join('')}</div></div><div class="identity-fields"><label>탐험가 별명<input data-ime="submit" data-identity="nickname" value="${esc(state.nickname)}" maxlength="20" aria-label="탐험가 별명"></label><label>학급<input data-ime="off" data-identity="classCode" value="${esc(state.classCode)}" maxlength="20" placeholder="예: 2-3" aria-label="학급"></label><label>번호<input data-ime="off" data-identity="number" value="${esc(state.number)}" maxlength="10" placeholder="번호" inputmode="numeric" aria-label="번호"></label></div>${IslandComfort.helpHTML}<p>주민의 부탁, 내가 바꾼 회로, 발견한 증거를 함께 모아요. 내 설명은 ‘어떻게 해결했는지 → 왜 통했는지 → 다음에는 어떻게 쓸지’를 담아요.</p><div class="journal-progress">부탁 ${state.completed.length}/5 · 해결 기록 ${finished}/3 완성</div>${journalEvidence([0])}<div class="action-row"><button data-action="journal-tab" data-tab="0" class="primary">첫 해결 기록 펼치기 →</button></div>`;}
- else if(journalTab>=0&&journalTab<=2){const e=M.entries[journalTab];body=`<img class="journal-art" src="art/story-journal.png" alt="주민과 함께 완성하는 탐험일지"><div class="eyebrow">필수 탐험 기록 ${journalTab+1} / 3 · ${M.entryDone(state,journalTab)?'서명 완료 ✓':'작성 후 서명해요'}</div><h3>${esc(e.title)}</h3><p>${esc(e.story)}</p>${journalEvidence(e.quests)}${IslandComfort.helpHTML}${e.questions.map((q,i)=>`<div class="field"><label for="note-${journalTab}-${i}"><span>${i+1}</span>${esc(labels[i])}</label><small>${esc(q)}</small><textarea id="note-${journalTab}-${i}" data-ime="submit" data-note="${journalTab},${i}" rows="3" required maxlength="5000" placeholder="${esc(state.mode==='beginner'?e.starts[i]:'내 실험과 이야기를 연결해 적어 주세요.')}" spellcheck="false">${esc(state.notes[journalTab][i])}</textarea></div>`).join('')}<button type="button" class="secondary ime-check" data-action="check-writing">✓ 기록 확인 · 한글 보정</button><p class="muted">작성 중인 글도 자동으로 저장돼요. 처음 예상과 달라졌어도 괜찮아요. 글의 길이보다 내 선택의 이유가 중요해요.</p><div class="action-row"><button class="secondary" data-action="journal-tab" data-tab="${journalTab===0?-1:journalTab-1}">← 이전</button><button class="primary" data-action="seal-entry">${M.entryDone(state,journalTab)?'✓ 서명한 기록 다시 확인':'✎ 기록에 서명하고 완성하기'}</button>${M.entryDone(state,journalTab)?(journalTab<2?`<button class="primary" data-action="navigate" data-id="${journalTab===0?2:4}">다음 주민에게 →</button>`:`<button class="primary" data-action="journal-tab" data-tab="4">축제와 제출 준비 →</button>`):''}</div>`;}
+ else if(journalTab>=0&&journalTab<=2){const e=M.entries[journalTab];body=`<img class="journal-art" src="art/story-journal.png" alt="주민과 함께 완성하는 탐험일지"><div class="eyebrow">필수 탐험 기록 ${journalTab+1} / 3 · ${M.entryDone(state,journalTab)?'서명 완료 ✓':'작성 후 서명해요'}</div><h3>${esc(e.title)}</h3><p>${esc(e.story)}</p>${journalEvidence(e.quests)}${IslandComfort.helpHTML}${e.questions.map((q,i)=>`<div class="field"><label for="note-${journalTab}-${i}"><span>${i+1}</span>${esc(e.labels?.[i]||labels[i])}</label><small>${esc(q)}</small><textarea id="note-${journalTab}-${i}" data-ime="submit" data-note="${journalTab},${i}" rows="3" required maxlength="5000" placeholder="${esc(state.mode==='beginner'?e.starts[i]:'내 실험과 이야기를 연결해 적어 주세요.')}" spellcheck="false">${esc(state.notes[journalTab][i])}</textarea></div>`).join('')}<button type="button" class="secondary ime-check" data-action="check-writing">✓ 기록 확인 · 한글 보정</button><p class="muted">작성 중인 글도 자동으로 저장돼요. 처음 예상과 달라졌어도 괜찮아요. 글의 길이보다 내 선택의 이유가 중요해요.</p><div class="action-row"><button class="secondary" data-action="journal-tab" data-tab="${journalTab===0?-1:journalTab-1}">← 이전</button><button class="primary" data-action="seal-entry">${M.entryDone(state,journalTab)?'✓ 서명한 기록 다시 확인':'✎ 기록에 서명하고 완성하기'}</button>${M.entryDone(state,journalTab)?(journalTab<2?`<button class="primary" data-action="navigate" data-id="${journalTab===0?2:4}">다음 주민에게 →</button>`:`<button class="primary" data-action="journal-tab" data-tab="4">축제와 제출 준비 →</button>`):''}</div>`;}
  else if(journalTab===3){body=`<div class="eyebrow">발견을 한눈에</div><h3>두 연결에서 무슨 일이 있었을까?</h3>${summaryTable()}<div class="note myth">저항은 전자를 없애지 않아요. 정상 상태의 직렬 회로에서는 저항 앞뒤 전류가 같아요. 병렬에서 가지 전류가 같은 것은 저항이 같을 때예요.</div><p class="muted">전압이 일정한 이상적 전원과 저항값이 일정한 장치를 비교한 결과예요. 합성 저항 계산과 혼합 연결은 다루지 않아요.</p><div class="action-row"><button class="primary" data-action="journal-tab" data-tab="4">제출 준비하기 →</button></div>`;}
  else {body=`<div class="eyebrow">나의 탐험을 한 권으로</div><h3>탐험일지 완성·제출 준비</h3><p>해결 기록과 실험 증거를 한 파일에 모아요. 선생님이 정한 과제 제출처에 이 파일을 올려 주세요.</p><ul class="quest-checks"><li class="${state.completed.length===5?'ok':''}"><span>${state.completed.length===5?'✓':'○'}</span>주민의 부탁 ${state.completed.length}/5 해결</li><li class="${finished===3?'ok':''}"><span>${finished===3?'✓':'○'}</span>해결책·과학적 이유·적용 기록 ${finished}/3 완성</li></ul><div class="notice">${M.ready(state)?'일지를 완성했어요! 축제를 열고 제출용 파일을 저장할 수 있어요.':'빈 기록을 채워 주세요. 작성 중인 일지도 파일로 보관할 수 있어요.'}</div><div class="end-actions"><button class="primary" data-action="finish">${state.festival?'축제 다시 보기':'빛 축제 열기'}</button><button data-action="print">인쇄 / PDF로 저장</button><button data-action="export-html">제출용 탐험일지 저장 (.html)</button><button data-action="export-json">이어서 쓸 기록 보관 (.json)</button><button data-action="import">저장한 기록 가져오기</button></div><p class="muted">이 화면은 파일을 준비하는 곳이에요. 온라인 제출함으로 전송하지 않아요. PDF는 인쇄 창에서 ‘PDF로 저장’을 선택하세요.</p>`;}
  $('journalContent').innerHTML=`<header class="modal-head"><div class="eyebrow">차곡차곡 쌓인 나의 발견</div><h2 id="journalTitle">탐험일지</h2><button class="close" data-close aria-label="일지 닫기">×</button></header><div class="journal-layout"><nav class="journal-nav" aria-label="일지 페이지">${[['-1','✦','나의 탐험일지'],['0','01','공방의 작업 메모'],['1','02','두 주민에게 편지'],['2','03','다음 탐험가에게'],['3','▦','발견 비교표'],['4','✓','완성·제출 준비']].map(([i,icon,l])=>`<button class="${+i===journalTab?'active':''}" data-action="journal-tab" data-tab="${i}"><b>${icon}</b>${l}</button>`).join('')}<small>실험 기록은 자동으로 붙어요.<br>해결의 이유는 내 말로 남겨요.<br><br>작성 내용은 이 기기에 저장돼요.</small></nav><section class="journal-page">${body}</section></div>`;
@@ -962,7 +1029,7 @@ function finish(){
 function skipFestival(){if(!festivalRunning)return;world?.cancelFestival({restore:true});festivalDone();}
 document.addEventListener('keydown',e=>{if(festivalRunning&&e.key==='Escape'){e.preventDefault();skipFestival();}});
 
-function reportBody(){return `<section class="print-cover"><p>놀러오세요 전기의 숲 · 빛 축제를 부탁해</p><h1>${disp(state.nickname)}의<br>전기의 숲 탐험일지</h1><p>학급 ${esc(state.classCode)||'—'} · 번호 ${esc(state.number)||'—'}<br>${state.mode==='beginner'?'첫 탐험':'복습 탐험'} · 부탁 ${state.completed.length}/5 해결</p><p>문제 해결 → 실험 증거 → 과학적 이유 → 새로운 적용</p><p class="print-footer">${M.ready(state)?'완성한 탐험일지':'작성 중인 탐험일지'} · ${new Date().toLocaleDateString('ko-KR',{timeZone:'Asia/Seoul'})}<br>© 2026 조승재(과학이조선생) · 해누리중학교</p></section>${M.entries.map((e,i)=>{const records=e.quests.flatMap(q=>state.evidence[q]);return `<section class="print-page"><h2>${i+1}. ${esc(e.title)}</h2><p>${esc(e.story)}</p><div class="evidence"><b>내가 남긴 실험 증거</b>${records.length?records.map(r=>`<div>${esc(evidenceText(r))}</div>`).join(''):'<p>아직 기록하지 않았어요.</p>'}${records.length?circuitSvg(records[records.length-1].p):''}</div>${e.quests.filter(q=>state.predictions[q]).map(q=>`<p class="print-footer">처음 예상 · ${esc(state.predictions[q])}</p>`).join('')}${labels.map((l,j)=>`<article><h3>${l}</h3><p class="print-footer">${esc(e.questions[j])}</p><p>${disp(state.notes[i][j])||'아직 작성하지 않았어요.'}</p></article>`).join('')}</section>`;}).join('')}<section class="print-page"><h2>두 연결에서 발견한 것</h2>${summaryTable()}<p>전압이 일정한 전원과 저항값이 일정한 장치의 모형에서 비교했어요.</p>${state.evidence[0].length?`<h3>처음 켠 불빛</h3><div class="evidence">${state.evidence[0].map(e=>`<div>${esc(evidenceText(e))}</div>`).join('')}</div>`:''}<p class="print-footer">작성한 설명은 학생의 기록입니다. 자동 채점하거나 대신 작성하지 않았습니다.</p></section>`;}
+function reportBody(){return `<section class="print-cover"><p>놀러오세요 전기의 숲 · 빛 축제를 부탁해</p><h1>${disp(state.nickname)}의<br>전기의 숲 탐험일지</h1><p>학급 ${esc(state.classCode)||'—'} · 번호 ${esc(state.number)||'—'}<br>${state.mode==='beginner'?'첫 탐험':'복습 탐험'} · 부탁 ${state.completed.length}/5 해결</p><p>문제 해결 → 실험 증거 → 과학적 이유 → 새로운 적용</p><p class="print-footer">${M.ready(state)?'완성한 탐험일지':'작성 중인 탐험일지'} · ${new Date().toLocaleDateString('ko-KR',{timeZone:'Asia/Seoul'})}<br>© 2026 조승재(과학이조선생) · 해누리중학교</p></section>${M.entries.map((e,i)=>{const records=e.quests.flatMap(q=>state.evidence[q]);return `<section class="print-page"><h2>${i+1}. ${esc(e.title)}</h2><p>${esc(e.story)}</p><div class="evidence"><b>내가 남긴 실험 증거</b>${records.length?records.map(r=>`<div>${esc(evidenceText(r))}</div>`).join(''):'<p>아직 기록하지 않았어요.</p>'}${records.length?circuitSvg(records[records.length-1].p):''}</div>${e.quests.filter(q=>state.predictions[q]).map(q=>`<p class="print-footer">처음 예상 · ${esc(state.predictions[q])}</p>`).join('')}${labels.map((l,j)=>`<article><h3>${esc(e.labels?.[j]||l)}</h3><p class="print-footer">${esc(e.questions[j])}</p><p>${disp(state.notes[i][j])||'아직 작성하지 않았어요.'}</p></article>`).join('')}</section>`;}).join('')}<section class="print-page"><h2>두 연결에서 발견한 것</h2>${summaryTable()}<p>전압이 일정한 전원과 저항값이 일정한 장치의 모형에서 비교했어요.</p>${state.evidence[0].length?`<h3>처음 켠 불빛</h3><div class="evidence">${state.evidence[0].map(e=>`<div>${esc(evidenceText(e))}</div>`).join('')}</div>`:''}<p class="print-footer">작성한 설명은 학생의 기록입니다. 자동 채점하거나 대신 작성하지 않았습니다.</p></section>`;}
 function download(name,data,mime){const blob=new Blob([data],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function exportHtml(){if(!comfort.confirmJournal(true))return;save();const css=`body{max-width:820px;margin:40px auto;padding:24px;color:#304b41;font:16px/1.85 'Malgun Gothic',sans-serif;background:#fffdf4}h1,h2{color:#3d795c}h1{font-size:38px}h2{border-bottom:2px solid #b3c8a0;padding-bottom:12px}.print-cover{text-align:center;padding:45px 0}.print-page{margin:35px 0;padding:20px 0;border-top:1px solid #dfe4d0}.print-page p{white-space:pre-wrap}article{break-inside:avoid}.evidence{background:#f0f4e7;padding:20px;border-radius:16px;font-size:14px}.evidence svg{display:block;width:100%;height:auto;max-height:280px}.print-footer{font-size:13px;color:#819073}.summary-table{border-collapse:collapse;width:100%;font-size:14px}.summary-table th,.summary-table td{padding:12px;border:1px solid #dbe2ce;text-align:left}svg text{font-family:'Malgun Gothic',sans-serif}.pulse-flow{animation:none}@media print{@page{size:A4;margin:17mm}body{margin:0;padding:0;background:white;font-size:11pt}.print-cover,.print-page{break-after:page}.print-page{border:0;margin:0}.print-page:last-child{break-after:auto}.evidence{break-inside:avoid}}`;download('전기의숲_탐험일지.html',`<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>놀러오세요 전기의 숲 · 탐험일지</title><style>${css}</style><body>${reportBody()}</body></html>`,'text/html;charset=utf-8');toast('제출용 파일을 저장했어요. 선생님이 정한 제출처에 올려 주세요.');}
 function sealEntry(){
