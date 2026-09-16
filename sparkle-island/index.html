@@ -1196,14 +1196,14 @@ updateHud();drawMap($('miniMap'));if(!state.started)show('welcome');else pause()
 
 </script>
 <script id="visit-count">
-/* 방문 집계 — Supabase(질문나무 프로젝트 C) 의 visit_hit RPC 한 번 + visit_count 로 숫자를 읽어 표지에 띄움.
+/* 방문 집계 — Supabase(과학이조선생 프로젝트 A) 의 visit_hit RPC 한 번 + visit_count 로 숫자를 읽어 표지에 띄움.
    보내는 것: 앱 이름·페이지·임의 방문자ID·유입경로·기기종류뿐. 탐험가 이름·일지 내용은 절대 보내지 않음.
    SETUP SQL(수업HTML/_템플릿/방문집계_SETUP.sql) 을 아직 안 돌렸으면 조용히 실패하고 표지 줄만 숨긴다.
    내 컴퓨터(file:·localhost)에서 연 건 세지 않고 숫자만 보여 준다. */
 (function(){
   try{
-    var U="https://hmzklbrksfdhzsgwzfyg.supabase.co";
-    var K="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtemtsYnJrc2ZkaHpzZ3d6ZnlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTY4NDcsImV4cCI6MjA5NTA5Mjg0N30.LuTEeJyu-mtkNzUTNaA8IigmdtWPWXS2ucVgXDeevPA";
+    var U="https://vbvtnmnodeoocbbjauap.supabase.co";
+    var K="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZidnRubW5vZGVvb2NiYmphdWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTQ0OTYsImV4cCI6MjA5NTA3MDQ5Nn0.dvuRrt3qw2Tya_QwGbcXrmGPdfDgI4xmgyH8UjU73Nc";
     var APP="sparkle-island", PAGE="index";
     var H={"Content-Type":"application/json","apikey":K,"Authorization":"Bearer "+K};
     var line=document.getElementById("visitLine");
