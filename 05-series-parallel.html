@@ -1700,7 +1700,28 @@ body.teacher .tqopt{display:inline-flex}
 .tqread .ra{color:#b23a30}.tqread .rv{color:#7d5ba6}
 .tqspot{cursor:pointer}
 .tqspot:hover circle{stroke-width:3}
-.tqspot.want circle{stroke-width:3;stroke-dasharray:5 3;animation:tqdash 1s linear infinite}
+.tqspot.want circle{stroke-width:2.5;stroke-dasharray:5 3}
+.tqspot.next circle{stroke-width:3.5;stroke-dasharray:5 3;animation:tqdash 1s linear infinite;filter:drop-shadow(0 0 4px rgba(0,100,224,.6))}
+.tqspot .nx{font-size:13px;font-weight:800;fill:#0064e0}
+.tqfix{font-size:13px;color:var(--ink-mute);font-weight:600}
+.tqctl #tqMode button small{display:block;font-size:11px;font-weight:600;opacity:.8;line-height:1.1;margin-top:1px}
+.tqcoach{position:sticky;top:calc(var(--header-h,60px) + 6px);z-index:8;margin-top:12px;padding:10px 14px;border-radius:14px;background:#0064e0;color:#fff;font-size:15.5px;line-height:1.5;display:flex;gap:10px;align-items:center;flex-wrap:wrap;box-shadow:0 8px 20px -12px rgba(0,100,224,.7)}
+.tqcoach .no{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;border-radius:99px;background:#fff;color:#0064e0;font-weight:800;font-size:13px;padding:0 8px}
+.tqcoach b{font-weight:800}
+.tqcoach .sub{font-size:12.5px;opacity:.85;width:100%}
+.tqcoach.done{background:#1e7d3a;box-shadow:0 8px 20px -12px rgba(30,125,58,.7)}
+.tqctl button.next,.tqmeas button.next{border-color:#0064e0!important;box-shadow:0 0 0 3px rgba(0,100,224,.25)!important;animation:tqnext 1.1s ease-in-out infinite;position:relative;z-index:1}
+@keyframes tqnext{50%{box-shadow:0 0 0 6px rgba(0,100,224,.08)!important}}
+.tqmeas button.want{animation:none;box-shadow:none;border-color:rgba(0,100,224,.45)}
+ol.tqorder{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:4px;font-size:13.5px}
+ol.tqorder li{display:flex;gap:8px;align-items:flex-start;padding:5px 8px;border-radius:9px;color:var(--ink-mute)}
+ol.tqorder li .k{flex:none;width:1.6em;text-align:center}
+ol.tqorder li.ok{color:#1e7d3a}
+ol.tqorder li.cur{background:rgba(0,100,224,.09);color:var(--ink);font-weight:800;border:1.5px solid rgba(0,100,224,.35)}
+ol.tqorder li .v{font-family:var(--mono,ui-monospace,monospace);font-weight:700;margin-left:auto;white-space:nowrap}
+.tqwrite input.ok{animation:tqokpop .35s ease-out}
+@keyframes tqokpop{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.tqctl button.next,.tqmeas button.next,.tqspot.next circle,.tqwrite input.ok{animation:none}}
 @keyframes tqdash{to{stroke-dashoffset:-16}}
 @media(prefers-reduced-motion:reduce){.tqmeas button.want,.tqspot.want circle{animation:none}}
 /* 미션 칸 */
@@ -2824,19 +2845,20 @@ body.teacher .tqopt{display:inline-flex}
  <div class="badge" style="margin-bottom:6px">🔬 재서 채우는 표 — 탐구 실험대</div>
  <h3 class="card-t" style="margin-bottom:4px">결국 알아야 할 것은 표 한 장 — 설명 대신 <b class="k">직접 재서</b> 채웁니다</h3>
  <p class="lead say" style="font-size:17px;margin-top:8px">저항 두 개(R₁, R₂)를 직렬·병렬로 잇고, <b>전류계(🅐)와 전압계(🅥)를 여섯 자리에 대어</b> 값을 읽습니다.
- 미션은 <b>한 번에 하나씩</b> 실험대 옆에 뜹니다 — 재고, <b>잰 값을 손으로 적고</b>, 질문에 답하면 맨 아래 표의 칸이 <b class="k">내가 잰 숫자와 함께</b> 채워져요. 그 표가 오늘 학습지 그대로입니다.</p>
+ 미션은 <b>한 번에 하나씩</b> 실험대 옆에 뜹니다. 위쪽 <b>👉 지금 할 일</b>이 다음에 누를 단추를 알려 주고, 그 단추가 깜빡여요 — 재고, <b>잰 값을 손으로 적고</b>, 질문에 답하면 맨 아래 표의 칸이 <b class="k">내가 잰 숫자와 함께</b> 채워져요. 그 표가 오늘 학습지 그대로입니다.</p>
  <div class="keyline-s"><span class="kw">계기를 대어 재기</span><span class="arw">→</span><span class="kw">잰 값 적기</span><span class="arw">→</span><span class="kw">질문에 답하기</span><span class="arw">→</span><span class="kw hi">표가 내 숫자로 채워짐</span><span class="memo"></span></div>
 
  <div class="tqstrip"><div class="tqsteps" id="tqSteps"></div><label class="tqopt" title="교사용 — 끄면 값을 적지 않아도 질문이 열려요"><input type="checkbox" id="tqWriteTg"> ✍️ 값 적기 단계</label><button type="button" class="tqprog" id="tqProg">🧾 표 0/10칸</button></div>
 
+ <div class="tqcoach" id="tqCoach" aria-live="polite"></div>
  <div class="tqlab">
  <div class="tqleft">
  <div class="svgstage" id="tqStage" aria-live="polite"></div>
  <div class="tqctl">
  <div class="tqctl-g">
  <h4>🔧 회로 만들기</h4>
- <div class="seg" id="tqMode"><button type="button" data-mode="s" class="on">🔗 직렬</button><button type="button" data-mode="p">🔀 병렬</button></div>
- <div class="tqrow"><span class="tql">전지</span><div class="seg tqseg" id="tqV"><button type="button" data-v="3">3 V</button><button type="button" data-v="6" class="on">6 V</button></div></div>
+ <div class="seg" id="tqMode"><button type="button" data-mode="s" class="on">🔗 직렬 <small>한 줄로</small></button><button type="button" data-mode="p">🔀 병렬 <small>나란히</small></button></div>
+ <div class="tqrow"><span class="tql">전지</span><span class="tqfix">6 V로 고정 — 이 실험대에서는 전압을 바꾸지 않아요</span></div>
  <div class="tqrow"><span class="tql">R₁</span><div class="seg tqseg" id="tqR1"><button type="button" data-r="10" class="on">10 Ω</button><button type="button" data-r="20">20 Ω</button><button type="button" data-r="30">30 Ω</button></div></div>
  <div class="tqrow"><span class="tql">R₂</span><div class="seg tqseg" id="tqR2"><button type="button" data-r="0">없음</button><button type="button" data-r="10">10 Ω</button><button type="button" data-r="20" class="on">20 Ω</button><button type="button" data-r="30">30 Ω</button></div></div>
  </div>
@@ -5382,9 +5404,9 @@ if(hlWrap){
 })();
 </script>
 <script id="sp-tq-0913">
-/* ═══════ 🔬 재서 채우는 표 — 탐구 실험대 v2 (2026-09-15)
-   미션이 실험대 옆에 한 번에 하나씩 떠서 「재기 → 적기 → 답하기」가 한 자리에서 끝난다.
-   연타 막기: 잰 값을 손으로 적어야 질문이 열리고, 틀리면 잠깐 잠금 + 보기 순서가 섞이고, 두 번 틀리면 힌트. ═══════ */
+/* ═══════ 🔬 재서 채우는 표 — 탐구 실험대 v3 (2026-09-17)
+   v2(미션이 실험대 옆에, 값 적기, 잠금)에 더한 것: 전지 6 V 고정 · 「👉 지금 할 일」 코치(다음에 누를 단추 하나만 깜빡임) ·
+   미션 칸에 순서 목록 · 값은 입력하는 즉시 판정(전각·단위·쉼표 허용)하고 다 맞으면 질문이 저절로 열린다. ═══════ */
 (function(){
 'use strict';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -5392,10 +5414,12 @@ const host=$('#tqStage');if(!host)return;
 S.tq=S.tq||{};S.tq.log=S.tq.log||{};S.tq.ans=S.tq.ans||{};S.tq.chips=S.tq.chips||{};S.tq.wr=S.tq.wr||{};S.tq.miss=S.tq.miss||{};
 const F='Gowun Dodum, Pretendard, sans-serif', W='#a08b64';
 const CIRC=['','①','②','③','④','⑤','⑥'];
-let mode='s',V=6,R1=10,R2=20,curA=null,curV=null;
-let cool=null,coolTimer=null; /* 틀린 뒤 잠깐 잠금 {key,until} */
+const V=6;                                   /* 전지는 6 V 고정 — 미션에서 전압을 바꿀 일이 없다 */
+let mode='s',R1=10,R2=20,curA=null,curV=null;
+let cool=null,coolTimer=null;
 const fmt=x=>String(Math.round(x*100)/100);
 const keyOf=(m,v,r1,r2)=>m+'|'+v+'|'+r1+'|'+r2;
+const kNow=()=>keyOf(mode,V,R1,R2);
 const sub=w=>w.replace('1','₁').replace('2','₂');
 const MNAME={I:'전체 전류 I',I1:'R₁의 전류 I₁',I2:'R₂의 전류 I₂',V:'전지 양 끝 V',V1:'R₁ 양 끝 V₁',V2:'R₂ 양 끝 V₂'};
 const unit=w=>w[0]==='I'?'A':'V';
@@ -5403,7 +5427,6 @@ const narrow=()=>!matchMedia('(min-width:860px)').matches;
 const useWrite=()=>!S.tq.noWrite;
 const modeLab=m=>m==='s'?'🔗 직렬':'🔀 병렬';
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
-/* 이상 회로 계산 — 합성 저항 값은 학생에게 보이지 않는다 */
 function calc(m,v,r1,r2){
  if(m==='s'){const I=v/(r1+r2);return {I,I1:I,I2:r2?I:null,V:v,V1:I*r1,V2:r2?I*r2:null};}
  const I1=v/r1,I2=r2?v/r2:null;return {I:I1+(I2||0),I1,I2,V:v,V1:v,V2:r2?v:null};
@@ -5423,20 +5446,19 @@ function volt(cx,cy,x1,x2,yw,what,val,side){
  return `<g class="tqinst">${lead(x1)}${lead(x2)}<circle cx="${cx}" cy="${cy}" r="17" fill="#fff" stroke="#7d5ba6" stroke-width="3"/><text x="${cx}" y="${cy+6}" text-anchor="middle" font-family="${F}" font-size="17" font-weight="800" fill="#7d5ba6">V</text>`
  +`<rect x="${side==='r'?cx+24:cx-46}" y="${cy-11}" width="92" height="22" rx="11" fill="#7d5ba6"/><text x="${side==='r'?cx+70:cx}" y="${cy+4}" text-anchor="middle" font-family="${F}" font-size="13" font-weight="800" fill="#fff">${lab}</text></g>`;
 }
-function voltB(cx,cy,what,val){ /* 전지 양 끝 — 단자 위·아래에서 */
+function voltB(cx,cy,what,val){
  const lab=`V = ${fmt(val)} V`;
  return `<g class="tqinst"><path d="M70 158 H${cx} V${cy-17}" fill="none" stroke="#7d5ba6" stroke-width="2.4"/><path d="M70 202 H${cx} V${cy+17}" fill="none" stroke="#7d5ba6" stroke-width="2.4"/><circle cx="${cx}" cy="${cy}" r="17" fill="#fff" stroke="#7d5ba6" stroke-width="3"/><text x="${cx}" y="${cy+6}" text-anchor="middle" font-family="${F}" font-size="17" font-weight="800" fill="#7d5ba6">V</text>`
  +`<rect x="${cx+24}" y="${cy-11}" width="76" height="22" rx="11" fill="#7d5ba6"/><text x="${cx+62}" y="${cy+4}" text-anchor="middle" font-family="${F}" font-size="13" font-weight="800" fill="#fff">${lab}</text></g>`;
 }
-function spot(cx,cy,what,kind,want){ /* 아직 안 잰 자리 — 점선 동그라미, 눌러서 재기. want = 지금 미션에 필요한 자리 */
+function spot(cx,cy,what,kind,want,next){ /* 아직 안 잰 자리. want=이 미션에 필요, next=바로 다음에 누를 자리(👉) */
  const c=kind==='a'?'#b23a30':'#7d5ba6', t=sub(what);
- return `<g class="tqspot${want?' want':''}" data-m="${what}" role="button" tabindex="0" aria-label="${MNAME[what]} 재기"><circle cx="${cx}" cy="${cy}" r="${want?14:13}" fill="#fff" fill-opacity=".8" stroke="${c}" stroke-width="2" stroke-dasharray="4 3"/><text x="${cx}" y="${cy+5}" text-anchor="middle" font-family="${F}" font-size="12" font-weight="800" fill="${c}">${t}</text></g>`;
+ return `<g class="tqspot${want?' want':''}${next?' next':''}" data-m="${what}" role="button" tabindex="0" aria-label="${MNAME[what]} 재기"><circle cx="${cx}" cy="${cy}" r="${next?15:13}" fill="#fff" fill-opacity=".85" stroke="${c}" stroke-width="2" stroke-dasharray="4 3"/><text x="${cx}" y="${cy+5}" text-anchor="middle" font-family="${F}" font-size="12" font-weight="800" fill="${c}">${t}</text>${next?`<text class="nx" x="${cx}" y="${cy-20}" text-anchor="middle" font-family="${F}">👉 여기</text>`:''}</g>`;
 }
 function draw(){
- const c=calc(mode,V,R1,R2), wt=wantSet();
- const sp=(cx,cy,w,k)=>spot(cx,cy,w,k,wt.has(w));
+ const c=calc(mode,V,R1,R2), wt=wantSet(), nx=coach().meas||'';
+ const sp=(cx,cy,w,k)=>spot(cx,cy,w,k,wt.has(w),nx===w);
  let h='';
- /* 전지 */
  h+=`<line x1="52" y1="170" x2="88" y2="170" stroke="#b23a30" stroke-width="4.5"/><line x1="61" y1="190" x2="79" y2="190" stroke="#2e5f8f" stroke-width="8"/>`
   +`<text x="96" y="175" font-family="${F}" font-size="14" font-weight="800" fill="#b23a30">(+)</text><text x="96" y="195" font-family="${F}" font-size="14" font-weight="800" fill="#2e5f8f">(−)</text>`
   +`<text x="70" y="222" text-anchor="middle" font-family="${F}" font-size="13.5" font-weight="800" fill="#4a3a26">${V} V</text>`;
@@ -5466,11 +5488,10 @@ function draw(){
  }
  host.innerHTML=`<svg viewBox="0 0 640 332" role="img" aria-label="${mode==='s'?'직렬':'병렬'} 회로 — 전지 ${V} V, R₁ ${R1} Ω, ${r2lab}. 점선 자리를 누르면 그 자리의 전류나 전압을 잰다.">${h}</svg>`;
  $$('#tqMode button').forEach(b=>b.classList.toggle('on',b.dataset.mode===mode));
- $$('#tqV button').forEach(b=>b.classList.toggle('on',+b.dataset.v===V));
  $$('#tqR1 button').forEach(b=>b.classList.toggle('on',+b.dataset.r===R1));
  $$('#tqR2 button').forEach(b=>b.classList.toggle('on',+b.dataset.r===R2));
  $$('#tqMeas button').forEach(b=>{b.classList.toggle('on',b.dataset.m===curA||b.dataset.m===curV);b.disabled=!R2&&/2$/.test(b.dataset.m);b.classList.toggle('want',wt.has(b.dataset.m)&&!b.disabled);});
- paintRead();paintNeed();
+ paintRead();paintNeed();paintCoach();
 }
 function paintRead(){
  const c=calc(mode,V,R1,R2), cfg=`${modeLab(mode)} · ${V} V · R₁ ${R1} Ω · ${R2?'R₂ '+R2+' Ω':'R₂ 없음'}`;
@@ -5483,33 +5504,32 @@ function measure(what){
  const c=calc(mode,V,R1,R2);
  if(c[what]==null){toast('지금은 R₂가 없는 회로예요 — R₂를 고르면 잴 수 있어요');return;}
  if(what[0]==='I')curA=what;else curV=what;
- const k=keyOf(mode,V,R1,R2);(S.tq.log[k]=S.tq.log[k]||{})[what]=fmt(c[what]);
+ const k=kNow();(S.tq.log[k]=S.tq.log[k]||{})[what]=fmt(c[what]);
  const m=cur(), wasReady=ready(m);
  save();draw();paintLog();paintPanel();paintTable();updateProgress();A.pop();
- /* 미션 ⑤: I를 재면 다음 회로로 저절로 바꿔 준다 */
  if(m.id===5&&what==='I'&&step5Cur()){
   const nx=step5Next();
-  if(nx){setTimeout(()=>{if(cur().id!==5)return;setCfg(nx.mode,V,nx.R1,nx.R2);toast(`다음 회로로 바꿨어요: ${modeLab(nx.mode)} · R₂ ${nx.R2?nx.R2+' Ω':'없음'} — 다시 I를 재요 📏`);},900);return;}
+  if(nx){setTimeout(()=>{if(cur().id!==5)return;setCfg(nx.mode,nx.R1,nx.R2);toast(`잘했어요! 다음 회로로 바꿨어요: ${modeLab(nx.mode)} · R₂ ${nx.R2?nx.R2+' Ω':'없음'} — 다시 I 를 재요 📏`);},900);return;}
  }
  if(!wasReady&&ready(m)){
-  toast(useWrite()?'다 쟀어요 — 이제 잰 값을 적어 보세요 ✍️':'다 쟀어요 — 이제 질문에 답하세요 🤔','good');
+  toast(useWrite()?'다 쟀어요 — 이제 오른쪽 칸에 잰 값을 적어 보세요 ✍️':'다 쟀어요 — 이제 질문에 답하세요 🤔','good');
   if(narrow())setTimeout(()=>{try{$('#tqPanel').scrollIntoView({block:'start',behavior:reduceMotion?'auto':'smooth'});}catch(_){}},350);
+  setTimeout(()=>{const f=$('#tqPanel .tqwrite input:not([readonly])');if(f&&!narrow())f.focus();},450);
  }
 }
-function setCfg(m,v,r1,r2){mode=m;V=v;R1=r1;R2=r2;curA=null;curV=null;draw();paintLog();paintPanel();}
-$('#tqMode').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.mode!==mode)setCfg(b.dataset.mode,V,R1,R2);});
-$('#tqV').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&+b.dataset.v!==V)setCfg(mode,+b.dataset.v,R1,R2);});
-$('#tqR1').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&+b.dataset.r!==R1)setCfg(mode,V,+b.dataset.r,R2);});
-$('#tqR2').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&+b.dataset.r!==R2)setCfg(mode,V,R1,+b.dataset.r);});
+function setCfg(m,r1,r2){mode=m;R1=r1;R2=r2;curA=null;curV=null;draw();paintLog();paintPanel();}
+$('#tqMode').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.mode!==mode)setCfg(b.dataset.mode,R1,R2);});
+$('#tqR1').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&+b.dataset.r!==R1)setCfg(mode,+b.dataset.r,R2);});
+$('#tqR2').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&+b.dataset.r!==R2)setCfg(mode,R1,+b.dataset.r);});
 $('#tqMeas').addEventListener('click',e=>{const b=e.target.closest('button[data-m]');if(b&&!b.disabled)measure(b.dataset.m);});
 host.addEventListener('click',e=>{const g=e.target.closest('.tqspot');if(g)measure(g.dataset.m);});
 host.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const g=e.target.closest('.tqspot');if(g){e.preventDefault();measure(g.dataset.m);}});
 /* ── 내가 잰 값 표(접힘) ── */
 function paintLog(){
- const tb=$('#tqLog tbody');const keys=Object.keys(S.tq.log);
+ const tb=$('#tqLog tbody');const keys=Object.keys(S.tq.log).filter(k=>k.split('|')[1]==='6');
  const sum=$('#tqLogSum');if(sum)sum.textContent=`📋 내가 잰 값 전부 보기${keys.length?` (${keys.length}줄)`:''}`;
  if(!keys.length){tb.innerHTML='<tr><td class="empty" colspan="10">아직 잰 값이 없어요. 위에서 계기를 대어 보세요.</td></tr>';return;}
- const c=keyOf(mode,V,R1,R2);
+ const c=kNow();
  tb.innerHTML=keys.map(k=>{const [m,v,r1,r2]=k.split('|'),g=S.tq.log[k];
   const cell=(w)=>g[w]!=null?`<td class="num">${g[w]} ${unit(w)}</td>`:'<td>—</td>';
   return `<tr class="${k===c?'cur':''}"><td>${modeLab(m)}</td><td class="num">${v} V</td><td class="num">${r1} Ω</td><td class="num">${+r2?r2+' Ω':'없음'}</td>${['I','I1','I2','V','V1','V2'].map(cell).join('')}</tr>`;}).join('');
@@ -5541,23 +5561,19 @@ const TQM=[
   why:'2단계 실험대에서 본 그대로 — 직렬은 외길이라 한 곳이 끊기면 회로가 끊기고, 병렬은 남은 길이 전지의 양 끝을 여전히 잇습니다. 그래서 <b>한꺼번에 끊겨야 하는 것</b>(퓨즈·누전 차단기·장식 전구)은 직렬, <b>따로 켜고 꺼야 하는 것</b>(멀티탭·가로등·건물 배선)은 병렬.'}
 ];
 const CHIPS=[['퓨즈','s'],['멀티탭','p'],['장식용 전구','s'],['가로등','p'],['누전 차단기','s'],['건물의 전기 배선','p']];
-/* 미션 설정(모드·R₁·R₂)에 맞는 측정 묶음 찾기 — 전지 전압은 3 V든 6 V든 되지만 한 묶음 안에서는 같아야 한다 */
-function groupFor(cfg,need){
- let best=null,bs=-1;
- Object.keys(S.tq.log).forEach(k=>{const [m,v,r1,r2]=k.split('|');if(m!==cfg.mode||+r1!==cfg.R1||+r2!==cfg.R2)return;
-  const g=S.tq.log[k];const n=need.filter(w=>g[w]!=null).length;const sc=n*10+(+v===6?1:0);if(sc>bs){bs=sc;best={V:+v,g};}});
- return best;
-}
-function step5(){ /* 직렬·병렬 각각 R₂ 없음/있음의 I — 같은 전지 전압끼리 */
- const out={};['s','p'].forEach(m=>{[6,3].forEach(v=>{if(out[m])return;const a=S.tq.log[keyOf(m,v,10,0)],b=S.tq.log[keyOf(m,v,10,20)];if(a&&a.I!=null&&b&&b.I!=null)out[m]={V:v,i1:a.I,i2:b.I};});});
+/* 미션 설정에 맞는 측정 묶음 — 전지는 6 V 하나뿐이라 묶음도 하나 */
+const grp=(m,r1,r2)=>S.tq.log[keyOf(m,V,r1,r2)]||null;
+function groupFor(cfg){const g=grp(cfg.mode,cfg.R1,cfg.R2);return g?{V:V,g:g}:null;}
+function step5(){
+ const out={};['s','p'].forEach(m=>{const a=grp(m,10,0),b=grp(m,10,20);if(a&&a.I!=null&&b&&b.I!=null)out[m]={V:V,i1:a.I,i2:b.I};});
  return out;
 }
 const ansOk=key=>!!S.tq.ans[key];
 const mDone=m=>m.qs.every(q=>ansOk(q.key))&&(m.id!==6||!!S.tq.chipsOk);
 function needState(m){
- if(m.id===5){return m.steps.map(s=>{const g=S.tq.log;const has=[6,3].some(v=>g[keyOf(s.mode,v,s.R1,s.R2)]&&g[keyOf(s.mode,v,s.R1,s.R2)].I!=null);return {ok:has,label:`${s.mode==='s'?'🔗':'🔀'} R₂ ${s.R2?'있음':'없음'}의 I`,s};});}
+ if(m.id===5){return m.steps.map(s=>{const g=grp(s.mode,s.R1,s.R2);return {ok:!!(g&&g.I!=null),label:`${s.mode==='s'?'🔗':'🔀'} R₂ ${s.R2?'있음':'없음'}의 I`,s,val:g&&g.I!=null?g.I+' A':''};});}
  if(m.id===6)return [];
- const gr=groupFor(m.cfg,m.need);
+ const gr=groupFor(m.cfg);
  return m.need.map(w=>({ok:!!(gr&&gr.g[w]!=null),label:`${sub(w)} 재기`,val:gr&&gr.g[w]!=null?gr.g[w]+' '+unit(w):''}));
 }
 function ready(m){
@@ -5567,42 +5583,104 @@ function ready(m){
 }
 function cfgMatch(m){return !!m.cfg&&mode===m.cfg.mode&&R1===m.cfg.R1&&R2===m.cfg.R2;}
 function step5Cur(){return TQM[4].steps.find(s=>s.mode===mode&&s.R1===R1&&s.R2===R2)||null;}
-function step5Next(){return TQM[4].steps.find(s=>{const g=S.tq.log[keyOf(s.mode,V,s.R1,s.R2)];return !(g&&g.I!=null);})||null;}
-function wantSet(){ /* 지금 미션에서 아직 안 잰 자리 — 그림·단추를 깜빡여 알려 준다 */
- const m=cur(), out=new Set(), g=S.tq.log[keyOf(mode,V,R1,R2)]||{};
+function step5Next(){return TQM[4].steps.find(s=>{const g=grp(s.mode,s.R1,s.R2);return !(g&&g.I!=null);})||null;}
+function wantSet(){
+ const m=cur(), out=new Set(), g=S.tq.log[kNow()]||{};
  if(m.id===5){if(step5Cur()&&g.I==null)out.add('I');}
  else if(m.cfg&&cfgMatch(m)){m.need.forEach(w=>{if(g[w]==null)out.add(w);});}
  return out;
 }
 function cur(){let m=TQM.find(x=>x.id===S.tq.cur);if(!m)m=TQM.find(x=>!mDone(x))||TQM[0];return m;}
-/* ── 잰 값 적기(연타 막기 1) — 내가 잰 숫자를 손으로 적어야 질문이 열린다 ── */
+/* ── 순서 목록 + 코치: 이 미션에서 할 일을 순서대로, 지금 어디까지 왔는지 ──
+   step = {k:'mode'|'r1'|'r2'|'meas'|'write'|'pick'|'chips'|'gate', t:설명, ok, meas?, ctl?, val?} */
+function stepsOf(m){
+ const out=[];
+ const cfgSteps=(mo,r1,r2,want)=>{
+  out.push({k:'mode',ctl:'mode:'+mo,t:`${modeLab(mo)} 단추를 누르세요`,ok:mode===mo});
+  out.push({k:'r1',ctl:'r1:'+r1,t:`R₁ 을 ${r1} Ω 으로`,ok:R1===r1});
+  out.push({k:'r2',ctl:'r2:'+r2,t:`R₂ 를 ${r2?r2+' Ω':'없음'} 으로`,ok:R2===r2});
+ };
+ if(m.id===6){
+  out.push({k:'gate',t:'2단계 회로 실험대에서 직렬·병렬 전구를 하나씩 빼 본다',ok:ready(m)});
+  m.qs.forEach((q,i)=>out.push({k:'pick',t:`질문 ${i+1}에 답하기`,ok:ansOk(q.key)}));
+  out.push({k:'chips',t:'쓰임 칩을 직렬·병렬 칸으로 옮기고 「확인하기」',ok:!!S.tq.chipsOk});
+  return out;
+ }
+ if(m.id===5){
+  m.steps.forEach((s,i)=>{
+   const g=grp(s.mode,s.R1,s.R2), done=!!(g&&g.I!=null);
+   if(!done){cfgSteps(s.mode,s.R1,s.R2);}
+   out.push({k:'meas',meas:'I',t:`${i+1}/4 ${modeLab(s.mode)} · R₂ ${s.R2?'있음('+s.R2+' Ω)':'없음'} 에서 그림 아래 <b>I</b> 를 누른다`,ok:done,val:done?g.I+' A':'',cfg:s});
+  });
+ }else{
+  cfgSteps(m.cfg.mode,m.cfg.R1,m.cfg.R2);
+  const gr=groupFor(m.cfg);
+  m.need.forEach(w=>{const v=gr&&gr.g[w];out.push({k:'meas',meas:w,t:`그림의 <b>${sub(w)}</b> 점선 동그라미(또는 🅐🅥 단추)를 누른다`,ok:v!=null,val:v!=null?v+' '+unit(w):''});});
+ }
+ if(useWrite())out.push({k:'write',t:'오른쪽 칸에 잰 값을 적는다(다 맞으면 질문이 열려요)',ok:writeOK(m)&&ready(m)});
+ m.qs.forEach((q,i)=>out.push({k:'pick',t:`질문 ${m.qs.length>1?(i+1)+'에 ':''}답하기`,ok:ansOk(q.key)}));
+ return out;
+}
+function coach(){ /* 지금 해야 할 딱 한 가지 */
+ const m=cur();
+ if(mDone(m)){const nx=TQM.find(x=>!mDone(x));return {done:true,text:nx?`미션 ${CIRC[m.id]} 완료! 「다음 미션 →」 단추를 누르세요`:'미션 6개를 다 마쳤어요 — 아래 표를 학습지에 옮겨 적으세요 🎉',ctl:'next'};}
+ const st=stepsOf(m);
+ /* 설정 단계는 실제 회로가 미션 설정과 다를 때만 (다르면 그 단추부터) */
+ const pend=st.filter(x=>!x.ok);
+ const first=pend[0]; if(!first)return {text:'…'};
+ const idx=st.indexOf(first)+1;
+ let text=first.t, meas=first.meas||'';
+ if(first.k==='write')text='오른쪽 칸에 잰 값을 적으세요 — 숫자만 적으면 돼요(예: 0.2)';
+ if(first.k==='pick')text='오른쪽 칸의 질문에 답하세요 — 내가 적은 숫자를 견주면 보여요';
+ if(first.k==='gate')text='2단계로 가서 직렬·병렬 전구를 하나씩 빼 본 뒤 돌아오세요';
+ if(first.k==='chips')text='쓰임 칩을 눌러 직렬·병렬 칸으로 옮기고 「확인하기」를 누르세요';
+ return {text,ctl:first.ctl||first.k,meas,no:idx,of:st.length,k:first.k};
+}
+function paintCoach(){
+ const box=$('#tqCoach');if(!box)return;const c=coach(), m=cur();
+ box.className='tqcoach'+(c.done?' done':'');
+ box.innerHTML=`<span class="no">${c.done?'✓':(m.id===5||m.id===6?'👉':'👉 '+(c.no||'')+'/'+(c.of||''))}</span><span><b>미션 ${CIRC[m.id]}</b> · ${c.text}</span>`;
+ /* 깜빡일 단추 하나 */
+ $$('.tqctl button.next').forEach(b=>b.classList.remove('next'));
+ const ctl=c.ctl||'';
+ let b=null;
+ if(ctl.startsWith('mode:'))b=$('#tqMode button[data-mode="'+ctl.slice(5)+'"]');
+ else if(ctl.startsWith('r1:'))b=$('#tqR1 button[data-r="'+ctl.slice(3)+'"]');
+ else if(ctl.startsWith('r2:'))b=$('#tqR2 button[data-r="'+ctl.slice(3)+'"]');
+ else if(c.meas)b=$('#tqMeas button[data-m="'+c.meas+'"]');
+ if(b)b.classList.add('next');
+}
+/* ── 잰 값 적기 — 입력하는 즉시 판정 (전각 숫자·단위·쉼표 허용) ── */
 function writeFields(m){
  if(m.id===5){const st=step5();if(!st.s||!st.p)return [];return [{w:'s0',label:'🔗 R₂ 없음 · I',t:st.s.i1},{w:'s1',label:'🔗 R₂ 있음 · I',t:st.s.i2},{w:'p0',label:'🔀 R₂ 없음 · I',t:st.p.i1},{w:'p1',label:'🔀 R₂ 있음 · I',t:st.p.i2}].map(x=>({...x,u:'A'}));}
  if(!m.cfg)return [];
- const gr=groupFor(m.cfg,m.need);if(!gr)return [];
+ const gr=groupFor(m.cfg);if(!gr)return [];
  return m.need.map(w=>({w,label:sub(w),t:gr.g[w],u:unit(w)}));
 }
-const near=(a,b)=>{if(a==null)return false;const x=parseFloat(String(a).trim().replace(',','.')),y=parseFloat(b);return isFinite(x)&&isFinite(y)&&Math.abs(x-y)<0.006;};
+const normNum=v=>{if(v==null)return NaN;let t=String(v).replace(/[０-９]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0xFF10+48)).replace(/．/g,'.').replace(/，/g,',').replace(/,/g,'.').replace(/[^0-9.\-]/g,'');const m=t.match(/-?\d*\.?\d+/);return m?parseFloat(m[0]):NaN;};
+const near=(a,b)=>{const x=normNum(a),y=parseFloat(b);return isFinite(x)&&isFinite(y)&&Math.abs(x-y)<0.006;};
 function writeOK(m){if(!useWrite()||m.id===6)return true;const f=writeFields(m);if(!f.length)return false;const wr=S.tq.wr[m.id]||{};return f.every(x=>near(wr[x.w],x.t));}
 function writeHTML(m){
  const f=writeFields(m);if(!f.length)return '';
  const wr=S.tq.wr[m.id]||{}, all=f.every(x=>near(wr[x.w],x.t));
- return `<div class="tqq"><div class="cq">✍️ 내가 잰 값을 적어 보세요 <small>— 학습지에도 그대로 옮겨 적기</small></div><div class="tqwrite" data-mid="${m.id}">${f.map(x=>{const ok=near(wr[x.w],x.t);return `<label><span class="sym">${x.label} =</span><input type="text" inputmode="decimal" autocomplete="off" data-w="${x.w}" value="${ok?wr[x.w]:''}" class="${ok?'ok':''}" ${ok?'readonly':''} placeholder="?"><span class="u">${x.u}</span></label>`;}).join('')}${all?'<span class="wok">✅ 다 맞아요</span>':`<button type="button" class="btn primary sm" data-wcheck="${m.id}">적었어요</button>`}</div><div class="tqwmsg"></div></div>`;
+ return `<div class="tqq"><div class="cq">✍️ 내가 잰 값을 적어 보세요 <small>— 숫자만(예: 0.2) · 맞으면 초록으로 바뀌고, 다 맞으면 질문이 열려요</small></div><div class="tqwrite" data-mid="${m.id}">${f.map(x=>{const ok=near(wr[x.w],x.t);return `<label><span class="sym">${x.label} =</span><input type="text" inputmode="decimal" autocomplete="off" data-w="${x.w}" value="${ok?wr[x.w]:''}" class="${ok?'ok':''}" ${ok?'readonly':''} placeholder="?"><span class="u">${x.u}</span></label>`;}).join('')}${all?'<span class="wok">✅ 다 맞아요</span>':`<button type="button" class="btn primary sm" data-wcheck="${m.id}">적었어요</button>`}</div><div class="tqwmsg"></div></div>`;
 }
-function checkWrite(mid){
+function checkWrite(mid,quiet){
  const m=TQM.find(x=>x.id===mid), f=writeFields(m), box=$('.tqwrite[data-mid="'+mid+'"]');if(!m||!box)return;
- const wr=S.tq.wr[mid]=S.tq.wr[mid]||{};let bad=0,empty=0;
+ const wr=S.tq.wr[mid]=S.tq.wr[mid]||{};let bad=0,empty=0,newly=0;
  f.forEach(x=>{const inp=box.querySelector('input[data-w="'+x.w+'"]');if(!inp||inp.readOnly)return;const v=inp.value.trim();
   if(!v){empty++;inp.classList.remove('bad');return;}
-  if(near(v,x.t)){wr[x.w]=v;inp.classList.add('ok');inp.classList.remove('bad');inp.readOnly=true;}
-  else{bad++;delete wr[x.w];inp.classList.remove('ok');inp.classList.remove('bad');void inp.offsetWidth;inp.classList.add('bad');}});
+  if(near(v,x.t)){wr[x.w]=v;inp.classList.add('ok');inp.classList.remove('bad');inp.readOnly=true;newly++;}
+  else if(!quiet){bad++;delete wr[x.w];inp.classList.remove('ok');inp.classList.remove('bad');void inp.offsetWidth;inp.classList.add('bad');}});
  save();
  const msg=box.parentElement.querySelector('.tqwmsg');
- if(bad){A.wrong();msg.textContent=`빨간 칸 ${bad}개가 「내가 잰 값」과 달라요 — 회로 그림의 계기 값(또는 위 ✅ 옆 숫자)을 다시 보고 적으세요.`;return;}
+ if(newly&&!f.every(x=>near(wr[x.w],x.t))){const nx=box.querySelector('input:not([readonly])');if(nx)nx.focus();}
+ if(f.every(x=>near(wr[x.w],x.t))){A.correct();paintPanel();paintCoach();toast('값을 다 적었어요 — 이제 질문에 답하세요 🤔','good');return;}
+ if(quiet)return;
+ if(bad){A.wrong();msg.textContent=`빨간 칸 ${bad}개가 잰 값과 달라요 — 왼쪽 ✅ 옆에 적힌 숫자(회로 그림의 계기 값)를 그대로 적으세요. 단위는 안 써도 돼요.`;return;}
  if(empty){msg.textContent='빈 칸이 있어요 — 모두 적은 뒤 「적었어요」를 누르세요.';return;}
- A.correct();paintPanel();toast('값을 다 적었어요 — 이제 질문에 답하세요 🤔','good');
 }
-/* ── 질문(연타 막기 2) — 틀리면 잠깐 잠금, 다시 열릴 때 보기 순서가 바뀌고, 두 번 틀리면 힌트 ── */
+/* ── 질문 — 틀리면 잠깐 잠금, 다시 열릴 때 보기 순서가 바뀌고, 두 번 틀리면 힌트 ── */
 function pickHTML(q){
  const a=ansOk(q.key), isCool=!!(cool&&cool.key===q.key&&cool.until>Date.now());
  const opts=a?q.opts:shuffle(q.opts), miss=S.tq.miss[q.key]||0;
@@ -5615,7 +5693,6 @@ function chipsHTML(){
  const zone=(z,label)=>`<div class="chips z${z} ${ok?'ok':''}" data-z="${z}"><span class="zl">${label}</span>${CHIPS.filter(c=>(st[c[0]]||'')===z).map(c=>`<button type="button" class="chip2" data-chip="${c[0]}">${c[0]}</button>`).join('')}</div>`;
  return `<div class="tqq"><div class="cq">쓰임을 알맞은 칸에 — 칩을 누를 때마다 직렬 → 병렬 → 처음으로 옮겨집니다</div>${zone('','아직')}${zone('s','🔗 직렬로 쓰는 것')}${zone('p','🔀 병렬로 쓰는 것')}<div class="btn-row" style="margin-top:8px"><button type="button" class="btn primary sm" id="tqChipCheck" ${ok?'disabled':''}>${ok?'✅ 다 맞았어요':'확인하기'}</button></div></div>`;
 }
-/* 아이들이 자주 묻는 낱말 — 미션 ⑥ 칩 옆에 미리 적어 둔다 */
 function glossHTML(){
  return `<div class="tqgl"><div class="cq">📖 이게 뭐예요? — 칩에 나오는 낱말 중 자주 묻는 두 가지</div><ul>
  <li><b class="w">🧯 퓨즈</b> — 전기 기구 안에 든 <b>가는 금속선</b>(유리관 속에 실처럼 들어 있어요). 정해진 것보다 <b>센 전류</b>가 흐르면 그 열에 <b>스스로 녹아 끊어져</b> 전류를 막는 안전장치예요. 한 번 끊어지면 새것으로 갈아 끼웁니다. 회로에 <b>직렬</b>로 끼워 두는 '일부러 약하게 만든 고리'.</li>
@@ -5634,16 +5711,19 @@ function paintStrip(){
  $('#tqProg').textContent=`🧾 표 ${Object.keys(S.cmp).length}/${CMP_TOTAL}칸`;
  const tg=$('#tqWriteTg');if(tg)tg.checked=useWrite();
 }
-function paintNeed(){ /* 계기 단추 위의 한 줄 — 지금 미션에 무엇이 필요한지 */
+function paintNeed(){ /* 계기 단추 위 한 줄 — 이 미션에 필요한 값과 남은 것 */
  const box=$('#tqNeed');if(!box)return;const m=cur();
  if(m.id===6){box.innerHTML=`<span>🎯 미션 ⑥은 재는 게 없어요 — ${narrow()?'아래':'오른쪽'} 미션 칸에서 답하세요.</span>`;return;}
  if(m.id===5){
-  box.innerHTML=`<span>🎯 미션 ⑤</span>`+needState(m).map(x=>{const now=x.s.mode===mode&&x.s.R1===R1&&x.s.R2===R2;return `<span class="${x.ok?'ok':'todo'}${now?' now':''}">${x.ok?'✅':'☐'} ${x.label}${now?' ◀':''}</span>`;}).join('')
-   +(step5Cur()?'':`<span class="warn">⚠️ 회로가 미션 설정과 달라요</span><button type="button" class="btn ghost sm" data-set5="1">⚙️ 맞추기</button>`);
+  box.innerHTML=`<span>🎯 미션 ⑤</span>`+needState(m).map(x=>{const now=x.s.mode===mode&&x.s.R1===R1&&x.s.R2===R2;return `<span class="${x.ok?'ok':'todo'}${now?' now':''}">${x.ok?'✅':'☐'} ${x.label}${x.val?' '+x.val:''}${now?' ◀ 지금':''}</span>`;}).join('');
   return;
  }
  box.innerHTML=`<span>🎯 미션 ${CIRC[m.id]}</span>`+needState(m).map(x=>`<span class="${x.ok?'ok':'todo'}">${x.ok?'✅':'☐'} ${x.label.replace(' 재기','')}${x.val?' '+x.val:''}</span>`).join('')
-  +(cfgMatch(m)?'':`<span class="warn">⚠️ 회로가 미션 설정(${modeLab(m.cfg.mode)} · R₁ ${m.cfg.R1} · R₂ ${m.cfg.R2})과 달라요</span><button type="button" class="btn ghost sm" data-set="${m.cfg.mode}|${m.cfg.R1}|${m.cfg.R2}">⚙️ 맞추기</button>`);
+  +(cfgMatch(m)?'':`<span class="warn">⚠️ 회로가 미션 설정과 달라요 — 깜빡이는 단추를 누르세요</span><button type="button" class="btn ghost sm" data-set="${m.cfg.mode}|${m.cfg.R1}|${m.cfg.R2}">⚙️ 한 번에 맞추기</button>`);
+}
+function orderHTML(m){
+ const st=stepsOf(m);const firstIdx=st.findIndex(x=>!x.ok);
+ return `<ol class="tqorder">${st.map((x,i)=>`<li class="${x.ok?'ok':(i===firstIdx?'cur':'')}"><span class="k">${x.ok?'✅':(i===firstIdx?'👉':(i+1))}</span><span>${x.t}</span>${x.val?`<span class="v">${x.val}</span>`:''}</li>`).join('')}</ol>`;
 }
 function paintPanel(){
  const m=cur(), box=$('#tqPanel');if(!box)return;
@@ -5655,17 +5735,15 @@ function paintPanel(){
   else h+=`<div class="cfg">2단계에서 직접 본 것을 표로 옮깁니다. 재는 것은 없어요.</div>`;
   h+=glossHTML();
  }else if(m.id===5){
-  h+=`<div class="cfg">R₁ 10 Ω로 두고, <b>R₂를 없앴을 때와 이었을 때</b>의 전체 전류 I를 직렬·병렬에서 각각 잽니다. I를 재면 다음 회로로 저절로 바뀌어요.</div><ul class="need steps">`
-   +needState(m).map(x=>{const now=x.s.mode===mode&&x.s.R1===R1&&x.s.R2===R2;const g=[6,3].map(v=>S.tq.log[keyOf(x.s.mode,v,x.s.R1,x.s.R2)]).find(g=>g&&g.I!=null);return `<li class="${x.ok?'ok':''}${now?' now':''}">${x.ok?'✅':'☐'} ${x.label}${g?' <b>'+g.I+' A</b>':''}${now?' <span class="cfgok">◀ 지금 회로</span>':(x.ok?'':`<button type="button" class="btn ghost sm" data-set="${x.s.mode}|${x.s.R1}|${x.s.R2}">⚙️ 맞추기</button>`)}</li>`;}).join('')+'</ul>';
+  h+=`<div class="cfg">R₁은 10 Ω 그대로 두고, <b>R₂가 없을 때와 있을 때</b> 전체 전류 I 가 어떻게 달라지는지 직렬·병렬에서 각각 잽니다. I 를 재면 다음 회로로 저절로 바뀌어요.</div>`+orderHTML(m);
  }else{
   const c=m.cfg;
-  h+=`<div class="cfg">설정 <span class="cfgv">${modeLab(c.mode)} · R₁ ${c.R1} Ω · R₂ ${c.R2} Ω</span>${cfgMatch(m)?'<span class="cfgok">✅ 지금 회로</span>':`<button type="button" class="btn ghost sm" data-set="${c.mode}|${c.R1}|${c.R2}">⚙️ 이렇게 맞추기</button>`}</div><ul class="need">`
-   +needState(m).map(x=>`<li class="${x.ok?'ok':''}">${x.ok?'✅':'☐'} ${x.label}${x.val?' <b>'+x.val+'</b>':''}</li>`).join('')+'</ul>';
+  h+=`<div class="cfg">이 미션의 회로 <span class="cfgv">${modeLab(c.mode)} · R₁ ${c.R1} Ω · R₂ ${c.R2} Ω</span>${cfgMatch(m)?'<span class="cfgok">✅ 지금 회로가 맞아요</span>':`<button type="button" class="btn ghost sm" data-set="${c.mode}|${c.R1}|${c.R2}">⚙️ 한 번에 맞추기</button>`}</div>`+orderHTML(m);
  }
  if(rdy&&useWrite())h+=writeHTML(m);
  if(rdy&&wOK){h+=m.qs.map(pickHTML).join('')+(m.id===6?chipsHTML():'');}
  else if(rdy){h+=`<div class="tqq lock"><div class="cq" style="font-size:13.5px;color:var(--ink-mute)">값을 다 적으면 질문이 열려요.</div>${m.qs.map(q=>`<div class="cq">${q.q}</div>`).join('')}</div>`;}
- else if(m.id!==6){h+=`<div class="tqq lock"><div class="cq" style="font-size:13.5px;color:var(--ink-mute)">위 항목을 다 재면 질문이 열려요.</div>${m.qs.map(q=>`<div class="cq">${q.q}</div>`).join('')}</div>`;}
+ else if(m.id!==6){h+=`<div class="tqq lock"><div class="cq" style="font-size:13.5px;color:var(--ink-mute)">위 순서를 다 마치면 질문이 열려요.</div>${m.qs.map(q=>`<div class="cq">${q.q}</div>`).join('')}</div>`;}
  h+=`<div class="why">💡 ${m.why}</div>`;
  if(done){
   h+=filledHTML(m);
@@ -5674,11 +5752,12 @@ function paintPanel(){
   else h+=`<div class="tqnext">🎉 미션 6개를 다 마쳤어요. <button type="button" class="btn ghost sm" data-showtbl="1">🧾 완성된 표 보기</button></div>`;
  }
  box.innerHTML=h;
+ paintCoach();
 }
 function selectMission(id,scroll){
  const m=TQM.find(x=>x.id===id);if(!m)return;S.tq.cur=id;save();cool=null;
- if(m.cfg)setCfg(m.cfg.mode,V,m.cfg.R1,m.cfg.R2);
- else if(m.id===5){const nx=step5Next()||m.steps[0];setCfg(nx.mode,V,nx.R1,nx.R2);}
+ if(m.cfg)setCfg(m.cfg.mode,m.cfg.R1,m.cfg.R2);
+ else if(m.id===5){const nx=step5Next()||m.steps[0];setCfg(nx.mode,nx.R1,nx.R2);}
  else{draw();paintPanel();}
  paintStrip();
  if(scroll&&narrow()&&m.id!==6){try{host.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'});}catch(_){}}
@@ -5692,10 +5771,9 @@ function startCool(key,ms){
 $('#tqCard').addEventListener('click',e=>{
  const mid=e.target.closest('#tqSteps button[data-mid]');if(mid){selectMission(+mid.dataset.mid,true);return;}
  if(e.target.closest('#tqProg')||e.target.closest('[data-showtbl]')){showTable();return;}
- const nx=e.target.closest('button[data-next]');if(nx){selectMission(+nx.dataset.next,true);toast(`미션 ${CIRC[+nx.dataset.next]} — 회로를 맞춰 두었어요, 깜빡이는 자리를 재요 📏`);return;}
+ const nx=e.target.closest('button[data-next]');if(nx){selectMission(+nx.dataset.next,true);toast(`미션 ${CIRC[+nx.dataset.next]} — 회로를 맞춰 두었어요. 위 「👉 지금 할 일」을 따라가세요`);return;}
  const st=e.target.closest('button[data-set]');
- if(st){const [m,r1,r2]=st.dataset.set.split('|');setCfg(m,V,+r1,+r2);toast('회로를 맞췄어요 — 깜빡이는 자리에 계기를 대어 보세요 📏');if(narrow()){try{host.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'});}catch(_){}}return;}
- if(e.target.closest('button[data-set5]')){const s=step5Next()||TQM[4].steps[0];setCfg(s.mode,V,s.R1,s.R2);toast('회로를 맞췄어요 — I를 재요 📏');return;}
+ if(st){const [m,r1,r2]=st.dataset.set.split('|');setCfg(m,+r1,+r2);toast('회로를 맞췄어요 — 깜빡이는 자리에 계기를 대어 보세요 📏');if(narrow()){try{host.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'});}catch(_){}}return;}
  const wc=e.target.closest('button[data-wcheck]');if(wc){checkWrite(+wc.dataset.wcheck);return;}
  const ch=e.target.closest('button[data-chip]');
  if(ch){if(S.tq.chipsOk)return;const c=S.tq.chips[ch.dataset.chip]||'';S.tq.chips[ch.dataset.chip]=c===''?'s':(c==='s'?'p':'');save();paintPanel();A.pop();return;}
@@ -5724,9 +5802,12 @@ $('#tqCard').addEventListener('click',e=>{
   toast('아직이에요 — 내가 적은 숫자를 다시 견주어 보세요 🔎');
  }
 });
+/* 값 칸: 입력하는 즉시 판정(맞으면 바로 초록) · Enter 는 다음 칸 */
+let wTimer=null;
+$('#tqPanel').addEventListener('input',e=>{const inp=e.target.closest('.tqwrite input');if(!inp)return;const box=inp.closest('.tqwrite');clearTimeout(wTimer);wTimer=setTimeout(()=>checkWrite(+box.dataset.mid,true),350);});
 $('#tqPanel').addEventListener('keydown',e=>{if(e.key!=='Enter')return;const inp=e.target.closest('.tqwrite input');if(!inp)return;e.preventDefault();
- const box=inp.closest('.tqwrite'), inputs=[...box.querySelectorAll('input:not([readonly])')], i=inputs.indexOf(inp);
- if(i>=0&&i<inputs.length-1&&!inputs[i+1].value){inputs[i+1].focus();return;}checkWrite(+box.dataset.mid);});
+ const box=inp.closest('.tqwrite');checkWrite(+box.dataset.mid,true);
+ const inputs=[...box.querySelectorAll('input:not([readonly])')];if(inputs.length&&!inputs[0].value)inputs[0].focus();else checkWrite(+box.dataset.mid);});
 const tg=$('#tqWriteTg');if(tg)tg.addEventListener('change',()=>{S.tq.noWrite=!tg.checked;save();paintPanel();});
 /* ── 정리표 ── */
 const CELL={
@@ -5743,7 +5824,7 @@ const CELL={
 };
 function cellText(k){
  const c=CELL[k], m=TQM.find(x=>x.id===c.m);let my='';
- if(m&&m.cfg){const gr=groupFor(m.cfg,m.need);if(gr)my=c.my(gr.g,gr.V);}else my=c.my();
+ if(m&&m.cfg){const gr=groupFor(m.cfg);if(gr)my=c.my(gr.g,gr.V);}else my=c.my();
  let use='';if(c.use){use=S.tq.chipsOk?`<span class="use">${c.use}</span>`:`<span class="use" style="color:#b23a30">쓰임은 미션 ⑥ 칩을 맞추면 채워져요</span>`;}
  return `${c.t}${c.fx?`<span class="fx">${c.fx}</span>`:''}${my?`<span class="my">${my}</span>`:''}${use}`;
 }
@@ -5760,9 +5841,7 @@ function paintTable(){
  $('#tqDone').hidden=!done;
  $('#tqTblH').textContent=done?'🧾 결국 알아야 할 표 — 내가 잰 숫자로 완성!':`🧾 결국 알아야 할 표 — 내가 잰 숫자로 채워지는 중 (${n}/${CMP_TOTAL}칸)`;
 }
-/* 다른 데서 실험대 기록이 바뀌면(2단계 전구 빼기) 미션 ⑥ 잠금도 따라가게 */
 const _up2=updateProgress;updateProgress=function(){_up2();try{if(cur().id===6){const p=$('#tqPanel');if(p&&/🔒/.test(p.textContent)&&ready(TQM[5]))paintPanel();}}catch(_){}};
-/* 시작 — 저장된 미션이 이미 끝났으면 다음 안 끝난 미션으로 */
 (function init(){
  let m=TQM.find(x=>x.id===S.tq.cur);
  if(!m||mDone(m))m=TQM.find(x=>!mDone(x))||m||TQM[0];
