@@ -3244,7 +3244,7 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('gui
   try{ const p=document.getElementById('panel-'+id);
    if(p&&p.classList.contains('show')&&MSN.some(m=>m.tab===id)){
     S.guide=S.guide||{};
-    if(!S.guide[id]){S.guide[id]=1;save();setTimeout(function(){try{openGuide(id);}catch(e){}},480);}}
+    if(!S.guide[id]&&document.body.classList.contains('solo')){S.guide[id]=1;save();setTimeout(function(){try{openGuide(id);}catch(e){}},480);}}
   }catch(e){}
   return r; };
 })();
@@ -4175,9 +4175,11 @@ document.querySelectorAll('.qna-btn').forEach(b=>b.addEventListener('click',()=>
  function hide(){tip.classList.remove('show');}
  function show(){tip.classList.add('show');try{localStorage.setItem(PKEY,'1');}catch(e){}
   setTimeout(function(){ if(tip.classList.contains('show'))hide(); },20000);}
+ if(matchMedia('(pointer:coarse)').matches||innerWidth<900)return; /* 폰·태블릿엔 Ctrl 단축키가 없음 */
  function wait(){
-  var cv=document.getElementById('cover');
+  var cv=document.getElementById('cover'), gd=document.getElementById('guide');
   if(cv&&!cv.classList.contains('hide')){setTimeout(wait,700);return;}
+  if(gd&&gd.classList.contains('show')){setTimeout(wait,1500);return;} /* 창은 한 번에 하나만 */
   show();
  }
  setTimeout(wait,1200);
@@ -4338,6 +4340,21 @@ document.querySelectorAll('.qna-btn').forEach(b=>b.addEventListener('click',()=>
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',count);else count();
  document.addEventListener('visibilitychange',function(){if(!document.hidden)count();});
 }catch(e){}})();
+</script>
+<script id="tm-gate">
+/* 🧑‍🏫 교사 모드 단추는 선생님 기기에서만 — ?teacher=1 로 한 번 열면 기억, ?teacher=0 으로 해제 (2026-09-25) */
+(function(){
+ var q=new URLSearchParams(location.search), ok=false;
+ try{
+  if(q.get('teacher')==='1')localStorage.setItem('tmAllow','1');
+  if(q.get('teacher')==='0'){localStorage.removeItem('tmAllow');localStorage.setItem('teacherMode','0');}
+  ok=localStorage.getItem('tmAllow')==='1';
+ }catch(e){}
+ if(ok)return;
+ document.body.classList.remove('teacher');
+ var b=document.getElementById('tmodeBtn'); if(!b)return;
+ var w=b.closest('.hb-wrap')||b; w.style.display='none';
+})();
 </script>
 </body>
 </html>

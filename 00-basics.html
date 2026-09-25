@@ -1799,5 +1799,20 @@ $('#brandBtn').addEventListener('click',()=>{refreshCover();$('#cover').classLis
  }catch(e){}
 })();
 </script>
+<script id="tm-gate">
+/* 🧑‍🏫 교사 모드 단추는 선생님 기기에서만 — ?teacher=1 로 한 번 열면 기억, ?teacher=0 으로 해제 (2026-09-25) */
+(function(){
+ var q=new URLSearchParams(location.search), ok=false;
+ try{
+  if(q.get('teacher')==='1')localStorage.setItem('tmAllow','1');
+  if(q.get('teacher')==='0'){localStorage.removeItem('tmAllow');localStorage.setItem('teacherMode','0');}
+  ok=localStorage.getItem('tmAllow')==='1';
+ }catch(e){}
+ if(ok)return;
+ document.body.classList.remove('teacher');
+ var b=document.getElementById('tmodeBtn'); if(!b)return;
+ var w=b.closest('.hb-wrap')||b; w.style.display='none';
+})();
+</script>
 </body>
 </html>
