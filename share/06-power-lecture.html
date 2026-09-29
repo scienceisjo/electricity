@@ -168,6 +168,14 @@ html.grid #gridov::after{content:"";position:absolute;inset:80px 120px;border:2p
 
 @media (prefers-reduced-motion: reduce){ .slide *{scroll-behavior:auto} }
 
+/* ── 소리 단추·알림 ── */
+#hud button.off{opacity:.55}
+#sfxToast{position:fixed;left:50%;bottom:78px;transform:translate(-50%,8px);z-index:80;padding:10px 22px;border-radius:9999px;background:rgba(29,29,31,.86);color:#f5f5f7;
+  font-size:16px;font-weight:600;letter-spacing:-.01em;opacity:0;pointer-events:none;transition:opacity .25s var(--ease-out),transform .25s var(--ease-out);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+#sfxToast.show{opacity:1;transform:translate(-50%,0)}
+html.still #sfxToast{display:none}
+
 /* ── 학생 모드(?s=1): 대본 숨김 ── */
 html.student #notes{display:none!important}
 
@@ -1058,8 +1066,17 @@ html.still .o-cellgrid .p-cell{transition:none}
     constructor(root, idx) {
       this.root = root; this.idx = idx; this.instant = false; this.alive = true;
       this.reduced = REDUCED; this.still = STILL; this.E = EASE; this.JE = JE; this.data = {};
-      this._anims = []; this._loops = []; this._timers = []; this._waits = []; this._tweens = [];
+      this._anims = []; this._loops = []; this._timers = []; this._waits = []; this._tweens = []; this._sfxT = []; this._disp = [];
     }
+    /** 효과음: SFX.play(name, a, b) 를 delay ms 뒤에. 순간 모드(되돌리기·복원)·건너뛰기·장면 나감이면 조용히 */
+    sfx(name, delay = 0, a, b) {
+      if (STILL || this.instant || !this.alive || !window.SFX) return;
+      if (delay > 0) { const id = setTimeout(() => { if (this.alive && !this.instant) SFX.play(name, a, b); }, delay); this._sfxT.push(id); }
+      else SFX.play(name, a, b);
+    }
+    /** 이어지는 소리('fan'|'hum'|'boil') — 장면을 떠나면 저절로 멎는다. 반환: {level(v), whine(v), stop()} */
+    sfxLoop(kind, o) { const h = window.SFX ? SFX.loop(kind, o) : null; if (h) this._disp.push(() => h.stop()); return h; }
+    onDispose(fn) { this._disp.push(fn); }
     $(s) { return this.root.querySelector(s); }
     $$(s) { return Array.from(this.root.querySelectorAll(s)); }
     _el(el) { return typeof el === 'string' ? this.$(el) : el; }
@@ -1091,6 +1108,11 @@ html.still .o-cellgrid .p-cell{transition:none}
         const P = REVEAL[fx] || REVEAL.rise;
         const d = Object.assign({ dur: P.dur, ease: P.ease || 'out' }, o);
         if (o.stagger) d.delay = (o.delay || 0) + i * o.stagger;
+        // 효과음: 학습지 빈칸 답이 채워지면 「띠링」, pop·up 등장이면 「톡」
+        if (!this.instant) {
+          const sk = (e.classList && e.classList.contains('a') && e.parentElement && e.parentElement.classList.contains('bk')) ? 'blank' : ((fx === 'pop' || fx === 'up') ? 'pop' : null);
+          if (sk) this.sfx(sk, d.delay || 0);
+        }
         if (fx === 'draw') {
           const geo = (e.matches && e.matches(GEOM)) ? [e] : Array.from(e.querySelectorAll(GEOM));
           this.a(e, [{ opacity: 1 }, { opacity: 1 }], { dur: 1, delay: d.delay });
@@ -1140,6 +1162,7 @@ html.still .o-cellgrid .p-cell{transition:none}
     count(el, from, to, o = {}) {
       el = this._el(el); if (!el) return Promise.resolve();
       const fmt = o.fmt || (v => Math.round(v).toLocaleString('ko-KR'));
+      if (to !== from) this.sfx('counter', o.delay || 0, o.dur ?? 1200);
       return this.tween(o.dur ?? 1200, p => { el.textContent = fmt(from + (to - from) * p); }, Object.assign({ ease: 'outQuint' }, o));
     }
     /** 선 그리기(pathLength=1 을 붙여 stroke-dashoffset 1→0) */
@@ -1148,6 +1171,7 @@ html.still .o-cellgrid .p-cell{transition:none}
     camera(svg, to, o = {}) {
       svg = this._el(svg); if (!svg) return Promise.resolve();
       const from = (svg.getAttribute('viewBox') || `0 0 ${SW} ${SH}`).split(/[\s,]+/).map(Number);
+      this.sfx('whoosh', o.delay || 0, o.dur ?? 1400, .55);
       return this.tween(o.dur ?? 1400, p => { svg.setAttribute('viewBox', from.map((v, i) => (v + (to[i] - v) * p).toFixed(2)).join(' ')); }, Object.assign({ ease: 'inOut' }, o));
     }
     /** 장면이 살아 있는 동안 도는 고리. fn(t초, dt초). 반환값.stop() */
@@ -1170,12 +1194,15 @@ html.still .o-cellgrid .p-cell{transition:none}
     /** 지금 도는 것을 끝 상태로(클릭이 애니 도중에 오면) */
     hurry() {
       this.instant = true;
+      this._sfxT.splice(0).forEach(id => clearTimeout(id));      // 아직 울리기 전인 효과음은 접는다
       this._anims.forEach(a => { try { const t = a.effect && a.effect.getComputedTiming(); if (t && t.iterations !== Infinity && a.playState !== 'finished') a.finish(); } catch (e) {} });
       this._tweens.slice().forEach(tw => tw.finish());
       this._waits.splice(0).forEach(w => { clearTimeout(w.t); w.res(); });
     }
     dispose() {
       this.alive = false;
+      this._sfxT.splice(0).forEach(id => clearTimeout(id));
+      this._disp.splice(0).forEach(fn => { try { fn(); } catch (e) {} });
       this._loops.forEach(l => l.stop());
       this._timers.forEach(id => clearTimeout(id));
       this._tweens.slice().forEach(tw => tw.kill());
@@ -1201,7 +1228,7 @@ html.still .o-cellgrid .p-cell{transition:none}
   const scenes = {};
   const Deck = {
     scene(id, def) { scenes[id] = def; },
-    list: [], i: -1, k: 0, ctx: null, busy: null, U, EASE, JE, Ctx, STILL, REDUCED,
+    list: [], i: -1, k: 0, ctx: null, busy: null, U, EASE, JE, Ctx, STILL, REDUCED, STUDENT,
   };
   window.Deck = Deck; window.U = U;
 
@@ -1263,6 +1290,7 @@ html.still .o-cellgrid .p-cell{transition:none}
     document.body.classList.toggle('on-light', tile === 'light' || tile === 'parchment');
     if (from && from !== to && !instant && !opt.cut) {
       to.animate([{ opacity: 0, transform: 'scale(1.015)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 620, easing: EASE.out });
+      if (window.SFX) SFX.play('slide');
     }
     const c = new Ctx(to, i); Deck.ctx = c;
     const def = defOf(to);
@@ -1286,6 +1314,7 @@ html.still .o-cellgrid .p-cell{transition:none}
   async function stepTo(k) {
     const c = Deck.ctx, sec = Deck.list[Deck.i]; if (!c) return;
     Deck.k = k; ui();
+    if (window.SFX && !STILL) SFX.play('step');
     c.instant = STILL; runDecl(c, k);
     const def = defOf(sec);
     const run = def.go ? safe(() => def.go(c, k), c) : Promise.resolve();
@@ -1327,11 +1356,18 @@ html.still .o-cellgrid .p-cell{transition:none}
     notes: '<svg viewBox="0 0 20 20"><path d="M4 5h12M4 10h12M4 15h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
     full: '<svg viewBox="0 0 20 20"><path d="M3.5 8V3.5H8M12 3.5h4.5V8M16.5 12v4.5H12M8 16.5H3.5V12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     replay: '<svg viewBox="0 0 20 20"><path d="M4.5 10a5.5 5.5 0 1 0 1.8-4.1M4.5 3.8v3.4h3.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    sound: '<svg viewBox="0 0 20 20"><path d="M3.5 8h3l4-3.5v11L6.5 12h-3z" fill="currentColor"/><path d="M13.5 7.2a4 4 0 0 1 0 5.6M15.6 5a7 7 0 0 1 0 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    mute: '<svg viewBox="0 0 20 20"><path d="M3.5 8h3l4-3.5v11L6.5 12h-3z" fill="currentColor"/><path d="M13.5 7.5l4.5 5M18 7.5l-4.5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
   };
+  function syncSound() {
+    const b = hud && hud.querySelector('[data-a="sound"]'); if (!b) return;
+    const on = !window.SFX || SFX.isOn();
+    b.innerHTML = on ? ICON.sound : ICON.mute; b.classList.toggle('off', !on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
   function buildChrome() {
     hud = document.createElement('div'); hud.id = 'hud';
-    hud.innerHTML = `<button data-a="replay" aria-label="이 단계 다시 보기(R)">${ICON.replay}</button>${STUDENT ? '' : `<button data-a="notes" aria-label="대본 보기(T)">${ICON.notes}</button>`}<button data-a="grid" aria-label="전체 보기(O)">${ICON.grid}</button><button data-a="prev" aria-label="이전">${ICON.prev}</button><span class="count" id="count">1 / 1</span><button data-a="next" aria-label="다음">${ICON.next}</button><button data-a="full" aria-label="전체 화면(F)">${ICON.full}</button>`;
-    document.body.appendChild(hud);
+    hud.innerHTML = `<button data-a="replay" aria-label="이 단계 다시 보기(R)">${ICON.replay}</button>${STUDENT ? '' : `<button data-a="notes" aria-label="대본 보기(T)">${ICON.notes}</button>`}<button data-a="grid" aria-label="전체 보기(O)">${ICON.grid}</button><button data-a="prev" aria-label="이전">${ICON.prev}</button><span class="count" id="count">1 / 1</span><button data-a="next" aria-label="다음">${ICON.next}</button><button data-a="sound" aria-label="소리 켜기/끄기(M)">${ICON.sound}</button><button data-a="full" aria-label="전체 화면(F)">${ICON.full}</button>`;
+    document.body.appendChild(hud); syncSound();
     hud.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; e.stopPropagation(); act(b.dataset.a); });
     prog = document.createElement('div'); prog.id = 'progress'; prog.innerHTML = '<i></i>'; document.body.appendChild(prog);
     dots = document.createElement('div'); dots.id = 'stepdots'; document.body.appendChild(dots);
@@ -1345,6 +1381,7 @@ html.still .o-cellgrid .p-cell{transition:none}
       <tr><td><kbd>N</kbd></td><td>발표자 노트(대본)</td></tr>
       <tr><td><kbd>O</kbd></td><td>전체 보기</td></tr>
       <tr><td><kbd>F</kbd></td><td>전체 화면</td></tr>
+      <tr><td><kbd>M</kbd></td><td>소리 켜기/끄기</td></tr>
       <tr><td><kbd>B</kbd> / <kbd>W</kbd></td><td>검은 화면 / 흰 화면</td></tr>
       <tr><td>숫자 + <kbd>Enter</kbd></td><td>그 장으로 이동</td></tr>
       <tr><td>좌우로 밀기</td><td>전자칠판에서 넘기기</td></tr></table></div>`;
@@ -1357,6 +1394,7 @@ html.still .o-cellgrid .p-cell{transition:none}
     if (a === 'next') Deck.next(); else if (a === 'prev') Deck.prev();
     else if (a === 'notes') toggleNotes(); else if (a === 'grid') toggleOverview();
     else if (a === 'full') toggleFull(); else if (a === 'replay') Deck.replay();
+    else if (a === 'sound') { if (window.SFX) SFX.toggle(); syncSound(); }
   }
   function ui() {
     const n = Deck.list.length, sec = Deck.list[Deck.i]; if (!sec || !hud) return;
@@ -1415,6 +1453,7 @@ html.still .o-cellgrid .p-cell{transition:none}
         case 'n': case 'N': case 't': case 'T': if (!STUDENT) toggleNotes(); break;
         case 'o': case 'O': toggleOverview(); break;
         case 'f': case 'F': toggleFull(); break;
+        case 'm': case 'M': act('sound'); break;
         case 'r': case 'R': Deck.replay(); break;
         case 'b': case 'B': blankEl.className = blankEl.className === 'black' ? '' : 'black'; break;
         case 'w': case 'W': blankEl.className = blankEl.className === 'white' ? '' : 'white'; break;
@@ -1513,6 +1552,406 @@ window.OBJ = (function () {
 window.FX = window.FX || {};
 
 }catch(e){console.error("[object 00_registry.js]",e)}
+/* ── 03_sfx.js ── */
+try{
+/* ═══════════════════════════════════════════════════════════════
+   03_sfx.js — 효과음(WebAudio 합성). 소리 파일 0개 · 오프라인 OK
+   · 장면에서는 c.sfx('blank', 지연ms) · c.sfxLoop('fan') 로 부른다(core.js 가 순간 모드·건너뛰기·장면 나감을 알아서 처리)
+   · 브라우저 정책상 첫 클릭·키 입력 뒤부터 소리가 난다. M 키·HUD 단추로 켜고 끔(기기에 기억). 학생 모드(?s=1)는 기본 꺼짐
+   · 점검: ?sfx=demo → 모든 소리를 눌러 들어 보는 패널 / SFX.analyze('blank') → 오프라인 렌더로 세기·길이 점검
+   · 주소 도우미: ?sound=1|0 강제 켜기·끄기 · ?nosfx=1 완전 끔 · ?sfxtest=1 클릭 없이 잠금 해제(자동 점검용)
+   ═══════════════════════════════════════════════════════════════ */
+window.SFX = (function () {
+  'use strict';
+  const Q = new URLSearchParams(location.search);
+  const D = window.Deck || {};
+  const OFF = !!D.STILL || Q.get('nosfx') === '1';
+  const KEY = 'sc_sfx';
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+  let on = !D.STUDENT;
+  try { const s = localStorage.getItem(KEY); if (s === '1' || s === '0') on = s === '1'; } catch (e) {}
+  if (Q.get('sound') === '1') on = true; else if (Q.get('sound') === '0') on = false;
+  let ac = null, out = null, X = null, unlocked = Q.get('sfxtest') === '1', broken = false;
+  const pending = new Set();
+
+  /* ── 잡음(결정적) ── */
+  function noiseBuf(actx) {
+    const n = Math.floor(actx.sampleRate * 2), b = actx.createBuffer(1, n, actx.sampleRate), d = b.getChannelData(0);
+    let s = 12345;
+    for (let i = 0; i < n; i++) { s = (s * 1664525 + 1013904223) >>> 0; d[i] = s / 2147483648 - 1; }
+    return b;
+  }
+  function ensure() {
+    if (OFF || broken || !unlocked) return null;
+    if (!ac) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { broken = true; return null; }
+      try { ac = new AC(); } catch (e) { broken = true; return null; }
+      const comp = ac.createDynamicsCompressor();
+      comp.threshold.value = -14; comp.knee.value = 18; comp.ratio.value = 4; comp.attack.value = .004; comp.release.value = .18;
+      out = ac.createGain(); out.gain.value = on ? .9 : 0;
+      out.connect(comp); comp.connect(ac.destination);
+      X = { ac, dest: out, nz: noiseBuf(ac) };
+    }
+    if (ac.state === 'suspended' && on && !document.hidden) ac.resume().catch(() => {});
+    return X;
+  }
+
+  /* ── 소리 부품 ── */
+  function env(g, t, a, d, peak) {
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(Math.max(0.0002, peak), t + a);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + a + d);
+  }
+  function route(x, node, pan) {
+    if (pan && x.ac.createStereoPanner) { const p = x.ac.createStereoPanner(); p.pan.value = clamp(pan, -1, 1); node.connect(p); p.connect(x.dest); return; }
+    node.connect(x.dest);
+  }
+  /** 톤: f(→f2) Hz, a 올림 s, d 사라짐 s, g 세기, type, vib[Hz, 깊이Hz], lp 저역통과, pan */
+  function tone(x, t, o) {
+    const ac = x.ac, osc = ac.createOscillator(), g = ac.createGain();
+    const a = o.a ?? .004, d = o.d ?? .3;
+    osc.type = o.type || 'sine';
+    osc.frequency.setValueAtTime(o.f, t);
+    if (o.f2) osc.frequency.exponentialRampToValueAtTime(o.f2, t + a + d);
+    if (o.vib) {
+      const l = ac.createOscillator(), lg = ac.createGain();
+      l.frequency.value = o.vib[0]; lg.gain.value = o.vib[1]; l.connect(lg); lg.connect(osc.frequency); l.start(t); l.stop(t + a + d + .06);
+    }
+    env(g, t, a, d, o.g ?? .2);
+    osc.connect(g);
+    let last = g;
+    if (o.lp) { const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = o.lp; g.connect(f); last = f; }
+    route(x, last, o.pan);
+    osc.start(t); osc.stop(t + a + d + .07);
+  }
+  /** 잡음: type(bandpass|highpass|lowpass), f(→f2) Hz, q */
+  function noise(x, t, o) {
+    const ac = x.ac, s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    const a = o.a ?? .003, d = o.d ?? .1;
+    s.buffer = x.nz; s.loop = true;
+    f.type = o.type || 'bandpass'; f.frequency.setValueAtTime(o.f || 2000, t);
+    if (o.f2) f.frequency.exponentialRampToValueAtTime(o.f2, t + a + d);
+    f.Q.value = o.q ?? 1;
+    env(g, t, a, d, o.g ?? .15);
+    s.connect(f); f.connect(g); route(x, g, o.pan);
+    s.start(t, (t * 7.13) % 1.5); s.stop(t + a + d + .07);
+  }
+  const PART = [[1, 1, 1], [2.76, .3, .55], [5.4, .1, .3], [8.93, .04, .18]];
+  function bell(x, t, f, g = .3, d = 1.1) { PART.forEach(([r, w, k]) => tone(x, t, { f: f * r, a: .002, d: d * k, g: g * w })); }
+  function tickAt(x, t, f, g) {
+    tone(x, t, { f, a: .001, d: .014, g });
+    noise(x, t, { a: .001, d: .006, g: g * .9, type: 'bandpass', f: f * 1.6, q: 1.5 });
+  }
+
+  /* ═════════ 소리 목록: (x, t, a, b) ═════════ */
+  const SCALE = [0, 2, 4, 7, 9, 12, 9, 7, 4, 2];       // 빈칸이 채워질 때마다 음계가 오르내린다
+  const S = {
+    /** 빈칸이 채워짐 — 마림바 같은 「띠링」. i = 몇 번째 빈칸(음 높이 순서) */
+    blank(x, t, i) {
+      const f = 659.25 * Math.pow(2, SCALE[(i | 0) % 10] / 12);
+      tone(x, t, { f, a: .003, d: .34, g: .24 });
+      tone(x, t, { f: f * 2, a: .002, d: .16, g: .07 });
+      tone(x, t, { f: f * 4.02, a: .001, d: .05, g: .025 });
+      noise(x, t, { a: .001, d: .012, g: .05, type: 'highpass', f: 3500 });
+    },
+    /** 무언가 톡 나타남 */
+    pop(x, t) {
+      tone(x, t, { f: 420, f2: 840, a: .002, d: .1, g: .2 });
+      noise(x, t, { a: .001, d: .02, g: .05, type: 'highpass', f: 3000 });
+    },
+    /** 클릭으로 다음 단계 — 아주 작은 톡 */
+    step(x, t) { tone(x, t, { f: 1500, f2: 900, type: 'triangle', a: .001, d: .045, g: .075 }); noise(x, t, { a: .001, d: .01, g: .03, f: 3000, q: 1.5 }); },
+    /** 다음 장으로 — 부드러운 슥 */
+    slide(x, t) {
+      noise(x, t, { a: .12, d: .5, g: .2, f: 400, f2: 2600, q: .8 });
+      tone(x, t, { f: 220, f2: 110, a: .005, d: .25, g: .09 });
+    },
+    /** 휙 — dur ms, gain */
+    whoosh(x, t, dur = 700, g = 1) {
+      const d = (dur || 700) / 1000;
+      noise(x, t, { a: d * .4, d: d * .6, g: .2 * (g ?? 1), f: 350, f2: 2400, q: .7 });
+    },
+    /** 숫자 굴러감 — 오르는 째깍째깍 */
+    counter(x, t, dur = 1200) {
+      const n = clamp(Math.round((dur || 1200) / 70), 4, 22), sp = (dur || 1200) / 1000 / n;
+      for (let i = 0; i < n; i++) tickAt(x, t + i * sp, 1500 + i * (900 / n), .07);
+    },
+    /** 세는 선을 조각이 지나감(가이거처럼) — p 음높이, g 세기 */
+    tick(x, t, p = 1, g = 1) { tickAt(x, t, 2100 * (p || 1), .1 * (g ?? 1)); },
+    /** 1초가 지남 — 나무 시계 */
+    clock(x, t) {
+      tone(x, t, { f: 1050, f2: 620, type: 'triangle', a: .001, d: .06, g: .17 });
+      noise(x, t, { a: .001, d: .012, g: .08, f: 2600, q: 2 });
+    },
+    /** 쾅(도장) */
+    thunk(x, t) {
+      tone(x, t, { f: 150, f2: 44, a: .002, d: .24, g: .5 });
+      noise(x, t, { a: .002, d: .1, g: .28, type: 'lowpass', f: 700, f2: 200 });
+    },
+    /** 땡 */
+    ding(x, t, k = 1) { bell(x, t, 1318.5 * (k || 1), .32, 1.1); },
+    /** 딩동딩동 ↑ (정답·완성) */
+    chime(x, t) { [1046.5, 1318.5, 1568, 2093].forEach((f, i) => bell(x, t + i * .085, f, .3, .9)); },
+    /** 명판 뒤집기 */
+    flip(x, t) {
+      noise(x, t, { a: .002, d: .03, g: .18, f: 3200, q: 1.5 });
+      noise(x, t + .12, { a: .002, d: .03, g: .18, f: 2600, q: 1.5 });
+      noise(x, t + .02, { a: .03, d: .16, g: .09, f: 900, f2: 2600 });
+    },
+    /** 토스터 레버 내림 — 철컥 */
+    lever(x, t) {
+      tone(x, t, { f: 260, f2: 75, type: 'triangle', a: .002, d: .14, g: .4 });
+      noise(x, t, { a: .002, d: .06, g: .22, type: 'lowpass', f: 1200, f2: 400 });
+      tone(x, t + .01, { f: 1900, f2: 1200, a: .001, d: .05, g: .04 });
+    },
+    /** 토스터 빵 튀어 오름 — 텅~ 팅! */
+    toasterPop(x, t) {
+      tone(x, t, { f: 150, f2: 55, a: .002, d: .12, g: .32 });
+      tone(x, t + .02, { f: 210, f2: 640, type: 'triangle', a: .005, d: .32, g: .11, vib: [22, 26] });
+      noise(x, t + .02, { a: .01, d: .2, g: .05, f: 2400, q: 1.2 });
+      bell(x, t + .16, 2637, .22, .9);
+    },
+    /** 열선이 달아오르며 탁탁 — dur ms */
+    sizzle(x, t, dur = 2000) {
+      const d = (dur || 2000) / 1000, n = Math.round(d * 34);
+      for (let i = 0; i < n; i++) noise(x, t + Math.random() * d, { a: .001, d: .009, g: .11 * (1 - i / n * .3), f: 2500 + Math.random() * 3500, q: 1.4, pan: (Math.random() - .5) * .6 });
+    },
+    /** 스피커 박 — strong 이면 큰 북, 아니면 작은 북 + 심벌 */
+    kick(x, t, strong, lv) {
+      const k = lv == null ? 1 : lv, g = (strong ? .5 : .3) * k;
+      tone(x, t, { f: strong ? 150 : 130, f2: 44, a: .002, d: strong ? .2 : .14, g });
+      noise(x, t, { a: .001, d: .05, g: g * .5, type: 'lowpass', f: 900, f2: 300 });
+      if (!strong) noise(x, t + .02, { a: .001, d: .04, g: .045, type: 'highpass', f: 7000 });
+    },
+    /** 백열전구 켜짐 — 딸깍 · 웅 · 팅 */
+    bulbOn(x, t) {
+      noise(x, t, { a: .001, d: .006, g: .12, f: 3000, q: 1.5 });
+      tone(x, t + .02, { f: 98, type: 'triangle', a: .05, d: .55, g: .08, lp: 500 });
+      noise(x, t + .03, { a: .08, d: .5, g: .05, type: 'lowpass', f: 300, f2: 3000 });
+      bell(x, t + .05, 1760, .12, .8);
+    },
+    /** LED 켜짐 — 딸깍 · 띠링 */
+    ledOn(x, t) {
+      noise(x, t, { a: .001, d: .006, g: .1, f: 3400, q: 1.5 });
+      tone(x, t + .01, { f: 1568, f2: 2093, a: .003, d: .2, g: .1 });
+      bell(x, t + .03, 2349, .1, .7);
+    },
+    /** 집 창문 켜짐 — 딸깍 · 띵띵띵 */
+    lightsOn(x, t) {
+      noise(x, t, { a: .001, d: .01, g: .08, f: 2600, q: 1.5 });
+      [1568, 1760, 1976].forEach((f, i) => bell(x, t + .04 + i * .09, f, .15, .7));
+    },
+    /** 송전선을 타고 전달 — 웅~ + 쉬익 + 지직, 소리가 왼쪽에서 오른쪽으로 움직임 */
+    zap(x, t, dur = 2400) {
+      const ac = x.ac, d = (dur || 2400) / 1000;
+      const o = ac.createOscillator(), lp = ac.createBiquadFilter(), g = ac.createGain();
+      o.type = 'sawtooth'; o.frequency.setValueAtTime(55, t); o.frequency.exponentialRampToValueAtTime(230, t + d * .8);
+      lp.type = 'lowpass'; lp.frequency.setValueAtTime(260, t); lp.frequency.exponentialRampToValueAtTime(1400, t + d);
+      g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.15, t + d * .15); g.gain.setValueAtTime(.15, t + d * .7); g.gain.exponentialRampToValueAtTime(.0001, t + d + .5);
+      o.connect(lp); lp.connect(g);
+      if (ac.createStereoPanner) { const p = ac.createStereoPanner(); p.pan.setValueAtTime(-.85, t); p.pan.linearRampToValueAtTime(.85, t + d); g.connect(p); p.connect(x.dest); } else g.connect(x.dest);
+      o.start(t); o.stop(t + d + .6);
+      noise(x, t, { a: d * .3, d: d * .7, g: .07, f: 600, f2: 4200, q: .6 });
+      for (let i = 0, n = Math.round(d * 22); i < n; i++) noise(x, t + Math.random() * d, { a: .001, d: .008, g: .045, type: 'highpass', f: 5000, pan: -1 + 2 * Math.random() });
+    },
+    /** 열 보기 훑기 — 스캐너 */
+    scan(x, t, dur = 900) {
+      const d = (dur || 900) / 1000;
+      tone(x, t, { f: 280, f2: 1250, a: .04, d, g: .09, vib: [9, 14] });
+      tone(x, t, { f: 283, f2: 1262, type: 'triangle', a: .04, d, g: .04, pan: .4 });
+    },
+    /** 온도계가 오름 — 조용한 상승음 */
+    rise(x, t, dur = 2400) { tone(x, t, { f: 260, f2: 640, a: .15, d: (dur || 2400) / 1000, g: .07, vib: [5, 6] }); },
+    /** 바늘이 내려옴 — 슬라이드 휘슬 + 톡 */
+    sweepDown(x, t, dur = 1300) {
+      const d = (dur || 1300) / 1000;
+      tone(x, t, { f: 1100, f2: 380, a: .02, d, g: .09 });
+      tickAt(x, t + d, 1800, .08);
+    },
+    /** 푸슉(연기) */
+    puff(x, t) { noise(x, t, { a: .05, d: .5, g: .22, type: 'lowpass', f: 1000, f2: 300, q: .4 }); },
+    /** 싹둑 싹둑 */
+    snip(x, t) {
+      [0, .07, .14].forEach(o => { noise(x, t + o, { a: .001, d: .012, g: .18, f: 5000, q: 2 }); tone(x, t + o, { f: 3000, a: .001, d: .02, g: .03 }); });
+    },
+    /** 슥(선 그리기) */
+    zip(x, t, dur = 500) { noise(x, t, { a: .02, d: Math.min(.3, (dur || 500) / 1000 * .5), g: .12, f: 1500, f2: 4200, q: 1 }); },
+    /** 반짝 */
+    spark(x, t) { for (let i = 0; i < 4; i++) tone(x, t + i * .04 + Math.random() * .02, { f: 2200 + Math.random() * 2000, a: .001, d: .08, g: .04 }); },
+  };
+
+  /* ═════════ 이어지는 소리(선풍기·발전소·끓는 물) — level(0..1) 로 세기 조종 ═════════ */
+  function buildFan(x) {
+    const ac = x.ac, out = ac.createGain(); out.gain.value = 0; out.connect(x.dest);
+    const ns = ac.createBufferSource(); ns.buffer = x.nz; ns.loop = true;
+    const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 500; bp.Q.value = .7;
+    const gw = ac.createGain(); gw.gain.value = 0;
+    const lfo = ac.createOscillator(), lg = ac.createGain(); lfo.frequency.value = 3; lg.gain.value = 0; lfo.connect(lg); lg.connect(gw.gain);   // 날개가 바람을 자르는 울렁임
+    ns.connect(bp); bp.connect(gw); gw.connect(out);
+    const m1 = ac.createOscillator(), m2 = ac.createOscillator(), gm = ac.createGain(), lp = ac.createBiquadFilter();   // 모터 웅~
+    m1.type = 'triangle'; m1.frequency.value = 50; m2.type = 'sine'; m2.frequency.value = 100; gm.gain.value = 0;
+    lp.type = 'lowpass'; lp.frequency.value = 700; m1.connect(gm); m2.connect(gm); gm.connect(lp); lp.connect(out);
+    ns.start(0, .3); lfo.start(); m1.start(); m2.start();
+    let lv = 0, wh = 0;
+    const apply = () => {
+      const T = ac.currentTime, v = clamp(lv, 0, 1.1), tc = .07;
+      gw.gain.setTargetAtTime(v * v * .095, T, tc); lg.gain.setTargetAtTime(v * v * .035, T, tc);
+      lfo.frequency.setTargetAtTime(2 + 7 * v, T, tc);
+      bp.frequency.setTargetAtTime(380 + 900 * v, T, tc);
+      m1.frequency.setTargetAtTime(46 + 70 * v, T, tc); m2.frequency.setTargetAtTime(92 + 140 * v, T, tc);
+      gm.gain.setTargetAtTime(v > .02 ? .01 + .034 * v + wh * .04 : 0, T, tc);
+      out.gain.setTargetAtTime(v > .01 ? 1 : 0, T, .05);
+    };
+    return {
+      level(v) { lv = v; apply(); }, whine(v) { wh = v; apply(); },
+      stop() {
+        const T = ac.currentTime; out.gain.cancelScheduledValues(T); out.gain.setTargetAtTime(0, T, .08);
+        setTimeout(() => { try { ns.stop(); lfo.stop(); m1.stop(); m2.stop(); out.disconnect(); } catch (e) {} }, 500);
+      },
+    };
+  }
+  function buildHum(x) {   // 발전소 웅~
+    const ac = x.ac, out = ac.createGain(); out.gain.value = 0; out.connect(x.dest);
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 220; lp.connect(out);
+    const o1 = ac.createOscillator(), o2 = ac.createOscillator(); o1.type = 'sawtooth'; o1.frequency.value = 50; o2.type = 'sine'; o2.frequency.value = 100;
+    const g2 = ac.createGain(); g2.gain.value = .5; o1.connect(lp); o2.connect(g2); g2.connect(lp);
+    const ns = ac.createBufferSource(); ns.buffer = x.nz; ns.loop = true; const nl = ac.createBiquadFilter(); nl.type = 'lowpass'; nl.frequency.value = 380; const ng = ac.createGain(); ng.gain.value = .5;
+    ns.connect(nl); nl.connect(ng); ng.connect(lp);
+    o1.start(); o2.start(); ns.start(0, .7);
+    return {
+      level(v) { const T = ac.currentTime; out.gain.setTargetAtTime(clamp(v, 0, 1.1) * .06, T, .15); o1.frequency.setTargetAtTime(44 + 8 * v, T, .3); },
+      stop() { const T = ac.currentTime; out.gain.setTargetAtTime(0, T, .1); setTimeout(() => { try { o1.stop(); o2.stop(); ns.stop(); out.disconnect(); } catch (e) {} }, 500); },
+    };
+  }
+  function buildBoil(x) {   // 주전자 끓는 소리: 쉬이~ + 보글보글
+    const ac = x.ac, out = ac.createGain(); out.gain.value = 0; out.connect(x.dest);
+    const ns = ac.createBufferSource(); ns.buffer = x.nz; ns.loop = true; const hp = ac.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 3200;
+    const gh = ac.createGain(); gh.gain.value = 0; ns.connect(hp); hp.connect(gh); gh.connect(out); ns.start(0, .2);
+    let lv = 0; const rnd = U_rng(7);
+    const id = setInterval(() => {
+      if (lv < .05 || !on) return;
+      if (rnd() < .15 + lv * .5) { const T = ac.currentTime + .005, f0 = 260 + rnd() * 260; tone({ ac, dest: out, nz: x.nz }, T, { f: f0, f2: f0 * 1.9, a: .003, d: .07, g: .1 * lv, pan: (rnd() - .5) * .8 }); }
+    }, 70);
+    return {
+      level(v) { lv = clamp(v, 0, 1); const T = ac.currentTime; gh.gain.setTargetAtTime(lv * .05, T, .4); out.gain.setTargetAtTime(lv > .01 ? 1 : 0, T, .1); },
+      stop() { clearInterval(id); const T = ac.currentTime; out.gain.setTargetAtTime(0, T, .1); setTimeout(() => { try { ns.stop(); out.disconnect(); } catch (e) {} }, 500); },
+    };
+  }
+  function U_rng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+  const LOOPS = { fan: buildFan, hum: buildHum, boil: buildBoil };
+  const NULL_LOOP = { level() {}, whine() {}, stop() {} };
+
+  /* ═════════ 바깥 API ═════════ */
+  let blankN = 0;
+  const tickLog = [];
+  function play(name, a, b) {
+    if (OFF || !on) return;
+    const x = ensure(); if (!x) return;
+    const f = S[name]; if (!f) { console.warn('[SFX] 없는 소리:', name); return; }
+    if (name === 'blank') a = blankN++;
+    if (name === 'tick') {   // 빽빽할수록(100 W 레인) 톡톡이 작고 높은 지지직으로 — 촘촘한 정도에 따라 세기·음높이 자동 조절
+      const now = performance.now(); tickLog.push(now); while (tickLog.length && now - tickLog[0] > 250) tickLog.shift();
+      const n = tickLog.length;
+      b = (b ?? 1) / (1 + n * .22); a = (a ?? 1) * (1 + Math.min(n, 30) * .012);
+    }
+    try { f(x, x.ac.currentTime + .008, a, b); } catch (e) { console.error('[SFX]', name, e); }
+  }
+  function loop(kind, o) {
+    const build = LOOPS[kind];
+    if (OFF || !build) return NULL_LOOP;
+    const h = {
+      built: null, lvl: 0, wh: 0, dead: false,
+      level(v) { h.lvl = v; if (h.built) h.built.level(v); },
+      whine(v) { h.wh = v; if (h.built && h.built.whine) h.built.whine(v); },
+      stop() { h.dead = true; pending.delete(h); if (h.built) { h.built.stop(); h.built = null; } },
+      tryBuild() {
+        if (h.built || h.dead) return;
+        const x = ensure(); if (!x) return;
+        try { h.built = build(x, o || {}); h.built.level(h.lvl); if (h.wh && h.built.whine) h.built.whine(h.wh); }
+        catch (e) { console.error('[SFX loop]', kind, e); h.dead = true; }
+      },
+    };
+    pending.add(h); h.tryBuild();
+    return h;
+  }
+  function unlock() {
+    if (unlocked) return;
+    unlocked = true;
+    if (!OFF) { ensure(); pending.forEach(h => h.tryBuild()); }
+  }
+  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, unlock, { capture: true, once: false, passive: true }));
+  document.addEventListener('visibilitychange', () => {
+    if (!ac) return;
+    if (document.hidden) ac.suspend().catch(() => {}); else if (on) ac.resume().catch(() => {});
+  });
+
+  let toastEl = null, toastT = 0;
+  function toast(v) {
+    if (!document.body) return;
+    if (!toastEl) { toastEl = document.createElement('div'); toastEl.id = 'sfxToast'; document.body.appendChild(toastEl); }
+    toastEl.textContent = v ? '소리 켜짐' : '소리 꺼짐';
+    toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), 1400);
+  }
+  function toggle(v) {
+    on = v == null ? !on : !!v;
+    try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {}
+    unlock();
+    const x = ensure();
+    if (x && out) out.gain.setTargetAtTime(on ? .9 : 0, ac.currentTime, .03);
+    toast(on);
+    if (on) play('pop');
+    return on;
+  }
+
+  /* ═════════ 점검 도구 ═════════ */
+  function measure(buf) {
+    let peak = 0, sum = 0, n = 0, last = 0, first = -1, zc = 0, prev = 0;
+    const ch = buf.getChannelData(0), ch2 = buf.numberOfChannels > 1 ? buf.getChannelData(1) : ch, sr = buf.sampleRate;
+    for (let i = 0; i < ch.length; i++) {
+      const v = Math.max(Math.abs(ch[i]), Math.abs(ch2[i]));
+      if (v > peak) peak = v;
+      sum += ch[i] * ch[i]; n++;
+      if (v > .003) { last = i; if (first < 0) first = i; }
+      if ((ch[i] >= 0) !== (prev >= 0)) zc++; prev = ch[i];
+    }
+    const active = Math.max(1, last - Math.max(0, first)) / sr;
+    return { peak: +peak.toFixed(3), rms: +Math.sqrt(sum / n).toFixed(4), attack: first < 0 ? null : +(first / sr).toFixed(3), length: +(last / sr).toFixed(2), approxHz: Math.round(zc / 2 / active), clipped: peak >= .98, silent: peak < .01 };
+  }
+  async function analyze(name, a, b, secs = 3) {
+    const OA = window.OfflineAudioContext || window.webkitOfflineAudioContext, sr = 44100;
+    const oc = new OA(2, Math.floor(sr * secs), sr), g = oc.createGain(); g.gain.value = .9; g.connect(oc.destination);
+    const x = { ac: oc, dest: g, nz: noiseBuf(oc) };
+    S[name](x, .02, a, b);
+    return measure(await oc.startRendering());
+  }
+  async function analyzeLoop(kind, level = 1, secs = 1.5) {
+    const OA = window.OfflineAudioContext || window.webkitOfflineAudioContext, sr = 44100;
+    const oc = new OA(2, Math.floor(sr * secs), sr), g = oc.createGain(); g.gain.value = .9; g.connect(oc.destination);
+    const h = LOOPS[kind]({ ac: oc, dest: g, nz: noiseBuf(oc) }); h.level(level);
+    const r = measure(await oc.startRendering()); try { h.stop(); } catch (e) {} return r;
+  }
+
+  /** ?sfx=demo — 모든 소리를 눌러 들어 보는 패널 */
+  function demoPanel() {
+    const box = document.createElement('div');
+    box.style.cssText = 'position:fixed;left:12px;top:12px;z-index:200;max-width:340px;max-height:92vh;overflow:auto;background:rgba(29,29,31,.94);color:#f5f5f7;border-radius:14px;padding:14px;font:600 13px/1.3 system-ui,sans-serif';
+    const btn = (t, fn) => { const b = document.createElement('button'); b.textContent = t; b.style.cssText = 'margin:3px;padding:6px 10px;border-radius:9999px;border:0;background:#0066cc;color:#fff;font:600 13px system-ui'; b.onclick = () => { unlock(); fn(); }; return b; };
+    box.appendChild(Object.assign(document.createElement('div'), { textContent: '효과음 듣기 (F2 로 닫기)', style: 'margin-bottom:8px;font-size:14px' }));
+    Object.keys(S).forEach(k => box.appendChild(btn(k, () => { if (!on) toggle(true); play(k, k === 'kick' ? true : undefined, 1); })));
+    let fan = null;
+    box.appendChild(btn('fan 0→1→0', () => { if (!on) toggle(true); if (fan) fan.stop(); fan = loop('fan'); let v = 0, dir = 1; const id = setInterval(() => { v += dir * .05; if (v >= 1) dir = -1; fan.level(clamp(v)); if (v <= 0 && dir < 0) { clearInterval(id); fan.stop(); fan = null; } }, 60); }));
+    box.appendChild(btn('boil', () => { if (!on) toggle(true); const h = loop('boil'); h.level(1); setTimeout(() => h.stop(), 4000); }));
+    box.appendChild(btn('hum', () => { if (!on) toggle(true); const h = loop('hum'); h.level(1); setTimeout(() => h.stop(), 3000); }));
+    document.body.appendChild(box);
+    document.addEventListener('keydown', e => { if (e.key === 'F2') box.remove(); });
+  }
+  if (Q.get('sfx') === 'demo') { const go = () => demoPanel(); if (document.body) go(); else document.addEventListener('DOMContentLoaded', go); }
+
+  return { play, loop, toggle, unlock, analyze, analyzeLoop, names: () => Object.keys(S), isOn: () => on, isOff: () => OFF, S, debug: () => ({ pendingLoops: pending.size, unlocked, state: ac ? ac.state : 'none' }) };
+})();
+
+}catch(e){console.error("[object 03_sfx.js]",e)}
 /* ── 10_energy.js ── */
 try{
 /* ═══════════════════════════════════════════════════════════════
@@ -2523,6 +2962,8 @@ try{
           shown = 0;
         }
         while (shown < D) {                                       // 세는 선을 지날 때마다 한 칸
+          // 효과음: 세는 선을 조각이 지날 때마다 똑 — 1 W 는 초당 1번, 30 W 는 30번, 100 W 는 지지직(가이거 계수기처럼)
+          c.sfx('tick');
           if (grid && grid.type === 'ctl') { try { grid.g.tally(); } catch (e) { console.error(e); } }
           if (o.onTally) { try { o.onTally(shown, api); } catch (e) { console.error(e); } }
           shown++;
@@ -3071,6 +3512,7 @@ try{
         el, geo: G,
         /** 띠가 중심선을 따라 자란다(마스크 전진). part = 'in' | 출력 key | 배열 | 'all'. opt {reverse, delay, ease, stagger} */
         grow(part = 'all', ms = 1000, opt = {}) {
+          if (ms > 0) c.sfx('whoosh', opt.delay || 0, ms, .55);   // 효과음: 띠가 흘러나오는 쉬익
           const list = part === 'all' ? ['in'].concat(G.keys) : [].concat(part);
           return Promise.all(list.map((k, i) => growOne(k, ms, Object.assign({}, opt, { delay: (opt.delay || 0) + i * (opt.stagger || 0) }))));
         },
@@ -3668,6 +4110,7 @@ try{
   /** 도장 찍기: scale 1.6 → 1, rotate −12° → −6°(바탕 −6° + 안쪽 −6° → 0°), 불투명 0 → 1 (320 spring) + 좌우 ±4px 두 번 */
   FX.stampIn = function (c, target, o = {}) {
     const root = $el(c, target); if (!root) return Promise.resolve();
+    c.sfx('thunk', 250);   // 효과음: 쾅
     const inner = root.querySelector('.p-stamp-in'), shake = root.querySelector('.p-shake'), ring = root.querySelector('.p-ring');
     if (!inner) { console.error('[FX.stampIn] obj.stamp 이 아님'); return Promise.resolve(); }
     // 글자 실제 폭에 테를 맞춤(보이는 상태에서만 잴 수 있음)
@@ -3698,7 +4141,7 @@ try{
     },
     drive(c, el) {
       const p = el.querySelector('.p-mark');
-      return { el, draw(ms = 400, opt = {}) { return c.a(p, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: ms, delay: opt.delay || 0, ease: 'out' }).finished; } };
+      return { el, draw(ms = 400, opt = {}) { c.sfx('ding', (opt.delay || 0) + ms * .6, 1.19); return c.a(p, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: ms, delay: opt.delay || 0, ease: 'out' }).finished; } };
     },
   });
 })();
@@ -4044,6 +4487,7 @@ try{
       const api = {
         /** 켜기: 필라멘트 색(빨강→주황→노랑→흰빛)이 warm ms 동안, 빛 번짐이 lag 뒤부터 ms 까지 */
         on(v = 1, ms = 1800, opt = {}) {
+          if (v > .5 && vf < .5) c.sfx('bulbOn');   // 효과음: 딸깍 · 웅 · 팅
           const f0 = vf, b0 = vb, T = Math.max(1, ms);
           const warm = opt.warm ?? T, lag = opt.lag ?? (opt.warm != null ? Math.min(opt.warm, T * 0.8) : T * 0.25);
           return c.tween(T, (p, raw) => {
@@ -4290,6 +4734,7 @@ try{
       const api = {
         /** 켜기: 칩 12개가 70ms 안에(시차 5ms) → 덮개가 30~100ms 에 고르게 → 빛 번짐은 lag 부터 ms 까지 */
         on(v = 1, ms = 900, opt = {}) {
+          if (v > .5 && !(lvl > .5)) c.sfx('ledOn');   // 효과음: 딸깍 · 띠링
           const T = Math.max(1, ms), k = Math.min(1, T / 100), lag = opt.lag ?? 0;
           const c0 = chipP.slice(), d0 = domeP, b0 = vb; lvl = v;
           return c.tween(T, (p, raw) => {
@@ -4383,7 +4828,7 @@ try{
       let b = 0;
       return {
         /** 아래로 +420 미끄러지며 사라짐(900 in). 되돌리기는 장면 복원이 맡는다 */
-        lift(ms = 900, dy = 420) { return c.a(el, [{ transform: 'translateY(0px)', opacity: 1 }, { transform: `translateY(${dy}px)`, opacity: 0 }], { dur: ms, ease: 'in' }).finished; },
+        lift(ms = 900, dy = 420) { c.sfx('whoosh', 0, ms, .8); return c.a(el, [{ transform: 'translateY(0px)', opacity: 1 }, { transform: `translateY(${dy}px)`, opacity: 0 }], { dur: ms, ease: 'in' }).finished; },
         /** 뒤에서 켜진 빛이 막을 통해 은은히 비침 */
         backlight(v = 1, ms = 600) { const b0 = b; return c.tween(ms, p => { b = lerp(b0, v, p); bl.setAttribute('opacity', r2(b)); }); },
         tag(t) { if (tag) tag.textContent = t; },
@@ -4572,6 +5017,7 @@ try{
       el: g,
       /** 훑기: 'lr' 왼쪽 → 오른쪽 / 'rl' */
       scan(dir = o.dir || 'lr', ms = o.ms ?? 1200) {
+        c.sfx('scan', 0, ms);
         lastDir = dir; cur = 1; g.setAttribute('opacity', 1);
         return c.tween(ms, p => {
           const w = aw * p;
@@ -5177,9 +5623,11 @@ try{
       const st = { speed: o.speed || 0, ang: o.angle || 0, xray: o.xray || 0, heat: o.heat || 0, blur: -1 };
       const red = c.reduced ? 1 / 3 : 1;
       let wind = null, windGain = 1, windLink = false;
+      const snd = c.sfxLoop ? c.sfxLoop('fan') : null;   // 효과음: 바람 + 모터 웅~ (세기·높이 = 날개 speed)
       c.loop((t, dt) => {
         // 1.1 회전/s × 5날개: 60fps 프레임당 6.6°(날개 간격 72° 의 1/10) — 역회전(마차 바퀴) 착시 없음
         st.ang = (st.ang + dt * 360 * 1.1 * st.speed * red) % 360;
+        if (snd) snd.level(st.speed);
         if (blades) blades.setAttribute('transform', `rotate(${N(st.ang)})`);
         const b = N(clamp((st.speed - .7) / .3) * .06);
         if (blur && b !== st.blur) { blur.setAttribute('opacity', b); st.blur = b; }
@@ -5212,6 +5660,7 @@ try{
         },
         /** 「윙」 파동: 모터와 앞망 테두리 두 곳(과학: 소리는 두 곳에서 남) → [motorFx, guardFx] */
         hum(parent, opt = {}) {
+          if (snd) snd.whine(1);   // 「윙」 — 모터 소리가 또렷해짐
           if (!FX.soundWaves) return [];
           return ['hum-motor', 'hum-guard'].map((nm, i) => { const p = api.pt(nm, parent); return FX.soundWaves(c, parent, Object.assign({ origin: [p.x, p.y], arc: 360, mode: 'continuous', rate: 3, r0: .11 * G.D, width: [4, 1.5], opacity: [.8, .35], ms: 1600, phase: i * .17 }, opt)); });
         },
@@ -5321,9 +5770,10 @@ try{
       return {
         el, state: st,
         /** 레버 내림(+60) · 빵 +80 함께 */
-        down(ms = 280) { const l0 = st.lever, b0 = st.bread; return c.tween(ms, p => { setLever(lerp(l0, 60, p)); setBread(lerp(b0, 0, p)); }, { ease: 'in' }); },
+        down(ms = 280) { c.sfx('lever'); const l0 = st.lever, b0 = st.bread; return c.tween(ms, p => { setLever(lerp(l0, 60, p)); setBread(lerp(b0, 0, p)); }, { ease: 'in' }); },
         /** 튀어 오름: 빵 −120 까지 솟았다가 −90 에 섬(spring), 레버 0 */
         pop(ms = 520) {
+          c.sfx('toasterPop');
           const l0 = st.lever, b0 = st.bread, peak = -120, fin = BREAD_Y.popped;
           return c.tween(ms, (p, raw) => {
             const r = raw == null ? p : raw;
@@ -5333,7 +5783,7 @@ try{
           }, { ease: 'linear' });
         },
         /** 열선 #3a3a3c → #8a2a10 → 열 색 + 그라데이션 글로(필터 없음) */
-        heat(v = 1, ms = 1600) { const h0 = st.heat; return c.tween(ms, p => setHeat(lerp(h0, v, p)), { ease: 'inOut' }); },
+        heat(v = 1, ms = 1600) { if (v > st.heat) c.sfx('sizzle', 250, ms); const h0 = st.heat; return c.tween(ms, p => setHeat(lerp(h0, v, p)), { ease: 'inOut' }); },
         /** 빵 굽기: 열선 쪽 두 면부터 진해짐 */
         toast(v = 1, ms = 3000) { const t0 = st.toast; return c.tween(ms, p => setToast(lerp(t0, v, p)), { ease: 'linear' }); },
         xray(v = 1, ms = 800) { const x0 = st.xray; return c.tween(ms, p => { st.xray = lerp(x0, v, p); shells.forEach(s => s.setAttribute('opacity', N(1 - .82 * st.xray))); }, { ease: 'inOut' }); },
@@ -5410,6 +5860,7 @@ try{
           const lv = st.level * (strong ? 1 : .6);
           if (st.waves) (Array.isArray(st.waves) ? st.waves : [st.waves]).forEach(w => w && w.pulse && w.pulse(lv));
           if (st.cb) { try { st.cb(i, strong, lv); } catch (e) { console.error(e); } }
+          if (i < 8) c.sfx('kick', 0, strong, lv);   // 처음 8박(4초)만 쿵 / 톡 — 그 뒤엔 그림만 계속(설명 방해 방지)
         }
         const ms = (bt - i) * per * 1000;
         const env = ms < 55 ? Math.sin(ms / 55 * PI / 2) : Math.max(0, 1 - (ms - 55) / 125);   // 180ms 안에 1→최대→1
@@ -5425,7 +5876,7 @@ try{
           else if (onBeat && onBeat.pulse) st.waves = onBeat;
         },
         stop() { st.bpm = 0; },
-        led(on = 1, ms = 300) { const l0 = st.led; return c.tween(ms, p => { st.led = lerp(l0, on ? 1 : 0, p); halo.setAttribute('opacity', N(st.led * .7)); dot.setAttribute('fill', mix(L ? '#c7c7cc' : '#3a3a3c', '#ffffff', st.led)); }, { ease: 'out' }); },
+        led(on = 1, ms = 300) { c.sfx('tick', 0, .7, 1.4); const l0 = st.led; return c.tween(ms, p => { st.led = lerp(l0, on ? 1 : 0, p); halo.setAttribute('opacity', N(st.led * .7)); dot.setAttribute('fill', mix(L ? '#c7c7cc' : '#3a3a3c', '#ffffff', st.led)); }, { ease: 'out' }); },
         /** 우퍼 앞에서 소리 파동 만들기(편의): parent 안에 FX.soundWaves(beat) 를 만들고 박자에 묶음 */
         waves(parent, opt = {}) {
           if (!FX.soundWaves) return null;
@@ -5994,7 +6445,8 @@ try{
     drive(c, el, o = {}) {
       const rot = el.querySelector('.p-rotor'), win = el.querySelector('.p-windows');
       let sp = o.speed ?? 1, ang = o.angle ?? 0; const k = c.reduced ? 1 / 3 : 1;
-      c.loop((t, dt) => { ang = (ang + dt * 300 * sp * k) % 360; rot.setAttribute('transform', `rotate(${ang.toFixed(2)} ${GEN.cx} ${GEN.cy})`); });
+      const hum = c.sfxLoop ? c.sfxLoop('hum') : null;   // 효과음: 발전기 웅~
+      c.loop((t, dt) => { if (hum) hum.level(sp); ang = (ang + dt * 300 * sp * k) % 360; rot.setAttribute('transform', `rotate(${ang.toFixed(2)} ${GEN.cx} ${GEN.cy})`); });
       return {
         el,
         /** 회전 빠르기(1 = 1회전/1.2 s). 반환 Promise */
@@ -6193,6 +6645,7 @@ ${HOUSE.wins.map((p, i) => win(i, p)).join('')}
         el,
         /** 창을 켬(v 0..1), 창마다 stagger ms 시차. 300 ms, spring 1.06 */
         light(v = 1, stagger = 90, ms = 300) {
+          if (v > 0) c.sfx('lightsOn');   // 효과음: 딸깍 · 띵띵띵
           const to = v >= 1 ? WARM : mix(off, WARM, v);
           return Promise.all(wins.map((w, i) => {
             const d = i * stagger;
@@ -6668,6 +7121,7 @@ ${HOUSE.wins.map((p, i) => win(i, p)).join('')}
     const T = Math.max(...items.map(it => it.t1));
     const passItem = items[o.passItem ?? 0]; const passes = (o.passes || []).map(p => Object.assign({ done: false }, p));
     let arrived = false;
+    c.sfx('zap', o.delay || 0, o.dur ?? 2400);   // 효과음: 송전선을 타고 전달되는 웅~ 쉬익 지직 (왼쪽 → 오른쪽)
     const headAt = (it, s, a) => { const vis = s > 0 && s < it.L + headLen * .6; it.head.style.opacity = vis ? f2(.95 * k * a) : 0; it.hglow.style.opacity = vis ? f2(.45 * k * a) : 0; it.head.style.strokeDashoffset = f1(headLen - s); it.hglow.style.strokeDashoffset = f1(headLen - s); };
     const litAt = (it, s, op) => { const p = clamp(s / (it.L || 1)); it.lit.style.strokeDasharray = `${f2(p)} 2`; it.glow.style.strokeDasharray = `${f2(p)} 2`; it.lit.style.opacity = p > 0 ? f2(op * k) : 0; it.glow.style.opacity = p > 0 ? f2(.2 * k) : 0; };
     const finished = c.tween(T, (p, raw) => {
@@ -7250,7 +7704,7 @@ try{
       if (k === 1) await sk.grow('kin', 1000);
       if (k === 2) { sk.grow('heat', 700); await sk.grow('sound', 700, { delay: 250 }); }
       if (k === 3) {
-        sk.dim('all', 0.3);
+        sk.dim('all', 0.3); c.sfx('ding', 1500);
         await FX.proofStack(c, c.$('svg'), { sections: ['kin', 'heat', 'sound'].map(f => sk.section(f)), inSection: sk.section('in'), colX: [1600, 1716], eqX: 1676 }).finished;
       }
     },
@@ -7279,7 +7733,7 @@ try{
       await c.wait(900); c.data.b.on(1, 400, { warm: 400, lag: 100 }); await c.wait(100); c.data.b.drawRays(500, 25);
     },
     async go(c, k) {
-      if (k === 1) await c.data.t.level(0.45, 2400);
+      if (k === 1) { c.sfx('rise', 0, 2400); await c.data.t.level(0.45, 2400); }
       if (k === 2) {
         const hv = FX.heatVision(c, '#s07_bulb-fx', { spots: OBJ.bulb.spots({ x: 670, y: 150, s: 1 }, 1) });
         await hv.scan('lr', 900);
@@ -7317,7 +7771,8 @@ try{
     async go(c, k) {
       const sk = OBJ.drive('sankey', c, '#s08_loss-sk', { speed: 80 });
       if (k === 1) await sk.grow('heat', 1000);
-      if (k === 2) await OBJ.drive('bracket', c, '#s08_loss-br').draw(600);
+      if (k === 2) { c.sfx('zip', 0, 600); await OBJ.drive('bracket', c, '#s08_loss-br').draw(600); }
+      if (k === 3) c.sfx('ding', 300);
     },
   });
 })();
@@ -7378,12 +7833,12 @@ try{
     async enter(c) {
       const f = OBJ.drive('fan', c, '#s10_labels-fan'); f.speed(.35, 600);
       const L = c.data.L = OBJ.drive('loupe', c, '#' + LL.id), R = c.data.R = OBJ.drive('loupe', c, '#' + LR.id);
-      L.open(600, { delay: 1000 }); await R.open(600, { delay: 1100 });
+      c.sfx('pop', 1000); c.sfx('pop', 1100); L.open(600, { delay: 1000 }); await R.open(600, { delay: 1100 });
       L.lead(500); R.lead(500); L.glint(900); R.glint(900);
       c.every(() => { L.glint(900); R.glint(900); }, 5000);
     },
     async go(c, k) {
-      if (k === 1) { c.data.L.emph(); await c.data.R.emph(); }
+      if (k === 1) { c.sfx('ding'); c.data.L.emph(); await c.data.R.emph(); }
     },
   });
 })();
@@ -7422,7 +7877,7 @@ try{
       clk.reset({ align: flow });
       FX.gateTally(c, { flow, onCount: (v, info) => { n.textContent = info.holding ? info.last : v; } });
       clk.onFrame((t, fr) => arc.setAttribute('stroke-dashoffset', (1 - fr).toFixed(4)));
-      clk.onTick(tk => { if (tk <= 3) console.info(`[s11] ${tk}초째 세는 선 통과 = ${flow.crossed(0, tk - 1, tk)} (기대 30)`); });
+      clk.onTick(tk => { c.sfx('clock'); if (tk <= 3) console.info(`[s11] ${tk}초째 세는 선 통과 = ${flow.crossed(0, tk - 1, tk)} (기대 30)`); });
     },
   });
 })();
@@ -7443,14 +7898,15 @@ try{
     },
     enter(c) {
       c.data.j = OBJ.drive('unitCard', c, '#s12_1w-j'); c.data.s = OBJ.drive('unitCard', c, '#s12_1w-s');
-      c.reveal('#s12_1w-j', 'scale', { delay: 300 });
+      c.reveal('#s12_1w-j', 'scale', { delay: 300 }); c.sfx('pop', 300);
     },
     async go(c, k) {
-      if (k === 1) { c.reveal('#s12_1w-s', 'scale'); await c.data.s.ring.sweep(1000, { delay: 500 }); }
+      if (k === 3) c.sfx('chime', 200);
+      if (k === 1) { c.reveal('#s12_1w-s', 'scale'); c.sfx('pop'); c.sfx('clock', 1500); await c.data.s.ring.sweep(1000, { delay: 500 }); }
       if (k === 2) {
         c.hide(c.$$('#s12_1w-j, #s12_1w-s'), { dur: 400 });
         const toks = OBJ.equation.toks(c.$('#s12_1w-eq'), 0);
-        c.reveal(toks, 'blur', { stagger: 220, delay: 300 });
+        c.reveal(toks, 'blur', { stagger: 220, delay: 300 }); Array.from(toks).forEach((t, i) => c.sfx('pop', 300 + i * 220));
         await c.wait(1300);
       }
     },
@@ -7481,6 +7937,7 @@ try{
       const clk = c.data.clk = FX.clock(c); const arc = c.$('#s13_lanes-arc');
       clk.onFrame((t, f) => arc.setAttribute('stroke-dashoffset', (1 - f).toFixed(4)));
       c.data.L = [];
+      clk.onTick(() => c.sfx('clock'));
     },
     go(c, k) {
       const clk = c.data.clk;
@@ -7523,15 +7980,17 @@ try{
       const cv = FX.chunkConvert(c, '#s14_problem-out', {
         mix: [{ form: 'heat', per: 14 }, { form: 'light', per: 8 }, { form: 'kin', per: 8 }], seed: 4, delay: 200,
         exits: F.reduce((o, f) => (o[f] = { path: 'M380 620 C340 580 300 540 200 500 S-20 400 -80 360', speed: 600 }, o), {}),
-        onTake: () => { const el = cells[perm[n]]; if (el) { el.style.fill = 'var(--elec)'; el.style.stroke = 'var(--elec)'; c.a(el, [{ fillOpacity: 0 }, { fillOpacity: 1 }], { dur: 120 }); } n++; J.textContent = `${n} J`; },
+        onTake: () => { c.sfx('tick'); const el = cells[perm[n]]; if (el) { el.style.fill = 'var(--elec)'; el.style.stroke = 'var(--elec)'; c.a(el, [{ fillOpacity: 0 }, { fillOpacity: 1 }], { dur: 120 }); } n++; J.textContent = `${n} J`; },
       });
       const flow = FX.chunkFlow(c, '#s14_problem-in', { path: '#s14_problem-band', rate: 30, speed: 600, size: 12, clock: clk, prefill: 'onStart', convert: cv });
       clk.onFrame((t) => { rd.textContent = `${Math.min(t, 5).toFixed(1)} s`; arc.setAttribute('stroke-dashoffset', (1 - Math.min(t, 5) / 5).toFixed(4)); });
       await c.wait(800);
       clk.reset(); flow.stopAt(5); flow.start();
+      clk.onTick(() => c.sfx('clock'));
       await clk.runFor(5);
       const a = cv.audit();
       if (a.in !== 150 || n !== 150) console.error('[s14] 150 이 아님', a, n); else console.info('[s14] 150 = 150 확인');
+      c.sfx('chime');
       c.all([J, rd], [{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }], { dur: 500, ease: 'spring' });
     },
   });
@@ -7556,8 +8015,8 @@ try{
     },
     async go(c, k) {
       const g = OBJ.drive('cellGrid', c, '#s15_divide-g'), t = OBJ.drive('timeline', c, '#s15_divide-t');
-      if (k === 1) { c.hide('#s15_divide-n', { dur: 300 }); await g.resort(900); g.cut(350); t.draw(600, { delay: 200 }); await t.labels(60, { delay: 500 }); }
-      if (k === 2) await g.splitTo([[480, 632], [720, 632], [960, 632], [1200, 632], [1440, 632]]);
+      if (k === 1) { c.hide('#s15_divide-n', { dur: 300 }); c.sfx('whoosh', 0, 900, .8); await g.resort(900); c.sfx('snip'); g.cut(350); t.draw(600, { delay: 200 }); await t.labels(60, { delay: 500 }); }
+      if (k === 2) { c.sfx('whoosh', 0, 800, .9); await g.splitTo([[480, 632], [720, 632], [960, 632], [1200, 632], [1440, 632]]); }
       if (k === 3) {
         g.dimSlabs([2, 3, 4, 5], 0.3);
         const lab = c.$('#s15_divide-30'); c.a(lab, [{ opacity: 0 }, { opacity: 1 }], { dur: 300 });
@@ -7566,6 +8025,7 @@ try{
         await OBJ.drive('bracket', c, '#s15_divide-b').draw(500, { delay: 400 });
       }
       if (k === 4) await g.dimSlabs([2, 3, 4, 5], 1, 400);
+      if (k === 5) c.sfx('chime', 300);
     },
   });
 })();
@@ -7587,6 +8047,7 @@ try{
       const eq = c.$('#s16_formula-e'); OBJ.equation.cols(eq);
       const r0 = OBJ.equation.toks(eq, 0);
       r0.forEach((t, i) => { if (t.classList.contains('eq-op')) OBJ.equation.drawOp(c, t, { delay: 300 + i * 220 }); else c.reveal(t, 'rise', { delay: 300 + i * 220 }); });
+      r0.forEach((t, i) => { if (!t.classList.contains('eq-op')) c.sfx('pop', 300 + i * 220); });
     },
     async go(c, k) {
       const eq = c.$('#s16_formula-e');
@@ -7595,9 +8056,10 @@ try{
           if (t.classList.contains('eq-op')) { c.reveal(t, 'fade', { delay: 300 + i * 120 }); return; }
           c.a(t, [{ opacity: 0, transform: 'translateY(-30px)' }, { opacity: 1, transform: 'translateY(0px)' }], { dur: 500, delay: 300 + i * 120, ease: 'spring' });
         });
+        c.sfx('pop', 300); c.sfx('pop', 660); c.sfx('pop', 780);
         await c.wait(1100);
       }
-      if (k === 2) c.reveal(OBJ.equation.toks(eq, 2), 'rise', { stagger: 120 });
+      if (k === 2) { c.reveal(OBJ.equation.toks(eq, 2), 'rise', { stagger: 120 }); c.sfx('chime', 250); }
     },
   });
 })();
@@ -7625,11 +8087,13 @@ try{
       const rows = D.map((_, i) => c.$('#s17_table-r' + i));
       if (k === 2) {
         rows.forEach((r, i) => c.a(r.querySelector('.bar'), [{ opacity: 1, transform: 'scaleX(0)' }, { opacity: 1, transform: 'scaleX(1)' }], { dur: 900, delay: i * 120, ease: 'outQuint' }));
+        c.sfx('counter', 0, 1400);
         await c.wait(1500);
       }
       if (k === 3) {
         const order = D.map((d, i) => i).sort((a, b) => D[b][4] - D[a][4]);   // 2200 > 990 > 700 > 500 > 35
         order.forEach((idx, rank) => c.a(rows[idx], [{ transform: 'translateY(0px)' }, { transform: `translateY(${(rank - idx) * DY}px)` }], { dur: 1100, delay: rank * 60, ease: 'inOut' }));
+        c.sfx('whoosh', 0, 1100, .9); c.sfx('chime', 1300);
         await c.wait(1300);
       }
     },
@@ -7690,6 +8154,7 @@ try{
     async go(c, k) {
       const sk = OBJ.drive('sankey', c, '#s19_heat-sk');
       if (k === 1) { await sk.grow('in', 800); sk.grow('heat', 1000); await sk.grow('light', 700, { delay: 200 }); }
+      if (k === 2) c.sfx('ding', 400);
     },
   });
 })();
@@ -7710,16 +8175,16 @@ try{
     async enter(c) {
       const A = OBJ.drive('cellGrid', c, '#s20_87-a'), B = OBJ.drive('cellGrid', c, '#s20_87-b');
       const ta = c.$('#s20_87-na'), tb = c.$('#s20_87-nb');
-      A.fillOver(1000, { delay: 900, onCell: n => { ta.textContent = n; } });
-      await B.fillOver(1000, { delay: 900, onCell: n => { tb.textContent = n; } });
+      A.fillOver(1000, { delay: 900, onCell: n => { ta.textContent = n; c.sfx('tick', 0, 1.1, .8); } });
+      await B.fillOver(1000, { delay: 900, onCell: n => { tb.textContent = n; c.sfx('tick', 0, 1.35, 1.1); } });
     },
     async go(c, k) {
       if (k !== 1) return;
       const A = OBJ.drive('cellGrid', c, '#s20_87-a'), B = OBJ.drive('cellGrid', c, '#s20_87-b');
-      await B.ghostOnto(A, { cols: 4 });
+      c.sfx('whoosh', 0, 700, .8); await B.ghostOnto(A, { cols: 4 });
       A.diff({ fromCol: 4 }, { stagger: 8 });
       OBJ.drive('bracket', c, '#s20_87-br').draw(500, { delay: 300 });
-      await c.count('#s20_87-p', 0, 87, { dur: 1400, delay: 700 });   // (60 − 8) ÷ 60 = 0.8667
+      c.sfx('ding', 2200); await c.count('#s20_87-p', 0, 87, { dur: 1400, delay: 700 });   // (60 − 8) ÷ 60 = 0.8667
     },
   });
 })();
@@ -7750,7 +8215,7 @@ try{
         const fx = c.$('#s21_fans-fx');
         c.data.s1.wind(fx, { reach: 480, n: 5 }); c.data.s2.wind(fx, { reach: 1000, n: 7 });
         c.data.s1.speed(1, 1200, { ease: 'in' }); c.data.s2.speed(.45, 1200, { ease: 'in' });
-        OBJ.drive('bar', c, '#s21_fans-ba').grow(110, 800); OBJ.drive('bar', c, '#s21_fans-bb').grow(330, 900);
+        c.sfx('counter', 0, 900); OBJ.drive('bar', c, '#s21_fans-ba').grow(110, 800); OBJ.drive('bar', c, '#s21_fans-bb').grow(330, 900);
         c.data.r1.angle(5, 900); await c.data.r2.angle(60, 900);
       }
       if (k === 2) await FX.stampIn(c, '#s21_fans-st');
@@ -7798,7 +8263,7 @@ try{
         const fx = c.$('svg');
         [c.data.a, c.data.b].forEach(f => { f.wind(fx, { n: 5, reach: 440, spread: 36 }); f.speed(1, 900); });
         c.data.ra.angle(40, 900); c.data.rb.angle(40, 900);
-        OBJ.drive('bar', c, '#s22_fair-ba').grow(240, 800, { delay: 700 }); await OBJ.drive('bar', c, '#s22_fair-bb').grow(120, 800, { delay: 700 });
+        c.sfx('counter', 700, 900); OBJ.drive('bar', c, '#s22_fair-ba').grow(240, 800, { delay: 700 }); await OBJ.drive('bar', c, '#s22_fair-bb').grow(120, 800, { delay: 700 });
         await OBJ.drive('check', c, '#s22_fair-ck2').draw(400);
       }
     },
@@ -7817,7 +8282,7 @@ try{
         const r = c.$('#s23_amount-area'), t = c.$('#s23_amount-t');
         c.a(t, [{ opacity: 0 }, { opacity: 1 }], { dur: 300 });
         c.a('#s23_amount-alab', [{ opacity: 0, transform: 'scale(.9)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 700, delay: 900 });
-        await c.tween(2400, p => { r.setAttribute('width', (6 + 654 * p).toFixed(1)); t.textContent = `${(3 * p).toFixed(1)} h`; }, { ease: 'linear' });
+        c.sfx('rise', 0, 2400); await c.tween(2400, p => { r.setAttribute('width', (6 + 654 * p).toFixed(1)); t.textContent = `${(3 * p).toFixed(1)} h`; }, { ease: 'linear' });
       }
     },
   });
@@ -7854,16 +8319,16 @@ try{
       const r = c.$('#s24_example-area'), t = c.$('#s24_example-t');
       if (k === 1) {
         c.a(t, [{ opacity: 0 }, { opacity: 1 }], { dur: 300 });
-        await c.tween(2200, p => { r.setAttribute('width', (760 * p).toFixed(1)); t.textContent = `${(2 * p).toFixed(1)} h`; }, { ease: 'linear' });
+        c.sfx('rise', 0, 2200); await c.tween(2200, p => { r.setAttribute('width', (760 * p).toFixed(1)); t.textContent = `${(2 * p).toFixed(1)} h`; }, { ease: 'linear' });
       }
       if (k === 2) {
         const a = c.$('#s24_example-a');
         c.a(a, [{ opacity: 0, transform: 'scale(.8)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 700, ease: 'spring' });
-        await c.count(a, 0, 2000, { dur: 1200, fmt: v => `${Math.round(v)} Wh` });
+        c.sfx('chime', 1300); await c.count(a, 0, 2000, { dur: 1200, fmt: v => `${Math.round(v)} Wh` });
       }
       if (k === 3) {
         c.a('#s24_example-a', [{ opacity: 1 }, { opacity: 0 }], { dur: 300 });
-        await c.a('#s24_example-cut', [{ opacity: 0 }, { opacity: 1 }], { dur: 400 }).finished;
+        c.sfx('snip', 100); await c.a('#s24_example-cut', [{ opacity: 0 }, { opacity: 1 }], { dur: 400 }).finished;
       }
     },
   });
@@ -7888,6 +8353,7 @@ try{
       const bars = D.map((_, i) => c.$('#s25_who-b' + i));
       if (k === 3) {
         bars.forEach((b, i) => c.a(b, [{ transform: 'scaleX(0)' }, { transform: `scaleX(${Math.max(0.012, D[i][1] / WMAX)})` }], { dur: 900, delay: 500 + i * 150, ease: 'outQuint' }));
+        c.sfx('counter', 500, 900);
         await c.wait(1500);
       }
       if (k === 4) {
@@ -7895,6 +8361,7 @@ try{
         c.a(bh, [{ opacity: 1 }, { opacity: 0 }, { opacity: 1 }], { dur: 600 }); bh.textContent = '소비 전력 × 시간';
         D.forEach(([, W, m], i) => c.count('#s25_who-p' + i, 0, W * m, { dur: 1100, delay: i * 150, fmt: v => `${Math.round(v)}` }));
         bars.forEach((b, i) => c.a(b, [{ transform: `scaleX(${Math.max(0.012, D[i][1] / WMAX)})` }, { transform: `scaleX(${D[i][1] * D[i][2] / PMAX})` }], { dur: 1200, delay: 300, ease: 'inOut' }));
+        c.sfx('chime', 1400);
         await c.wait(1600);
       }
     },
@@ -7939,11 +8406,11 @@ try{
     async go(c, k) {
       if (k === 1) {
         const n = c.$('#s26_label-needle');
-        await c.tween(1300, p => n.setAttribute('transform', `rotate(${(162 * (1 - p) + 18 * p).toFixed(1)} 320 300)`), { ease: 'spring' });   // 1등급 가운데(18°)
+        c.sfx('sweepDown', 0, 1300); await c.tween(1300, p => n.setAttribute('transform', `rotate(${(162 * (1 - p) + 18 * p).toFixed(1)} 320 300)`), { ease: 'spring' });   // 1등급 가운데(18°)
         c.reveal('#s26_label-big', 'pop');
       }
       if (k === 2) {
-        c.a('#s26_label-hl', [{ opacity: 0 }, { opacity: 1 }], { dur: 400 });
+        c.sfx('ding'); c.a('#s26_label-hl', [{ opacity: 0 }, { opacity: 1 }], { dur: 400 });
         c.a('#s26_label-rw', [{ transform: 'scale(1)' }, { transform: 'scale(1.03)' }, { transform: 'scale(1)' }], { dur: 600, delay: 300, ease: 'spring' });
       }
     },
@@ -8007,9 +8474,10 @@ try{
         const bubs = ks.map(g => { const b = []; for (let i = 0; i < 7; i++) b.push({ el: U.el('circle', { cx: 114 + r() * 26, cy: 270, r: 2 + r() * 2.5, fill: '#fff', opacity: .9 }, g.querySelector('.p-bub')), ph: r() * 2, sp: 50 + r() * 40 }); return b; });
         const steams = ks.map(g => [0, 1, 2].map(i => U.el('path', { d: `M${14 - i * 6} ${50 - i * 4} c-14 -24 14 -40 0 -64 s14 -40 0 -64`, fill: 'none', stroke: '#c7c7cc', 'stroke-width': 5, 'stroke-linecap': 'round', opacity: 0 }, g.querySelector('.p-steam'))));
         const T0 = c.instant ? -3 : 0;
+        const bs = c.sfxLoop('boil'); c.sfx('tick', 0, .7, 1.6);
         c.loop(t => {
           const tt = t - T0;
-          const boil = U.clamp((tt - 1.2) / 1);
+          const boil = U.clamp((tt - 1.2) / 1); if (bs) bs.level(boil);
           bubs.forEach(b => b.forEach(x => { const y = 270 - ((tt * x.sp + x.ph * 60) % 120); x.el.setAttribute('cy', y.toFixed(1)); x.el.setAttribute('opacity', (boil * .9).toFixed(2)); }));
           const st = U.clamp((tt - 2.2) / .8);
           steams.forEach(s => s.forEach((p, i) => { const ph = (tt * .6 + i * .33) % 1; p.setAttribute('transform', `translate(${(Math.sin(tt * 1.3 + i) * 4).toFixed(1)} ${(-ph * 30).toFixed(1)})`); p.setAttribute('opacity', (st * .7 * (1 - ph)).toFixed(2)); }));
@@ -8018,7 +8486,7 @@ try{
       }
       if (k === 2) {
         const W = 700 / 1600;                                          // 1600 J → 700 px
-        c.tween(900, p => { c.$('#s28_kettle-ba').setAttribute('width', (1500 * W * p).toFixed(1)); c.$('#s28_kettle-bb').setAttribute('width', (1500 * W * p).toFixed(1)); }, { delay: 200 });
+        c.sfx('counter', 200, 900); c.tween(900, p => { c.$('#s28_kettle-ba').setAttribute('width', (1500 * W * p).toFixed(1)); c.$('#s28_kettle-bb').setAttribute('width', (1500 * W * p).toFixed(1)); }, { delay: 200 });
         await c.wait(1000);
         await c.tween(500, p => c.$('#s28_kettle-bx').setAttribute('width', (100 * W * p).toFixed(1)));   // 1500 + 100 = 1600
       }
@@ -8044,6 +8512,7 @@ try{
     },
     go(c, k) {
       if (k !== 1) return;
+      c.sfx('puff'); c.every(() => c.sfx('puff'), 2600);
       const ms = c.$$('#s29_why-co2 > g'), r = U.rng(11);
       // 연기 기둥처럼: 분자마다 속도·퍼짐·크기가 달라 올라갈수록 넓게 흩어진다(결정적 난수)
       const P = ms.map((m, i) => ({ m, ph: (i * 0.618) % 1, sp: 0.1 + r() * 0.08, sx: (r() - .5) * 520, sw: 16 + r() * 34, rot: r() * 6, k: 0.62 + r() * 0.4 }));
@@ -8104,7 +8573,7 @@ try{
     async go(c, k) {
       if (k !== 1) return;
       const b = c.data.b, P = OBJ.bulb.pts(B);
-      c.hide(c.$$('#s31_end-e, #s31_end-q'), { dur: 400 });
+      c.hide(c.$$('#s31_end-e, #s31_end-q'), { dur: 400 }); c.sfx('chime', 1500);
       b.print(0.95, 900); b.bloom(null, 0.3, 900);
       await c.camera('#s31_end-svg', [P.print[0] - 180, P.print[1] - 115, 360, 202.5], { dur: 1400 });
     },
