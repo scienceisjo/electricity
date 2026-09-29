@@ -261,6 +261,11 @@ body.toc #toc{display:flex}
 #black{position:fixed;inset:0;z-index:60;background:#1c160d;display:none;align-items:center;justify-content:center;color:#f4eee3;font-family:var(--jua);font-size:54px}
 body.black #black{display:flex}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ── 소리 단추·알림 ── */
+#hud button.off{opacity:.5}
+#sfxToast{position:fixed;left:50%;bottom:74px;transform:translate(-50%,8px);z-index:80;padding:9px 20px;border-radius:9999px;background:rgba(46,35,21,.92);color:#fffdf8;font-family:var(--body);font-size:18px;font-weight:800;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+#sfxToast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
@@ -280,8 +285,8 @@ body.black #black{display:flex}
    <li><span>🛝</span>미끄럼틀<small>병렬 전압은 왜 같을까</small></li>
    <li><span>💡</span>전구 실험<small>밝기 · 빼 보기</small></li>
   </ul>
-  <div class="cv-keys k-tea">넘기기 <kbd>→</kbd><kbd>스페이스</kbd> · 뒤로 <kbd>←</kbd> · 대본 <kbd>T</kbd> · 판서 <kbd>P</kbd> · 목차 <kbd>G</kbd> · 전체 화면 <kbd>F</kbd> · 화면 가리기 <kbd>B</kbd></div>
-  <div class="cv-keys k-stu">넘기기 <kbd>화면 누르기</kbd><kbd>→</kbd> · 뒤로 <kbd>←</kbd> · 목차 <kbd>☰</kbd> · 전체 화면 <kbd>⛶</kbd><br>빈칸 옆 <b style="color:var(--bn)">파란 번호</b>가 학습지 5의 빈칸 번호예요.</div>
+  <div class="cv-keys k-tea">넘기기 <kbd>→</kbd><kbd>스페이스</kbd> · 뒤로 <kbd>←</kbd> · 대본 <kbd>T</kbd> · 판서 <kbd>P</kbd> · 목차 <kbd>G</kbd> · 전체 화면 <kbd>F</kbd> · 화면 가리기 <kbd>B</kbd><br>소리 켜고 끄기 <kbd>M</kbd> <span style="color:var(--mute)">(처음엔 화면을 한 번 눌러야 소리가 나요)</span></div>
+  <div class="cv-keys k-stu">넘기기 <kbd>화면 누르기</kbd><kbd>→</kbd> · 뒤로 <kbd>←</kbd> · 목차 <kbd>☰</kbd> · 전체 화면 <kbd>⛶</kbd><br>빈칸 옆 <b style="color:var(--bn)">파란 번호</b>가 학습지 5의 빈칸 번호예요. 소리는 오른쪽 아래 <kbd>🔇</kbd> 단추로 켜요.</div>
  </div>
  <div class="cv-r">
   <svg viewBox="0 0 560 470" role="img" aria-label="전구 두 개를 한 줄로 이은 회로와 나란히 이은 회로">
@@ -730,6 +735,7 @@ body.black #black{display:flex}
  <button id="bToc" title="목차 (G)">☰</button>
  <button id="bPen" title="판서 (P)">🖊</button>
  <button id="bScr" title="대본 (T)">📝</button>
+ <button id="bSnd" title="소리 켜기/끄기 (M)" aria-pressed="false">🔊</button>
  <button id="bFs" title="전체 화면 (F)">⛶</button>
 </div>
 
@@ -746,6 +752,410 @@ const f2=x=>x.toFixed(2), f1=x=>(Math.round(x*10)/10).toFixed(1);
 const STU=(()=>{ const q=/(?:^|[?&])s=1(?:&|$)/.test(location.search); let t=false;
   try{ t=localStorage.getItem('sc_teacher')==='1'; }catch(e){} return q&&!t; })();
 if(STU) document.body.classList.add('stu');
+
+/* ══════════ 효과음 — 소리 파일 0개, WebAudio 로 그 자리에서 만든다(소비 전력 강의와 같은 합성기) ══════════
+   빈칸이 채워질 때 「띠링」, 회로 끊기·전구 켜짐·과부하, 세는 선을 지나는 톡톡…
+   브라우저 정책상 첫 클릭·키 입력 뒤부터 나고, M 키·오른쪽 아래 🔊 로 끄고 켠다. 학생 모드(?s=1)는 기본 꺼짐. */
+window.Deck={STUDENT:STU};
+/* ═══════════════════════════════════════════════════════════════
+   03_sfx.js — 효과음(WebAudio 합성). 소리 파일 0개 · 오프라인 OK
+   · 장면에서는 c.sfx('blank', 지연ms) · c.sfxLoop('fan') 로 부른다(core.js 가 순간 모드·건너뛰기·장면 나감을 알아서 처리)
+   · 브라우저 정책상 첫 클릭·키 입력 뒤부터 소리가 난다. M 키·HUD 단추로 켜고 끔(기기에 기억). 학생 모드(?s=1)는 기본 꺼짐
+   · 점검: ?sfx=demo → 모든 소리를 눌러 들어 보는 패널 / SFX.analyze('blank') → 오프라인 렌더로 세기·길이 점검
+   · 주소 도우미: ?sound=1|0 강제 켜기·끄기 · ?nosfx=1 완전 끔 · ?sfxtest=1 클릭 없이 잠금 해제(자동 점검용)
+   ═══════════════════════════════════════════════════════════════ */
+window.SFX = (function () {
+  'use strict';
+  const Q = new URLSearchParams(location.search);
+  const D = window.Deck || {};
+  const OFF = !!D.STILL || Q.get('nosfx') === '1';
+  const KEY = 'sc_sfx';
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+  let on = !D.STUDENT;
+  try { const s = localStorage.getItem(KEY); if (s === '1' || s === '0') on = s === '1'; } catch (e) {}
+  if (Q.get('sound') === '1') on = true; else if (Q.get('sound') === '0') on = false;
+  let ac = null, out = null, X = null, unlocked = Q.get('sfxtest') === '1', broken = false;
+  const pending = new Set();
+
+  /* ── 잡음(결정적) ── */
+  function noiseBuf(actx) {
+    const n = Math.floor(actx.sampleRate * 2), b = actx.createBuffer(1, n, actx.sampleRate), d = b.getChannelData(0);
+    let s = 12345;
+    for (let i = 0; i < n; i++) { s = (s * 1664525 + 1013904223) >>> 0; d[i] = s / 2147483648 - 1; }
+    return b;
+  }
+  function ensure() {
+    if (OFF || broken || !unlocked) return null;
+    if (!ac) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { broken = true; return null; }
+      try { ac = new AC(); } catch (e) { broken = true; return null; }
+      const comp = ac.createDynamicsCompressor();
+      comp.threshold.value = -14; comp.knee.value = 18; comp.ratio.value = 4; comp.attack.value = .004; comp.release.value = .18;
+      out = ac.createGain(); out.gain.value = on ? .9 : 0;
+      out.connect(comp); comp.connect(ac.destination);
+      X = { ac, dest: out, nz: noiseBuf(ac) };
+    }
+    if (ac.state === 'suspended' && on && !document.hidden) ac.resume().catch(() => {});
+    return X;
+  }
+
+  /* ── 소리 부품 ── */
+  function env(g, t, a, d, peak) {
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(Math.max(0.0002, peak), t + a);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + a + d);
+  }
+  function route(x, node, pan) {
+    if (pan && x.ac.createStereoPanner) { const p = x.ac.createStereoPanner(); p.pan.value = clamp(pan, -1, 1); node.connect(p); p.connect(x.dest); return; }
+    node.connect(x.dest);
+  }
+  /** 톤: f(→f2) Hz, a 올림 s, d 사라짐 s, g 세기, type, vib[Hz, 깊이Hz], lp 저역통과, pan */
+  function tone(x, t, o) {
+    const ac = x.ac, osc = ac.createOscillator(), g = ac.createGain();
+    const a = o.a ?? .004, d = o.d ?? .3;
+    osc.type = o.type || 'sine';
+    osc.frequency.setValueAtTime(o.f, t);
+    if (o.f2) osc.frequency.exponentialRampToValueAtTime(o.f2, t + a + d);
+    if (o.vib) {
+      const l = ac.createOscillator(), lg = ac.createGain();
+      l.frequency.value = o.vib[0]; lg.gain.value = o.vib[1]; l.connect(lg); lg.connect(osc.frequency); l.start(t); l.stop(t + a + d + .06);
+    }
+    env(g, t, a, d, o.g ?? .2);
+    osc.connect(g);
+    let last = g;
+    if (o.lp) { const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = o.lp; g.connect(f); last = f; }
+    route(x, last, o.pan);
+    osc.start(t); osc.stop(t + a + d + .07);
+  }
+  /** 잡음: type(bandpass|highpass|lowpass), f(→f2) Hz, q */
+  function noise(x, t, o) {
+    const ac = x.ac, s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    const a = o.a ?? .003, d = o.d ?? .1;
+    s.buffer = x.nz; s.loop = true;
+    f.type = o.type || 'bandpass'; f.frequency.setValueAtTime(o.f || 2000, t);
+    if (o.f2) f.frequency.exponentialRampToValueAtTime(o.f2, t + a + d);
+    f.Q.value = o.q ?? 1;
+    env(g, t, a, d, o.g ?? .15);
+    s.connect(f); f.connect(g); route(x, g, o.pan);
+    s.start(t, (t * 7.13) % 1.5); s.stop(t + a + d + .07);
+  }
+  const PART = [[1, 1, 1], [2.76, .3, .55], [5.4, .1, .3], [8.93, .04, .18]];
+  function bell(x, t, f, g = .3, d = 1.1) { PART.forEach(([r, w, k]) => tone(x, t, { f: f * r, a: .002, d: d * k, g: g * w })); }
+  function tickAt(x, t, f, g) {
+    tone(x, t, { f, a: .001, d: .014, g });
+    noise(x, t, { a: .001, d: .006, g: g * .9, type: 'bandpass', f: f * 1.6, q: 1.5 });
+  }
+
+  /* ═════════ 소리 목록: (x, t, a, b) ═════════ */
+  const SCALE = [0, 2, 4, 7, 9, 12, 9, 7, 4, 2];       // 빈칸이 채워질 때마다 음계가 오르내린다
+  const S = {
+    /** 빈칸이 채워짐 — 마림바 같은 「띠링」. i = 몇 번째 빈칸(음 높이 순서) */
+    blank(x, t, i) {
+      const f = 659.25 * Math.pow(2, SCALE[(i | 0) % 10] / 12);
+      tone(x, t, { f, a: .003, d: .34, g: .24 });
+      tone(x, t, { f: f * 2, a: .002, d: .16, g: .07 });
+      tone(x, t, { f: f * 4.02, a: .001, d: .05, g: .025 });
+      noise(x, t, { a: .001, d: .012, g: .05, type: 'highpass', f: 3500 });
+    },
+    /** 무언가 톡 나타남 */
+    pop(x, t) {
+      tone(x, t, { f: 420, f2: 840, a: .002, d: .1, g: .2 });
+      noise(x, t, { a: .001, d: .02, g: .05, type: 'highpass', f: 3000 });
+    },
+    /** 클릭으로 다음 단계 — 아주 작은 톡 */
+    step(x, t) { tone(x, t, { f: 1500, f2: 900, type: 'triangle', a: .001, d: .045, g: .075 }); noise(x, t, { a: .001, d: .01, g: .03, f: 3000, q: 1.5 }); },
+    /** 다음 장으로 — 부드러운 슥 */
+    slide(x, t) {
+      noise(x, t, { a: .12, d: .5, g: .2, f: 400, f2: 2600, q: .8 });
+      tone(x, t, { f: 220, f2: 110, a: .005, d: .25, g: .09 });
+    },
+    /** 휙 — dur ms, gain */
+    whoosh(x, t, dur = 700, g = 1) {
+      const d = (dur || 700) / 1000;
+      noise(x, t, { a: d * .4, d: d * .6, g: .2 * (g ?? 1), f: 350, f2: 2400, q: .7 });
+    },
+    /** 숫자 굴러감 — 오르는 째깍째깍 */
+    counter(x, t, dur = 1200) {
+      const n = clamp(Math.round((dur || 1200) / 70), 4, 22), sp = (dur || 1200) / 1000 / n;
+      for (let i = 0; i < n; i++) tickAt(x, t + i * sp, 1500 + i * (900 / n), .07);
+    },
+    /** 세는 선을 조각이 지나감(가이거처럼) — p 음높이, g 세기 */
+    tick(x, t, p = 1, g = 1) { tickAt(x, t, 2100 * (p || 1), .1 * (g ?? 1)); },
+    /** 1초가 지남 — 나무 시계 */
+    clock(x, t) {
+      tone(x, t, { f: 1050, f2: 620, type: 'triangle', a: .001, d: .06, g: .17 });
+      noise(x, t, { a: .001, d: .012, g: .08, f: 2600, q: 2 });
+    },
+    /** 쾅(도장) */
+    thunk(x, t) {
+      tone(x, t, { f: 150, f2: 44, a: .002, d: .24, g: .5 });
+      noise(x, t, { a: .002, d: .1, g: .28, type: 'lowpass', f: 700, f2: 200 });
+    },
+    /** 땡 */
+    ding(x, t, k = 1) { bell(x, t, 1318.5 * (k || 1), .32, 1.1); },
+    /** 딩동딩동 ↑ (정답·완성) */
+    chime(x, t) { [1046.5, 1318.5, 1568, 2093].forEach((f, i) => bell(x, t + i * .085, f, .3, .9)); },
+    /** 명판 뒤집기 */
+    flip(x, t) {
+      noise(x, t, { a: .002, d: .03, g: .18, f: 3200, q: 1.5 });
+      noise(x, t + .12, { a: .002, d: .03, g: .18, f: 2600, q: 1.5 });
+      noise(x, t + .02, { a: .03, d: .16, g: .09, f: 900, f2: 2600 });
+    },
+    /** 토스터 레버 내림 — 철컥 */
+    lever(x, t) {
+      tone(x, t, { f: 260, f2: 75, type: 'triangle', a: .002, d: .14, g: .4 });
+      noise(x, t, { a: .002, d: .06, g: .22, type: 'lowpass', f: 1200, f2: 400 });
+      tone(x, t + .01, { f: 1900, f2: 1200, a: .001, d: .05, g: .04 });
+    },
+    /** 토스터 빵 튀어 오름 — 텅~ 팅! */
+    toasterPop(x, t) {
+      tone(x, t, { f: 150, f2: 55, a: .002, d: .12, g: .32 });
+      tone(x, t + .02, { f: 210, f2: 640, type: 'triangle', a: .005, d: .32, g: .11, vib: [22, 26] });
+      noise(x, t + .02, { a: .01, d: .2, g: .05, f: 2400, q: 1.2 });
+      bell(x, t + .16, 2637, .22, .9);
+    },
+    /** 열선이 달아오르며 탁탁 — dur ms */
+    sizzle(x, t, dur = 2000) {
+      const d = (dur || 2000) / 1000, n = Math.round(d * 34);
+      for (let i = 0; i < n; i++) noise(x, t + Math.random() * d, { a: .001, d: .009, g: .11 * (1 - i / n * .3), f: 2500 + Math.random() * 3500, q: 1.4, pan: (Math.random() - .5) * .6 });
+    },
+    /** 스피커 박 — strong 이면 큰 북, 아니면 작은 북 + 심벌 */
+    kick(x, t, strong, lv) {
+      const k = lv == null ? 1 : lv, g = (strong ? .5 : .3) * k;
+      tone(x, t, { f: strong ? 150 : 130, f2: 44, a: .002, d: strong ? .2 : .14, g });
+      noise(x, t, { a: .001, d: .05, g: g * .5, type: 'lowpass', f: 900, f2: 300 });
+      if (!strong) noise(x, t + .02, { a: .001, d: .04, g: .045, type: 'highpass', f: 7000 });
+    },
+    /** 백열전구 켜짐 — 딸깍 · 웅 · 팅 */
+    bulbOn(x, t) {
+      noise(x, t, { a: .001, d: .006, g: .12, f: 3000, q: 1.5 });
+      tone(x, t + .02, { f: 98, type: 'triangle', a: .05, d: .55, g: .08, lp: 500 });
+      noise(x, t + .03, { a: .08, d: .5, g: .05, type: 'lowpass', f: 300, f2: 3000 });
+      bell(x, t + .05, 1760, .12, .8);
+    },
+    /** LED 켜짐 — 딸깍 · 띠링 */
+    ledOn(x, t) {
+      noise(x, t, { a: .001, d: .006, g: .1, f: 3400, q: 1.5 });
+      tone(x, t + .01, { f: 1568, f2: 2093, a: .003, d: .2, g: .1 });
+      bell(x, t + .03, 2349, .1, .7);
+    },
+    /** 집 창문 켜짐 — 딸깍 · 띵띵띵 */
+    lightsOn(x, t) {
+      noise(x, t, { a: .001, d: .01, g: .08, f: 2600, q: 1.5 });
+      [1568, 1760, 1976].forEach((f, i) => bell(x, t + .04 + i * .09, f, .15, .7));
+    },
+    /** 송전선을 타고 전달 — 웅~ + 쉬익 + 지직, 소리가 왼쪽에서 오른쪽으로 움직임 */
+    zap(x, t, dur = 2400) {
+      const ac = x.ac, d = (dur || 2400) / 1000;
+      const o = ac.createOscillator(), lp = ac.createBiquadFilter(), g = ac.createGain();
+      o.type = 'sawtooth'; o.frequency.setValueAtTime(55, t); o.frequency.exponentialRampToValueAtTime(230, t + d * .8);
+      lp.type = 'lowpass'; lp.frequency.setValueAtTime(260, t); lp.frequency.exponentialRampToValueAtTime(1400, t + d);
+      g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.15, t + d * .15); g.gain.setValueAtTime(.15, t + d * .7); g.gain.exponentialRampToValueAtTime(.0001, t + d + .5);
+      o.connect(lp); lp.connect(g);
+      if (ac.createStereoPanner) { const p = ac.createStereoPanner(); p.pan.setValueAtTime(-.85, t); p.pan.linearRampToValueAtTime(.85, t + d); g.connect(p); p.connect(x.dest); } else g.connect(x.dest);
+      o.start(t); o.stop(t + d + .6);
+      noise(x, t, { a: d * .3, d: d * .7, g: .07, f: 600, f2: 4200, q: .6 });
+      for (let i = 0, n = Math.round(d * 22); i < n; i++) noise(x, t + Math.random() * d, { a: .001, d: .008, g: .045, type: 'highpass', f: 5000, pan: -1 + 2 * Math.random() });
+    },
+    /** 열 보기 훑기 — 스캐너 */
+    scan(x, t, dur = 900) {
+      const d = (dur || 900) / 1000;
+      tone(x, t, { f: 280, f2: 1250, a: .04, d, g: .09, vib: [9, 14] });
+      tone(x, t, { f: 283, f2: 1262, type: 'triangle', a: .04, d, g: .04, pan: .4 });
+    },
+    /** 온도계가 오름 — 조용한 상승음 */
+    rise(x, t, dur = 2400) { tone(x, t, { f: 260, f2: 640, a: .15, d: (dur || 2400) / 1000, g: .07, vib: [5, 6] }); },
+    /** 바늘이 내려옴 — 슬라이드 휘슬 + 톡 */
+    sweepDown(x, t, dur = 1300) {
+      const d = (dur || 1300) / 1000;
+      tone(x, t, { f: 1100, f2: 380, a: .02, d, g: .09 });
+      tickAt(x, t + d, 1800, .08);
+    },
+    /** 푸슉(연기) */
+    puff(x, t) { noise(x, t, { a: .05, d: .5, g: .22, type: 'lowpass', f: 1000, f2: 300, q: .4 }); },
+    /** 싹둑 싹둑 */
+    snip(x, t) {
+      [0, .07, .14].forEach(o => { noise(x, t + o, { a: .001, d: .012, g: .18, f: 5000, q: 2 }); tone(x, t + o, { f: 3000, a: .001, d: .02, g: .03 }); });
+    },
+    /** 슥(선 그리기) */
+    zip(x, t, dur = 500) { noise(x, t, { a: .02, d: Math.min(.3, (dur || 500) / 1000 * .5), g: .12, f: 1500, f2: 4200, q: 1 }); },
+    /** 반짝 */
+    spark(x, t) { for (let i = 0; i < 4; i++) tone(x, t + i * .04 + Math.random() * .02, { f: 2200 + Math.random() * 2000, a: .001, d: .08, g: .04 }); },
+  };
+
+  /* ═════════ 이어지는 소리(선풍기·발전소·끓는 물) — level(0..1) 로 세기 조종 ═════════ */
+  function buildFan(x) {
+    const ac = x.ac, out = ac.createGain(); out.gain.value = 0; out.connect(x.dest);
+    const ns = ac.createBufferSource(); ns.buffer = x.nz; ns.loop = true;
+    const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 500; bp.Q.value = .7;
+    const gw = ac.createGain(); gw.gain.value = 0;
+    const lfo = ac.createOscillator(), lg = ac.createGain(); lfo.frequency.value = 3; lg.gain.value = 0; lfo.connect(lg); lg.connect(gw.gain);   // 날개가 바람을 자르는 울렁임
+    ns.connect(bp); bp.connect(gw); gw.connect(out);
+    const m1 = ac.createOscillator(), m2 = ac.createOscillator(), gm = ac.createGain(), lp = ac.createBiquadFilter();   // 모터 웅~
+    m1.type = 'triangle'; m1.frequency.value = 50; m2.type = 'sine'; m2.frequency.value = 100; gm.gain.value = 0;
+    lp.type = 'lowpass'; lp.frequency.value = 700; m1.connect(gm); m2.connect(gm); gm.connect(lp); lp.connect(out);
+    ns.start(0, .3); lfo.start(); m1.start(); m2.start();
+    let lv = 0, wh = 0;
+    const apply = () => {
+      const T = ac.currentTime, v = clamp(lv, 0, 1.1), tc = .07;
+      gw.gain.setTargetAtTime(v * v * .095, T, tc); lg.gain.setTargetAtTime(v * v * .035, T, tc);
+      lfo.frequency.setTargetAtTime(2 + 7 * v, T, tc);
+      bp.frequency.setTargetAtTime(380 + 900 * v, T, tc);
+      m1.frequency.setTargetAtTime(46 + 70 * v, T, tc); m2.frequency.setTargetAtTime(92 + 140 * v, T, tc);
+      gm.gain.setTargetAtTime(v > .02 ? .01 + .034 * v + wh * .04 : 0, T, tc);
+      out.gain.setTargetAtTime(v > .01 ? 1 : 0, T, .05);
+    };
+    return {
+      level(v) { lv = v; apply(); }, whine(v) { wh = v; apply(); },
+      stop() {
+        const T = ac.currentTime; out.gain.cancelScheduledValues(T); out.gain.setTargetAtTime(0, T, .08);
+        setTimeout(() => { try { ns.stop(); lfo.stop(); m1.stop(); m2.stop(); out.disconnect(); } catch (e) {} }, 500);
+      },
+    };
+  }
+  function buildHum(x) {   // 발전소 웅~
+    const ac = x.ac, out = ac.createGain(); out.gain.value = 0; out.connect(x.dest);
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 220; lp.connect(out);
+    const o1 = ac.createOscillator(), o2 = ac.createOscillator(); o1.type = 'sawtooth'; o1.frequency.value = 50; o2.type = 'sine'; o2.frequency.value = 100;
+    const g2 = ac.createGain(); g2.gain.value = .5; o1.connect(lp); o2.connect(g2); g2.connect(lp);
+    const ns = ac.createBufferSource(); ns.buffer = x.nz; ns.loop = true; const nl = ac.createBiquadFilter(); nl.type = 'lowpass'; nl.frequency.value = 380; const ng = ac.createGain(); ng.gain.value = .5;
+    ns.connect(nl); nl.connect(ng); ng.connect(lp);
+    o1.start(); o2.start(); ns.start(0, .7);
+    return {
+      level(v) { const T = ac.currentTime; out.gain.setTargetAtTime(clamp(v, 0, 1.1) * .06, T, .15); o1.frequency.setTargetAtTime(44 + 8 * v, T, .3); },
+      stop() { const T = ac.currentTime; out.gain.setTargetAtTime(0, T, .1); setTimeout(() => { try { o1.stop(); o2.stop(); ns.stop(); out.disconnect(); } catch (e) {} }, 500); },
+    };
+  }
+  function buildBoil(x) {   // 주전자 끓는 소리: 쉬이~ + 보글보글
+    const ac = x.ac, out = ac.createGain(); out.gain.value = 0; out.connect(x.dest);
+    const ns = ac.createBufferSource(); ns.buffer = x.nz; ns.loop = true; const hp = ac.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 3200;
+    const gh = ac.createGain(); gh.gain.value = 0; ns.connect(hp); hp.connect(gh); gh.connect(out); ns.start(0, .2);
+    let lv = 0; const rnd = U_rng(7);
+    const id = setInterval(() => {
+      if (lv < .05 || !on) return;
+      if (rnd() < .15 + lv * .5) { const T = ac.currentTime + .005, f0 = 260 + rnd() * 260; tone({ ac, dest: out, nz: x.nz }, T, { f: f0, f2: f0 * 1.9, a: .003, d: .07, g: .1 * lv, pan: (rnd() - .5) * .8 }); }
+    }, 70);
+    return {
+      level(v) { lv = clamp(v, 0, 1); const T = ac.currentTime; gh.gain.setTargetAtTime(lv * .05, T, .4); out.gain.setTargetAtTime(lv > .01 ? 1 : 0, T, .1); },
+      stop() { clearInterval(id); const T = ac.currentTime; out.gain.setTargetAtTime(0, T, .1); setTimeout(() => { try { ns.stop(); out.disconnect(); } catch (e) {} }, 500); },
+    };
+  }
+  function U_rng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+  const LOOPS = { fan: buildFan, hum: buildHum, boil: buildBoil };
+  const NULL_LOOP = { level() {}, whine() {}, stop() {} };
+
+  /* ═════════ 바깥 API ═════════ */
+  let blankN = 0;
+  const tickLog = [];
+  function play(name, a, b) {
+    if (OFF || !on) return;
+    const x = ensure(); if (!x) return;
+    const f = S[name]; if (!f) { console.warn('[SFX] 없는 소리:', name); return; }
+    if (name === 'blank') a = blankN++;
+    if (name === 'tick') {   // 빽빽할수록(100 W 레인) 톡톡이 작고 높은 지지직으로 — 촘촘한 정도에 따라 세기·음높이 자동 조절
+      const now = performance.now(); tickLog.push(now); while (tickLog.length && now - tickLog[0] > 250) tickLog.shift();
+      const n = tickLog.length;
+      b = (b ?? 1) / (1 + n * .22); a = (a ?? 1) * (1 + Math.min(n, 30) * .012);
+    }
+    try { f(x, x.ac.currentTime + .008, a, b); } catch (e) { console.error('[SFX]', name, e); }
+  }
+  function loop(kind, o) {
+    const build = LOOPS[kind];
+    if (OFF || !build) return NULL_LOOP;
+    const h = {
+      built: null, lvl: 0, wh: 0, dead: false,
+      level(v) { h.lvl = v; if (h.built) h.built.level(v); },
+      whine(v) { h.wh = v; if (h.built && h.built.whine) h.built.whine(v); },
+      stop() { h.dead = true; pending.delete(h); if (h.built) { h.built.stop(); h.built = null; } },
+      tryBuild() {
+        if (h.built || h.dead) return;
+        const x = ensure(); if (!x) return;
+        try { h.built = build(x, o || {}); h.built.level(h.lvl); if (h.wh && h.built.whine) h.built.whine(h.wh); }
+        catch (e) { console.error('[SFX loop]', kind, e); h.dead = true; }
+      },
+    };
+    pending.add(h); h.tryBuild();
+    return h;
+  }
+  function unlock() {
+    if (unlocked) return;
+    unlocked = true;
+    if (!OFF) { ensure(); pending.forEach(h => h.tryBuild()); }
+  }
+  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, unlock, { capture: true, once: false, passive: true }));
+  document.addEventListener('visibilitychange', () => {
+    if (!ac) return;
+    if (document.hidden) ac.suspend().catch(() => {}); else if (on) ac.resume().catch(() => {});
+  });
+
+  let toastEl = null, toastT = 0;
+  function toast(v) {
+    if (!document.body) return;
+    if (!toastEl) { toastEl = document.createElement('div'); toastEl.id = 'sfxToast'; document.body.appendChild(toastEl); }
+    toastEl.textContent = v ? '소리 켜짐' : '소리 꺼짐';
+    toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), 1400);
+  }
+  function toggle(v) {
+    on = v == null ? !on : !!v;
+    try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {}
+    unlock();
+    const x = ensure();
+    if (x && out) out.gain.setTargetAtTime(on ? .9 : 0, ac.currentTime, .03);
+    toast(on);
+    if (on) play('pop');
+    return on;
+  }
+
+  /* ═════════ 점검 도구 ═════════ */
+  function measure(buf) {
+    let peak = 0, sum = 0, n = 0, last = 0, first = -1, zc = 0, prev = 0;
+    const ch = buf.getChannelData(0), ch2 = buf.numberOfChannels > 1 ? buf.getChannelData(1) : ch, sr = buf.sampleRate;
+    for (let i = 0; i < ch.length; i++) {
+      const v = Math.max(Math.abs(ch[i]), Math.abs(ch2[i]));
+      if (v > peak) peak = v;
+      sum += ch[i] * ch[i]; n++;
+      if (v > .003) { last = i; if (first < 0) first = i; }
+      if ((ch[i] >= 0) !== (prev >= 0)) zc++; prev = ch[i];
+    }
+    const active = Math.max(1, last - Math.max(0, first)) / sr;
+    return { peak: +peak.toFixed(3), rms: +Math.sqrt(sum / n).toFixed(4), attack: first < 0 ? null : +(first / sr).toFixed(3), length: +(last / sr).toFixed(2), approxHz: Math.round(zc / 2 / active), clipped: peak >= .98, silent: peak < .01 };
+  }
+  async function analyze(name, a, b, secs = 3) {
+    const OA = window.OfflineAudioContext || window.webkitOfflineAudioContext, sr = 44100;
+    const oc = new OA(2, Math.floor(sr * secs), sr), g = oc.createGain(); g.gain.value = .9; g.connect(oc.destination);
+    const x = { ac: oc, dest: g, nz: noiseBuf(oc) };
+    S[name](x, .02, a, b);
+    return measure(await oc.startRendering());
+  }
+  async function analyzeLoop(kind, level = 1, secs = 1.5) {
+    const OA = window.OfflineAudioContext || window.webkitOfflineAudioContext, sr = 44100;
+    const oc = new OA(2, Math.floor(sr * secs), sr), g = oc.createGain(); g.gain.value = .9; g.connect(oc.destination);
+    const h = LOOPS[kind]({ ac: oc, dest: g, nz: noiseBuf(oc) }); h.level(level);
+    const r = measure(await oc.startRendering()); try { h.stop(); } catch (e) {} return r;
+  }
+
+  /** ?sfx=demo — 모든 소리를 눌러 들어 보는 패널 */
+  function demoPanel() {
+    const box = document.createElement('div');
+    box.style.cssText = 'position:fixed;left:12px;top:12px;z-index:200;max-width:340px;max-height:92vh;overflow:auto;background:rgba(29,29,31,.94);color:#f5f5f7;border-radius:14px;padding:14px;font:600 13px/1.3 system-ui,sans-serif';
+    const btn = (t, fn) => { const b = document.createElement('button'); b.textContent = t; b.style.cssText = 'margin:3px;padding:6px 10px;border-radius:9999px;border:0;background:#0066cc;color:#fff;font:600 13px system-ui'; b.onclick = () => { unlock(); fn(); }; return b; };
+    box.appendChild(Object.assign(document.createElement('div'), { textContent: '효과음 듣기 (F2 로 닫기)', style: 'margin-bottom:8px;font-size:14px' }));
+    Object.keys(S).forEach(k => box.appendChild(btn(k, () => { if (!on) toggle(true); play(k, k === 'kick' ? true : undefined, 1); })));
+    let fan = null;
+    box.appendChild(btn('fan 0→1→0', () => { if (!on) toggle(true); if (fan) fan.stop(); fan = loop('fan'); let v = 0, dir = 1; const id = setInterval(() => { v += dir * .05; if (v >= 1) dir = -1; fan.level(clamp(v)); if (v <= 0 && dir < 0) { clearInterval(id); fan.stop(); fan = null; } }, 60); }));
+    box.appendChild(btn('boil', () => { if (!on) toggle(true); const h = loop('boil'); h.level(1); setTimeout(() => h.stop(), 4000); }));
+    box.appendChild(btn('hum', () => { if (!on) toggle(true); const h = loop('hum'); h.level(1); setTimeout(() => h.stop(), 3000); }));
+    document.body.appendChild(box);
+    document.addEventListener('keydown', e => { if (e.key === 'F2') box.remove(); });
+  }
+  if (Q.get('sfx') === 'demo') { const go = () => demoPanel(); if (document.body) go(); else document.addEventListener('DOMContentLoaded', go); }
+
+  return { play, loop, toggle, unlock, analyze, analyzeLoop, names: () => Object.keys(S), isOn: () => on, isOff: () => OFF, S, debug: () => ({ pendingLoops: pending.size, unlocked, state: ac ? ac.state : 'none' }) };
+})();
+
+const snd=(n,a,b)=>{ try{ SFX.play(n,a,b); }catch(e){} };
+function syncSnd(){ const on=SFX.isOn(), b=$('#bSnd'); if(!b) return; b.textContent=on?'🔊':'🔇'; b.classList.toggle('off',!on); b.setAttribute('aria-pressed',on?'true':'false'); }
 $('#rot').addEventListener('click',()=>$('#rot').classList.add('gone'));
 
 /* ══════════ 무대 맞추기 ══════════ */
@@ -757,10 +1167,19 @@ addEventListener('resize',fit); fit();
 const slides=$$('.slide'); let cur=0, step=0;
 const MAXS=slides.map(s=>{ let m=0; $$('[data-step]',s).forEach(e=>{ m=Math.max(m,+e.dataset.step); }); return m; });
 const HOOKS={};
+let SND=false, lastCur=-1;   /* 사용자가 직접 넘길 때(next·목차)만 소리 — 주소 복원·되돌아가기는 조용히 */
+const SNDHOOK={ 's-stot':{2:()=>snd('rise',900)}, 's-ptot':{2:()=>snd('sweepDown',900)} };
+function paintSound(fresh,changed,s){
+  const bk=fresh.filter(e=>e.classList.contains('bk')), other=fresh.filter(e=>!e.classList.contains('bk'));
+  if(changed) snd('slide'); else if(!fresh.length) snd('step');
+  bk.forEach((e,i)=>setTimeout(()=>snd('blank'),(changed?280:60)+i*130));
+  if(other.length&&!changed) setTimeout(()=>snd(other.some(e=>e.classList.contains('final'))?'chime':'pop'),50);
+  const hk=SNDHOOK[s.id]&&SNDHOOK[s.id][step]; if(hk&&!changed) setTimeout(hk,180);
+}
 function paint(){
   slides.forEach((s,i)=>s.classList.toggle('on',i===cur));
-  const s=slides[cur];
-  $$('[data-step]',s).forEach(e=>e.classList.toggle('shown',+e.dataset.step<=step));
+  const s=slides[cur], changed=cur!==lastCur, fresh=[]; lastCur=cur;
+  $$('[data-step]',s).forEach(e=>{ const was=e.classList.contains('shown'), now=+e.dataset.step<=step; e.classList.toggle('shown',now); if(now&&!was) fresh.push(e); });
   $('#cnt').textContent=(cur+1)+' / '+slides.length;
   $('#ttl').textContent=s.dataset.title||'';
   $('#barFill').style.width=(cur/(slides.length-1)*100)+'%';
@@ -770,14 +1189,15 @@ function paint(){
   $$('#tocList button').forEach((b,i)=>b.classList.toggle('on',i===cur));
   if(HOOKS[s.id]) HOOKS[s.id](step);
   inkDraw();
+  if(SND) paintSound(fresh,changed,s);
 }
-function next(){ if(step<MAXS[cur]){ step++; paint(); } else if(cur<slides.length-1){ cur++; step=0; paint(); } }
+function next(){ SND=true; try{ if(step<MAXS[cur]){ step++; paint(); } else if(cur<slides.length-1){ cur++; step=0; paint(); } } finally{ SND=false; } }
 function prev(){ if(step>0){ step--; paint(); } else if(cur>0){ cur--; step=MAXS[cur]; paint(); } }
 function go(i,st){ cur=Math.max(0,Math.min(slides.length-1,i)); step=st==null?0:Math.min(st,MAXS[cur]); paint(); }
 
 /* 목차 */
 $('#tocList').innerHTML=slides.map((s,i)=>'<li><button type="button" data-go="'+i+'"><i>'+String(i+1).padStart(2,'0')+'</i>'+(s.dataset.title||'')+'</button></li>').join('');
-$('#tocList').addEventListener('click',e=>{ const b=e.target.closest('[data-go]'); if(!b)return; go(+b.dataset.go); document.body.classList.remove('toc'); });
+$('#tocList').addEventListener('click',e=>{ const b=e.target.closest('[data-go]'); if(!b)return; SND=true; try{ go(+b.dataset.go); } finally{ SND=false; } document.body.classList.remove('toc'); });
 $('#toc').addEventListener('click',e=>{ if(e.target.id==='toc') document.body.classList.remove('toc'); });
 
 const toggleCls=c=>document.body.classList.toggle(c);
@@ -786,6 +1206,7 @@ $('#bPrev').onclick=prev; $('#bNext').onclick=next;
 $('#bToc').onclick=()=>toggleCls('toc');
 $('#bScr').onclick=()=>{ toggleCls('script'); $('#bScr').classList.toggle('on',document.body.classList.contains('script')); };
 $('#bFs').onclick=toggleFs;
+$('#bSnd').onclick=()=>{ SFX.toggle(); syncSnd(); }; syncSnd();
 $('#bPen').onclick=()=>PEN.toggle();
 $('#black').onclick=()=>document.body.classList.remove('black');
 
@@ -818,6 +1239,7 @@ addEventListener('keydown',e=>{
   else if(k==='End'){ e.preventDefault(); go(slides.length-1); }
   else if(c==='KeyT'){ if(!STU) $('#bScr').click(); }
   else if(c==='KeyG'){ toggleCls('toc'); }
+  else if(c==='KeyM'){ SFX.toggle(); syncSnd(); }
   else if(c==='KeyF'){ toggleFs(); }
   else if(c==='KeyP'){ PEN.toggle(); }
   else if(c==='KeyB'){ if(!STU) toggleCls('black'); }
@@ -986,12 +1408,15 @@ function paintRO(){
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-sr1],[data-sr2],[data-pr1],[data-pr2],[data-scut],[data-pcut]'); if(!b) return;
   const d=b.dataset;
-  if(d.sr1){ SS.r1=+d.sr1; renderSims('s'); }
-  else if(d.sr2){ SS.r2=+d.sr2; renderSims('s'); }
-  else if(d.pr1){ PS.r1=+d.pr1; renderSims('p'); }
-  else if(d.pr2){ PS.r2=+d.pr2; renderSims('p'); }
-  else if(d.scut){ SS.cut=!SS.cut; renderSims('s'); }
-  else if(d.pcut){ if(d.pcut==='1') PS.cut1=!PS.cut1; else PS.cut2=!PS.cut2; renderSims('p'); }
+  if(d.sr1){ SS.r1=+d.sr1; renderSims('s'); snd('pop'); }
+  else if(d.sr2){ SS.r2=+d.sr2; renderSims('s'); snd('pop'); }
+  else if(d.pr1){ PS.r1=+d.pr1; renderSims('p'); snd('pop'); }
+  else if(d.pr2){ PS.r2=+d.pr2; renderSims('p'); snd('pop'); }
+  else if(d.scut){ SS.cut=!SS.cut; renderSims('s');
+    if(SS.cut){ snd('snip'); setTimeout(()=>snd('sweepDown',800),200); } else { snd('pop'); setTimeout(()=>snd('ledOn'),110); } }
+  else if(d.pcut){ const one=d.pcut==='1'; if(one) PS.cut1=!PS.cut1; else PS.cut2=!PS.cut2; renderSims('p');
+    if(one?PS.cut1:PS.cut2){ snd('snip'); if(PS.cut1&&PS.cut2) setTimeout(()=>snd('sweepDown',800),200); else setTimeout(()=>snd('ding',1),260); }
+    else { snd('pop'); setTimeout(()=>snd('ledOn'),110); } }
 });
 renderSims();
 /* 빼기 장을 떠나면 원래대로 — 다른 장에서 끊긴 회로를 보지 않게 */
@@ -1024,23 +1449,26 @@ function Trace(svg){
   if(kind==='s'){
     const P=mkPath([[70,128],[70,50],[500,50],[500,250],[70,250],[70,172]]); const T=P.len/v+.6;
     place(A,ptAt(P,0));
-    return dt=>{ t=(t+dt)%T; place(A,ptAt(P,Math.min(P.len,t*v))); };
+    let pd=0;   /* 저항 R₁·R₂ 한가운데를 지날 때 톡 */
+    return dt=>{ t=(t+dt)%T; const d=Math.min(P.len,t*v); if(d<pd) pd=0; [233,383].forEach((r,i)=>{ if(pd<r&&d>=r) snd('tick',i?1.25:1,1.2); }); pd=d; place(A,ptAt(P,d)); };
   }
   const P0=mkPath([[70,128],[70,50],[160,50]]), P1=mkPath([[160,50],[420,50]]), P2=mkPath([[160,50],[160,160],[420,160],[420,50]]), P3=mkPath([[420,50],[500,50],[500,250],[70,250],[70,172]]);
   const t0=P0.len/v, tb=P2.len/v, t3=P3.len/v, T=t0+tb+t3+.6;
   place(A,ptAt(P0,0));
+  let pu=0;   /* 두 갈래의 저항을 함께 지날 때 톡톡 */
   return dt=>{
     t=(t+dt)%T;
-    if(t<t0){ B.style.display='none'; place(A,ptAt(P0,t*v)); }
-    else if(t<t0+tb){ const u=(t-t0)/tb; B.style.display=''; place(A,ptAt(P1,u*P1.len)); place(B,ptAt(P2,u*P2.len)); }
-    else { B.style.display='none'; place(A,ptAt(P3,Math.min(P3.len,(t-t0-tb)*v))); }
+    if(t<t0){ pu=0; B.style.display='none'; place(A,ptAt(P0,t*v)); }
+    else if(t<t0+tb){ const u=(t-t0)/tb; B.style.display=''; place(A,ptAt(P1,u*P1.len)); place(B,ptAt(P2,u*P2.len));
+      if(pu<.45&&u>=.45){ snd('tick',1,1.2); setTimeout(()=>snd('tick',1.25,1.2),30); } pu=u; }
+    else { pu=1; B.style.display='none'; place(A,ptAt(P3,Math.min(P3.len,(t-t0-tb)*v))); }
   };
 }
 $$('svg.trace').forEach(svg=>{ const f=Trace(svg); regAnim(svg.closest('.slide'),f); });
 
 /* 5초마다 세어 보여 주는 계수기 */
-function Counter(W){ this.W=W; this.clock=0; this.ready=false; }
-Counter.prototype.tick=function(dt,gates,paint){ this.clock+=dt; if(this.clock>=this.W){ this.clock-=this.W; gates.forEach(g=>{ g.val=g.c; g.c=0; }); this.ready=true; paint(); } };
+function Counter(W){ this.W=W; this.clock=0; this.ready=false; this.dn=0; }
+Counter.prototype.tick=function(dt,gates,paint){ this.clock+=dt; if(this.clock>=this.W){ this.clock-=this.W; gates.forEach(g=>{ g.val=g.c; g.c=0; }); this.ready=true; paint(); if(this.dn++<4) snd('ding',1.5); } };   /* 세어 준 결과 「띵」 — 앞의 네 번만(오래 머물러도 시끄럽지 않게) */
 
 /* ══════════ 🚗 막힌 도로 (7장) ══════════ */
 (function(){
@@ -1075,7 +1503,7 @@ Counter.prototype.tick=function(dt,gates,paint){ this.clock+=dt; if(this.clock>=
   cars.forEach(place);
   regAnim(svg.closest('.slide'),dt=>{
     acc+=dt; while(acc>=T){ acc-=T; add(X0+V*acc); }
-    for(let i=cars.length-1;i>=0;i--){ const c=cars[i], ox=c.x; c.x+=V*dt; GX.forEach((gx,j)=>{ if(ox<gx&&c.x>=gx) gates[j].c++; }); if(c.x>X1){ c.e.remove(); cars.splice(i,1); } else place(c); }
+    for(let i=cars.length-1;i>=0;i--){ const c=cars[i], ox=c.x; c.x+=V*dt; GX.forEach((gx,j)=>{ if(ox<gx&&c.x>=gx){ gates[j].c++; snd('tick',[.85,1.05,1.3][j],.8); } }); if(c.x>X1){ c.e.remove(); cars.splice(i,1); } else place(c); }
     C.tick(dt,gates,paintG);
   });
 })();
@@ -1113,7 +1541,7 @@ Counter.prototype.tick=function(dt,gates,paint){ this.clock+=dt; if(this.clock>=
   pv.forEach(t=>{ t.textContent='⏱ 펄 세는 중…'; });
   regAnim(svg.closest('.slide'),dt=>{
     acc+=dt; while(acc>=T){ acc-=T; add(0,Y0-V*acc); add(1,Y0-V*acc); }
-    P.forEach((arr,i)=>{ for(let k=arr.length-1;k>=0;k--){ const p=arr[k]; p.y-=V*dt; if(p.y<Y1){ gates[i].c++; p.e.remove(); arr.splice(k,1); } else p.e.setAttribute('cy',p.y.toFixed(1)); } });
+    P.forEach((arr,i)=>{ for(let k=arr.length-1;k>=0;k--){ const p=arr[k]; p.y-=V*dt; if(p.y<Y1){ gates[i].c++; snd('tick',i?1.3:.95,1); p.e.remove(); arr.splice(k,1); } else p.e.setAttribute('cy',p.y.toFixed(1)); } });
     C.tick(dt,gates,paintG);
   });
 })();
@@ -1168,7 +1596,7 @@ Counter.prototype.tick=function(dt,gates,paint){ this.clock+=dt; if(this.clock>=
   function paintG(){ cv.forEach((t,i)=>{ t.textContent='5초 동안 '+gates[i].val+'명'; }); ct2.textContent='모두 합치면 '+(gates[0].val+gates[1].val)+'명 = '+gates[0].val+' + '+gates[1].val+' (전원 쪽 전류)'; }
   regAnim(svg.closest('.slide'),dt=>{
     acc.forEach((arr,i)=>arr.forEach((_,ln)=>{ arr[ln]+=dt; while(arr[ln]>=T){ arr[ln]-=T; add(i,ln,V*arr[ln]); } }));
-    for(let k=ppl.length-1;k>=0;k--){ const p=ppl[k]; p.d+=V*dt; if(p.d>=L[p.i]){ gates[p.i].c++; p.e.remove(); ppl.splice(k,1); } else place(p); }
+    for(let k=ppl.length-1;k>=0;k--){ const p=ppl[k]; p.d+=V*dt; if(p.d>=L[p.i]){ gates[p.i].c++; snd('tick',p.i?1.3:.95,1); p.e.remove(); ppl.splice(k,1); } else place(p); }
     C.tick(dt,gates,paintG);
   });
 })();
@@ -1210,9 +1638,9 @@ Counter.prototype.tick=function(dt,gates,paint){ this.clock+=dt; if(this.clock>=
   regAnim(svg.closest('.slide'),dt=>{
     acc+=dt; while(acc>=T){ acc-=T; add(X0+V*acc); nFix(cars[cars.length-1]); }
     for(let i=cars.length-1;i>=0;i--){ const c=cars[i], ox=c.x; c.x+=V*dt;
-      if(ox<190&&c.x>=190) gates[0].c++;
-      if(ox<720&&c.x>=720) gates[c.br===0?1:2].c++;
-      if(ox<1250&&c.x>=1250) gates[3].c++;
+      if(ox<190&&c.x>=190){ gates[0].c++; snd('tick',.9,.5); }
+      if(ox<720&&c.x>=720){ gates[c.br===0?1:2].c++; snd('tick',c.br===0?1.1:1.35,.7); }
+      if(ox<1250&&c.x>=1250){ gates[3].c++; snd('tick',.9,.5); }
       if(c.x>X1){ c.e.remove(); cars.splice(i,1); } else place(c); }
     C.tick(dt,gates,paintG);
   });
@@ -1337,6 +1765,14 @@ function circuitSVG(mode,remA,remB){
 }
 /* 두 실험대(직렬·병렬) — ①은 비교용 한 개짜리, ②는 두 개짜리 */
 const LAB={S:{one:false,A:false,B:false},P:{one:false,A:false,B:false}};
+function labLit(k){ const st=LAB[k], s=k==='S'; return {one:!st.one, A:s?(!st.A&&!st.B):!st.A, B:s?(!st.A&&!st.B):!st.B}; }
+/* 전구를 뺄 때 톡 · 그 결과 꺼지면(직렬·한 개짜리) 「우웅…」 · 다시 끼우면 톡 + 켜짐 */
+function labSound(k,b4,rem,id){
+  const af=labLit(k), keys=Object.keys(af), gone=keys.some(x=>b4[x]&&!af[x]), came=keys.some(x=>!b4[x]&&af[x]);
+  snd('pop');
+  if(rem&&gone&&(k==='S'||id==='one')) setTimeout(()=>snd('sweepDown',600),130);
+  if(!rem&&came) setTimeout(()=>snd('bulbOn'),130);
+}
 function labPaint(k){
   const st=LAB[k], mode=k==='S'?'s':'p';
   const h1=$('[data-lab="'+k+'1"]'), h2=$('[data-lab="'+k+'2"]');
@@ -1351,7 +1787,7 @@ function labPaint(k){
 }
 ['S','P'].forEach(k=>{
   const h1=$('[data-lab="'+k+'1"]'), h2=$('[data-lab="'+k+'2"]'); if(!h1||!h2) return;
-  const set=(id,rem)=>{ const st=LAB[k]; if(id==='one') st.one=rem; else st[id]=rem; labPaint(k); };
+  const set=(id,rem)=>{ const st=LAB[k], b4=labLit(k); if(id==='one') st.one=rem; else st[id]=rem; labPaint(k); labSound(k,b4,rem,id); };
   attachBulbDrag(h1,(id,rem)=>set('one',rem),()=>labPaint(k));
   attachBulbDrag(h2,(id,rem)=>set(id,rem),()=>labPaint(k));
   h1.addEventListener('click',e=>{ const g=e.target.closest('[data-bulb]'); if(!g) return; set('one',g.dataset.role==='in'); });
@@ -1386,12 +1822,19 @@ function labPaint(k){
     ro.className='tapro'+(hot?' hit':'');
     ro.innerHTML=on.size?('코드 한 가닥에 흐르는 전류 = '+[...on].map(i=>APPS[i].a.toFixed(1)).join(' + ')+' = <b>'+tot.toFixed(1)+' A</b>'+(hot?'<br>⚠️ 정격을 넘었어요 — 과부하 → 과열 → 화재 위험!':'')):'기구를 눌러 꽂아 보세요 — 기구마다 220 V를 그대로 받아요(병렬).';
   }
-  box.addEventListener('click',e=>{ const b=e.target.closest('[data-app]'); if(!b) return; const i=+b.dataset.app; if(on.has(i)) on.delete(i); else on.add(i); draw(); });
+  box.addEventListener('click',e=>{ const b=e.target.closest('[data-app]'); if(!b) return; const i=+b.dataset.app;
+    const tot=()=>[...on].reduce((s,j)=>s+APPS[j].a,0), was=tot()>LIM, adding=!on.has(i);
+    if(adding) on.add(i); else on.delete(i); draw(); const now=tot()>LIM;
+    snd(adding?(i>=2?'lever':'ledOn'):'step');
+    if(now&&!was) setTimeout(()=>{ snd('thunk'); snd('sizzle',1800); },160);
+    else if(!now&&was) setTimeout(()=>snd('ding',.8),120); });
   draw();
 })();
 
 /* ══════════ 퀴즈 카드 ══════════ */
-$$('.qz').forEach(b=>b.addEventListener('click',()=>{ b.classList.add('rev',b.dataset.ans); }));
+$$('.qz').forEach(b=>b.addEventListener('click',()=>{
+  if(!b.classList.contains('rev')){ snd('flip'); setTimeout(()=>snd('ding',b.dataset.ans==='s'?1:1.335),170); }
+  b.classList.add('rev',b.dataset.ans); }));
 
 /* ══════════ 시작 ══════════ */
 /* #5 → 5장 처음, #5.3 → 5장 세 번째 단계까지 열린 채로(#5.99 = 다 열림) */
