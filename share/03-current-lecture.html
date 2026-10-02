@@ -1,0 +1,2761 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#000000">
+<title>강의 · 전류 · 전압 · 저항</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   core.css — 소비 전력 강의 덱 공통 (Apple DESIGN.md 언어)
+   무대 1920×1080 · 면 색이 구획 · 액션 블루 하나 · UI 그림자 없음
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  /* 면 */
+  --c-white:#ffffff; --c-parchment:#f5f5f7; --c-black:#000000; --c-dark:#1d1d1f; --c-graphite:#272729;
+  /* 글자 */
+  --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b; --on-dark:#f5f5f7; --on-dark-2:#a1a1a6; --on-dark-3:#6e6e73;
+  --hair:#e0e0e0; --hair-dark:#3a3a3c;
+  /* 행동 */
+  --action:#0066cc; --action-dark:#2997ff;
+  /* 에너지 — 어두운 면 기본값(밝은 면에서 아래 .slide[data-tile] 규칙이 덮어씀) */
+  --elec:#64D2FF; --light:#FFD60A; --heat:#FF6A3D; --sound:#BF5AF2; --kin:#30D158;
+  /* 에너지 — 면과 무관하게 고정된 두 벌(그림 속에서 직접 고를 때) */
+  --elec-hi:#64D2FF; --light-hi:#FFD60A; --heat-hi:#FF6A3D; --sound-hi:#BF5AF2; --kin-hi:#30D158;
+  --elec-lo:#0077B6; --light-lo:#9A7400; --heat-lo:#C4391B; --sound-lo:#8A3FC0; --kin-lo:#1E8B3E;
+  /* 글꼴 */
+  --font:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"SF Pro Display","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  /* 움직임 */
+  --ease-out:cubic-bezier(.2,.8,.2,1); --ease-inout:cubic-bezier(.65,0,.35,1); --ease-spring:cubic-bezier(.34,1.56,.64,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#000}
+body{font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  word-break:keep-all;overflow-wrap:break-word;-webkit-user-select:none;user-select:none;font-feature-settings:"ss03"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ── 무대 ── */
+#viewport{position:fixed;inset:0;overflow:hidden;background:#000}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;background:#000;contain:layout paint}
+.slide{position:absolute;inset:0;display:none;overflow:hidden;isolation:isolate}
+.slide.is-on{display:block}
+.slide.is-out{display:block;z-index:1}
+.slide.is-on{z-index:2}
+
+/* ── 면(타일) ── 다크: 에너지가 빛나는 무대 / 라이트: 정의와 타이포 */
+.slide[data-tile="black"]{background:var(--c-black);color:var(--on-dark)}
+.slide[data-tile="dark"]{background:var(--c-dark);color:var(--on-dark)}
+.slide[data-tile="graphite"]{background:var(--c-graphite);color:var(--on-dark)}
+.slide[data-tile="light"]{background:var(--c-white);color:var(--ink)}
+.slide[data-tile="parchment"]{background:var(--c-parchment);color:var(--ink)}
+.slide[data-tile="light"],.slide[data-tile="parchment"]{
+  --elec:var(--elec-lo); --light:var(--light-lo); --heat:var(--heat-lo); --sound:var(--sound-lo); --kin:var(--kin-lo);
+  --t2:var(--ink-2); --t3:var(--ink-3); --hl:var(--hair); --act:var(--action);
+}
+.slide[data-tile="black"],.slide[data-tile="dark"],.slide[data-tile="graphite"]{
+  --t2:var(--on-dark-2); --t3:var(--on-dark-3); --hl:var(--hair-dark); --act:var(--action-dark);
+}
+
+/* ── 글자 체계 (무대 px) — 최소 24px ── */
+.t-hero{font-size:168px;font-weight:600;line-height:1.02;letter-spacing:-.035em}
+.t-display{font-size:120px;font-weight:600;line-height:1.05;letter-spacing:-.03em}
+.t-title{font-size:84px;font-weight:600;line-height:1.1;letter-spacing:-.025em}
+.t-head{font-size:60px;font-weight:600;line-height:1.14;letter-spacing:-.022em}
+.t-lead{font-size:44px;font-weight:400;line-height:1.3;letter-spacing:-.012em}
+.t-airy{font-size:40px;font-weight:300;line-height:1.4;letter-spacing:-.005em}
+.t-label{font-size:34px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+.t-body{font-size:32px;font-weight:400;line-height:1.47;letter-spacing:-.01em}
+.t-cap{font-size:26px;font-weight:400;line-height:1.35;letter-spacing:-.005em}
+.t-eyebrow{font-size:30px;font-weight:600;line-height:1.2;letter-spacing:.01em;color:var(--t2)}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum","ss03";letter-spacing:-.02em}
+.mute{color:var(--t2)} .mute2{color:var(--t3)}
+.c-elec{color:var(--elec)} .c-light{color:var(--light)} .c-heat{color:var(--heat)} .c-sound{color:var(--sound)} .c-kin{color:var(--kin)}
+.unit{font-weight:400;letter-spacing:0;margin-left:.12em}
+.center{text-align:center}
+
+/* 배치 도우미 — 슬라이드 조각이 자유롭게 쓴다 */
+.abs{position:absolute}
+.fill{position:absolute;inset:0}
+.full-svg{position:absolute;inset:0;width:1920px;height:1080px;overflow:visible}
+.row{display:flex;align-items:center}
+.col{display:flex;flex-direction:column}
+.pill{display:inline-flex;align-items:center;gap:12px;border-radius:9999px;padding:12px 26px;font-size:28px;font-weight:600}
+.pill.ghost{border:2px solid currentColor}
+.chip-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:9999px;padding:16px 34px;font-size:30px;font-weight:600;
+  background:var(--act);color:#fff;transition:transform .15s var(--ease-out)}
+.chip-btn:active{transform:scale(.95)}
+.card{border-radius:18px;border:1px solid var(--hl);padding:32px}
+svg text{font-family:var(--font)}
+
+/* ── 선언형 등장: data-in(들어올 때) / data-step="k"(k번째 클릭) / data-out="k" ── */
+[data-in],[data-step]{opacity:0}
+[data-fx="draw"],[data-fx="draw"] :is(path,line,polyline,polygon,circle,ellipse,rect){stroke-dasharray:1 1;stroke-dashoffset:1}
+[data-fx="draw"]{opacity:1}
+svg [data-in],svg [data-step],svg .tb{transform-box:fill-box;transform-origin:center}
+.tb{transform-box:fill-box;transform-origin:center}
+.tb-bl{transform-box:fill-box;transform-origin:left bottom}
+.tb-b{transform-box:fill-box;transform-origin:center bottom}
+
+/* ── HUD (Apple 원형 칩) ── */
+#hud{position:fixed;right:22px;bottom:18px;display:flex;align-items:center;gap:8px;z-index:50;opacity:0;transform:translateY(8px);
+  transition:opacity .35s var(--ease-out),transform .35s var(--ease-out);pointer-events:none}
+#hud.show{opacity:1;transform:none;pointer-events:auto}
+#hud button{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(210,210,215,.64);color:#1d1d1f;
+  -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);transition:transform .15s var(--ease-out)}
+#hud button:active{transform:scale(.92)}
+#hud button svg{width:20px;height:20px}
+#hud .count{min-width:84px;height:44px;border-radius:9999px;display:grid;place-items:center;padding:0 16px;background:rgba(210,210,215,.64);color:#1d1d1f;
+  font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+#progress{position:fixed;left:0;right:0;bottom:0;height:3px;z-index:40;background:transparent}
+#progress i{display:block;height:100%;width:0;background:rgba(255,255,255,.38);transition:width .5s var(--ease-out),background .4s}
+body.on-light #progress i{background:rgba(0,0,0,.22)}
+#stepdots{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:9px;z-index:40;opacity:0;transition:opacity .35s}
+#stepdots.show{opacity:1}
+#stepdots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.28);transition:background .3s,transform .3s}
+#stepdots i.on{background:rgba(255,255,255,.9);transform:scale(1.15)}
+body.on-light #stepdots i{background:rgba(0,0,0,.16)} body.on-light #stepdots i.on{background:rgba(0,0,0,.62)}
+
+/* ── 덮개(노트·전체보기·도움말) ── */
+.overlay{position:fixed;inset:0;z-index:60;display:none}
+.overlay.show{display:block}
+#notes{position:fixed;left:0;right:0;bottom:0;height:36vh;z-index:55;transform:translateY(102%);transition:transform .45s var(--ease-out);
+  background:rgba(22,22,23,.86);color:#f5f5f7;-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  padding:22px 40px 26px;overflow:auto;border-top:1px solid rgba(255,255,255,.08)}
+#notes.show{transform:none}
+#notes .nh{display:flex;align-items:baseline;gap:14px;margin-bottom:10px;font-size:15px;color:#a1a1a6;font-weight:600;letter-spacing:.01em}
+#notes .nh b{color:#f5f5f7;font-size:18px}
+#notes .nh .nx{margin-left:auto;font-weight:400}
+#notes p{font-size:clamp(17px,1.55vw,24px);line-height:1.6;margin:0 0 .7em;color:#e8e8ed;max-width:1500px}
+#notes p .pn{display:inline-block;font-size:.66em;font-weight:700;color:#2997ff;margin-right:.6em;vertical-align:.12em}
+#notes p b{color:#fff;font-weight:700}
+#notes p .cue{display:inline-block;margin-top:.3em;padding:2px 12px;border-radius:9999px;background:rgba(41,151,255,.18);color:#8cc8ff;font-size:.85em}
+
+#overview{background:rgba(0,0,0,.72);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);overflow:auto;padding:56px 5vw}
+#overview h2{color:#f5f5f7;font-size:28px;font-weight:600;letter-spacing:-.01em;margin-bottom:22px}
+#overview .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+#overview .ov{position:relative;aspect-ratio:16/9;border-radius:11px;padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;
+  border:1px solid rgba(255,255,255,.1);transition:transform .2s var(--ease-out)}
+#overview .ov:active{transform:scale(.97)}
+#overview .ov.cur{outline:3px solid #2997ff;outline-offset:3px}
+#overview .ov .n{font-size:14px;font-weight:700;opacity:.6;font-variant-numeric:tabular-nums}
+#overview .ov .tt{font-size:19px;font-weight:600;line-height:1.25;letter-spacing:-.01em}
+#overview .ov[data-tile="black"],#overview .ov[data-tile="dark"],#overview .ov[data-tile="graphite"]{background:#1d1d1f;color:#f5f5f7}
+#overview .ov[data-tile="light"]{background:#fff;color:#1d1d1f}
+#overview .ov[data-tile="parchment"]{background:#f5f5f7;color:#1d1d1f}
+
+#help{background:rgba(0,0,0,.6);display:none;place-items:center}
+#help.show{display:grid}
+#help .box{background:#fff;color:#1d1d1f;border-radius:18px;padding:34px 40px;min-width:520px}
+#help h3{font-size:24px;font-weight:600;margin-bottom:16px;letter-spacing:-.01em}
+#help table{border-collapse:collapse;font-size:17px}
+#help td{padding:7px 18px 7px 0;border-bottom:1px solid #f0f0f0}
+#help kbd{display:inline-block;min-width:30px;padding:3px 9px;border-radius:8px;background:#f5f5f7;border:1px solid #e0e0e0;font:600 15px var(--font);text-align:center}
+#blank{position:fixed;inset:0;z-index:70;display:none}
+#blank.black{display:block;background:#000} #blank.white{display:block;background:#fff}
+
+/* 정지 화면(검증 스크린샷) — 크롬 UI 숨김 */
+html.still #hud,html.still #progress,html.still #stepdots{display:none!important}
+html.still *{cursor:none!important}
+/* 격자 보기(?grid=1) */
+#gridov{position:absolute;inset:0;z-index:30;pointer-events:none;display:none;
+  background-image:linear-gradient(rgba(255,0,80,.25) 1px,transparent 1px),linear-gradient(90deg,rgba(255,0,80,.25) 1px,transparent 1px);
+  background-size:120px 120px}
+html.grid #gridov{display:block}
+html.grid #gridov::after{content:"";position:absolute;inset:80px 120px;border:2px dashed rgba(255,0,80,.6)}
+
+@media (prefers-reduced-motion: reduce){ .slide *{scroll-behavior:auto} }
+
+/* ── 소리 단추·알림 ── */
+#hud button.off{opacity:.55}
+#sfxToast{position:fixed;left:50%;bottom:78px;transform:translate(-50%,8px);z-index:80;padding:10px 22px;border-radius:9999px;background:rgba(29,29,31,.86);color:#f5f5f7;
+  font-size:16px;font-weight:600;letter-spacing:-.01em;opacity:0;pointer-events:none;transition:opacity .25s var(--ease-out),transform .25s var(--ease-out);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+#sfxToast.show{opacity:1;transform:translate(-50%,0)}
+html.still #sfxToast{display:none}
+
+/* ── 학생 모드(?s=1): 대본 숨김 ── */
+html.student #notes{display:none!important}
+
+/* ── 장면 머리(제목) ── */
+.hd{position:absolute;left:120px;top:78px;right:120px;z-index:3}
+.hd .eb{font-size:28px;font-weight:600;letter-spacing:.01em;color:var(--t2);margin-bottom:10px}
+.hd .eb b{color:var(--act);font-weight:700;margin-right:.35em}
+.hd h2{font-size:66px;font-weight:600;line-height:1.1;letter-spacing:-.028em}
+.hd h2 .soft{color:var(--t2);font-weight:400}
+
+/* ── 개념정리 학습지 카드 · 빈칸(번호 = 학습지 빈칸 번호 ①~㉖) ── */
+.ws-card{position:absolute;border-radius:18px;padding:30px 44px 26px;background:#f5f5f7;z-index:3}
+.slide[data-tile="parchment"] .ws-card{background:#fff}
+.slide[data-tile="black"] .ws-card,.slide[data-tile="dark"] .ws-card,.slide[data-tile="graphite"] .ws-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.ws-card .ws-h{display:flex;align-items:baseline;gap:18px;margin-bottom:6px}
+.ws-card .ws-h b{font-size:40px;font-weight:700;letter-spacing:-.02em}
+.ws-card .ws-h span{font-size:28px;color:var(--t2)}
+.ws-row{display:grid;grid-template-columns:110px 1fr;gap:22px;align-items:baseline;font-size:38px;line-height:1.55;padding:12px 0;border-top:1px solid var(--hl)}
+.ws-row:first-of-type{border-top:0}
+.ws-row .tm{font-size:26px;font-weight:600;color:var(--t2);letter-spacing:.01em}
+.ws-line{font-size:38px;line-height:1.6}
+.bk{position:relative;display:inline-block;min-width:3.4em;margin:0 .2em;padding:0 .3em;text-align:center;line-height:1.3;white-space:nowrap;
+  border-bottom:4px solid #c7c7cc}
+.slide[data-tile="black"] .bk,.slide[data-tile="dark"] .bk,.slide[data-tile="graphite"] .bk{border-bottom-color:#48484a}
+.bk .a{display:inline-block;font-weight:700;color:var(--act)}
+.bk .n{position:absolute;left:-.62em;top:-.55em;min-width:1.25em;height:1.25em;padding:0 .2em;border-radius:9999px;background:var(--act);color:#fff;
+  font-size:.6em;font-weight:700;line-height:1.25em;text-align:center;font-variant-numeric:tabular-nums}
+.bk.wide{min-width:5.6em}
+.qbox{position:absolute;border-radius:18px;border:1px solid var(--hl);padding:26px 34px;font-size:32px;line-height:1.5}
+.qbox .qh{font-size:26px;font-weight:600;color:var(--t2);margin-bottom:6px}
+.say-line{position:absolute;left:120px;right:120px;text-align:center;font-size:44px;font-weight:600;letter-spacing:-.02em;z-index:3}
+.fine{position:absolute;left:120px;bottom:40px;font-size:24px;color:var(--t3);z-index:3}
+
+/* ── 10_elec.css ── */
+/* ── 전기와 자기 강의 덱 공용 색·글자 — 의미마다 색 하나(같은 뜻은 어느 장·어느 덱에서나 같은 색) ──
+   (+)전하 = 붉은 주황(--heat) · (−)전하·전자 = 하늘(--elec) · 전기력(인력·척력) 화살표 = 보라(--sound)
+   전류(방향) = 앰버(--light) · 전압 = 초록(--kin) · 저항 = 보라(--sound, 전류 덱 e3·e4 에서만)
+   빈칸 답 = 액션 블루(--act) — 면(밝음/어두움)에 따라 저절로 짙고 옅게 바뀜 */
+.c-pos{color:var(--heat)} .c-neg{color:var(--elec)} .c-force{color:var(--sound)}
+.c-cur{color:var(--light)} .c-volt{color:var(--kin)} .c-res{color:var(--sound)}
+.el-ro{position:absolute;font-size:34px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.el-ro small{font-size:26px;font-weight:400;color:var(--t2);margin-left:.3em}
+.el-cap{position:absolute;font-size:28px;font-weight:400;color:var(--t2);letter-spacing:-.005em}
+.el-tag{position:absolute;display:inline-flex;align-items:center;gap:10px;padding:8px 22px;border-radius:9999px;font-size:28px;font-weight:600;border:2px solid currentColor}
+.el-eq{position:absolute;font-weight:600;letter-spacing:-.025em;white-space:nowrap}
+.el-eq .i{color:var(--light)} .el-eq .v{color:var(--kin)} .el-eq .r{color:var(--sound)}
+/* 표(학습지 표를 그대로 옮길 때) */
+.el-tbl{position:absolute;border-collapse:separate;border-spacing:0;font-size:32px;line-height:1.35}
+.el-tbl th,.el-tbl td{padding:14px 22px;text-align:left;border-bottom:1px solid var(--hl)}
+.el-tbl th{font-size:26px;font-weight:600;color:var(--t2)}
+.el-tbl td.ans{color:var(--act);font-weight:700}
+
+/* ── e3.css ── */
+/* ═══════════════════════════════════════════════════════════════
+   objects/e3/e3.css — 학습지 3(전류·전압·저항) 강의 덱 전용 색 변수·글자 조각
+   --e3bg  : 면 색(부품 뒤 가림판 — 도선·전자가 부품 밑으로 지나가게)
+   --e3tube: 도선(속이 보이는 관) · --e3edge: 관 가장자리 빛 · --e3ink: 회로 기호 선 · --e3hl2: 짝 찾기 강조 후광
+   --e3pipe/--e3water: 물의 흐름 모형 관·물(전자 색 --elec 과 다른 청록) · --e3atom: 원자(중립 베이지)
+   ═══════════════════════════════════════════════════════════════ */
+.slide[data-tile="black"]{--e3bg:#000000}
+.slide[data-tile="dark"]{--e3bg:#1d1d1f}
+.slide[data-tile="graphite"]{--e3bg:#272729}
+.slide[data-tile="light"]{--e3bg:#ffffff}
+.slide[data-tile="parchment"]{--e3bg:#f5f5f7}
+.slide[data-tile="black"],.slide[data-tile="dark"],.slide[data-tile="graphite"]{
+  --e3tube:#333336; --e3edge:rgba(255,255,255,.16); --e3ink:#d1d1d6; --e3hl2:rgba(255,255,255,.16); --e3pipe:#4a4a4e; --e3water:#2b9aa8;
+  --e3atom:#6f685b; --e3atomS:#9a917f; --e3card:rgba(255,255,255,.06);
+}
+.slide[data-tile="black"]{--e3tube:#2a2a2d}
+.slide[data-tile="graphite"]{--e3tube:#3f3f42}
+.slide[data-tile="light"],.slide[data-tile="parchment"]{
+  --e3tube:#e3e3e8; --e3edge:rgba(0,0,0,.08); --e3ink:#3a3a3c; --e3hl2:rgba(0,113,227,.10); --e3pipe:#c7c7cc; --e3water:#6cc3cf;
+  --e3atom:#eadfc6; --e3atomS:#c6b48a; --e3card:#ffffff;
+}
+.e3-flow{fill:none;stroke:rgba(255,255,255,.9);stroke-width:5;stroke-linecap:round;stroke-dasharray:14 30}
+.e3-lbl{font-size:26px;font-weight:600;fill:var(--t2)}
+.e3-lbl.b{font-size:30px;fill:currentColor}
+.e3-tag{position:absolute;font-size:30px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;z-index:3}
+.e3-note{position:absolute;font-size:26px;line-height:1.4;color:var(--t3);z-index:3}
+.e3-cap{position:absolute;font-size:30px;font-weight:600;letter-spacing:-.01em;z-index:3}
+.e3-big{position:absolute;font-size:44px;font-weight:600;letter-spacing:-.022em;z-index:3}
+
+/* ── 05_direction.html ── */
+
+#e3_05_direction .e3-pill{display:inline-block;margin-left:12px;padding:2px 18px;border:2px solid currentColor;border-radius:9999px;font-size:28px;vertical-align:3px}
+
+/* ── 06_flow.html ── */
+
+#e3_06_flow .bk.xw{min-width:7.2em}
+
+/* ── 07_water.html ── */
+
+#e3_07_water .bk.xw{min-width:8.4em}
+
+/* ── 08_pairs.html ── */
+
+#e3_08_pairs .cell{position:absolute;height:96px;display:flex;align-items:center;gap:12px;padding:0 30px;font-size:36px;background:#fff;border-radius:14px;z-index:3}
+#e3_08_pairs .cell.h{height:60px;background:transparent;font-size:30px;font-weight:600;color:var(--t2);padding:0 6px}
+#e3_08_pairs .cell.r{justify-content:center}
+#e3_08_pairs .cell .bk{font-size:38px}
+
+/* ── 12_factors.html ── */
+
+#e3_12_factors .fc{position:absolute;top:410px;width:520px;height:520px;border-radius:18px;background:#fff;padding:32px 0 0;z-index:3}
+#e3_12_factors .fc .ft{font-size:36px;font-weight:600;letter-spacing:-.015em;padding:0 40px}
+#e3_12_factors .fc svg{display:block;margin-top:24px}
+#e3_12_factors .fc .fn{position:absolute;left:40px;bottom:30px;font-size:28px;color:var(--t2)}
+
+/* ── 15_table.html ── */
+
+#e3_15_table .cell{position:absolute;display:flex;align-items:center;font-size:36px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:0 26px;z-index:3}
+#e3_15_table .cell.h{background:transparent;border:0;font-size:28px;font-weight:600;color:var(--t2);line-height:1.3;padding:0 8px;align-items:flex-end}
+#e3_15_table .cell.c{justify-content:center;padding:0}
+#e3_15_table .cell .bk{min-width:4.2em}
+
+/* ── 16_recap.html ── */
+
+#e3_16_recap .rc{position:absolute;top:270px;width:540px;height:640px;border-radius:18px;background:#fff;padding:34px 38px;display:flex;flex-direction:column;gap:14px;z-index:3}
+#e3_16_recap .rc .top{display:flex;align-items:baseline;justify-content:space-between}
+#e3_16_recap .rc h3{font-size:60px;font-weight:600;letter-spacing:-.025em;line-height:1.1}
+#e3_16_recap .rc .u{font-size:30px;font-weight:600;color:var(--t2)}
+#e3_16_recap .rc .u b{font-size:46px;font-weight:700;margin-left:8px}
+#e3_16_recap .rc p{font-size:34px;line-height:1.42;font-weight:600}
+#e3_16_recap .rc p.m{color:var(--t2);font-size:28px;font-weight:400}
+#e3_16_recap .rc .big{margin-top:auto;font-size:40px;font-weight:700;letter-spacing:-.02em;line-height:1.3}
+#e3_16_recap .rc .big small{display:block;font-size:28px;font-weight:600;color:var(--t2);margin-top:4px}
+
+</style>
+</head>
+<body>
+<!-- 덱 전체가 함께 쓰는 SVG 정의(필터·그라데이션). 장면 SVG 에서 url(#이름) 으로 참조 -->
+<svg id="gdefs" width="0" height="0" style="position:absolute;width:0;height:0" aria-hidden="true" focusable="false">
+<defs>
+  <!-- 빛 번짐: 원래 모양 + 흐린 사본 -->
+  <filter id="glow-s" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-m" x="-80%" y="-80%" width="260%" height="260%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-l" x="-100%" y="-100%" width="300%" height="300%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceGraphic" stdDeviation="18" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-xl" x="-150%" y="-150%" width="400%" height="400%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceGraphic" stdDeviation="36" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <!-- 번짐만(후광 층) -->
+  <filter id="bloom-m" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="14"/></filter>
+  <filter id="bloom-l" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="40"/></filter>
+  <!-- 애플의 단 하나의 그림자: 면 위에 놓인 제품(오브젝트)에만 -->
+  <filter id="product-shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="3" dy="5" stdDeviation="15" flood-color="#000" flood-opacity=".22"/></filter>
+  <!-- 열 아지랑이 일렁임(작은 영역에만) — JS 가 baseFrequency/seed 를 바꿔 움직임 -->
+  <filter id="heat-haze" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence id="heat-haze-turb" type="fractalNoise" baseFrequency="0.012 0.06" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="14" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <!-- 에너지 조각 광원(원형 방사) — 색마다 -->
+  <radialGradient id="rg-elec"><stop offset="0" stop-color="#ffffff"/><stop offset=".28" stop-color="#64D2FF"/><stop offset="1" stop-color="#64D2FF" stop-opacity="0"/></radialGradient>
+  <radialGradient id="rg-light"><stop offset="0" stop-color="#ffffff"/><stop offset=".28" stop-color="#FFD60A"/><stop offset="1" stop-color="#FFD60A" stop-opacity="0"/></radialGradient>
+  <radialGradient id="rg-heat"><stop offset="0" stop-color="#fff1e8"/><stop offset=".28" stop-color="#FF6A3D"/><stop offset="1" stop-color="#FF6A3D" stop-opacity="0"/></radialGradient>
+  <radialGradient id="rg-sound"><stop offset="0" stop-color="#ffffff"/><stop offset=".28" stop-color="#BF5AF2"/><stop offset="1" stop-color="#BF5AF2" stop-opacity="0"/></radialGradient>
+  <radialGradient id="rg-kin"><stop offset="0" stop-color="#ffffff"/><stop offset=".28" stop-color="#30D158"/><stop offset="1" stop-color="#30D158" stop-opacity="0"/></radialGradient>
+  <!-- 제품 재질 -->
+  <linearGradient id="lg-white-plastic" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#eeeef0"/><stop offset="1" stop-color="#d4d4d9"/></linearGradient>
+  <linearGradient id="lg-graphite" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a5a5f"/><stop offset=".5" stop-color="#3a3a3d"/><stop offset="1" stop-color="#1f1f21"/></linearGradient>
+  <linearGradient id="lg-silver" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f4f6"/><stop offset=".45" stop-color="#c9c9ce"/><stop offset=".55" stop-color="#b3b3b8"/><stop offset="1" stop-color="#e2e2e6"/></linearGradient>
+  <linearGradient id="lg-glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity=".30"/><stop offset=".35" stop-color="#ffffff" stop-opacity=".06"/><stop offset=".8" stop-color="#ffffff" stop-opacity=".02"/><stop offset="1" stop-color="#ffffff" stop-opacity=".18"/></linearGradient>
+</defs>
+</svg>
+
+<div id="viewport"><div id="stage">
+<!-- ═══ 01_cover.html ═══ -->
+<section class="slide" id="e3_01_cover" data-tile="black" data-title="표지" data-notes="P1" data-say="도선 속을 아주 크게 본 화면에서 시작합니다. 하늘색 알갱이가 무엇인지는 아직 말하지 않아요. 딸깍 소리와 함께 알갱이들이 한꺼번에 움직이기 시작하고, 카메라가 물러나면 회로 전체가 보입니다 — 알갱이는 처음부터 도선 전체에 가득 있었어요.">
+  <svg class="full-svg" id="e3_01_cover-svg" viewBox="500 82.5 240 135">
+    <defs><linearGradient id="e3_01_cover-fg" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#FFD60A" stop-opacity=".26"/><stop offset=".6" stop-color="#FFD60A" stop-opacity=".06"/><stop offset="1" stop-color="#FFD60A" stop-opacity="0"/></linearGradient></defs>
+    <rect id="e3_01_cover-flash" x="480" y="60" width="300" height="180" fill="url(#e3_01_cover-fg)" opacity="0"/>
+    <g id="e3_01_cover-c"></g>
+  </svg>
+  <div class="abs t-eyebrow center" style="left:0;width:1920px;top:664px" data-in="4300">VII. 전기와 자기 · 2. 전기의 이용</div>
+  <div class="abs t-display center" style="left:0;width:1920px;top:708px" data-in="4500">전류 · 전압 · 저항</div>
+  <div class="abs t-lead center mute" style="left:0;width:1920px;top:858px" data-in="4900">전하의 흐름 · 미는 힘 · 막는 정도</div>
+  <div class="abs center" style="left:0;width:1920px;top:944px;font-size:26px;color:var(--t3)" data-in="5300">학습지 3 · 개념정리</div>
+</section>
+<!-- ═══ 02_hook.html ═══ -->
+<section class="slide" id="e3_02_hook" data-tile="dark" data-title="스위치를 켜는 순간" data-notes="P2" data-say="답은 말하지 않습니다. 「무언가가 아주 빨리 달려갔다」는 생각이 나오면 칠판에 적어 두고 마지막 장에서 다시 봅니다. 3단계 확대 화면은 증거만 보여 주는 장면이에요 — 해석은 아직 하지 않아요.">
+  <svg class="full-svg" id="e3_02_hook-svg" viewBox="200 560 1600 900"><g id="e3_02_hook-c"></g></svg>
+  <div class="hd" data-in="4900"><div class="eb">도입</div><h2>스위치를 켜는 순간</h2></div>
+  <div class="abs center mute" id="e3_02_hook-trip" style="left:0;width:1920px;top:930px;font-size:30px" data-in="500">스위치에서 전구까지 — 아주 긴 도선</div>
+  <div class="abs center" style="left:0;width:1920px;top:792px;font-size:44px;font-weight:600;letter-spacing:-.02em" data-step="1" data-out="3">딸깍 — 기다림 없이 곧바로 켜진다</div>
+  <div class="abs center" style="left:0;width:1920px;top:872px;font-size:62px;font-weight:600;letter-spacing:-.028em" data-step="2">무언가가 저 끝까지 순식간에 달려간 걸까?</div>
+  <div class="abs center mute" style="left:0;width:1920px;top:300px;font-size:32px;font-weight:600" data-step="3" data-fx="fade" data-delay="1500">도선 속을 크게 보면</div>
+</section>
+<!-- ═══ 03_define.html ═══ -->
+<section class="slide" id="e3_03_define" data-tile="light" data-title="전류란" data-notes="P3" data-say="빈칸 ① 흐름 · ② 전자 · ③ 한 방향. 처음 화면에서 알갱이가 이미 도선 속에 가득하고, 흐르지 않을 때도 흔들리고 있다는 것을 먼저 보게 합니다. 3단계의 자취(옅은 선)는 동그라미 친 전자 하나가 지나온 길 — 줄 맞춰 행진하는 것이 아니라 흔들리며 천천히 나아가요.">
+  <div class="hd" data-in><div class="eb"><b>1</b>전류</div><h2>전하가 흐른다는 것</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:36px"><b>정의</b> : 전하의 <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="900">흐름</span><span class="n">1</span></span> — 전하를 띤 입자(<span class="bk"><span class="a" data-step="2" data-fx="pop" data-delay="700">전자</span><span class="n">2</span></span>)가 <span class="bk wide"><span class="a" data-step="3" data-fx="pop" data-delay="900">한 방향</span><span class="n">3</span></span>으로 움직이는 것</div>
+  </div>
+  <div class="e3-cap mute" style="left:240px;top:500px;font-size:28px;font-weight:400" data-in="600">도선 속을 크게 본 모습</div>
+  <div class="e3-cap" style="left:980px;top:496px;width:700px;text-align:right" data-step="2" data-fx="fade" data-delay="200"><span class="c-neg">(−)전하</span>를 띤 아주 작은 입자</div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <rect x="240" y="560" width="1440" height="220" rx="110" fill="var(--e3tube)" stroke="var(--e3edge)" stroke-width="1.5"/>
+    <path id="e3_03_define-tr" d="" fill="none" stroke="var(--elec)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+    <g id="e3_03_define-e" style="color:var(--ink)"></g>
+    <g id="e3_03_define-arr" data-step="3" data-fx="left" data-delay="200"></g>
+  </svg>
+  <div class="e3-big center" style="left:0;width:1920px;top:884px" data-step="3" data-fx="fade" data-delay="1400">흔들리면서도 다 함께 한쪽으로 — <span class="c-neg">천천히</span></div>
+</section>
+<!-- ═══ 04_strength.html ═══ -->
+<section class="slide" id="e3_04_strength" data-tile="black" data-title="전류의 세기" data-notes="P4" data-say="빈칸 ④ 1초 · ⑤ 단면 · ⑥ 전하 · ⑦ A · ⑧ 1000. 숫자는 그림 속 단면(문)을 1초 동안 실제로 지나간 전자 수예요 — 1초를 재고 잠깐 멈춰 보여 준 뒤 다시 잽니다. 4단계에서 같은 시간에 두 배가 지나가면 전류가 두 배로 센 것. 실제 도선에서는 1초에 셀 수 없이 많은 전자가 지나갑니다.">
+  <div class="hd" data-in><div class="eb">전류의 세기</div><h2>얼마나 많이 흐를까</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:36px"><b>전류의 세기</b> : <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="300">1초</span><span class="n">4</span></span> 동안 도선의 <span class="bk"><span class="a" data-step="2" data-fx="pop" data-delay="900">단면</span><span class="n">5</span></span>을 통과하는 <span class="bk"><span class="a" data-step="3" data-fx="pop" data-delay="300">전하</span><span class="n">6</span></span>의 양</div>
+    <div class="ws-line" style="font-size:36px"><b>단위</b> : <span class="bk"><span class="a" data-step="5" data-fx="pop" data-delay="200">A</span><span class="n">7</span></span> (암페어) · 1 A = <span class="bk"><span class="a" data-step="5" data-fx="pop" data-delay="700">1000</span><span class="n">8</span></span> mA</div>
+  </div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <path d="M240 590H1380V790H240A30 100 0 0 1 240 590Z" fill="var(--e3tube)"/>
+    <ellipse cx="240" cy="690" rx="30" ry="100" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.5"/>
+    <g id="e3_04_strength-e"></g>
+    <ellipse cx="1380" cy="690" rx="30" ry="100" fill="#3a3a3c" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+    <g id="e3_04_strength-gate" data-step="2" data-fx="fade" data-delay="200">
+      <ellipse id="e3_04_strength-gl" cx="800" cy="690" rx="30" ry="100" fill="#f5f5f7" opacity="0"/>
+      <ellipse cx="800" cy="690" rx="30" ry="100" fill="rgba(255,255,255,.08)" stroke="#f5f5f7" stroke-width="4" stroke-dasharray="11 8"/>
+      <text x="800" y="840" text-anchor="middle" style="font-size:32px;font-weight:700;fill:#f5f5f7">단면</text>
+    </g>
+    <g id="e3_04_strength-clk" data-step="1" data-fx="pop">
+      <circle cx="1630" cy="590" r="66" fill="none" stroke="#3a3a3c" stroke-width="12"/>
+      <circle id="e3_04_strength-arc" cx="1630" cy="590" r="66" fill="none" stroke="#f5f5f7" stroke-width="12" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" transform="rotate(-90 1630 590)"/>
+      <text x="1630" y="604" text-anchor="middle" style="font-size:40px;font-weight:700;fill:#f5f5f7">1초</text>
+    </g>
+  </svg>
+  <div class="e3-cap mute" style="left:240px;top:520px;font-size:28px;font-weight:400" data-in="600">도선 속을 크게 본 모습</div>
+  <div class="abs center mute" style="left:1460px;width:340px;top:690px;font-size:26px" data-step="3" data-fx="fade">1초 동안 지나간 전하</div>
+  <div class="abs center" style="left:1460px;width:340px;top:724px;font-size:36px;font-weight:600" data-step="3" data-fx="fade"><span class="num c-neg" id="e3_04_strength-n" style="display:inline-block;font-size:84px;font-weight:700;margin-right:8px">0</span>개</div>
+  <div class="e3-big center" style="left:0;width:1920px;top:880px" data-step="4" data-fx="fade" data-delay="300">1초 동안 더 많이 지나가면 → <span class="c-cur">전류</span>가 더 세다</div>
+</section>
+<!-- ═══ 05_direction.html ═══ -->
+<section class="slide" id="e3_05_direction" data-tile="parchment" data-title="전류의 방향 vs 전자의 이동 방향" data-notes="P5" data-say="빈칸 ⑨ (+)극 · ⑩ (−)극 · ⑪ (−)극 · ⑫ (+)극. 그림의 도선은 전지 바깥 도선이에요(왼쪽 끝이 (+)극, 오른쪽 끝이 (−)극). 전자는 처음부터 (+)극 쪽으로 움직이고 있습니다 — 1단계 화살표가 전자의 실제 움직임과 반대라는 것을 학생이 먼저 알아채게 해 보세요.">
+  <div class="hd" data-in><div class="eb">전류의 방향 vs 전자의 이동 방향</div><h2>둘은 언제나 반대!</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line"><b>전류의 방향</b> : <span class="bk wide"><span class="a" data-step="1" data-fx="pop" data-delay="700">(+)극</span><span class="n">9</span></span> → <span class="bk wide"><span class="a" data-step="1" data-fx="pop" data-delay="1050">(−)극</span><span class="n">10</span></span></div>
+    <div class="ws-line"><b>전자의 이동 방향</b> : <span class="bk wide"><span class="a" data-step="2" data-fx="pop" data-delay="900">(−)극</span><span class="n">11</span></span> → <span class="bk wide"><span class="a" data-step="2" data-fx="pop" data-delay="1250">(+)극</span><span class="n">12</span></span></div>
+  </div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <rect x="330" y="658" width="1260" height="64" rx="32" fill="var(--e3tube)" stroke="var(--e3edge)" stroke-width="1.5"/>
+    <g id="e3_05_direction-e"></g>
+    <circle cx="300" cy="690" r="46" fill="var(--heat)"/><path d="M280 690H320M300 670V710" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="1620" cy="690" r="46" fill="var(--elec)"/><path d="M1600 690H1640" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+    <text x="300" y="784" text-anchor="middle" class="e3-lbl b" style="fill:var(--heat)">(+)극</text>
+    <text x="1620" y="784" text-anchor="middle" class="e3-lbl b" style="fill:var(--elec)">(−)극</text>
+    <g id="e3_05_direction-ia" data-step="1" data-fx="right"></g>
+    <g id="e3_05_direction-ea" data-step="2" data-fx="left" data-delay="300"></g>
+  </svg>
+  <div class="abs center" style="left:0;width:1920px;top:512px;font-size:32px;font-weight:600" data-step="1" data-fx="fade" data-delay="200"><span class="c-cur">전류의 방향</span> — (+)극에서 (−)극으로 <span class="e3-pill c-cur">약속</span></div>
+  <div class="abs center" style="left:0;width:1920px;top:826px;font-size:32px;font-weight:600" data-step="2" data-fx="fade" data-delay="500"><span class="c-neg">전자의 이동 방향</span> — (−)극에서 (+)극으로 · 전류와 반대!</div>
+  <div class="e3-big center" style="left:0;width:1920px;top:900px;font-size:40px" data-step="3">전자를 알기 <b style="font-weight:700">전에</b> 정한 약속을 지금도 그대로 쓰기 때문</div>
+</section>
+<!-- ═══ 06_flow.html ═══ -->
+<section class="slide" id="e3_06_flow" data-tile="black" data-title="흐를 때 vs 흐르지 않을 때" data-notes="P6" data-say="빈칸 ⑬ 일정한 · ⑭ 켜진다 · ⑮ 불규칙 · ⑯ 켜지지 않는다. 두 회로 모두 처음에는 전자가 제자리에서 흔들리기만 해요. 동그라미 친 전자의 자취(옅은 선)를 비교하게 하세요 — 흐를 때는 흔들리면서 한쪽으로 늘어나고, 흐르지 않을 때는 제자리에서 엉킵니다.">
+  <div class="hd" data-in><div class="eb">전류가 흐를 때 vs 흐르지 않을 때</div><h2>전자는 늘 움직이고 있다</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:36px"><b>흐를 때</b> : 전자들이 <span class="bk wide"><span class="a" data-step="1" data-fx="pop" data-delay="900">일정한</span><span class="n">13</span></span> 방향으로 움직인다 → 전구가 <span class="bk wide"><span class="a" data-step="1" data-fx="pop" data-delay="1300">켜진다</span><span class="n">14</span></span></div>
+    <div class="ws-line" style="font-size:36px"><b>흐르지 않을 때</b> : 전자들이 <span class="bk wide"><span class="a" data-step="2" data-fx="pop" data-delay="900">불규칙</span><span class="n">15</span></span>하게 움직인다. → 전구가 <span class="bk xw"><span class="a" data-step="2" data-fx="pop" data-delay="1300">켜지지 않는다</span><span class="n">16</span></span></div>
+  </div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <g id="e3_06_flow-L"></g><g id="e3_06_flow-R"></g>
+    <path id="e3_06_flow-ta" d="" fill="none" stroke="var(--elec)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+    <path id="e3_06_flow-tb" d="" fill="none" stroke="var(--elec)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+  </svg>
+  <div class="e3-cap center" style="left:200px;width:600px;top:902px" data-in="500">스위치를 닫으면</div>
+  <div class="e3-cap center" style="left:1120px;width:600px;top:902px" data-in="500">스위치를 열어 두면</div>
+</section>
+<!-- ═══ 07_water.html ═══ -->
+<section class="slide" id="e3_07_water" data-tile="dark" data-title="물의 흐름 모형" data-notes="P7" data-say="빈칸 ⑰ 전지 · ⑱ 아예 흐르지 않는다. 펌프가 물을 새로 만들지 않듯 전지도 전자를 만들지 않아요 — 도선 속에 이미 있는 전자를 계속 밀 뿐입니다. 2·3단계는 모형의 한계: 관은 끊으면 물이 새지만, 전선은 끊어도 전자가 새어 나오지 않고 회로 전체에서 한꺼번에 흐름이 멈춥니다.">
+  <div class="hd" data-in><div class="eb">물의 흐름 모형</div><h2>전기 회로 이해하기</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:34px">펌프가 물을 퍼 올려 물이 계속 흐르게 하는 것처럼, <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="800">전지</span><span class="n">17</span></span>가 전자를 계속 이동하게 한다</div>
+    <div class="ws-line" style="font-size:34px"><svg width="34" height="30" viewBox="0 0 34 30" style="vertical-align:-4px;margin-right:10px"><path d="M17 3L32 28H2Z" fill="none" stroke="var(--heat)" stroke-width="3" stroke-linejoin="round"/><path d="M17 11V19" stroke="var(--heat)" stroke-width="3" stroke-linecap="round"/><circle cx="17" cy="23.5" r="1.9" fill="var(--heat)"/></svg>수도관이 끊어지면 물이 새지만, 전선이 끊어지면 전류는 <span class="bk xw"><span class="a" data-step="3" data-fx="pop" data-delay="1500">아예 흐르지 않는다</span><span class="n">18</span></span></div>
+  </div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <g id="e3_07_water-W"></g><g id="e3_07_water-C"></g>
+    <text x="624" y="532" class="e3-lbl">물레방아</text>
+    <text x="530" y="904" text-anchor="middle" class="e3-lbl">펌프</text>
+    <text x="1390" y="904" text-anchor="middle" class="e3-lbl b" style="fill:var(--on-dark)" data-step="1" data-fx="fade" data-delay="600">전지</text>
+    <g data-step="1" data-fx="fade" data-delay="300"><g id="e3_07_water-link"></g></g>
+  </svg>
+  <div class="e3-cap" style="left:270px;top:476px">물의 흐름</div>
+  <div class="e3-cap" style="left:1130px;top:476px">전기 회로</div>
+  <div class="e3-cap mute" style="left:120px;top:770px;font-size:28px" data-step="2" data-fx="fade" data-delay="500">물이 샌다</div>
+  <div class="abs center mute" style="left:1080px;width:620px;top:922px;font-size:26px" data-step="3" data-fx="fade" data-delay="900">전자는 새어 나오지 않고, 회로 전체에서 흐름이 멈춘다</div>
+</section>
+<!-- ═══ 08_pairs.html ═══ -->
+<section class="slide" id="e3_08_pairs" data-tile="parchment" data-title="물의 흐름 ↔ 전기 회로" data-notes="P8" data-say="빈칸 ⑲ 전지 · ⑳ 전구 · ㉑ 스위치 · ㉒ 도선 · ㉓ 전류의 방향(학습지 1쪽 표의 전기 회로 칸). 짝을 학생이 먼저 말하게 한 뒤 넘깁니다. 물이 흐르는 방향과 짝인 것은 「전자의 이동 방향」이 아니라 「전류의 방향」 — 두 그림 모두 왼쪽 변에서 위로 흐르는 쪽이에요.">
+  <div class="hd" data-in><div class="eb">물의 흐름 모형</div><h2>무엇이 무엇과 닮았을까</h2></div>
+  <div id="e3_08_pairs-tbl" data-in="300">
+    <div class="cell h" style="left:120px;top:262px;width:350px"><svg width="26" height="30" viewBox="0 0 26 30"><path d="M13 2C13 2 3 14 3 20A10 10 0 0 0 23 20C23 14 13 2 13 2Z" fill="var(--elec)"/></svg>물의 흐름</div>
+    <div class="cell h" style="left:490px;top:262px;width:410px"><svg width="24" height="30" viewBox="0 0 24 30"><path d="M14 1L3 17H11L9 29L21 12H13Z" fill="var(--light)"/></svg>전기 회로</div>
+    <div class="cell" style="left:120px;top:330px;width:350px">펌프</div><div class="cell r" style="left:490px;top:330px;width:410px"><span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="500">전지</span><span class="n">19</span></span></div>
+    <div class="cell" style="left:120px;top:442px;width:350px">물레방아</div><div class="cell r" style="left:490px;top:442px;width:410px"><span class="bk"><span class="a" data-step="2" data-fx="pop" data-delay="500">전구</span><span class="n">20</span></span></div>
+    <div class="cell" style="left:120px;top:554px;width:350px">수도꼭지</div><div class="cell r" style="left:490px;top:554px;width:410px"><span class="bk"><span class="a" data-step="3" data-fx="pop" data-delay="500">스위치</span><span class="n">21</span></span></div>
+    <div class="cell" style="left:120px;top:666px;width:350px">수도관</div><div class="cell r" style="left:490px;top:666px;width:410px"><span class="bk"><span class="a" data-step="4" data-fx="pop" data-delay="500">도선</span><span class="n">22</span></span></div>
+    <div class="cell" style="left:120px;top:778px;width:350px">물이 흐르는 방향</div><div class="cell r" style="left:490px;top:778px;width:410px"><span class="bk wide"><span class="a" data-step="5" data-fx="pop" data-delay="500">전류의 방향</span><span class="n">23</span></span></div>
+  </div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <g id="e3_08_pairs-W"></g><g id="e3_08_pairs-C"></g>
+    <text x="1408" y="250" class="e3-lbl">물레방아</text>
+    <text x="1340" y="562" text-anchor="middle" class="e3-lbl">펌프</text>
+    <text x="1676" y="410" class="e3-lbl">수도꼭지</text>
+    <text x="1062" y="410" text-anchor="end" class="e3-lbl">수도관</text>
+    <g data-step="5" data-fx="fade" data-delay="200"><g id="e3_08_pairs-wa"></g><text x="1168" y="412" class="e3-lbl">물이 흐르는 방향</text></g>
+    <text x="1404" y="644" class="e3-lbl b" data-step="2" data-fx="fade" data-delay="300">전구</text>
+    <text x="1340" y="940" text-anchor="middle" class="e3-lbl b" data-step="1" data-fx="fade" data-delay="300">전지</text>
+    <text x="1632" y="770" class="e3-lbl b" data-step="3" data-fx="fade" data-delay="300">스위치</text>
+    <text x="1062" y="770" text-anchor="end" class="e3-lbl b" data-step="4" data-fx="fade" data-delay="300">도선</text>
+    <g data-step="5" data-fx="fade" data-delay="600"><g id="e3_08_pairs-ca"></g><text x="1168" y="772" class="e3-lbl b" style="fill:var(--light)">전류의 방향</text></g>
+  </svg>
+</section>
+<!-- ═══ 09_voltage.html ═══ -->
+<section class="slide" id="e3_09_voltage" data-tile="black" data-title="전압" data-notes="P9" data-say="빈칸 ㉔ 흐르게 · ㉕ V · ㉖ 펌프 · ㉗ 잘. 3단계에서 같은 전구에 전지를 하나 더 이어(1.5 V → 3 V) 앰버 꺾쇠(전류)가 빨라지고 전구가 밝아집니다. 전압은 회로를 「흐르는」 것이 아니라 전자를 미는 능력이라는 점을 짚어 주세요.">
+  <div class="hd" data-in><div class="eb"><b>2</b>전압</div><h2>전자를 미는 힘</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:36px"><b>정의</b> : 전류를 <span class="bk wide"><span class="a" data-step="1" data-fx="pop" data-delay="300">흐르게</span><span class="n">24</span></span> 하는 능력 · <b>단위</b> : <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="800">V</span><span class="n">25</span></span> (볼트)</div>
+    <div class="ws-line" style="font-size:36px">물의 흐름 모형에서는 물을 밀어 올리는 <span class="bk"><span class="a" data-step="2" data-fx="pop" data-delay="500">펌프</span><span class="n">26</span></span>의 힘에 해당 — 펌프가 셀수록 물이 더 <span class="bk"><span class="a" data-step="3" data-fx="pop" data-delay="1400">잘</span><span class="n">27</span></span> 흐른다</div>
+  </div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <g id="e3_09_voltage-W"></g><g id="e3_09_voltage-C"></g>
+    <text x="530" y="880" text-anchor="middle" class="e3-lbl">펌프</text>
+    <g data-step="2" data-fx="fade" data-delay="300"><g id="e3_09_voltage-link"></g></g>
+  </svg>
+  <div class="e3-cap" style="left:270px;top:480px" data-in="400">물의 흐름</div>
+  <div class="e3-cap" style="left:1130px;top:480px" data-in="400">전기 회로</div>
+  <div class="e3-tag c-volt" id="e3_09_voltage-v" style="left:1290px;width:200px;text-align:center;top:840px;font-size:38px;font-weight:700" data-step="1" data-fx="pop" data-delay="500">1.5 V</div>
+  <div class="e3-tag center" style="left:820px;width:280px;top:690px;font-size:28px;line-height:1.35" data-step="2" data-fx="fade" data-delay="300">펌프의 힘<br><span class="c-volt">전압</span></div>
+  <div class="e3-tag mute" style="left:600px;top:840px;font-size:28px" data-step="3" data-fx="fade">더 세게</div>
+  <div class="e3-big center" style="left:0;width:1920px;top:912px;font-size:38px" data-step="3" data-fx="fade" data-delay="1700">같은 회로에서 <span class="c-volt">전압</span>이 클수록 <span class="c-cur">전류</span>가 잘 흐른다</div>
+</section>
+<!-- ═══ 10_resist.html ═══ -->
+<section class="slide" id="e3_10_resist" data-tile="light" data-title="저항" data-notes="P10" data-say="빈칸 ㉘ 방해 · ㉙ Ω · ㉚ 1 V · ㉛ 1 A. 1단계에서 저항을 끼우면 저항 근처만이 아니라 회로 전체의 전자가 함께 느려져요(한 고리에서는 어디서나 전류가 같음). 오른쪽 작은 회로는 저항 하나만 이은 것으로 1 Ω 의 뜻을 그대로 그린 것입니다.">
+  <div class="hd" data-in><div class="eb"><b>3</b>저항</div><h2>흐름을 막는 정도</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:36px"><b>정의</b> : 전류의 흐름을 <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="1500">방해</span><span class="n">28</span></span>하는 정도 · <b>단위</b> : <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="1900">Ω</span><span class="n">29</span></span> (옴)</div>
+    <div class="ws-line" style="font-size:36px"><b>1 Ω의 크기</b> : <span class="bk"><span class="a" data-step="2" data-fx="pop" data-delay="600">1 V</span><span class="n">30</span></span>의 전압을 걸었을 때 <span class="bk"><span class="a" data-step="2" data-fx="pop" data-delay="1000">1 A</span><span class="n">31</span></span>의 전류가 흐르는 저항의 크기</div>
+  </div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <g id="e3_10_resist-L"></g>
+    <text x="884" y="704" class="e3-lbl b" style="fill:var(--sound)" data-step="1" data-fx="fade" data-delay="300">저항</text>
+    <g id="e3_10_resist-mini" data-step="2" data-fx="fade" data-delay="100"><g id="e3_10_resist-R"></g><g id="e3_10_resist-ia"></g></g>
+  </svg>
+  <div class="abs center" style="left:160px;width:720px;top:896px;font-size:30px;font-weight:600" data-step="1" data-fx="fade" data-delay="1000">저항을 넣으면 회로 <b style="font-weight:700">전체</b>의 전자가 함께 느려진다</div>
+  <div class="e3-tag c-volt" style="left:1010px;width:120px;text-align:right;top:688px;font-size:40px;font-weight:700" data-step="2" data-fx="pop" data-delay="600">1 V</div>
+  <div class="e3-tag c-cur" style="left:1330px;width:200px;text-align:center;top:486px;font-size:40px;font-weight:700" data-step="2" data-fx="pop" data-delay="1000">1 A</div>
+  <div class="e3-tag c-res" style="left:1736px;top:688px;font-size:40px;font-weight:700" data-step="2" data-fx="pop" data-delay="1400">1 Ω</div>
+</section>
+<!-- ═══ 11_why.html ═══ -->
+<section class="slide" id="e3_11_why" data-tile="black" data-title="저항이 생기는 까닭" data-notes="P11" data-say="빈칸 ㉜ 원자 · ㉝ 충돌. 전자는 전지에 밀려 오른쪽으로 빨라지다가 원자에 부딪히면 방향이 제멋대로 바뀌어요. 그래서 전체로는 오른쪽으로 천천히 나아갑니다. 보라색으로 반짝이는 곳이 부딪힌 곳이에요(원자는 제자리에서 조금씩 떨 뿐 흘러가지 않습니다).">
+  <div class="hd" data-in><div class="eb">저항이 생기는 까닭</div><h2>도선 속을 들여다보면</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:36px"><b>저항이 생기는 까닭</b> : 전류가 흐를 때 전자들이 움직이면서 <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="700">원자</span><span class="n">32</span></span>와 <span class="bk"><span class="a" data-step="2" data-fx="pop" data-delay="1200">충돌</span><span class="n">33</span></span>하기 때문</div>
+  </div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <rect x="200" y="440" width="1520" height="360" rx="44" fill="var(--e3tube)" stroke="var(--e3edge)" stroke-width="1.5"/>
+    <g id="e3_11_why-lat"></g>
+    <g transform="translate(212 852)">
+      <g data-step="1" data-fx="fade"><circle cx="16" cy="0" r="16" fill="var(--e3atom)" stroke="var(--e3atomS)" stroke-width="2"/><text x="44" y="10" class="e3-lbl" style="fill:var(--on-dark)">원자</text></g>
+      <g transform="translate(170 0)"><circle cx="12" cy="0" r="12" fill="var(--elec)"/><path d="M6 0H18" stroke="#fff" stroke-width="3" stroke-linecap="round"/><text x="36" y="10" class="e3-lbl" style="fill:var(--on-dark)">전자</text></g>
+      <g transform="translate(320 0)" data-step="2" data-fx="fade" data-delay="300"><circle cx="16" cy="0" r="18" fill="var(--sound)" opacity=".75"/><text x="46" y="10" class="e3-lbl" style="fill:var(--on-dark)">부딪힌 곳 — 흐름이 방해받는다</text></g>
+    </g>
+  </svg>
+  <div class="abs mute" style="left:1300px;top:392px;width:420px;text-align:right;font-size:26px" data-in="600">전자가 밀려 가는 쪽 →</div>
+  <div class="e3-big center" style="left:0;width:1920px;top:904px;font-size:38px" data-step="2" data-fx="fade" data-delay="900">전자가 원자와 부딪히며 나아간다 — 이 충돌이 곧 <span class="c-res">저항</span></div>
+</section>
+<!-- ═══ 12_factors.html ═══ -->
+<section class="slide" id="e3_12_factors" data-tile="parchment" data-title="저항의 크기를 정하는 것" data-notes="P12" data-say="빈칸 ㉞ 종류 · ㉟ 길이 · ㊱ 단면적. 저항은 도선이 원래 가진 성질이에요. 비교할 때는 한 가지만 다르게 하고 나머지는 같게 둡니다(길이·굵기 비교는 같은 물질끼리). 어느 쪽이 더 큰지는 다음 두 장에서 전자를 보내 확인합니다.">
+  <div class="hd" data-in><div class="eb">저항의 크기를 정하는 것</div><h2>도선이 원래 가진 성질</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:36px"><b>저항의 크기에 영향을 주는 요인</b> — 물질의 <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="600">종류</span><span class="n">34</span></span> · 물질의 <span class="bk"><span class="a" data-step="2" data-fx="pop" data-delay="600">길이</span><span class="n">35</span></span> · 물질의 <span class="bk wide"><span class="a" data-step="3" data-fx="pop" data-delay="600">단면적</span><span class="n">36</span></span></div>
+  </div>
+  <div class="fc" style="left:120px" data-step="1" data-fx="up">
+    <div class="ft">구리 vs 니크롬</div>
+    <svg viewBox="0 0 520 330" width="520" height="330">
+      <text x="50" y="80" class="e3-lbl">구리</text>
+      <rect x="50" y="98" width="400" height="36" rx="18" fill="url(#e3_12_factors-cu)"/><ellipse cx="450" cy="116" rx="8" ry="18" fill="#a35a30"/>
+      <text x="50" y="212" class="e3-lbl">니크롬</text>
+      <rect x="50" y="230" width="400" height="36" rx="18" fill="url(#e3_12_factors-ni)"/><ellipse cx="450" cy="248" rx="8" ry="18" fill="#6e6e73"/>
+    </svg>
+    <div class="fn">길이 · 굵기는 같게</div>
+  </div>
+  <div class="fc" style="left:700px" data-step="2" data-fx="up">
+    <div class="ft">짧게 vs 길게</div>
+    <svg viewBox="0 0 520 330" width="520" height="330">
+      <text x="50" y="80" class="e3-lbl">짧은 도선</text>
+      <rect x="50" y="98" width="190" height="36" rx="18" fill="url(#e3_12_factors-al)"/>
+      <text x="50" y="212" class="e3-lbl">긴 도선</text>
+      <rect id="e3_12_factors-long" x="50" y="230" width="190" height="36" rx="18" fill="url(#e3_12_factors-al)"/>
+    </svg>
+    <div class="fn">물질 · 굵기는 같게</div>
+  </div>
+  <div class="fc" style="left:1280px" data-step="3" data-fx="up">
+    <div class="ft">가늘게 vs 굵게</div>
+    <svg viewBox="0 0 520 330" width="520" height="330">
+      <text x="50" y="80" class="e3-lbl">가는 도선</text>
+      <rect x="70" y="106" width="380" height="16" rx="8" fill="url(#e3_12_factors-al)"/><ellipse cx="70" cy="114" rx="5" ry="8" fill="#6e6e73"/>
+      <text x="50" y="196" class="e3-lbl">굵은 도선</text>
+      <rect id="e3_12_factors-thick" x="80" y="240" width="370" height="16" rx="8" fill="url(#e3_12_factors-al)"/><ellipse id="e3_12_factors-face" cx="80" cy="248" rx="5" ry="8" fill="#6e6e73"/>
+      <text x="30" y="318" class="e3-lbl" style="font-size:24px">← 자른 면(단면)의 넓이가 다르다</text>
+    </svg>
+    <div class="fn">물질 · 길이는 같게</div>
+  </div>
+  <svg width="0" height="0" style="position:absolute"><defs>
+    <linearGradient id="e3_12_factors-cu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0b48a"/><stop offset=".45" stop-color="#c8794a"/><stop offset="1" stop-color="#9a5530"/></linearGradient>
+    <linearGradient id="e3_12_factors-ni" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8d8dc"/><stop offset=".45" stop-color="#9a9aa0"/><stop offset="1" stop-color="#6e6e73"/></linearGradient>
+    <linearGradient id="e3_12_factors-al" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2e2e6"/><stop offset=".45" stop-color="#b3b3b8"/><stop offset="1" stop-color="#86868b"/></linearGradient>
+  </defs></svg>
+</section>
+<!-- ═══ 13_length.html ═══ -->
+<section class="slide" id="e3_13_length" data-tile="dark" data-title="굵기가 같을 때 — 길이" data-notes="P13" data-say="빈칸 ㊲ 많은 · ㊳ 크다. 두 도선은 같은 물질·같은 굵기예요. 전자 하나를 같은 빠르기로 보내 끝까지 가는 동안 부딪힌 횟수를 셉니다(숫자는 이 그림 속 원자에 실제로 부딪힌 횟수). 막대는 충돌 횟수만큼 — 길수록 방해가 많아 저항이 큽니다.">
+  <div class="hd" data-in><div class="eb">굵기가 같을 때</div><h2>길이를 바꾸면</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:36px"><b>굵기가 같을 때</b> : 길이가 길수록 전자가 더 <span class="bk"><span class="a" id="e3_13_length-b37" data-step="1" data-fx="pop" data-delay="4000">많은</span><span class="n">37</span></span> 원자와 충돌하여 저항이 <span class="bk"><span class="a" data-step="2" data-fx="pop" data-delay="1000">크다</span><span class="n">38</span></span></div>
+  </div>
+  <div class="e3-cap" style="left:200px;top:418px" data-in="400">짧은 도선</div>
+  <div class="e3-cap" style="left:200px;top:648px" data-in="400">긴 도선</div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <g id="e3_13_length-S"></g><g id="e3_13_length-L"></g>
+    <g data-step="2" data-fx="fade">
+      <text x="1300" y="582" class="e3-lbl" style="fill:var(--sound)">저항</text>
+      <text x="1300" y="812" class="e3-lbl" style="fill:var(--sound)">저항</text>
+    </g>
+    <rect id="e3_13_length-bs" x="1380" y="562" width="0" height="26" rx="13" fill="var(--sound)"/>
+    <rect id="e3_13_length-bl" x="1380" y="792" width="0" height="26" rx="13" fill="var(--sound)"/>
+  </svg>
+  <div class="abs" style="left:1300px;top:470px;font-size:34px;font-weight:600">충돌 <span class="num" style="font-size:60px;font-weight:700;margin:0 6px" id="e3_13_length-ns">0</span>번</div>
+  <div class="abs" style="left:1300px;top:700px;font-size:34px;font-weight:600">충돌 <span class="num" style="font-size:60px;font-weight:700;margin:0 6px" id="e3_13_length-nl">0</span>번</div>
+  <div class="abs center e3-note" style="left:0;width:1920px;top:910px" data-in="800">같은 물질 · 같은 굵기 · 같은 빠르기로 보낸 전자 하나</div>
+</section>
+<!-- ═══ 14_thick.html ═══ -->
+<section class="slide" id="e3_14_thick" data-tile="light" data-title="길이가 같을 때 — 굵기" data-notes="P14" data-say="빈칸 ㊴ 쉬워 · ㊵ 작다. 두 도선은 같은 물질·같은 길이이고 같은 전압을 걸었어요. 전자 하나하나의 빠르기는 같지만 굵은 도선은 단면이 넓어 나란히 지나갈 길이 많습니다. 숫자는 점선 단면을 3초 동안 실제로 지나간 전자 수예요.">
+  <div class="hd" data-in><div class="eb">길이가 같을 때</div><h2>굵기를 바꾸면</h2></div>
+  <div class="ws-card" style="left:120px;top:250px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:36px"><b>길이가 같을 때</b> : 굵을수록 전자가 단면을 통과하기 <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="3300">쉬워</span><span class="n">39</span></span> 저항이 <span class="bk"><span class="a" data-step="2" data-fx="pop" data-delay="1000">작다</span><span class="n">40</span></span></div>
+  </div>
+  <div class="e3-cap" style="left:200px;top:410px" data-in="400">굵은 도선</div>
+  <div class="e3-cap" style="left:200px;top:700px" data-in="400">가는 도선</div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <rect x="200" y="460" width="960" height="180" rx="40" fill="var(--e3tube)" stroke="var(--e3edge)" stroke-width="1.5"/>
+    <rect x="200" y="750" width="960" height="60" rx="30" fill="var(--e3tube)" stroke="var(--e3edge)" stroke-width="1.5"/>
+    <g id="e3_14_thick-et"></g><g id="e3_14_thick-en"></g>
+    <ellipse cx="1100" cy="550" rx="20" ry="90" fill="rgba(0,0,0,.04)" stroke="var(--ink)" stroke-width="3" stroke-dasharray="9 7"/>
+    <ellipse cx="1100" cy="780" rx="10" ry="30" fill="rgba(0,0,0,.04)" stroke="var(--ink)" stroke-width="3" stroke-dasharray="9 7"/>
+    <g data-step="2" data-fx="fade">
+      <text x="1300" y="620" class="e3-lbl" style="fill:var(--sound)">저항</text>
+      <text x="1300" y="860" class="e3-lbl" style="fill:var(--sound)">저항</text>
+    </g>
+    <rect id="e3_14_thick-bt" x="1380" y="600" width="0" height="26" rx="13" fill="var(--sound)"/>
+    <rect id="e3_14_thick-bn" x="1380" y="840" width="0" height="26" rx="13" fill="var(--sound)"/>
+  </svg>
+  <div class="abs mute" style="left:1300px;top:466px;font-size:28px">3초 동안 단면을 지나간 전자</div>
+  <div class="abs" style="left:1300px;top:504px;font-size:34px;font-weight:600"><span class="num c-neg" style="font-size:60px;font-weight:700;margin-right:6px" id="e3_14_thick-nt">0</span>개</div>
+  <div class="abs mute" style="left:1300px;top:706px;font-size:28px">3초 동안 단면을 지나간 전자</div>
+  <div class="abs" style="left:1300px;top:744px;font-size:34px;font-weight:600"><span class="num c-neg" style="font-size:60px;font-weight:700;margin-right:6px" id="e3_14_thick-nn">0</span>개</div>
+  <div class="abs center e3-note" style="left:0;width:1920px;top:910px" data-in="800">같은 물질 · 같은 길이 · 같은 전압 — 전자 하나하나의 빠르기는 같다</div>
+</section>
+<!-- ═══ 15_table.html ═══ -->
+<section class="slide" id="e3_15_table" data-tile="black" data-title="표로 정리" data-notes="P15" data-say="학습지 2쪽 아래 표(번호 없는 칸): 길게 → 저항 커진다 · 전류 작아진다 / 굵게 → 저항 작아진다 · 전류 커진다. 전지(전압)는 그대로 두고 시험 도선만 바꿉니다(같은 물질). 전구 밝기로 전류의 크기를 봐요 — 수업 페이지의 샤프심 집게 실험과 같은 장면입니다.">
+  <div class="hd" data-in><div class="eb">표로 정리</div><h2>도선을 바꾸면</h2></div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <circle id="e3_15_table-glow" cx="520" cy="400" r="170" fill="url(#rg-light)" opacity=".55"/>
+    <path d="M200 400H840V620" fill="none" stroke="var(--e3tube)" stroke-width="16" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M200 400V820H240" fill="none" stroke="var(--e3tube)" stroke-width="16" stroke-linejoin="round" stroke-linecap="round"/>
+    <path id="e3_15_table-lead" d="" fill="none" stroke="var(--e3tube)" stroke-width="16" stroke-linecap="round"/>
+    <rect id="e3_15_table-rod" x="230" y="813" width="680" height="14" rx="7" fill="#8e8e93"/>
+    <rect id="e3_15_table-act" x="252" y="813" width="268" height="14" rx="7" fill="var(--sound)" opacity=".6"/>
+    <rect x="236" y="796" width="24" height="48" rx="7" fill="var(--e3ink)"/>
+    <rect id="e3_15_table-clip" x="508" y="796" width="24" height="48" rx="7" fill="var(--e3ink)"/>
+    <!-- 전지(왼쪽 세로 도선 위, 위가 (+)극) -->
+    <rect x="182" y="570" width="36" height="80" fill="var(--e3bg)"/>
+    <line x1="160" y1="599" x2="240" y2="599" stroke="var(--e3ink)" stroke-width="5" stroke-linecap="round"/>
+    <line x1="178" y1="621" x2="222" y2="621" stroke="var(--e3ink)" stroke-width="12"/>
+    <line x1="200" y1="570" x2="200" y2="599" stroke="var(--e3tube)" stroke-width="8"/><line x1="200" y1="621" x2="200" y2="650" stroke="var(--e3tube)" stroke-width="8"/>
+    <path d="M136 588H154M145 579V597" stroke="var(--heat)" stroke-width="4" stroke-linecap="round"/><path d="M136 632H154" stroke="var(--elec)" stroke-width="4" stroke-linecap="round"/>
+    <!-- 전구 -->
+    <circle cx="520" cy="400" r="40" fill="var(--e3bg)"/>
+    <circle id="e3_15_table-bf" cx="520" cy="400" r="40" fill="#FFE27A" opacity=".6"/>
+    <path d="M480 400H498A22 22 0 0 1 542 400H560" fill="none" stroke="var(--e3ink)" stroke-width="4"/>
+    <circle cx="520" cy="400" r="40" fill="none" stroke="var(--e3ink)" stroke-width="4"/>
+  </svg>
+  <div class="abs mute" style="left:230px;top:858px;font-size:26px">시험 도선 — 집게 사이만 회로에 들어간다</div>
+  <div class="e3-tag" style="left:230px;top:904px;color:var(--sound)" data-step="1" data-fx="fade" data-out="2">도선을 더 길게</div>
+  <div class="e3-tag" style="left:230px;top:904px;color:var(--sound)" data-step="2" data-fx="fade" data-delay="300">길이는 처음대로 · 도선을 더 굵게</div>
+  <div id="e3_15_table-tbl"></div>
+</section>
+<!-- ═══ 16_recap.html ═══ -->
+<section class="slide" id="e3_16_recap" data-tile="parchment" data-title="오늘의 정리" data-notes="P16" data-say="세 낱말의 단위를 함께 소리 내어 읽고 넘어갑니다. 다음 시간에는 이 셋 사이의 관계(옴의 법칙)를 배워요.">
+  <div class="hd" data-in><div class="eb">정리</div><h2>오늘 배운 세 낱말</h2></div>
+  <div id="e3_16_recap-cards"></div>
+</section>
+<!-- ═══ 17_answer.html ═══ -->
+<section class="slide" id="e3_17_answer" data-tile="black" data-title="처음 질문의 답" data-notes="P17" data-say="2장의 질문으로 돌아갑니다. 동그라미 친 전자는 전구에 닿으려면 한참 걸리지만 전구는 스위치를 닫자마자 켜져요. 도선 속에 처음부터 가득 있던 전자 전체가 한꺼번에 밀리기 시작하기 때문입니다(화면의 전자 빠르기도 보이게 하려고 실제보다 훨씬 빠르게 그린 것).">
+  <svg class="full-svg" id="e3_17_answer-svg" viewBox="0 0 3840 2160"><g id="e3_17_answer-c"></g></svg>
+  <div class="hd" data-in><div class="eb">처음 질문의 답</div><h2>곧바로 켜지는 까닭</h2></div>
+  <div class="e3-big center" style="left:0;width:1920px;top:792px" data-step="1" data-fx="fade" data-delay="300" data-out="2">딸깍 — 전구가 곧바로 켜졌다</div>
+  <div class="e3-big center" style="left:0;width:1920px;top:792px;font-size:40px" data-step="2" data-fx="fade" data-delay="1600" data-out="3">동그라미 친 전자는 아직 전지 옆 — 전자는 아주 <span class="c-neg">천천히</span> 움직인다</div>
+  <div class="abs center" style="left:0;width:1920px;top:800px;font-size:52px;font-weight:600;letter-spacing:-.025em" data-step="3" data-delay="1400">도선 전체의 <span class="c-neg">전자</span>가 한꺼번에 움직이기 시작하기 때문</div>
+  <div class="abs center mute" style="left:0;width:1920px;top:884px;font-size:30px" data-step="3" data-fx="fade" data-delay="2000">전자가 전지에서 전구까지 빨리 달려가서가 아니다 — 물이 가득 찬 호스를 밀면 반대쪽에서 곧바로 물이 나오듯</div>
+  <div id="app-credit" class="abs center" style="left:0;width:1920px;top:1016px;font-size:24px;color:var(--t3)">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved · 최종 업데이트: 2026-10-02</div>
+</section>
+<div id="gridov"></div>
+</div></div>
+
+<script>window.NOTES = {"P1": "오늘은 전기 회로 속을 아주 가까이에서 들여다보는 것으로 시작합니다. 화면에 보이는 하늘색 알갱이들, 가만히 있지 않고 제자리에서 흔들리고 있죠? 딸깍 소리가 나자 알갱이들이 한꺼번에 한쪽으로 움직이기 시작했어요. 카메라가 물러나니 이 알갱이들이 회로의 도선 전체에 처음부터 가득 들어 있었다는 것이 보입니다. 이 알갱이가 무엇인지, 오늘 세 낱말 — 전류, 전압, 저항 — 으로 하나씩 이름을 붙여 볼 거예요. <span class=\"cue\">화면: 도선 속 확대 → 딸깍 → 회로 전체</span>", "P2": "이번에는 아주 긴 도선입니다. 스위치에서 출발해 도선을 따라 한참 가야 전구가 나와요. 스위치를 딸깍 누르면… 기다림 없이 곧바로 불이 들어옵니다. 저 멀리까지 무언가가 순식간에 달려간 걸까요? 도선 속을 크게 들여다보면 알갱이들이 보이는데, 생각보다 천천히 움직이고 있습니다. 지금 떠오르는 생각을 학습지 여백에 한 줄 적어 두세요. 수업 마지막 장에서 다시 확인합니다.", "P3": "도선 속을 크게 본 모습입니다. 알갱이들이 처음부터 가득 들어 있고, 제멋대로 흔들리고 있어요. 이제 이 알갱이들이 다 함께 한쪽으로 움직이기 시작합니다. 이렇게 전하가 흐르는 것을 전류라고 해요. 학습지 1번은 「흐름」입니다. 움직이는 알갱이는 (−)전하를 띤 아주 작은 입자, 바로 「전자」가 2번이에요. 동그라미 친 전자 하나의 자취를 보세요. 줄 맞춰 행진하는 게 아니라 흔들리면서도 전체적으로는 「한 방향」으로 천천히 나아갑니다. 3번은 「한 방향」입니다.", "P4": "전류가 얼마나 센지는 어떻게 나타낼까요? 시계를 하나 세워 「1초」를 잽니다. 4번이에요. 그리고 도선을 칼로 자른 면, 즉 「단면」에 문을 하나 세웠다고 생각해 봅시다. 5번은 단면. 1초 동안 이 문을 지나가는 「전하」가 몇 개인지 세어 볼게요. 6번은 전하입니다. 화면에서는 1초에 6개가 지나가네요. 이번엔 같은 시간에 두 배가 지나가게 해 볼까요? 1초에 12개 — 1초 동안 더 많이 지나갈수록 전류가 센 거예요. 단위는 「A」, 암페어라고 읽어요. 작은 전류는 밀리암페어를 쓰는데 1 A 는 「1000」 mA 입니다. 7번 A, 8번 1000. 그림 속 전자 수는 모형이고, 실제 도선에서는 1초에 셀 수 없이 많은 전자가 지나갑니다.", "P5": "그럼 전류는 어느 방향으로 흐를까요? 왼쪽 끝이 전지의 (+)극, 오른쪽 끝이 (−)극에 이어진 도선입니다. 그런데 벌써 전자들이 움직이고 있죠? 어느 쪽으로 가고 있나요? 우선 전류의 방향은 「(+)극」에서 「(−)극」으로 정해서 씁니다. 9번, 10번이에요. 그런데 실제로 움직이는 전자는 (−)전하를 띠고 있어서 (+)극 쪽으로 끌려가니까 「(−)극」에서 「(+)극」으로 움직입니다. 11번, 12번. 둘은 언제나 반대예요. 왜 이렇게 됐을까요? 사람들이 전자를 알기 전에 전류의 방향을 먼저 약속해 버렸고, 이 약속에 맞춰 이미 많은 책과 기호가 만들어져 지금도 그대로 쓰고 있기 때문입니다.", "P6": "두 회로를 비교해 봅시다. 처음에는 두 회로 모두 스위치가 열려 있어요. 그래도 전자는 멈춰 있지 않죠? 제자리에서 흔들리고 있습니다. 동그라미 친 전자의 자취도 제자리에서 엉켜 있어요. 이제 왼쪽 스위치를 닫습니다. 전자들이 「일정한」 방향으로 움직이고, 전구가 「켜진다」. 13번, 14번이에요. 왼쪽 자취가 한쪽으로 늘어나는 게 보이죠? 스위치를 열어 둔 오른쪽은 어떤가요? 전자들이 여전히 「불규칙」하게 움직이기만 하고, 한쪽으로 쏠리지 않습니다. 그래서 전구가 「켜지지 않는다」. 15번, 16번입니다. 전자가 움직이느냐가 아니라, 한 방향으로 흐르느냐가 중요한 거예요.", "P7": "전류는 눈에 보이지 않으니, 눈에 보이는 물의 흐름에 빗대어 봅시다. 펌프가 물을 퍼 올려 물이 계속 흐르게 하는 것처럼, 「전지」가 전자를 계속 이동하게 합니다. 17번은 전지예요. 펌프가 물을 새로 만들지 않듯, 전지도 전자를 만들어 내보내는 게 아니라 도선 속에 이미 있는 전자를 미는 겁니다. 그런데 모형은 모형일 뿐이에요. 수도관을 끊으면 끊어진 곳으로 물이 새지요. 전선을 끊으면 어떻게 될까요? 전자가 새어 나오지 않고, 회로 전체에서 전류가 「아예 흐르지 않는다」. 18번입니다.", "P8": "물의 흐름과 전기 회로에서 하는 일이 같은 짝을 찾아 표를 채워 봅시다. 물을 계속 밀어 주는 펌프는 「전지」, 물이 흐르면 돌아가는 물레방아는 전류가 흐르면 켜지는 「전구」, 흐름을 막거나 여는 수도꼭지는 「스위치」, 물이 지나는 수도관은 전류가 지나는 「도선」, 그리고 물이 흐르는 방향은 「전류의 방향」입니다. 19번부터 23번이에요. 마지막 짝은 전자의 이동 방향이 아니라 전류의 방향이라는 것에 주의하세요.", "P9": "이번엔 전압입니다. 전압은 전류를 「흐르게」 하는 능력이고, 단위는 「V」, 볼트예요. 24번, 25번. 건전지에 적힌 1.5 V 가 바로 이것입니다. 물의 흐름 모형에서는 물을 밀어 올리는 「펌프」의 힘에 해당해요. 26번. 펌프를 더 세게 돌리면 물이 더 「잘」 흐르죠. 27번입니다. 전기 회로도 같아요. 같은 전구에 전지를 하나 더 이어 전압을 3 V 로 높이면 전류가 더 잘 흐르고 전구가 더 밝아집니다.", "P10": "세 번째는 저항입니다. 회로에 이 지그재그 기호, 저항을 끼워 볼게요. 전자들이 어떻게 됐나요? 저항 근처만이 아니라 회로 전체의 전자가 함께 느려졌고, 전구도 어두워졌어요. 저항은 전류의 흐름을 「방해」하는 정도이고, 단위는 「Ω」, 옴이라고 읽습니다. 28번, 29번. 1 Ω 은 「1 V」의 전압을 걸었을 때 「1 A」의 전류가 흐르는 저항의 크기예요. 30번, 31번입니다.", "P11": "저항은 왜 생길까요? 도선 속을 다시 들여다봅시다. 베이지색 동그라미가 도선을 이루는 「원자」예요. 32번. 원자는 제자리에서 조금씩 떨 뿐 흘러가지 않습니다. 전자는 전지에 밀려 나아가다가 원자에 부딪히면 방향이 제멋대로 바뀝니다. 보라색으로 반짝이는 곳이 부딪힌 곳이에요. 전류가 흐를 때 전자들이 움직이면서 원자와 「충돌」하기 때문에 흐름이 방해받는 것, 이것이 저항입니다. 33번.", "P12": "그렇다면 저항의 크기는 무엇이 정할까요? 저항은 도선이 원래 가진 성질이에요. 구리와 니크롬처럼 물질의 「종류」가 다르면 저항이 다르고, 같은 물질이라도 「길이」와 자른 면의 넓이, 즉 「단면적」에 따라 달라집니다. 34번, 35번, 36번. 비교할 때는 한 가지만 다르게 하고 나머지는 같게 둔다는 것, 기억하세요.", "P13": "굵기가 같은 두 도선, 짧은 것과 긴 것에 전자를 하나씩 같은 빠르기로 보내 봅시다. 끝까지 가는 동안 몇 번 부딪히는지 세어 볼게요. 긴 도선을 지나는 전자가 훨씬 「많은」 원자와 충돌합니다. 그래서 길이가 길수록 저항이 「크다」. 37번, 38번이에요.", "P14": "이번엔 길이가 같고 굵기가 다른 두 도선입니다. 같은 전압을 걸었으니 전자 하나하나의 빠르기는 같아요. 그런데 굵은 도선은 단면이 넓어서 전자가 나란히 지나갈 길이 많습니다. 3초 동안 점선 단면을 지나간 전자를 세어 보면 굵은 도선 쪽이 세 배나 많죠. 굵을수록 전자가 단면을 통과하기 「쉬워」 저항이 「작다」. 39번, 40번입니다.", "P15": "학습지 아래 표를 채워 봅시다. 전지는 그대로 두고 시험 도선만 바꿉니다. 집게를 밀어 도선을 더 길게 하면 저항은 커지고, 같은 전압에서 전류는 작아져서 전구가 어두워져요. 길이를 되돌리고 도선을 더 굵게 하면 저항은 작아지고, 전류는 커져서 전구가 밝아집니다. 샤프심 양 끝을 집게로 물고 한쪽 집게를 밀어 보는 실험과 같은 장면이에요.", "P16": "오늘 배운 세 낱말을 정리합니다. 전류는 전하의 흐름이고 단위는 A, 방향은 (+)극에서 (−)극, 전자는 그 반대. 전압은 전류를 흐르게 하는 능력이고 단위는 V, 물의 흐름 모형의 펌프. 저항은 전류의 흐름을 방해하는 정도이고 단위는 Ω, 전자가 원자와 충돌해서 생기며 길수록 크고 굵을수록 작습니다. 다음 시간에는 이 셋 사이의 관계를 배워요.", "P17": "처음 질문으로 돌아갑시다. 긴 도선의 스위치를 닫는 순간 전구는 곧바로 켜집니다. 그런데 전지 옆을 크게 보세요. 동그라미 친, 전지 바로 옆에 있던 전자는 아직 거의 그 자리에 있죠? 전자는 아주 천천히 움직여요. 그런데도 전구가 곧바로 켜지는 것은 전자가 전지에서 전구까지 빨리 달려가서가 아니라, 도선 속에 처음부터 가득 있던 전자들이 스위치를 닫는 순간 회로 전체에서 한꺼번에 움직이기 시작하기 때문입니다. 물이 가득 찬 호스를 한쪽에서 밀면 반대쪽에서 곧바로 물이 나오는 것과 같아요. 학습지 여백에 적어 둔 생각과 비교해 보세요."};</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   core.js — 강의 덱 엔진
+   · 1920×1080 무대를 화면에 맞춰 배율(레터박스)
+   · 장면(scene) = 도입(enter, 저절로) + 빌드 단계(go(k), 클릭마다)
+   · 되돌아가기·건너뛰기는 "처음 상태로 복원 → 순간 재생"이라 언제나 같은 모습
+   · 애니메이션 도구는 ctx 가 쥐고 있어 장면을 떠나면 저절로 정리됨
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  const SW = 1920, SH = 1080;
+  const Q = new URLSearchParams(location.search);
+  const STILL = Q.get('still') === '1';
+  /* 학생 모드(?s=1): 대본(노트) 숨김 — 허브 「칠판 다시보기」용. sc_teacher=1 이 저장된 기기는 그대로 교사 화면 */
+  let TEACHER_DEV = false; try { TEACHER_DEV = localStorage.getItem('sc_teacher') === '1'; } catch (e) {}
+  const STUDENT = Q.get('s') === '1' && !TEACHER_DEV;
+  if (STUDENT) document.documentElement.classList.add('student');
+  const REDUCED = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  if (STILL || Q.get('clean') === '1') document.documentElement.classList.add('still');
+  if (Q.get('grid') === '1') document.documentElement.classList.add('grid');
+  if (Q.get('log') === '1') {   // 검증용: 콘솔 수준을 앞머리로 남김(console.py 가 읽음)
+    const oe = console.error.bind(console), ow = console.warn.bind(console);
+    const txt = a => a.map(x => (x && x.stack) ? String(x.stack).split(String.fromCharCode(10)).slice(0, 2).join(' | ') : (typeof x === 'object' ? (() => { try { return JSON.stringify(x); } catch (e) { return String(x); } })() : String(x))).join(' ');
+    console.error = (...a) => oe('[ERR] ' + txt(a));
+    console.warn = (...a) => ow('[WARN] ' + txt(a));
+    window.addEventListener('error', e => oe('[ERR] uncaught ' + (e.message || '') + ' @' + (e.lineno || '')));
+    window.addEventListener('unhandledrejection', e => oe('[ERR] rejection ' + ((e.reason && e.reason.stack) || e.reason)));
+  }
+
+  /* ── 곡선 ── */
+  const EASE = {
+    out: 'cubic-bezier(.2,.8,.2,1)', outQuint: 'cubic-bezier(.22,1,.36,1)', inOut: 'cubic-bezier(.65,0,.35,1)',
+    in: 'cubic-bezier(.55,0,.75,.1)', spring: 'cubic-bezier(.34,1.56,.64,1)', soft: 'cubic-bezier(.25,.1,.25,1)', linear: 'linear',
+  };
+  const JE = {
+    linear: t => t,
+    out: t => 1 - Math.pow(1 - t, 3),
+    outQuint: t => 1 - Math.pow(1 - t, 5),
+    inOut: t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+    in: t => t * t * t,
+    soft: t => t * t * (3 - 2 * t),
+    spring: t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); },
+    elastic: t => (t === 0 || t === 1) ? t : Math.pow(2, -10 * t) * Math.sin((t * 10 - .75) * (2 * Math.PI) / 3) + 1,
+  };
+
+  /* ── 등장 모양(선언형·ctx.reveal 공용) ── svg 요소에는 blur(필터) 빼고 */
+  const REVEAL = {
+    rise:  { k: [{ opacity: 0, transform: 'translateY(28px)', filter: 'blur(12px)' }, { opacity: 1, transform: 'translateY(0px)', filter: 'blur(0px)' }], dur: 900 },
+    fade:  { k: [{ opacity: 0 }, { opacity: 1 }], dur: 700 },
+    blur:  { k: [{ opacity: 0, transform: 'scale(1.06)', filter: 'blur(24px)' }, { opacity: 1, transform: 'scale(1)', filter: 'blur(0px)' }], dur: 1100 },
+    scale: { k: [{ opacity: 0, transform: 'scale(.92)' }, { opacity: 1, transform: 'scale(1)' }], dur: 900 },
+    pop:   { k: [{ opacity: 0, transform: 'scale(.5)' }, { opacity: 1, transform: 'scale(1)' }], dur: 750, ease: 'spring' },
+    left:  { k: [{ opacity: 0, transform: 'translateX(-64px)' }, { opacity: 1, transform: 'translateX(0px)' }], dur: 900 },
+    right: { k: [{ opacity: 0, transform: 'translateX(64px)' }, { opacity: 1, transform: 'translateX(0px)' }], dur: 900 },
+    down:  { k: [{ opacity: 0, transform: 'translateY(-28px)' }, { opacity: 1, transform: 'translateY(0px)' }], dur: 900 },
+    up:    { k: [{ opacity: 0, transform: 'translateY(72px)' }, { opacity: 1, transform: 'translateY(0px)' }], dur: 1000 },
+    draw:  { k: [{ opacity: 1, strokeDashoffset: 1 }, { opacity: 1, strokeDashoffset: 0 }], dur: 1200, ease: 'inOut' },
+    wipe:  { k: [{ opacity: 1, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0% 0 0)' }], dur: 1000, ease: 'inOut' },
+    none:  { k: [{ opacity: 1 }, { opacity: 1 }], dur: 1 },
+  };
+  const isSVG = el => el instanceof SVGElement && !(el instanceof SVGSVGElement);
+  const GEOM = 'path,line,polyline,polygon,circle,ellipse,rect';
+  const noFilter = k => k.map(f => { const g = Object.assign({}, f); delete g.filter; return g; });
+
+  const STUB = { finished: Promise.resolve(), cancel() {}, finish() {}, pause() {}, play() {}, playbackRate: 1, effect: null };
+
+  /* ═════════ 장면 도구 상자 ═════════ */
+  class Ctx {
+    constructor(root, idx) {
+      this.root = root; this.idx = idx; this.instant = false; this.alive = true;
+      this.reduced = REDUCED; this.still = STILL; this.E = EASE; this.JE = JE; this.data = {};
+      this._anims = []; this._loops = []; this._timers = []; this._waits = []; this._tweens = []; this._sfxT = []; this._disp = [];
+    }
+    /** 효과음: SFX.play(name, a, b) 를 delay ms 뒤에. 순간 모드(되돌리기·복원)·건너뛰기·장면 나감이면 조용히 */
+    sfx(name, delay = 0, a, b) {
+      if (STILL || this.instant || !this.alive || !window.SFX) return;
+      if (delay > 0) { const id = setTimeout(() => { if (this.alive && !this.instant) SFX.play(name, a, b); }, delay); this._sfxT.push(id); }
+      else SFX.play(name, a, b);
+    }
+    /** 이어지는 소리('fan'|'hum'|'boil') — 장면을 떠나면 저절로 멎는다. 반환: {level(v), whine(v), stop()} */
+    sfxLoop(kind, o) { const h = window.SFX ? SFX.loop(kind, o) : null; if (h) this._disp.push(() => h.stop()); return h; }
+    onDispose(fn) { this._disp.push(fn); }
+    $(s) { return this.root.querySelector(s); }
+    $$(s) { return Array.from(this.root.querySelectorAll(s)); }
+    _el(el) { return typeof el === 'string' ? this.$(el) : el; }
+    _els(els) { if (typeof els === 'string') return this.$$(els); if (!els) return []; return (els.length !== undefined && !(els instanceof Element)) ? Array.from(els) : [els]; }
+
+    /** Web Animations 한 방. o: {dur, delay, ease, fill, iter, dir, composite}. 순간 모드면 바로 끝 상태 */
+    a(el, kf, o = {}) {
+      el = this._el(el);
+      if (!el || !this.alive) return STUB;
+      const infinite = o.iter === Infinity;
+      const inst = this.instant && !infinite;
+      const an = el.animate(kf, {
+        duration: inst ? 0 : (o.dur ?? 700), delay: inst ? 0 : (o.delay ?? 0),
+        easing: EASE[o.ease] || o.ease || EASE.out, fill: o.fill || 'both',
+        iterations: o.iter ?? 1, direction: o.dir || 'normal', composite: o.composite || 'replace',
+      });
+      if (inst) { try { an.finish(); } catch (e) {} }
+      this._anims.push(an);
+      return an;
+    }
+    /** 여러 요소에 시차(stagger ms)를 두고 같은 애니 */
+    all(els, kf, o = {}) {
+      return this._els(els).map((e, i) => this.a(e, typeof kf === 'function' ? kf(e, i) : kf, Object.assign({}, o, { delay: (o.delay || 0) + i * (o.stagger || 0) })));
+    }
+    /** 등장: fx = rise|fade|blur|scale|pop|left|right|down|up|draw|wipe */
+    reveal(el, fx = 'rise', o = {}) {
+      const els = this._els(el); const out = [];
+      els.forEach((e, i) => {
+        const P = REVEAL[fx] || REVEAL.rise;
+        const d = Object.assign({ dur: P.dur, ease: P.ease || 'out' }, o);
+        if (o.stagger) d.delay = (o.delay || 0) + i * o.stagger;
+        // 효과음: 학습지 빈칸 답이 채워지면 「띠링」, pop·up 등장이면 「톡」
+        if (!this.instant) {
+          const sk = (e.classList && e.classList.contains('a') && e.parentElement && e.parentElement.classList.contains('bk')) ? 'blank' : ((fx === 'pop' || fx === 'up') ? 'pop' : null);
+          if (sk) this.sfx(sk, d.delay || 0);
+        }
+        if (fx === 'draw') {
+          const geo = (e.matches && e.matches(GEOM)) ? [e] : Array.from(e.querySelectorAll(GEOM));
+          this.a(e, [{ opacity: 1 }, { opacity: 1 }], { dur: 1, delay: d.delay });
+          geo.forEach(g => { if (!g.hasAttribute('pathLength')) g.setAttribute('pathLength', '1'); out.push(this.a(g, P.k, d)); });
+        } else {
+          out.push(this.a(e, isSVG(e) ? noFilter(P.k) : P.k, d));
+        }
+      });
+      return out.length === 1 ? out[0] : { finished: Promise.all(out.map(x => x.finished)), list: out };
+    }
+    /** 사라짐(기본: 흐려지며 살짝 위로) */
+    hide(el, o = {}) {
+      return this.all(el, isSVG(this._els(el)[0] || document.body) ? [{ opacity: 1 }, { opacity: 0 }] : [{ opacity: 1, filter: 'blur(0px)' }, { opacity: 0, filter: 'blur(8px)' }],
+        Object.assign({ dur: 500, ease: 'out' }, o));
+    }
+    /** 기다리기(순간 모드면 곧장) */
+    wait(ms) {
+      if (this.instant || !this.alive) return Promise.resolve();
+      return new Promise(res => { const w = { res }; w.t = setTimeout(() => { const i = this._waits.indexOf(w); if (i >= 0) this._waits.splice(i, 1); res(); }, ms); this._waits.push(w); });
+    }
+    /** JS 트윈 — WAAPI 로 못 움직이는 것(속성·viewBox·path d·숫자). fn(p, rawT) */
+    tween(dur, fn, o = {}) {
+      const ease = typeof o.ease === 'function' ? o.ease : (JE[o.ease] || JE.out);
+      if (this.instant || !this.alive) { if (this.alive) fn(1, 1); return Promise.resolve(); }
+      const delay = o.delay || 0;
+      return new Promise(res => {
+        let start = null, done = false, id = 0;
+        const tw = {
+          finish: () => { if (done) return; done = true; cancelAnimationFrame(id); try { fn(1, 1); } catch (e) { console.error(e); } res(); },
+          kill: () => { if (done) return; done = true; cancelAnimationFrame(id); res(); },
+        };
+        this._tweens.push(tw);
+        if (!o.noInit) { try { fn(0, 0); } catch (e) { console.error(e); } }
+        const tick = now => {
+          if (done) return;
+          if (start === null) start = now + delay;
+          const t = (now - start) / dur;
+          if (t < 0) { id = requestAnimationFrame(tick); return; }
+          if (t >= 1) { tw.finish(); return; }
+          try { fn(ease(t), t); } catch (e) { console.error(e); tw.kill(); return; }
+          id = requestAnimationFrame(tick);
+        };
+        id = requestAnimationFrame(tick);
+      });
+    }
+    /** 숫자 굴리기. o.fmt(v) 로 모양 */
+    count(el, from, to, o = {}) {
+      el = this._el(el); if (!el) return Promise.resolve();
+      const fmt = o.fmt || (v => Math.round(v).toLocaleString('ko-KR'));
+      if (to !== from) this.sfx('counter', o.delay || 0, o.dur ?? 1200);
+      return this.tween(o.dur ?? 1200, p => { el.textContent = fmt(from + (to - from) * p); }, Object.assign({ ease: 'outQuint' }, o));
+    }
+    /** 선 그리기(pathLength=1 을 붙여 stroke-dashoffset 1→0) */
+    draw(el, o = {}) { return this.reveal(el, 'draw', o); }
+    /** SVG 카메라 — viewBox 를 [x,y,w,h] 로 옮김 */
+    camera(svg, to, o = {}) {
+      svg = this._el(svg); if (!svg) return Promise.resolve();
+      const from = (svg.getAttribute('viewBox') || `0 0 ${SW} ${SH}`).split(/[\s,]+/).map(Number);
+      this.sfx('whoosh', o.delay || 0, o.dur ?? 1400, .55);
+      return this.tween(o.dur ?? 1400, p => { svg.setAttribute('viewBox', from.map((v, i) => (v + (to[i] - v) * p).toFixed(2)).join(' ')); }, Object.assign({ ease: 'inOut' }, o));
+    }
+    /** 장면이 살아 있는 동안 도는 고리. fn(t초, dt초). 반환값.stop() */
+    loop(fn) {
+      const L = { on: true, t: 0, last: null, id: 0 };
+      const tick = now => {
+        if (!L.on || !this.alive) return;
+        const dt = L.last === null ? 0 : Math.min(0.05, (now - L.last) / 1000);
+        L.last = now; L.t += dt;
+        try { fn(L.t, dt); } catch (e) { console.error('[loop]', e); L.on = false; return; }
+        L.id = requestAnimationFrame(tick);
+      };
+      L.stop = () => { L.on = false; cancelAnimationFrame(L.id); };
+      L.id = requestAnimationFrame(tick);
+      this._loops.push(L);
+      return L;
+    }
+    timer(fn, ms) { const id = setTimeout(() => { if (this.alive) fn(); }, this.instant ? 0 : ms); this._timers.push(id); return id; }
+    every(fn, ms) { const id = setInterval(() => { if (this.alive) fn(); }, ms); this._timers.push(id); return id; }
+    /** 지금 도는 것을 끝 상태로(클릭이 애니 도중에 오면) */
+    hurry() {
+      this.instant = true;
+      this._sfxT.splice(0).forEach(id => clearTimeout(id));      // 아직 울리기 전인 효과음은 접는다
+      this._anims.forEach(a => { try { const t = a.effect && a.effect.getComputedTiming(); if (t && t.iterations !== Infinity && a.playState !== 'finished') a.finish(); } catch (e) {} });
+      this._tweens.slice().forEach(tw => tw.finish());
+      this._waits.splice(0).forEach(w => { clearTimeout(w.t); w.res(); });
+    }
+    dispose() {
+      this.alive = false;
+      this._sfxT.splice(0).forEach(id => clearTimeout(id));
+      this._disp.splice(0).forEach(fn => { try { fn(); } catch (e) {} });
+      this._loops.forEach(l => l.stop());
+      this._timers.forEach(id => clearTimeout(id));
+      this._tweens.slice().forEach(tw => tw.kill());
+      this._waits.splice(0).forEach(w => { clearTimeout(w.t); w.res(); });
+    }
+  }
+
+  /* ═════════ SVG 도우미 ═════════ */
+  const NS = 'http://www.w3.org/2000/svg';
+  const U = {
+    NS,
+    el(tag, attrs = {}, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; },
+    lerp: (a, b, t) => a + (b - a) * t,
+    clamp: (v, a = 0, b = 1) => Math.max(a, Math.min(b, v)),
+    rand: (a = 0, b = 1) => a + Math.random() * (b - a),
+    /** 결정적 난수(검증 화면이 매번 같게): U.rng(seed)() */
+    rng(seed = 1) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; },
+    uid: (() => { let n = 0; return (p = 'u') => `${p}${(++n).toString(36)}`; })(),
+    E: EASE, JE,
+  };
+
+  /* ═════════ 덱 ═════════ */
+  const scenes = {};
+  const Deck = {
+    scene(id, def) { scenes[id] = def; },
+    list: [], i: -1, k: 0, ctx: null, busy: null, U, EASE, JE, Ctx, STILL, REDUCED, STUDENT,
+  };
+  window.Deck = Deck; window.U = U;
+
+  let stage, viewport, hud, prog, dots, notesEl, ovEl, helpEl, blankEl;
+  const fit = () => {
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const s = Math.min(vw / SW, vh / SH);
+    stage.style.transform = `translate(${(vw - SW * s) / 2 - vw / 2}px, ${(vh - SH * s) / 2 - vh / 2}px) scale(${s})`;
+    Deck.scale = s;
+  };
+  const defOf = sec => scenes[sec.id] || {};
+  const stepsOf = sec => {
+    if (sec.__steps != null) return sec.__steps;
+    let m = +(defOf(sec).steps || 0);
+    const tmp = document.createElement('div'); tmp.innerHTML = sec.__pristine;
+    tmp.querySelectorAll('[data-step]').forEach(e => { m = Math.max(m, +e.getAttribute('data-step') || 0); });
+    tmp.querySelectorAll('[data-out]').forEach(e => { m = Math.max(m, +e.getAttribute('data-out') || 0); });
+    return (sec.__steps = m);
+  };
+  const safe = async (fn, c) => { try { await fn(); } catch (e) { if (c && c.alive) console.error(`[scene ${c.root.id}]`, e); } };
+
+  function runDecl(c, k) {
+    if (k === 0) {
+      c.$$('[data-in]').forEach(el => {
+        const v = el.getAttribute('data-in'); const delay = +(el.dataset.delay || (v && !isNaN(+v) ? v : 0));
+        c.reveal(el, el.dataset.fx || 'rise', { delay, dur: el.dataset.dur ? +el.dataset.dur : undefined, ease: el.dataset.ease || undefined });
+      });
+    } else {
+      c.$$(`[data-step="${k}"]`).forEach(el => {
+        c.reveal(el, el.dataset.fx || 'rise', { delay: +(el.dataset.delay || 0), dur: el.dataset.dur ? +el.dataset.dur : undefined, ease: el.dataset.ease || undefined });
+      });
+      c.$$(`[data-out="${k}"]`).forEach(el => c.hide(el, { delay: +(el.dataset.outDelay || 0) }));
+    }
+  }
+
+  async function show(i, k = 0, opt = {}) {
+    const n = Deck.list.length; if (!n) return;
+    i = Math.max(0, Math.min(n - 1, i));
+    const to = Deck.list[i]; const from = Deck.i >= 0 ? Deck.list[Deck.i] : null;
+    k = Math.max(0, Math.min(stepsOf(to), k));
+    const instant = !!opt.instant || STILL;
+    if (Deck.ctx) { Deck.ctx.hurry(); Deck.ctx.dispose(); }
+    Deck.busy = null;
+
+    if (from && from !== to) {
+      from.classList.remove('is-on');
+      if (instant || opt.cut) { from.classList.remove('is-out'); from.innerHTML = ''; }
+      else {
+        from.classList.add('is-out');
+        const done = () => { if (!from.classList.contains('is-on')) { from.classList.remove('is-out'); from.innerHTML = ''; } };
+        setTimeout(done, 700);
+      }
+    }
+    to.getAnimations && to.getAnimations().forEach(a => a.cancel());
+    to.innerHTML = to.__pristine;
+    to.classList.remove('is-out'); to.classList.add('is-on');
+    Deck.i = i; Deck.k = k;
+    const tile = to.getAttribute('data-tile') || 'dark';
+    document.body.classList.toggle('on-light', tile === 'light' || tile === 'parchment');
+    if (from && from !== to && !instant && !opt.cut) {
+      to.animate([{ opacity: 0, transform: 'scale(1.015)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 620, easing: EASE.out });
+      if (window.SFX) SFX.play('slide');
+    }
+    const c = new Ctx(to, i); Deck.ctx = c;
+    const def = defOf(to);
+    const run = (async () => {
+      c.instant = instant;
+      runDecl(c, 0);
+      if (def.enter) await safe(() => def.enter(c), c);
+      for (let s = 1; s <= k; s++) {
+        if (!c.alive) return;
+        c.instant = true; runDecl(c, s);
+        if (def.go) await safe(() => def.go(c, s), c);
+      }
+      c.instant = STILL;
+    })();
+    Deck.busy = run; ui();
+    await run;
+    if (Deck.busy === run) Deck.busy = null;
+    if (STILL) markReady();
+    try { history.replaceState(null, '', `#${i + 1}${k ? '.' + k : ''}`); } catch (e) {}
+  }
+  async function stepTo(k) {
+    const c = Deck.ctx, sec = Deck.list[Deck.i]; if (!c) return;
+    Deck.k = k; ui();
+    if (window.SFX && !STILL) SFX.play('step');
+    c.instant = STILL; runDecl(c, k);
+    const def = defOf(sec);
+    const run = def.go ? safe(() => def.go(c, k), c) : Promise.resolve();
+    Deck.busy = run;
+    await run;
+    if (Deck.busy === run) { Deck.busy = null; c.instant = STILL; }
+    try { history.replaceState(null, '', `#${Deck.i + 1}${k ? '.' + k : ''}`); } catch (e) {}
+  }
+  Deck.next = () => {
+    if (Deck.busy && Deck.ctx) { Deck.ctx.hurry(); return; }
+    const sec = Deck.list[Deck.i];
+    if (Deck.k < stepsOf(sec)) stepTo(Deck.k + 1);
+    else if (Deck.i < Deck.list.length - 1) show(Deck.i + 1, 0);
+  };
+  Deck.prev = () => {
+    if (Deck.k > 0) show(Deck.i, Deck.k - 1, { instant: true });
+    else if (Deck.i > 0) show(Deck.i - 1, stepsOf(Deck.list[Deck.i - 1]), { instant: true });
+  };
+  Deck.go = (i, k = 0, opt) => show(i, k, opt);
+  Deck.goId = (id, k = 0) => { const i = Deck.list.findIndex(s => s.id === id); if (i >= 0) show(i, k); };
+  /** 지금 단계 다시 보기(R) */
+  Deck.replay = async () => {
+    const k = Deck.k;
+    if (k === 0) { const i = Deck.i; Deck.i = -1; await show(i, 0, { cut: true }); }
+    else { await show(Deck.i, k - 1, { instant: true }); stepTo(k); }
+  };
+  Deck.steps = sec => stepsOf(sec || Deck.list[Deck.i]);
+
+  function markReady() {
+    const fin = () => { document.documentElement.dataset.ready = '1'; };
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => setTimeout(fin, 60));
+  }
+
+  /* ── 화면 바깥 UI ── */
+  const ICON = {
+    prev: '<svg viewBox="0 0 20 20"><path d="M12.5 4 6.5 10l6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    next: '<svg viewBox="0 0 20 20"><path d="M7.5 4l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    grid: '<svg viewBox="0 0 20 20"><g fill="currentColor"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5"/></g></svg>',
+    notes: '<svg viewBox="0 0 20 20"><path d="M4 5h12M4 10h12M4 15h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+    full: '<svg viewBox="0 0 20 20"><path d="M3.5 8V3.5H8M12 3.5h4.5V8M16.5 12v4.5H12M8 16.5H3.5V12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    replay: '<svg viewBox="0 0 20 20"><path d="M4.5 10a5.5 5.5 0 1 0 1.8-4.1M4.5 3.8v3.4h3.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    sound: '<svg viewBox="0 0 20 20"><path d="M3.5 8h3l4-3.5v11L6.5 12h-3z" fill="currentColor"/><path d="M13.5 7.2a4 4 0 0 1 0 5.6M15.6 5a7 7 0 0 1 0 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    mute: '<svg viewBox="0 0 20 20"><path d="M3.5 8h3l4-3.5v11L6.5 12h-3z" fill="currentColor"/><path d="M13.5 7.5l4.5 5M18 7.5l-4.5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  };
+  function syncSound() {
+    const b = hud && hud.querySelector('[data-a="sound"]'); if (!b) return;
+    const on = !window.SFX || SFX.isOn();
+    b.innerHTML = on ? ICON.sound : ICON.mute; b.classList.toggle('off', !on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  function buildChrome() {
+    hud = document.createElement('div'); hud.id = 'hud';
+    hud.innerHTML = `<button data-a="replay" aria-label="이 단계 다시 보기(R)">${ICON.replay}</button>${STUDENT ? '' : `<button data-a="notes" aria-label="대본 보기(T)">${ICON.notes}</button>`}<button data-a="grid" aria-label="전체 보기(O)">${ICON.grid}</button><button data-a="prev" aria-label="이전">${ICON.prev}</button><span class="count" id="count">1 / 1</span><button data-a="next" aria-label="다음">${ICON.next}</button><button data-a="sound" aria-label="소리 켜기/끄기(M)">${ICON.sound}</button><button data-a="full" aria-label="전체 화면(F)">${ICON.full}</button>`;
+    document.body.appendChild(hud); syncSound();
+    hud.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; e.stopPropagation(); act(b.dataset.a); });
+    prog = document.createElement('div'); prog.id = 'progress'; prog.innerHTML = '<i></i>'; document.body.appendChild(prog);
+    dots = document.createElement('div'); dots.id = 'stepdots'; document.body.appendChild(dots);
+    notesEl = document.createElement('div'); notesEl.id = 'notes'; document.body.appendChild(notesEl);
+    ovEl = document.createElement('div'); ovEl.id = 'overview'; ovEl.className = 'overlay'; document.body.appendChild(ovEl);
+    helpEl = document.createElement('div'); helpEl.id = 'help'; helpEl.className = 'overlay';
+    helpEl.innerHTML = `<div class="box"><h3>강의 조작</h3><table>
+      <tr><td><kbd>→</kbd> <kbd>Space</kbd> 화면 클릭</td><td>다음(빌드 단계 → 다음 장)</td></tr>
+      <tr><td><kbd>←</kbd> 오른쪽 클릭</td><td>이전</td></tr>
+      <tr><td><kbd>R</kbd></td><td>이 단계 애니메이션 다시 보기</td></tr>
+      <tr><td><kbd>N</kbd></td><td>발표자 노트(대본)</td></tr>
+      <tr><td><kbd>O</kbd></td><td>전체 보기</td></tr>
+      <tr><td><kbd>F</kbd></td><td>전체 화면</td></tr>
+      <tr><td><kbd>M</kbd></td><td>소리 켜기/끄기</td></tr>
+      <tr><td><kbd>B</kbd> / <kbd>W</kbd></td><td>검은 화면 / 흰 화면</td></tr>
+      <tr><td>숫자 + <kbd>Enter</kbd></td><td>그 장으로 이동</td></tr>
+      <tr><td>좌우로 밀기</td><td>전자칠판에서 넘기기</td></tr></table></div>`;
+    document.body.appendChild(helpEl);
+    helpEl.addEventListener('click', () => helpEl.classList.remove('show'));
+    blankEl = document.createElement('div'); blankEl.id = 'blank'; document.body.appendChild(blankEl);
+    blankEl.addEventListener('click', () => { blankEl.className = ''; });
+  }
+  function act(a) {
+    if (a === 'next') Deck.next(); else if (a === 'prev') Deck.prev();
+    else if (a === 'notes') toggleNotes(); else if (a === 'grid') toggleOverview();
+    else if (a === 'full') toggleFull(); else if (a === 'replay') Deck.replay();
+    else if (a === 'sound') { if (window.SFX) SFX.toggle(); syncSound(); }
+  }
+  function ui() {
+    const n = Deck.list.length, sec = Deck.list[Deck.i]; if (!sec || !hud) return;
+    const st = stepsOf(sec);
+    hud.querySelector('#count').textContent = `${Deck.i + 1} / ${n}`;
+    prog.firstChild.style.width = `${((Deck.i + (st ? Deck.k / (st + 1) : 0)) / Math.max(1, n - 1)) * 100}%`;
+    dots.innerHTML = st ? Array.from({ length: st + 1 }, (_, j) => `<i class="${j <= Deck.k ? 'on' : ''}"></i>`).join('') : '';
+    if (notesEl.classList.contains('show')) renderNotes();
+    if (ovEl.classList.contains('show')) renderOverview();
+  }
+  function md(s) { return s.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); }
+  function renderNotes() {
+    const sec = Deck.list[Deck.i]; const N = window.NOTES || {};
+    const keys = (sec.dataset.notes || '').split(/[\s,]+/).filter(Boolean);
+    const nx = Deck.list[Deck.i + 1];
+    const st = stepsOf(sec);
+    const extra = sec.dataset.say ? `<p>${md(sec.dataset.say)}</p>` : '';
+    notesEl.innerHTML = `<div class="nh"><b>${Deck.i + 1}. ${sec.dataset.title || sec.id}</b><span>${st ? `단계 ${Deck.k} / ${st}` : ''}</span><span class="nx">${nx ? '다음 → ' + (nx.dataset.title || '') : '마지막 장'}</span></div>` +
+      keys.map(key => N[key] ? `<p><span class="pn">${key}</span>${md(N[key])}</p>` : '').join('') + extra;
+  }
+  function toggleNotes() { notesEl.classList.toggle('show'); if (notesEl.classList.contains('show')) renderNotes(); }
+  function renderOverview() {
+    ovEl.innerHTML = `<h2>전체 보기 · ${Deck.list.length}장</h2><div class="grid">` + Deck.list.map((s, i) =>
+      `<button class="ov ${i === Deck.i ? 'cur' : ''}" data-i="${i}" data-tile="${s.getAttribute('data-tile') || 'dark'}"><span class="n">${String(i + 1).padStart(2, '0')}</span><span class="tt">${s.dataset.title || s.id}</span></button>`).join('') + '</div>';
+  }
+  function toggleOverview() {
+    const on = !ovEl.classList.contains('show');
+    ovEl.classList.toggle('show', on); if (on) renderOverview();
+  }
+  function toggleFull() {
+    const d = document;
+    if (!d.fullscreenElement) (d.documentElement.requestFullscreen || d.documentElement.webkitRequestFullscreen || (() => {})).call(d.documentElement);
+    else (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+  }
+
+  let hudTimer = 0;
+  function pokeHud() { if (STILL) return; hud.classList.add('show'); dots.classList.add('show'); clearTimeout(hudTimer); hudTimer = setTimeout(() => { hud.classList.remove('show'); dots.classList.remove('show'); }, 2600); }
+
+  function bind() {
+    let jump = '';
+    document.addEventListener('keydown', e => {
+      if (e.target.closest && e.target.closest('input,textarea,select,[contenteditable]')) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const key = e.key;
+      if (helpEl.classList.contains('show')) { helpEl.classList.remove('show'); e.preventDefault(); return; }
+      if (blankEl.className && key !== 'b' && key !== 'B' && key !== 'w' && key !== 'W') { blankEl.className = ''; e.preventDefault(); return; }
+      if (/^[0-9]$/.test(key)) { jump += key; return; }
+      if (key === 'Enter' && jump) { show(+jump - 1, 0); jump = ''; e.preventDefault(); return; }
+      jump = '';
+      if (ovEl.classList.contains('show') && (key === 'Escape' || key === 'o' || key === 'O')) { toggleOverview(); e.preventDefault(); return; }
+      switch (key) {
+        case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown': case 'Enter': Deck.next(); break;
+        case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': Deck.prev(); break;
+        case 'Home': show(0, 0); break;
+        case 'End': show(Deck.list.length - 1, 0); break;
+        case 'n': case 'N': case 't': case 'T': if (!STUDENT) toggleNotes(); break;
+        case 'o': case 'O': toggleOverview(); break;
+        case 'f': case 'F': toggleFull(); break;
+        case 'm': case 'M': act('sound'); break;
+        case 'r': case 'R': Deck.replay(); break;
+        case 'b': case 'B': blankEl.className = blankEl.className === 'black' ? '' : 'black'; break;
+        case 'w': case 'W': blankEl.className = blankEl.className === 'white' ? '' : 'white'; break;
+        case 'h': case 'H': case '?': helpEl.classList.add('show'); break;
+        case 'Escape': notesEl.classList.remove('show'); break;
+        default: return;
+      }
+      e.preventDefault();
+    });
+    ovEl.addEventListener('click', e => { const b = e.target.closest('.ov'); if (b) { ovEl.classList.remove('show'); show(+b.dataset.i, 0); } else ovEl.classList.remove('show'); });
+    // 무대 클릭·밀기
+    let down = null;
+    viewport.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY, t: performance.now(), inter: !!e.target.closest('button,a,input,select,textarea,label,[data-interactive]') }; pokeHud(); });
+    viewport.addEventListener('pointerup', e => {
+      if (!down) return; const dx = e.clientX - down.x, dy = e.clientY - down.y; const d0 = down; down = null;
+      if (d0.inter) return;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.3) { dx < 0 ? Deck.next() : Deck.prev(); return; }
+      if (Math.abs(dx) < 12 && Math.abs(dy) < 12 && e.button === 0) {
+        const r = stage.getBoundingClientRect();
+        (e.clientX - r.left < r.width * 0.12) ? Deck.prev() : Deck.next();
+      }
+    });
+    viewport.addEventListener('contextmenu', e => { if (e.target.closest('[data-interactive]')) return; e.preventDefault(); Deck.prev(); });
+    document.addEventListener('mousemove', pokeHud, { passive: true });
+    window.addEventListener('resize', fit);
+  }
+
+  function boot() {
+    viewport = document.getElementById('viewport'); stage = document.getElementById('stage');
+    Deck.list = Array.from(stage.querySelectorAll(':scope > section.slide'));
+    // 한 번만: 장면별 build(root) → 처음 상태 저장
+    Deck.list.forEach(sec => {
+      const def = defOf(sec);
+      if (def.build) { try { def.build(sec, U); } catch (e) { console.error(`[build ${sec.id}]`, e); } }
+      sec.querySelectorAll('[data-fx="draw"]').forEach(g => {
+        const geo = g.matches(GEOM) ? [g] : Array.from(g.querySelectorAll(GEOM));
+        geo.forEach(x => { if (!x.hasAttribute('pathLength')) x.setAttribute('pathLength', '1'); });
+      });
+      sec.__pristine = sec.innerHTML;
+      sec.innerHTML = '';
+    });
+    buildChrome(); fit(); bind();
+    const h = (location.hash || '').replace('#', '').split('.');
+    let si = Q.has('p') ? (+Q.get('p') - 1) : (h[0] ? +h[0] - 1 : 0);
+    let sk = Q.has('k') ? +Q.get('k') : (h[1] ? +h[1] : 0);
+    if (Q.has('id')) { const j = Deck.list.findIndex(s => s.id === Q.get('id')); if (j >= 0) si = j; }
+    if (!(si >= 0)) si = 0;
+    if (sk === -1 || Q.get('k') === 'last') sk = 99;
+    if (Q.get('play') === '1' && sk > 0 && !STILL) { show(si, sk - 1, { instant: true }).then(() => stepTo(Math.min(sk, stepsOf(Deck.list[si])))); }
+    else show(si, sk, { instant: sk > 0 });
+    if (!STILL) setTimeout(pokeHud, 400);
+  }
+  Deck.boot = boot;
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(boot, 0));
+  else setTimeout(boot, 0);
+})();
+
+</script>
+<script>
+/* ── 00_registry.js ── */
+try{
+/* ═══════════════════════════════════════════════════════════════
+   objects/00_registry.js — 오브젝트(OBJ)·공용 효과(FX) 등록소
+   규약(모든 objects/*.js 가 따름):
+   · OBJ.def(name, {box:[w,h], svg(o), drive?(ctx, el, o), doc})
+       svg(o)  → 문자열. 최상위는 <g class="o-name" id="o.id"> 하나. 좌표는 (0,0)~box 안.
+                 그라데이션·필터 id 는 반드시 `${o.id}-무엇` 으로(같은 오브젝트가 여러 장에 나와도 안 겹치게).
+                 움직이는 부품에는 class="p-부품" 을 붙인다(ctx.$('#id .p-blades')).
+                 색은 에너지 변수(var(--heat) 등)를 style 로 — 면(밝음/어두움)에 따라 저절로 바뀜.
+       drive() → 움직임 조종기. ctx.loop/ctx.a/ctx.tween 만 써서(장면을 떠나면 저절로 멈춤) 부품을 움직이고
+                 {speed(v,ms), glow(v,ms), …} 같은 메서드를 가진 객체를 돌려준다.
+   · OBJ.place(name, {x,y,s,rot, ...o}) → <g transform="translate scale">{svg}</g>
+       바깥 g 에 자리(transform 속성), 안쪽 g 는 비워 두어 CSS 애니메이션(등장·확대)이 자리를 덮어쓰지 않게.
+   · FX.이름(ctx, 부모g, opts) → 공용 모션 효과. 반환값은 조종기(set…/stop).
+   ═══════════════════════════════════════════════════════════════ */
+window.OBJ = (function () {
+  const R = {};
+  const api = {
+    R,
+    def(name, spec) { R[name] = spec; api[name] = spec; return spec; },
+    svg(name, o = {}) { if (!R[name]) { console.error('OBJ 없음:', name); return ''; } o.id = o.id || U.uid(name); return R[name].svg(o); },
+    place(name, o = {}) {
+      const x = o.x || 0, y = o.y || 0, s = o.s == null ? 1 : o.s, rot = o.rot || 0;
+      const tf = `translate(${x} ${y})${s !== 1 ? ` scale(${s})` : ''}${rot ? ` rotate(${rot})` : ''}`;
+      return `<g transform="${tf}"${o.wrapId ? ` id="${o.wrapId}"` : ''}${o.wrapClass ? ` class="${o.wrapClass}"` : ''}>${api.svg(name, o)}</g>`;
+    },
+    drive(name, ctx, el, o = {}) {
+      if (!R[name] || !R[name].drive) return null;
+      el = typeof el === 'string' ? ctx.$(el) : el;
+      if (!el) { console.error('OBJ.drive 대상 없음:', name); return null; }
+      return R[name].drive(ctx, el, o);
+    },
+  };
+  return api;
+})();
+window.FX = window.FX || {};
+
+}catch(e){console.error("[object 00_registry.js]",e)}
+/* ── 03_sfx.js ── */
+try{
+/* ═══════════════════════════════════════════════════════════════
+   03_sfx.js — 효과음(WebAudio 합성). 소리 파일 0개 · 오프라인 OK
+   · 장면에서는 c.sfx('blank', 지연ms) · c.sfxLoop('fan') 로 부른다(core.js 가 순간 모드·건너뛰기·장면 나감을 알아서 처리)
+   · 브라우저 정책상 첫 클릭·키 입력 뒤부터 소리가 난다. M 키·HUD 단추로 켜고 끔(기기에 기억). 학생 모드(?s=1)는 기본 꺼짐
+   · 점검: ?sfx=demo → 모든 소리를 눌러 들어 보는 패널 / SFX.analyze('blank') → 오프라인 렌더로 세기·길이 점검
+   · 주소 도우미: ?sound=1|0 강제 켜기·끄기 · ?nosfx=1 완전 끔 · ?sfxtest=1 클릭 없이 잠금 해제(자동 점검용)
+   ═══════════════════════════════════════════════════════════════ */
+window.SFX = (function () {
+  'use strict';
+  const Q = new URLSearchParams(location.search);
+  const D = window.Deck || {};
+  const OFF = !!D.STILL || Q.get('nosfx') === '1';
+  const KEY = 'sc_sfx';
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+  let on = !D.STUDENT;
+  try { const s = localStorage.getItem(KEY); if (s === '1' || s === '0') on = s === '1'; } catch (e) {}
+  if (Q.get('sound') === '1') on = true; else if (Q.get('sound') === '0') on = false;
+  let ac = null, out = null, X = null, unlocked = Q.get('sfxtest') === '1', broken = false;
+  const pending = new Set();
+
+  /* ── 잡음(결정적) ── */
+  function noiseBuf(actx) {
+    const n = Math.floor(actx.sampleRate * 2), b = actx.createBuffer(1, n, actx.sampleRate), d = b.getChannelData(0);
+    let s = 12345;
+    for (let i = 0; i < n; i++) { s = (s * 1664525 + 1013904223) >>> 0; d[i] = s / 2147483648 - 1; }
+    return b;
+  }
+  function ensure() {
+    if (OFF || broken || !unlocked) return null;
+    if (!ac) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { broken = true; return null; }
+      try { ac = new AC(); } catch (e) { broken = true; return null; }
+      const comp = ac.createDynamicsCompressor();
+      comp.threshold.value = -14; comp.knee.value = 18; comp.ratio.value = 4; comp.attack.value = .004; comp.release.value = .18;
+      out = ac.createGain(); out.gain.value = on ? .9 : 0;
+      out.connect(comp); comp.connect(ac.destination);
+      X = { ac, dest: out, nz: noiseBuf(ac) };
+    }
+    if (ac.state === 'suspended' && on && !document.hidden) ac.resume().catch(() => {});
+    return X;
+  }
+
+  /* ── 소리 부품 ── */
+  function env(g, t, a, d, peak) {
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(Math.max(0.0002, peak), t + a);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + a + d);
+  }
+  function route(x, node, pan) {
+    if (pan && x.ac.createStereoPanner) { const p = x.ac.createStereoPanner(); p.pan.value = clamp(pan, -1, 1); node.connect(p); p.connect(x.dest); return; }
+    node.connect(x.dest);
+  }
+  /** 톤: f(→f2) Hz, a 올림 s, d 사라짐 s, g 세기, type, vib[Hz, 깊이Hz], lp 저역통과, pan */
+  function tone(x, t, o) {
+    const ac = x.ac, osc = ac.createOscillator(), g = ac.createGain();
+    const a = o.a ?? .004, d = o.d ?? .3;
+    osc.type = o.type || 'sine';
+    osc.frequency.setValueAtTime(o.f, t);
+    if (o.f2) osc.frequency.exponentialRampToValueAtTime(o.f2, t + a + d);
+    if (o.vib) {
+      const l = ac.createOscillator(), lg = ac.createGain();
+      l.frequency.value = o.vib[0]; lg.gain.value = o.vib[1]; l.connect(lg); lg.connect(osc.frequency); l.start(t); l.stop(t + a + d + .06);
+    }
+    env(g, t, a, d, o.g ?? .2);
+    osc.connect(g);
+    let last = g;
+    if (o.lp) { const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = o.lp; g.connect(f); last = f; }
+    route(x, last, o.pan);
+    osc.start(t); osc.stop(t + a + d + .07);
+  }
+  /** 잡음: type(bandpass|highpass|lowpass), f(→f2) Hz, q */
+  function noise(x, t, o) {
+    const ac = x.ac, s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    const a = o.a ?? .003, d = o.d ?? .1;
+    s.buffer = x.nz; s.loop = true;
+    f.type = o.type || 'bandpass'; f.frequency.setValueAtTime(o.f || 2000, t);
+    if (o.f2) f.frequency.exponentialRampToValueAtTime(o.f2, t + a + d);
+    f.Q.value = o.q ?? 1;
+    env(g, t, a, d, o.g ?? .15);
+    s.connect(f); f.connect(g); route(x, g, o.pan);
+    s.start(t, (t * 7.13) % 1.5); s.stop(t + a + d + .07);
+  }
+  const PART = [[1, 1, 1], [2.76, .3, .55], [5.4, .1, .3], [8.93, .04, .18]];
+  function bell(x, t, f, g = .3, d = 1.1) { PART.forEach(([r, w, k]) => tone(x, t, { f: f * r, a: .002, d: d * k, g: g * w })); }
+  function tickAt(x, t, f, g) {
+    tone(x, t, { f, a: .001, d: .014, g });
+    noise(x, t, { a: .001, d: .006, g: g * .9, type: 'bandpass', f: f * 1.6, q: 1.5 });
+  }
+
+  /* ═════════ 소리 목록: (x, t, a, b) ═════════ */
+  const SCALE = [0, 2, 4, 7, 9, 12, 9, 7, 4, 2];       // 빈칸이 채워질 때마다 음계가 오르내린다
+  const S = {
+    /** 빈칸이 채워짐 — 마림바 같은 「띠링」. i = 몇 번째 빈칸(음 높이 순서) */
+    blank(x, t, i) {
+      const f = 659.25 * Math.pow(2, SCALE[(i | 0) % 10] / 12);
+      tone(x, t, { f, a: .003, d: .34, g: .24 });
+      tone(x, t, { f: f * 2, a: .002, d: .16, g: .07 });
+      tone(x, t, { f: f * 4.02, a: .001, d: .05, g: .025 });
+      noise(x, t, { a: .001, d: .012, g: .05, type: 'highpass', f: 3500 });
+    },
+    /** 무언가 톡 나타남 */
+    pop(x, t) {
+      tone(x, t, { f: 420, f2: 840, a: .002, d: .1, g: .2 });
+      noise(x, t, { a: .001, d: .02, g: .05, type: 'highpass', f: 3000 });
+    },
+    /** 클릭으로 다음 단계 — 아주 작은 톡 */
+    step(x, t) { tone(x, t, { f: 1500, f2: 900, type: 'triangle', a: .001, d: .045, g: .075 }); noise(x, t, { a: .001, d: .01, g: .03, f: 3000, q: 1.5 }); },
+    /** 다음 장으로 — 부드러운 슥 */
+    slide(x, t) {
+      noise(x, t, { a: .12, d: .5, g: .2, f: 400, f2: 2600, q: .8 });
+      tone(x, t, { f: 220, f2: 110, a: .005, d: .25, g: .09 });
+    },
+    /** 휙 — dur ms, gain */
+    whoosh(x, t, dur = 700, g = 1) {
+      const d = (dur || 700) / 1000;
+      noise(x, t, { a: d * .4, d: d * .6, g: .2 * (g ?? 1), f: 350, f2: 2400, q: .7 });
+    },
+    /** 숫자 굴러감 — 오르는 째깍째깍 */
+    counter(x, t, dur = 1200) {
+      const n = clamp(Math.round((dur || 1200) / 70), 4, 22), sp = (dur || 1200) / 1000 / n;
+      for (let i = 0; i < n; i++) tickAt(x, t + i * sp, 1500 + i * (900 / n), .07);
+    },
+    /** 세는 선을 조각이 지나감(가이거처럼) — p 음높이, g 세기 */
+    tick(x, t, p = 1, g = 1) { tickAt(x, t, 2100 * (p || 1), .1 * (g ?? 1)); },
+    /** 1초가 지남 — 나무 시계 */
+    clock(x, t) {
+      tone(x, t, { f: 1050, f2: 620, type: 'triangle', a: .001, d: .06, g: .17 });
+      noise(x, t, { a: .001, d: .012, g: .08, f: 2600, q: 2 });
+    },
+    /** 쾅(도장) */
+    thunk(x, t) {
+      tone(x, t, { f: 150, f2: 44, a: .002, d: .24, g: .5 });
+      noise(x, t, { a: .002, d: .1, g: .28, type: 'lowpass', f: 700, f2: 200 });
+    },
+    /** 땡 */
+    ding(x, t, k = 1) { bell(x, t, 1318.5 * (k || 1), .32, 1.1); },
+    /** 딩동딩동 ↑ (정답·완성) */
+    chime(x, t) { [1046.5, 1318.5, 1568, 2093].forEach((f, i) => bell(x, t + i * .085, f, .3, .9)); },
+    /** 명판 뒤집기 */
+    flip(x, t) {
+      noise(x, t, { a: .002, d: .03, g: .18, f: 3200, q: 1.5 });
+      noise(x, t + .12, { a: .002, d: .03, g: .18, f: 2600, q: 1.5 });
+      noise(x, t + .02, { a: .03, d: .16, g: .09, f: 900, f2: 2600 });
+    },
+    /** 토스터 레버 내림 — 철컥 */
+    lever(x, t) {
+      tone(x, t, { f: 260, f2: 75, type: 'triangle', a: .002, d: .14, g: .4 });
+      noise(x, t, { a: .002, d: .06, g: .22, type: 'lowpass', f: 1200, f2: 400 });
+      tone(x, t + .01, { f: 1900, f2: 1200, a: .001, d: .05, g: .04 });
+    },
+    /** 토스터 빵 튀어 오름 — 텅~ 팅! */
+    toasterPop(x, t) {
+      tone(x, t, { f: 150, f2: 55, a: .002, d: .12, g: .32 });
+      tone(x, t + .02, { f: 210, f2: 640, type: 'triangle', a: .005, d: .32, g: .11, vib: [22, 26] });
+      noise(x, t + .02, { a: .01, d: .2, g: .05, f: 2400, q: 1.2 });
+      bell(x, t + .16, 2637, .22, .9);
+    },
+    /** 열선이 달아오르며 탁탁 — dur ms */
+    sizzle(x, t, dur = 2000) {
+      const d = (dur || 2000) / 1000, n = Math.round(d * 34);
+      for (let i = 0; i < n; i++) noise(x, t + Math.random() * d, { a: .001, d: .009, g: .11 * (1 - i / n * .3), f: 2500 + Math.random() * 3500, q: 1.4, pan: (Math.random() - .5) * .6 });
+    },
+    /** 스피커 박 — strong 이면 큰 북, 아니면 작은 북 + 심벌 */
+    kick(x, t, strong, lv) {
+      const k = lv == null ? 1 : lv, g = (strong ? .5 : .3) * k;
+      tone(x, t, { f: strong ? 150 : 130, f2: 44, a: .002, d: strong ? .2 : .14, g });
+      noise(x, t, { a: .001, d: .05, g: g * .5, type: 'lowpass', f: 900, f2: 300 });
+      if (!strong) noise(x, t + .02, { a: .001, d: .04, g: .045, type: 'highpass', f: 7000 });
+    },
+    /** 백열전구 켜짐 — 딸깍 · 웅 · 팅 */
+    bulbOn(x, t) {
+      noise(x, t, { a: .001, d: .006, g: .12, f: 3000, q: 1.5 });
+      tone(x, t + .02, { f: 98, type: 'triangle', a: .05, d: .55, g: .08, lp: 500 });
+      noise(x, t + .03, { a: .08, d: .5, g: .05, type: 'lowpass', f: 300, f2: 3000 });
+      bell(x, t + .05, 1760, .12, .8);
+    },
+    /** LED 켜짐 — 딸깍 · 띠링 */
+    ledOn(x, t) {
+      noise(x, t, { a: .001, d: .006, g: .1, f: 3400, q: 1.5 });
+      tone(x, t + .01, { f: 1568, f2: 2093, a: .003, d: .2, g: .1 });
+      bell(x, t + .03, 2349, .1, .7);
+    },
+    /** 집 창문 켜짐 — 딸깍 · 띵띵띵 */
+    lightsOn(x, t) {
+      noise(x, t, { a: .001, d: .01, g: .08, f: 2600, q: 1.5 });
+      [1568, 1760, 1976].forEach((f, i) => bell(x, t + .04 + i * .09, f, .15, .7));
+    },
+    /** 송전선을 타고 전달 — 웅~ + 쉬익 + 지직, 소리가 왼쪽에서 오른쪽으로 움직임 */
+    zap(x, t, dur = 2400) {
+      const ac = x.ac, d = (dur || 2400) / 1000;
+      const o = ac.createOscillator(), lp = ac.createBiquadFilter(), g = ac.createGain();
+      o.type = 'sawtooth'; o.frequency.setValueAtTime(55, t); o.frequency.exponentialRampToValueAtTime(230, t + d * .8);
+      lp.type = 'lowpass'; lp.frequency.setValueAtTime(260, t); lp.frequency.exponentialRampToValueAtTime(1400, t + d);
+      g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.15, t + d * .15); g.gain.setValueAtTime(.15, t + d * .7); g.gain.exponentialRampToValueAtTime(.0001, t + d + .5);
+      o.connect(lp); lp.connect(g);
+      if (ac.createStereoPanner) { const p = ac.createStereoPanner(); p.pan.setValueAtTime(-.85, t); p.pan.linearRampToValueAtTime(.85, t + d); g.connect(p); p.connect(x.dest); } else g.connect(x.dest);
+      o.start(t); o.stop(t + d + .6);
+      noise(x, t, { a: d * .3, d: d * .7, g: .07, f: 600, f2: 4200, q: .6 });
+      for (let i = 0, n = Math.round(d * 22); i < n; i++) noise(x, t + Math.random() * d, { a: .001, d: .008, g: .045, type: 'highpass', f: 5000, pan: -1 + 2 * Math.random() });
+    },
+    /** 열 보기 훑기 — 스캐너 */
+    scan(x, t, dur = 900) {
+      const d = (dur || 900) / 1000;
+      tone(x, t, { f: 280, f2: 1250, a: .04, d, g: .09, vib: [9, 14] });
+      tone(x, t, { f: 283, f2: 1262, type: 'triangle', a: .04, d, g: .04, pan: .4 });
+    },
+    /** 온도계가 오름 — 조용한 상승음 */
+    rise(x, t, dur = 2400) { tone(x, t, { f: 260, f2: 640, a: .15, d: (dur || 2400) / 1000, g: .07, vib: [5, 6] }); },
+    /** 바늘이 내려옴 — 슬라이드 휘슬 + 톡 */
+    sweepDown(x, t, dur = 1300) {
+      const d = (dur || 1300) / 1000;
+      tone(x, t, { f: 1100, f2: 380, a: .02, d, g: .09 });
+      tickAt(x, t + d, 1800, .08);
+    },
+    /** 푸슉(연기) */
+    puff(x, t) { noise(x, t, { a: .05, d: .5, g: .22, type: 'lowpass', f: 1000, f2: 300, q: .4 }); },
+    /** 싹둑 싹둑 */
+    snip(x, t) {
+      [0, .07, .14].forEach(o => { noise(x, t + o, { a: .001, d: .012, g: .18, f: 5000, q: 2 }); tone(x, t + o, { f: 3000, a: .001, d: .02, g: .03 }); });
+    },
+    /** 슥(선 그리기) */
+    zip(x, t, dur = 500) { noise(x, t, { a: .02, d: Math.min(.3, (dur || 500) / 1000 * .5), g: .12, f: 1500, f2: 4200, q: 1 }); },
+    /** 반짝 */
+    spark(x, t) { for (let i = 0; i < 4; i++) tone(x, t + i * .04 + Math.random() * .02, { f: 2200 + Math.random() * 2000, a: .001, d: .08, g: .04 }); },
+  };
+
+  /* ═════════ 이어지는 소리(선풍기·발전소·끓는 물) — level(0..1) 로 세기 조종 ═════════ */
+  function buildFan(x) {
+    const ac = x.ac, out = ac.createGain(); out.gain.value = 0; out.connect(x.dest);
+    const ns = ac.createBufferSource(); ns.buffer = x.nz; ns.loop = true;
+    const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 500; bp.Q.value = .7;
+    const gw = ac.createGain(); gw.gain.value = 0;
+    const lfo = ac.createOscillator(), lg = ac.createGain(); lfo.frequency.value = 3; lg.gain.value = 0; lfo.connect(lg); lg.connect(gw.gain);   // 날개가 바람을 자르는 울렁임
+    ns.connect(bp); bp.connect(gw); gw.connect(out);
+    const m1 = ac.createOscillator(), m2 = ac.createOscillator(), gm = ac.createGain(), lp = ac.createBiquadFilter();   // 모터 웅~
+    m1.type = 'triangle'; m1.frequency.value = 50; m2.type = 'sine'; m2.frequency.value = 100; gm.gain.value = 0;
+    lp.type = 'lowpass'; lp.frequency.value = 700; m1.connect(gm); m2.connect(gm); gm.connect(lp); lp.connect(out);
+    ns.start(0, .3); lfo.start(); m1.start(); m2.start();
+    let lv = 0, wh = 0;
+    const apply = () => {
+      const T = ac.currentTime, v = clamp(lv, 0, 1.1), tc = .07;
+      gw.gain.setTargetAtTime(v * v * .095, T, tc); lg.gain.setTargetAtTime(v * v * .035, T, tc);
+      lfo.frequency.setTargetAtTime(2 + 7 * v, T, tc);
+      bp.frequency.setTargetAtTime(380 + 900 * v, T, tc);
+      m1.frequency.setTargetAtTime(46 + 70 * v, T, tc); m2.frequency.setTargetAtTime(92 + 140 * v, T, tc);
+      gm.gain.setTargetAtTime(v > .02 ? .01 + .034 * v + wh * .04 : 0, T, tc);
+      out.gain.setTargetAtTime(v > .01 ? 1 : 0, T, .05);
+    };
+    return {
+      level(v) { lv = v; apply(); }, whine(v) { wh = v; apply(); },
+      stop() {
+        const T = ac.currentTime; out.gain.cancelScheduledValues(T); out.gain.setTargetAtTime(0, T, .08);
+        setTimeout(() => { try { ns.stop(); lfo.stop(); m1.stop(); m2.stop(); out.disconnect(); } catch (e) {} }, 500);
+      },
+    };
+  }
+  function buildHum(x) {   // 발전소 웅~
+    const ac = x.ac, out = ac.createGain(); out.gain.value = 0; out.connect(x.dest);
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 220; lp.connect(out);
+    const o1 = ac.createOscillator(), o2 = ac.createOscillator(); o1.type = 'sawtooth'; o1.frequency.value = 50; o2.type = 'sine'; o2.frequency.value = 100;
+    const g2 = ac.createGain(); g2.gain.value = .5; o1.connect(lp); o2.connect(g2); g2.connect(lp);
+    const ns = ac.createBufferSource(); ns.buffer = x.nz; ns.loop = true; const nl = ac.createBiquadFilter(); nl.type = 'lowpass'; nl.frequency.value = 380; const ng = ac.createGain(); ng.gain.value = .5;
+    ns.connect(nl); nl.connect(ng); ng.connect(lp);
+    o1.start(); o2.start(); ns.start(0, .7);
+    return {
+      level(v) { const T = ac.currentTime; out.gain.setTargetAtTime(clamp(v, 0, 1.1) * .06, T, .15); o1.frequency.setTargetAtTime(44 + 8 * v, T, .3); },
+      stop() { const T = ac.currentTime; out.gain.setTargetAtTime(0, T, .1); setTimeout(() => { try { o1.stop(); o2.stop(); ns.stop(); out.disconnect(); } catch (e) {} }, 500); },
+    };
+  }
+  function buildBoil(x) {   // 주전자 끓는 소리: 쉬이~ + 보글보글
+    const ac = x.ac, out = ac.createGain(); out.gain.value = 0; out.connect(x.dest);
+    const ns = ac.createBufferSource(); ns.buffer = x.nz; ns.loop = true; const hp = ac.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 3200;
+    const gh = ac.createGain(); gh.gain.value = 0; ns.connect(hp); hp.connect(gh); gh.connect(out); ns.start(0, .2);
+    let lv = 0; const rnd = U_rng(7);
+    const id = setInterval(() => {
+      if (lv < .05 || !on) return;
+      if (rnd() < .15 + lv * .5) { const T = ac.currentTime + .005, f0 = 260 + rnd() * 260; tone({ ac, dest: out, nz: x.nz }, T, { f: f0, f2: f0 * 1.9, a: .003, d: .07, g: .1 * lv, pan: (rnd() - .5) * .8 }); }
+    }, 70);
+    return {
+      level(v) { lv = clamp(v, 0, 1); const T = ac.currentTime; gh.gain.setTargetAtTime(lv * .05, T, .4); out.gain.setTargetAtTime(lv > .01 ? 1 : 0, T, .1); },
+      stop() { clearInterval(id); const T = ac.currentTime; out.gain.setTargetAtTime(0, T, .1); setTimeout(() => { try { ns.stop(); out.disconnect(); } catch (e) {} }, 500); },
+    };
+  }
+  function U_rng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+  const LOOPS = { fan: buildFan, hum: buildHum, boil: buildBoil };
+  const NULL_LOOP = { level() {}, whine() {}, stop() {} };
+
+  /* ═════════ 바깥 API ═════════ */
+  let blankN = 0;
+  const tickLog = [];
+  function play(name, a, b) {
+    if (OFF || !on) return;
+    const x = ensure(); if (!x) return;
+    const f = S[name]; if (!f) { console.warn('[SFX] 없는 소리:', name); return; }
+    if (name === 'blank') a = blankN++;
+    if (name === 'tick') {   // 빽빽할수록(100 W 레인) 톡톡이 작고 높은 지지직으로 — 촘촘한 정도에 따라 세기·음높이 자동 조절
+      const now = performance.now(); tickLog.push(now); while (tickLog.length && now - tickLog[0] > 250) tickLog.shift();
+      const n = tickLog.length;
+      b = (b ?? 1) / (1 + n * .22); a = (a ?? 1) * (1 + Math.min(n, 30) * .012);
+    }
+    try { f(x, x.ac.currentTime + .008, a, b); } catch (e) { console.error('[SFX]', name, e); }
+  }
+  function loop(kind, o) {
+    const build = LOOPS[kind];
+    if (OFF || !build) return NULL_LOOP;
+    const h = {
+      built: null, lvl: 0, wh: 0, dead: false,
+      level(v) { h.lvl = v; if (h.built) h.built.level(v); },
+      whine(v) { h.wh = v; if (h.built && h.built.whine) h.built.whine(v); },
+      stop() { h.dead = true; pending.delete(h); if (h.built) { h.built.stop(); h.built = null; } },
+      tryBuild() {
+        if (h.built || h.dead) return;
+        const x = ensure(); if (!x) return;
+        try { h.built = build(x, o || {}); h.built.level(h.lvl); if (h.wh && h.built.whine) h.built.whine(h.wh); }
+        catch (e) { console.error('[SFX loop]', kind, e); h.dead = true; }
+      },
+    };
+    pending.add(h); h.tryBuild();
+    return h;
+  }
+  function unlock() {
+    if (unlocked) return;
+    unlocked = true;
+    if (!OFF) { ensure(); pending.forEach(h => h.tryBuild()); }
+  }
+  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, unlock, { capture: true, once: false, passive: true }));
+  document.addEventListener('visibilitychange', () => {
+    if (!ac) return;
+    if (document.hidden) ac.suspend().catch(() => {}); else if (on) ac.resume().catch(() => {});
+  });
+
+  let toastEl = null, toastT = 0;
+  function toast(v) {
+    if (!document.body) return;
+    if (!toastEl) { toastEl = document.createElement('div'); toastEl.id = 'sfxToast'; document.body.appendChild(toastEl); }
+    toastEl.textContent = v ? '소리 켜짐' : '소리 꺼짐';
+    toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), 1400);
+  }
+  function toggle(v) {
+    on = v == null ? !on : !!v;
+    try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {}
+    unlock();
+    const x = ensure();
+    if (x && out) out.gain.setTargetAtTime(on ? .9 : 0, ac.currentTime, .03);
+    toast(on);
+    if (on) play('pop');
+    return on;
+  }
+
+  /* ═════════ 점검 도구 ═════════ */
+  function measure(buf) {
+    let peak = 0, sum = 0, n = 0, last = 0, first = -1, zc = 0, prev = 0;
+    const ch = buf.getChannelData(0), ch2 = buf.numberOfChannels > 1 ? buf.getChannelData(1) : ch, sr = buf.sampleRate;
+    for (let i = 0; i < ch.length; i++) {
+      const v = Math.max(Math.abs(ch[i]), Math.abs(ch2[i]));
+      if (v > peak) peak = v;
+      sum += ch[i] * ch[i]; n++;
+      if (v > .003) { last = i; if (first < 0) first = i; }
+      if ((ch[i] >= 0) !== (prev >= 0)) zc++; prev = ch[i];
+    }
+    const active = Math.max(1, last - Math.max(0, first)) / sr;
+    return { peak: +peak.toFixed(3), rms: +Math.sqrt(sum / n).toFixed(4), attack: first < 0 ? null : +(first / sr).toFixed(3), length: +(last / sr).toFixed(2), approxHz: Math.round(zc / 2 / active), clipped: peak >= .98, silent: peak < .01 };
+  }
+  async function analyze(name, a, b, secs = 3) {
+    const OA = window.OfflineAudioContext || window.webkitOfflineAudioContext, sr = 44100;
+    const oc = new OA(2, Math.floor(sr * secs), sr), g = oc.createGain(); g.gain.value = .9; g.connect(oc.destination);
+    const x = { ac: oc, dest: g, nz: noiseBuf(oc) };
+    S[name](x, .02, a, b);
+    return measure(await oc.startRendering());
+  }
+  async function analyzeLoop(kind, level = 1, secs = 1.5) {
+    const OA = window.OfflineAudioContext || window.webkitOfflineAudioContext, sr = 44100;
+    const oc = new OA(2, Math.floor(sr * secs), sr), g = oc.createGain(); g.gain.value = .9; g.connect(oc.destination);
+    const h = LOOPS[kind]({ ac: oc, dest: g, nz: noiseBuf(oc) }); h.level(level);
+    const r = measure(await oc.startRendering()); try { h.stop(); } catch (e) {} return r;
+  }
+
+  /** ?sfx=demo — 모든 소리를 눌러 들어 보는 패널 */
+  function demoPanel() {
+    const box = document.createElement('div');
+    box.style.cssText = 'position:fixed;left:12px;top:12px;z-index:200;max-width:340px;max-height:92vh;overflow:auto;background:rgba(29,29,31,.94);color:#f5f5f7;border-radius:14px;padding:14px;font:600 13px/1.3 system-ui,sans-serif';
+    const btn = (t, fn) => { const b = document.createElement('button'); b.textContent = t; b.style.cssText = 'margin:3px;padding:6px 10px;border-radius:9999px;border:0;background:#0066cc;color:#fff;font:600 13px system-ui'; b.onclick = () => { unlock(); fn(); }; return b; };
+    box.appendChild(Object.assign(document.createElement('div'), { textContent: '효과음 듣기 (F2 로 닫기)', style: 'margin-bottom:8px;font-size:14px' }));
+    Object.keys(S).forEach(k => box.appendChild(btn(k, () => { if (!on) toggle(true); play(k, k === 'kick' ? true : undefined, 1); })));
+    let fan = null;
+    box.appendChild(btn('fan 0→1→0', () => { if (!on) toggle(true); if (fan) fan.stop(); fan = loop('fan'); let v = 0, dir = 1; const id = setInterval(() => { v += dir * .05; if (v >= 1) dir = -1; fan.level(clamp(v)); if (v <= 0 && dir < 0) { clearInterval(id); fan.stop(); fan = null; } }, 60); }));
+    box.appendChild(btn('boil', () => { if (!on) toggle(true); const h = loop('boil'); h.level(1); setTimeout(() => h.stop(), 4000); }));
+    box.appendChild(btn('hum', () => { if (!on) toggle(true); const h = loop('hum'); h.level(1); setTimeout(() => h.stop(), 3000); }));
+    document.body.appendChild(box);
+    document.addEventListener('keydown', e => { if (e.key === 'F2') box.remove(); });
+  }
+  if (Q.get('sfx') === 'demo') { const go = () => demoPanel(); if (document.body) go(); else document.addEventListener('DOMContentLoaded', go); }
+
+  return { play, loop, toggle, unlock, analyze, analyzeLoop, names: () => Object.keys(S), isOn: () => on, isOff: () => OFF, S, debug: () => ({ pendingLoops: pending.size, unlocked, state: ac ? ac.state : 'none' }) };
+})();
+
+}catch(e){console.error("[object 03_sfx.js]",e)}
+/* ── 10_elec.js ── */
+try{
+/* ═══════════════════════════════════════════════════════════════
+   objects/10_elec.js — 전기와 자기 강의 덱 공용 그림 조각(문자열 SVG)
+   · EL.arrow(x1,y1,x2,y2,{color,w,head,id,cls,dash})   화살표
+   · EL.charge(x,y,sign,{r,id,cls,color,stroke})         전하 기호 원(+ / −). sign: '+' | '-'
+   · EL.sign(x,y,sign,{s,color,w})                        원 없이 + / − 기호만(선으로 그려 글꼴과 무관하게 또렷)
+   · EL.electron(x,y,{r,id,cls})                          전자(하늘색 작은 원 + −)
+   과학 규약: 전하 기호는 «원자핵(+)은 제자리, 움직이는 것은 전자(−)뿐». 대전되지 않은 물체는 (+)와 (−)의 수가 같다.
+   마찰·유도 전후 전체 전하량(기호 수의 합)이 맞는지 그림마다 셀 것.
+   덱마다 더 필요한 그림은 objects/<덱>/ 안에 따로(이름표 E1·E2·E3·E4 처럼 덱 이름으로 — 서로 덮어쓰지 않게).
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  const E = window.EL = {};
+  const f = v => (Math.round(v * 10) / 10);
+  E.arrow = function (x1, y1, x2, y2, o = {}) {
+    const col = o.color || 'currentColor', w = o.w == null ? 6 : o.w, hd = o.head == null ? Math.max(18, w * 3.2) : o.head;
+    const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
+    const bx = x2 - ux * hd * 0.85, by = y2 - uy * hd * 0.85, px = -uy, py = ux;
+    return `<g${o.cls ? ` class="${o.cls}"` : ''}${o.id ? ` id="${o.id}"` : ''}><line x1="${f(x1)}" y1="${f(y1)}" x2="${f(bx)}" y2="${f(by)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"${o.dash ? ` stroke-dasharray="${o.dash}"` : ''}/>` +
+      `<polygon points="${f(x2)},${f(y2)} ${f(bx + px * hd * .5)},${f(by + py * hd * .5)} ${f(bx - px * hd * .5)},${f(by - py * hd * .5)}" fill="${col}"/></g>`;
+  };
+  E.sign = function (x, y, sign, o = {}) {
+    const s = o.s == null ? 10 : o.s, col = o.color || (sign === '+' ? 'var(--heat)' : 'var(--elec)'), w = o.w == null ? Math.max(2.5, s * .32) : o.w;
+    let d = `M${f(x - s)} ${f(y)}H${f(x + s)}`;
+    if (sign === '+') d += `M${f(x)} ${f(y - s)}V${f(y + s)}`;
+    return `<path d="${d}" stroke="${col}" stroke-width="${f(w)}" stroke-linecap="round" fill="none"/>`;
+  };
+  E.charge = function (x, y, sign, o = {}) {
+    const r = o.r == null ? 22 : o.r, col = o.color || (sign === '+' ? 'var(--heat)' : 'var(--elec)');
+    return `<g${o.cls ? ` class="${o.cls}"` : ''}${o.id ? ` id="${o.id}"` : ''}><circle cx="${f(x)}" cy="${f(y)}" r="${r}" fill="${col}" fill-opacity="${o.fill == null ? .16 : o.fill}" stroke="${o.stroke || col}" stroke-width="${o.sw == null ? 3 : o.sw}"/>` +
+      E.sign(x, y, sign, { s: r * .5, color: col }) + `</g>`;
+  };
+  E.electron = function (x, y, o = {}) {
+    const r = o.r == null ? 14 : o.r;
+    return `<g${o.cls ? ` class="${o.cls}"` : ''}${o.id ? ` id="${o.id}"` : ''}><circle cx="${f(x)}" cy="${f(y)}" r="${r}" fill="var(--elec)"/>` +
+      E.sign(x, y, '-', { s: r * .5, color: '#fff', w: Math.max(2, r * .22) }) + `</g>`;
+  };
+})();
+
+}catch(e){console.error("[object 10_elec.js]",e)}
+/* ── e3.js ── */
+try{
+/* ═══════════════════════════════════════════════════════════════
+   objects/e3/e3.js — 학습지 3(전류·전압·저항) 강의 덱 전용 그림·시뮬 · 전역 이름 window.E3
+   · E3.poly(pts, closed)                 꺾은선 — L(길이), at(s) → [x, y, tx, ty]
+   · E3.tube(d, T, id)                    속이 보이는 관(도선) — 가장자리 빛 + 몸통
+   · E3.circuit(o) → {svg, path, pos, curDir, dir}   직사각형 고리 회로(회로 기호 = 기본 다지기 모양)
+       parts: {type:'bat'|'bulb'|'sw'|'res'|'cut', side:'top'|'right'|'bottom'|'left', at:0..1, key, …}
+   · E3.realLoop(o)                       제품 그림 회로(표지·도입·답) — 매달린 백열전구·AA 전지·나이프 스위치
+       parts: {type:'bulb'|'cell'|'knife', side:'top'|'bottom', at, …} · E3.realFlip / E3.realOn
+   · E3.electrons(c, circ, o)             고리 속 전자: 제멋대로 흔들림(열운동 모형) + 다 같이 천천히 한 방향(drift)
+   · E3.trail(c, sim, i, pathEl, o)       전자 한 개가 지나온 자취(최근 span 초, <path>) — 흔들리며 나아가는 모습
+   · E3.chevrons(c, circ, o)              전류의 방향(앰버 꺾쇠) — 전지 바깥 도선에서 (+)극 → (−)극
+   · E3.flip(c, circ, closed) · E3.light(c, circ, v) · E3.hl(c, el)   스위치 날 · 전구 밝기 · 강조 후광
+   · E3.water(o) / E3.waterDrive(c, wc, o)            물의 흐름 모형(펌프·물레방아·수도꼭지·수도관·새는 곳)
+   · E3.wireSim(c, g, o)                  곧은 도선 속 전자(여러 줄), 단면을 지나간 수 세기(crossings — 실제 자리로 센 값)
+   · E3.lattice(c, g, o)                  원자 사이를 지나는 전자(부딪히면 방향이 바뀜, 부딪힌 원자가 잠깐 빛남)
+   · E3.zigWire(o) / E3.zigRun(c, zw, ms) 원자에 부딪히며 지그재그로 나아가는 전자 한 개(충돌 수 세기)
+   과학 규약: 전자는 처음부터 도선 전체에 고르게 있다(전지가 만들어 내보내지 않음). 한 고리에서 모든 전자는 같은 거리만큼
+   움직인다(어디서나 전류가 같음 — 전구에서 줄거나 없어지지 않음). 전류가 흐르지 않을 때도 전자는 제자리에서 흔들린다(쏠림 없음).
+   흐를 때도 줄 맞춘 행진이 아니라 흔들리면서 전체적으로 한쪽으로 천천히. 전류의 방향은 전자의 이동 방향과 반대.
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  const E = window.E3 = {};
+  const f = v => (Math.round(v * 10) / 10);
+  const f3 = v => (Math.round(v * 1000) / 1000);
+  const TAU = Math.PI * 2;
+  const mod = (a, n) => ((a % n) + n) % n;
+  E.f = f; E.f3 = f3; E.mod = mod;
+
+  /* 꺾은선 */
+  E.poly = function (pts, closed = true) {
+    const P = pts.map(p => p.slice()); if (closed) P.push(P[0].slice());
+    const seg = []; let L = 0;
+    for (let i = 0; i < P.length - 1; i++) {
+      const [x1, y1] = P[i], [x2, y2] = P[i + 1], l = Math.hypot(x2 - x1, y2 - y1) || 1e-6;
+      seg.push({ x1, y1, l, s: L, tx: (x2 - x1) / l, ty: (y2 - y1) / l }); L += l;
+    }
+    const at = s => {
+      s = closed ? mod(s, L) : Math.max(0, Math.min(L, s));
+      let lo = 0, hi = seg.length - 1;
+      while (lo < hi) { const m = (lo + hi + 1) >> 1; if (seg[m].s <= s) lo = m; else hi = m - 1; }
+      const g = seg[lo], u = s - g.s;
+      return [g.x1 + g.tx * u, g.y1 + g.ty * u, g.tx, g.ty];
+    };
+    const d = () => 'M' + P.map(p => `${f(p[0])} ${f(p[1])}`).join(' L') + (closed ? 'Z' : '');
+    return { L, seg, at, d, pts: P, closed };
+  };
+
+  /* 관(도선) — 가장자리 빛 1.5px + 몸통 */
+  E.tube = (d, T, id) => `<path d="${d}" fill="none" stroke="var(--e3edge)" stroke-width="${T + 3}" stroke-linejoin="round" stroke-linecap="round"/>` +
+    `<path${id ? ` id="${id}"` : ''} d="${d}" fill="none" stroke="var(--e3tube)" stroke-width="${T}" stroke-linejoin="round" stroke-linecap="round"/>`;
+
+  /* 전자 한 개의 흔들림(합성 사인 — 평균이 0 이라 쏠림이 없다) */
+  const jit = rnd => ({ a: [rnd() * TAU, rnd() * TAU, rnd() * TAU, rnd() * TAU], w: [TAU * (1.3 + rnd() * 1.4), TAU * (2.4 + rnd() * 2.2), TAU * (1.1 + rnd() * 1.5), TAU * (2.2 + rnd() * 2.4)] });
+  const jv = (j, t, k) => .62 * Math.sin(j.w[k] * t + j.a[k]) + .38 * Math.sin(j.w[k + 1] * t + j.a[k + 1]);
+  E.jit = jit; E.jv = jv;
+
+  /* ═════ 고리 회로(회로 기호) ═════ */
+  E.circuit = function (o) {
+    const id = o.id, x = o.x, y = o.y, w = o.w, h = o.h, T = o.tube || 30;
+    const path = E.poly([[x, y], [x + w, y], [x + w, y + h], [x, y + h]]);
+    const SD = { top: [1, 0], right: [0, 1], bottom: [-1, 0], left: [0, -1] };
+    const OUT = { top: [0, -1], right: [1, 0], bottom: [0, 1], left: [-1, 0] };
+    const ptOf = (side, at) => side === 'top' ? [x + at * w, y] : side === 'right' ? [x + w, y + at * h] : side === 'bottom' ? [x + at * w, y + h] : [x, y + at * h];
+    const sOf = (side, at) => side === 'top' ? at * w : side === 'right' ? w + at * h : side === 'bottom' ? w + h + (1 - at) * w : 2 * w + h + (1 - at) * h;
+    const ink = 'var(--e3ink)', bg = 'var(--e3bg)';
+    let glow = '', hl = '', over = '';
+    const pos = {}; let curDir = 1;
+    (o.parts || []).forEach(p => {
+      const [cx, cy] = ptOf(p.side, p.at), Hz = p.side === 'top' || p.side === 'bottom';
+      const P = (u, v) => Hz ? [cx + u, cy + v] : [cx + v, cy + u];
+      const pt = (u, v) => P(u, v).map(f).join(' ');
+      const rectUV = (u0, u1, v0, v1, attrs) => { const [ax, ay] = P(u0, v0), [bx, by] = P(u1, v1); return `<rect x="${f(Math.min(ax, bx))}" y="${f(Math.min(ay, by))}" width="${f(Math.abs(bx - ax))}" height="${f(Math.abs(by - ay))}" ${attrs}/>`; };
+      const mask = half => rectUV(-half, half, -T / 2 - 3, T / 2 + 3, `fill="${bg}"`);
+      const line = (u0, v0, u1, v1, col, sw, extra = '') => { const [a, b] = P(u0, v0), [c2, d] = P(u1, v1); return `<line x1="${f(a)}" y1="${f(b)}" x2="${f(c2)}" y2="${f(d)}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round"${extra}/>`; };
+      const key = p.key || p.type;
+      pos[key] = { x: cx, y: cy, s: sOf(p.side, p.at), Hz, side: p.side, out: OUT[p.side], P };
+      const hlBox = (half, vh) => o.hl ? rectUV(-half - 16, half + 16, -vh - 16, vh + 16, `id="${id}-${key}-hl" rx="22" fill="var(--e3hl2)" opacity="0"`) : '';
+      if (p.type === 'bat') {
+        const n = p.cells || 1, sp = (p.plus === 'right' || p.plus === 'down') ? 1 : -1;   // (+)극판이 u 의 어느 쪽에 있나
+        const cw = 44, half = n * cw / 2 + 14;
+        const ax = Hz ? sp : 0, ay = Hz ? 0 : sp, sd = SD[p.side];
+        curDir = Math.sign(ax * sd[0] + ay * sd[1]) || 1;   // 전지 바깥 도선의 전류: (+)극에서 나가는 쪽
+        hl += hlBox(half, 46);
+        let g = mask(half);
+        const plates = [];
+        for (let i = 0; i < n; i++) {
+          const uc = (i - (n - 1) / 2) * cw, up = uc + sp * 11, um = uc - sp * 11;
+          plates.push([up, um]);
+          const cell = line(up, -40, up, 40, ink, 5) + line(um, -22, um, 22, ink, 12, ' stroke-linecap="butt"');
+          g += (p.hide2 && i === 1) ? `<g id="${id}-cell2" opacity="0">${cell}</g>` : cell;
+        }
+        const us = plates.flat(), lo = Math.min(...us), hi = Math.max(...us);
+        g += line(-half, 0, lo, 0, 'var(--e3tube)', 8) + line(hi, 0, half, 0, 'var(--e3tube)', 8);
+        if (n > 1) for (let i = 0; i < n - 1; i++) {
+          const a = Math.max(plates[i][0], plates[i][1]), b = Math.min(plates[i + 1][0], plates[i + 1][1]);
+          g += line(a, 0, b, 0, 'var(--e3tube)', 8);
+        }
+        if (p.hide2 && n > 1) {   // 둘째 칸이 숨어 있는 동안은 도선이 그 자리를 잇는다
+          const a = Math.min(...plates[1]), b = Math.max(...plates[1]);
+          g = g.replace(`<g id="${id}-cell2"`, `<g id="${id}-cell2w">${line(a - 2, 0, b + 2, 0, 'var(--e3tube)', 8)}</g><g id="${id}-cell2"`);
+        }
+        if (p.labels !== false) {
+          const pp = sp < 0 ? lo - 20 : hi + 20, mm = sp < 0 ? hi + 20 : lo - 20, lv = p.labelV || -46;
+          const [qx, qy] = P(pp, lv), [mx, my] = P(mm, lv);
+          g += EL.sign(qx, qy, '+', { s: 11, color: 'var(--heat)', w: 4 }) + EL.sign(mx, my, '-', { s: 11, color: 'var(--elec)', w: 4 });
+        }
+        over += `<g id="${id}-bat">${g}</g>`;
+      } else if (p.type === 'bulb') {
+        const R = p.r || 38, ra = R * .55;
+        glow += `<circle id="${id}-glow" cx="${f(cx)}" cy="${f(cy)}" r="${p.glow || 170}" fill="url(#rg-light)" opacity="0"/>`;
+        hl += hlBox(R, R);
+        const fd = `M${pt(-R, 0)} L${pt(-ra, 0)} A${f(ra)} ${f(ra)} 0 0 1 ${pt(ra, 0)} L${pt(R, 0)}`;
+        over += `<g id="${id}-bulb"><circle cx="${f(cx)}" cy="${f(cy)}" r="${R}" fill="${bg}"/>` +
+          `<circle id="${id}-bfill" cx="${f(cx)}" cy="${f(cy)}" r="${R}" fill="#FFE27A" opacity="0"/>` +
+          `<path d="${fd}" fill="none" stroke="${ink}" stroke-width="4" stroke-linejoin="round"/>` +
+          `<path id="${id}-fil" d="${fd}" fill="none" stroke="#A35F00" stroke-width="4.5" stroke-linejoin="round" opacity="0"/>` +
+          `<circle cx="${f(cx)}" cy="${f(cy)}" r="${R}" fill="none" stroke="${ink}" stroke-width="4"/></g>`;
+      } else if (p.type === 'sw') {
+        const S = p.len || 80, open = (p.side === 'top' || p.side === 'right') ? -32 : 32, a0 = p.closed ? 0 : open;
+        hl += hlBox(S / 2, 34);
+        const [ax, ay] = P(-S / 2, 0), [bx, by] = P(S / 2, 0);
+        over += `<g id="${id}-sw">${mask(S / 2)}` +
+          `<g transform="translate(${f(ax)} ${f(ay)})"><g id="${id}-blade" data-a="${a0}" data-open="${open}" transform="rotate(${a0})"><line x1="0" y1="0" x2="${Hz ? S : 0}" y2="${Hz ? 0 : S}" stroke="${ink}" stroke-width="6" stroke-linecap="round"/></g></g>` +
+          `<circle cx="${f(ax)}" cy="${f(ay)}" r="8" fill="${ink}"/><circle cx="${f(bx)}" cy="${f(by)}" r="8" fill="${ink}"/></g>`;
+      } else if (p.type === 'res') {
+        const Lr = p.len || 120, A = p.amp || 20, nz = 6;
+        let d = `M${pt(-Lr / 2, 0)}`;
+        for (let i = 0; i < nz; i++) d += ` L${pt(-Lr / 2 + Lr * (2 * i + 1) / (2 * nz), i % 2 ? A : -A)}`;
+        d += ` L${pt(Lr / 2, 0)}`;
+        hl += hlBox(Lr / 2, A + 6);
+        over += `<g id="${id}-res"${p.hidden ? ' opacity="0"' : ''}>${mask(Lr / 2 + 4)}${line(-Lr / 2 - 6, 0, -Lr / 2, 0, 'var(--e3tube)', 8)}${line(Lr / 2, 0, Lr / 2 + 6, 0, 'var(--e3tube)', 8)}<path d="${d}" fill="none" stroke="var(--sound)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/></g>`;
+      } else if (p.type === 'cut') {
+        const half = p.half || 24;
+        over += `<g id="${id}-cut" opacity="0">${mask(half)}${line(-half, -T / 2 + 2, -half, T / 2 - 2, ink, 3)}${line(half, -T / 2 + 2, half, T / 2 - 2, ink, 3)}</g>`;
+      }
+    });
+    const tubeHl = o.hl ? `<path id="${id}-tube-hl" d="${path.d()}" fill="none" stroke="var(--e3hl2)" stroke-width="${T + 30}" stroke-linejoin="round" opacity="0"/>` : '';
+    const svg = glow + hl + tubeHl + E.tube(path.d(), T, `${id}-tube`) + `<g id="${id}-e"></g><g id="${id}-cur"></g>` + over;
+    return { id, svg, path, pos, curDir, dir: -curDir, T, x, y, w, h };
+  };
+
+  /* ═════ 제품 그림 회로(표지·도입·답) ═════
+     위·아래 변에만 부품을 단다. bulb: 위 변에 매달린 백열전구(유리구 안 코일 필라멘트·지지선·나사 꼭지)
+     cell: AA 전지(minus:'left'|'right') · knife: 나이프 스위치(경첩 왼쪽, 열리면 날이 들림) */
+  E.realLoop = function (o) {
+    const id = o.id, x = o.x, y = o.y, w = o.w, h = o.h, T = o.T || 26;
+    const path = E.poly([[x, y], [x + w, y], [x + w, y + h], [x, y + h]]);
+    let back = '', over = ''; const pos = {}; let curDir = 1;
+    (o.parts || []).forEach(p => {
+      const top = p.side === 'top', cx = x + p.at * w, cy = top ? y : y + h, s = p.s || 1;
+      pos[p.key || p.type] = { x: cx, y: cy, s: top ? p.at * w : w + h + (1 - p.at) * w };
+      const mask = hw => `<rect x="${f(cx - hw * s)}" y="${f(cy - T / 2 - 3)}" width="${f(2 * hw * s)}" height="${T + 6}" fill="var(--e3bg)"/>`;
+      if (p.type === 'bulb') {
+        const gy = 170;   // 유리구 중심(아래로)
+        back += `<defs><radialGradient id="${id}-bg"><stop offset="0" stop-color="#fff6d0" stop-opacity=".85"/><stop offset=".16" stop-color="#FFD60A" stop-opacity=".42"/>` +
+          `<stop offset=".45" stop-color="#FFD60A" stop-opacity=".12"/><stop offset="1" stop-color="#FFD60A" stop-opacity="0"/></radialGradient></defs>` +
+          `<circle id="${id}-bloom" cx="${f(cx)}" cy="${f(cy + gy * s)}" r="${p.bloom || 420}" fill="url(#${id}-bg)" opacity="0"/>`;
+        const globe = 'M-22 66C-22 94 -84 106 -84 170A84 84 0 1 0 84 170C84 106 22 94 22 66Z';
+        let coil = 'M-26 150'; for (let i = 1; i <= 16; i++) coil += ` L${f(-26 + i * 52 / 16)} ${f(150 + (i % 2 ? -6 : 6))}`;
+        let thr = ''; for (let i = 0; i < 4; i++) thr += `<path d="M-27 ${30 + i * 9}L27 ${34 + i * 9}" stroke="rgba(0,0,0,.28)" stroke-width="2"/>`;
+        let rays = '';
+        for (let i = 0; i < 12; i++) { const a = i * TAU / 12 + TAU / 24, c1 = Math.cos(a), s1 = Math.sin(a); rays += `<line x1="${f(c1 * 128)}" y1="${f(gy + s1 * 128)}" x2="${f(c1 * 196)}" y2="${f(gy + s1 * 196)}" stroke="var(--light)" stroke-width="5" stroke-linecap="round"/>`; }
+        over += mask(40) + `<g transform="translate(${f(cx)} ${f(cy)})${s !== 1 ? ` scale(${s})` : ''}">` +
+          `<defs><radialGradient id="${id}-wg" cx="50%" cy="58%" r="55%"><stop offset="0" stop-color="#fffbe6"/><stop offset=".45" stop-color="#ffe08a"/><stop offset="1" stop-color="#ffb000" stop-opacity=".35"/></radialGradient></defs>` +
+          `<g id="${id}-rays" opacity="0">${rays}</g>` +
+          `<path d="${globe}" fill="rgba(255,255,255,.035)"/>` +
+          `<path id="${id}-warm" d="${globe}" fill="url(#${id}-wg)" opacity="0"/>` +
+          `<path d="M-6 66L-8 118L8 118L6 66Z" fill="rgba(255,255,255,.12)"/>` +
+          `<path d="M-6 70L-26 150M6 70L26 150" stroke="#9a9aa0" stroke-width="2" fill="none"/>` +
+          `<path d="${coil}" fill="none" stroke="#8e8e93" stroke-width="2.4" stroke-linejoin="round"/>` +
+          `<path id="${id}-fil" d="${coil}" fill="none" stroke="#fff4c8" stroke-width="3.4" stroke-linejoin="round" filter="url(#glow-m)" opacity="0"/>` +
+          `<path d="${globe}" fill="url(#lg-glass)" stroke="rgba(255,255,255,.30)" stroke-width="1.6"/>` +
+          `<ellipse cx="-40" cy="140" rx="12" ry="30" transform="rotate(24 -40 140)" fill="rgba(255,255,255,.22)"/>` +
+          `<rect x="-29" y="22" width="58" height="46" rx="6" fill="url(#lg-silver)"/>${thr}` +
+          `<rect x="-36" y="-20" width="72" height="44" rx="12" fill="url(#lg-graphite)"/>` +
+          `<path d="M-30 -19.2H30" stroke="rgba(255,255,255,.26)" stroke-width="1.5" stroke-linecap="round"/></g>`;
+      } else if (p.type === 'cell') {
+        const L = p.len || 230, H = p.hgt || 80, sp = p.minus === 'left' ? 1 : -1;   // sp = (+)극이 있는 쪽(+1 오른쪽)
+        curDir = sp * (top ? 1 : -1);   // 전지 바깥 도선의 전류: (+)극에서 나가는 쪽(길 좌표 +s 기준)
+        const px = sp * (L / 2), mx = -sp * (L / 2);
+        over += mask(L / 2 + 18) + `<g transform="translate(${f(cx)} ${f(cy)})${s !== 1 ? ` scale(${s})` : ''}">` +
+          `<rect x="${f(Math.min(px, px + sp * 14))}" y="-15" width="14" height="30" rx="4" fill="url(#lg-silver)"/>` +
+          `<rect x="${f(Math.min(mx, mx - sp * 6))}" y="-30" width="6" height="60" rx="2" fill="url(#lg-silver)"/>` +
+          `<rect x="${f(-L / 2)}" y="${f(-H / 2)}" width="${L}" height="${H}" rx="16" fill="url(#lg-graphite)"/>` +
+          `<rect x="${f(sp > 0 ? L / 2 - 64 : -L / 2)}" y="${f(-H / 2)}" width="64" height="${H}" rx="16" fill="url(#lg-silver)" opacity=".9"/>` +
+          `<path d="M${f(-L / 2 + 14)} ${f(-H / 2 + 1)}H${f(L / 2 - 14)}" stroke="rgba(255,255,255,.28)" stroke-width="1.5" stroke-linecap="round"/>` +
+          EL.sign(sp * (L / 2 - 96), 0, '+', { s: 15, color: 'var(--heat)', w: 5.5 }) + EL.sign(-sp * (L / 2 - 40), 0, '-', { s: 15, color: 'var(--elec)', w: 5.5 }) + `</g>`;
+      } else if (p.type === 'knife') {
+        const S = p.len || 130, open = -38, a0 = p.closed ? 0 : open, vs = top ? 1 : 1;
+        over += mask(S / 2 + 12) + `<g transform="translate(${f(cx)} ${f(cy)})${s !== 1 ? ` scale(${s})` : ''}">` +
+          `<rect x="${f(-S / 2 - 30)}" y="${f(12 * vs)}" width="${S + 60}" height="26" rx="9" fill="url(#lg-graphite)"/>` +
+          `<path d="M${f(-S / 2 - 22)} ${f(12.8 * vs)}H${f(S / 2 + 22)}" stroke="rgba(255,255,255,.22)" stroke-width="1.4" stroke-linecap="round"/>` +
+          `<rect x="${f(-S / 2 - 30)}" y="-6" width="22" height="12" rx="3" fill="url(#lg-silver)"/><rect x="${f(S / 2 + 8)}" y="-6" width="22" height="12" rx="3" fill="url(#lg-silver)"/>` +
+          `<rect x="${f(-S / 2 - 9)}" y="-16" width="18" height="30" rx="4" fill="url(#lg-silver)"/>` +
+          `<rect x="${f(S / 2 - 6)}" y="-16" width="6" height="30" rx="2" fill="url(#lg-silver)"/><rect x="${f(S / 2 + 6)}" y="-16" width="6" height="30" rx="2" fill="url(#lg-silver)"/>` +
+          `<g transform="translate(${f(-S / 2)} -1)"><g id="${id}-kblade" data-a="${a0}" data-open="${open}" transform="rotate(${a0})">` +
+          `<rect x="-4" y="-5" width="${S + 8}" height="10" rx="4" fill="url(#lg-silver)"/>` +
+          `<rect x="${S - 4}" y="-10" width="30" height="20" rx="7" fill="#1c1c1e" stroke="rgba(255,255,255,.22)" stroke-width="1.4"/></g></g>` +
+          `<circle cx="${f(-S / 2)}" cy="-1" r="5" fill="#6e6e73"/></g>`;
+      }
+    });
+    const svg = back + E.tube(path.d(), T, `${id}-tube`) + `<g id="${id}-e"></g>` + over;
+    return { id, svg, path, pos, curDir, dir: -curDir, T, x, y, w, h };
+  };
+  E.realFlip = function (c, lp, closed = true, ms = 220) {
+    const b = c.$(`#${lp.id}-kblade`); if (!b) return Promise.resolve();
+    const a0 = +b.dataset.a, a1 = closed ? 0 : +b.dataset.open;
+    if (a0 === a1) return Promise.resolve();
+    c.sfx('flip');
+    return c.tween(ms, p => { const a = a0 + (a1 - a0) * p; b.setAttribute('transform', `rotate(${f(a)})`); if (p === 1) b.dataset.a = a1; }, { ease: 'in' });
+  };
+  E.realOn = function (c, lp, v = 1, ms = 300, quiet = false) {
+    const bl = c.$(`#${lp.id}-bloom`), wm = c.$(`#${lp.id}-warm`), fl = c.$(`#${lp.id}-fil`);
+    if (!bl) return Promise.resolve();
+    const v0 = +(bl.dataset.v || 0);
+    if (v0 < .05 && v > .05 && !quiet) c.sfx('bulbOn');
+    return c.tween(ms, p => {
+      const q = v0 + (v - v0) * p;
+      bl.setAttribute('opacity', f3(q * .95)); wm.setAttribute('opacity', f3(Math.min(1, q * 1.1))); fl.setAttribute('opacity', f3(Math.min(1, q * 1.5)));
+      if (p === 1) bl.dataset.v = v;
+    }, { ease: 'out' });
+  };
+
+  /* ═════ 고리 속 전자 ═════
+     모든 전자가 같은 st.D 만큼 길을 따라 옮겨 간다 → 고리 어디서나 같은 수가 지나감(전류가 같다).
+     흔들림(jitter)은 평균이 0 — 전류가 없을 때는 제자리에서 제각각 흔들릴 뿐 한쪽으로 쏠리지 않는다. */
+  E.electrons = function (c, circ, o = {}) {
+    const g = c.$(`#${circ.id}-e`); if (!g) { console.error('E3.electrons 대상 없음', circ.id); return null; }
+    const path = circ.path, L = path.L, n = Math.max(1, Math.round(L / (o.gap || 48))), r = o.r || 9;
+    const A = o.jitter == null ? 6 : o.jitter, Ap = o.jitterPerp == null ? Math.max(1, Math.min(A, circ.T / 2 - r - 1)) : o.jitterPerp;
+    const rnd = U.rng(o.seed || 7), list = [];
+    let html = '';
+    for (let i = 0; i < n; i++) { list.push({ s: (i + (rnd() - .5) * .45) * L / n, j: jit(rnd), X: 0, Y: 0 }); html += `<g><g class="tb">${EL.electron(0, 0, { r })}</g></g>`; }
+    if (o.ring) html += `<g id="${circ.id}-ring" opacity="0"><g class="tb"><circle r="${r + 9}" fill="none" stroke="${o.ringC || '#fff'}" stroke-width="${o.ringW || 3.5}"/><circle r="${r + 16}" fill="none" stroke="${o.ringC || '#fff'}" stroke-opacity=".35" stroke-width="${(o.ringW || 3.5) * .6}"/></g></g>`;
+    g.innerHTML = html;
+    const els = Array.from(g.children).slice(0, n), ring = o.ring ? c.$(`#${circ.id}-ring`) : null;
+    const st = { D: 0, v: o.drift || 0, dir: o.dir || circ.dir, t: 0, ri: -1 };
+    const posAt = (i, t, D) => {
+      const e = list[i], [px, py, tx, ty] = path.at(e.s + D * st.dir), ja = A * jv(e.j, t, 0), jp = Ap * jv(e.j, t, 2);
+      return [px + tx * ja - ty * jp, py + ty * ja + tx * jp];
+    };
+    const place = t => {
+      for (let i = 0; i < n; i++) {
+        const [X, Y] = posAt(i, t, st.D), e = list[i]; e.X = X; e.Y = Y;
+        const tf = `translate(${f(X)} ${f(Y)})`;
+        els[i].setAttribute('transform', tf);
+        if (ring && i === st.ri) ring.setAttribute('transform', tf);
+      }
+    };
+    place(0);
+    c.loop((t, dt) => { st.t = t; st.D += st.v * dt; place(t); });
+    return {
+      st, els, list, n, ring, posAt,
+      drift(v, ms = 600, ease = 'inOut') { const v0 = st.v; return c.tween(ms, p => { st.v = v0 + (v - v0) * p; }, { ease }); },
+      nearest(s) { let best = 0, bd = 1e9; list.forEach((e, i) => { const d = Math.abs(mod(e.s + st.D * st.dir - s + L / 2, L) - L / 2); if (d < bd) { bd = d; best = i; } }); return best; },
+      track(i) { st.ri = i; place(st.t); },
+      pulse(o2 = {}) { return c.all(els.map(e => e.firstChild), [{ transform: 'scale(1)' }, { transform: 'scale(1.7)' }, { transform: 'scale(1)' }], Object.assign({ dur: 650, ease: 'inOut' }, o2)); },
+    };
+  };
+
+  /* 전자 한 개의 자취 — 최근 span 초 동안의 자리를 잇는다(그 동안 drift 가 일정했다고 보고 계산 → 정지 화면에서도 그려짐) */
+  E.trail = function (c, sim, i, el, o = {}) {
+    el = typeof el === 'string' ? c.$(el) : el; if (!el || !sim) return null;
+    const span = o.span || 2.6, N = o.n || 90;
+    const brk = o.brk || 120;   // 고리를 한 바퀴 돌아 자리가 크게 건너뛰면 선을 끊는다
+    const draw = () => {
+      const t = sim.st.t, D = sim.st.D, v = sim.st.v; let d = '', px = null, py = null;
+      for (let k = 0; k <= N; k++) {
+        const tau = t - span + span * k / N, [X, Y] = sim.posAt(i, tau, D - v * (t - tau));
+        d += (px === null || Math.hypot(X - px, Y - py) > brk ? 'M' : 'L') + `${f(X)} ${f(Y)}`; px = X; py = Y;
+      }
+      el.setAttribute('d', d);
+    };
+    draw();
+    c.loop(draw);
+    return { draw };
+  };
+
+  /* ═════ 전류의 방향(앰버 꺾쇠) ═════ */
+  E.chevrons = function (c, circ, o = {}) {
+    const g = c.$(`#${circ.id}-cur`); if (!g) return null;
+    const path = circ.path, L = path.L, n = Math.max(1, Math.round(L / (o.gap || 110))), sz = o.size || 11;
+    let html = '';
+    for (let i = 0; i < n; i++) html += `<g><path d="M${-sz} ${-sz} L0 0 L${-sz} ${sz}" fill="none" stroke="var(--light)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+    g.innerHTML = html;
+    if (o.hidden) g.setAttribute('opacity', '0');
+    const els = Array.from(g.children), st = { D: 0, v: o.speed || 0, dir: o.dir || circ.curDir };
+    const place = () => {
+      for (let i = 0; i < n; i++) {
+        const [px, py, tx, ty] = path.at(i * L / n + st.D * st.dir), ang = Math.atan2(ty * st.dir, tx * st.dir) * 180 / Math.PI;
+        els[i].setAttribute('transform', `translate(${f(px)} ${f(py)}) rotate(${f(ang)})`);
+      }
+    };
+    place();
+    c.loop((t, dt) => { st.D += st.v * dt; place(); });
+    return { st, g, speed(v, ms = 700) { const v0 = st.v; return c.tween(ms, p => { st.v = v0 + (v - v0) * p; }, { ease: 'inOut' }); } };
+  };
+
+  /* 스위치 날(닫힘 0° · 열림 ±32°) */
+  E.flip = function (c, circ, closed = true, ms = 240) {
+    const b = c.$(`#${circ.id}-blade`); if (!b) return Promise.resolve();
+    const a0 = +b.dataset.a, a1 = closed ? 0 : +b.dataset.open;
+    if (a0 === a1) return Promise.resolve();
+    c.sfx('flip');
+    return c.tween(ms, p => { const a = a0 + (a1 - a0) * p; b.setAttribute('transform', `rotate(${f(a)})`); if (p === 1) b.dataset.a = a1; }, { ease: 'in' });
+  };
+  /* 전구 밝기 0..1 */
+  E.light = function (c, circ, v = 1, ms = 260, quiet = false) {
+    const gl = c.$(`#${circ.id}-glow`), bf = c.$(`#${circ.id}-bfill`), fl = c.$(`#${circ.id}-fil`);
+    if (!gl) return Promise.resolve();
+    const v0 = +(gl.dataset.v || 0);
+    if (v0 < .05 && v > .05 && !quiet) c.sfx('bulbOn');
+    return c.tween(ms, p => {
+      const q = v0 + (v - v0) * p;
+      gl.setAttribute('opacity', f3(q)); bf.setAttribute('opacity', f3(Math.min(1, q * 1.15))); fl.setAttribute('opacity', f3(Math.min(1, q * 1.6)));
+      if (p === 1) gl.dataset.v = v;
+    }, { ease: 'out' });
+  };
+  /* 부품 강조(후광 깜빡 → 켜진 채로) */
+  E.hl = function (c, el, o = {}) {
+    el = typeof el === 'string' ? c.$(el) : el; if (!el) return null;
+    return c.a(el, [{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: .55, offset: .6 }, { opacity: 1 }], Object.assign({ dur: 1100, ease: 'out' }, o));
+  };
+
+  /* ═════ 물의 흐름 모형 ═════
+     관은 시계 방향으로 흐른다(펌프는 아래 변 — 물이 왼쪽으로 나가 왼쪽 관을 타고 올라감).
+     흐름 표시는 두 토막(펌프→끊는 곳, 끊는 곳→펌프)으로 나눠 그려, 끊어지면 뒤 토막만 멈추게 한다. */
+  E.water = function (o) {
+    const id = o.id, x = o.x, y = o.y, w = o.w, h = o.h, T = o.T || 40, ink = 'var(--e3ink)', bg = 'var(--e3bg)';
+    const loopD = `M${x} ${y} L${x + w} ${y} L${x + w} ${y + h} L${x} ${y + h}Z`;
+    const px = x + w * (o.pumpAt ?? .5), cutY = y + h * (o.cutAt ?? .5);
+    const A = [[px - 50, y + h], [x, y + h], [x, cutY]], B = [[x, cutY], [x, y], [x + w, y], [x + w, y + h], [px + 50, y + h]];
+    const dOf = Q => 'M' + Q.map(p => `${f(p[0])} ${f(p[1])}`).join(' L');
+    let s = '';
+    if (o.hl) s += `<path id="${id}-pipe-hl" d="${loopD}" fill="none" stroke="var(--e3hl2)" stroke-width="${T + 30}" stroke-linejoin="round" opacity="0"/>`;
+    const wx = x + w * (o.wheelAt ?? .5), wy = y - (o.wheelLift ?? 34), WR = o.wheelR || 54, PR = o.pumpR || 46;
+    const tx = x + w, ty = y + h * (o.tapAt ?? .5);
+    if (o.hl) {
+      if (o.wheel !== false) s += `<circle id="${id}-wheel-hl" cx="${f(wx)}" cy="${f(wy)}" r="${WR + 34}" fill="var(--e3hl2)" opacity="0"/>`;
+      s += `<circle id="${id}-pump-hl" cx="${f(px)}" cy="${f(y + h)}" r="${PR + 24}" fill="var(--e3hl2)" opacity="0"/>`;
+      if (o.tap) s += `<rect id="${id}-tap-hl" x="${f(tx - 46)}" y="${f(ty - 50)}" width="150" height="100" rx="22" fill="var(--e3hl2)" opacity="0"/>`;
+    }
+    s += `<path d="${loopD}" fill="none" stroke="var(--e3pipe)" stroke-width="${T}" stroke-linejoin="round"/>`;
+    s += `<path d="${loopD}" fill="none" stroke="var(--e3water)" stroke-width="${T - 14}" stroke-linejoin="round"/>`;
+    s += `<path id="${id}-fa" d="${dOf(A)}" class="e3-flow"/><path id="${id}-fb" d="${dOf(B)}" class="e3-flow"/>`;
+    if (o.wheel !== false) {   // 물레방아(아래 날개가 위 관의 물에 잠김 → 오른쪽으로 흐르는 물에 아래쪽이 밀려 시계 반대 방향으로 돈다)
+      let wsvg = `<circle r="${WR}" fill="none" stroke="${ink}" stroke-width="4"/><circle r="9" fill="${ink}"/>`;
+      for (let i = 0; i < 8; i++) {
+        const a = i * TAU / 8, c1 = Math.cos(a), s1 = Math.sin(a);
+        wsvg += `<line x1="0" y1="0" x2="${f(c1 * WR)}" y2="${f(s1 * WR)}" stroke="${ink}" stroke-width="3"/>` +
+          `<line x1="${f(c1 * (WR - 2))}" y1="${f(s1 * (WR - 2))}" x2="${f(c1 * (WR + 18))}" y2="${f(s1 * (WR + 18))}" stroke="${ink}" stroke-width="9" stroke-linecap="round"/>`;
+      }
+      s += `<g transform="translate(${f(wx)} ${f(wy)})"><g id="${id}-wheel">${wsvg}</g></g>`;
+    }
+    let imp = '';
+    for (let i = 0; i < 4; i++) { const a = i * TAU / 4; imp += `<path d="M0 0 Q${f(Math.cos(a + .6) * 22)} ${f(Math.sin(a + .6) * 22)} ${f(Math.cos(a + .25) * 34)} ${f(Math.sin(a + .25) * 34)}" fill="none" stroke="${ink}" stroke-width="5" stroke-linecap="round"/>`; }
+    s += `<g id="${id}-pump"><circle cx="${f(px)}" cy="${f(y + h)}" r="${PR}" fill="${bg}" stroke="${ink}" stroke-width="4"/>` +
+      `<g transform="translate(${f(px)} ${f(y + h)})"><g id="${id}-imp">${imp}</g></g><circle cx="${f(px)}" cy="${f(y + h)}" r="7" fill="${ink}"/></g>`;
+    if (o.tap) {   // 수도꼭지(밸브): 관 위 몸통 + 바깥 손잡이
+      s += `<g id="${id}-tap"><rect x="${f(tx - 28)}" y="${f(ty - 28)}" width="56" height="56" rx="10" fill="${bg}" stroke="${ink}" stroke-width="4"/>` +
+        `<line x1="${f(tx - 18)}" y1="${f(ty)}" x2="${f(tx + 18)}" y2="${f(ty)}" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>` +
+        `<line x1="${f(tx + 28)}" y1="${f(ty)}" x2="${f(tx + 60)}" y2="${f(ty)}" stroke="${ink}" stroke-width="6" stroke-linecap="round"/>` +
+        `<line x1="${f(tx + 62)}" y1="${f(ty - 26)}" x2="${f(tx + 62)}" y2="${f(ty + 26)}" stroke="${ink}" stroke-width="9" stroke-linecap="round"/></g>`;
+    }
+    if (o.cut) {
+      s += `<g id="${id}-cutg" opacity="0"><rect x="${f(x - T / 2 - 4)}" y="${f(cutY - 22)}" width="${T + 8}" height="44" fill="${bg}"/>` +
+        `<line x1="${f(x - T / 2)}" y1="${f(cutY - 22)}" x2="${f(x + T / 2)}" y2="${f(cutY - 22)}" stroke="var(--e3pipe)" stroke-width="4"/>` +
+        `<line x1="${f(x - T / 2)}" y1="${f(cutY + 22)}" x2="${f(x + T / 2)}" y2="${f(cutY + 22)}" stroke="var(--e3pipe)" stroke-width="4"/></g><g id="${id}-drops"></g>`;
+    }
+    return { id, svg: s, x, y, w, h, T, px, cutY, wheel: [wx, wy, WR], pump: [px, y + h, PR], tap: [tx, ty] };
+  };
+  E.waterDrive = function (c, wc, o = {}) {
+    const fa = c.$(`#${wc.id}-fa`), fb = c.$(`#${wc.id}-fb`), imp = c.$(`#${wc.id}-imp`), wh = c.$(`#${wc.id}-wheel`), dr = c.$(`#${wc.id}-drops`);
+    const st = { a: 0, b: 0, va: o.speed || 0, vb: o.speed || 0, ang: 0, wang: 0, leak: 0 };
+    const N = 16, drops = [];
+    if (dr) {
+      let html = ''; for (let i = 0; i < N; i++) html += `<circle r="${6 + (i % 3) * 2}" fill="var(--e3water)" opacity="0"/>`;
+      dr.innerHTML = html; Array.from(dr.children).forEach((el, i) => drops.push({ el, ph: i / N, vx: 70 + ((i * 37) % 60), vy: 40 + ((i * 53) % 70) }));
+    }
+    const x0 = wc.x - wc.T / 2 + 4, y0 = wc.cutY + 14, floor = wc.y + wc.h + 40;
+    const step = (t, dt) => {
+      st.a += st.va * dt; st.b += st.vb * dt;
+      fa.setAttribute('stroke-dashoffset', f(-st.a)); fb.setAttribute('stroke-dashoffset', f(-st.b));
+      st.ang += st.va * dt * 1.8; st.wang -= st.vb * dt * 1.3;
+      if (imp) imp.setAttribute('transform', `rotate(${f(st.ang)})`);
+      if (wh) wh.setAttribute('transform', `rotate(${f(st.wang)})`);
+      if (drops.length) drops.forEach(d => {
+        const Tc = 1.0, tau = mod(t / Tc + d.ph, 1) * Tc;
+        const X = x0 - d.vx * tau, Y = y0 - d.vy * tau + 450 * tau * tau;
+        d.el.setAttribute('cx', f(X)); d.el.setAttribute('cy', f(Y));
+        d.el.setAttribute('opacity', f3(Y < floor ? st.leak * Math.min(1, tau / .06) * .9 : 0));
+      });
+    };
+    step(.45, 0);
+    c.loop(step);
+    const tw = (key, v, ms) => { const v0 = st[key]; return c.tween(ms, p => { st[key] = v0 + (v - v0) * p; if (p === 1 && c.instant) step(.45, 0); }, { ease: 'inOut' }); };
+    return {
+      st,
+      speed(v, ms = 800) { return Promise.all([tw('va', v, ms), tw('vb', v, ms)]); },
+      speedB(v, ms = 800) { return tw('vb', v, ms); },
+      leak(v = 1, ms = 400) { return tw('leak', v, ms); },
+    };
+  };
+
+  /* ═════ 곧은 도선 속 전자(여러 줄) ═════
+     줄마다 전자 간격이 고르다 → 단면을 지나간 수 = (움직인 거리 ÷ 간격) × 줄 수. crossings() 는 실제 자리로 센다. */
+  E.wireSim = function (c, g, o) {
+    const L = o.x2 - o.x1, n = Math.max(1, Math.round(L / (o.gap || 50))), gap = L / n, rows = o.rows || 1, rg = o.rowGap || 44, r = o.r || 10;
+    const A = o.jitter == null ? 6 : o.jitter, Ap = o.jitterPerp == null ? A : o.jitterPerp, fade = o.fade == null ? 50 : o.fade;
+    const rnd = U.rng(o.seed || 3), list = [];
+    let html = '';
+    for (let j = 0; j < rows; j++) {
+      const off = rnd() * gap, yy = o.y + (j - (rows - 1) / 2) * rg;
+      for (let i = 0; i < n; i++) { list.push({ u: i * gap + off, y: yy, j: jit(rnd), X: 0, Y: 0 }); html += `<g><g class="tb">${EL.electron(0, 0, { r })}</g></g>`; }
+    }
+    if (o.ring) html += `<g id="${o.ring}" opacity="0"><circle r="${r + 9}" fill="none" stroke="currentColor" stroke-width="3.5"/></g>`;
+    g.innerHTML = html;
+    const els = Array.from(g.children).slice(0, list.length), ring = o.ring ? g.querySelector('#' + o.ring) : null;
+    const st = { D: 0, v: o.drift || 0, free: true, t: 0, ri: o.track == null ? -1 : o.track };
+    const posAt = (i, t, D) => { const e = list[i], u = mod(e.u + D, L); return [o.x1 + u + A * jv(e.j, t, 0), e.y + Ap * jv(e.j, t, 2), u]; };
+    const place = t => {
+      for (let i = 0; i < list.length; i++) {
+        const [X, Y, u] = posAt(i, t, st.D), e = list[i]; e.X = X; e.Y = Y;
+        els[i].setAttribute('transform', `translate(${f(X)} ${f(Y)})`);
+        if (fade > 0) els[i].setAttribute('opacity', f3(Math.max(0, Math.min(1, u / fade, (L - u) / fade))));
+        if (ring && i === st.ri) ring.setAttribute('transform', `translate(${f(X)} ${f(Y)})`);
+      }
+    };
+    place(0);
+    c.loop((t, dt) => { st.t = t; if (st.free) st.D += st.v * dt; place(t); });
+    return {
+      st, els, list, gap, n, rows, L, posAt, ring,
+      drift(v, ms = 700, ease = 'inOut') { const v0 = st.v; return c.tween(ms, p => { st.v = v0 + (v - v0) * p; }, { ease }); },
+      /** D 가 Da → Db 로 가는 동안 x = gx 를 지나간 전자 수(오른쪽으로 +) */
+      crossings(Da, Db, gx) { const g0 = gx - o.x1; let k = 0; list.forEach(e => { k += Math.floor((e.u + Db - g0) / L) - Math.floor((e.u + Da - g0) / L); }); return k; },
+      /** 정해진 거리만큼 정해진 시간에 옮기기(결정적 — 되돌리기·건너뛰기 때도 같은 끝 상태) */
+      runBy(dD, ms) { const D0 = st.D; st.free = false; return c.tween(ms, p => { st.D = D0 + dD * p; place(st.t); if (p === 1) st.free = true; }, { ease: 'linear' }); },
+      pulse(o2 = {}) { return c.all(els.map(e => e.firstChild), [{ transform: 'scale(1)' }, { transform: 'scale(1.6)' }, { transform: 'scale(1)' }], Object.assign({ dur: 700, ease: 'inOut' }, o2)); },
+    };
+  };
+
+  /* ═════ 원자 사이의 전자(충돌) ═════
+     전자는 밀려(acc) 오른쪽으로 빨라지다가 원자에 부딪히면 제멋대로 튕긴다 → 평균하면 천천히 오른쪽으로(드리프트).
+     flash 를 켜면 부딪힌 원자가 잠깐 보라(저항 색)로 빛난다. 원자는 제자리에서 조금씩 떨린다(vib). */
+  E.lattice = function (c, g, o) {
+    const x = o.x, y = o.y, w = o.w, h = o.h, rows = o.rows || 4, cols = o.cols || 12, R = o.R || 24, r = o.r || 9, ne = o.ne || 14, vib = o.vib == null ? 1.6 : o.vib;
+    const rnd = U.rng(o.seed || 5), sx = w / cols, sy = h / rows, atoms = [];
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) atoms.push({ x: x + (i + (j % 2 ? .75 : .25)) * sx, y: y + (j + .5) * sy, fl: 0, j: jit(rnd) });
+    const cid = `${o.id}-clip`;
+    let s = `<clipPath id="${cid}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${o.rx || 0}"/></clipPath>`;
+    s += `<g id="${o.id}-halos">` + atoms.map(a => `<circle cx="${f(a.x)}" cy="${f(a.y)}" r="${R + 16}" fill="var(--sound)" opacity="0"/>`).join('') + '</g>';
+    s += `<g id="${o.id}-atoms">` + atoms.map(a => `<g transform="translate(${f(a.x)} ${f(a.y)})"><circle class="tb" r="${R}" fill="var(--e3atom)" stroke="var(--e3atomS)" stroke-width="2"/></g>`).join('') + '</g>';
+    s += `<g clip-path="url(#${cid})" id="${o.id}-es">`;
+    const es = [], vth = o.vth || 230;
+    for (let k = 0; k < ne; k++) {
+      let ex = x + w / 2, ey = y + h / 2, ok = false, tries = 0;
+      while (!ok && tries++ < 80) { ex = x + rnd() * w; ey = y + r + 2 + rnd() * (h - 2 * r - 4); ok = atoms.every(a => Math.hypot(a.x - ex, a.y - ey) > R + r + 6); }
+      const th = rnd() * TAU; es.push({ x: ex, y: ey, vx: Math.cos(th) * vth, vy: Math.sin(th) * vth });
+      s += `<g>${EL.electron(0, 0, { r })}</g>`;
+    }
+    s += '</g>';
+    g.innerHTML = s;
+    const halos = Array.from(c.$(`#${o.id}-halos`).children), els = Array.from(c.$(`#${o.id}-es`).children);
+    const atomG = Array.from(c.$(`#${o.id}-atoms`).children);
+    const st = { acc: o.acc == null ? 240 : o.acc, vth, flash: !!o.flash, hits: 0 };
+    const place = () => es.forEach((e, k) => els[k].setAttribute('transform', `translate(${f(e.x)} ${f(e.y)})`));
+    place();
+    c.loop((t, dt) => {
+      es.forEach(e => {
+        e.vx += st.acc * dt;
+        const sp = Math.hypot(e.vx, e.vy); if (sp > 520) { e.vx *= 520 / sp; e.vy *= 520 / sp; }
+        e.x += e.vx * dt; e.y += e.vy * dt;
+        if (e.y < y + r) { e.y = y + r; e.vy = Math.abs(e.vy); }
+        if (e.y > y + h - r) { e.y = y + h - r; e.vy = -Math.abs(e.vy); }
+        if (e.x > x + w + r) e.x -= w + 2 * r;
+        if (e.x < x - r) e.x += w + 2 * r;
+        for (let i = 0; i < atoms.length; i++) {
+          const a = atoms[i], dx = e.x - a.x, dy = e.y - a.y, d = Math.hypot(dx, dy);
+          if (d < R + r && d > 1e-3 && (dx * e.vx + dy * e.vy) < 0) {
+            const nx = dx / d, ny = dy / d, th = Math.atan2(ny, nx) + (rnd() - .5) * Math.PI * .95;
+            e.vx = Math.cos(th) * st.vth; e.vy = Math.sin(th) * st.vth;
+            e.x = a.x + nx * (R + r); e.y = a.y + ny * (R + r);
+            if (st.flash) { a.fl = 1; st.hits++; }
+          }
+        }
+      });
+      place();
+      if (vib > 0) atoms.forEach((a, i) => atomG[i].setAttribute('transform', `translate(${f(a.x + vib * jv(a.j, t, 0))} ${f(a.y + vib * jv(a.j, t, 2))})`));
+      atoms.forEach((a, i) => { if (a.fl > 0) { a.fl = Math.max(0, a.fl - dt / .45); halos[i].setAttribute('opacity', f3(a.fl * .75)); } });
+    });
+    return { st, atoms, halos, atomEls: atomG.map(g2 => g2.firstChild),
+      /** 몇몇 원자를 방금 부딪힌 것처럼(정지 화면·순간 재생용) */
+      flashSome(idx) { idx.forEach(i => { if (atoms[i]) { atoms[i].fl = 1; halos[i].setAttribute('opacity', '.75'); } }); } };
+  };
+
+  /* ═════ 지그재그 도선(학습지 그림) ═════
+     위 줄·아래 줄 원자에 번갈아 부딪히며 나아가는 전자 한 개. 꼭짓점 하나 = 충돌 한 번(그 원자가 잠깐 빛남). */
+  E.zigWire = function (o) {
+    const id = o.id, x = o.x, y = o.y, len = o.len, H = o.H || 124, sp = o.sp || 104, R = o.R || 17, r = o.r || 10;
+    const yt = y - H / 2 + R + 10, yb = y + H / 2 - R - 10;
+    const atoms = [], verts = [[x + 18, y]], hit = [];
+    for (let k = 0; ; k++) {
+      const ut = sp / 2 + k * sp, ub = sp + k * sp;
+      if (ut > len - sp * .4) break;
+      atoms.push([x + ut, yt]); verts.push([x + ut, yt + R + r]); hit.push(atoms.length - 1);
+      if (ub > len - sp * .4) break;
+      atoms.push([x + ub, yb]); verts.push([x + ub, yb - R - r]); hit.push(atoms.length - 1);
+    }
+    verts.push([x + len - 18, y]);
+    let s = `<rect x="${f(x)}" y="${f(y - H / 2)}" width="${f(len)}" height="${H}" rx="26" fill="var(--e3tube)" stroke="var(--e3edge)" stroke-width="1.5"/>`;
+    s += `<g id="${id}-halos">` + atoms.map(a => `<circle cx="${f(a[0])}" cy="${f(a[1])}" r="${R + 14}" fill="var(--sound)" opacity="0"/>`).join('') + '</g>';
+    s += atoms.map(a => `<circle cx="${f(a[0])}" cy="${f(a[1])}" r="${R}" fill="var(--e3atom)" stroke="var(--e3atomS)" stroke-width="2"/>`).join('');
+    s += `<polyline id="${id}-trail" points="${f(verts[0][0])},${f(verts[0][1])}" fill="none" stroke="var(--elec)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" opacity=".75"/>`;
+    s += `<g id="${id}-el" transform="translate(${f(verts[0][0])} ${f(verts[0][1])})">${EL.electron(0, 0, { r })}</g>`;
+    const segL = []; let Lt = 0;
+    for (let i = 0; i < verts.length - 1; i++) { const l = Math.hypot(verts[i + 1][0] - verts[i][0], verts[i + 1][1] - verts[i][1]); segL.push(l); Lt += l; }
+    return { id, svg: s, verts, hit, n: hit.length, L: Lt, segL };
+  };
+  E.zigRun = function (c, zw, ms, o = {}) {
+    const el = c.$(`#${zw.id}-el`), tr = c.$(`#${zw.id}-trail`), halos = Array.from(c.$(`#${zw.id}-halos`).children), cnt = o.counter ? c.$(o.counter) : null;
+    let passed = 0;
+    return c.tween(ms, p => {
+      let s = p * zw.L, i = 0;
+      while (i < zw.segL.length - 1 && s > zw.segL[i]) { s -= zw.segL[i]; i++; }
+      const a = zw.verts[i], b = zw.verts[i + 1], u = Math.min(1, s / zw.segL[i]);
+      const X = a[0] + (b[0] - a[0]) * u, Y = a[1] + (b[1] - a[1]) * u;
+      el.setAttribute('transform', `translate(${f(X)} ${f(Y)})`);
+      tr.setAttribute('points', zw.verts.slice(0, i + 1).map(q => `${f(q[0])},${f(q[1])}`).join(' ') + ` ${f(X)},${f(Y)}`);
+      const hits = Math.min(zw.n, i);   // 지나온 꼭짓점(첫 점 제외) = 충돌 수
+      if (hits > passed) {
+        for (let k = passed; k < hits; k++) {
+          const hEl = halos[zw.hit[k]];
+          if (hEl && !c.instant) { c.a(hEl, [{ opacity: .85 }, { opacity: 0 }], { dur: 520, ease: 'out' }); if (o.tick !== false) c.sfx('tick'); }
+        }
+        passed = hits;
+        if (cnt) cnt.textContent = passed;
+      }
+      if (p === 1) { passed = zw.n; if (cnt) cnt.textContent = zw.n; }
+    }, { ease: 'linear' });
+  };
+})();
+
+}catch(e){console.error("[object e3.js]",e)}
+</script>
+<script>
+/* ── 01_cover.html ── */
+try{
+
+(function () {
+  const LP = E3.realLoop({ id: 'e3_01_cover-k', x: 380, y: 150, w: 1160, h: 400, T: 26,
+    parts: [{ type: 'bulb', side: 'top', at: .5, s: .95, bloom: 520 }, { type: 'cell', side: 'bottom', at: .5, minus: 'right' }, { type: 'knife', side: 'bottom', at: .83 }] });
+  Deck.scene('e3_01_cover', {
+    steps: 0,
+    build(root) { root.querySelector('#e3_01_cover-c').innerHTML = LP.svg; },
+    async enter(c) {
+      const e = E3.electrons(c, LP, { gap: 26, r: 5.5, jitter: 4.5, seed: 13 });
+      const fl = c.$('#e3_01_cover-flash');
+      await c.wait(1300);
+      E3.realFlip(c, LP, true, 160);                     // 딸깍 — 화면 밖에서 스위치가 닫힘
+      await c.wait(140);
+      E3.realOn(c, LP, 1, 260);
+      c.a(fl, [{ opacity: 0 }, { opacity: 1 }], { dur: 260 });
+      e.drift(14, 500);                                   // 도선 전체의 전자가 같은 순간에 움직이기 시작
+      await c.wait(1100);
+      c.a(fl, [{ opacity: 1 }, { opacity: 0 }], { dur: 1200, delay: 300 });
+      const cam = c.camera('#e3_01_cover-svg', [0, 0, 1920, 1080], { dur: 3000 });
+      await c.wait(2100);
+      c.reveal(c.$('#e3_01_cover-k-rays'), 'draw', { dur: 900, stagger: 40 });
+      await cam;
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 01_cover.html]",e)}
+/* ── 02_hook.html ── */
+try{
+
+(function () {
+  const LP = E3.realLoop({ id: 'e3_02_hook-k', x: 360, y: 780, w: 3120, h: 600, T: 24,
+    parts: [{ type: 'knife', side: 'top', at: .13, s: 1.2 }, { type: 'cell', side: 'bottom', at: .13, minus: 'left', s: 1.2 }, { type: 'bulb', side: 'top', at: .872, s: 1.25, bloom: 560 }] });
+  Deck.scene('e3_02_hook', {
+    steps: 3,
+    build(root) { root.querySelector('#e3_02_hook-c').innerHTML = LP.svg; },
+    async enter(c) {
+      c.data.e = E3.electrons(c, LP, { gap: 56, r: 7, jitter: 5, seed: 23 });
+      await c.wait(700);
+      await c.camera('#e3_02_hook-svg', [2240, 560, 1600, 900], { dur: 2800 });   // 도선을 따라 저 멀리 전구까지
+      await c.wait(250);
+      c.hide(c.$('#e3_02_hook-trip'), { dur: 600 });
+      await c.camera('#e3_02_hook-svg', [0, 0, 3840, 2160], { dur: 1500 });
+    },
+    async go(c, k) {
+      const e = c.data.e;
+      if (k === 1) {
+        await E3.realFlip(c, LP, true, 180);
+        E3.realOn(c, LP, 1, 160);                  // 같은 순간에 저 끝의 전구가 켜짐
+        c.reveal(c.$('#e3_02_hook-k-rays'), 'draw', { dur: 700 });
+        await e.drift(10, 300);
+      }
+      if (k === 3) await c.camera('#e3_02_hook-svg', [1740, 690, 320, 180], { dur: 2000 });
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 02_hook.html]",e)}
+/* ── 03_define.html ── */
+try{
+
+(function () {
+  const V = -55;   // 왼쪽으로 천천히(px/s)
+  Deck.scene('e3_03_define', {
+    steps: 3,
+    build(root) { root.querySelector('#e3_03_define-arr').innerHTML = EL.arrow(1320, 828, 600, 828, { color: 'var(--elec)', w: 8, head: 30 }); },
+    async enter(c) {
+      const w = c.data.w = E3.wireSim(c, c.$('#e3_03_define-e'), { x1: 240, x2: 1680, y: 670, rows: 2, rowGap: 80, gap: 84, r: 14, jitter: 10, jitterPerp: 9, fade: 90, seed: 31, ring: 'e3_03_define-ring' });
+      let best = 0, bd = 1e9; w.list.forEach((e, i) => { if (i < w.n && Math.abs(e.u - 1060) < bd) { bd = Math.abs(e.u - 1060); best = i; } });
+      w.st.ri = best;
+      c.data.tr = E3.trail(c, w, best, c.$('#e3_03_define-tr'), { span: 3.2 });
+    },
+    async go(c, k) {
+      const w = c.data.w;
+      if (k === 1) { c.sfx('whoosh', 200, 900, .4); await w.drift(V, 1400); }
+      if (k === 2) await w.pulse({ stagger: 22 });
+      if (k === 3) {
+        c.data.tr.draw();
+        c.a(w.ring, [{ opacity: 0 }, { opacity: 1 }], { dur: 500 });
+        await c.a(c.$('#e3_03_define-tr'), [{ opacity: 0 }, { opacity: .55 }], { dur: 900, delay: 300 }).finished;
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 03_define.html]",e)}
+/* ── 04_strength.html ── */
+try{
+
+(function () {
+  const GX = 800;
+  Deck.scene('e3_04_strength', {
+    steps: 5,
+    async enter(c) {
+      const w = c.data.w = E3.wireSim(c, c.$('#e3_04_strength-e'), { x1: 240, x2: 1380, y: 690, rows: 3, rowGap: 58, gap: 60, r: 12, jitter: 6, jitterPerp: 5, fade: 60, seed: 41 });
+      const cs = c.data.cs = { V: 2 * w.gap, on: false, phase: 'count', Da: 0, hold: 0, last: 0 };   // 1초에 간격 2칸 → 줄마다 1초에 2개
+      w.st.v = cs.V;
+      const arc = c.$('#e3_04_strength-arc'), num = c.$('#e3_04_strength-n'), gl = c.$('#e3_04_strength-gl');
+      c.loop((t, dt) => {
+        const D = w.st.D;
+        if (cs.phase === 'count') {
+          const p = Math.min(1, (D - cs.Da) / cs.V);
+          arc.setAttribute('stroke-dashoffset', (1 - p).toFixed(3));
+          const k = w.crossings(cs.Da, Math.min(D, cs.Da + cs.V), GX);
+          if (k > cs.last) { cs.last = k; if (cs.on) { num.textContent = k; c.a(gl, [{ opacity: .32 }, { opacity: 0 }], { dur: 320 }); } }
+          if (p >= 1) { cs.phase = 'hold'; cs.hold = 0; if (cs.on) c.a(num, [{ transform: 'scale(1.18)' }, { transform: 'scale(1)' }], { dur: 420, ease: 'spring' }); }
+        } else {
+          cs.hold += dt;
+          if (cs.hold >= .8) { cs.phase = 'count'; cs.Da = D; cs.last = 0; if (cs.on) num.textContent = 0; }
+        }
+      });
+    },
+    async go(c, k) {
+      const w = c.data.w, cs = c.data.cs, num = c.$('#e3_04_strength-n');
+      const restart = () => { cs.phase = 'count'; cs.Da = w.st.D; cs.last = 0; };
+      if (k === 1) { c.sfx('tick', 300); restart(); }
+      if (k === 3) { cs.on = true; restart(); num.textContent = c.instant ? 2 * w.rows : 0; }
+      if (k === 4) {
+        cs.V = 4 * w.gap; c.sfx('rise', 0, 900);
+        await w.drift(cs.V, 900);
+        restart(); num.textContent = c.instant ? 4 * w.rows : 0;
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 04_strength.html]",e)}
+/* ── 05_direction.html ── */
+try{
+
+(function () {
+  Deck.scene('e3_05_direction', {
+    steps: 3,
+    build(root) {
+      root.querySelector('#e3_05_direction-ia').innerHTML = EL.arrow(430, 594, 1490, 594, { color: 'var(--light)', w: 9, head: 32 });
+      root.querySelector('#e3_05_direction-ea').innerHTML = EL.arrow(1490, 790, 430, 790, { color: 'var(--elec)', w: 9, head: 32 });
+    },
+    async enter(c) {
+      c.data.w = E3.wireSim(c, c.$('#e3_05_direction-e'), { x1: 346, x2: 1574, y: 690, rows: 1, gap: 62, r: 12, jitter: 7, jitterPerp: 5, fade: 40, seed: 51, drift: -60 });
+    },
+    async go(c, k) {
+      if (k === 2) await c.data.w.pulse({ stagger: 25 });
+      if (k === 3) c.sfx('chime');
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 05_direction.html]",e)}
+/* ── 06_flow.html ── */
+try{
+
+(function () {
+  const mk = (id, x) => E3.circuit({ id, x, y: 560, w: 600, h: 280, tube: 30,
+    parts: [{ type: 'bulb', side: 'top', at: .5, r: 38, glow: 140 }, { type: 'bat', side: 'bottom', at: .5, plus: 'left' }, { type: 'sw', side: 'right', at: .5 }] });
+  const A = mk('e3_06_flow-a', 200), B = mk('e3_06_flow-b', 1120);
+  Deck.scene('e3_06_flow', {
+    steps: 2,
+    build(root) {
+      root.querySelector('#e3_06_flow-L').innerHTML = A.svg;
+      root.querySelector('#e3_06_flow-R').innerHTML = B.svg;
+    },
+    async enter(c) {
+      const a = c.data.a = E3.electrons(c, A, { gap: 46, seed: 61, jitter: 7, ring: true });
+      const b = c.data.b = E3.electrons(c, B, { gap: 46, seed: 62, jitter: 7, ring: true });
+      const leftMid = 2 * 600 + 280 + 140;   // 왼쪽 변 한가운데(길 좌표)
+      const ia = a.nearest(leftMid + 40), ib = b.nearest(leftMid);
+      a.track(ia); b.track(ib);
+      c.a(a.ring, [{ opacity: 0 }, { opacity: 1 }], { dur: 500, delay: 600 });
+      c.a(b.ring, [{ opacity: 0 }, { opacity: 1 }], { dur: 500, delay: 600 });
+      c.data.ta = E3.trail(c, a, ia, c.$('#e3_06_flow-ta'), { span: 2.8 });
+      c.data.tb = E3.trail(c, b, ib, c.$('#e3_06_flow-tb'), { span: 2.8 });
+    },
+    async go(c, k) {
+      if (k === 1) {
+        await E3.flip(c, A, true);
+        E3.light(c, A, 1, 160);
+        await c.data.a.drift(42, 300);
+        c.data.ta.draw();
+      }
+      if (k === 2) {
+        c.sfx('pop');
+        await c.a(c.data.b.ring.firstChild, [{ transform: 'scale(1)' }, { transform: 'scale(1.6)' }, { transform: 'scale(1)' }], { dur: 700, ease: 'inOut' }).finished;
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 06_flow.html]",e)}
+/* ── 07_water.html ── */
+try{
+
+(function () {
+  const W = E3.water({ id: 'e3_07_water-w', x: 270, y: 590, w: 520, h: 230, T: 40, hl: true, cut: true, cutAt: .5 });
+  const C = E3.circuit({ id: 'e3_07_water-k', x: 1130, y: 590, w: 520, h: 230, tube: 30, hl: true,
+    parts: [{ type: 'bulb', side: 'top', at: .5, r: 38, glow: 130 }, { type: 'bat', side: 'bottom', at: .5, plus: 'left' }, { type: 'cut', side: 'left', at: .5 }] });
+  Deck.scene('e3_07_water', {
+    steps: 3,
+    build(root) {
+      root.querySelector('#e3_07_water-W').innerHTML = W.svg; root.querySelector('#e3_07_water-C').innerHTML = C.svg;
+      root.querySelector('#e3_07_water-link').innerHTML = EL.arrow(960, 820, 836, 820, { color: 'var(--t2)', w: 4, head: 18 }) + EL.arrow(960, 820, 1084, 820, { color: 'var(--t2)', w: 4, head: 18 });
+    },
+    async enter(c) {
+      c.data.wd = E3.waterDrive(c, W, { speed: 70 });
+      c.data.e = E3.electrons(c, C, { gap: 44, seed: 71, drift: 40 });
+      E3.light(c, C, .9, 1, true);
+    },
+    async go(c, k) {
+      if (k === 1) { E3.hl(c, '#e3_07_water-w-pump-hl'); E3.hl(c, '#e3_07_water-k-bat-hl', { delay: 250 }); }
+      if (k === 2) {
+        c.sfx('snip');
+        c.a(c.$('#e3_07_water-w-cutg'), [{ opacity: 0 }, { opacity: 1 }], { dur: 200 });
+        const wd = c.data.wd;
+        wd.leak(1, 300); await wd.speedB(0, 900);
+      }
+      if (k === 3) {
+        c.sfx('snip');
+        c.a(c.$('#e3_07_water-k-cut'), [{ opacity: 0 }, { opacity: 1 }], { dur: 200 });
+        await c.wait(200);
+        E3.light(c, C, 0, 120);
+        await c.data.e.drift(0, 260);   // 어디서나 한꺼번에 멈춤 — 흔들림만 남는다
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 07_water.html]",e)}
+/* ── 08_pairs.html ── */
+try{
+
+(function () {
+  const W = E3.water({ id: 'e3_08_pairs-w', x: 1090, y: 300, w: 500, h: 200, T: 36, hl: true, tap: true, pumpR: 40, wheelR: 46, wheelLift: 30 });
+  const C = E3.circuit({ id: 'e3_08_pairs-k', x: 1090, y: 660, w: 500, h: 200, tube: 28, hl: true,
+    parts: [{ type: 'bulb', side: 'top', at: .5, r: 34, glow: 92 }, { type: 'bat', side: 'bottom', at: .5, plus: 'left' }, { type: 'sw', side: 'right', at: .5, closed: true }] });
+  const HL = [['pump', 'bat'], ['wheel', 'bulb'], ['tap', 'sw'], ['pipe', 'tube']];
+  Deck.scene('e3_08_pairs', {
+    steps: 5,
+    build(root) {
+      root.querySelector('#e3_08_pairs-W').innerHTML = W.svg;
+      root.querySelector('#e3_08_pairs-C').innerHTML = C.svg;
+      root.querySelector('#e3_08_pairs-wa').innerHTML = EL.arrow(1140, 470, 1140, 336, { color: 'var(--e3ink)', w: 6, head: 22 });
+      root.querySelector('#e3_08_pairs-ca').innerHTML = EL.arrow(1140, 830, 1140, 696, { color: 'var(--light)', w: 6, head: 22 });
+    },
+    async enter(c) {
+      c.data.wd = E3.waterDrive(c, W, { speed: 60 });
+      c.data.ch = E3.chevrons(c, C, { gap: 100, speed: 0, hidden: true });
+      E3.light(c, C, .85, 1, true);
+    },
+    async go(c, k) {
+      const off = (a, b) => { c.a(c.$(`#e3_08_pairs-w-${a}-hl`), [{ opacity: 1 }, { opacity: 0 }], { dur: 400 }); c.a(c.$(`#e3_08_pairs-k-${b}-hl`), [{ opacity: 1 }, { opacity: 0 }], { dur: 400 }); };
+      if (k > 1 && k <= 5) off(...HL[k - 2]);
+      if (k <= 4) { const [a, b] = HL[k - 1]; E3.hl(c, `#e3_08_pairs-w-${a}-hl`); E3.hl(c, `#e3_08_pairs-k-${b}-hl`, { delay: 250 }); }
+      if (k === 5) {
+        c.a(c.data.ch.g, [{ opacity: 0 }, { opacity: 1 }], { dur: 500, delay: 500 });
+        await c.data.ch.speed(60, 800);
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 08_pairs.html]",e)}
+/* ── 09_voltage.html ── */
+try{
+
+(function () {
+  const W = E3.water({ id: 'e3_09_voltage-w', x: 270, y: 580, w: 520, h: 210, T: 40, hl: true, wheelR: 48, wheelLift: 30 });
+  const C = E3.circuit({ id: 'e3_09_voltage-k', x: 1130, y: 580, w: 520, h: 210, tube: 30, hl: true,
+    parts: [{ type: 'bulb', side: 'top', at: .5, r: 38, glow: 130 }, { type: 'bat', side: 'bottom', at: .5, plus: 'left', cells: 2, hide2: true }] });
+  Deck.scene('e3_09_voltage', {
+    steps: 3,
+    build(root) {
+      root.querySelector('#e3_09_voltage-W').innerHTML = W.svg;
+      root.querySelector('#e3_09_voltage-C').innerHTML = C.svg;
+      root.querySelector('#e3_09_voltage-link').innerHTML = EL.arrow(960, 790, 836, 790, { color: 'var(--t2)', w: 4, head: 18 }) + EL.arrow(960, 790, 1084, 790, { color: 'var(--t2)', w: 4, head: 18 });
+    },
+    async enter(c) {
+      c.data.wd = E3.waterDrive(c, W, { speed: 50 });
+      c.data.ch = E3.chevrons(c, C, { gap: 96, speed: 40 });
+      E3.light(c, C, .45, 1, true);
+    },
+    async go(c, k) {
+      if (k === 1) E3.hl(c, '#e3_09_voltage-k-bat-hl');
+      if (k === 2) E3.hl(c, '#e3_09_voltage-w-pump-hl');
+      if (k === 3) {
+        c.$('#e3_09_voltage-v').textContent = '3 V';
+        c.a(c.$('#e3_09_voltage-v'), [{ transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { dur: 600, ease: 'spring' });
+        c.a(c.$('#e3_09_voltage-k-cell2w'), [{ opacity: 1 }, { opacity: 0 }], { dur: 300 });
+        c.a(c.$('#e3_09_voltage-k-cell2'), [{ opacity: 0 }, { opacity: 1 }], { dur: 500 });
+        c.sfx('rise', 0, 1200);
+        await Promise.all([c.data.wd.speed(100, 1200), c.data.ch.speed(80, 1200), E3.light(c, C, 1, 1200)]);
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 09_voltage.html]",e)}
+/* ── 10_resist.html ── */
+try{
+
+(function () {
+  const L = E3.circuit({ id: 'e3_10_resist-k', x: 200, y: 560, w: 640, h: 270, tube: 30,
+    parts: [{ type: 'bulb', side: 'top', at: .5, r: 38, glow: 140 }, { type: 'bat', side: 'bottom', at: .5, plus: 'left' }, { type: 'res', side: 'right', at: .5, len: 116, amp: 20, hidden: true }] });
+  const M = E3.circuit({ id: 'e3_10_resist-m', x: 1180, y: 590, w: 500, h: 250, tube: 22,
+    parts: [{ type: 'bat', side: 'left', at: .5, plus: 'up' }, { type: 'res', side: 'right', at: .5, len: 116, amp: 20 }] });
+  Deck.scene('e3_10_resist', {
+    steps: 2,
+    build(root) {
+      root.querySelector('#e3_10_resist-L').innerHTML = L.svg;
+      root.querySelector('#e3_10_resist-R').innerHTML = M.svg;
+      root.querySelector('#e3_10_resist-ia').innerHTML = EL.arrow(1330, 556, 1550, 556, { color: 'var(--light)', w: 6, head: 22 });
+    },
+    async enter(c) {
+      c.data.e = E3.electrons(c, L, { gap: 44, seed: 101, drift: 62 });
+      E3.light(c, L, .9, 1, true);
+    },
+    async go(c, k) {
+      if (k === 1) {
+        c.sfx('thunk');
+        c.a(c.$('#e3_10_resist-k-res'), [{ opacity: 0, transform: 'translateX(60px)' }, { opacity: 1, transform: 'translateX(0px)' }], { dur: 600 });
+        await c.wait(500);
+        await Promise.all([c.data.e.drift(22, 900), E3.light(c, L, .32, 900)]);
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 10_resist.html]",e)}
+/* ── 11_why.html ── */
+try{
+
+(function () {
+  Deck.scene('e3_11_why', {
+    steps: 2,
+    async enter(c) {
+      c.data.lat = E3.lattice(c, c.$('#e3_11_why-lat'), { id: 'e3_11_why-L', x: 200, y: 440, w: 1520, h: 360, rx: 44, rows: 4, cols: 13, R: 23, r: 10, ne: 16, seed: 111, vth: 230, acc: 230 });
+    },
+    async go(c, k) {
+      const L = c.data.lat;
+      if (k === 1) { c.all(L.atomEls, [{ transform: 'scale(1)' }, { transform: 'scale(1.35)' }, { transform: 'scale(1)' }], { dur: 700, stagger: 14, ease: 'inOut' }); c.sfx('pop'); }
+      if (k === 2) { L.st.flash = true; if (c.instant) L.flashSome([4, 17, 22, 35, 47]); c.sfx('tick', 200); c.sfx('tick', 420); c.sfx('tick', 560); }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 11_why.html]",e)}
+/* ── 12_factors.html ── */
+try{
+
+(function () {
+  Deck.scene('e3_12_factors', {
+    steps: 3,
+    async go(c, k) {
+      if (k === 2) {   // 긴 도선이 쭉 늘어난다(굵기·물질은 그대로)
+        const r = c.$('#e3_12_factors-long');
+        await c.tween(1100, p => r.setAttribute('width', (190 + 210 * p).toFixed(1)), { delay: 500, ease: 'inOut' });
+      }
+      if (k === 3) {   // 굵은 도선이 굵어진다 — 단면이 넓어짐
+        const r = c.$('#e3_12_factors-thick'), e = c.$('#e3_12_factors-face');
+        await c.tween(1100, p => { const t = 16 + 40 * p; r.setAttribute('y', (248 - t / 2).toFixed(1)); r.setAttribute('height', t.toFixed(1)); r.setAttribute('rx', (t / 2).toFixed(1)); e.setAttribute('rx', (5 + 9 * p).toFixed(1)); e.setAttribute('ry', (t / 2).toFixed(1)); }, { delay: 500, ease: 'inOut' });
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 12_factors.html]",e)}
+/* ── 13_length.html ── */
+try{
+
+(function () {
+  const S = E3.zigWire({ id: 'e3_13_length-s', x: 200, y: 540, len: 440, H: 150, sp: 104, R: 15, r: 9 });
+  const Lw = E3.zigWire({ id: 'e3_13_length-l', x: 200, y: 770, len: 1000, H: 150, sp: 104, R: 15, r: 9 });
+  const V = 380, PX = 20;   // 전자 빠르기(px/s) · 막대: 충돌 1번 = 20 px
+  Deck.scene('e3_13_length', {
+    steps: 2,
+    build(root) {
+      root.querySelector('#e3_13_length-S').innerHTML = S.svg; root.querySelector('#e3_13_length-L').innerHTML = Lw.svg;
+      root.querySelector('#e3_13_length-b37').setAttribute('data-delay', String(Math.round(Lw.L / V * 1000) + 250));   // 긴 도선 전자가 끝에 닿은 뒤
+    },
+    async go(c, k) {
+      if (k === 1) {
+        c.sfx('whoosh', 0, 800, .4);
+        await Promise.all([
+          E3.zigRun(c, S, S.L / V * 1000, { counter: '#e3_13_length-ns', tick: false }),
+          E3.zigRun(c, Lw, Lw.L / V * 1000, { counter: '#e3_13_length-nl' }),
+        ]);
+      }
+      if (k === 2) {
+        const bs = c.$('#e3_13_length-bs'), bl = c.$('#e3_13_length-bl');
+        c.sfx('rise', 0, 900);
+        await c.tween(900, p => { bs.setAttribute('width', (S.n * PX * p).toFixed(1)); bl.setAttribute('width', (Lw.n * PX * p).toFixed(1)); });
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 13_length.html]",e)}
+/* ── 14_thick.html ── */
+try{
+
+(function () {
+  const GX = 1100;
+  Deck.scene('e3_14_thick', {
+    steps: 2,
+    async enter(c) {
+      const t = c.data.t = E3.wireSim(c, c.$('#e3_14_thick-et'), { x1: 200, x2: 1160, y: 550, rows: 3, rowGap: 52, gap: 60, r: 11, jitter: 6, jitterPerp: 5, fade: 50, seed: 141 });
+      const n = c.data.n = E3.wireSim(c, c.$('#e3_14_thick-en'), { x1: 200, x2: 1160, y: 780, rows: 1, gap: 60, r: 11, jitter: 6, jitterPerp: 4, fade: 50, seed: 142 });
+      t.st.v = t.gap; n.st.v = n.gap;      // 1초에 한 칸(간격)씩 — 줄마다 1초에 1개 · 빠르기는 두 도선이 같다
+      const nt = c.$('#e3_14_thick-nt'), nn = c.$('#e3_14_thick-nn');
+      const cs = c.data.cs = { on: false, t0: 0, n0: 0 };
+      c.loop(() => {
+        if (!cs.on) return;
+        nt.textContent = t.crossings(cs.t0, t.st.D, GX);
+        nn.textContent = n.crossings(cs.n0, n.st.D, GX);
+      });
+    },
+    async go(c, k) {
+      const t = c.data.t, n = c.data.n, cs = c.data.cs;
+      if (k === 1) {
+        cs.t0 = t.st.D; cs.n0 = n.st.D; cs.on = true;
+        c.sfx('scan', 0, 3000);
+        await Promise.all([t.runBy(3 * t.gap, 3000), n.runBy(3 * n.gap, 3000)]);
+        cs.on = false;
+        c.$('#e3_14_thick-nt').textContent = t.crossings(cs.t0, cs.t0 + 3 * t.gap, GX);
+        c.$('#e3_14_thick-nn').textContent = n.crossings(cs.n0, cs.n0 + 3 * n.gap, GX);
+      }
+      if (k === 2) {
+        const bt = c.$('#e3_14_thick-bt'), bn = c.$('#e3_14_thick-bn');
+        await c.tween(900, p => { bt.setAttribute('width', (60 * p).toFixed(1)); bn.setAttribute('width', (180 * p).toFixed(1)); });
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 14_thick.html]",e)}
+/* ── 15_table.html ── */
+try{
+
+(function () {
+  const CL = 252, BASE = 520, LONG = 860;
+  const lead = xb => `M840 620C840 710 ${xb} 720 ${xb} 796`;
+  Deck.scene('e3_15_table', {
+    steps: 2,
+    build(root) {
+      root.querySelector('#e3_15_table-lead').setAttribute('d', lead(BASE));
+      const cols = [[1010, 300], [1330, 220], [1570, 230]];
+      const H = ['바꾼 것', '저항은?', '같은 전압에서<br>전류는?'];
+      let s = H.map((t, i) => `<div class="cell h" style="left:${cols[i][0]}px;top:330px;width:${cols[i][1]}px;height:80px">${t}</div>`).join('');
+      const R = [['도선을 더 길게', '커진다', '작아진다'], ['도선을 더 굵게', '작아진다', '커진다']];
+      R.forEach((r, j) => {
+        const y = 430 + j * 150;
+        s += `<div class="cell" style="left:${cols[0][0]}px;top:${y}px;width:${cols[0][1]}px;height:130px;font-weight:600">${r[0]}</div>`;
+        for (let i = 1; i < 3; i++) s += `<div class="cell c" style="left:${cols[i][0]}px;top:${y}px;width:${cols[i][1]}px;height:130px"><span class="bk"><span class="a" data-step="${j + 1}" data-fx="pop" data-delay="${i === 1 ? 1500 : 2100}">${r[i]}</span></span></div>`;
+      });
+      root.querySelector('#e3_15_table-tbl').innerHTML = s;
+    },
+    async go(c, k) {
+      const rod = c.$('#e3_15_table-rod'), act = c.$('#e3_15_table-act'), clip = c.$('#e3_15_table-clip'), ld = c.$('#e3_15_table-lead');
+      const gl = c.$('#e3_15_table-glow'), bf = c.$('#e3_15_table-bf');
+      const setX = xb => { clip.setAttribute('x', (xb - 12).toFixed(1)); act.setAttribute('width', (xb - CL).toFixed(1)); ld.setAttribute('d', lead(xb)); };
+      const setT = t => { [rod, act].forEach(r => { r.setAttribute('y', (820 - t / 2).toFixed(1)); r.setAttribute('height', t.toFixed(1)); r.setAttribute('rx', (t / 2).toFixed(1)); }); };
+      const bright = (a, b, p) => { const v = a + (b - a) * p; gl.setAttribute('opacity', v.toFixed(3)); bf.setAttribute('opacity', Math.min(1, v * 1.1).toFixed(3)); };
+      if (k === 1) {   // 길이 약 2배 → 저항 ↑ → 같은 전압에서 전류 ↓(전구 어두워짐)
+        c.sfx('slide');
+        await c.tween(1300, p => { setX(BASE + (LONG - BASE) * p); bright(.55, .2, p); }, { ease: 'inOut' });
+      }
+      if (k === 2) {   // 길이는 처음대로 되돌리고 굵기만 키움 → 저항 ↓ → 전류 ↑(전구 밝아짐)
+        await c.tween(700, p => { setX(LONG + (BASE - LONG) * p); bright(.2, .55, p); }, { ease: 'inOut' });
+        c.sfx('rise', 0, 1000);
+        await c.tween(1100, p => { setT(14 + 22 * p); bright(.55, .95, p); }, { ease: 'inOut' });
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 15_table.html]",e)}
+/* ── 16_recap.html ── */
+try{
+
+(function () {
+  const CARDS = [
+    ['c-cur', '전류', 'A', '전하(전자)의 흐름', '1초 동안 도선의 단면을 지나는 전하의 양 · 1 A = 1000 mA', '<span class="c-cur">(+)극 → (−)극</span><small>전자의 이동 방향은 반대</small>'],
+    ['c-volt', '전압', 'V', '전류를 흐르게 하는 능력', '물의 흐름 모형에서 물을 밀어 올리는 펌프', '<span class="c-volt">전압 ↑</span> → <span class="c-cur">전류 ↑</span><small>같은 회로에서</small>'],
+    ['c-res', '저항', 'Ω', '전류의 흐름을 방해하는 정도', '전자가 원자와 충돌하기 때문 · 물질의 종류·길이·단면적에 따라 달라진다', '<span class="c-res">길수록 ↑ · 굵을수록 ↓</span><small>같은 물질끼리 비교</small>'],
+  ];
+  Deck.scene('e3_16_recap', {
+    steps: 3,
+    build(root) {
+      root.querySelector('#e3_16_recap-cards').innerHTML = CARDS.map(([cl, t, u, a, m, big], i) =>
+        `<div class="rc" style="left:${120 + i * 570}px" data-step="${i + 1}" data-fx="up"><div class="top"><h3 class="${cl}">${t}</h3><span class="u">단위<b class="${cl}">${u}</b></span></div><p>${a}</p><p class="m">${m}</p><div class="big">${big}</div></div>`).join('');
+    },
+    async go(c, k) { if (k === 3) c.sfx('chime', 300); },
+  });
+})();
+
+}catch(e){console.error("[slide 16_recap.html]",e)}
+/* ── 17_answer.html ── */
+try{
+
+(function () {
+  const LP = E3.realLoop({ id: 'e3_17_answer-k', x: 360, y: 780, w: 3120, h: 600, T: 24,
+    parts: [{ type: 'knife', side: 'top', at: .13, s: 1.2 }, { type: 'cell', side: 'bottom', at: .13, minus: 'left', s: 1.2 }, { type: 'bulb', side: 'top', at: .872, s: 1.25, bloom: 560 }] });
+  const FULL = [0, 0, 3840, 2160], NEAR = [280, 1010, 1280, 720];
+  Deck.scene('e3_17_answer', {
+    steps: 3,
+    build(root) { root.querySelector('#e3_17_answer-c').innerHTML = LP.svg; },
+    async enter(c) {
+      const e = c.data.e = E3.electrons(c, LP, { gap: 56, r: 7, jitter: 5, seed: 23, ring: true, ringW: 4 });
+      const minusS = LP.pos.cell.s + 190;   // (−)극 바로 바깥(왼쪽) 도선 — 전지 그림 밑에 가리지 않는 첫 자리
+      e.track(e.nearest(minusS));
+    },
+    async go(c, k) {
+      const e = c.data.e;
+      if (k === 1) {
+        await E3.realFlip(c, LP, true, 180);
+        E3.realOn(c, LP, 1, 160);
+        c.reveal(c.$('#e3_17_answer-k-rays'), 'draw', { dur: 700 });
+        await e.drift(10, 300);
+      }
+      if (k === 2) {
+        await c.camera('#e3_17_answer-svg', NEAR, { dur: 1600 });
+        c.sfx('pop');
+        await c.a(e.ring, [{ opacity: 0 }, { opacity: 1 }], { dur: 500 }).finished;
+      }
+      if (k === 3) {
+        await c.camera('#e3_17_answer-svg', FULL, { dur: 1300 });
+        c.sfx('chime');
+        e.pulse({ dur: 700 });            // 시차 없이 — 모든 전자가 같은 순간에
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 17_answer.html]",e)}
+</script>
+</body>
+</html>
