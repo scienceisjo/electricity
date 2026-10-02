@@ -228,6 +228,59 @@ html.student #notes{display:none!important}
 .el-tbl th{font-size:26px;font-weight:600;color:var(--t2)}
 .el-tbl td.ans{color:var(--act);font-weight:700}
 
+/* ── 90_quiz.css ── */
+/* ── 문제로 확인하기(강의 끝 문제 풀이) — 수업 페이지 확인하기 문제를 옮긴 장면 ──
+   문제 → (한 번 누르면) 정답 표시 + 보기 ○/✗ + 풀이. 글이 넘치면 enter 에서 --qz 배율을 줄여 맞춘다. */
+.qz-body{position:absolute;left:120px;top:96px;width:1680px;height:930px;display:flex;flex-direction:column;gap:calc(22px * var(--qz,1));font-size:calc(1px * var(--qz,1))}
+.qz-body>*{flex-shrink:0}
+.qz-eb{display:flex;align-items:center;gap:14px;font-size:30em;font-weight:600;color:var(--t2);letter-spacing:.01em}
+.qz-eb b{color:var(--act);font-weight:700}
+.qz-lv{display:inline-flex;align-items:center;padding:2px 14px;border-radius:9999px;border:2px solid var(--hl);font-size:.86em;color:var(--t2)}
+.qz-stem{font-size:42em;font-weight:600;line-height:1.42;letter-spacing:-.015em}
+.qz-stem u{text-decoration-thickness:3px;text-underline-offset:6px}
+.qz-row{display:flex;gap:44px;align-items:flex-start;min-height:0}
+.qz-wide .qz-left{flex-basis:1080px}
+.qz-wide .qz-fig svg{max-height:calc(420px * var(--qz,1))}
+.qz-left{flex:0 0 760px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.qz-card{border-radius:18px;background:#f5f5f7}
+.slide[data-tile="parchment"] .qz-card{background:#fff}
+.qz-fig{padding:14px 18px}
+.qz-fig svg{display:block;width:100%;height:auto;max-height:calc(330px * var(--qz,1))}
+.qz-box{padding:16px 26px 18px}
+.qz-box-h{display:inline-block;font-size:24em;font-weight:700;color:var(--t2);border:2px solid var(--hl);border-radius:8px;padding:0 12px;margin-bottom:6px}
+.qz-box p{position:relative;font-size:30em;line-height:1.45;margin:6px 0;padding-right:58px}
+.qz-box p b{font-weight:700;margin-right:6px}
+.qz-v{position:absolute;right:0;top:0;font-weight:800;font-size:1.1em}
+.qz-v.ok{color:var(--act)} .qz-v.no{color:var(--heat)}
+.qz-ch{list-style:none;margin:0;padding:0;flex:1 1 0;display:flex;flex-direction:column;gap:10px;min-width:0}
+.qz-ch li{position:relative;display:flex;align-items:flex-start;gap:16px;font-size:34em;line-height:1.38;padding:12px 150px 12px 20px;border-radius:14px}
+.qz-n{flex:none;font-weight:700;color:var(--t2)}
+.qz-t{min-width:0}
+.qz-hl{position:absolute;inset:0;border-radius:14px;border:3px solid var(--act);background:color-mix(in srgb, var(--act) 10%, transparent);pointer-events:none}
+.qz-ch li.ok .qz-n,.qz-ch li.ok .qz-t{position:relative}
+.qz-mark{position:absolute;right:18px;top:50%;margin-top:-.75em;font-size:.82em;font-weight:700;color:#fff;background:var(--act);border-radius:9999px;padding:3px 16px}
+.qz-why{margin-top:auto;padding:22px 30px 24px;border-left:6px solid var(--act)}
+.qz-why .qz-why-h{font-size:26em;font-weight:700;color:var(--act);margin-bottom:6px}
+.qz-why .qz-why-t{font-size:30em;line-height:1.5}
+.qz-why b{color:var(--act);font-weight:700}
+/* 문제 들어가기 장 */
+.qz-intro{position:absolute;left:0;top:0;width:1920px;height:1080px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center}
+.qz-intro .qz-k{font-size:30px;font-weight:600;color:var(--t2);letter-spacing:.02em}
+.qz-intro h2{font-size:96px;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.qz-intro .qz-dots{display:flex;gap:18px;margin-top:20px}
+.qz-intro .qz-dots span{display:flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;border:3px solid var(--hl);font-size:36px;font-weight:700;color:var(--t2)}
+.qz-intro .qz-sub{font-size:30px;color:var(--t2)}
+
+/* ── 91_recap.css ── */
+/* ── «오늘 배운 것» 핵심 낱말 빈칸(번호 없음 — 학습지 빈칸과 다름) ── */
+.rk{position:relative;display:inline-block;margin:0 .06em;padding:0 .1em;border-bottom:3px solid #c7c7cc;line-height:1.2;vertical-align:baseline}
+.slide[data-tile="black"] .rk,.slide[data-tile="dark"] .rk,.slide[data-tile="graphite"] .rk{border-bottom-color:#48484a}
+.rk .rk-w{display:inline-block;opacity:0}
+.rk.on{border-bottom-color:transparent}
+.rk-fx{position:absolute;inset:0;pointer-events:none;z-index:2}
+.rk-p{position:absolute;display:block;pointer-events:none}
+.rk.on .rk-w{opacity:1}
+
 /* ── e3.css ── */
 /* ═══════════════════════════════════════════════════════════════
    objects/e3/e3.css — 학습지 3(전류·전압·저항) 강의 덱 전용 색 변수·글자 조각
@@ -657,7 +710,7 @@ html.student #notes{display:none!important}
   <div id="e3_15_table-tbl"></div>
 </section>
 <!-- ═══ 16_recap.html ═══ -->
-<section class="slide" id="e3_16_recap" data-tile="parchment" data-title="오늘의 정리" data-notes="P16" data-say="세 낱말의 단위를 함께 소리 내어 읽고 넘어갑니다. 다음 시간에는 이 셋 사이의 관계(옴의 법칙)를 배워요.">
+<section class="slide" id="e3_16_recap" data-tile="parchment" data-title="오늘의 정리" data-notes="P16" data-say="핵심 낱말이 빈칸으로 나옵니다 — 학생이 먼저 말하게 한 뒤 누를 때마다 카드 한 장씩 채워져요. 세 낱말의 단위를 함께 소리 내어 읽고 넘어갑니다. 다음 시간에는 이 셋 사이의 관계(옴의 법칙)를 배워요.">
   <div class="hd" data-in><div class="eb">정리</div><h2>오늘 배운 세 낱말</h2></div>
   <div id="e3_16_recap-cards"></div>
 </section>
@@ -670,6 +723,51 @@ html.student #notes{display:none!important}
   <div class="abs center" style="left:0;width:1920px;top:800px;font-size:52px;font-weight:600;letter-spacing:-.025em" data-step="3" data-delay="1400">도선 전체의 <span class="c-neg">전자</span>가 한꺼번에 움직이기 시작하기 때문</div>
   <div class="abs center mute" style="left:0;width:1920px;top:884px;font-size:30px" data-step="3" data-fx="fade" data-delay="2000">전자가 전지에서 전구까지 빨리 달려가서가 아니다 — 물이 가득 찬 호스를 밀면 반대쪽에서 곧바로 물이 나오듯</div>
   <div id="app-credit" class="abs center" style="left:0;width:1920px;top:1016px;font-size:24px;color:var(--t3)">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved · 최종 업데이트: 2026-10-02</div>
+</section>
+<!-- ═══ 90_quiz0.html ═══ -->
+<section class="slide" id="e3_90_quiz0" data-tile="black" data-title="문제로 확인하기" data-notes="" data-say="수업 페이지 확인하기에서 고른 4문제입니다. 문제마다 먼저 풀어 보게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다.">
+  <div class="qz-intro">
+    <div class="qz-k" data-in>전류 · 전압 · 저항</div>
+    <h2 data-in="200" data-fx="blur">문제로 확인하기</h2>
+    <div class="qz-dots" data-in="500" data-fx="up"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+    <div class="qz-sub" data-in="700">오늘 배운 내용으로 4문제를 풀어 봅시다</div>
+  </div>
+</section>
+<!-- ═══ 91_quiz1.html ═══ -->
+<section class="slide" id="e3_91_quiz1" data-tile="light" data-title="문제 1" data-notes="" data-say="전류의 정의·단위·방향 약속 정답 ⑤. 학생이 먼저 고르게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다. 전자는 (−)전하를 띠므로 (−)극에서 출발해 (+)극으로 이동합니다. ⑤는 출발 극을 거꾸로 뒤집은 진술이라 옳지 않습니다.③이 틀렸다고 고르는 학생이 많은데, 전류의 방향은 (+)극 → (−)극으로 정한 약속이고 전자의 이동 방향과는 언제나 반대입니다. ④의 단위 관계도 그대로 옳습니다.">
+  <div class="qz-body">
+    <div class="qz-eb" data-in><b>문제 1</b> / 4 <span class="qz-lv">기본</span></div>
+    <div class="qz-stem" data-in="150">전류에 대한 설명으로 옳지 <u>않은</u> 것은?</div>
+    <div class="qz-row" data-in="350"><ol class="qz-ch"><li><span class="qz-n">①</span><span class="qz-t">전류는 도선을 따라 흐르는 전하의 흐름이다.</span></li><li><span class="qz-n">②</span><span class="qz-t">전류의 세기는 A(암페어) 단위로 나타낸다.</span></li><li><span class="qz-n">③</span><span class="qz-t">전류가 흐르는 방향은 전지의 (+)극에서 나와 (−)극으로 들어가는 쪽으로 약속하였다.</span></li><li><span class="qz-n">④</span><span class="qz-t">1 A는 1000 mA 이다.</span></li><li class="ok"><span class="qz-hl" data-step="1" data-fx="fade"></span><span class="qz-n">⑤</span><span class="qz-t">도선 속 전자는 전지의 (+)극에서 출발하여 (−)극 쪽으로 움직인다.</span><span class="qz-mark" data-step="1" data-fx="pop">정답</span></li></ol></div>
+    <div class="qz-card qz-why" data-step="1" data-fx="up"><div class="qz-why-h">정답 ⑤ · 풀이</div><div class="qz-why-t">전자는 (−)전하를 띠므로 (−)극에서 출발해 (+)극으로 이동합니다. ⑤는 출발 극을 거꾸로 뒤집은 진술이라 옳지 않습니다.③이 틀렸다고 고르는 학생이 많은데, 전류의 방향은 (+)극 → (−)극으로 정한 약속이고 전자의 이동 방향과는 언제나 반대입니다. ④의 단위 관계도 그대로 옳습니다.</div></div>
+  </div>
+</section>
+<!-- ═══ 92_quiz2.html ═══ -->
+<section class="slide" id="e3_92_quiz2" data-tile="parchment" data-title="문제 2" data-notes="" data-say="저항 — 길이·굵기·재질 정답 ①. 학생이 먼저 고르게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다. 도선은 길수록 저항이 커집니다. 전자가 지나가야 할 길이 길어져 방해를 더 많이 받기 때문이므로 ①는 반대로 말한 진술입니다.③을 틀렸다고 고르는 학생이 많은데, 굵어지면 전자가 지나갈 통로가 넓어지므로 굵을수록 저항은 작아집니다. 길이는 비례, 굵기는 반비례라고 짝지어 외워 두세요.">
+  <div class="qz-body">
+    <div class="qz-eb" data-in><b>문제 2</b> / 4 <span class="qz-lv">기본</span></div>
+    <div class="qz-stem" data-in="150">전기 저항에 대한 설명으로 옳지 <u>않은</u> 것은?</div>
+    <div class="qz-row" data-in="350"><ol class="qz-ch"><li class="ok"><span class="qz-hl" data-step="1" data-fx="fade"></span><span class="qz-n">①</span><span class="qz-t">재질과 굵기가 같은 니크롬선이라면 길이가 길수록 저항이 작아진다.</span><span class="qz-mark" data-step="1" data-fx="pop">정답</span></li><li><span class="qz-n">②</span><span class="qz-t">저항은 전하의 흐름을 방해하는 정도를 나타내며, 단위로 옴(Ω)을 쓴다.</span></li><li><span class="qz-n">③</span><span class="qz-t">재질과 길이가 같은 니크롬선이라면 굵을수록 저항이 작아진다.</span></li><li><span class="qz-n">④</span><span class="qz-t">길이와 굵기가 똑같아도 재질이 다르면 저항의 크기가 다를 수 있다.</span></li><li><span class="qz-n">⑤</span><span class="qz-t">저항이 클수록 같은 전압에서 흐르는 전류의 세기가 약해진다.</span></li></ol></div>
+    <div class="qz-card qz-why" data-step="1" data-fx="up"><div class="qz-why-h">정답 ① · 풀이</div><div class="qz-why-t">도선은 길수록 저항이 커집니다. 전자가 지나가야 할 길이 길어져 방해를 더 많이 받기 때문이므로 ①는 반대로 말한 진술입니다.③을 틀렸다고 고르는 학생이 많은데, 굵어지면 전자가 지나갈 통로가 넓어지므로 굵을수록 저항은 작아집니다. 길이는 비례, 굵기는 반비례라고 짝지어 외워 두세요.</div></div>
+  </div>
+</section>
+<!-- ═══ 93_quiz3.html ═══ -->
+<section class="slide" id="e3_93_quiz3" data-tile="light" data-title="문제 3" data-notes="" data-say="그림에서 저항 크기 비교 정답 ②. 학생이 먼저 고르게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다. 굵기가 같을 때는 길수록 저항이 크고, 길이가 같을 때는 굵을수록 저항이 작습니다.(나)는 (가)보다 두 배 길어 저항이 가장 크고, (다)는 (가)보다 두 배 굵어 저항이 가장 작습니다. 그래서 (나) &gt; (가) &gt; (다) 순서예요. ①은 길이 관계를 거꾸로, ③은 굵기 관계를 거꾸로 본 답입니다.">
+  <div class="qz-body">
+    <div class="qz-eb" data-in><b>문제 3</b> / 4 <span class="qz-lv">중간</span></div>
+    <div class="qz-stem" data-in="150">그림은 재질이 같은 세 도선 (가)~(다)를 나타낸 것이다. 저항이 큰 것부터 차례대로 옳게 나열한 것은?</div>
+    <div class="qz-row" data-in="350"><div class="qz-left"><div class="qz-card qz-fig"><svg viewBox="0 0 560 244" role="img" aria-label="재질이 같은 세 도선. (가)는 길이 L 굵기 d, (나)는 길이 2L 굵기 d, (다)는 길이 L 굵기 2d."><rect x="96" y="30" width="140" height="20" rx="10" fill="#e8c9a0" stroke="#a05c2c" stroke-width="2.2"/><polyline points="70,40 96,40" fill="none" stroke="#6b573f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><polyline points="236,40 262,40" fill="none" stroke="#6b573f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><text x="56" y="46" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" fill="#2e2315" font-weight="800">(가)</text><text x="274" y="45" text-anchor="start" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" fill="#5c4a33">길이 L · 굵기 d</text><rect x="96" y="100" width="280" height="20" rx="10" fill="#e8c9a0" stroke="#a05c2c" stroke-width="2.2"/><polyline points="70,110 96,110" fill="none" stroke="#6b573f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><polyline points="376,110 402,110" fill="none" stroke="#6b573f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><text x="56" y="116" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" fill="#2e2315" font-weight="800">(나)</text><text x="414" y="115" text-anchor="start" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" fill="#5c4a33">길이 2L · 굵기 d</text><rect x="96" y="160" width="140" height="40" rx="20" fill="#e8c9a0" stroke="#a05c2c" stroke-width="2.2"/><polyline points="70,180 96,180" fill="none" stroke="#6b573f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><polyline points="236,180 262,180" fill="none" stroke="#6b573f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><text x="56" y="186" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="16" fill="#2e2315" font-weight="800">(다)</text><text x="274" y="185" text-anchor="start" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13.5" fill="#5c4a33">길이 L · 굵기 2d</text><text x="280" y="232" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="13" fill="#5c4a33">※ 세 도선의 재질은 모두 같다.</text></svg></div></div><ol class="qz-ch"><li><span class="qz-n">①</span><span class="qz-t">(가) &gt; (나) &gt; (다)</span></li><li class="ok"><span class="qz-hl" data-step="1" data-fx="fade"></span><span class="qz-n">②</span><span class="qz-t">(나) &gt; (가) &gt; (다)</span><span class="qz-mark" data-step="1" data-fx="pop">정답</span></li><li><span class="qz-n">③</span><span class="qz-t">(다) &gt; (가) &gt; (나)</span></li><li><span class="qz-n">④</span><span class="qz-t">(나) &gt; (다) &gt; (가)</span></li><li><span class="qz-n">⑤</span><span class="qz-t">세 도선의 저항은 모두 같다.</span></li></ol></div>
+    <div class="qz-card qz-why" data-step="1" data-fx="up"><div class="qz-why-h">정답 ② · 풀이</div><div class="qz-why-t">굵기가 같을 때는 길수록 저항이 크고, 길이가 같을 때는 굵을수록 저항이 작습니다.(나)는 (가)보다 두 배 길어 저항이 가장 크고, (다)는 (가)보다 두 배 굵어 저항이 가장 작습니다. 그래서 (나) > (가) > (다) 순서예요. ①은 길이 관계를 거꾸로, ③은 굵기 관계를 거꾸로 본 답입니다.</div></div>
+  </div>
+</section>
+<!-- ═══ 94_quiz4.html ═══ -->
+<section class="slide" id="e3_94_quiz4" data-tile="parchment" data-title="문제 4" data-notes="" data-say="도선 속 전자 모형 — 전류 방향 정답 ⑤. 학생이 먼저 고르게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다. (나)에서 전자가 B → A로 이동하므로, 언제나 반대인 전류의 방향은 A → B가 되어 ⑤가 옳습니다. (가)의 전자는 멈춰 있는 것이 아니라 제멋대로 움직이되 한쪽으로 몰려 흐르지 않을 뿐이므로 ②·④는 틀리고, 전자는 원래부터 도선에 가득 차 있으므로 ①·③도 옳지 않습니다.">
+  <div class="qz-body">
+    <div class="qz-eb" data-in><b>문제 4</b> / 4 <span class="qz-lv">중간</span></div>
+    <div class="qz-stem" data-in="150">그림 (가), (나)에 대한 설명으로 옳은 것은?</div>
+    <div class="qz-row" data-in="350"><div class="qz-left"><div class="qz-card qz-fig"><svg viewBox="0 0 560 200" role="img" aria-label="도선 내부 모형 두 가지. (가)는 전자들이 여러 방향으로 불규칙하게 움직이고, (나)는 전자들이 B에서 A 쪽으로 일제히 움직인다."><text x="150" y="26" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="700" fill="#6b573f">(가)</text><rect x="40" y="40" width="220" height="100" rx="14" fill="#f6f1e8" stroke="#a08b64" stroke-width="2.2"/><circle cx="75" cy="65" r="7" fill="#3a7a3f"/><line x1="75.0" y1="65.0" x2="98.0" y2="44.3" stroke="#3a7a3f" stroke-width="2"/><path d="M98.0 44.3 L95.7 50.8 L91.3 45.9 z" fill="#3a7a3f"/><circle cx="120" cy="58" r="7" fill="#3a7a3f"/><line x1="120.0" y1="58.0" x2="94.7" y2="74.1" stroke="#3a7a3f" stroke-width="2"/><path d="M94.7 74.1 L98.0 68.1 L101.5 73.7 z" fill="#3a7a3f"/><circle cx="170" cy="70" r="7" fill="#3a7a3f"/><line x1="170.0" y1="70.0" x2="188.4" y2="93.0" stroke="#3a7a3f" stroke-width="2"/><path d="M188.4 93.0 L182.1 90.4 L187.2 86.3 z" fill="#3a7a3f"/><circle cx="220" cy="60" r="7" fill="#3a7a3f"/><line x1="220.0" y1="60.0" x2="201.6" y2="39.3" stroke="#3a7a3f" stroke-width="2"/><path d="M201.6 39.3 L208.1 41.6 L203.1 46.0 z" fill="#3a7a3f"/><circle cx="90" cy="105" r="7" fill="#3a7a3f"/><line x1="90.0" y1="105.0" x2="110.7" y2="125.7" stroke="#3a7a3f" stroke-width="2"/><path d="M110.7 125.7 L104.1 123.8 L108.8 119.1 z" fill="#3a7a3f"/><circle cx="140" cy="115" r="7" fill="#3a7a3f"/><line x1="140.0" y1="115.0" x2="117.0" y2="96.6" stroke="#3a7a3f" stroke-width="2"/><path d="M117.0 96.6 L123.7 97.8 L119.6 102.9 z" fill="#3a7a3f"/><circle cx="195" cy="108" r="7" fill="#3a7a3f"/><line x1="195.0" y1="108.0" x2="220.3" y2="94.2" stroke="#3a7a3f" stroke-width="2"/><path d="M220.3 94.2 L216.6 100.0 L213.5 94.2 z" fill="#3a7a3f"/><circle cx="235" cy="118" r="7" fill="#3a7a3f"/><line x1="235.0" y1="118.0" x2="218.9" y2="141.0" stroke="#3a7a3f" stroke-width="2"/><path d="M218.9 141.0 L219.6 134.2 L225.0 138.0 z" fill="#3a7a3f"/><text x="410" y="26" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="700" fill="#6b573f">(나)</text><rect x="300" y="40" width="220" height="100" rx="14" fill="#f6f1e8" stroke="#a08b64" stroke-width="2.2"/><text x="290" y="96" text-anchor="end" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="700" fill="#4a3a26">A</text><text x="530" y="96" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" font-weight="700" fill="#4a3a26">B</text><circle cx="360" cy="65" r="7" fill="#3a7a3f"/><line x1="352" y1="65" x2="336" y2="65" stroke="#3a7a3f" stroke-width="2"/><path d="M333 65 l5 -3 v6 z" fill="#3a7a3f"/><circle cx="410" cy="60" r="7" fill="#3a7a3f"/><line x1="402" y1="60" x2="386" y2="60" stroke="#3a7a3f" stroke-width="2"/><path d="M383 60 l5 -3 v6 z" fill="#3a7a3f"/><circle cx="460" cy="68" r="7" fill="#3a7a3f"/><line x1="452" y1="68" x2="436" y2="68" stroke="#3a7a3f" stroke-width="2"/><path d="M433 68 l5 -3 v6 z" fill="#3a7a3f"/><circle cx="360" cy="105" r="7" fill="#3a7a3f"/><line x1="352" y1="105" x2="336" y2="105" stroke="#3a7a3f" stroke-width="2"/><path d="M333 105 l5 -3 v6 z" fill="#3a7a3f"/><circle cx="415" cy="112" r="7" fill="#3a7a3f"/><line x1="407" y1="112" x2="391" y2="112" stroke="#3a7a3f" stroke-width="2"/><path d="M388 112 l5 -3 v6 z" fill="#3a7a3f"/><circle cx="470" cy="104" r="7" fill="#3a7a3f"/><line x1="462" y1="104" x2="446" y2="104" stroke="#3a7a3f" stroke-width="2"/><path d="M443 104 l5 -3 v6 z" fill="#3a7a3f"/><circle cx="505" cy="66" r="7" fill="#3a7a3f"/><line x1="497" y1="66" x2="481" y2="66" stroke="#3a7a3f" stroke-width="2"/><path d="M478 66 l5 -3 v6 z" fill="#3a7a3f"/><circle cx="505" cy="112" r="7" fill="#3a7a3f"/><line x1="497" y1="112" x2="481" y2="112" stroke="#3a7a3f" stroke-width="2"/><path d="M478 112 l5 -3 v6 z" fill="#3a7a3f"/><text x="280" y="186" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="12.5" fill="#6b573f">※ 초록 알갱이는 전자이고, (나)에서 전자는 B→A 방향으로 이동한다.</text></svg></div></div><ol class="qz-ch"><li><span class="qz-n">①</span><span class="qz-t">(가)의 도선에는 전자가 하나도 들어 있지 않다.</span></li><li><span class="qz-n">②</span><span class="qz-t">(가)에서도 한쪽으로 전류가 흐르고 있다.</span></li><li><span class="qz-n">③</span><span class="qz-t">(나)의 전자는 전지가 새로 만들어 넣어 준 것이다.</span></li><li><span class="qz-n">④</span><span class="qz-t">(가)에서 전자는 모두 멈추어 있다.</span></li><li class="ok"><span class="qz-hl" data-step="1" data-fx="fade"></span><span class="qz-n">⑤</span><span class="qz-t">(나)에서 전류의 방향은 A에서 B 쪽이다.</span><span class="qz-mark" data-step="1" data-fx="pop">정답</span></li></ol></div>
+    <div class="qz-card qz-why" data-step="1" data-fx="up"><div class="qz-why-h">정답 ⑤ · 풀이</div><div class="qz-why-t">(나)에서 전자가 B → A로 이동하므로, 언제나 반대인 전류의 방향은 A → B가 되어 ⑤가 옳습니다. (가)의 전자는 멈춰 있는 것이 아니라 제멋대로 움직이되 한쪽으로 몰려 흐르지 않을 뿐이므로 ②·④는 틀리고, 전자는 원래부터 도선에 가득 차 있으므로 ①·③도 옳지 않습니다.</div></div>
+  </div>
 </section>
 <div id="gridov"></div>
 </div></div>
@@ -1674,6 +1772,182 @@ try{
 })();
 
 }catch(e){console.error("[object 10_elec.js]",e)}
+/* ── 90_quiz.js ── */
+try{
+/* objects/90_quiz.js — 문제 장면 도우미: 글이 넘치면 배율(--qz)을 줄여 한 화면에 맞춘다 */
+window.QZ = {
+  // 등장 효과(translate)는 scrollHeight 를 부풀리므로, 자식들의 실제 높이(offsetHeight, 변형 무시) 합으로 잰다
+  need(b) {
+    const kids = [...b.children], gap = parseFloat(getComputedStyle(b).rowGap) || 0;
+    return kids.reduce((a, e) => a + e.offsetHeight, 0) + gap * Math.max(0, kids.length - 1);
+  },
+  fit(c) {
+    const b = c.$('.qz-body'); if (!b) return;
+    let s = 1; b.style.setProperty('--qz', '1');
+    for (let i = 0; i < 8 && QZ.need(b) > b.clientHeight; i++) { s -= 0.05; b.style.setProperty('--qz', s.toFixed(2)); }
+  },
+};
+
+}catch(e){console.error("[object 90_quiz.js]",e)}
+/* ── 91_recap.js ── */
+try{
+/* ═══════════════════════════════════════════════════════════════
+   objects/91_recap.js — «오늘 배운 것» 핵심 낱말 빈칸 + 낱말에 어울리는 모션그래픽
+   · 마크업: RK.b('척력', 'push', 2)  → 빈칸(밑줄만, 낱말은 숨김). 세 번째 값 = 채워지는 단계(k)
+   · 장면 go(c, k) 에서 RK.fill(c, k) → 그 단계의 빈칸이 차례로(시차 ms) 모션그래픽과 함께 채워진다
+   · 순간 모드(되돌리기·건너뛰기)에서는 c.a/c.wait 가 곧장 끝 상태 → 낱말만 보이고 효과는 사라진 상태
+   종류(kind): electron · pos · neg · push · pull · spark · rub · flow · volt · zigzag · line · curve · press · hits
+              · grow · shrink · up · down · glow · equal · pop(기본)
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  const SND = { electron: 'zip', pos: 'pop', neg: 'pop', push: 'whoosh', pull: 'whoosh', spark: 'spark', rub: 'zip', flow: 'slide', volt: 'rise',
+    zigzag: 'scan', line: 'scan', curve: 'scan', press: 'thunk', hits: 'tick', grow: 'rise', shrink: 'pop', up: 'rise', down: 'pop', glow: 'ding', equal: 'step', pop: 'pop' };
+  const R = window.RK = {
+    /** 빈칸 하나(문자열). word 는 HTML 가능(색 span 등). cls 로 색(c-neg 등)을 줄 수 있다 */
+    b(word, kind, step, cls) {
+      return `<span class="rk${cls ? ' ' + cls : ''}" data-rk="${step}" data-kind="${kind || 'pop'}"><span class="rk-w">${word}</span><span class="rk-fx" aria-hidden="true"></span></span>`;
+    },
+    /** k 단계 빈칸 채우기. gap = 낱말 사이 시차(ms) */
+    async fill(c, k, gap = 520) {
+      const els = c.$$(`.rk[data-rk="${k}"]`);
+      for (let i = 0; i < els.length; i++) {
+        if (i) await c.wait(gap);
+        R.play(c, els[i]);
+      }
+      await c.wait(700);
+    },
+    play(c, el) {
+      const kind = el.dataset.kind || 'pop', w = el.querySelector('.rk-w'), fx = el.querySelector('.rk-fx');
+      el.classList.add('on');
+      c.sfx(SND[kind] || 'pop');
+      const f = R.K[kind] || R.K.pop;
+      fx.innerHTML = '';
+      const d = f(c, el, fx, w) || 0;
+      c.a(w, [{ opacity: 0, transform: 'scale(.6)', filter: 'blur(6px)' }, { opacity: 1, transform: 'scale(1)', filter: 'blur(0px)' }], { dur: 520, delay: d, ease: 'spring' });
+      c.a(fx, [{ opacity: 1 }, { opacity: 0 }], { dur: 500, delay: d + 650 });
+    },
+    /* 작은 도우미: fx 안에 요소 하나 */
+    el(fx, html, css) { const s = document.createElement('span'); s.className = 'rk-p'; s.innerHTML = html || ''; Object.assign(s.style, css || {}); fx.appendChild(s); return s; },
+    svg(fx, w, h, inner, css) { return R.el(fx, `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="overflow:visible;display:block">${inner}</svg>`, css); },
+    arrow(x1, y1, x2, y2, col, sw = 6) {
+      const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L, hd = 16, bx = x2 - ux * hd, by = y2 - uy * hd;
+      return `<line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round"/><polygon points="${x2},${y2} ${bx - uy * 9},${by + ux * 9} ${bx + uy * 9},${by - ux * 9}" fill="${col}"/>`;
+    },
+  };
+  const W = el => el.offsetWidth, H = el => el.offsetHeight;
+  R.K = {
+    pop(c, el, fx) { const s = R.el(fx, '', { inset: '-8px -14px', border: '3px solid var(--act)', borderRadius: '12px' }); c.a(s, [{ opacity: 0, transform: 'scale(1.4)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 380 }); return 120; },
+    electron(c, el, fx) {
+      const e = R.el(fx, '<span>−</span>', { left: '50%', top: '50%', width: '34px', height: '34px', margin: '-17px 0 0 -17px', borderRadius: '50%', background: 'var(--elec)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '26px', lineHeight: '1' });
+      c.a(e, [{ transform: 'translate(-260px,-120px) scale(.6)', opacity: 0 }, { transform: 'translate(-120px,-90px) scale(.9)', opacity: 1, offset: .35 }, { transform: 'translate(0,0) scale(1.2)', opacity: 1, offset: .85 }, { transform: 'translate(0,0) scale(.2)', opacity: 0 }], { dur: 900, ease: 'inOut' });
+      return 700;
+    },
+    pos(c, el, fx) { return R.K._chg(c, fx, '+', 'var(--heat)'); },
+    neg(c, el, fx) { return R.K._chg(c, fx, '−', 'var(--elec)'); },
+    _chg(c, fx, sym, col) {
+      const e = R.el(fx, sym, { left: '50%', top: '50%', width: '64px', height: '64px', margin: '-32px 0 0 -32px', borderRadius: '50%', border: `4px solid ${col}`, color: col, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '40px', lineHeight: '1', background: 'color-mix(in srgb, currentColor 14%, transparent)' });
+      c.a(e, [{ transform: 'scale(0)', opacity: 0 }, { transform: 'scale(1.25)', opacity: 1, offset: .5 }, { transform: 'scale(1)', opacity: 1, offset: .75 }, { transform: 'scale(.3)', opacity: 0 }], { dur: 900, ease: 'out' });
+      return 620;
+    },
+    push(c, el, fx) {   // 낱말 위에서 두 화살표가 가운데에서 바깥으로
+      const s = R.svg(fx, 170, 30, R.arrow(78, 15, 6, 15, 'var(--sound)') + R.arrow(92, 15, 164, 15, 'var(--sound)'), { left: '50%', bottom: '100%', marginLeft: '-85px', marginBottom: '2px' });
+            c.a(s, [{ transform: 'scaleX(.2)', opacity: 0 }, { transform: 'scaleX(1)', opacity: 1 }], { dur: 520, ease: 'out' });
+      return 260;
+    },
+    pull(c, el, fx) {   // 낱말 위에서 두 화살표가 바깥에서 가운데로
+      const s = R.svg(fx, 170, 30, R.arrow(4, 15, 76, 15, 'var(--sound)') + R.arrow(166, 15, 94, 15, 'var(--sound)'), { left: '50%', bottom: '100%', marginLeft: '-85px', marginBottom: '2px' });
+      c.a(s, [{ transform: 'scaleX(1.8)', opacity: 0 }, { transform: 'scaleX(1)', opacity: 1 }], { dur: 560, ease: 'inOut' });
+      return 380;
+    },
+    spark(c, el, fx) {
+      let g = ''; for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5, r1 = 26, r2 = 54; g += `<line x1="${60 + Math.cos(a) * r1}" y1="${60 + Math.sin(a) * r1}" x2="${60 + Math.cos(a) * r2}" y2="${60 + Math.sin(a) * r2}" stroke="${i % 2 ? 'var(--light)' : 'var(--elec)'}" stroke-width="5" stroke-linecap="round"/>`; }
+      const s = R.svg(fx, 120, 120, g, { left: '50%', top: '50%', margin: '-60px 0 0 -60px' });
+      c.a(s, [{ transform: 'scale(.3) rotate(-20deg)', opacity: 0 }, { transform: 'scale(1.3) rotate(10deg)', opacity: 1, offset: .5 }, { transform: 'scale(1.6) rotate(20deg)', opacity: 0 }], { dur: 700, ease: 'out' });
+      return 260;
+    },
+    rub(c, el, fx) {
+      const s = R.svg(fx, 120, 24, '<path d="M4 6H116M14 18H106" stroke="var(--t2)" stroke-width="5" stroke-linecap="round"/>', { left: '50%', top: '-30px', marginLeft: '-60px' });
+      c.a(s, [{ transform: 'translateX(-30px)' }, { transform: 'translateX(30px)' }, { transform: 'translateX(-30px)' }, { transform: 'translateX(30px)' }, { transform: 'translateX(0)', opacity: 0 }], { dur: 720, ease: 'inOut' });
+      R.K.spark(c, el, fx);
+      return 520;
+    },
+    flow(c, el, fx) {
+      const s = R.el(fx, '›››', { left: '-40px', right: '-40px', bottom: '-30px', height: '30px', color: 'var(--light)', fontWeight: '800', fontSize: '34px', lineHeight: '30px', letterSpacing: '6px', overflow: 'hidden', whiteSpace: 'nowrap' });
+      c.a(s, [{ transform: 'translateX(-80px)', opacity: 0 }, { transform: 'translateX(0)', opacity: 1, offset: .4 }, { transform: 'translateX(80px)', opacity: 0 }], { dur: 900, ease: 'linear' });
+      return 300;
+    },
+    volt(c, el, fx) {
+      for (let i = 0; i < 3; i++) {
+        const r = R.el(fx, '', { left: '50%', top: '50%', width: '60px', height: '60px', margin: '-30px 0 0 -30px', borderRadius: '50%', border: '4px solid var(--kin)' });
+        c.a(r, [{ transform: 'scale(.4)', opacity: .9 }, { transform: 'scale(2.6)', opacity: 0 }], { dur: 800, delay: i * 180, ease: 'out' });
+      }
+      return 300;
+    },
+    zigzag(c, el, fx) {
+      const s = R.svg(fx, 160, 30, '<path d="M2 15H22L32 3L48 27L64 3L80 27L96 3L112 27L128 3L138 15H158" fill="none" stroke="var(--sound)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>', { left: '50%', bottom: '-34px', marginLeft: '-80px' });
+      c.a(s.querySelector('path'), [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: 600, ease: 'inOut' });
+      return 380;
+    },
+    line(c, el, fx) {
+      const s = R.svg(fx, 90, 70, '<path d="M6 4V64H86" fill="none" stroke="var(--t3)" stroke-width="3"/><path d="M6 64L82 10" fill="none" stroke="var(--act)" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>', { left: '50%', bottom: '100%', marginLeft: '-45px', marginBottom: '4px' });
+      c.a(s.querySelectorAll('path')[1], [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: 650, ease: 'inOut' });
+      return 420;
+    },
+    curve(c, el, fx) {
+      const s = R.svg(fx, 90, 70, '<path d="M6 4V64H86" fill="none" stroke="var(--t3)" stroke-width="3"/><path d="M12 8Q18 52 82 58" fill="none" stroke="var(--act)" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>', { left: '50%', bottom: '100%', marginLeft: '-45px', marginBottom: '4px' });
+      c.a(s.querySelectorAll('path')[1], [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: 650, ease: 'inOut' });
+      return 420;
+    },
+    press(c, el, fx) {
+      const s = R.svg(fx, 120, 60, R.arrow(30, 0, 30, 50, 'var(--heat)', 6) + R.arrow(60, 0, 60, 50, 'var(--heat)', 6) + R.arrow(90, 0, 90, 50, 'var(--heat)', 6), { left: '50%', bottom: '100%', marginLeft: '-60px', marginBottom: '-6px' });
+      c.a(s, [{ transform: 'translateY(-40px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1, offset: .6 }, { transform: 'translateY(6px)', opacity: 1 }], { dur: 520, ease: 'in' });
+      c.a(el, [{ transform: 'translateY(0)' }, { transform: 'translateY(5px)', offset: .5 }, { transform: 'translateY(0)' }], { dur: 300, delay: 420 });
+      return 420;
+    },
+    hits(c, el, fx) {
+      const box = R.el(fx, '', { inset: '-12px -18px', border: '3px solid var(--t3)', borderRadius: '10px' });
+      for (let i = 0; i < 5; i++) {
+        const p = R.el(fx, '', { left: '50%', top: '50%', width: '14px', height: '14px', margin: '-7px 0 0 -7px', borderRadius: '50%', background: 'var(--kin)' });
+        const a = i * 1.26 + .4, dx = Math.cos(a) * (W(el) / 2 + 10), dy = Math.sin(a) * (H(el) / 2 + 6);
+        c.a(p, [{ transform: 'translate(0,0)' }, { transform: `translate(${dx}px,${dy}px)`, offset: .5 }, { transform: 'translate(0,0)', opacity: 0 }], { dur: 700, delay: i * 60, ease: 'linear' });
+      }
+      c.a(box, [{ opacity: 0 }, { opacity: 1, offset: .3 }, { opacity: 0 }], { dur: 900 });
+      return 420;
+    },
+    grow(c, el, fx) {
+      const b = R.el(fx, '', { inset: '-6px -10px', border: '3px dashed var(--light)', borderRadius: '12px' });
+      c.a(b, [{ transform: 'scale(.4)', opacity: 0 }, { transform: 'scale(1.25)', opacity: 1 }], { dur: 650, ease: 'out' });
+      return 300;
+    },
+    shrink(c, el, fx) {
+      const b = R.el(fx, '', { inset: '-6px -10px', border: '3px dashed var(--light)', borderRadius: '12px' });
+      c.a(b, [{ transform: 'scale(1.8)', opacity: 0 }, { transform: 'scale(.95)', opacity: 1 }], { dur: 650, ease: 'inOut' });
+      return 300;
+    },
+    up(c, el, fx) { return R.K._arr(c, fx, true); },
+    down(c, el, fx) { return R.K._arr(c, fx, false); },
+    _arr(c, fx, up) {
+      const s = R.svg(fx, 30, 60, up ? R.arrow(15, 58, 15, 4, 'var(--act)', 5) : R.arrow(15, 2, 15, 56, 'var(--act)', 5), { left: '100%', top: '50%', marginTop: '-30px', marginLeft: '8px' });
+      c.a(s, [{ transform: `translateY(${up ? 30 : -30}px)`, opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], { dur: 520, ease: 'out' });
+      return 260;
+    },
+    glow(c, el, fx) {
+      const g = R.el(fx, '', { left: '50%', top: '50%', width: '200px', height: '200px', margin: '-100px 0 0 -100px', borderRadius: '50%', background: 'radial-gradient(circle, color-mix(in srgb, var(--light) 70%, transparent) 0%, transparent 65%)' });
+      c.a(g, [{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1)', opacity: 1, offset: .5 }, { transform: 'scale(1.2)', opacity: 0 }], { dur: 1000, ease: 'out' });
+      return 300;
+    },
+    equal(c, el, fx) {
+      const a = R.el(fx, '', { left: '-30px', right: '-30px', top: '-16px', height: '6px', borderRadius: '3px', background: 'var(--act)' });
+      const b = R.el(fx, '', { left: '-30px', right: '-30px', bottom: '-16px', height: '6px', borderRadius: '3px', background: 'var(--act)' });
+      c.a(a, [{ transform: 'translateX(-60px) scaleX(.4)', opacity: 0 }, { transform: 'translateX(0) scaleX(1)', opacity: 1 }], { dur: 520, ease: 'out' });
+      c.a(b, [{ transform: 'translateX(60px) scaleX(.4)', opacity: 0 }, { transform: 'translateX(0) scaleX(1)', opacity: 1 }], { dur: 520, ease: 'out' });
+      return 260;
+    },
+  };
+})();
+
+}catch(e){console.error("[object 91_recap.js]",e)}
 /* ── e3.js ── */
 try{
 /* ═══════════════════════════════════════════════════════════════
@@ -2702,18 +2976,22 @@ try{
 try{
 
 (function () {
+  const b = (w, kind, k, cls) => RK.b(w, kind, k, cls);
   const CARDS = [
-    ['c-cur', '전류', 'A', '전하(전자)의 흐름', '1초 동안 도선의 단면을 지나는 전하의 양 · 1 A = 1000 mA', '<span class="c-cur">(+)극 → (−)극</span><small>전자의 이동 방향은 반대</small>'],
-    ['c-volt', '전압', 'V', '전류를 흐르게 하는 능력', '물의 흐름 모형에서 물을 밀어 올리는 펌프', '<span class="c-volt">전압 ↑</span> → <span class="c-cur">전류 ↑</span><small>같은 회로에서</small>'],
-    ['c-res', '저항', 'Ω', '전류의 흐름을 방해하는 정도', '전자가 원자와 충돌하기 때문 · 물질의 종류·길이·단면적에 따라 달라진다', '<span class="c-res">길수록 ↑ · 굵을수록 ↓</span><small>같은 물질끼리 비교</small>'],
+    ['c-cur', '전류', b('A', 'flow', 1), `전하(전자)의 ${b('흐름', 'flow', 1)}`, '1초 동안 도선의 단면을 지나는 전하의 양 · 1 A = 1000 mA', `<span class="c-cur">(+)극 → ${b('(−)극', 'neg', 1)}</span><small>전자의 이동 방향은 반대</small>`],
+    ['c-volt', '전압', b('V', 'volt', 2), `전류를 ${b('흐르게', 'volt', 2)} 하는 능력`, '물의 흐름 모형에서 물을 밀어 올리는 펌프', `<span class="c-volt">전압 ↑</span> → <span class="c-cur">전류 ${b('↑', 'up', 2)}</span><small>같은 회로에서</small>`],
+    ['c-res', '저항', b('Ω', 'zigzag', 3), `전류의 흐름을 ${b('방해', 'hits', 3)}하는 정도`, `전자가 원자와 ${b('충돌', 'hits', 3)}하기 때문 · 물질의 종류·길이·단면적에 따라 달라진다`, `<span class="c-res">길수록 ${b('↑', 'up', 3)} · 굵을수록 ${b('↓', 'down', 3)}</span><small>같은 물질끼리 비교</small>`],
   ];
   Deck.scene('e3_16_recap', {
     steps: 3,
     build(root) {
       root.querySelector('#e3_16_recap-cards').innerHTML = CARDS.map(([cl, t, u, a, m, big], i) =>
-        `<div class="rc" style="left:${120 + i * 570}px" data-step="${i + 1}" data-fx="up"><div class="top"><h3 class="${cl}">${t}</h3><span class="u">단위<b class="${cl}">${u}</b></span></div><p>${a}</p><p class="m">${m}</p><div class="big">${big}</div></div>`).join('');
+        `<div class="rc" style="left:${120 + i * 570}px" data-in="${250 + i * 140}" data-fx="up"><div class="top"><h3 class="${cl}">${t}</h3><span class="u">단위<b class="${cl}">${u}</b></span></div><p>${a}</p><p class="m">${m}</p><div class="big">${big}</div></div>`).join('');
     },
-    async go(c, k) { if (k === 3) c.sfx('chime', 300); },
+    async go(c, k) {
+      await RK.fill(c, k);
+      if (k === 3) c.sfx('chime', 300);
+    },
   });
 })();
 
@@ -2756,6 +3034,62 @@ try{
 })();
 
 }catch(e){console.error("[slide 17_answer.html]",e)}
+/* ── 90_quiz0.html ── */
+try{
+
+(function () {
+  Deck.scene('e3_90_quiz0', { steps: 0, async enter(c) { c.sfx('whoosh', 300); } });
+})();
+
+}catch(e){console.error("[slide 90_quiz0.html]",e)}
+/* ── 91_quiz1.html ── */
+try{
+
+(function () {
+  Deck.scene('e3_91_quiz1', {
+    steps: 1,
+    async enter(c) { QZ.fit(c); },
+    async go(c, k) { c.all(c.$$('.qz-ch li:not(.ok)'), [{ opacity: 1 }, { opacity: .38 }], { dur: 450 }); c.sfx('chime'); },
+  });
+})();
+
+}catch(e){console.error("[slide 91_quiz1.html]",e)}
+/* ── 92_quiz2.html ── */
+try{
+
+(function () {
+  Deck.scene('e3_92_quiz2', {
+    steps: 1,
+    async enter(c) { QZ.fit(c); },
+    async go(c, k) { c.all(c.$$('.qz-ch li:not(.ok)'), [{ opacity: 1 }, { opacity: .38 }], { dur: 450 }); c.sfx('chime'); },
+  });
+})();
+
+}catch(e){console.error("[slide 92_quiz2.html]",e)}
+/* ── 93_quiz3.html ── */
+try{
+
+(function () {
+  Deck.scene('e3_93_quiz3', {
+    steps: 1,
+    async enter(c) { QZ.fit(c); },
+    async go(c, k) { c.all(c.$$('.qz-ch li:not(.ok)'), [{ opacity: 1 }, { opacity: .38 }], { dur: 450 }); c.sfx('chime'); },
+  });
+})();
+
+}catch(e){console.error("[slide 93_quiz3.html]",e)}
+/* ── 94_quiz4.html ── */
+try{
+
+(function () {
+  Deck.scene('e3_94_quiz4', {
+    steps: 1,
+    async enter(c) { QZ.fit(c); },
+    async go(c, k) { c.all(c.$$('.qz-ch li:not(.ok)'), [{ opacity: 1 }, { opacity: .38 }], { dur: 450 }); c.sfx('chime'); },
+  });
+})();
+
+}catch(e){console.error("[slide 94_quiz4.html]",e)}
 </script>
 </body>
 </html>

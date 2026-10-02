@@ -370,6 +370,59 @@ html.still .o-cellgrid .p-cell{transition:none}
 .uc-icon{position:absolute;right:calc(22px * var(--k,1));top:calc(22px * var(--k,1));width:calc(56px * var(--k,1));height:calc(56px * var(--k,1))}
 .uc-icon>svg{width:100%;height:100%;display:block;overflow:visible}
 
+/* ── 90_quiz.css ── */
+/* ── 문제로 확인하기(강의 끝 문제 풀이) — 수업 페이지 확인하기 문제를 옮긴 장면 ──
+   문제 → (한 번 누르면) 정답 표시 + 보기 ○/✗ + 풀이. 글이 넘치면 enter 에서 --qz 배율을 줄여 맞춘다. */
+.qz-body{position:absolute;left:120px;top:96px;width:1680px;height:930px;display:flex;flex-direction:column;gap:calc(22px * var(--qz,1));font-size:calc(1px * var(--qz,1))}
+.qz-body>*{flex-shrink:0}
+.qz-eb{display:flex;align-items:center;gap:14px;font-size:30em;font-weight:600;color:var(--t2);letter-spacing:.01em}
+.qz-eb b{color:var(--act);font-weight:700}
+.qz-lv{display:inline-flex;align-items:center;padding:2px 14px;border-radius:9999px;border:2px solid var(--hl);font-size:.86em;color:var(--t2)}
+.qz-stem{font-size:42em;font-weight:600;line-height:1.42;letter-spacing:-.015em}
+.qz-stem u{text-decoration-thickness:3px;text-underline-offset:6px}
+.qz-row{display:flex;gap:44px;align-items:flex-start;min-height:0}
+.qz-wide .qz-left{flex-basis:1080px}
+.qz-wide .qz-fig svg{max-height:calc(420px * var(--qz,1))}
+.qz-left{flex:0 0 760px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.qz-card{border-radius:18px;background:#f5f5f7}
+.slide[data-tile="parchment"] .qz-card{background:#fff}
+.qz-fig{padding:14px 18px}
+.qz-fig svg{display:block;width:100%;height:auto;max-height:calc(330px * var(--qz,1))}
+.qz-box{padding:16px 26px 18px}
+.qz-box-h{display:inline-block;font-size:24em;font-weight:700;color:var(--t2);border:2px solid var(--hl);border-radius:8px;padding:0 12px;margin-bottom:6px}
+.qz-box p{position:relative;font-size:30em;line-height:1.45;margin:6px 0;padding-right:58px}
+.qz-box p b{font-weight:700;margin-right:6px}
+.qz-v{position:absolute;right:0;top:0;font-weight:800;font-size:1.1em}
+.qz-v.ok{color:var(--act)} .qz-v.no{color:var(--heat)}
+.qz-ch{list-style:none;margin:0;padding:0;flex:1 1 0;display:flex;flex-direction:column;gap:10px;min-width:0}
+.qz-ch li{position:relative;display:flex;align-items:flex-start;gap:16px;font-size:34em;line-height:1.38;padding:12px 150px 12px 20px;border-radius:14px}
+.qz-n{flex:none;font-weight:700;color:var(--t2)}
+.qz-t{min-width:0}
+.qz-hl{position:absolute;inset:0;border-radius:14px;border:3px solid var(--act);background:color-mix(in srgb, var(--act) 10%, transparent);pointer-events:none}
+.qz-ch li.ok .qz-n,.qz-ch li.ok .qz-t{position:relative}
+.qz-mark{position:absolute;right:18px;top:50%;margin-top:-.75em;font-size:.82em;font-weight:700;color:#fff;background:var(--act);border-radius:9999px;padding:3px 16px}
+.qz-why{margin-top:auto;padding:22px 30px 24px;border-left:6px solid var(--act)}
+.qz-why .qz-why-h{font-size:26em;font-weight:700;color:var(--act);margin-bottom:6px}
+.qz-why .qz-why-t{font-size:30em;line-height:1.5}
+.qz-why b{color:var(--act);font-weight:700}
+/* 문제 들어가기 장 */
+.qz-intro{position:absolute;left:0;top:0;width:1920px;height:1080px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center}
+.qz-intro .qz-k{font-size:30px;font-weight:600;color:var(--t2);letter-spacing:.02em}
+.qz-intro h2{font-size:96px;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.qz-intro .qz-dots{display:flex;gap:18px;margin-top:20px}
+.qz-intro .qz-dots span{display:flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;border:3px solid var(--hl);font-size:36px;font-weight:700;color:var(--t2)}
+.qz-intro .qz-sub{font-size:30px;color:var(--t2)}
+
+/* ── 91_recap.css ── */
+/* ── «오늘 배운 것» 핵심 낱말 빈칸(번호 없음 — 학습지 빈칸과 다름) ── */
+.rk{position:relative;display:inline-block;margin:0 .06em;padding:0 .1em;border-bottom:3px solid #c7c7cc;line-height:1.2;vertical-align:baseline}
+.slide[data-tile="black"] .rk,.slide[data-tile="dark"] .rk,.slide[data-tile="graphite"] .rk{border-bottom-color:#48484a}
+.rk .rk-w{display:inline-block;opacity:0}
+.rk.on{border-bottom-color:transparent}
+.rk-fx{position:absolute;inset:0;pointer-events:none;z-index:2}
+.rk-p{position:absolute;display:block;pointer-events:none}
+.rk.on .rk-w{opacity:1}
+
 /* ── s01_cover.html ── */
 
 #s01_cover .s01-cord line{stroke:#3a3a3c;stroke-width:2}
@@ -979,7 +1032,7 @@ html.still .o-cellgrid .p-cell{transition:none}
   <div class="fine">화석 연료(석탄·가스 등)를 태워 전기를 만들 때 이산화 탄소가 나온다</div>
 </section>
 <!-- ═══ s30_recap.html ═══ -->
-<section class="slide" id="s30_recap" data-tile="parchment" data-title="오늘의 정리" data-notes="P14">
+<section class="slide" id="s30_recap" data-tile="parchment" data-title="오늘의 정리" data-notes="P14" data-say="핵심 낱말이 빈칸으로 나옵니다 — 학생이 먼저 말하게 한 뒤 누를 때마다 카드 한 장씩 채워져요.">
   <div class="hd" data-in><div class="eb">정리</div><h2>오늘 배운 것</h2></div>
   <div id="s30_recap-cards"></div>
 </section>
@@ -990,6 +1043,51 @@ html.still .o-cellgrid .p-cell{transition:none}
   <div class="abs center s31-q" style="left:0;width:1920px;top:822px" data-in="1100" id="s31_end-q">이 기구는 <b>1초에 몇 J</b>의 전기 에너지를 사용할까?</div>
   <div class="abs center s31-a num" style="left:0;width:1920px;top:820px" data-step="1" data-delay="1500">1초에 <span class="c-elec">60 J</span></div>
   <div id="app-credit" class="abs center" style="left:0;width:1920px;top:1016px;font-size:24px;color:var(--t3)">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved · 최종 업데이트: 2026-09-29</div>
+</section>
+<!-- ═══ s90_quiz0.html ═══ -->
+<section class="slide" id="s90_quiz0" data-tile="black" data-title="문제로 확인하기" data-notes="" data-say="수업 페이지 확인하기에서 고른 4문제입니다. 문제마다 먼저 풀어 보게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다.">
+  <div class="qz-intro">
+    <div class="qz-k" data-in>전기 에너지의 전환과 소비 전력</div>
+    <h2 data-in="200" data-fx="blur">문제로 확인하기</h2>
+    <div class="qz-dots" data-in="500" data-fx="up"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+    <div class="qz-sub" data-in="700">오늘 배운 내용으로 4문제를 풀어 봅시다</div>
+  </div>
+</section>
+<!-- ═══ s91_quiz1.html ═══ -->
+<section class="slide" id="s91_quiz1" data-tile="light" data-title="문제 1" data-notes="" data-say="소비 전력과 전력량 정답 ③. 학생이 먼저 고르게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다. 소비 전력은 1초 동안 소비하는 양이므로, 실제로 소비한 전기 에너지의 총량인 전력량은 소비 전력에 사용 시간을 곱해야 정해집니다. 소비 전력만 크다고 언제나 더 많이 소비하는 것은 아니므로 ③이 옳지 않습니다.실제로 2000 W 기구를 1분 쓰면 2000 × 1 = 2000이고, 100 W 기구를 30분 쓰면 100 × 30 = 3000이 되어 소비 전력이 작은 쪽이 더 많이 소비할 수도 있습니다. ①·②·④·⑤는 모두 정의 그대로의 설명입니다.">
+  <div class="qz-body">
+    <div class="qz-eb" data-in><b>문제 1</b> / 4 <span class="qz-lv">중간</span></div>
+    <div class="qz-stem" data-in="150">소비 전력과 전력량에 대한 설명으로 옳지 <u>않은</u> 것은?</div>
+    <div class="qz-row" data-in="350"><ol class="qz-ch"><li><span class="qz-n">①</span><span class="qz-t">소비 전력은 1초 동안 소비하는 전기 에너지의 양이다.</span></li><li><span class="qz-n">②</span><span class="qz-t">소비 전력의 단위 W는 1초에 1 J의 전기 에너지를 소비한다는 뜻이다.</span></li><li class="ok"><span class="qz-hl" data-step="1" data-fx="fade"></span><span class="qz-n">③</span><span class="qz-t">소비 전력이 큰 기구는 사용 시간과 관계없이 언제나 전기 에너지를 더 많이 소비한다.</span><span class="qz-mark" data-step="1" data-fx="pop">정답</span></li><li><span class="qz-n">④</span><span class="qz-t">1 kW는 1000 W와 같다.</span></li><li><span class="qz-n">⑤</span><span class="qz-t">전력량은 소비 전력에 사용 시간을 곱하여 구하며, 단위로 Wh를 쓴다.</span></li></ol></div>
+    <div class="qz-card qz-why" data-step="1" data-fx="up"><div class="qz-why-h">정답 ③ · 풀이</div><div class="qz-why-t">소비 전력은 1초 동안 소비하는 양이므로, 실제로 소비한 전기 에너지의 총량인 전력량은 소비 전력에 사용 시간을 곱해야 정해집니다. 소비 전력만 크다고 언제나 더 많이 소비하는 것은 아니므로 ③이 옳지 않습니다.실제로 2000 W 기구를 1분 쓰면 2000 × 1 = 2000이고, 100 W 기구를 30분 쓰면 100 × 30 = 3000이 되어 소비 전력이 작은 쪽이 더 많이 소비할 수도 있습니다. ①·②·④·⑤는 모두 정의 그대로의 설명입니다.</div></div>
+  </div>
+</section>
+<!-- ═══ s92_quiz2.html ═══ -->
+<section class="slide" id="s92_quiz2" data-tile="parchment" data-title="문제 2" data-notes="" data-say="빛 전환 비율로 효율 비교 정답 ①. 학생이 먼저 고르게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다. 소비 전력이 같으므로 같은 시간 동안 소비하는 전기 에너지도 같고, 그중 빛으로 전환되는 비율이 큰 A가 더 밝습니다(ㄱ). B는 10 %만 빛이 되므로 나머지 90 %는 대부분 열 에너지로 빠져나갑니다(ㄴ).ㄷ은 문제에 주어진 &#x27;소비 전력이 서로 같다&#x27;는 조건을 놓친 진술입니다. 소비 전력이 같으면 1초 동안 소비하는 전기 에너지도 같으므로, B가 더 많이 소비한다고 말할 수 없습니다. 효율이 낮다는 것과 많이 소비한다는 것은 다른 말입니다.">
+  <div class="qz-body">
+    <div class="qz-eb" data-in><b>문제 2</b> / 4 <span class="qz-lv">중간</span></div>
+    <div class="qz-stem" data-in="150">소비 전력이 서로 같은 두 전등 A, B가 있다. A는 소비한 전기 에너지의 85 %를 빛 에너지로 전환하고, B는 10 %를 빛 에너지로 전환한다. 이에 대한 설명으로 옳은 것을 &lt;보기&gt;에서 모두 고른 것은?</div>
+    <div class="qz-row" data-in="350"><div class="qz-left"><div class="qz-card qz-box"><div class="qz-box-h">보기</div><p><b>ㄱ.</b>두 전등을 같은 시간 동안 켜 두면 A가 B보다 더 밝다.<span class="qz-v ok" data-step="1" data-fx="pop">○</span></p><p><b>ㄴ.</b>B는 소비한 전기 에너지의 대부분을 열 에너지로 전환한다.<span class="qz-v ok" data-step="1" data-fx="pop">○</span></p><p><b>ㄷ.</b>B는 A보다 1초 동안 소비하는 전기 에너지가 더 많다.<span class="qz-v no" data-step="1" data-fx="pop">✗</span></p></div></div><ol class="qz-ch"><li class="ok"><span class="qz-hl" data-step="1" data-fx="fade"></span><span class="qz-n">①</span><span class="qz-t">ㄱ, ㄴ</span><span class="qz-mark" data-step="1" data-fx="pop">정답</span></li><li><span class="qz-n">②</span><span class="qz-t">ㄷ</span></li><li><span class="qz-n">③</span><span class="qz-t">ㄱ</span></li><li><span class="qz-n">④</span><span class="qz-t">ㄴ, ㄷ</span></li><li><span class="qz-n">⑤</span><span class="qz-t">ㄱ, ㄴ, ㄷ</span></li></ol></div>
+    <div class="qz-card qz-why" data-step="1" data-fx="up"><div class="qz-why-h">정답 ① · 풀이</div><div class="qz-why-t">소비 전력이 같으므로 같은 시간 동안 소비하는 전기 에너지도 같고, 그중 빛으로 전환되는 비율이 큰 A가 더 밝습니다(ㄱ). B는 10 %만 빛이 되므로 나머지 90 %는 대부분 열 에너지로 빠져나갑니다(ㄴ).ㄷ은 문제에 주어진 '소비 전력이 서로 같다'는 조건을 놓친 진술입니다. 소비 전력이 같으면 1초 동안 소비하는 전기 에너지도 같으므로, B가 더 많이 소비한다고 말할 수 없습니다. 효율이 낮다는 것과 많이 소비한다는 것은 다른 말입니다.</div></div>
+  </div>
+</section>
+<!-- ═══ s93_quiz3.html ═══ -->
+<section class="slide" id="s93_quiz3" data-tile="light" data-title="문제 3" data-notes="" data-say="전환량 자료 — 소비 전력과 효율 정답 ②. 학생이 먼저 고르게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다. 10초 동안 A는 90 + 510 = 600 J, B는 40 + 160 = 200 J을 소비했으므로 소비 전력은 A가 600 ÷ 10 = 60 W, B가 200 ÷ 10 = 20 W입니다. 그런데 빛으로 전환된 비율은 A가 90 ÷ 600 = 15 %, B가 40 ÷ 200 = 20 %로 B가 더 높습니다. 따라서 ②가 옳습니다.①은 소비 전력을 서로 뒤바꾼 것이고, ③은 &#x27;소비 전력이 크면 효율도 좋다&#x27;는 오해입니다. ④는 두 전구 모두 빛의 비율이 절반에 한">
+  <div class="qz-body">
+    <div class="qz-eb" data-in><b>문제 3</b> / 4 <span class="qz-lv">도전</span></div>
+    <div class="qz-stem" data-in="150">다음은 전구 A와 B를 각각 10초 동안 켜 두었을 때 전환된 에너지의 양을 나타낸 것이다. 이에 대한 설명으로 옳은 것은?</div>
+    <div class="qz-row" data-in="350"><div class="qz-left"><div class="qz-card qz-fig"><svg viewBox="0 0 560 196" role="img" aria-label="전구 A와 B를 각각 10초 동안 켰을 때 전환된 에너지의 양. 전구 A는 빛 90 J과 열 510 J, 전구 B는 빛 40 J과 열 160 J이다."><rect x="60" y="30" width="440" height="142" rx="10" fill="#faf4e6" stroke="#cbb894" stroke-width="2"/><rect x="60" y="30" width="440" height="38" rx="10" fill="#f2e8d2"/><rect x="60" y="56" width="440" height="12" fill="#f2e8d2"/><line x1="60" y1="68" x2="500" y2="68" stroke="#a08b64" stroke-width="1.6"/><line x1="220" y1="30" x2="220" y2="172" stroke="#a08b64" stroke-width="1.4"/><line x1="360" y1="30" x2="360" y2="172" stroke="#a08b64" stroke-width="1.4"/><line x1="60" y1="120" x2="500" y2="120" stroke="#cbb894" stroke-width="1.4"/><text x="140.0" y="55" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#6b573f" font-weight="700">구분</text><text x="290.0" y="55" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#6b573f" font-weight="700">빛 에너지</text><text x="430.0" y="55" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#6b573f" font-weight="700">열 에너지</text><text x="140.0" y="101" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">전구 A</text><text x="290.0" y="101" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">90 J</text><text x="430.0" y="101" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">510 J</text><text x="140.0" y="153" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">전구 B</text><text x="290.0" y="153" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">40 J</text><text x="430.0" y="153" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">160 J</text></svg></div></div><ol class="qz-ch"><li><span class="qz-n">①</span><span class="qz-t">A의 소비 전력은 20 W, B의 소비 전력은 60 W이다.</span></li><li class="ok"><span class="qz-hl" data-step="1" data-fx="fade"></span><span class="qz-n">②</span><span class="qz-t">소비 전력은 A가 B보다 크지만, 소비한 전기 에너지 중 빛으로 전환되는 비율은 B가 더 높다.</span><span class="qz-mark" data-step="1" data-fx="pop">정답</span></li><li><span class="qz-n">③</span><span class="qz-t">소비 전력이 큰 A가 빛으로 전환되는 비율도 더 높으므로, A가 B보다 효율적이다.</span></li><li><span class="qz-n">④</span><span class="qz-t">두 전구 모두 소비한 전기 에너지의 절반보다 많은 양을 빛 에너지로 전환한다.</span></li><li><span class="qz-n">⑤</span><span class="qz-t">B는 소비 전력이 작으므로, 같은 시간 동안 A보다 더 밝은 빛을 낸다.</span></li></ol></div>
+    <div class="qz-card qz-why" data-step="1" data-fx="up"><div class="qz-why-h">정답 ② · 풀이</div><div class="qz-why-t">10초 동안 A는 90 + 510 = 600 J, B는 40 + 160 = 200 J을 소비했으므로 소비 전력은 A가 600 ÷ 10 = 60 W, B가 200 ÷ 10 = 20 W입니다. 그런데 빛으로 전환된 비율은 A가 90 ÷ 600 = 15 %, B가 40 ÷ 200 = 20 %로 B가 더 높습니다. 따라서 ②가 옳습니다.①은 소비 전력을 서로 뒤바꾼 것이고, ③은 '소비 전력이 크면 효율도 좋다'는 오해입니다. ④는 두 전구 모두 빛의 비율이 절반에 한참 못 미치므로 틀렸고, ⑤는 실제로 빛 에너지가 A 90 J, B 40 J이므로 A가 더 밝습니다. 효율이 높다고 더 밝은 것은 아닙니다.</div></div>
+  </div>
+</section>
+<!-- ═══ s94_quiz4.html ═══ -->
+<section class="slide" id="s94_quiz4" data-tile="parchment" data-title="문제 4" data-notes="" data-say="전력량 = 소비 전력 × 시간 정답 ①. 학생이 먼저 고르게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다. 먼저 단위를 맞추면 전기난로의 소비 전력은 1.5 kW = 1500 W입니다. 전력량 = 소비 전력 × 시간이므로 1500 W × 4분 = 6000, 40 W × 150분 = 6000 — 두 값이 같습니다. 시간 단위로 계산해도 1500 W × (4/60)시간 = 100 Wh, 40 W × 2.5시간 = 100 Wh로 같습니다. 따라서 ①이 옳습니다.③은 소비 전력만 보고 판단한 것이고, ②는 사용 시간만 보고 판단한 것입니다. 둘 다 곱해 보아야 합니다. ④는">
+  <div class="qz-body">
+    <div class="qz-eb" data-in><b>문제 4</b> / 4 <span class="qz-lv">도전</span></div>
+    <div class="qz-stem" data-in="150">다음은 어느 날 두 전기 기구를 사용한 기록이다. 이에 대한 설명으로 옳은 것은? (단, 1 kW = 1000 W이다.)</div>
+    <div class="qz-row" data-in="350"><div class="qz-left"><div class="qz-card qz-fig"><svg viewBox="0 0 560 196" role="img" aria-label="어느 날 두 전기 기구를 사용한 기록 표. 전기난로는 소비 전력 1.5 킬로와트로 4분, 선풍기는 소비 전력 40와트로 150분 동안 사용했다."><rect x="60" y="30" width="440" height="142" rx="10" fill="#faf4e6" stroke="#cbb894" stroke-width="2"/><rect x="60" y="30" width="440" height="38" rx="10" fill="#f2e8d2"/><rect x="60" y="56" width="440" height="12" fill="#f2e8d2"/><line x1="60" y1="68" x2="500" y2="68" stroke="#a08b64" stroke-width="1.6"/><line x1="220" y1="30" x2="220" y2="172" stroke="#a08b64" stroke-width="1.4"/><line x1="360" y1="30" x2="360" y2="172" stroke="#a08b64" stroke-width="1.4"/><line x1="60" y1="120" x2="500" y2="120" stroke="#cbb894" stroke-width="1.4"/><text x="140.0" y="55" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#6b573f" font-weight="700">전기 기구</text><text x="290.0" y="55" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#6b573f" font-weight="700">소비 전력</text><text x="430.0" y="55" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15" fill="#6b573f" font-weight="700">사용 시간</text><text x="140.0" y="101" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">전기난로</text><text x="290.0" y="101" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">1.5 kW</text><text x="430.0" y="101" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">4분</text><text x="140.0" y="153" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">선풍기</text><text x="290.0" y="153" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">40 W</text><text x="430.0" y="153" text-anchor="middle" font-family="Gowun Dodum, Pretendard, sans-serif" font-size="15.5" fill="#4a3a26">150분</text></svg></div></div><ol class="qz-ch"><li class="ok"><span class="qz-hl" data-step="1" data-fx="fade"></span><span class="qz-n">①</span><span class="qz-t">두 기구가 이날 소비한 전기 에너지의 양은 서로 같다.</span><span class="qz-mark" data-step="1" data-fx="pop">정답</span></li><li><span class="qz-n">②</span><span class="qz-t">선풍기를 훨씬 더 오랫동안 켜 두었으므로 선풍기가 전기 에너지를 더 많이 소비하였다.</span></li><li><span class="qz-n">③</span><span class="qz-t">소비 전력이 훨씬 큰 전기난로가 선풍기보다 전기 에너지를 더 많이 소비하였다.</span></li><li><span class="qz-n">④</span><span class="qz-t">전기난로의 소비 전력 1.5 kW는 1초 동안 150 J의 전기 에너지를 소비한다는 뜻이다.</span></li><li><span class="qz-n">⑤</span><span class="qz-t">선풍기는 소비한 전기 에너지를 주로 열 에너지로 전환한다.</span></li></ol></div>
+    <div class="qz-card qz-why" data-step="1" data-fx="up"><div class="qz-why-h">정답 ① · 풀이</div><div class="qz-why-t">먼저 단위를 맞추면 전기난로의 소비 전력은 1.5 kW = 1500 W입니다. 전력량 = 소비 전력 × 시간이므로 1500 W × 4분 = 6000, 40 W × 150분 = 6000 — 두 값이 같습니다. 시간 단위로 계산해도 1500 W × (4/60)시간 = 100 Wh, 40 W × 2.5시간 = 100 Wh로 같습니다. 따라서 ①이 옳습니다.③은 소비 전력만 보고 판단한 것이고, ②는 사용 시간만 보고 판단한 것입니다. 둘 다 곱해 보아야 합니다. ④는 1.5 kW = 1500 W이므로 1초에 1500 J이 맞고, ⑤ 선풍기의 주된 전환은 날개를 돌리는 운동 에너지입니다.</div></div>
+  </div>
 </section>
 <div id="gridov"></div>
 </div></div>
@@ -7508,6 +7606,182 @@ ${HOUSE.wins.map((p, i) => win(i, p)).join('')}
 })();
 
 }catch(e){console.error("[object 50_meters.js]",e)}
+/* ── 90_quiz.js ── */
+try{
+/* objects/90_quiz.js — 문제 장면 도우미: 글이 넘치면 배율(--qz)을 줄여 한 화면에 맞춘다 */
+window.QZ = {
+  // 등장 효과(translate)는 scrollHeight 를 부풀리므로, 자식들의 실제 높이(offsetHeight, 변형 무시) 합으로 잰다
+  need(b) {
+    const kids = [...b.children], gap = parseFloat(getComputedStyle(b).rowGap) || 0;
+    return kids.reduce((a, e) => a + e.offsetHeight, 0) + gap * Math.max(0, kids.length - 1);
+  },
+  fit(c) {
+    const b = c.$('.qz-body'); if (!b) return;
+    let s = 1; b.style.setProperty('--qz', '1');
+    for (let i = 0; i < 8 && QZ.need(b) > b.clientHeight; i++) { s -= 0.05; b.style.setProperty('--qz', s.toFixed(2)); }
+  },
+};
+
+}catch(e){console.error("[object 90_quiz.js]",e)}
+/* ── 91_recap.js ── */
+try{
+/* ═══════════════════════════════════════════════════════════════
+   objects/91_recap.js — «오늘 배운 것» 핵심 낱말 빈칸 + 낱말에 어울리는 모션그래픽
+   · 마크업: RK.b('척력', 'push', 2)  → 빈칸(밑줄만, 낱말은 숨김). 세 번째 값 = 채워지는 단계(k)
+   · 장면 go(c, k) 에서 RK.fill(c, k) → 그 단계의 빈칸이 차례로(시차 ms) 모션그래픽과 함께 채워진다
+   · 순간 모드(되돌리기·건너뛰기)에서는 c.a/c.wait 가 곧장 끝 상태 → 낱말만 보이고 효과는 사라진 상태
+   종류(kind): electron · pos · neg · push · pull · spark · rub · flow · volt · zigzag · line · curve · press · hits
+              · grow · shrink · up · down · glow · equal · pop(기본)
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  const SND = { electron: 'zip', pos: 'pop', neg: 'pop', push: 'whoosh', pull: 'whoosh', spark: 'spark', rub: 'zip', flow: 'slide', volt: 'rise',
+    zigzag: 'scan', line: 'scan', curve: 'scan', press: 'thunk', hits: 'tick', grow: 'rise', shrink: 'pop', up: 'rise', down: 'pop', glow: 'ding', equal: 'step', pop: 'pop' };
+  const R = window.RK = {
+    /** 빈칸 하나(문자열). word 는 HTML 가능(색 span 등). cls 로 색(c-neg 등)을 줄 수 있다 */
+    b(word, kind, step, cls) {
+      return `<span class="rk${cls ? ' ' + cls : ''}" data-rk="${step}" data-kind="${kind || 'pop'}"><span class="rk-w">${word}</span><span class="rk-fx" aria-hidden="true"></span></span>`;
+    },
+    /** k 단계 빈칸 채우기. gap = 낱말 사이 시차(ms) */
+    async fill(c, k, gap = 520) {
+      const els = c.$$(`.rk[data-rk="${k}"]`);
+      for (let i = 0; i < els.length; i++) {
+        if (i) await c.wait(gap);
+        R.play(c, els[i]);
+      }
+      await c.wait(700);
+    },
+    play(c, el) {
+      const kind = el.dataset.kind || 'pop', w = el.querySelector('.rk-w'), fx = el.querySelector('.rk-fx');
+      el.classList.add('on');
+      c.sfx(SND[kind] || 'pop');
+      const f = R.K[kind] || R.K.pop;
+      fx.innerHTML = '';
+      const d = f(c, el, fx, w) || 0;
+      c.a(w, [{ opacity: 0, transform: 'scale(.6)', filter: 'blur(6px)' }, { opacity: 1, transform: 'scale(1)', filter: 'blur(0px)' }], { dur: 520, delay: d, ease: 'spring' });
+      c.a(fx, [{ opacity: 1 }, { opacity: 0 }], { dur: 500, delay: d + 650 });
+    },
+    /* 작은 도우미: fx 안에 요소 하나 */
+    el(fx, html, css) { const s = document.createElement('span'); s.className = 'rk-p'; s.innerHTML = html || ''; Object.assign(s.style, css || {}); fx.appendChild(s); return s; },
+    svg(fx, w, h, inner, css) { return R.el(fx, `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="overflow:visible;display:block">${inner}</svg>`, css); },
+    arrow(x1, y1, x2, y2, col, sw = 6) {
+      const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L, hd = 16, bx = x2 - ux * hd, by = y2 - uy * hd;
+      return `<line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round"/><polygon points="${x2},${y2} ${bx - uy * 9},${by + ux * 9} ${bx + uy * 9},${by - ux * 9}" fill="${col}"/>`;
+    },
+  };
+  const W = el => el.offsetWidth, H = el => el.offsetHeight;
+  R.K = {
+    pop(c, el, fx) { const s = R.el(fx, '', { inset: '-8px -14px', border: '3px solid var(--act)', borderRadius: '12px' }); c.a(s, [{ opacity: 0, transform: 'scale(1.4)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 380 }); return 120; },
+    electron(c, el, fx) {
+      const e = R.el(fx, '<span>−</span>', { left: '50%', top: '50%', width: '34px', height: '34px', margin: '-17px 0 0 -17px', borderRadius: '50%', background: 'var(--elec)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '26px', lineHeight: '1' });
+      c.a(e, [{ transform: 'translate(-260px,-120px) scale(.6)', opacity: 0 }, { transform: 'translate(-120px,-90px) scale(.9)', opacity: 1, offset: .35 }, { transform: 'translate(0,0) scale(1.2)', opacity: 1, offset: .85 }, { transform: 'translate(0,0) scale(.2)', opacity: 0 }], { dur: 900, ease: 'inOut' });
+      return 700;
+    },
+    pos(c, el, fx) { return R.K._chg(c, fx, '+', 'var(--heat)'); },
+    neg(c, el, fx) { return R.K._chg(c, fx, '−', 'var(--elec)'); },
+    _chg(c, fx, sym, col) {
+      const e = R.el(fx, sym, { left: '50%', top: '50%', width: '64px', height: '64px', margin: '-32px 0 0 -32px', borderRadius: '50%', border: `4px solid ${col}`, color: col, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '40px', lineHeight: '1', background: 'color-mix(in srgb, currentColor 14%, transparent)' });
+      c.a(e, [{ transform: 'scale(0)', opacity: 0 }, { transform: 'scale(1.25)', opacity: 1, offset: .5 }, { transform: 'scale(1)', opacity: 1, offset: .75 }, { transform: 'scale(.3)', opacity: 0 }], { dur: 900, ease: 'out' });
+      return 620;
+    },
+    push(c, el, fx) {   // 낱말 위에서 두 화살표가 가운데에서 바깥으로
+      const s = R.svg(fx, 170, 30, R.arrow(78, 15, 6, 15, 'var(--sound)') + R.arrow(92, 15, 164, 15, 'var(--sound)'), { left: '50%', bottom: '100%', marginLeft: '-85px', marginBottom: '2px' });
+            c.a(s, [{ transform: 'scaleX(.2)', opacity: 0 }, { transform: 'scaleX(1)', opacity: 1 }], { dur: 520, ease: 'out' });
+      return 260;
+    },
+    pull(c, el, fx) {   // 낱말 위에서 두 화살표가 바깥에서 가운데로
+      const s = R.svg(fx, 170, 30, R.arrow(4, 15, 76, 15, 'var(--sound)') + R.arrow(166, 15, 94, 15, 'var(--sound)'), { left: '50%', bottom: '100%', marginLeft: '-85px', marginBottom: '2px' });
+      c.a(s, [{ transform: 'scaleX(1.8)', opacity: 0 }, { transform: 'scaleX(1)', opacity: 1 }], { dur: 560, ease: 'inOut' });
+      return 380;
+    },
+    spark(c, el, fx) {
+      let g = ''; for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5, r1 = 26, r2 = 54; g += `<line x1="${60 + Math.cos(a) * r1}" y1="${60 + Math.sin(a) * r1}" x2="${60 + Math.cos(a) * r2}" y2="${60 + Math.sin(a) * r2}" stroke="${i % 2 ? 'var(--light)' : 'var(--elec)'}" stroke-width="5" stroke-linecap="round"/>`; }
+      const s = R.svg(fx, 120, 120, g, { left: '50%', top: '50%', margin: '-60px 0 0 -60px' });
+      c.a(s, [{ transform: 'scale(.3) rotate(-20deg)', opacity: 0 }, { transform: 'scale(1.3) rotate(10deg)', opacity: 1, offset: .5 }, { transform: 'scale(1.6) rotate(20deg)', opacity: 0 }], { dur: 700, ease: 'out' });
+      return 260;
+    },
+    rub(c, el, fx) {
+      const s = R.svg(fx, 120, 24, '<path d="M4 6H116M14 18H106" stroke="var(--t2)" stroke-width="5" stroke-linecap="round"/>', { left: '50%', top: '-30px', marginLeft: '-60px' });
+      c.a(s, [{ transform: 'translateX(-30px)' }, { transform: 'translateX(30px)' }, { transform: 'translateX(-30px)' }, { transform: 'translateX(30px)' }, { transform: 'translateX(0)', opacity: 0 }], { dur: 720, ease: 'inOut' });
+      R.K.spark(c, el, fx);
+      return 520;
+    },
+    flow(c, el, fx) {
+      const s = R.el(fx, '›››', { left: '-40px', right: '-40px', bottom: '-30px', height: '30px', color: 'var(--light)', fontWeight: '800', fontSize: '34px', lineHeight: '30px', letterSpacing: '6px', overflow: 'hidden', whiteSpace: 'nowrap' });
+      c.a(s, [{ transform: 'translateX(-80px)', opacity: 0 }, { transform: 'translateX(0)', opacity: 1, offset: .4 }, { transform: 'translateX(80px)', opacity: 0 }], { dur: 900, ease: 'linear' });
+      return 300;
+    },
+    volt(c, el, fx) {
+      for (let i = 0; i < 3; i++) {
+        const r = R.el(fx, '', { left: '50%', top: '50%', width: '60px', height: '60px', margin: '-30px 0 0 -30px', borderRadius: '50%', border: '4px solid var(--kin)' });
+        c.a(r, [{ transform: 'scale(.4)', opacity: .9 }, { transform: 'scale(2.6)', opacity: 0 }], { dur: 800, delay: i * 180, ease: 'out' });
+      }
+      return 300;
+    },
+    zigzag(c, el, fx) {
+      const s = R.svg(fx, 160, 30, '<path d="M2 15H22L32 3L48 27L64 3L80 27L96 3L112 27L128 3L138 15H158" fill="none" stroke="var(--sound)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>', { left: '50%', bottom: '-34px', marginLeft: '-80px' });
+      c.a(s.querySelector('path'), [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: 600, ease: 'inOut' });
+      return 380;
+    },
+    line(c, el, fx) {
+      const s = R.svg(fx, 90, 70, '<path d="M6 4V64H86" fill="none" stroke="var(--t3)" stroke-width="3"/><path d="M6 64L82 10" fill="none" stroke="var(--act)" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>', { left: '50%', bottom: '100%', marginLeft: '-45px', marginBottom: '4px' });
+      c.a(s.querySelectorAll('path')[1], [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: 650, ease: 'inOut' });
+      return 420;
+    },
+    curve(c, el, fx) {
+      const s = R.svg(fx, 90, 70, '<path d="M6 4V64H86" fill="none" stroke="var(--t3)" stroke-width="3"/><path d="M12 8Q18 52 82 58" fill="none" stroke="var(--act)" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>', { left: '50%', bottom: '100%', marginLeft: '-45px', marginBottom: '4px' });
+      c.a(s.querySelectorAll('path')[1], [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: 650, ease: 'inOut' });
+      return 420;
+    },
+    press(c, el, fx) {
+      const s = R.svg(fx, 120, 60, R.arrow(30, 0, 30, 50, 'var(--heat)', 6) + R.arrow(60, 0, 60, 50, 'var(--heat)', 6) + R.arrow(90, 0, 90, 50, 'var(--heat)', 6), { left: '50%', bottom: '100%', marginLeft: '-60px', marginBottom: '-6px' });
+      c.a(s, [{ transform: 'translateY(-40px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1, offset: .6 }, { transform: 'translateY(6px)', opacity: 1 }], { dur: 520, ease: 'in' });
+      c.a(el, [{ transform: 'translateY(0)' }, { transform: 'translateY(5px)', offset: .5 }, { transform: 'translateY(0)' }], { dur: 300, delay: 420 });
+      return 420;
+    },
+    hits(c, el, fx) {
+      const box = R.el(fx, '', { inset: '-12px -18px', border: '3px solid var(--t3)', borderRadius: '10px' });
+      for (let i = 0; i < 5; i++) {
+        const p = R.el(fx, '', { left: '50%', top: '50%', width: '14px', height: '14px', margin: '-7px 0 0 -7px', borderRadius: '50%', background: 'var(--kin)' });
+        const a = i * 1.26 + .4, dx = Math.cos(a) * (W(el) / 2 + 10), dy = Math.sin(a) * (H(el) / 2 + 6);
+        c.a(p, [{ transform: 'translate(0,0)' }, { transform: `translate(${dx}px,${dy}px)`, offset: .5 }, { transform: 'translate(0,0)', opacity: 0 }], { dur: 700, delay: i * 60, ease: 'linear' });
+      }
+      c.a(box, [{ opacity: 0 }, { opacity: 1, offset: .3 }, { opacity: 0 }], { dur: 900 });
+      return 420;
+    },
+    grow(c, el, fx) {
+      const b = R.el(fx, '', { inset: '-6px -10px', border: '3px dashed var(--light)', borderRadius: '12px' });
+      c.a(b, [{ transform: 'scale(.4)', opacity: 0 }, { transform: 'scale(1.25)', opacity: 1 }], { dur: 650, ease: 'out' });
+      return 300;
+    },
+    shrink(c, el, fx) {
+      const b = R.el(fx, '', { inset: '-6px -10px', border: '3px dashed var(--light)', borderRadius: '12px' });
+      c.a(b, [{ transform: 'scale(1.8)', opacity: 0 }, { transform: 'scale(.95)', opacity: 1 }], { dur: 650, ease: 'inOut' });
+      return 300;
+    },
+    up(c, el, fx) { return R.K._arr(c, fx, true); },
+    down(c, el, fx) { return R.K._arr(c, fx, false); },
+    _arr(c, fx, up) {
+      const s = R.svg(fx, 30, 60, up ? R.arrow(15, 58, 15, 4, 'var(--act)', 5) : R.arrow(15, 2, 15, 56, 'var(--act)', 5), { left: '100%', top: '50%', marginTop: '-30px', marginLeft: '8px' });
+      c.a(s, [{ transform: `translateY(${up ? 30 : -30}px)`, opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], { dur: 520, ease: 'out' });
+      return 260;
+    },
+    glow(c, el, fx) {
+      const g = R.el(fx, '', { left: '50%', top: '50%', width: '200px', height: '200px', margin: '-100px 0 0 -100px', borderRadius: '50%', background: 'radial-gradient(circle, color-mix(in srgb, var(--light) 70%, transparent) 0%, transparent 65%)' });
+      c.a(g, [{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1)', opacity: 1, offset: .5 }, { transform: 'scale(1.2)', opacity: 0 }], { dur: 1000, ease: 'out' });
+      return 300;
+    },
+    equal(c, el, fx) {
+      const a = R.el(fx, '', { left: '-30px', right: '-30px', top: '-16px', height: '6px', borderRadius: '3px', background: 'var(--act)' });
+      const b = R.el(fx, '', { left: '-30px', right: '-30px', bottom: '-16px', height: '6px', borderRadius: '3px', background: 'var(--act)' });
+      c.a(a, [{ transform: 'translateX(-60px) scaleX(.4)', opacity: 0 }, { transform: 'translateX(0) scaleX(1)', opacity: 1 }], { dur: 520, ease: 'out' });
+      c.a(b, [{ transform: 'translateX(60px) scaleX(.4)', opacity: 0 }, { transform: 'translateX(0) scaleX(1)', opacity: 1 }], { dur: 520, ease: 'out' });
+      return 260;
+    },
+  };
+})();
+
+}catch(e){console.error("[object 91_recap.js]",e)}
 </script>
 <script>
 /* ── s01_cover.html ── */
@@ -8537,18 +8811,23 @@ try{
 
 (function () {
   const ic = f => OBJ.energyIcon.html({ form: f, size: 44 });
+  const b = (w, kind, k, cls) => RK.b(w, kind, k, cls);
   const CARDS = [
-    ['전환', '<p>전기 에너지를 <b>빛 · 열 · 소리 · 운동</b> 에너지로 바꾸어 쓴다</p>', `<div class="ics">${ic('elec')}${ic('light')}${ic('heat')}${ic('sound')}${ic('kin')}</div>`],
-    ['에너지 손실', '<p>원한 일에 쓰이지 못한 에너지</p><p class="m">사라진 것이 아니라 다른 형태로 바뀐 것</p>', `<div class="big c-heat">${ic('heat')}</div>`],
-    ['소비 전력', '<p>1초 동안 사용하는 전기 에너지의 양</p><p class="m">단위 W · 1&nbsp;kW&nbsp;=&nbsp;1000&nbsp;W</p>', '<div class="big num">1 W = 1 <span class="c-elec">J</span>/s</div>'],
-    ['전력량', '<p>일정 시간 동안 사용한 전기 에너지 양</p><p class="m">단위 Wh · 1&nbsp;kWh&nbsp;=&nbsp;1000&nbsp;Wh</p>', '<div class="big num" style="font-size:40px">W × h = <span style="color:var(--act)">Wh</span></div>'],
-    ['에너지 효율', '<p>공급한 에너지 중 필요한 에너지로 바뀌는 비율</p><p class="m">성능이 같다면 소비 전력이 작은 쪽</p>', '<div class="big" style="font-size:40px">효율 <span style="color:var(--act)">↑</span></div>'],
+    ['전환', `<p>전기 에너지를 <b>${b('빛', 'glow', 1)} · ${b('열', 'spark', 1)} · ${b('소리', 'volt', 1)} · ${b('운동', 'flow', 1)}</b> 에너지로 바꾸어 쓴다</p>`, `<div class="ics">${ic('elec')}${ic('light')}${ic('heat')}${ic('sound')}${ic('kin')}</div>`],
+    ['에너지 손실', `<p>원한 일에 쓰이지 못한 에너지</p><p class="m">사라진 것이 아니라 다른 ${b('형태', 'pop', 2)}로 바뀐 것</p>`, `<div class="big c-heat">${ic('heat')}</div>`],
+    ['소비 전력', `<p>${b('1초', 'flow', 3)} 동안 사용하는 전기 에너지의 양</p><p class="m">단위 ${b('W', 'glow', 3)} · 1&nbsp;kW&nbsp;=&nbsp;1000&nbsp;W</p>`, `<div class="big num">1 W = 1 ${b('J', 'spark', 3, 'c-elec')}/s</div>`],
+    ['전력량', `<p>일정 ${b('시간', 'flow', 4)} 동안 사용한 전기 에너지 양</p><p class="m" data-step="4" data-delay="1300">단위 Wh · 1&nbsp;kWh&nbsp;=&nbsp;1000&nbsp;Wh</p>`, `<div class="big num" style="font-size:40px">W × h = ${b('Wh', 'pop', 4)}</div>`],
+    ['에너지 효율', `<p>공급한 에너지 중 필요한 에너지로 바뀌는 ${b('비율', 'grow', 5)}</p><p class="m">성능이 같다면 소비 전력이 ${b('작은', 'shrink', 5)} 쪽</p>`, `<div class="big" style="font-size:40px">효율 ${b('↑', 'up', 5)}</div>`],
   ];
   Deck.scene('s30_recap', {
     steps: 5,
     build(root) {
       root.querySelector('#s30_recap-cards').innerHTML = CARDS.map(([t, body, foot], i) =>
-        `<div class="rc" style="left:${120 + i * 341}px" data-step="${i + 1}" data-fx="up"><div class="no">${i + 1}</div><h3>${t}</h3>${body}${foot}</div>`).join('');
+        `<div class="rc" style="left:${120 + i * 341}px" data-in="${250 + i * 140}" data-fx="up"><div class="no">${i + 1}</div><h3>${t}</h3>${body}${foot}</div>`).join('');
+    },
+    async go(c, k) {
+      await RK.fill(c, k);
+      if (k === 5) c.sfx('chime', 300);
     },
   });
 })();
@@ -8581,6 +8860,62 @@ try{
 })();
 
 }catch(e){console.error("[slide s31_end.html]",e)}
+/* ── s90_quiz0.html ── */
+try{
+
+(function () {
+  Deck.scene('s90_quiz0', { steps: 0, async enter(c) { c.sfx('whoosh', 300); } });
+})();
+
+}catch(e){console.error("[slide s90_quiz0.html]",e)}
+/* ── s91_quiz1.html ── */
+try{
+
+(function () {
+  Deck.scene('s91_quiz1', {
+    steps: 1,
+    async enter(c) { QZ.fit(c); },
+    async go(c, k) { c.all(c.$$('.qz-ch li:not(.ok)'), [{ opacity: 1 }, { opacity: .38 }], { dur: 450 }); c.sfx('chime'); },
+  });
+})();
+
+}catch(e){console.error("[slide s91_quiz1.html]",e)}
+/* ── s92_quiz2.html ── */
+try{
+
+(function () {
+  Deck.scene('s92_quiz2', {
+    steps: 1,
+    async enter(c) { QZ.fit(c); },
+    async go(c, k) { c.all(c.$$('.qz-ch li:not(.ok)'), [{ opacity: 1 }, { opacity: .38 }], { dur: 450 }); c.sfx('chime'); },
+  });
+})();
+
+}catch(e){console.error("[slide s92_quiz2.html]",e)}
+/* ── s93_quiz3.html ── */
+try{
+
+(function () {
+  Deck.scene('s93_quiz3', {
+    steps: 1,
+    async enter(c) { QZ.fit(c); },
+    async go(c, k) { c.all(c.$$('.qz-ch li:not(.ok)'), [{ opacity: 1 }, { opacity: .38 }], { dur: 450 }); c.sfx('chime'); },
+  });
+})();
+
+}catch(e){console.error("[slide s93_quiz3.html]",e)}
+/* ── s94_quiz4.html ── */
+try{
+
+(function () {
+  Deck.scene('s94_quiz4', {
+    steps: 1,
+    async enter(c) { QZ.fit(c); },
+    async go(c, k) { c.all(c.$$('.qz-ch li:not(.ok)'), [{ opacity: 1 }, { opacity: .38 }], { dur: 450 }); c.sfx('chime'); },
+  });
+})();
+
+}catch(e){console.error("[slide s94_quiz4.html]",e)}
 </script>
 </body>
 </html>
