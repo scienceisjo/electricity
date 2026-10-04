@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>전지도 없이 전구를 켜 보자 · 가상 실험실</title>
+<title>전지도 없이 전구를 켜 보자 · 3D 가상 실험실</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <style>
@@ -11,6 +11,7 @@
  --abyss:#f2eade; --surface2:#fffcf4; --line:#c1ac82; --line-soft:#dccfae;
  --ink:#2e2315; --ink-dim:#5c4a33; --ink-mute:#96805c;
  --accent:#a05c2c; --gold:#8a5f24; --ok:#2c7a44; --neon:#ff6a2a;
+ --minus:#2f78c8; --plus:#c8402f;
  --disp:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
  --jua:"Jua",var(--disp); --gowun:"Gowun Dodum",var(--disp);
  --r:16px; --shadow:0 18px 50px -22px rgba(0,0,0,.5);
@@ -25,7 +26,7 @@ body{font-family:var(--disp);color:var(--ink);background:
 header.top{padding:20px 20px 2px; text-align:center}
 header.top h1{font-family:var(--jua); font-size:clamp(21px,4.2vw,32px); line-height:1.3}
 header.top h1 .em{color:var(--accent)}
-.wrap{max-width:900px; margin:0 auto; padding:10px 14px 40px}
+.wrap{max-width:980px; margin:0 auto; padding:10px 14px 40px}
 
 .steps{display:flex; gap:7px; justify-content:center; margin:13px 0 4px; flex-wrap:wrap}
 .st{display:flex; align-items:center; gap:7px; background:var(--surface2); border:1.5px solid var(--line-soft);
@@ -40,7 +41,7 @@ header.top h1 .em{color:var(--accent)}
  animation:stpop .5s} .st.success .no{background:var(--ok)}
 @keyframes stpop{0%{transform:scale(.6)}70%{transform:scale(1.12)}100%{transform:scale(1)}}
 
-#todo{margin:11px auto 0; max-width:740px; display:flex; gap:11px; align-items:center;
+#todo{margin:11px auto 0; max-width:780px; display:flex; gap:11px; align-items:center;
  background:#fbf1e4; border:1.6px solid var(--accent); border-radius:14px; padding:12px 18px;
  font-family:var(--gowun); font-size:15.5px; line-height:1.6; color:var(--ink-dim)}
 #todo .ic{font-size:20px; flex:none} #todo b{color:var(--accent); font-family:var(--disp)}
@@ -50,18 +51,81 @@ header.top h1 .em{color:var(--accent)}
 .card-h{display:flex; align-items:center; gap:9px; padding:10px 16px; border-bottom:1px dashed var(--line-soft)}
 .card-h .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
 .card-h h2{font-family:var(--jua); font-size:16px; color:var(--gold)}
-.card-h .hint{margin-left:auto; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun)}
+.card-h .hint{margin-left:auto; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun); text-align:right}
+@media (max-width:560px){ .card-h .hint{display:none} }
 
-#lab{display:block; width:100%; height:auto; aspect-ratio:820/480; touch-action:none;
- user-select:none; -webkit-user-select:none; cursor:default}
-.labbox{background:#0f0c09; line-height:0}
+/* ── 3D 무대 ── */
+#stage{position:relative; width:100%; height:clamp(330px,56vw,520px); background:#0c0a08; overflow:hidden;
+ user-select:none; -webkit-user-select:none}
+#stage canvas{display:block; width:100% !important; height:100% !important; touch-action:none; outline:none}
+#labels{position:absolute; inset:0; pointer-events:none; overflow:hidden}
+.lbl{position:absolute; left:0; top:0; white-space:nowrap; pointer-events:none;
+ font-family:var(--gowun); font-size:13px; color:#d8c9ae; text-shadow:0 1px 3px rgba(0,0,0,.9);
+ transition:opacity .25s; will-change:transform}
+.lbl.k{font-weight:700; font-size:13.5px; padding:2px 8px; border-radius:8px; background:rgba(10,8,6,.62)}
+.lbl.minus{color:#a9d0f7} .lbl.plus{color:#f6aa9c} .lbl.warn{color:#ffd28a}
+.lbl.big{font-size:15px}
+#stage.light .lbl{color:#4a3a26; text-shadow:0 1px 2px rgba(255,255,255,.9)}
+#stage.light .lbl.k{background:rgba(255,252,244,.86)}
+#stage.light .lbl.minus{color:#1f5c9e} #stage.light .lbl.plus{color:#a8321f} #stage.light .lbl.warn{color:#8a5f24}
+
+.sbtn{position:absolute; top:10px; z-index:5; font-family:var(--gowun); font-size:12.5px; padding:6px 10px;
+ border-radius:9px; border:1px solid rgba(255,255,255,.28); background:rgba(20,16,12,.62); color:#f3e6cf; cursor:pointer}
+.sbtn:hover{background:rgba(40,30,20,.85)}
+#camReset{right:10px} #fsBtn{right:122px}
+#stage.light .sbtn{background:rgba(255,252,244,.85); color:var(--ink-dim); border-color:var(--line)}
+
+#tally{position:absolute; left:10px; top:10px; z-index:4; background:rgba(14,11,8,.78); color:#f1e4cc;
+ border:1px solid rgba(255,255,255,.18); border-radius:11px; padding:8px 11px; font-family:var(--gowun);
+ font-size:12.5px; line-height:1.55; pointer-events:none}
+#tally b{font-family:var(--jua); font-weight:400}
+#tally .row{display:flex; gap:8px; justify-content:space-between}
+#tally .n{font-family:var(--jua)} #tally .m{color:#9cc8f5} #tally .p{color:#f4a497}
+#tally .net{min-width:46px; text-align:right; font-family:var(--jua)}
+#tally .t{font-size:11.5px; opacity:.75; margin-bottom:2px}
+#stage.light #tally{background:rgba(255,252,244,.9); color:var(--ink); border-color:var(--line)}
+#stage.light #tally .m{color:#1f5c9e} #stage.light #tally .p{color:#a8321f}
+#legend{padding:7px 14px; font-family:var(--gowun); font-size:13px; line-height:1.55; color:var(--ink-dim);
+ border-top:1px dashed var(--line-soft); background:rgba(255,252,244,.9)}
+#legend i{display:inline-block; width:13px; height:13px; border-radius:50%; vertical-align:-2px; margin-right:3px;
+ color:#fff; font-style:normal; font-size:11px; line-height:13px; text-align:center; font-weight:700}
+#legend .lm{background:var(--minus)} #legend .lp{background:var(--plus)}
+
+#cap{position:absolute; left:12px; right:12px; bottom:58px; z-index:6; background:rgba(16,12,9,.86);
+ color:#fff3dc; border:1px solid rgba(255,200,140,.35); border-radius:13px; padding:10px 15px;
+ font-family:var(--gowun); font-size:15.5px; line-height:1.6; box-shadow:0 10px 30px -10px rgba(0,0,0,.6);
+ transition:opacity .25s}
+#cap b{color:#ffcf8f; font-family:var(--disp)}
+#cap .no{display:inline-block; font-family:var(--jua); color:#ffb066; margin-right:6px}
+#stage.light #cap{background:rgba(255,252,244,.95); color:var(--ink); border-color:var(--accent)}
+#stage.light #cap b{color:var(--accent)}
+#playbar{position:absolute; left:0; right:0; bottom:0; z-index:6; display:flex; gap:7px; justify-content:center;
+ align-items:center; padding:9px; background:linear-gradient(transparent, rgba(0,0,0,.6))}
+.pb{font-family:var(--jua); font-size:14px; padding:7px 13px; border-radius:10px; border:1.5px solid rgba(255,255,255,.35);
+ background:rgba(20,16,12,.78); color:#fff3dc; cursor:pointer}
+.pb:hover{border-color:#ffb066}
+.pb.on{background:#a05c2c; border-color:#a05c2c}
+#pbDots{display:flex; gap:5px; margin:0 4px}
+#pbDots span{width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.3)}
+#pbDots span.on{background:#ffb066} #pbDots span.done{background:rgba(255,176,102,.55)}
+#cap[hidden], #playbar[hidden], #tally[hidden], #legend[hidden]{display:none}
+#stage.narrow #cap{font-size:13.5px; line-height:1.5; padding:7px 10px; left:8px; right:8px; bottom:50px}
+#stage.narrow #tally{font-size:11px; padding:5px 8px} #stage.narrow .sbtn{font-size:11.5px; padding:5px 8px}
+#stage.narrow #fsBtn{right:100px} #stage.narrow .pb{font-size:13px; padding:6px 9px}
+#noGL{position:absolute; inset:0; display:grid; place-items:center; text-align:center; padding:30px;
+ color:#f1e4cc; font-family:var(--gowun); font-size:15px; line-height:1.7}
+#noGL[hidden]{display:none}
 
 .acts{display:flex; gap:9px; flex-wrap:wrap; justify-content:center; margin-top:14px}
-.btn{font-family:var(--jua); font-size:15.5px; padding:11px 22px; border-radius:12px; cursor:pointer;
+.btn{font-family:var(--jua); font-size:15.5px; padding:11px 20px; border-radius:12px; cursor:pointer;
  border:1.8px solid var(--line); background:var(--surface2); color:var(--ink-dim); transition:.15s}
 .btn:hover:not(:disabled){border-color:var(--accent); color:var(--accent)}
 .btn.primary{background:var(--accent); color:#fdf6e8; border-color:var(--accent)}
 .btn.primary:hover:not(:disabled){filter:brightness(1.08); color:#fdf6e8}
+.btn.ask{background:#2c6e5f; border-color:#2c6e5f; color:#f2fbf7}
+.btn.ask:hover:not(:disabled){filter:brightness(1.1); color:#fff}
+.btn.pulse{animation:bpulse 1.2s infinite}
+@keyframes bpulse{0%,100%{box-shadow:0 0 0 0 rgba(44,110,95,.55)}55%{box-shadow:0 0 0 11px rgba(44,110,95,0)}}
 .btn:disabled{opacity:.36; cursor:not-allowed}
 .btn[hidden]{display:none}
 .nextbox{margin-top:12px; padding:12px 15px; border-radius:12px; background:rgba(44,110,95,.13);
@@ -70,6 +134,58 @@ header.top h1 .em{color:var(--accent)}
 #count{margin:13px auto 0; max-width:740px; text-align:center; font-family:var(--gowun);
  font-size:15px; color:var(--ink-dim)}
 #count b{font-family:var(--jua); font-size:19px; color:var(--neon)}
+
+/* ── 답 찾기 ── */
+#ansHead{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:12px; background:#eaf4f0;
+ border:1.6px solid #2c6e5f; border-radius:14px; padding:9px 12px}
+#ansHead[hidden]{display:none}
+#ansHead .t{font-family:var(--jua); font-size:17px; color:#1f5c4f; margin-right:auto}
+#ansHead .t small{font-family:var(--gowun); font-size:13px; color:#3d6b60; margin-left:6px}
+#ansHead .btn{font-size:14px; padding:8px 14px}
+#grid{display:block}
+body.ans #grid{display:grid; grid-template-columns:minmax(0,1.42fr) minmax(280px,1fr); gap:12px; align-items:start}
+body.ans #labUI, body.ans #acts, body.ans #count{display:none}
+@media (max-width:780px){ body.ans #grid{display:block} }
+#ansPanel{margin-top:13px; background:rgba(255,252,244,.94); border:1.5px solid #2c6e5f; border-radius:var(--r);
+ box-shadow:var(--shadow); display:flex; flex-direction:column; overflow:hidden}
+#ansPanel[hidden]{display:none}
+.ap-search{display:flex; gap:7px; padding:11px 12px 8px; border-bottom:1px dashed var(--line-soft)}
+.ap-search input{flex:1; min-width:0; font-family:var(--gowun); font-size:15px; padding:9px 11px; border-radius:10px;
+ border:1.5px solid var(--line); background:#fff; color:var(--ink)}
+.ap-search input:focus{outline:none; border-color:#2c6e5f; box-shadow:0 0 0 3px rgba(44,110,95,.15)}
+.ap-search button{font-family:var(--jua); font-size:14.5px; padding:0 14px; border-radius:10px; border:1.5px solid #2c6e5f;
+ background:#2c6e5f; color:#fff; cursor:pointer}
+#qMsg{font-family:var(--gowun); font-size:13.5px; color:#2c6e5f; padding:6px 13px 0; line-height:1.5}
+#qMsg:empty{display:none}
+.ap-scroll{overflow-y:auto; padding:10px 12px 14px; flex:1; min-height:0}
+#ansCard{background:#fff; border:1.5px solid var(--line); border-radius:13px; padding:13px 15px 12px; margin-bottom:12px}
+#ansCard .k{font-family:var(--jua); font-size:12.5px; color:#2c6e5f}
+#ansCard h3{font-family:var(--jua); font-size:18px; line-height:1.4; margin:2px 0 7px; color:var(--ink)}
+#ansCard p{font-family:var(--gowun); font-size:15px; line-height:1.72; color:var(--ink-dim); margin-top:6px}
+#ansCard p b{color:var(--ink); font-family:var(--disp)}
+#ansCard ol{font-family:var(--gowun); font-size:15px; line-height:1.7; color:var(--ink-dim); margin:6px 0 0 20px}
+#ansCard ol b{color:var(--ink); font-family:var(--disp)}
+#ansCard .core{margin-top:10px; padding:8px 11px; border-radius:10px; background:#fbf1e4; border:1.3px solid var(--accent);
+ font-family:var(--gowun); font-size:14.5px; color:var(--ink)}
+#ansCard .core b{color:var(--accent)}
+#ansCard .play{margin-top:10px; font-family:var(--jua); font-size:14px; padding:7px 13px; border-radius:10px;
+ border:1.5px solid #2c6e5f; background:#eaf4f0; color:#1f5c4f; cursor:pointer}
+#ansCard table{width:100%; border-collapse:collapse; margin-top:8px; font-family:var(--gowun); font-size:13.5px}
+#ansCard th,#ansCard td{border:1px solid var(--line-soft); padding:5px 7px; text-align:left; vertical-align:top; line-height:1.5}
+#ansCard th{background:#f5ecda; font-family:var(--jua); font-weight:400; color:var(--gold)}
+.qall{display:block; width:100%; text-align:left; font-family:var(--jua); font-size:15px; padding:11px 13px; border-radius:12px;
+ border:1.6px solid var(--accent); background:#fbf1e4; color:var(--accent); cursor:pointer; margin-bottom:10px}
+.qall.on{background:var(--accent); color:#fff}
+.qg-t{font-family:var(--jua); font-size:13.5px; color:var(--gold); margin:10px 2px 6px}
+.qchips{display:flex; flex-direction:column; gap:6px}
+.qc{text-align:left; font-family:var(--gowun); font-size:14.5px; line-height:1.45; padding:8px 11px; border-radius:10px;
+ border:1.4px solid var(--line-soft); background:#fff; color:var(--ink-dim); cursor:pointer; transition:.15s}
+.qc:hover{border-color:#2c6e5f; color:#1f5c4f}
+.qc.on{border-color:#2c6e5f; background:#2c6e5f; color:#fff}
+.qc.hit{border-color:#e08a2c; box-shadow:0 0 0 3px rgba(224,138,44,.22); background:#fff8ec}
+.qc.hit.on{background:#2c6e5f}
+.ap-foot{font-family:var(--gowun); font-size:13px; color:var(--ink-mute); line-height:1.6; margin-top:12px; padding-top:9px;
+ border-top:1px dashed var(--line-soft)}
 
 #pop{position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
  background:rgba(20,14,8,.62); padding:20px}
@@ -85,6 +201,7 @@ header.top h1 .em{color:var(--accent)}
 .popbox .body b{color:var(--ink); font-family:var(--disp)}
 .popbox ol{text-align:left; margin:12px 4px 0 22px; font-family:var(--gowun); font-size:15.5px;
  line-height:1.8; color:var(--ink-dim)}
+.popbox .small{font-family:var(--gowun); font-size:13.5px; color:var(--ink-mute); margin-top:10px; line-height:1.6}
 .poprow{display:flex; gap:10px; justify-content:center; margin-top:19px; flex-wrap:wrap}
 .qbox{margin-top:16px; padding:15px 18px; border-radius:14px; border:1.6px solid var(--accent);
  background:rgba(160,92,44,.07); font-family:var(--gowun); font-size:16.5px; line-height:1.65}
@@ -101,12 +218,34 @@ header.top h1 .em{color:var(--accent)}
  line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;
  border-top:1px solid rgba(128,128,128,.25)}
 
+/* 전체 화면 */
+.stagecard:fullscreen{border-radius:0; margin:0; display:flex; flex-direction:column; background:#0c0a08}
+.stagecard:fullscreen #stage{height:auto; flex:1}
+
 /* 수업 페이지 안에 끼워 넣을 때 — 제목·푸터·돌아가기를 감춘다 */
 html.embed body{background:none}
 html.embed header.top, html.embed .backline, html.embed #app-credit{display:none}
-html.embed .wrap{padding:4px 12px 12px; max-width:840px}
+html.embed .wrap{padding:4px 12px 12px; max-width:none}
 html.embed .card{box-shadow:none}
+html.embed #stage{height:clamp(320px,50vw,440px)}
+
+/* 갤러리 썸네일용 — 실험판만 화면 가득 (?thumb=1) */
+html.thumb header.top, html.thumb #labUI, html.thumb #ansHead, html.thumb #acts, html.thumb #count,
+html.thumb .backline, html.thumb #app-credit, html.thumb .card-h, html.thumb #legend, html.thumb .sbtn,
+html.thumb #labels, html.thumb #tally, html.thumb #pop{display:none !important}
+html.thumb body{background:#0c0a08}
+html.thumb .wrap{padding:0; max-width:none}
+html.thumb .card{margin:0; border:0; border-radius:0; box-shadow:none}
+html.thumb #stage{height:100vh !important}
+html.embed body.ans #stage{height:clamp(320px,52vw,470px)}
 </style>
+<!-- CLICK SCIENCE 갤러리 카드 — 이 페이지를 배포(push)하면 sim-lab 에 자동으로 올라간다(sim-lab/tools/sync_labs.py) -->
+<script type="application/json" id="click-science">
+{"id":"electrophorus", "subject":"phys", "unit":"전기와 자기", "grade":"중2", "tags":["sim","3d"],
+ "title":"전지 없이 전구 켜기 3D",
+ "desc":"털가죽으로 문지른 스타이로폼 접시에 수수깡을 잡고 알루미늄 접시를 올려 네온전구를 켭니다. 실험 뒤에는 접시를 뒤집는 까닭, 수수깡을 잡는 까닭처럼 생략된 과정을 전자가 보이는 3D로 확인합니다.",
+ "shot":"?thumb=1", "added":"2026-10-04"}
+</script>
 </head>
 <body>
 
@@ -115,20 +254,61 @@ html.embed .card{box-shadow:none}
 </header>
 
 <div class="wrap">
-  <div class="steps" id="steps"></div>
-  <div id="todo"><span class="ic">👉</span><span id="todoTx">준비 중…</span></div>
-
-  <div class="card">
-    <div class="card-h"><span class="dot"></span><h2>실험대</h2>
-      <span class="hint">도구를 끌어다 옮기세요</span></div>
-    <div class="labbox"><svg id="lab" viewBox="0 0 820 480" width="820" height="480" role="img"
-      aria-label="어두운 실험실 책상 위에 스타이로폼 접시, 털가죽, 수수깡 손잡이가 달린 알루미늄 접시, 네온전구가 놓여 있다. 도구를 끌어다 실험 순서를 따라 하면 네온전구가 순간적으로 켜진다."></svg></div>
+  <div id="labUI">
+    <div class="steps" id="steps"></div>
+    <div id="todo"><span class="ic">👉</span><span id="todoTx">준비 중…</span></div>
   </div>
 
-  <div class="acts">
+  <div id="ansHead" hidden>
+    <span class="t">🔎 내 질문의 답 찾기<small>전자가 보이는 3D로 숨은 과정을 보여 줘요</small></span>
+    <button class="btn" id="btnFree">🧪 전자 보며 직접 다시 해 보기</button>
+    <button class="btn" id="btnBack">← 실험으로 돌아가기</button>
+  </div>
+
+  <div id="grid">
+    <div class="card stagecard" id="stageCard">
+      <div class="card-h"><span class="dot"></span><h2>3D 실험대</h2>
+        <span class="hint" id="stageHint">도구를 끌어다 옮기세요 · 빈 곳을 끌면 돌려 볼 수 있어요</span></div>
+      <div id="stage">
+        <div id="labels"></div>
+        <div id="tally" hidden></div>
+        <button class="sbtn" id="camReset" type="button">⌖ 처음 시점</button>
+        <button class="sbtn" id="fsBtn" type="button">⛶ 크게 보기</button>
+        <div id="cap" hidden></div>
+        <div id="playbar" hidden>
+          <button class="pb" id="pbPrev" type="button">⏮</button>
+          <button class="pb" id="pbReplay" type="button">⟲ 다시 보기</button>
+          <div id="pbDots"></div>
+          <button class="pb" id="pbSlow" type="button">🐢 느리게</button>
+          <button class="pb" id="pbNext" type="button">⏭</button>
+        </div>
+        <div id="noGL" hidden>이 기기에서는 3D 화면을 그릴 수 없어요.<br>크롬 브라우저 최신판에서 다시 열어 보세요.</div>
+      </div>
+      <div id="legend" hidden></div>
+    </div>
+
+    <aside id="ansPanel" hidden>
+      <div class="ap-search">
+        <input id="qIn" type="text" autocomplete="off" placeholder="내 질문을 적어 보세요 (예: 접시를 왜 뒤집어요?)">
+        <button id="qGo" type="button">찾기</button>
+      </div>
+      <div id="qMsg"></div>
+      <div class="ap-scroll" id="apScroll">
+        <div id="ansCard"></div>
+        <button class="qall" id="qAll" type="button">▶ 처음부터 끝까지 — 숨은 과정 모두 보기</button>
+        <div id="qList"></div>
+        <div class="ap-foot">목록에 없는 질문은 <b>아주 좋은 질문</b>이에요. 학습지에 적어 두었다가 선생님께 가져오세요.</div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="acts" id="acts">
     <button class="btn primary" id="btnFlip" hidden>접시 뒤집어 놓기</button>
-    <button class="btn primary" id="btnLift" hidden>접시를 들었다 다시 놓기</button>
+    <button class="btn primary" id="btnLift" hidden>⬆ 수수깡 잡고 들어 올리기</button>
+    <button class="btn primary" id="btnLower" hidden>⬇ 다시 내려놓기</button>
     <button class="btn" id="btnSlow" hidden>🐢 느리게 다시 보기</button>
+    <button class="btn ask" id="btnAns" hidden>🔎 내가 한 질문에 대한 답이 있나 확인하기</button>
+    <button class="btn" id="btnXray" hidden>⚛ 전하 보기: 끔</button>
     <button class="btn" id="btnLight">💡 교실 불 켜기</button>
     <button class="btn" id="btnReset">↺ 처음부터</button>
   </div>
@@ -140,640 +320,1836 @@ html.embed .card{box-shadow:none}
 
 <div id="pop"><div class="popbox" id="popbox"></div></div>
 
-<footer id="app-credit">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-09-01</span></footer>
+<footer id="app-credit">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-10-04</span></footer>
 
+<script src="lib/three.min.js"></script>
+<script src="lib/OrbitControls.js"></script>
 <script>
 "use strict";
 (function(){
 
-var lab = document.getElementById('lab');
-
-/* 같은 화면이 매번 똑같이 나오도록 씨앗 난수를 쓴다 */
-var seed = 20260901;
-function rnd(){ seed = (seed*1664525 + 1013904223) % 4294967296; return seed/4294967296; }
-
-/* ═══════════════════════════════════════════════════════════
-   무대 좌표
-   ═══════════════════════════════════════════════════════════ */
-var DESK_Y  = 268;                       /* 책상 윗면이 시작되는 높이 */
-var STY = {x:270, y:372, rx:132, ry:34};  /* 스타이로폼 접시 */
-var ALU_ON  = {x:270, y:344, rx:106, ry:28};
-var ALU_HOME= {x:630, y:330};
-var FUR_HOME= {x:640, y:414};
-var NEON_HOME={x:556, y:238};
-var TOUCH   = {x:ALU_ON.x + ALU_ON.rx - 6, y:ALU_ON.y - 4};   /* 알루미늄 가장자리 */
-
-var S = {
-  step:0,            /* 0 문지르기 · 1 뒤집기 · 2 접시 올리기 · 3 전구 대기 · 4 끝 */
-  rub:0,             /* 문지른 거리 */
-  flipped:false, aluOn:false, armed:false,
-  lit:0, dark:true,
-  fur:{x:FUR_HOME.x, y:FUR_HOME.y},
-  alu:{x:ALU_HOME.x, y:ALU_HOME.y},
-  neon:{x:NEON_HOME.x, y:NEON_HOME.y}
-};
-var RUB_NEED = 900;                       /* 이만큼 문지르면 충분 */
-function rubPct(){ return Math.min(1, S.rub / RUB_NEED); }
-
 var EMBED = /[?&]embed=1/.test(location.search);
 if(EMBED) document.documentElement.classList.add('embed');
+var THUMB = /[?&]thumb=1/.test(location.search);   /* 갤러리 썸네일 찍기 */
+if(THUMB) document.documentElement.classList.add('thumb');
+function $(id){ return document.getElementById(id); }
+var stageEl = $('stage');
 
-/* ── 전하 표시 ────────────────────────────────────────────
-   지난 차시에 배운 것(마찰전기 · 정전기 유도)까지만 보여 준다.
-   스타이로폼은 부도체라 전하가 알루미늄으로 건너가지 않는다 —
-   움직이는 것은 알루미늄 접시 안에 원래 있던 전하다. */
-var STY_PTS = [], ALU_PTS = [], PLUS_PTS = [];
+/* ═══════════════════════════════════════════════════════════
+   모형의 약속 (화면 뒤 계산)
+   · 전하 알갱이 하나 = 실제로는 셀 수 없이 많은 전하 묶음
+   · 털가죽 → 스타이로폼으로 옮겨 가는 것은 전자(−)뿐 — (+)는 움직이지 않는다
+   · 스타이로폼은 부도체: 문질러 생긴 (−)는 제자리에 붙어 있다(알루미늄으로 넘어가지 않음)
+   · 알루미늄은 도체: 자유 전자만 움직이고 (+)는 제자리
+   · 정전기 유도의 세기 A = round(스타이로폼 (−) 수 × 가까움 k)
+       k = 1/(1+(h/0.2)²) × 겹침 — 맞닿으면 1, 들어 올리면 0 에 가깝다
+       뒤집지 않으면(문지른 면이 책상 쪽) k × 0.42 — 멀고 책상 쪽을 향해 약해진다
+   · 손(몸)과 이어지면 접시의 남는 전하 q 가 A 와 같아질 때까지 전자가 오간다(q→A)
+       q < A → 남는 전자가 손 쪽으로 나간다 / q > A → 손 쪽에서 전자가 들어온다
+   · 네온전구는 전자가 지나가는 동안만 빛나고, 전자가 밖에서 들어오는 쪽 전극 둘레가 빛난다
+   ═══════════════════════════════════════════════════════════ */
+
+if(!window.THREE){ $('noGL').hidden = false; return; }
+var renderer;
+try{ renderer = new THREE.WebGLRenderer({antialias:true}); }
+catch(err){ $('noGL').hidden = false; return; }
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stageEl.insertBefore(renderer.domElement, stageEl.firstChild);
+
+function V(x,y,z){ return new THREE.Vector3(x,y,z); }
+function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+function ease(t){ return t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
+function lerp(a,b,t){ return a+(b-a)*t; }
+var seed = 20261004;
+function rnd(){ seed = (seed*1664525 + 1013904223) % 4294967296; return seed/4294967296; }
+
+var scene = new THREE.Scene();
+var cam = new THREE.PerspectiveCamera(36, 16/9, 0.03, 80);
+var CAMS = {
+  start: {p:V(0.85, 2.55, 4.75), t:V(0.35, 0.5, 0.05)},
+  held:  {p:V(0.75, 2.05, 4.75), t:V(0.25, 0.8, -0.05)},
+  stack: {p:V(0.35, 1.75, 3.35), t:V(-0.15, 0.36, 0.1)}
+};
+cam.position.copy(CAMS.start.p);
+var ctl = new THREE.OrbitControls(cam, renderer.domElement);
+ctl.target.copy(CAMS.start.t);
+ctl.enableDamping = true; ctl.dampingFactor = .12; ctl.enablePan = false;
+ctl.minDistance = 0.8; ctl.maxDistance = 9; ctl.maxPolarAngle = 1.52;
+ctl.update();
+
+/* ── 빛 ── */
+var hemi = new THREE.HemisphereLight(0xfff1dc, 0x2a1f15, .5); scene.add(hemi);
+var key = new THREE.DirectionalLight(0xfff0d8, .9);
+key.position.set(-2.4, 6, 3.6); key.castShadow = true;
+key.shadow.mapSize.set(1024,1024);
+key.shadow.camera.left = -4; key.shadow.camera.right = 4; key.shadow.camera.top = 4; key.shadow.camera.bottom = -4;
+key.shadow.camera.near = .5; key.shadow.camera.far = 16; key.shadow.bias = -0.0008;
+scene.add(key);
+var fill = new THREE.DirectionalLight(0xbfd4ff, .22); fill.position.set(4, 3, -3); scene.add(fill);
+
+/* ── 질감 ── */
+function canvasTex(w,h,draw){
+  var c = document.createElement('canvas'); c.width = w; c.height = h;
+  draw(c.getContext('2d'), w, h);
+  var t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t;
+}
+var TEX = {
+  wood: canvasTex(1024,512,function(g,w,h){
+    g.fillStyle = '#7d5834'; g.fillRect(0,0,w,h);
+    for(var i=0;i<110;i++){
+      var y = rnd()*h;
+      g.strokeStyle = 'rgba('+(40+rnd()*40|0)+','+(22+rnd()*20|0)+',10,'+(.10+rnd()*.2).toFixed(2)+')';
+      g.lineWidth = 1+rnd()*3; g.beginPath(); g.moveTo(0,y);
+      for(var x=0;x<=w;x+=24) g.lineTo(x, y+Math.sin(x*.009+i)*4+Math.sin(x*.0027+i*1.7)*9);
+      g.stroke();
+    }
+  }),
+  foam: canvasTex(256,256,function(g,w,h){
+    g.fillStyle = '#f4f2ec'; g.fillRect(0,0,w,h);
+    for(var i=0;i<1400;i++){
+      var x=rnd()*w, y=rnd()*h, r=1+rnd()*2.6;
+      g.fillStyle = rnd()<.5 ? 'rgba(255,255,255,.9)' : 'rgba(200,196,184,.35)';
+      g.beginPath(); g.arc(x,y,r,0,7); g.fill();
+    }
+  }),
+  stick: canvasTex(64,256,function(g,w,h){
+    g.fillStyle = '#dcc68e'; g.fillRect(0,0,w,h);
+    for(var i=0;i<9;i++){ g.fillStyle = 'rgba(150,118,60,.35)'; g.fillRect(i*7+rnd()*3, 0, 1.5, h); }
+    for(var j=0;j<3;j++){ g.fillStyle = 'rgba(160,128,70,.45)'; g.fillRect(0, 40+j*80, w, 3); }
+  }),
+  fur: canvasTex(256,128,function(g,w,h){
+    g.fillStyle = '#5e4027'; g.fillRect(0,0,w,h);
+    for(var i=0;i<900;i++){
+      var x=rnd()*w, y=rnd()*h;
+      g.strokeStyle = 'rgba('+(120+rnd()*60|0)+','+(85+rnd()*40|0)+',50,.5)';
+      g.lineWidth = 1; g.beginPath(); g.moveTo(x,y); g.lineTo(x+rnd()*4-2, y+5+rnd()*6); g.stroke();
+    }
+  }),
+  glow: canvasTex(128,128,function(g){
+    var gr = g.createRadialGradient(64,64,0,64,64,64);
+    gr.addColorStop(0,'rgba(255,236,200,1)'); gr.addColorStop(.25,'rgba(255,150,70,.9)');
+    gr.addColorStop(.6,'rgba(255,80,20,.35)'); gr.addColorStop(1,'rgba(255,60,0,0)');
+    g.fillStyle = gr; g.fillRect(0,0,128,128);
+  }),
+  ring: canvasTex(128,128,function(g){
+    g.strokeStyle = 'rgba(255,214,120,.95)'; g.lineWidth = 9; g.beginPath(); g.arc(64,64,50,0,7); g.stroke();
+  }),
+  minus: chargeTex(-1), plus: chargeTex(1)
+};
+TEX.wood.wrapS = TEX.wood.wrapT = THREE.RepeatWrapping; TEX.wood.repeat.set(1.6,1);
+function chargeTex(sign){
+  return canvasTex(128,128,function(g){
+    g.beginPath(); g.arc(64,64,54,0,7);
+    g.fillStyle = sign<0 ? '#2f78c8' : '#c8402f'; g.fill();
+    g.lineWidth = 8; g.strokeStyle = 'rgba(255,255,255,.92)'; g.stroke();
+    g.strokeStyle = '#fff'; g.lineWidth = 13; g.lineCap = 'round'; g.beginPath();
+    g.moveTo(36,64); g.lineTo(92,64); if(sign>0){ g.moveTo(64,36); g.lineTo(64,92); }
+    g.stroke();
+  });
+}
+/* 금속이 빛을 받아 보이도록 — 간단한 둘레 그림 */
+var ENV = (function(){
+  function face(top, bot){
+    var c = document.createElement('canvas'); c.width = c.height = 64;
+    var g = c.getContext('2d'), gr = g.createLinearGradient(0,0,0,64);
+    gr.addColorStop(0, top); gr.addColorStop(.55, '#8f877c'); gr.addColorStop(1, bot);
+    g.fillStyle = gr; g.fillRect(0,0,64,64); return c;
+  }
+  var side = face('#fff6e6','#2b241d');
+  var up = document.createElement('canvas'); up.width = up.height = 64;
+  var ug = up.getContext('2d'); ug.fillStyle = '#fffaf0'; ug.fillRect(0,0,64,64);
+  var dn = document.createElement('canvas'); dn.width = dn.height = 64;
+  var dg = dn.getContext('2d'); dg.fillStyle = '#3a2c1e'; dg.fillRect(0,0,64,64);
+  var t = new THREE.CubeTexture([side, side, up, dn, side, side]); t.needsUpdate = true; return t;
+})();
+
+var M = {
+  desk:  new THREE.MeshStandardMaterial({map:TEX.wood, roughness:.8}),
+  wall:  new THREE.MeshStandardMaterial({color:0x1b1612, roughness:1}),
+  foam:  new THREE.MeshStandardMaterial({color:0xf3f1ea, roughness:.93, side:THREE.DoubleSide}),
+  alu:   new THREE.MeshStandardMaterial({color:0xd9dde2, metalness:.85, roughness:.3, envMap:ENV, envMapIntensity:1, side:THREE.DoubleSide}),
+  stick: new THREE.MeshStandardMaterial({color:0xdcc68e, map:TEX.stick, roughness:.85}),
+  tape:  new THREE.MeshStandardMaterial({color:0xf3f1ea, roughness:.5}),
+  skin:  new THREE.MeshStandardMaterial({color:0xe3b18b, roughness:.62}),
+  sleeve:new THREE.MeshStandardMaterial({color:0x2d3f63, roughness:.85}),
+  lead:  new THREE.MeshStandardMaterial({color:0xcfd2d6, metalness:.8, roughness:.28, envMap:ENV}),
+  glass: new THREE.MeshStandardMaterial({color:0xeef3f6, transparent:true, opacity:.26, roughness:.08, depthWrite:false}),
+  seal:  new THREE.MeshStandardMaterial({color:0xa8b0a0, transparent:true, opacity:.7, roughness:.3}),
+  elec:  new THREE.MeshStandardMaterial({color:0x8d9399, metalness:.7, roughness:.4}),
+  fur:   new THREE.MeshStandardMaterial({map:TEX.fur, roughness:1}),
+  hair:  new THREE.MeshStandardMaterial({color:0x8a6640, roughness:1})
+};
+
+/* ── 책상 · 벽 ── */
+var desk = new THREE.Mesh(new THREE.BoxGeometry(9.5, .16, 5.4), M.desk);
+desk.position.set(.3, -.08, 0); desk.receiveShadow = true; scene.add(desk);
+var wall = new THREE.Mesh(new THREE.PlaneGeometry(30, 12), M.wall);
+wall.position.set(0, 5, -2.75); scene.add(wall);
+
+/* ═══════════════════════════════════════════════════════════
+   스타이로폼 접시 — 원점 = 바깥 바닥면 가운데 (바로 놓으면 바닥면이 책상에 닿는다)
+   ═══════════════════════════════════════════════════════════ */
+var FOAM_C = V(-0.35, 0, 0);
+var foamG = new THREE.Group(); scene.add(foamG);
 (function(){
-  /* 스타이로폼 — 알루미늄 접시(rx 106)를 올려도 가려지지 않도록 바깥 테두리를 따라 둔다 */
-  for(var i=0;i<14;i++){
-    var a = (i/14)*6.2832 + 0.22;
-    STY_PTS.push([STY.x + Math.cos(a)*(STY.rx-16), STY.y + Math.sin(a)*(STY.ry-6)]);
-  }
-  /* 알루미늄 — 접시 안에 원래 고르게 있던 전자가, 아래 스타이로폼의 (−)에 밀려
-     먼 쪽(윗면)으로 몰린다. 스타이로폼에서 건너오는 것이 아니다. */
-  for(var j=0;j<9;j++){
-    var b = -0.82 + (j/8)*1.64;
-    var w = Math.sqrt(1 - b*b) * 0.92;
-    ALU_PTS.push({ x0: b*(ALU_ON.rx-26), y0: (j % 2 ? 9 : -7),   /* 처음 — 고르게 */
-                   x1: b*(ALU_ON.rx-26), y1: -(ALU_ON.ry-4)*w });/* 나중 — 윗면으로 */
-  }
-  /* 전자가 빠져나간 아래쪽에는 (+)가 남는다 — 접시 전체 전하량은 그대로 0 */
-  for(var q=0;q<7;q++){
-    var c = -0.72 + (q/6)*1.44;
-    PLUS_PTS.push({ x: c*(ALU_ON.rx-30), y: (ALU_ON.ry-9)*Math.sqrt(1-c*c)*0.72 });
-  }
+  var pts = [[0.001,0],[0.2,0],[0.4,0],[0.6,0],[0.78,0],[0.82,0.006],[1.17,0.18],[1.25,0.2],[1.245,0.213],[1.2,0.214],
+             [1.13,0.197],[0.8,0.031],[0.76,0.025],[0.001,0.025]].map(function(p){ return new THREE.Vector2(p[0],p[1]); });
+  var m = new THREE.Mesh(new THREE.LatheGeometry(pts, 72), M.foam);
+  m.castShadow = true; m.receiveShadow = true; foamG.add(m);
 })();
-var aluT = 0, chgA = 1, fading = false, animRun = false;
+/* 문지른 자리 윤 */
+var rubSheen = new THREE.Mesh(new THREE.CircleGeometry(.74, 48),
+  new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0, depthWrite:false}));
+rubSheen.rotation.x = Math.PI/2; rubSheen.position.y = -0.002; foamG.add(rubSheen);
 
-function minus(x, y, op){
-  return '<g opacity="'+op.toFixed(2)+'"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)
-       + '" r="7" fill="#2f6ea8" stroke="#dceaf7" stroke-width="1.4"/>'
-       + '<line x1="'+(x-4).toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(x+4).toFixed(1)+'" y2="'
-       + y.toFixed(1)+'" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/></g>';
+var Q_HELD = new THREE.Quaternion().setFromUnitVectors(V(0,-1,0), V(0.28,0.42,0.86).normalize());
+var Q_FLIP = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI,0,0));
+var Q_UP = new THREE.Quaternion();
+var POSE_HELD = V(-0.5, 1.32, -0.55);
+function foamTo(kind){
+  if(kind === 'held'){ foamG.position.copy(POSE_HELD); foamG.quaternion.copy(Q_HELD); }
+  else if(kind === 'flipped'){ foamG.position.set(FOAM_C.x, 0.2, FOAM_C.z); foamG.quaternion.copy(Q_FLIP); }
+  else { foamG.position.set(FOAM_C.x, 0, FOAM_C.z); foamG.quaternion.copy(Q_UP); }
+  foamG.updateMatrixWorld(true);
 }
-function chgSty(){
-  if(chgA <= 0.02) return '';
-  var n = Math.round(rubPct()*STY_PTS.length), g = '';
-  for(var i=0;i<n;i++) g += minus(STY_PTS[i][0], STY_PTS[i][1], chgA);
-  /* 알루미늄이 올라와 있으면 — 스타이로폼의 (−)는 움직이지 않는다는 이름표 */
-  if(S.aluOn && aluT > 0.7){
-    var os = (chgA * Math.min(1, (aluT-0.7)/0.3)).toFixed(2);
-    g += '<text x="'+(STY.x + STY.rx + 12)+'" y="'+(STY.y + 12)+'" text-anchor="start"'
-       + ' font-family="Gowun Dodum,sans-serif" font-size="13" font-weight="700"'
-       + ' fill="#d8c9ae" opacity="'+os+'">스타이로폼의 −는 그대로 (부도체)</text>';
+
+/* ═══════════════════════════════════════════════════════════
+   손 — 원점 = 엄지와 검지가 집는 곳, 팔은 +x 쪽(조금 위)으로 뻗는다
+   ═══════════════════════════════════════════════════════════ */
+var HAND_PATH = [V(0,0,0), V(.07,.04,-.02), V(.2,.06,0), V(.34,.1,0), V(.72,.25,0), V(1.12,.4,0)];
+function makeHand(){
+  var g = new THREE.Group();
+  function seg(a,b,r,mat){
+    var len = a.distanceTo(b);
+    var c = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 10), mat || M.skin);
+    c.position.copy(a).add(b).multiplyScalar(.5);
+    c.quaternion.setFromUnitVectors(V(0,1,0), b.clone().sub(a).normalize());
+    c.castShadow = true; g.add(c);
+    var s1 = new THREE.Mesh(new THREE.SphereGeometry(r,10,8), mat || M.skin); s1.position.copy(a); g.add(s1);
+    var s2 = s1.clone(); s2.position.copy(b); g.add(s2);
   }
+  var palm = new THREE.Mesh(new THREE.SphereGeometry(1,20,14), M.skin);
+  palm.scale.set(.15,.058,.125); palm.position.set(.22,.06,0); palm.rotation.z = -.28; palm.castShadow = true; g.add(palm);
+  seg(V(.1,.088,-.075), V(.04,.07,-.045), .022); seg(V(.04,.07,-.045), V(.005,.013,-.008), .019);   /* 검지 */
+  seg(V(.1,.088,-.025), V(.045,.05,-.022), .022); seg(V(.045,.05,-.022), V(.07,-.004,-.022), .02);  /* 가운뎃손가락(굽힘) */
+  seg(V(.105,.083,.025), V(.052,.046,.025), .021); seg(V(.052,.046,.025), V(.075,-.003,.025), .019);
+  seg(V(.112,.078,.07), V(.066,.042,.07), .018); seg(V(.066,.042,.07), V(.086,.002,.07), .016);
+  seg(V(.2,.0,-.1), V(.085,-.022,-.06), .026); seg(V(.085,-.022,-.06), V(.006,-.011,-.009), .021);  /* 엄지 */
+  seg(V(.33,.085,0), V(.8,.255,0), .068);                                                            /* 팔 */
+  seg(V(.76,.24,0), V(1.25,.43,0), .088, M.sleeve);                                                  /* 소매 */
+  g.traverse(function(o){ o.userData.handPart = true; });
   return g;
 }
-function plus(x, y, op){
-  return '<g opacity="'+op.toFixed(2)+'"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)
-       + '" r="7" fill="#b23a30" stroke="#f7e0dc" stroke-width="1.4"/>'
-       + '<line x1="'+(x-4).toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(x+4).toFixed(1)+'" y2="'
-       + y.toFixed(1)+'" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>'
-       + '<line x1="'+x.toFixed(1)+'" y1="'+(y-4).toFixed(1)+'" x2="'+x.toFixed(1)+'" y2="'
-       + (y+4).toFixed(1)+'" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/></g>';
+function aimHand(h, dir){ h.quaternion.setFromUnitVectors(V(1,0,0), dir.clone().normalize()); }
+
+/* 접시를 든 손 (문지를 때) */
+var handFoam = makeHand(); foamG.add(handFoam);
+handFoam.position.set(-1.26, 0.1, 0); aimHand(handFoam, V(-1, -0.15, 0.25));
+
+/* ═══════════════════════════════════════════════════════════
+   알루미늄 접시 + 수수깡 — 원점 = 바닥 가운데
+   ═══════════════════════════════════════════════════════════ */
+var PAN = {rF:.72, rR:.98, H:.28};
+var PAN_HOME = V(1.95, 0.003, -0.45), CARRY_Y = 0.62, LIFT_Y = 1.15;
+var PLACED_Y = 0.2 + 0.006, PLACED_Y_IN = 0.032;
+var panG = new THREE.Group(); scene.add(panG);
+var panMeshes = [];
+(function(){
+  var pts = [[0.001,0],[0.7,0],[0.722,0.01],[0.975,0.268],[0.99,0.282]].map(function(p){ return new THREE.Vector2(p[0],p[1]); });
+  var geo = new THREE.LatheGeometry(pts, 120);
+  var pos = geo.attributes.position;
+  for(var i=0;i<pos.count;i++){
+    var x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+    if(y > 0.012){ var a = Math.atan2(z,x); var f = 1 + 0.014*Math.sin(a*48)*Math.min(1,(y-0.012)/0.05); pos.setXYZ(i, x*f, y, z*f); }
+  }
+  geo.computeVertexNormals();
+  var m = new THREE.Mesh(geo, M.alu); m.castShadow = true; m.receiveShadow = true; panG.add(m); panMeshes.push(m);
+  var rim = new THREE.Mesh(new THREE.TorusGeometry(.99, .014, 8, 120), M.alu);
+  rim.rotation.x = Math.PI/2; rim.position.y = .284; panG.add(rim); panMeshes.push(rim);
+  var stick = new THREE.Mesh(new THREE.CylinderGeometry(.045, .048, .95, 14), M.stick);
+  stick.position.y = .479; stick.castShadow = true; panG.add(stick); panMeshes.push(stick);
+  var band = new THREE.Mesh(new THREE.CylinderGeometry(.056,.056,.06,14), M.tape); band.position.y = .04; panG.add(band); panMeshes.push(band);
+  [0, Math.PI/2].forEach(function(r){
+    var t = new THREE.Mesh(new THREE.BoxGeometry(.3,.006,.055), M.tape); t.position.y = .006; t.rotation.y = r; panG.add(t); panMeshes.push(t);
+  });
+})();
+panMeshes.forEach(function(m){ m.userData.grab = 'pan'; });
+var handStick = makeHand(); panG.add(handStick);
+handStick.position.set(0, .86, 0); aimHand(handStick, V(.62,.5,-.55)); handStick.visible = false;
+var handPan = makeHand(); panG.add(handPan);
+var GRIP_A = -0.75;   /* 맨손으로 잡을 때 쥐는 가장자리 자리(각도) */
+handPan.position.set(.995*Math.cos(GRIP_A), .29, .995*Math.sin(GRIP_A));
+aimHand(handPan, V(Math.cos(GRIP_A), .55, Math.sin(GRIP_A))); handPan.visible = false;
+
+/* ═══════════════════════════════════════════════════════════
+   털가죽
+   ═══════════════════════════════════════════════════════════ */
+var FUR_HOME = V(1.75, 0.035, 1.3);
+var furG = new THREE.Group(); scene.add(furG);
+var furMeshes = [];
+(function(){
+  var base = new THREE.Mesh(new THREE.BoxGeometry(.62,.06,.42), M.fur); base.castShadow = true; furG.add(base); furMeshes.push(base);
+  var hg = new THREE.ConeGeometry(.012, .06, 4); hg.translate(0,.03,0);
+  var hair = new THREE.InstancedMesh(hg, M.hair, 300);
+  var o = new THREE.Object3D();
+  for(var i=0;i<300;i++){
+    o.position.set(-.3+rnd()*.6, .028, -.2+rnd()*.4);
+    o.rotation.set((rnd()-.5)*.7, rnd()*3, (rnd()-.5)*.7); o.updateMatrix(); hair.setMatrixAt(i, o.matrix);
+  }
+  furG.add(hair); furMeshes.push(hair);
+})();
+furMeshes.forEach(function(m){ m.userData.grab = 'fur'; });
+var Q_FURHOME = new THREE.Quaternion();
+function furHomeNow(){ furG.position.copy(FUR_HOME); furG.quaternion.copy(Q_FURHOME); }
+
+/* ═══════════════════════════════════════════════════════════
+   네온전구 + 손 — 원점 = 접시에 닿는 극의 끝, +x = 접시 바깥쪽
+   두 극이 한쪽으로 나온 작은 네온전구(보기 쉽게 크게 그림)
+   ═══════════════════════════════════════════════════════════ */
+var NP = {
+  tip:V(0,0,0), a1:V(.05,.045,0), a2:V(.13,.11,0), a3:V(.135,.19,0), eA0:V(.135,.235,0), eA1:V(.135,.37,0),
+  eB1:V(.185,.37,0), eB0:V(.185,.235,0), b3:V(.185,.19,0), b2:V(.19,.11,0), b1:V(.27,.05,0), pinch:V(.35,.035,0)
+};
+var neonG = new THREE.Group(); scene.add(neonG);
+var NEON = (function(){
+  var g = neonG, meshes = [];
+  function add(m){ g.add(m); meshes.push(m); return m; }
+  var body = add(new THREE.Mesh(new THREE.CylinderGeometry(.056,.056,.2,20,1,true), M.glass)); body.position.set(.16,.3,0);
+  var top = add(new THREE.Mesh(new THREE.SphereGeometry(.056,20,10,0,Math.PI*2,0,Math.PI/2), M.glass)); top.position.set(.16,.4,0);
+  var bot = add(new THREE.Mesh(new THREE.CylinderGeometry(.056,.03,.05,20,1,true), M.glass)); bot.position.set(.16,.175,0);
+  var seal = add(new THREE.Mesh(new THREE.CylinderGeometry(.031,.031,.024,14), M.seal)); seal.position.set(.16,.146,0);
+  var eA = add(new THREE.Mesh(new THREE.CylinderGeometry(.0075,.0075,.15,8), M.elec)); eA.position.set(.135,.31,0);
+  var eB = add(new THREE.Mesh(new THREE.CylinderGeometry(.0075,.0075,.15,8), M.elec)); eB.position.set(.185,.31,0);
+  function lead(arr){ return add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arr), 40, .0065, 8, false), M.lead)); }
+  lead([NP.eA0, NP.a3, NP.a2, NP.a1, NP.tip]);
+  lead([NP.eB0, NP.b3, NP.b2, NP.b1, NP.pinch, V(.4,.034,0)]);
+  function core(x){
+    var m = new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.16,10),
+      new THREE.MeshBasicMaterial({color:0xff7a2e, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false}));
+    m.position.set(x,.31,0); g.add(m); return m;
+  }
+  function glowSp(x, s){
+    var sp = new THREE.Sprite(new THREE.SpriteMaterial({map:TEX.glow, transparent:true, opacity:0,
+      blending:THREE.AdditiveBlending, depthWrite:false}));
+    sp.position.set(x,.31,0); sp.scale.setScalar(s); sp.renderOrder = 15; g.add(sp); return sp;
+  }
+  var light = new THREE.PointLight(0xff7a2e, 0, 2.6, 2); light.position.set(.16,.3,0); g.add(light);
+  var hand = makeHand(); hand.position.copy(NP.pinch); g.add(hand);
+  meshes.forEach(function(m){ m.userData.grab = 'neon'; });
+  hand.traverse(function(m){ if(m.isMesh){ m.userData.grab = 'neon'; meshes.push(m); } });
+  return {meshes:meshes, cA:core(.135), cB:core(.185), sA:glowSp(.135,.2), sB:glowSp(.185,.2), halo:glowSp(.16,.75), light:light, hand:hand};
+})();
+neonG.visible = false; neonG.scale.setScalar(1.3);
+
+/* 내려놓을 곳 표시 — 접시를 들고 있을 때만 */
+var dropRing = new THREE.Mesh(new THREE.RingGeometry(.62, .72, 48),
+  new THREE.MeshBasicMaterial({color:0xffb066, transparent:true, opacity:.6, depthWrite:false, side:THREE.DoubleSide}));
+dropRing.rotation.x = -Math.PI/2; dropRing.position.set(FOAM_C.x, .215, FOAM_C.z); dropRing.visible = false; scene.add(dropRing);
+/* 대는 곳 표시 (○) */
+var touchRing = new THREE.Sprite(new THREE.SpriteMaterial({map:TEX.ring, transparent:true, depthTest:false, opacity:.9}));
+touchRing.scale.setScalar(.24); touchRing.renderOrder = 25; touchRing.visible = false; scene.add(touchRing);
+
+/* ═══════════════════════════════════════════════════════════
+   전하 알갱이
+   ═══════════════════════════════════════════════════════════ */
+var PARTS = [], SZ = .36;   /* 화면에서 늘 같은 크기로 보이게(멀어져도·확대해도) */
+function Part(sign, owner, lp, size){
+  var mat = new THREE.SpriteMaterial({map: sign<0 ? TEX.minus : TEX.plus, depthTest:false, depthWrite:false, transparent:true, opacity:0, sizeAttenuation:false});
+  this.sp = new THREE.Sprite(mat); this.sp.renderOrder = 20;
+  this.size = (size || .082) * SZ; this.sp.scale.setScalar(this.size);
+  this.sign = sign; this.owner = owner; this.lp = lp.clone(); this.op = 0; this.dim = false; this.fade = 1;
+  this.glide = null; this.flow = null; this.slot = null; this.hi = false;
+  owner.add(this.sp); this.sp.position.copy(lp);
+  PARTS.push(this);
 }
-function chgAlu(){
-  if(!S.aluOn || chgA <= 0.02) return '';
-  var t = aluT < 0.5 ? 2*aluT*aluT : 1 - Math.pow(-2*aluT+2, 2)/2;   /* 부드럽게 */
-  var g = '';
-  /* 전자가 빠져나간 자리에 (+)가 드러난다 — 몰림이 끝나 갈수록 뚜렷해진다 */
-  for(var q=0;q<PLUS_PTS.length;q++){
-    var e = PLUS_PTS[q];
-    g += plus(ALU_ON.x + e.x, ALU_ON.y + e.y, chgA * Math.max(0, (t-0.45)/0.55));
+Part.prototype.kill = function(){
+  if(this.sp.parent) this.sp.parent.remove(this.sp);
+  this.sp.material.dispose();
+  var i = PARTS.indexOf(this); if(i >= 0) PARTS.splice(i,1);
+};
+Part.prototype.moveTo = function(lp, dur){
+  if(!dur){ this.lp.copy(lp); this.sp.position.copy(lp); this.glide = null; return; }
+  this.glide = {from:this.sp.position.clone(), to:lp.clone(), t:0, dur:dur};
+  this.lp.copy(lp);
+};
+function tangOff(p, d){ /* p 의 둘레 방향으로 d 만큼 옆 */
+  var a = Math.atan2(p.z, p.x); return V(p.x - Math.sin(a)*d, p.y, p.z + Math.cos(a)*d);
+}
+function polar(r, deg, y){ var a = deg*Math.PI/180; return V(r*Math.cos(a), y, r*Math.sin(a)); }
+
+/* 털가죽: 이온 8 + 전자 8 (털 쪽 면, y=+.075) */
+var FUR = {ions:[], els:[]};
+var FUR_SITES = [];
+[-.21,-.07,.07,.21].forEach(function(x){ [-.12,0,.12].forEach(function(z){ FUR_SITES.push(V(x,.075,z)); }); });   /* 12쌍 — 8개만 옮겨 가서 털가죽에도 전자가 남는다 */
+/* 스타이로폼: 제 이온·전자 8쌍 + 문질러 얻은 전자 자리 8 (바깥 바닥면, y=-.006) */
+var FOAM_ION = [], FOAM_X = [];
+for(var i=0;i<8;i++) FOAM_ION.push(polar(.66, 22.5+i*45, -.006));
+[[.16,0],[.16,120],[.16,240],[.46,0],[.46,72],[.46,144],[.46,216],[.46,288]].forEach(function(a){ FOAM_X.push(polar(a[0],a[1],-.006)); });
+var FOAM = {ions:[], own:[], x:[]};
+/* 알루미늄: 바닥 이온 8 · 옆면 이온 6 · 가장자리 빈자리 8 */
+function wallR(y){ return PAN.rF + (PAN.rR-PAN.rF)*(y/0.27); }
+var PAN_ION = [];
+[[.30,60],[.30,180],[.30,300],[.58,36],[.58,108],[.58,180],[.58,252],[.58,324]].forEach(function(a){ PAN_ION.push(polar(a[0],a[1],.014)); });
+[30,90,150,210,270,330].forEach(function(d){ PAN_ION.push(polar(wallR(.14)-.012, d, .14)); });
+var PAN_PAIR = PAN_ION.map(function(p){ return tangOff(p, .072); });
+var RIM_DEG = [10,55,100,145,190,235,280,325];
+var RIM_X = RIM_DEG.map(function(d){ return polar(wallR(.255)-.008, d, .255); });
+var FLOOR_ORDER = [0,4,6,1,3,7,2,5], WALL_ORDER = [8,11,9,12,10,13], FLOOR_OUT = [3,4,5,6,7,0,1,2];
+var RIM_ORDER = [0,4,2,6,1,5,3,7];
+var P = {q:0, A:0, ions:[], els:[], glide:.9};
+
+function slotPos(k){ return k.charAt(0) === 'p' ? PAN_PAIR[+k.slice(1)] : RIM_X[+k.slice(1)]; }
+/* 접시의 남는 전하 q 와 유도 세기 A 로 전자 자리를 정한다 */
+function panLayout(q, A){
+  A = clamp(A, 0, 8);
+  var expo = {}, i, Y = q - A, X = 0;
+  for(i=0;i<A;i++) expo[FLOOR_ORDER[i]] = true;
+  if(Y < 0){ X = -Y; Y = 0; }
+  for(i=0;i<WALL_ORDER.length && Y>0;i++){ expo[WALL_ORDER[i]] = true; Y--; }
+  for(i=0;i<FLOOR_OUT.length && Y>0;i++){ if(!expo[FLOOR_OUT[i]]){ expo[FLOOR_OUT[i]] = true; Y--; } }
+  var keys = [];
+  for(i=0;i<14;i++) if(!expo[i]) keys.push('p'+i);
+  for(i=0;i<X;i++) keys.push('x'+RIM_ORDER[i]);
+  return keys;
+}
+function assignPan(keys, dur){
+  var free = keys.slice(), rest = [];
+  P.els.forEach(function(e){
+    var j = e.slot ? free.indexOf(e.slot) : -1;
+    if(j >= 0) free.splice(j,1); else rest.push(e);
+  });
+  rest.forEach(function(e){
+    var best = 0, bd = 1e9;
+    free.forEach(function(k, j){ var d = slotPos(k).distanceTo(e.lp); if(d < bd){ bd = d; best = j; } });
+    var k = free.splice(best,1)[0];
+    if(k === undefined) return;
+    e.slot = k; e.moveTo(slotPos(k), dur);
+  });
+  updDims();
+}
+function updDims(){
+  var occ = {};
+  P.els.forEach(function(e){ if(e.slot) occ[e.slot] = true; e.dim = !!(e.slot && e.slot.charAt(0) === 'p'); });
+  P.ions.forEach(function(p, i){ p.dim = !!occ['p'+i]; });
+  FUR.ions.forEach(function(p, i){ p.dim = !!FUR.els[i]; });
+  FUR.els.forEach(function(e){ if(e) e.dim = true; });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   상태
+   ═══════════════════════════════════════════════════════════ */
+var S = {
+  step:0, phase:'held', flipped:true, foamN:0, rub:0, lit:0, dark:true,
+  xray:false, unlocked:false, mode:'live',
+  cfg:{handOnPan:false, neonHand:true},
+  neon:'hidden', contactA:0, flowing:false, busy:false,
+  panAt:'home', liftNoTouch:false,
+  saidLift:false, saidAgain:false, saidNo:false, lastDir:'A', hiFoam:false, playing:false
+};
+var RUB_NEED = 8;
+var chgVis = 0, chgVisT = 0;
+
+/* ── 타이머 · 장면 끊기 ── */
+var TW = [], TOK = 0, SPEED = 1;
+function tween(dur, fn){
+  var tok = TOK;
+  return new Promise(function(res, rej){ TW.push({t:0, dur:Math.max(.0001, dur), fn:fn, res:res, rej:rej, tok:tok}); });
+}
+function wait(sec){ return tween(sec, null); }
+function abortAll(){
+  TOK++;
+  var old = TW; TW = [];
+  old.forEach(function(t){ t.rej('abort'); });
+  FLOWS.forEach(function(f){ f.rej && f.rej('abort'); }); FLOWS = [];
+}
+
+/* ═══════════════════════════════════════════════════════════
+   정전기 유도 세기
+   ═══════════════════════════════════════════════════════════ */
+var _v1 = V(0,0,0);
+function calcA(){
+  if(S.foamN <= 0 || S.phase === 'held') return 0;
+  var f = foamG.localToWorld(_v1.set(0,-0.006,0));
+  var p = panG.position;
+  var dxz = Math.hypot(p.x-f.x, p.z-f.z), h = Math.abs(p.y-f.y);
+  var k = 1/(1+Math.pow(h/0.2, 2)) * clamp(1.15 - dxz/1.0, 0, 1);
+  if(!S.flipped) k *= 0.42;
+  return clamp(Math.round(S.foamN * k), 0, S.foamN);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   전하 만들기 (장면 시작 · 처음부터)
+   ═══════════════════════════════════════════════════════════ */
+function clearParts(){ PARTS.slice().forEach(function(p){ p.kill(); }); FUR.ions=[]; FUR.els=[]; FOAM.ions=[]; FOAM.own=[]; FOAM.x=[]; P.ions=[]; P.els=[]; }
+function buildParts(){
+  clearParts();
+  var i;
+  for(i=0;i<12;i++){
+    FUR.ions.push(new Part(1, furG, FUR_SITES[i].clone().add(V(-.03,0,0)), .07));
+    FUR.els.push(i < 12 - S.foamN ? new Part(-1, furG, FUR_SITES[i].clone().add(V(.03,0,0)), .07) : null);
   }
-  for(var i=0;i<ALU_PTS.length;i++){
-    var p = ALU_PTS[i];
-    g += minus(ALU_ON.x + p.x0 + (p.x1-p.x0)*t, ALU_ON.y + p.y0 + (p.y1-p.y0)*t, chgA);
+  for(i=0;i<8;i++){
+    FOAM.ions.push(new Part(1, foamG, FOAM_ION[i], .066));
+    FOAM.own.push(new Part(-1, foamG, tangOff(FOAM_ION[i], .08), .066));
+    FOAM.ions[i].dim = true; FOAM.own[i].dim = true;
   }
-  /* 이동 중 — (−)가 위로 밀려나는 방향 화살표 */
-  if(t < 0.92){
-    var oa = (chgA * (1-t)).toFixed(2);
-    [-56, 0, 56].forEach(function(ax){
-      var x = ALU_ON.x + ax, y1 = ALU_ON.y + 11, y2 = ALU_ON.y - 15;
-      g += '<g opacity="'+oa+'"><line x1="'+x+'" y1="'+y1+'" x2="'+x+'" y2="'+y2
-        + '" stroke="#8fc1ef" stroke-width="2.2" stroke-linecap="round"/>'
-        + '<polygon points="'+x+','+(y2-6)+' '+(x-4.5)+','+(y2+3)+' '+(x+4.5)+','+(y2+3)
-        + '" fill="#8fc1ef"/></g>';
+  for(i=0;i<S.foamN;i++) FOAM.x.push(new Part(-1, foamG, FOAM_X[i], .085));
+  for(i=0;i<14;i++) P.ions.push(new Part(1, panG, PAN_ION[i], .074));
+  var keys = panLayout(P.q, P.A);
+  keys.forEach(function(k){ var e = new Part(-1, panG, slotPos(k), .078); e.slot = k; P.els.push(e); });
+  updDims();
+  PARTS.forEach(function(p){ p.op = p.dim ? .55*chgVis : chgVis; });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   전자 흐름 (경로를 따라 움직임)
+   ═══════════════════════════════════════════════════════════ */
+var FLOWS = [];
+function runFlow(list){   /* list: [{part, frame, pts(frame 좌표), delay, fadeIn, fadeOut, tube:[s0,s1], sC, panStart, end}] */
+  return new Promise(function(res, rej){
+    var f = {n:list.length, res:res, rej:rej};
+    if(!list.length){ res(); return; }
+    FLOWS.push(f);
+    list.forEach(function(o){
+      var p = o.part, wp = p.sp.getWorldPosition(V(0,0,0));
+      o.frame.add(p.sp); p.owner = o.frame;
+      var start = o.frame.worldToLocal(wp.clone());
+      var path = [start].concat(o.pts), cum = [0];
+      for(var i=1;i<path.length;i++) cum.push(cum[i-1] + path[i].distanceTo(path[i-1]));
+      p.glide = null;
+      p.flow = {path:path, cum:cum, L:cum[cum.length-1], s:0, delay:o.delay||0, v:o.v||1.5,
+                fadeIn:o.fadeIn||0, fadeOut:o.fadeOut||0, tube:o.tube||null, sC:o.sC, panStart:!!o.panStart,
+                end:o.end, grp:f};
+      p.dim = false;
+      if(o.fadeIn) p.fade = 0;
     });
+  });
+}
+function flowStep(p, sdt){
+  var F = p.flow;
+  if(F.delay > 0){ F.delay -= sdt; return; }
+  F.s = Math.min(F.L, F.s + F.v*sdt);
+  var i = 1; while(i < F.cum.length-1 && F.cum[i] < F.s) i++;
+  var a = F.path[i-1], b = F.path[i], seg = (F.cum[i]-F.cum[i-1]) || 1;
+  p.sp.position.copy(a).lerp(b, clamp((F.s-F.cum[i-1])/seg, 0, 1));
+  if(F.fadeIn) p.fade = clamp(F.s / F.fadeIn, 0, 1);
+  if(F.fadeOut) p.fade = clamp((F.L - F.s)/F.fadeOut, 0, 1);
+  if(F.s >= F.L){
+    var g = F.grp; p.flow = null;
+    if(F.end) F.end(p);
+    g.n--; if(g.n <= 0){ var k = FLOWS.indexOf(g); if(k>=0) FLOWS.splice(k,1); g.res(); }
   }
-  /* 다 몰리면 — 어느 쪽이 어떤 전하인지 이름표 */
-  if(t > 0.7){
-    var ol = (chgA * Math.min(1, (t-0.7)/0.3)).toFixed(2);
-    var lx = ALU_ON.x - ALU_ON.rx - 12;
-    g += '<text x="'+lx+'" y="'+(ALU_ON.y-16)+'" text-anchor="end" font-family="Gowun Dodum,sans-serif"'
-       + ' font-size="13.5" font-weight="700" fill="#8fc1ef" opacity="'+ol+'">먼 쪽(위)엔 −</text>'
-       + '<text x="'+lx+'" y="'+(ALU_ON.y+18)+'" text-anchor="end" font-family="Gowun Dodum,sans-serif"'
-       + ' font-size="13.5" font-weight="700" fill="#f0a196" opacity="'+ol+'">닿은 쪽(아래)엔 +</text>';
-  }
-  return g;
 }
-function paintChg(){
-  var a = document.getElementById('chgS'), b = document.getElementById('chgA');
-  if(a) a.innerHTML = chgSty();
-  if(b) b.innerHTML = chgAlu();
+function pinPan(p, lp, slot){   /* 흐름을 마친 전자를 접시에 붙인다 */
+  var wp = p.sp.getWorldPosition(V(0,0,0));
+  panG.add(p.sp); p.owner = panG; p.sp.position.copy(panG.worldToLocal(wp));
+  p.slot = slot; p.moveTo(lp, .25);
 }
-/* 프레임 수가 아니라 흘러간 시간으로 움직인다 —
-   전자칠판처럼 프레임이 느린 기기에서도 같은 시간에 끝나야 한다 */
-var animLast = 0;
-function anim(now){
-  var dt = animLast ? Math.min(80, now - animLast) : 16;
-  animLast = now;
-  var go = false;
-  if(S.aluOn && aluT < 1){ aluT = Math.min(1, aluT + dt/2800); go = true; }   /* 이동 과정이 보이게 천천히 */
-  if(fading && chgA > 0){ chgA = Math.max(0, chgA - dt/650); go = true; }
-  paintChg();
-  if(go) requestAnimationFrame(anim); else { animRun = false; animLast = 0; }
+function inPanCount(){
+  var n = 0;
+  PARTS.forEach(function(p){
+    if(p.sign > 0) return;
+    if(P.els.indexOf(p) >= 0 && !p.flow) n++;
+    else if(p.flow && p.flow.sC !== undefined){
+      var s = p.flow.s;
+      if(p.flow.panStart ? (s < p.flow.sC) : (s >= p.flow.sC && p.flow.delay <= 0)) n++;
+    }
+  });
+  return n;
 }
-function startAnim(){ if(!animRun){ animRun = true; animLast = 0; requestAnimationFrame(anim); } }
+
+/* 가장자리 둘레 길 (접시 좌표) */
+function angOf(p){ return Math.atan2(p.z, p.x); }
+function rimPt(a, y, r){ y = y===undefined ? .262 : y; r = r || (wallR(y)-.006); return V(r*Math.cos(a), y, r*Math.sin(a)); }
+function rimArc(a0, a1){
+  var d = a1 - a0; while(d > Math.PI) d -= 2*Math.PI; while(d < -Math.PI) d += 2*Math.PI;
+  var n = Math.max(1, Math.ceil(Math.abs(d)/0.2)), out = [];
+  for(var i=1;i<=n;i++) out.push(rimPt(a0 + d*i/n));
+  return out;
+}
+function toRim(lp){   /* 바닥·옆면 자리에서 가장자리로 오르는 길 */
+  var a = angOf(lp), out = [];
+  if(lp.y < .05) out.push(V(PAN.rF*Math.cos(a)*.98, .03, PAN.rF*Math.sin(a)*.98));
+  out.push(rimPt(a)); return out;
+}
+function contactPt(a){ return V(.995*Math.cos(a), .29, .995*Math.sin(a)); }
+
+/* 전구·손 길 (세계 좌표) */
+function neonPathOut(){
+  var arr = [NP.tip, NP.a1, NP.a2, NP.a3, NP.eA0, NP.eA1, NP.eB1, NP.eB0, NP.b3, NP.b2, NP.b1, NP.pinch].map(function(v){ return neonG.localToWorld(v.clone()); });
+  var hand = HAND_PATH.slice(1).map(function(v){ return NEON.hand.localToWorld(v.clone()); });
+  return {pts: arr.concat(hand), tube0:4, tube1:7};
+}
+function cumAt(pts, idx, startExtra){ /* pts 앞에서 idx 번째까지 길이 */
+  var s = 0; for(var i=1;i<=idx;i++) s += pts[i].distanceTo(pts[i-1]); return s;
+}
 
 /* ═══════════════════════════════════════════════════════════
-   그림 조각
+   네온전구 불빛
    ═══════════════════════════════════════════════════════════ */
-function defs(){
-  return '<defs>'
-  /* 어둠 · 책상 */
-  + '<linearGradient id="pWall" x1="0" y1="0" x2="0" y2="1">'
-  +  '<stop offset="0" stop-color="#0c0a08"/><stop offset="1" stop-color="#1b1611"/></linearGradient>'
-  + '<linearGradient id="pWallOn" x1="0" y1="0" x2="0" y2="1">'
-  +  '<stop offset="0" stop-color="#e6dcc6"/><stop offset="1" stop-color="#d9cbad"/></linearGradient>'
-  + '<linearGradient id="pDesk" x1="0" y1="0" x2="0" y2="1">'
-  +  '<stop offset="0" stop-color="#4a3624"/><stop offset=".25" stop-color="#3a2a1b"/>'
-  +  '<stop offset="1" stop-color="#241a11"/></linearGradient>'
-  + '<linearGradient id="pDeskOn" x1="0" y1="0" x2="0" y2="1">'
-  +  '<stop offset="0" stop-color="#c69a63"/><stop offset=".25" stop-color="#b0854f"/>'
-  +  '<stop offset="1" stop-color="#8e6738"/></linearGradient>'
-  + '<radialGradient id="pLamp" cx=".5" cy=".5" r=".5">'
-  +  '<stop offset="0" stop-color="#fff3d6" stop-opacity=".16"/>'
-  +  '<stop offset="1" stop-color="#fff3d6" stop-opacity="0"/></radialGradient>'
-  /* 스타이로폼 — 미세한 알갱이가 보이는 하얀 발포 */
-  + '<linearGradient id="pSty" x1="0" y1="0" x2="0" y2="1">'
-  +  '<stop offset="0" stop-color="#fbfaf6"/><stop offset=".55" stop-color="#e9e6dc"/>'
-  +  '<stop offset="1" stop-color="#cfcabb"/></linearGradient>'
-  /* 알루미늄 — 금속 띠 */
-  + '<linearGradient id="pAlu" x1="0" y1="0" x2="1" y2="0">'
-  +  '<stop offset="0" stop-color="#8f9298"/><stop offset=".14" stop-color="#e8ecef"/>'
-  +  '<stop offset=".33" stop-color="#a9aeb4"/><stop offset=".5" stop-color="#f2f5f7"/>'
-  +  '<stop offset=".68" stop-color="#9aa0a6"/><stop offset=".86" stop-color="#dfe3e7"/>'
-  +  '<stop offset="1" stop-color="#83878d"/></linearGradient>'
-  + '<linearGradient id="pAluRim" x1="0" y1="0" x2="0" y2="1">'
-  +  '<stop offset="0" stop-color="#fdfefe"/><stop offset="1" stop-color="#8d9298"/></linearGradient>'
-  /* 털가죽 */
-  + '<linearGradient id="pFur" x1="0" y1="0" x2="0" y2="1">'
-  +  '<stop offset="0" stop-color="#7c5a38"/><stop offset=".6" stop-color="#5d4128"/>'
-  +  '<stop offset="1" stop-color="#3d2a19"/></linearGradient>'
-  /* 네온 불빛 */
-  + '<radialGradient id="pNeon" cx=".5" cy=".5" r=".5">'
-  +  '<stop offset="0" stop-color="#ffd9a8"/><stop offset=".28" stop-color="#ff8a3c"/>'
-  +  '<stop offset=".62" stop-color="#ff4d1a" stop-opacity=".55"/>'
-  +  '<stop offset="1" stop-color="#ff3300" stop-opacity="0"/></radialGradient>'
-  + '<filter id="fBlur" x="-80%" y="-80%" width="260%" height="260%">'
-  +  '<feGaussianBlur stdDeviation="7"/></filter>'
-  + '<filter id="fSoft" x="-40%" y="-40%" width="180%" height="180%">'
-  +  '<feGaussianBlur stdDeviation="2.2"/></filter>'
-  + '</defs>';
-}
-
-function stage(){
-  var wall = S.dark ? 'url(#pWall)' : 'url(#pWallOn)';
-  var desk = S.dark ? 'url(#pDesk)' : 'url(#pDeskOn)';
-  var s = '<rect width="820" height="'+DESK_Y+'" fill="'+wall+'"/>'
-        + '<rect y="'+DESK_Y+'" width="820" height="'+(480-DESK_Y)+'" fill="'+desk+'"/>'
-        + '<line x1="0" y1="'+DESK_Y+'" x2="820" y2="'+DESK_Y+'" stroke="'
-        + (S.dark?'#5b4530':'#e0c397') + '" stroke-width="2"/>';
-  /* 나뭇결 */
-  for(var i=0;i<16;i++){
-    var y = DESK_Y + 10 + i*13 + rnd()*4;
-    s += '<line x1="0" y1="'+y.toFixed(1)+'" x2="820" y2="'+(y+2).toFixed(1)+'" stroke="'
-       + (S.dark?'#000':'#7d5a30') + '" stroke-width="1" opacity="'+(S.dark?.22:.13)+'"/>';
+var glowA = 0, glowB = 0, flash = null;
+function fireFlash(dir, slow){ flash = {dir:dir, t:0, dur: slow ? 1.5 : 0.2}; S.lastDir = dir; }
+function updGlow(dt){
+  var tA = 0, tB = 0, nT = 0;
+  PARTS.forEach(function(p){
+    var F = p.flow; if(!F || !F.tube || F.delay > 0) return;
+    if(F.s >= F.tube[0] && F.s <= F.tube[1]){ nT++; }
+  });
+  if(nT){ var I = Math.min(1, .35 + nT*.32); if(S.flowDir === 'A') tA = I; else tB = I; }
+  if(flash){
+    flash.t += dt; var e = flash.t / flash.dur, b;
+    if(e >= 1) b = 0; else if(e < .07) b = e/.07; else b = Math.pow(1-(e-.07)/.93, 1.7);
+    if(flash.dir === 'A') tA = Math.max(tA, b); else tB = Math.max(tB, b);
+    if(e >= 1) flash = null;
   }
-  if(S.dark) s += '<ellipse cx="330" cy="250" rx="430" ry="250" fill="url(#pLamp)"/>';
-  return s;
+  var k = S.weakGlow ? .32 : 1;
+  tA *= k; tB *= k;
+  glowA += (tA - glowA) * (tA > glowA ? 1 : clamp(dt*9, 0, 1));
+  glowB += (tB - glowB) * (tB > glowB ? 1 : clamp(dt*9, 0, 1));
+  var vis = S.dark ? 1 : .3;
+  NEON.cA.material.opacity = glowA * vis; NEON.cB.material.opacity = glowB * vis;
+  NEON.sA.material.opacity = glowA * vis; NEON.sB.material.opacity = glowB * vis;
+  NEON.sA.scale.setScalar(.16 + glowA*.16); NEON.sB.scale.setScalar(.16 + glowB*.16);
+  var g = Math.max(glowA, glowB);
+  NEON.halo.material.opacity = g * .55 * vis; NEON.halo.scale.setScalar(.45 + g*.5);
+  NEON.light.intensity = g * (S.dark ? 2.2 : .6);
 }
 
-/* ── 스타이로폼 접시 ─────────────────────────────────────── */
-function styro(){
-  var x=STY.x, y=STY.y, rx=STY.rx, ry=STY.ry;
-  var s = '<ellipse cx="'+x+'" cy="'+(y+13)+'" rx="'+(rx+6)+'" ry="'+(ry*0.5)+'" fill="#000" opacity="'
-        + (S.dark?.5:.24) + '" filter="url(#fBlur)"/>';
-  if(!S.flipped){
-    /* 바로 놓임 — 안쪽 오목한 면이 보인다 */
-    s += '<ellipse cx="'+x+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" fill="url(#pSty)" stroke="#b9b4a5" stroke-width="1.5"/>'
-       + '<ellipse cx="'+x+'" cy="'+(y+3)+'" rx="'+(rx-22)+'" ry="'+(ry-9)+'" fill="#e4e0d5" opacity=".85"/>'
-       + '<ellipse cx="'+x+'" cy="'+(y+4)+'" rx="'+(rx-30)+'" ry="'+(ry-13)+'" fill="#f4f2ea"/>';
+/* ═══════════════════════════════════════════════════════════
+   위치 · 놓기
+   ═══════════════════════════════════════════════════════════ */
+var NEON_A0 = 35*Math.PI/180;
+function panCenter(){ return panG.position; }
+function rimY(){ return panG.position.y + .29; }
+function neonHomePos(){
+  var c = panCenter(), a = NEON_A0;
+  var baseY = (S.panAt === 'home' || S.panAt === 'carry') ? PLACED_Y + .29 : rimY();
+  var cx = (S.panAt === 'home') ? FOAM_C.x : c.x, cz = (S.panAt === 'home') ? FOAM_C.z : c.z;
+  return {p:V(cx + 1.55*Math.cos(a), baseY + .12, cz + 1.55*Math.sin(a)), r:-a};
+}
+function neonAt(p, a){ neonG.position.copy(p); neonG.rotation.set(0, -a, 0); neonG.updateMatrixWorld(true); }
+function neonContactPose(a){ return {p: panG.localToWorld(contactPt(a)), r:-a}; }
+function setNeonHand(on){
+  S.cfg.neonHand = on;
+  if(on){ NEON.hand.position.copy(NP.pinch); NEON.hand.rotation.set(0,0,0); }
+  else { NEON.hand.position.set(.216,.31,0); NEON.hand.rotation.set(0,0,.25); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   동작들 (실험·장면이 함께 쓴다)
+   ═══════════════════════════════════════════════════════════ */
+function hopOne(){   /* 털가죽의 전자 하나가 스타이로폼으로 */
+  var idx = -1;
+  for(var i=0;i<12;i++) if(FUR.els[i]){ idx = i; }
+  if(idx < 0 || S.foamN >= 8) return;
+  var e = FUR.els[idx]; FUR.els[idx] = null;
+  var slot = S.foamN; S.foamN++;
+  FOAM.x.push(e); e.size = .085*SZ;
+  var target = foamG.localToWorld(FOAM_X[slot].clone());
+  var mid = e.sp.getWorldPosition(V(0,0,0)).lerp(target, .5).add(V(0,.08,0));
+  runFlow([{part:e, frame:scene, pts:[mid, target], v:1.6, end:function(p){
+    var wp = p.sp.getWorldPosition(V(0,0,0)); foamG.add(p.sp); p.owner = foamG;
+    p.sp.position.copy(foamG.worldToLocal(wp)); p.moveTo(FOAM_X[slot], .15); p.dim = false;
+  }}]).catch(function(){});
+  updDims(); updTally();
+}
+
+function faceFrame(){   /* 문지를 면: 가운데 · 바깥쪽 법선 */
+  var c = foamG.localToWorld(V(0,0,0));
+  var n = V(0,-1,0).applyQuaternion(foamG.quaternion).normalize();
+  return {c:c, n:n};
+}
+function furOnFace(off){   /* off: 면 위 옆 방향 위치(-1~1) */
+  var f = faceFrame();
+  var side = V(1,0,0).applyQuaternion(foamG.quaternion).normalize();
+  furG.position.copy(f.c).addScaledVector(f.n, .085).addScaledVector(side, off*.42);
+  furG.quaternion.setFromUnitVectors(V(0,1,0), f.n.clone().negate());
+}
+function autoRub(dur){
+  var start = furG.position.clone(), q0 = furG.quaternion.clone();
+  return tween(.6, function(t){
+    var e = ease(t); var f = faceFrame();
+    var tgt = f.c.clone().addScaledVector(f.n, .085);
+    furG.position.copy(start).lerp(tgt, e);
+    var q1 = new THREE.Quaternion().setFromUnitVectors(V(0,1,0), f.n.clone().negate());
+    furG.quaternion.copy(q0).slerp(q1, e);
+  }).then(function(){
+    var hopped = S.foamN;
+    return tween(dur, function(t){
+      furOnFace(Math.sin(t*Math.PI*2*5));
+      S.rub = t * RUB_NEED;
+      var want = Math.min(8, Math.floor(t*8.6));
+      while(S.foamN < want) hopOne();
+      rubSheen.material.opacity = Math.min(1, S.foamN/8) * .16;
+    });
+  }).then(function(){ while(S.foamN < 8) hopOne(); });
+}
+function furHome(dur){
+  var p0 = furG.position.clone(), q0 = furG.quaternion.clone();
+  return tween(dur || .7, function(t){ var e = ease(t); furG.position.copy(p0).lerp(FUR_HOME, e); furG.quaternion.copy(q0).slerp(Q_FURHOME, e); });
+}
+function doFlip(){
+  S.showRubLbl = false;
+  var p0 = foamG.position.clone(), q0 = foamG.quaternion.clone(), p1 = V(FOAM_C.x, .2, FOAM_C.z);
+  S.busy = true;
+  return tween(1.4, function(t){
+    var e = ease(t);
+    foamG.position.copy(p0).lerp(p1, e); foamG.position.y += Math.sin(e*Math.PI)*.25;
+    foamG.quaternion.copy(q0).slerp(Q_FLIP, e);
+    if(t > .55) handFoam.visible = false;
+  }).then(function(){ S.phase = 'flipped'; S.flipped = true; foamTo('flipped'); S.busy = false; });
+}
+function movePan(to, dur){   /* 단순 이동 */
+  var p0 = panG.position.clone();
+  return tween(dur, function(t){ panG.position.copy(p0).lerp(to, ease(t)); });
+}
+function autoPlace(slow){
+  var inDish = !S.flipped, py = inDish ? PLACED_Y_IN : PLACED_Y;
+  var over = V(FOAM_C.x, CARRY_Y, FOAM_C.z), dst = V(FOAM_C.x, py, FOAM_C.z);
+  if(!S.cfg.handOnPan) handStick.visible = true; else handPan.visible = true;
+  S.panAt = 'moving'; S.busy = true;
+  var up = V(panG.position.x, CARRY_Y, panG.position.z);
+  return movePan(up, .5).then(function(){ return movePan(over, .9); })
+    .then(function(){ return movePan(dst, slow ? 2.4 : 1.2); })
+    .then(function(){
+      S.panAt = 'placed'; S.busy = false;
+      if(!S.cfg.handOnPan) handStick.visible = false;
+      return waitFlows();
+    });
+}
+function waitFlows(){
+  return new Promise(function(res, rej){
+    var tok = TOK;
+    (function chk(){ if(tok !== TOK){ rej('abort'); return; } if(!S.flowing && !S.pending){ res(); return; } wait(.1).then(chk, rej); })();
+  });
+}
+function doLift(){
+  if(S.neon === 'contact') neonGoHome(true);
+  handStick.visible = true; S.panAt = 'moving'; S.busy = true; S.liftNoTouch = true;
+  return movePan(V(panG.position.x, LIFT_Y, panG.position.z), 1.2).then(function(){ S.panAt = 'lifted'; S.busy = false; });
+}
+function doLower(){
+  if(S.neon === 'contact') neonGoHome(true);
+  handStick.visible = true; S.panAt = 'moving'; S.busy = true;
+  return movePan(V(FOAM_C.x, S.flipped ? PLACED_Y : PLACED_Y_IN, FOAM_C.z), 1.3)
+    .then(function(){ S.panAt = 'placed'; S.busy = false; handStick.visible = false; return wait(P.glide); });
+}
+function neonGoHome(instant){
+  var fin = neonG.visible ? 'home' : 'hidden';
+  if(instant){ S.neon = fin; var h = neonHomePos(); neonAt(h.p, -h.r); return Promise.resolve(); }
+  S.neon = 'moving';
+  var p0 = neonG.position.clone(), r0 = neonG.rotation.y, h2 = neonHomePos();
+  return tween(.6, function(t){ var e = ease(t); neonG.position.copy(p0).lerp(neonHomePos().p, e); neonG.rotation.y = lerp(r0, h2.r, e); })
+    .then(function(){ S.neon = fin; }, function(e){ S.neon = fin; throw e; });
+}
+function autoTouch(a){
+  if(a === undefined) a = NEON_A0;
+  neonG.visible = true;
+  var p0 = neonG.position.clone(), r0 = neonG.rotation.y, c = neonContactPose(a);
+  var mid = p0.clone().lerp(c.p, .5); mid.y = Math.max(p0.y, c.p.y) + .12;
+  S.neon = 'moving';
+  return tween(.9, function(t){
+    var e = ease(t);
+    var q = p0.clone().lerp(mid, e).lerp(mid.clone().lerp(c.p, e), e);
+    neonG.position.copy(q); neonG.rotation.y = lerp(r0, c.r, e);
+  }).then(function(){ return touchAt(a); });
+}
+
+/* ── 전구를 댔다: q 를 A 로 맞추며 전자가 오간다 ── */
+function touchAt(a){
+  var c = neonContactPose(a);
+  neonAt(c.p, a); S.neon = 'contact'; S.contactA = a;
+  var A = calcA(), n = A - P.q;
+  if(n === 0) return wait(.35).then(function(){ return {n:0}; });
+  if(!S.cfg.neonHand) return wait(.9).then(function(){ return {n:0, blocked:true}; });
+  S.flowDir = n > 0 ? 'A' : 'B'; S.lastDir = S.flowDir;
+  if(!S.xray && chgVisT === 0 && S.mode === 'live'){   /* 눈에 안 보이는 실험 모드 — 순간에 끝 */
+    chgVis = 0;
+    instantFlow(n, A); fireFlash(S.flowDir, false);
+    return wait(.3).then(function(){ return {n:n}; });
+  }
+  return animFlow(n, A, a).then(function(){ return {n:n}; });
+}
+function instantFlow(n, A){
+  if(n > 0){
+    var out = P.els.filter(function(e){ return e.slot && e.slot.charAt(0) === 'x'; }).slice(0, n);
+    out.forEach(function(e){ P.els.splice(P.els.indexOf(e),1); e.kill(); });
   } else {
-    /* 뒤집힘 — 볼록한 바닥이 위로 */
-    s += '<ellipse cx="'+x+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" fill="url(#pSty)" stroke="#b9b4a5" stroke-width="1.5"/>'
-       + '<ellipse cx="'+x+'" cy="'+(y-6)+'" rx="'+(rx-14)+'" ry="'+(ry-8)+'" fill="#fbfaf6" opacity=".9"/>'
-       + '<ellipse cx="'+(x-34)+'" cy="'+(y-13)+'" rx="46" ry="9" fill="#ffffff" opacity=".55" filter="url(#fSoft)"/>';
+    for(var i=0;i<-n;i++){ var e = new Part(-1, panG, V(0,.1,0), .078); P.els.push(e); }
   }
-  /* 발포 알갱이 */
-  var g = '';
-  for(var i=0;i<90;i++){
-    var a = rnd()*Math.PI*2, r = Math.sqrt(rnd());
-    var px = x + Math.cos(a)*r*(rx-10), py = y + Math.sin(a)*r*(ry-7);
-    g += '<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="'+(0.8+rnd()*1.1).toFixed(2)
-       + '" fill="#ffffff" opacity="'+(0.28+rnd()*0.4).toFixed(2)+'"/>';
+  P.q += n; P.A = A;
+  assignPan(panLayout(P.q, P.A), 0);
+  P.els.forEach(function(e){ e.moveTo(slotPos(e.slot), 0); });
+  updTally();
+}
+function animFlow(n, A, a){
+  S.flowing = true;
+  var np = neonPathOut(), list = [];
+  var pts0 = np.pts, i;
+  if(n > 0){
+    var out = P.els.filter(function(e){ return e.slot && e.slot.charAt(0) === 'x'; });
+    out.sort(function(u,v){ return Math.abs(angDiff(angOf(u.lp),a)) - Math.abs(angDiff(angOf(v.lp),a)); });
+    out = out.slice(0, n);
+    out.forEach(function(e, k){
+      P.els.splice(P.els.indexOf(e),1); e.slot = null;
+      var local = toRim(e.lp).concat(rimArc(angOf(e.lp), a), [contactPt(a)]);
+      var wpts = local.map(function(v){ return panG.localToWorld(v.clone()); });
+      var all = wpts.concat(pts0.slice(1));
+      var startW = e.sp.getWorldPosition(V(0,0,0)), full = [startW].concat(all);
+      var sC = cumAt(full, wpts.length);
+      var t0 = cumAt(full, wpts.length + np.tube0), t1 = cumAt(full, wpts.length + np.tube1);
+      list.push({part:e, frame:scene, pts:all, v:1.45, delay:k*.17, fadeOut:.4, tube:[t0,t1], sC:sC, panStart:true,
+        end:function(p){ p.kill(); }});
+    });
+    P.q += n;
+  } else {
+    var m = -n, keysNew = panLayout(P.q - m, A);
+    var occ = P.els.map(function(e){ return e.slot; });
+    var free = keysNew.filter(function(k){ return occ.indexOf(k) < 0; });
+    var rev = pts0.slice().reverse();          /* 팔 끝 → … → 전구 → 접시에 닿은 곳 */
+    var spawnW = rev[0];
+    for(i=0;i<m;i++){
+      var key = free[i] || keysNew[i];
+      var tgt = slotPos(key);
+      var local2 = [contactPt(a)].concat(rimArc(a, angOf(tgt)), toRim(tgt).reverse().slice(1), [tgt]);
+      var w2 = local2.map(function(v){ return panG.localToWorld(v.clone()); });
+      var e2 = new Part(-1, scene, scene.worldToLocal(spawnW.clone()), .078);
+      e2.op = 0;
+      var all2 = rev.slice(1).concat(w2);
+      var full2 = [spawnW].concat(all2);
+      var sC2 = cumAt(full2, rev.length - 1);
+      var tb1 = cumAt(full2, rev.length - 1 - np.tube0), tb0 = cumAt(full2, rev.length - 1 - np.tube1);
+      (function(e2, key, tgt){
+        list.push({part:e2, frame:scene, pts:all2, v:1.45, delay:i*.17, fadeIn:.35, tube:[tb0,tb1], sC:sC2, panStart:false,
+          end:function(p){ pinPan(p, tgt, key); P.els.push(p); updDims(); }});
+      })(e2, key, tgt);
+    }
+    P.q -= m;
   }
-  s += g;
-  /* 문지른 자리에 생기는 옅은 윤 */
-  if(rubPct() > 0.08 && !S.flipped){
-    s += '<ellipse cx="'+x+'" cy="'+(y+1)+'" rx="'+(rx-26)+'" ry="'+(ry-10)+'" fill="#ffffff" opacity="'
-       + (rubPct()*0.3).toFixed(2) + '" filter="url(#fSoft)"/>';
+  P.A = A;
+  updDims();
+  return runFlow(list).then(function(){
+    S.flowing = false; assignPan(panLayout(P.q, calcA()), .5); P.A = calcA(); updTally();
+  }, function(e){ S.flowing = false; throw e; });
+}
+function angDiff(a, b){ var d = a-b; while(d > Math.PI) d -= 2*Math.PI; while(d < -Math.PI) d += 2*Math.PI; return d; }
+
+/* 맨손으로 접시를 잡았을 때 — 손(몸)과 바로 이어져 q 가 늘 A 로 맞춰진다 */
+function groundViaHand(A){
+  var n = A - P.q; if(!n) return;
+  S.flowing = true; S.flowDir = null;
+  var list = [], ga = GRIP_A, handPts = HAND_PATH.slice(1).map(function(v){ return panG.worldToLocal(handPan.localToWorld(v.clone())); });
+  if(n > 0){
+    var out = P.els.filter(function(e){ return e.slot && e.slot.charAt(0) === 'x'; }).slice(0, n);
+    out.forEach(function(e, k){
+      P.els.splice(P.els.indexOf(e),1); e.slot = null;
+      var pts = toRim(e.lp).concat(rimArc(angOf(e.lp), ga), [contactPt(ga)], handPts);
+      list.push({part:e, frame:panG, pts:pts, v:1.6, delay:k*.12, fadeOut:.4, end:function(p){ p.kill(); }});
+    });
+    P.q += n;
+  } else {
+    var m = -n, keysNew = panLayout(P.q - m, A), occ = P.els.map(function(e){ return e.slot; });
+    var free = keysNew.filter(function(k){ return occ.indexOf(k) < 0; });
+    var rev = handPts.slice().reverse();
+    for(var i=0;i<m;i++){
+      var key = free[i], tgt = slotPos(key);
+      var e2 = new Part(-1, panG, rev[0], .078); e2.op = 0;
+      var pts2 = rev.slice(1).concat([contactPt(ga)], rimArc(ga, angOf(tgt)), toRim(tgt).reverse().slice(1), [tgt]);
+      (function(key, tgt){
+        list.push({part:e2, frame:panG, pts:pts2, v:1.6, delay:i*.12, fadeIn:.3, end:function(p){ p.slot = key; p.moveTo(tgt,.2); P.els.push(p); updDims(); }});
+      })(key, tgt);
+    }
+    P.q -= m;
   }
-  s += '<text x="'+x+'" y="'+(y+ry+26)+'" text-anchor="middle" font-family="Gowun Dodum, sans-serif"'
-     + ' font-size="14" fill="'+(S.dark?'#b6a486':'#5c4a33')+'">스타이로폼 접시</text>';
-  return s;
-}
-
-/* ── 털가죽 ─────────────────────────────────────────────── */
-var FUR_HAIR = (function(){
-  var h = '';
-  for(var i=0;i<120;i++){
-    var x = -74 + rnd()*148, y = 4 + rnd()*24;
-    var dx = -3 + rnd()*6, dy = 8 + rnd()*11;
-    h += '<line x1="'+x.toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(x+dx).toFixed(1)+'" y2="'
-       + (y+dy).toFixed(1)+'" stroke="#8a6640" stroke-width="1.2" opacity="'
-       + (0.3+rnd()*0.5).toFixed(2)+'" stroke-linecap="round"/>';
-  }
-  return h;
-})();
-function fur(){
-  return '<g id="gFur" transform="translate('+S.fur.x+','+S.fur.y+')" style="cursor:grab">'
-    + '<ellipse cx="0" cy="30" rx="80" ry="12" fill="#000" opacity="'+(S.dark?.45:.2)+'" filter="url(#fBlur)"/>'
-    + '<rect x="-78" y="-26" width="156" height="52" rx="16" fill="url(#pFur)" stroke="#2e2013" stroke-width="1.5"/>'
-    + '<g clip-path="none">'+FUR_HAIR+'</g>'
-    + '<rect x="-78" y="-26" width="156" height="16" rx="8" fill="#8b6743" opacity=".45"/>'
-    + '<text x="0" y="46" text-anchor="middle" font-family="Gowun Dodum, sans-serif" font-size="13.5"'
-    + ' fill="'+(S.dark?'#b6a486':'#5c4a33')+'">털가죽</text></g>';
-}
-
-/* ── 알루미늄 접시 + 수수깡 손잡이 ───────────────────────── */
-function alu(){
-  var on = S.aluOn;
-  var x = on ? ALU_ON.x : S.alu.x, y = on ? ALU_ON.y : S.alu.y;
-  var rx = ALU_ON.rx, ry = ALU_ON.ry;
-  var s = '<g id="gAluG" transform="translate('+x+','+y+')" style="cursor:grab">'
-    + '<ellipse cx="0" cy="'+(ry*0.5+8)+'" rx="'+(rx+4)+'" ry="'+(ry*0.45)+'" fill="#000" opacity="'
-    + (S.dark?.5:.22) + '" filter="url(#fBlur)"/>'
-    /* 접시 몸통 */
-    + '<ellipse cx="0" cy="0" rx="'+rx+'" ry="'+ry+'" fill="url(#pAlu)" stroke="#6f7479" stroke-width="1.4"/>'
-    + '<ellipse cx="0" cy="2" rx="'+(rx-16)+'" ry="'+(ry-7)+'" fill="url(#pAluRim)" opacity=".55"/>'
-    + '<ellipse cx="0" cy="3" rx="'+(rx-30)+'" ry="'+(ry-12)+'" fill="#eef1f3" opacity=".7"/>'
-    /* 가장자리 주름 */
-    + (function(){ var g=''; for(var i=0;i<26;i++){ var a=(i/26)*Math.PI*2;
-        var x1=Math.cos(a)*(rx-13), y1=Math.sin(a)*(ry-6);
-        var x2=Math.cos(a)*rx, y2=Math.sin(a)*ry;
-        g+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)
-          +'" stroke="#7f858b" stroke-width="1" opacity=".55"/>'; } return g; })()
-    /* 반짝임 */
-    + '<ellipse cx="-38" cy="-9" rx="30" ry="6" fill="#ffffff" opacity=".7" filter="url(#fSoft)"/>'
-    /* 수수깡 손잡이 */
-    + '<rect x="-7" y="-88" width="14" height="90" rx="6" fill="#d9c48f" stroke="#a98f52" stroke-width="1.4"/>'
-    + '<line x1="-2" y1="-84" x2="-2" y2="-6" stroke="#c2a86f" stroke-width="1.4"/>'
-    + '<line x1="3" y1="-82" x2="3" y2="-8" stroke="#c2a86f" stroke-width="1.4"/>'
-    + '<ellipse cx="0" cy="-88" rx="7" ry="3.4" fill="#e8d8ab"/>'
-    + '<text x="34" y="-74" font-family="Gowun Dodum, sans-serif" font-size="13"'
-    + ' fill="'+(S.dark?'#b6a486':'#5c4a33')+'">수수깡</text>'
-    + (on
-       /* 겹쳐 놓으면 스타이로폼 이름표와 부딪히므로 위로 올린다 */
-       ? '<text x="-78" y="'+(-ry-16)+'" text-anchor="middle" font-family="Gowun Dodum, sans-serif"'
-         + ' font-size="13.5" fill="'+(S.dark?'#b6a486':'#5c4a33')+'">알루미늄 접시</text>'
-       : '<text x="0" y="'+(ry+26)+'" text-anchor="middle" font-family="Gowun Dodum, sans-serif"'
-         + ' font-size="13.5" fill="'+(S.dark?'#b6a486':'#5c4a33')+'">알루미늄 접시</text>')
-    + '</g>';
-  return s;
-}
-
-/* ── 네온전구 + 그것을 쥔 손 ─────────────────────────────── */
-function neon(){
-  var x = S.neon.x, y = S.neon.y;
-  /* 원점은 오른쪽 극(접촉하는 쪽) 끝 */
-  return '<g id="gNeon" transform="translate('+x+','+y+')" style="cursor:grab">'
-    /* 불빛 — 밝기는 자바스크립트가 실시간으로 바꾼다 */
-    + '<circle id="nHalo" cx="52" cy="0" r="62" fill="url(#pNeon)" opacity="0"/>'
-    /* 접시에 닿는 쪽 리드선 */
-    + '<line x1="0" y1="0" x2="22" y2="0" stroke="#c9ccd0" stroke-width="2.6" stroke-linecap="round"/>'
-    /* 유리관 */
-    + '<rect x="22" y="-13" width="52" height="26" rx="13" fill="#2a2b30" opacity=".85"/>'
-    + '<rect x="22" y="-13" width="52" height="26" rx="13" fill="none" stroke="#9aa0a6" stroke-width="1.6"/>'
-    + '<rect id="nCore" x="26" y="-9" width="44" height="18" rx="9" fill="#ff7a2e" opacity="0"/>'
-    /* 안쪽 두 전극 */
-    + '<line x1="32" y1="-6" x2="32" y2="6" stroke="#b7bcc2" stroke-width="2.4"/>'
-    + '<line x1="64" y1="-6" x2="64" y2="6" stroke="#b7bcc2" stroke-width="2.4"/>'
-    + '<ellipse cx="58" cy="-7" rx="12" ry="3" fill="#ffffff" opacity=".35"/>'
-    /* 반대쪽 리드선 — 손이 잡는다 */
-    + '<line x1="74" y1="0" x2="104" y2="0" stroke="#c9ccd0" stroke-width="2.6" stroke-linecap="round"/>'
-    /* 손 */
-    + '<g transform="translate(150,-4) scale(-1,1)">'
-    +  '<path d="M0 -14 q26 -8 44 2 q10 6 10 16 q0 12 -12 16 q-20 6 -42 -2 z" fill="#e7bc95" stroke="#b98f68" stroke-width="1.5"/>'
-    +  '<path d="M44 -12 q12 -2 14 6 q2 8 -8 10" fill="none" stroke="#b98f68" stroke-width="1.4"/>'
-    +  '<path d="M6 -6 q16 -3 30 0" fill="none" stroke="#cfa07a" stroke-width="1.2"/>'
-    +  '<path d="M6 4 q16 3 30 0" fill="none" stroke="#cfa07a" stroke-width="1.2"/>'
-    + '</g>'
-    + '<text x="56" y="34" text-anchor="middle" font-family="Gowun Dodum, sans-serif" font-size="13.5"'
-    + ' fill="'+(S.dark?'#b6a486':'#5c4a33')+'">네온전구</text></g>';
-}
-
-/* 접촉 지점 표시 — 어디에 대야 하는지 */
-function target(){
-  if(S.step !== 3 || !S.armed) return '';
-  return '<g pointer-events="none"><circle cx="'+TOUCH.x+'" cy="'+TOUCH.y+'" r="17" fill="none"'
-       + ' stroke="#ffb066" stroke-width="2.4" stroke-dasharray="5 5" opacity=".9"/>'
-       + '<circle cx="'+TOUCH.x+'" cy="'+TOUCH.y+'" r="4" fill="#ffb066" opacity=".9"/></g>';
-}
-
-/* 문지르는 중 효과 */
-function rubFx(){
-  if(S.step !== 0 || !rubbing) return '';
-  var g = '';
-  for(var i=0;i<3;i++){
-    var yy = S.fur.y - 34 - i*9;
-    g += '<line x1="'+(S.fur.x-96-i*8)+'" y1="'+yy+'" x2="'+(S.fur.x-64-i*8)+'" y2="'+yy
-       + '" stroke="#ffe6b8" stroke-width="2.2" opacity="'+(0.5-i*0.13).toFixed(2)+'" stroke-linecap="round"/>'
-       + '<line x1="'+(S.fur.x+64+i*8)+'" y1="'+yy+'" x2="'+(S.fur.x+96+i*8)+'" y2="'+yy
-       + '" stroke="#ffe6b8" stroke-width="2.2" opacity="'+(0.5-i*0.13).toFixed(2)+'" stroke-linecap="round"/>';
-  }
-  return g;
-}
-
-/* 알루미늄 접시에 비치는 불빛 */
-function spill(){
-  return '<ellipse id="nSpill" cx="'+ALU_ON.x+'" cy="'+(ALU_ON.y-2)+'" rx="120" ry="34"'
-       + ' fill="#ff8a3c" opacity="0" filter="url(#fBlur)" pointer-events="none"/>';
-}
-
-function draw(){
-  seed = 20260901;
-  lab.innerHTML = defs() + stage() + styro() + '<g id="chgS"></g>'
-                + (S.aluOn ? alu() + '<g id="chgA"></g>' : '')
-                + spill() + rubFx() + target()
-                + (S.step === 0 || S.step === 1 ? fur() : '')
-                + (!S.aluOn && S.step >= 2 ? alu() : '')
-                + (S.step >= 3 ? neon() : '');
-  paintChg();
+  P.A = A; updDims();
+  runFlow(list).then(function(){ S.flowing = false; assignPan(panLayout(P.q, calcA()), .4); updTally(); }, function(){ S.flowing = false; });
 }
 
 /* ═══════════════════════════════════════════════════════════
-   번쩍임
+   장면 차리기 — 한 번에 원하는 상태로
    ═══════════════════════════════════════════════════════════ */
-var flashStart = 0, flashDur = 0, flashing = false;
-function fire(slow){
-  flashStart = performance.now();
-  flashDur = slow ? 1500 : 200;
-  flashing = true;
-  requestAnimationFrame(tick);
+function setup(o){
+  abortAll();
+  S.flowing = false; S.busy = false; S.pending = false; flash = null; glowA = glowB = 0; S.weakGlow = false;
+  S.phase = o.phase || 'flipped'; S.flipped = o.flip !== false; S.foamN = o.foamN === undefined ? 8 : o.foamN;
+  S.cfg.handOnPan = !!o.handOnPan; setNeonHand(o.neonHand !== false);
+  S.hiFoam = false;
+  if(S.phase === 'held') foamTo('held'); else foamTo(S.flipped ? 'flipped' : 'up');
+  handFoam.visible = (S.phase === 'held');
+  rubSheen.material.opacity = S.foamN ? .16 : 0;
+  furHomeNow(); S.rub = S.foamN ? RUB_NEED : 0;
+  S.panAt = o.pan || 'home';
+  var py = S.flipped ? PLACED_Y : PLACED_Y_IN;
+  if(S.panAt === 'home') panG.position.copy(PAN_HOME);
+  else if(S.panAt === 'placed') panG.position.set(FOAM_C.x, py, FOAM_C.z);
+  else if(S.panAt === 'lifted') panG.position.set(FOAM_C.x, LIFT_Y, FOAM_C.z);
+  panG.updateMatrixWorld(true);
+  handStick.visible = (S.panAt === 'lifted') && !S.cfg.handOnPan;
+  handPan.visible = S.cfg.handOnPan;
+  P.q = o.q || 0; P.A = calcA();
+  if(o.induced === false) P.A = 0;
+  buildParts();
+  neonG.visible = !!o.neon;
+  S.neon = o.neon ? 'home' : 'hidden';
+  if(o.neon){ var h = neonHomePos(); neonAt(h.p, -h.r); }
+  updTally();
 }
-function tick(now){
-  if(!flashing) return;
-  var e = (now - flashStart) / flashDur;
-  var b;
-  if(e >= 1){ b = 0; flashing = false; }
-  else if(e < 0.07) b = e / 0.07;
-  else b = Math.pow(1 - (e - 0.07) / 0.93, 1.7);
-  var halo = document.getElementById('nHalo');
-  var core = document.getElementById('nCore');
-  var sp   = document.getElementById('nSpill');
-  if(halo) halo.setAttribute('opacity', (b * 0.95).toFixed(3));
-  if(halo) halo.setAttribute('r', (48 + b * 30).toFixed(1));
-  if(core) core.setAttribute('opacity', (b).toFixed(3));
-  if(sp)   sp.setAttribute('opacity', (b * (S.dark ? 0.5 : 0.22)).toFixed(3));
-  if(flashing) requestAnimationFrame(tick);
+
+/* ═══════════════════════════════════════════════════════════
+   글자표 (3D 위 이름표)
+   ═══════════════════════════════════════════════════════════ */
+var LBL = {};
+function mkLbl(id, cls, txt){
+  var d = document.createElement('div'); d.className = 'lbl ' + (cls||''); d.textContent = txt;
+  d.style.opacity = 0; $('labels').appendChild(d);
+  LBL[id] = {el:d, on:false, p:V(0,0,0), op:0};
 }
+mkLbl('foam','', '스타이로폼 접시'); mkLbl('fur','', '털가죽'); mkLbl('pan','', '알루미늄 접시');
+mkLbl('stick','', '수수깡'); mkLbl('neon','', '네온전구'); mkLbl('face','k warn', '문지를 곳: 접시 바닥면');
+mkLbl('far','k minus', '먼 쪽(가장자리)엔 −'); mkLbl('near','k plus', '닿은 쪽(아래)엔 +');
+mkLbl('fixed','k', '스타이로폼의 −는 그대로 (부도체)'); mkLbl('body','k warn', '손 → 몸으로');
+mkLbl('bodyIn','k warn', '몸 → 손에서'); mkLbl('furP','k plus', '털가죽: 전자를 잃어 +');
+mkLbl('foamM','k minus', '스타이로폼: 전자를 얻어 −'); mkLbl('handGnd','k warn', '맨손 → 몸으로 새어 나감');
+mkLbl('nopath','k warn', '✕ 전자가 빠져나갈 길 없음'); mkLbl('lit','k warn', '');
+mkLbl('panPlus','k plus', '전자가 모자라 접시 전체 (+)'); mkLbl('desk','k', '문지른 면이 책상 쪽');
+var _pv = V(0,0,0);
+function setL(id, on, p, txt){ var L = LBL[id]; L.on = on; if(p) L.p.copy(p); if(txt !== undefined && L.el.textContent !== txt) L.el.textContent = txt; }
+function updLabels(){
+  var w = stageEl.clientWidth, h = stageEl.clientHeight, X = S.xray || chgVis > .5;
+  var fp = foamG.position, pp = panG.position;
+  setL('foam', true, S.phase === 'held' ? V(fp.x, fp.y - .95, fp.z + .2) : V(fp.x - .2, 0, fp.z + 1.42));
+  setL('fur', true, V(furG.position.x, furG.position.y - .02, furG.position.z + .33));
+  setL('pan', S.panAt !== 'placed', V(pp.x, pp.y - .02, pp.z + 1.12));
+  setL('stick', S.step <= 2 || S.panAt === 'lifted', V(pp.x + .2, pp.y + 1.0, pp.z));
+  setL('neon', neonG.visible, neonG.localToWorld(V(.16,.52,0)));
+  setL('face', S.mode === 'live' && S.step === 0, foamG.localToWorld(V(0,-.25,-.55)));
+  var placed = S.panAt === 'placed' && S.phase !== 'held';
+  var X2 = P.els.some(function(e){ return e.slot && e.slot.charAt(0) === 'x'; });
+  setL('far', X && X2 && !S.flowing, panG.localToWorld(V(-.9,.42,-.55)));
+  setL('near', X && placed && P.A > 0 && !S.flowing, V(pp.x - 1.25, pp.y - .03, pp.z + .55));
+  setL('fixed', X && placed && S.foamN > 0 && S.flipped, V(FOAM_C.x + .95, .02, FOAM_C.z + 1.05));
+  setL('desk', X && !S.flipped && S.phase !== 'held', V(FOAM_C.x + .95, -.02, FOAM_C.z + 1.05));
+  var hp = NEON.hand.localToWorld(V(.62,.36,0));
+  setL('body', X && S.flowing && S.flowDir === 'A', hp);
+  setL('bodyIn', X && S.flowing && S.flowDir === 'B', hp);
+  setL('handGnd', X && S.cfg.handOnPan && S.flowing, handPan.localToWorld(V(.9,.5,0)));
+  setL('nopath', X && !S.cfg.neonHand && S.neon === 'contact', neonG.localToWorld(V(.42,-.06,0)));
+  var furCharged = S.foamN > 0 && X;
+  setL('furP', furCharged && S.showRubLbl, V(furG.position.x, furG.position.y + .3, furG.position.z));
+  setL('foamM', furCharged && S.showRubLbl, S.phase === 'held' ? foamG.localToWorld(V(0,-.3,.4)) : V(fp.x, .55, fp.z));
+  setL('panPlus', X && S.panAt === 'lifted' && P.q > 0 && !S.flowing, V(pp.x, pp.y + .55, pp.z - .2));
+  for(var id in LBL){
+    var L = LBL[id], tgt = L.on ? 1 : 0;
+    L.op += (tgt - L.op) * .2; if(Math.abs(L.op - tgt) < .01) L.op = tgt;
+    if(L.op <= 0){ if(L.el.style.opacity !== '0') L.el.style.opacity = 0; continue; }
+    _pv.copy(L.p).project(cam);
+    if(_pv.z > 1){ L.el.style.opacity = 0; continue; }
+    var x = (_pv.x*.5+.5)*w, y = (-_pv.y*.5+.5)*h;
+    L.el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) translate(-50%,-50%)';
+    L.el.style.opacity = L.op.toFixed(2);
+  }
+}
+
+/* ── 전하 수 세기 표 ── */
+var lastTally = '';
+function updTally(){
+  var el = $('tally');
+  if(!(S.xray || S.mode === 'scene')){ el.hidden = true; return; }
+  el.hidden = false;
+  var fm = FUR.els.filter(Boolean).length + PARTS.filter(function(p){ return p.flow && FOAM.x.indexOf(p) >= 0; }).length;
+  var rows = [['털가죽', 12, 12 - S.foamN], ['스타이로폼', 8, 8 + S.foamN], ['알루미늄 접시', 14, inPanCount()]];
+  var h = '<div class="t">전하 수 (알갱이)</div>' + rows.map(function(r){
+    var net = r[1] - r[2], nt = net === 0 ? '0' : (net > 0 ? '+' + net : '−' + (-net));
+    return '<div class="row"><b>' + r[0] + '</b><span><span class="p">+' + r[1] + '</span> <span class="m">−' + r[2] +
+      '</span></span><span class="net ' + (net>0?'p':(net<0?'m':'')) + '">' + (net === 0 ? '전체 0' : '전체 ' + nt) + '</span></div>';
+  }).join('');
+  if(h !== lastTally){ el.innerHTML = h; lastTally = h; }
+}
+function updLegend(){
+  var el = $('legend');
+  el.hidden = !(S.xray || S.mode === 'scene');
+  if(!el.hidden) el.innerHTML = '<i class="lm">−</i>전자 &nbsp;<i class="lp">+</i>(+)전하 · 흐린 것 = 짝을 이룬 전하 · 알갱이 하나 = 실제로는 셀 수 없이 많은 전하 · 전구는 보기 쉽게 크게 그림';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   그리기 순환
+   ═══════════════════════════════════════════════════════════ */
+var last = 0, pulseT = 0, FRAMES = 0;
+function frame(now){
+  var dt = last ? Math.min(.05, (now - last)/1000) : .016; last = now;
+  tick(dt);
+  raf = requestAnimationFrame(frame);
+}
+function tick(dt){
+  FRAMES++;
+  var sdt = dt * SPEED;
+  /* 타이머 */
+  if(TW.length){
+    var list = TW.slice();
+    for(var i=0;i<list.length;i++){
+      var t = list[i]; if(TW.indexOf(t) < 0) continue;
+      t.t += sdt; var k = Math.min(1, t.t / t.dur);
+      if(t.fn) t.fn(k);
+      if(k >= 1){ TW.splice(TW.indexOf(t),1); t.res(); }
+    }
+  }
+  /* 유도 — 접시가 움직이면 전자가 따라 움직인다 */
+  if(!S.flowing){
+    var A = calcA();
+    if(S.cfg.handOnPan && A !== P.q){ groundViaHand(A); }
+    else if(A !== P.A){ P.A = A; assignPan(panLayout(P.q, A), P.glide); updTally(); }
+  }
+  /* 전하 표시 */
+  chgVis += (chgVisT - chgVis) * Math.min(1, dt*3.2);
+  if(Math.abs(chgVis - chgVisT) < .005) chgVis = chgVisT;
+  pulseT += dt;
+  for(var j=PARTS.length-1;j>=0;j--){
+    var p = PARTS[j];
+    if(p.flow) flowStep(p, sdt);
+    else if(p.glide){
+      var g = p.glide; g.t += sdt/g.dur; var e = ease(Math.min(1,g.t));
+      p.sp.position.copy(g.from).lerp(g.to, e);
+      if(g.t >= 1){ p.sp.position.copy(g.to); p.glide = null; }
+    }
+    if(!p.sp.parent) continue;
+    var target = chgVis * (p.dim ? .5 : 1) * p.fade;
+    p.op += (target - p.op) * Math.min(1, dt*10);
+    p.sp.material.opacity = p.op;
+    var sc = p.size * (p.dim ? .82 : 1);
+    if(S.hiFoam && FOAM.x.indexOf(p) >= 0) sc *= 1 + .28*Math.max(0, Math.sin(pulseT*5));
+    p.sp.scale.setScalar(sc);
+  }
+  /* 전구가 집에 있으면 접시 높이를 따라간다 */
+  if(neonG.visible && S.neon === 'home' && !drag){
+    var hp = neonHomePos(); neonG.position.lerp(hp.p, Math.min(1, dt*6)); neonG.rotation.y = hp.r;
+  }
+  touchRing.visible = S.mode === 'live' && S.step >= 3 && S.neon !== 'contact' && S.panAt === 'placed' && !S.flowing && neonG.visible && S.lit === 0;
+  if(touchRing.visible){ touchRing.position.copy(panG.localToWorld(contactPt(NEON_A0))); touchRing.material.opacity = .55 + .4*Math.sin(pulseT*4); }
+  dropRing.visible = S.panAt === 'carry' && S.flipped;
+  if(dropRing.visible) dropRing.material.opacity = .35 + .3*Math.sin(pulseT*5);
+  updGlow(dt);
+  if(S.freezeOnGlow && Math.max(glowA, glowB) > .9){ SPEED = 0; S.freezeOnGlow = false; }   /* 썸네일: 전자가 전구를 지나는 순간에 멈춤 */
+  if(S.flowing) updTally();
+  ctl.update();
+  renderer.render(scene, cam);
+  updLabels();
+}
+var raf = 0;
+function resize(){
+  var w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w || !h) return;
+  renderer.setSize(w, h, false); cam.aspect = w/h;
+  stageEl.classList.toggle('narrow', w < 560);
+  cam.fov = w/h < 1.1 ? 48 : 36;
+  cam.updateProjectionMatrix();
+}
+if(window.ResizeObserver) new ResizeObserver(resize).observe(stageEl);
+addEventListener('resize', resize);
+document.addEventListener('visibilitychange', function(){
+  if(document.hidden){ cancelAnimationFrame(raf); raf = 0; } else if(!raf){ last = 0; raf = requestAnimationFrame(frame); }
+});
 
 /* ═══════════════════════════════════════════════════════════
    끌기
    ═══════════════════════════════════════════════════════════ */
-function svgPt(cx, cy){
-  var m = lab.getScreenCTM(); if(!m) return null;
-  var i = m.inverse();
-  return { x: i.a*cx + i.c*cy + i.e, y: i.b*cx + i.d*cy + i.f };
+var ray = new THREE.Raycaster(); ray.camera = cam;
+var ndc = new THREE.Vector2();
+var GRAB = furMeshes.concat(panMeshes, NEON.meshes);
+var drag = null;
+function setRay(e){
+  var r = renderer.domElement.getBoundingClientRect();
+  ndc.set(((e.clientX - r.left)/r.width)*2 - 1, -((e.clientY - r.top)/r.height)*2 + 1);
+  ray.setFromCamera(ndc, cam);
 }
-var drag = null, rubbing = false, lastRubX = 0;
-
-function hit(p){
-  if((S.step === 0 || S.step === 1) && Math.abs(p.x-S.fur.x) < 84 && Math.abs(p.y-S.fur.y) < 34) return 'fur';
-  if(S.step === 2 && !S.aluOn){
-    /* 수수깡을 잡는다 */
-    if(Math.abs(p.x-S.alu.x) < 30 && p.y > S.alu.y-96 && p.y < S.alu.y+6) return 'alu';
-    if(Math.abs(p.x-S.alu.x) < ALU_ON.rx && Math.abs(p.y-S.alu.y) < ALU_ON.ry+6) return 'alu';
-  }
-  if(S.step === 3 && p.x > S.neon.x-24 && p.x < S.neon.x+200 && Math.abs(p.y-S.neon.y) < 40) return 'neon';
-  return null;
+function hitPlane(pl){ var v = V(0,0,0); return ray.ray.intersectPlane(pl, v) ? v : null; }
+function canGrab(w){
+  if(S.mode !== 'live' || S.busy || S.flowing || POP.classList.contains('on')) return false;
+  if(w === 'fur') return S.step === 0 && S.phase === 'held';
+  if(w === 'pan') return S.step === 2 && S.panAt === 'home';
+  if(w === 'neon') return S.step >= 3 && neonG.visible && (S.panAt === 'placed' || S.panAt === 'lifted');
+  return false;
 }
-
-lab.addEventListener('pointerdown', function(e){
-  var p = svgPt(e.clientX, e.clientY); if(!p) return;
-  var h = hit(p); if(!h) return;
-  e.preventDefault();
-  var o = h === 'fur' ? S.fur : (h === 'alu' ? S.alu : S.neon);
-  drag = { what:h, dx:o.x - p.x, dy:o.y - p.y };
-  if(h === 'fur'){ lastRubX = p.x; }
-  try{ lab.setPointerCapture(e.pointerId); }catch(_){}
-});
-
-lab.addEventListener('pointermove', function(e){
+stageEl.addEventListener('pointerdown', function(e){
+  if(e.target !== renderer.domElement) return;
+  setRay(e);
+  var hits = ray.intersectObjects(GRAB, false);
+  var w = null, gp = null;
+  for(var i=0;i<hits.length;i++){ var o = hits[i].object; if(o.visible !== false && o.parent && isShown(o)){ w = o.userData.grab; gp = hits[i].point.clone(); break; } }
+  if(!w || !canGrab(w)) return;
+  e.preventDefault(); e.stopPropagation();
+  ctl.enabled = false;
+  drag = {what:w};
+  if(w === 'fur'){
+    var f = faceFrame();
+    drag.plane = new THREE.Plane().setFromNormalAndCoplanarPoint(f.n, f.c.clone().addScaledVector(f.n, .085));
+    drag.last = null;
+  } else if(w === 'pan'){
+    /* 잡은 점이 손가락을 그대로 따라오게 — 잡은 높이(들어 올린 뒤)의 수평면 */
+    var lift = CARRY_Y - panG.position.y;
+    drag.plane = new THREE.Plane(V(0,1,0), -(gp.y + lift));
+    handStick.visible = true; S.panAt = 'carry';
+    drag.off = V(panG.position.x - gp.x, 0, panG.position.z - gp.z);
+    panG.position.y = CARRY_Y;
+  } else if(w === 'neon'){
+    var c0 = panCenter();
+    drag.armed = Math.hypot(neonG.position.x - c0.x, neonG.position.z - c0.z) > 1.15;   /* 대고 있던 전구를 떼는 중이면 한 번 멀어져야 다시 댈 수 있다 */
+    var dy = rimY() - neonG.position.y;          /* 전구 끝을 가장자리 높이로 맞춘 뒤 잡은 점 높이 */
+    drag.plane = new THREE.Plane(V(0,1,0), -(gp.y + dy));
+    drag.off = V(neonG.position.x - gp.x, 0, neonG.position.z - gp.z);
+    S.neon = 'drag';
+  }
+  try{ renderer.domElement.setPointerCapture(e.pointerId); }catch(_){}
+}, true);
+function isShown(o){ while(o){ if(o.visible === false) return false; o = o.parent; } return true; }
+addEventListener('pointermove', function(e){
   if(!drag) return;
-  var p = svgPt(e.clientX, e.clientY); if(!p) return;
-  var o = drag.what === 'fur' ? S.fur : (drag.what === 'alu' ? S.alu : S.neon);
-  o.x = p.x + drag.dx; o.y = p.y + drag.dy;
-
-  if(drag.what === 'fur' && S.step === 0){
-    var onPlate = Math.abs(o.x - STY.x) < STY.rx + 20 && Math.abs(o.y - STY.y) < 66;
-    rubbing = onPlate;
-    if(onPlate){
-      S.rub += Math.abs(p.x - lastRubX);
-      if(rubPct() >= 1 && S.step === 0) ready1();
+  setRay(e);
+  var h = hitPlane(drag.plane); if(!h) return;
+  if(drag.what === 'fur'){
+    var f = faceFrame();
+    var rel = h.clone().sub(f.c); var dist = rel.length();
+    if(dist > 1.9){ rel.multiplyScalar(1.9/dist); h = f.c.clone().add(rel); }
+    furG.position.lerp(h, .6);
+    furG.quaternion.setFromUnitVectors(V(0,1,0), f.n.clone().negate());
+    var onFace = h.clone().sub(f.c.clone().addScaledVector(f.n, .085)).length() < .84;
+    if(onFace && drag.last && S.step === 0){
+      S.rub += h.distanceTo(drag.last);
+      var want = Math.min(8, Math.floor(S.rub / RUB_NEED * 8.6));
+      while(S.foamN < want) hopOne();
+      rubSheen.material.opacity = Math.min(1, S.foamN/8)*.16;
+      if(S.foamN >= 8){ drag.last = null; endDrag(); ready1(); return; }
     }
-    lastRubX = p.x;
+    drag.last = h.clone();
+    updateTodo();
+  } else if(drag.what === 'pan'){
+    panG.position.set(clamp(h.x + drag.off.x, -3.5, 3.6), CARRY_Y, clamp(h.z + drag.off.z, -2.2, 2.2));
+  } else if(drag.what === 'neon'){
+    var tip = V(h.x + drag.off.x, rimY(), h.z + drag.off.z);
+    var c = panCenter(), a = Math.atan2(tip.z - c.z, tip.x - c.x), r = Math.hypot(tip.x - c.x, tip.z - c.z);
+    neonAt(tip, a);
+    if(r > 1.2) drag.armed = true;
+    if(r < 1.1 && drag.armed){ drag.touched = true; endDrag(); liveTouch(a); }
   }
-  var g = document.getElementById(drag.what === 'fur' ? 'gFur' : (drag.what === 'alu' ? 'gAluG' : 'gNeon'));
-  if(g) g.setAttribute('transform', 'translate('+o.x+','+o.y+')');
-
-  if(drag.what === 'fur') { draw(); }
-  if(drag.what === 'neon' && S.step === 3 && S.armed){
-    var d = Math.hypot(o.x - TOUCH.x, o.y - TOUCH.y);
-    if(d < 46) contact();
-  }
-  updateTodo();
 });
-
-lab.addEventListener('pointerup', function(){
-  if(!drag) return;
-  var w = drag.what; drag = null; rubbing = false;
-  if(w === 'alu' && S.step === 2){
-    var d = Math.hypot(S.alu.x - ALU_ON.x, S.alu.y - ALU_ON.y);
-    if(d < 90){
-      S.aluOn = true; S.armed = true; S.step = 3; aluT = 0;
-      draw(); startAnim();
-      /* 전하가 다 몰린 뒤에 다음 안내를 띄운다 */
-      setTimeout(function(){ fadeAfterPop = true; brief(3); }, 1200);
+function endDrag(){
+  ctl.enabled = true;
+  var d = drag; drag = null; if(!d) return;
+  if(d.what === 'fur' && S.step === 0){ furHome(.5); }
+  if(d.what === 'pan' && S.panAt === 'carry'){
+    var c = panG.position, dx = Math.hypot(c.x - FOAM_C.x, c.z - FOAM_C.z);
+    if(dx < 1.05){
+      S.busy = true;
+      movePan(V(FOAM_C.x, CARRY_Y, FOAM_C.z), .25).then(function(){ return movePan(V(FOAM_C.x, PLACED_Y, FOAM_C.z), 1.3); }).then(function(){
+        S.panAt = 'placed'; handStick.visible = false; S.busy = false; S.step = 3;
+        updateTodo();
+        return wait(1.2);
+      }).then(function(){
+        neonG.visible = true; S.neon = 'home'; var hh = neonHomePos(); neonAt(hh.p, -hh.r);
+        if(S.xray){ updateTodo(); } else { fadeAfterPop = true; brief(3); }
+      }).catch(function(){});
+    } else {
+      S.busy = true;
+      movePan(V(PAN_HOME.x, CARRY_Y, PAN_HOME.z), .5).then(function(){ return movePan(PAN_HOME, .35); })
+        .then(function(){ S.panAt = 'home'; handStick.visible = false; S.busy = false; }).catch(function(){});
     }
-    else { S.alu.x = ALU_HOME.x; S.alu.y = ALU_HOME.y; }
   }
-  draw(); updateTodo();
-});
+  if(d.what === 'neon' && S.neon === 'drag' && !d.touched){ neonGoHome(false).catch(function(){}); }
+}
+addEventListener('pointerup', function(){ if(drag) endDrag(); });
+addEventListener('pointercancel', function(){ if(drag) endDrag(); });
 
 /* ═══════════════════════════════════════════════════════════
-   진행
+   실험 진행 (live)
    ═══════════════════════════════════════════════════════════ */
-function ready1(){ S.step = 1; draw(); updateTodo(); brief(1); }
-
-function contact(){
-  if(!S.armed) return;
-  S.armed = false; S.lit++;
-  S.neon.x = TOUCH.x; S.neon.y = TOUCH.y;
-  drag = null;
-  draw();
-  fire(false);
-  try{ if(window.parent !== window) window.parent.postMessage({ t:'electrophorusLit' }, '*'); }catch(_){}
-  document.getElementById('btnSlow').hidden = false;
-  document.getElementById('btnLift').hidden = false;
-  updateTodo(); updateCount();
-  setTimeout(function(){ if(S.lit === 1) result1(); }, 950);
+function ready1(){ S.step = 1; furHome(.6).catch(function(){}); updateTodo(); if(!S.xray) brief(1); }
+function liveTouch(a){
+  var placedBefore = S.panAt === 'placed', liftedBefore = S.panAt === 'lifted';
+  S.busy = true;
+  touchAt(a).then(function(r){
+    S.busy = false;
+    if(r.n !== 0){
+      S.lit++; updateCount();
+      $('btnSlow').hidden = false;
+      if(liftedBefore) S.liftNoTouch = false;
+      if(S.lit === 1){
+        try{ if(window.parent !== window) window.parent.postMessage({t:'electrophorusLit'}, '*'); }catch(_){}
+        unlock();
+        if(!S.xray) setTimeout(result1, 950);
+      } else if(liftedBefore && !S.saidLift){ S.saidLift = true; if(!S.xray) setTimeout(liftLit, 950); }
+      else if(placedBefore && S.lit >= 3 && !S.saidAgain){ S.saidAgain = true; if(!S.xray) setTimeout(again, 950); }
+    } else if(placedBefore && P.q > 0 && S.liftNoTouch && !S.saidNo){
+      S.saidNo = true; if(!S.xray) setTimeout(noLit, 500);
+    }
+    S.lastN = r.n;
+    updateTodo();
+  }).catch(function(){ S.busy = false; });
+}
+function unlock(){
+  if(S.unlocked) return;
+  S.unlocked = true;
+  $('btnAns').hidden = false; $('btnAns').classList.add('pulse');
+  $('btnXray').hidden = false;
 }
 
-var POP = document.getElementById('pop'), POPBOX = document.getElementById('popbox');
+var POP = $('pop'), POPBOX = $('popbox');
 function openPop(h){ POPBOX.innerHTML = h; POP.classList.add('on'); }
 function closePop(){ POP.classList.remove('on'); }
-POPBOX.addEventListener('click', function(e){
-  var b = e.target.closest('button[data-act]'); if(b) ACT[b.dataset.act]();
-});
+POPBOX.addEventListener('click', function(e){ var b = e.target.closest('button[data-act]'); if(b) ACT[b.dataset.act](); });
 var fadeAfterPop = false;
-var ACT = { ok:function(){
-  closePop();
-  if(fadeAfterPop){ fadeAfterPop = false; fading = true; startAnim(); }
-}, next:function(){
-  closePop();
-  /* 래퍼(질문실험실) 안이면 ② 탭으로 넘겨 달라고 신호, 단독으로 열었으면 바로 이동 */
-  var sent = false;
-  try{ if(window.parent !== window){ window.parent.postMessage({ t:'gotoCircuit' }, '*'); sent = true; } }catch(_){}
-  if(!sent) location.href = 'ask-circuit.html';
-} };
-
+var ACT = {
+  ok:function(){ closePop(); if(fadeAfterPop){ fadeAfterPop = false; if(!S.xray) chgVisT = 0; updateTodo(); } },
+  next:function(){
+    closePop();
+    var sent = false;
+    try{ if(window.parent !== window){ window.parent.postMessage({t:'gotoCircuit'}, '*'); sent = true; } }catch(_){}
+    if(!sent) location.href = 'ask-circuit.html';
+  },
+  ans:function(){ closePop(); enterAns(); }
+};
 var BRIEF = [
 { k:'준비', t:'실험을 시작합니다',
   b:'전지는 하나도 쓰지 않습니다. 그래도 전구를 켤 수 있을까요?<br>'
    +'<b>어두운 실험실</b>로 해 두었습니다 — 불빛이 아주 약하거든요.',
-  o:['스타이로폼 접시를 <b>털가죽으로 여러 번</b> 문지른다',
-     '문지른 접시를 <b>뒤집어</b> 책상에 놓는다',
+  o:['스타이로폼 접시를 들고 <b>바닥면</b>을 털가죽으로 여러 번 문지른다',
+     '문지른 바닥면이 위로 오게 접시를 <b>뒤집어</b> 책상에 놓는다',
      '<b>수수깡을 잡고</b> 알루미늄 접시를 그 위에 올린다',
-     '네온전구 한쪽 극을 손으로 잡고, 다른 쪽을 <b>알루미늄 접시 가장자리</b>에 댄다'] },
+     '네온전구 한쪽 극을 손으로 잡고, 다른 쪽 극을 <b>알루미늄 접시 가장자리</b>에 댄다'],
+  s:'3D 화면이에요. 도구가 아닌 빈 곳을 끌면 실험대를 돌려 볼 수 있어요.' },
 { k:'2단계', t:'뒤집어 놓기',
   b:'충분히 문질렀습니다.<br>이제 접시를 <b>뒤집어</b> 책상 위에 놓으세요.' },
 { k:'3단계', t:'알루미늄 접시 올리기',
   b:'<b>수수깡을 잡고</b> 알루미늄 접시를 스타이로폼 접시 위에 올려놓으세요.<br><br>'
    +'스타이로폼의 (−)는 <b>한 톨도 움직이지 않습니다.</b><br>'
-   +'움직이는 것은 <b>알루미늄 접시 안에 원래 있던</b> (−)예요.' },
+   +'움직이는 것은 <b>알루미늄 접시 안에 원래 있던</b> (−)예요. 올리는 동안 잘 보세요.' },
 { k:'4단계', t:'네온전구를 대 보기',
   b:'네온전구의 한쪽 극은 이미 <b>손으로 잡고</b> 있습니다.<br>'
-   +'다른 쪽 끝을 <b>알루미늄 접시 가장자리</b>에 대 보세요.<br><br>'
+   +'네온전구를 끌어다 다른 쪽 극을 <b>알루미늄 접시 가장자리</b>에 대 보세요.<br><br>'
    +'<b>여기서부터는 눈에 보이지 않습니다.</b><br>무슨 일이 일어나는지는 여러분이 알아내야 해요.' }
 ];
 function brief(i){
   var m = BRIEF[i];
-  openPop('<div class="kicker">'+m.k+'</div><h3>'+m.t+'</h3>'
-        + '<div class="body">'+m.b+'</div>'
-        + (m.o ? '<ol>'+m.o.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ol>' : '')
-        + '<div class="poprow"><button class="btn primary" data-act="ok">알겠어요</button></div>');
+  openPop('<div class="kicker">'+m.k+'</div><h3>'+m.t+'</h3><div class="body">'+m.b+'</div>'
+    + (m.o ? '<ol>'+m.o.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol>' : '')
+    + (m.s ? '<div class="small">'+m.s+'</div>' : '')
+    + '<div class="poprow"><button class="btn primary" data-act="ok">알겠어요</button></div>');
 }
-
 function result1(){
   openPop('<div class="kicker">봤나요?</div><h3>불이 켜졌습니다</h3>'
-        + '<div class="body">전지는 <b>하나도</b> 쓰지 않았습니다.<br>'
-        + '그런데 네온전구가 <b>아주 잠깐</b> 켜졌어요.<br>'
-        + '너무 빨라서 놓쳤다면 <b>🐢 느리게 다시 보기</b>를 눌러 보세요.</div>'
-        + '<div class="qbox">🤔 전지도 없었는데 불이 켜졌습니다.<br>'
-        + '그 순간, <b>무엇이 전구를 지나간 걸까요?</b></div>'
-        + '<div class="qbox">🤔 그리고 왜 <b>계속 켜져 있지 않고</b> 잠깐만 켜졌을까요?</div>'
-        + '<div class="nextbox">🎉 <b>① 성공!</b> 다음 실험은 <b>② 다 이었는데 안 켜진다</b> —'
-        + ' 이번엔 전지도 전구도 있는데 <b>안 켜지는</b> 회로입니다.</div>'
-        + '<div class="poprow"><button class="btn" data-act="ok">여기 더 있을래요</button>'
-        + '<button class="btn primary" data-act="next">② 다 이었는데 안 켜진다 →</button></div>');
+    + '<div class="body">전지는 <b>하나도</b> 쓰지 않았습니다.<br>그런데 네온전구가 <b>아주 잠깐</b> 켜졌어요.<br>'
+    + '너무 빨라서 놓쳤다면 <b>🐢 느리게 다시 보기</b>를 눌러 보세요.</div>'
+    + '<div class="qbox">🤔 전지도 없었는데 불이 켜졌습니다.<br>그 순간, <b>무엇이 전구를 지나간 걸까요?</b></div>'
+    + '<div class="qbox">🤔 그리고 왜 <b>계속 켜져 있지 않고</b> 잠깐만 켜졌을까요?</div>'
+    + '<div class="body" style="font-size:14.5px;margin-top:12px">더 해 볼 것 — <b>⬆ 들어 올리기</b>로 접시를 들고, 들어 올린 접시에도 전구를 대 보세요.</div>'
+    + '<div class="nextbox">🎉 <b>① 성공!</b> 다음 실험은 <b>② 다 이었는데 안 켜진다</b> — 이번엔 전지도 전구도 있는데 <b>안 켜지는</b> 회로입니다.</div>'
+    + '<div class="poprow"><button class="btn" data-act="ok">여기 더 있을래요</button>'
+    + '<button class="btn primary" data-act="next">② 다 이었는데 안 켜진다 →</button></div>');
 }
-
+function liftLit(){
+  openPop('<div class="kicker">어? 또!</div><h3>들어 올린 접시에서도 켜졌습니다</h3>'
+    + '<div class="body">이번엔 접시가 스타이로폼 위에 <b>없었어요.</b><br><b>🐢 느리게 다시 보기</b>로 전구의 <b>어느 쪽 끝</b>이 빛나는지도 보세요.</div>'
+    + '<div class="qbox">🤔 이번에도 전구를 지나간 것이 <b>같은 쪽으로</b> 지나갔을까요?</div>'
+    + '<div class="poprow"><button class="btn primary" data-act="ok">계속 해 볼게요</button></div>');
+}
 function again(){
   openPop('<div class="kicker">한 번 더</div><h3>또 켜졌습니다</h3>'
-        + '<div class="body">털가죽으로는 <b>맨 처음 한 번만</b> 문질렀습니다.<br>'
-        + '그런데 접시를 들었다 놓기만 하면 <b>몇 번이고</b> 다시 켜져요.</div>'
-        + '<div class="qbox">🤔 문지르지도 않았는데 <b>어떻게 계속 켜질까요?</b></div>'
-        + '<div class="poprow"><button class="btn primary" data-act="ok">계속 해 볼게요</button></div>');
+    + '<div class="body">털가죽으로는 <b>맨 처음 한 번만</b> 문질렀습니다.<br>그런데 <b>들기 → 대기 → 놓기 → 대기</b>를 할 때마다 다시 켜져요.</div>'
+    + '<div class="qbox">🤔 문지르지도 않았는데 <b>어떻게 계속 켜질까요?</b></div>'
+    + '<div class="poprow"><button class="btn primary" data-act="ok">계속 해 볼게요</button></div>');
+}
+function noLit(){
+  openPop('<div class="kicker">어?</div><h3>이번엔 안 켜졌습니다</h3>'
+    + '<div class="body">접시를 들었다가 <b>전구를 대지 않고</b> 그냥 내려놓았죠?</div>'
+    + '<div class="qbox">🤔 앞에서 켜졌을 때와 <b>무엇이 달랐을까요?</b></div>'
+    + '<div class="body" style="font-size:14.5px">다시 들어 올려서, 들어 올린 접시에 먼저 대 보세요.</div>'
+    + '<div class="poprow"><button class="btn primary" data-act="ok">다시 해 볼게요</button></div>');
 }
 
-/* ═══════════════════════════════════════════════════════════
-   단추 · 안내
-   ═══════════════════════════════════════════════════════════ */
 var STEPS = ['문지르기', '뒤집어 놓기', '접시 올리기', '전구 대기'];
 function drawSteps(){
-  document.getElementById('steps').innerHTML = STEPS.map(function(t, i){
+  $('steps').innerHTML = STEPS.map(function(t, i){
     var cls = (S.step > i || (i === 3 && S.lit > 0)) ? 'done' : (S.step === i ? 'now' : '');
     return '<div class="st '+cls+'"><span class="no">'+(i+1)+'</span><span>'+t+'</span></div>';
   }).join('') + (S.lit > 0 ? '<div class="st success"><span class="no">🎉</span><span>성공!</span></div>' : '');
 }
 function updateTodo(){
   var t;
-  if(S.step === 0){
-    var pct = Math.round(rubPct()*100);
-    t = '<b>털가죽</b>을 끌어다 스타이로폼 접시 위에서 <b>좌우로 문지르세요.</b> ('+pct+'%)';
-  }
+  if(S.step === 0) t = '<b>털가죽</b>을 끌어다 들고 있는 접시의 <b>바닥면</b> 위에서 이리저리 문지르세요. (' + Math.round(Math.min(1, S.foamN/8)*100) + '%)';
   else if(S.step === 1) t = '<b>접시 뒤집어 놓기</b>를 누르세요.';
-  else if(S.step === 2) t = '<b>수수깡</b>을 잡고 알루미늄 접시를 스타이로폼 접시 위로 옮기세요.';
-  else if(S.step === 3 && S.armed) t = '네온전구 끝을 <b>알루미늄 접시 가장자리(○ 표시)</b>에 대세요.';
-  else t = '✅ <b>성공!</b> 전구가 켜졌어요 — <b>접시를 들었다 다시 놓기</b>로 몇 번이고 다시, 아니면 위의 <b>② 다 이었는데 안 켜진다</b>로 넘어가세요.';
-  document.getElementById('todoTx').innerHTML = t;
-  document.getElementById('btnFlip').hidden = (S.step !== 1);
+  else if(S.step === 2) t = '<b>수수깡</b>을 잡고(끌어서) 알루미늄 접시를 스타이로폼 접시 위로 옮기세요.';
+  else if(S.lit === 0) t = '네온전구를 끌어다 끝을 <b>알루미늄 접시 가장자리(○)</b>에 대세요.';
+  else if(S.panAt === 'lifted') t = '들어 올린 접시 가장자리에 <b>네온전구</b>를 대 보세요. 그다음 <b>⬇ 다시 내려놓기</b>.';
+  else if(S.lastN === 0 && S.panAt === 'placed') t = '이번엔 안 켜졌어요. <b>⬆ 들어 올리기</b>부터 다시 해 보세요.';
+  else t = '✅ <b>켜졌어요!</b> <b>⬆ 들어 올리기</b>로 접시를 들고 다시 대 보세요.'
+       + ' 궁금한 것을 학습지에 적었다면 <b>🔎 단추</b>로 답이 있는지 확인해 보세요.';
+  $('todoTx').innerHTML = t;
+  $('btnFlip').hidden = (S.step !== 1);
+  $('btnLift').hidden = !(S.lit > 0 && S.panAt === 'placed');
+  $('btnLower').hidden = !(S.lit > 0 && S.panAt === 'lifted');
   drawSteps();
 }
-function updateCount(){
-  document.getElementById('count').innerHTML = S.lit
-    ? '지금까지 불이 켜진 횟수 <b>'+S.lit+'</b>번'
-    : '';
+function updateCount(){ $('count').innerHTML = S.lit ? '지금까지 불이 켜진 횟수 <b>'+S.lit+'</b>번' : ''; }
+
+$('btnFlip').addEventListener('click', function(){
+  if(S.busy || S.step !== 1 || S.phase !== 'held') return;
+  camTo(CAMS.start, 1.4).catch(function(){});
+  doFlip().then(function(){ S.step = 2; updateTodo(); if(!S.xray) brief(2); }).catch(function(){});
+});
+$('btnLift').addEventListener('click', function(){
+  if(S.busy || S.flowing || S.panAt !== 'placed' || S.lit < 1) return;
+  doLift().then(updateTodo).catch(function(){});
+  $('btnLift').hidden = true;
+});
+$('btnLower').addEventListener('click', function(){
+  if(S.busy || S.flowing || S.panAt !== 'lifted') return;
+  doLower().then(updateTodo).catch(function(){});
+  $('btnLower').hidden = true;
+});
+$('btnSlow').addEventListener('click', function(){ fireFlash(S.lastDir, true); });
+$('btnLight').addEventListener('click', function(){ setDark(!S.dark); });
+function setDark(d){
+  S.dark = d;
+  $('btnLight').textContent = d ? '💡 교실 불 켜기' : '🌙 교실 불 끄기';
+  stageEl.classList.toggle('light', !d);
+  scene.background = new THREE.Color(d ? 0x0c0a08 : 0xe9dfca);
+  stageEl.style.background = d ? '#0c0a08' : '#e9dfca';
+  M.wall.color.set(d ? 0x1b1612 : 0xdccfb3);
+  hemi.intensity = d ? .32 : .85; key.intensity = d ? .62 : 1.0; fill.intensity = d ? .14 : .3;
+}
+$('btnReset').addEventListener('click', function(){ liveReset(true); });
+$('btnXray').addEventListener('click', function(){ setXray(!S.xray); updateTodo(); });
+function setXray(on){
+  S.xray = on; chgVisT = on ? 1 : ((S.step >= 3 && !fadeAfterPop) ? 0 : 1);
+  if(on){ M.foam.transparent = true; M.foam.opacity = .55; M.foam.depthWrite = false; M.alu.transparent = true; M.alu.opacity = .5; M.alu.depthWrite = false; }
+  else { M.foam.transparent = false; M.foam.opacity = 1; M.foam.depthWrite = true; M.alu.transparent = false; M.alu.opacity = 1; M.alu.depthWrite = true; }
+  M.foam.needsUpdate = true; M.alu.needsUpdate = true;
+  $('btnXray').textContent = '⚛ 전하 보기: ' + (on ? '켬' : '끔');
+  updTally(); updLegend();
+}
+function liveReset(withBrief){
+  S.mode = 'live'; SPEED = 1;
+  S.step = 0; S.lit = 0; S.saidLift = S.saidAgain = S.saidNo = false; S.liftNoTouch = false; S.lastN = undefined; S.showRubLbl = true;
+  setup({phase:'held', foamN:0, pan:'home', neon:false});
+  chgVisT = 1;
+  if(!S.xray){ chgVis = 1; }
+  fadeAfterPop = false;
+  $('btnSlow').hidden = true;
+  updateTodo(); updateCount(); camTo(CAMS.held, .8).catch(function(){});
+  if(withBrief && !S.xray) brief(0);
 }
 
-document.getElementById('btnFlip').addEventListener('click', function(){
-  S.flipped = true; S.step = 2; draw(); updateTodo(); brief(2);
+/* ── 시점 ── */
+function camTo(c, dur){
+  var p0 = cam.position.clone(), t0 = ctl.target.clone();
+  return tween(dur, function(t){ var e = ease(t); cam.position.copy(p0).lerp(c.p, e); ctl.target.copy(t0).lerp(c.t, e); });
+}
+$('camReset').addEventListener('click', function(){
+  var c = S.mode === 'scene' ? (curScnCam || CAMS.stack) : (S.step === 0 ? CAMS.held : CAMS.start);
+  var p0 = cam.position.clone(), t0 = ctl.target.clone();
+  TW.push({t:0, dur:.6, fn:function(t){ var e = ease(t); cam.position.copy(p0).lerp(c.p, e); ctl.target.copy(t0).lerp(c.t, e); }, res:function(){}, rej:function(){}, tok:-1});
 });
-document.getElementById('btnLift').addEventListener('click', function(){
-  S.armed = true;
-  S.neon.x = NEON_HOME.x; S.neon.y = NEON_HOME.y;
-  draw(); updateTodo();
+$('fsBtn').addEventListener('click', function(){
+  var el = $('stageCard');
+  if(document.fullscreenElement){ document.exitFullscreen(); }
+  else if(el.requestFullscreen){ el.requestFullscreen().catch(function(){}); }
 });
-document.getElementById('btnSlow').addEventListener('click', function(){ fire(true); });
-document.getElementById('btnLight').addEventListener('click', function(){
-  S.dark = !S.dark;
-  this.textContent = S.dark ? '💡 교실 불 켜기' : '🌙 교실 불 끄기';
-  draw();
-});
-document.getElementById('btnReset').addEventListener('click', function(){
-  S.step = 0; S.rub = 0; S.flipped = false; S.aluOn = false; S.armed = false; S.lit = 0;
-  aluT = 0; chgA = 1; fading = false; fadeAfterPop = false; saidAgain = false;
-  S.fur = {x:FUR_HOME.x, y:FUR_HOME.y};
-  S.alu = {x:ALU_HOME.x, y:ALU_HOME.y};
-  S.neon = {x:NEON_HOME.x, y:NEON_HOME.y};
-  document.getElementById('btnSlow').hidden = true;
-  document.getElementById('btnLift').hidden = true;
-  draw(); updateTodo(); updateCount(); brief(0);
-});
+document.addEventListener('fullscreenchange', function(){ setTimeout(resize, 60); setTimeout(resize, 300); });
 
-/* 두 번째부터는 "또 켜졌다" 안내를 한 번만 */
-var saidAgain = false;
-var _contact = contact;
-contact = function(){
-  var before = S.lit;
-  _contact();
-  if(before >= 1 && !saidAgain){ saidAgain = true; setTimeout(again, 950); }
+/* ═══════════════════════════════════════════════════════════
+   🔎 답 찾기 — 질문 목록 · 답 · 3D 장면
+   ═══════════════════════════════════════════════════════════ */
+var QS = [
+ {g:'준비할 때', id:'flip', q:'스타이로폼 접시를 왜 뒤집어 놓아요?', kw:['뒤집','엎어','엎','거꾸로','바닥면','윗면','아랫면'],
+  a:'<p>털가죽으로 문지른 곳은 접시의 <b>바닥면</b>이에요. 뒤집어 놓는 까닭은 세 가지예요.</p>'
+   +'<ol><li><b>(−)가 붙은 면이 위로 와서 알루미늄 접시와 바로 맞닿아요.</b> (−)와 가까울수록 알루미늄 속 전자를 더 세게 밀어내요.</li>'
+   +'<li>접시 테두리가 받침이 되어 (−)가 붙은 면이 <b>책상에서 떨어져</b> 있어요. 문지른 면이 책상에 닿아 있으면 알루미늄 접시와는 접시 두께만큼 멀어지고, (−)가 책상(특히 습기를 머금은 책상)으로 조금씩 빠져나가기도 해서 알루미늄 접시를 미는 힘이 약해져요.</li>'
+   +'<li>바닥면은 <b>평평해서</b> 알루미늄 접시가 흔들리지 않고 넓게 앉아요.</li></ol>'
+   +'<p>교과서 실험에서 <b>플라스틱 컵을 뒤집어</b> 받침으로 쓰는 것과 같은 생각이에요.</p>',
+  core:'문지른 면을 <b>위로</b> — 알루미늄 접시와는 가깝게, 책상과는 멀게.', parts:['flip','noflip','flipok']},
+ {g:'준비할 때', id:'stick', q:'수수깡은 왜 잡아요? 손으로 잡으면 안 돼요?', kw:['수수깡','손잡이','맨손','직접','손으로잡','손이닿','만지'],
+  a:'<p>알루미늄은 전자가 잘 움직이는 <b>금속(도체)</b>, 수수깡은 전자가 거의 지나가지 못하는 <b>부도체</b>예요.</p>'
+   +'<p>알루미늄 접시를 <b>손으로 직접</b> 잡고 올리면, 스타이로폼의 (−)에 밀려난 전자가 <b>손을 거쳐 몸으로 먼저 빠져나가 버려요.</b> 그러면 전구를 대도 지나갈 전자가 남아 있지 않아서 불이 켜지지 않아요.</p>'
+   +'<p>수수깡을 잡으면 전자가 손으로 새지 못해서, 빠져나갈 길이 <b>전구 하나뿐</b>이 돼요. 교과서의 「알루미늄 컵에 손이 닿지 않게 주의한다」도 같은 까닭이에요.</p>',
+  core:'수수깡 = 전자가 <b>손으로 새지 않게</b> 막는 손잡이.', parts:['hand','stickok']},
+ {g:'준비할 때', id:'neonhand', q:'네온전구 한쪽 극을 왜 손으로 잡아요?', kw:['한쪽극','한쪽을손','극을손','다리','손으로잡고','왜잡','붙잡'],
+  a:'<p>전자가 전구를 <b>지나가려면 들어갈 곳과 나갈 곳</b>이 모두 있어야 해요.</p>'
+   +'<p>손으로 잡은 극은 <b>손 → 몸</b>으로 이어져서, 전자가 빠져나가거나(또는 들어오는) 길이 돼요. 사람 몸은 접시보다 훨씬 커서 전자를 많이 받아들이거나 내줄 수 있어요.</p>'
+   +'<p>극을 잡지 않고 유리만 잡으면 길이 막혀서 전자가 전구를 <b>거의 지나가지 못하고</b>, 불도 켜지지 않아요.</p>',
+  core:'손과 몸 = 전자가 <b>지나갈 길의 끝</b>.', parts:['nohand','neonok']},
+ {g:'준비할 때', id:'rub', q:'털가죽으로 왜 문질러요?', kw:['털가죽','털','문지','문질','마찰','비비'],
+  a:'<p>털가죽과 스타이로폼을 문지르면 <b>털가죽의 전자가 스타이로폼으로 옮겨 가요.</b></p>'
+   +'<p>전자를 얻은 스타이로폼은 <b>(−)전하</b>, 전자를 잃은 털가죽은 <b>(+)전하</b>로 대전돼요. 옮겨 가는 것은 전자뿐이고 (+)는 움직이지 않아요.</p>'
+   +'<p>이 (−)전하가 나중에 알루미늄 접시 속 전자를 밀어내는 일을 해요.</p>',
+  core:'문지르기 = 털가죽 → 스타이로폼으로 <b>전자 옮기기</b>.', parts:['rub']},
+ {g:'준비할 때', id:'dark', q:'왜 어둡게 하고 해요?', kw:['어둡','어두','불끄','불을끄','깜깜','밝으','밝은','교실불'],
+  a:'<p>네온전구의 불빛은 <b>아주 약하고 아주 짧아요.</b> 밝은 교실에서는 번쩍여도 거의 보이지 않아요.</p>'
+   +'<p>그래서 진짜 실험도 교실 불을 끄거나 어둠 상자 안에서 해요.</p>',
+  core:'불빛이 약하고 짧아서 — <b>어두워야</b> 보여요.', parts:['dark']},
+ {g:'준비할 때', id:'neon', q:'왜 네온전구를 써요? 꼬마전구도 켜져요?', kw:['네온','꼬마전구','LED','엘이디','다른전구','일반전구','백열'],
+  a:'<p>네온전구는 <b>아주 적은 양의 전하가 아주 잠깐</b> 지나가도 빛을 내요. 그래서 전하가 움직인 것을 눈으로 확인하기 좋아요.</p>'
+   +'<p>꼬마전구는 많은 전하가 계속 흘러서 필라멘트가 뜨겁게 달궈져야 빛나요. 이 실험에서 한 번에 옮겨 가는 전하로는 켜지지 않아요.</p>',
+  core:'네온전구 = <b>아주 약한 흐름</b>에도 빛나는 전구.', parts:['touch']},
+
+ {g:'불이 켜질 때', id:'induce', q:'알루미늄 접시를 올리면 무슨 일이 생겨요?', kw:['올리','올려','알루미늄','유도','몰리','몰려','밀어','밀려'],
+  a:'<p>지난 시간에 배운 <b>정전기 유도</b>가 일어나요.</p>'
+   +'<p>알루미늄 접시도 처음엔 (+)와 (−)의 양이 같아요. 스타이로폼의 (−)가 가까이 오면, 접시 안에서 자유롭게 움직이는 <b>전자가 밀려나 먼 쪽(위·가장자리)으로 몰리고</b>, 가까운 쪽(아래)에는 (+)가 남아요.</p>'
+   +'<p>접시 전체의 전하량은 여전히 0이에요. 그리고 스타이로폼의 (−)는 <b>한 개도 움직이지 않아요.</b></p>',
+  core:'같은 전하끼리 밀어내서 — 접시 속 전자가 <b>먼 쪽으로</b>.', parts:['induce']},
+ {g:'불이 켜질 때', id:'what', q:'불이 켜진 순간, 무엇이 전구를 지나갔어요?', kw:['지나','무엇이','뭐가','흐르','흘러','켜지는이유','켜진이유','원리','어떻게켜'],
+  a:'<p>가장자리로 몰려 있던 <b>전자</b>예요.</p>'
+   +'<p>전구를 대는 순간, 그 전자들이 <b>알루미늄 접시 → 네온전구 → 손 → 몸</b>으로 빠져나가요. 전자가 전구를 지나가는 그 짧은 순간에만 불이 켜져요.</p>'
+   +'<p>이렇게 전하가 이동하는 것을 다음 단계에서 <b>전류</b>라고 불러요.</p>',
+  core:'전구를 지나간 것 = 접시 안에 원래 있던 <b>전자</b>.', parts:['touch']},
+ {g:'불이 켜질 때', id:'brief', q:'왜 계속 안 켜지고 잠깐만 켜져요?', kw:['잠깐','짧게','짧','계속안','꺼져','꺼지','순간','금방'],
+  a:'<p>밀려나 있던 전자가 <b>다 빠져나가면 더 지나갈 전자가 없어요.</b> 전자의 흐름이 멈추면 불도 꺼져요.</p>'
+   +'<p>남은 접시는 전자가 모자라 (+)가 되고, 아래쪽 (+)는 스타이로폼의 (−)에 붙들려 있어요.</p>'
+   +'<p>전지가 이어진 회로처럼 <b>전자를 계속 밀어 주는 것이 없어서</b> 한 번 번쩍하고 끝나요.</p>',
+  core:'지나갈 전자가 <b>바닥나면</b> 흐름도, 불빛도 끝.', parts:['touch','plus']},
+ {g:'불이 켜질 때', id:'edge', q:'왜 꼭 가장자리에 대요?', kw:['가장자리','모서리','끝에','가운데','테두리'],
+  a:'<p>금속은 전체가 이어져 있어서 <b>어디를 대도</b> 전자가 그 점으로 모여 빠져나가요.</p>'
+   +'<p>가장자리에 대는 까닭은 밀려난 전자가 먼 쪽인 <b>가장자리 쪽에 몰려 있고</b>, 손가락이 알루미늄에 닿지 않게 <b>대기 쉬운 곳</b>이기 때문이에요.</p>',
+  core:'금속이면 어디든 OK — 가장자리는 <b>대기 쉬운 곳</b>.', parts:['edge']},
+ {g:'불이 켜질 때', id:'transfer', q:'스타이로폼의 전자가 알루미늄으로 넘어가서 켜진 거 아니에요?', kw:['넘어','건너','스타이로폼의전자','스타이로폼전자','옮겨가서'],
+  a:'<p>아니에요. 스타이로폼은 <b>부도체</b>라서 문질러 생긴 (−)가 그 자리에 붙어 움직이지 못해요.</p>'
+   +'<p>전구를 지나간 것은 <b>알루미늄 접시 안에 원래 있던 전자</b>예요.</p>'
+   +'<p>만약 스타이로폼의 전자가 넘어간 거라면, 몇 번 켜고 나면 (−)가 바닥나서 더는 안 켜졌을 거예요. 하지만 문지르지 않아도 몇 번이고 켜져요.</p>',
+  core:'스타이로폼의 (−)는 <b>그대로</b> — 움직인 건 알루미늄의 전자.', parts:['transfer']},
+
+ {g:'다시 켤 때', id:'again', q:'문지르지 않았는데 어떻게 또 켜져요?', kw:['또','다시','계속켜','여러번','반복','몇번','계속'],
+  a:'<p>스타이로폼의 (−)는 <b>쓰여서 없어지지 않아요.</b> 부도체라 제자리에 붙어 있어 처음부터 끝까지 그대로예요.</p>'
+   +'<p>전구를 대고 난 접시는 전자가 빠져나가 (+)예요. 이 접시를 <b>들어 올려서 전구를 대면</b>, 이번엔 <b>손 → 전구 → 접시</b>로 전자가 들어오며 또 번쩍해요.</p>'
+   +'<p>다시 내려놓으면 처음처럼 정전기 유도가 일어나고, 전구를 대면 또 번쩍. 그래서 <b>들기 → 대기 → 놓기 → 대기</b>를 되풀이하면 몇 번이고 켜져요.</p>',
+  core:'스타이로폼의 (−)는 그대로 — 오가는 건 <b>접시와 손 사이의 전자</b>.', parts:['plus','lift','lower']},
+ {g:'다시 켤 때', id:'skip', q:'들었다가 그냥 내려놓았더니 안 켜져요. 왜요?', kw:['안켜','그냥놓','그냥내려','내려놓았','들었다가','안돼'],
+  a:'<p>들어 올린 접시는 전자가 모자란 <b>(+) 상태</b>예요.</p>'
+   +'<p>여기서 전구를 대지 않고 그냥 내려놓으면, 접시의 (+)가 스타이로폼의 (−)와 딱 맞게 마주해서 <b>더 밀려날 전자가 없어요.</b> 그래서 대도 켜지지 않아요.</p>'
+   +'<p>들어 올렸을 때 한 번 대서 <b>전자를 채워 주어야</b> 내려놓고 대면 또 켜져요.</p>',
+  core:'들었을 때 대기를 건너뛰면 — 채울 전자도, 밀려날 전자도 <b>없음</b>.', parts:['skip','lift']},
+ {g:'다시 켤 때', id:'electrode', q:'왜 전구의 한쪽 끝만 빛나요?', kw:['한쪽만','한쪽끝','전극','쪽만','어느쪽','반대쪽'],
+  a:'<p>네온전구는 <b>전자가 밖에서 들어오는 쪽 전극 둘레</b>가 빛나요.</p>'
+   +'<p>스타이로폼 위의 접시에 대면 <b>접시 쪽 전극</b>이, 들어 올린 접시에 대면 <b>손 쪽 전극</b>이 빛나요. 빛나는 쪽이 바뀐 것은 <b>전자가 반대 방향으로 지나갔다</b>는 증거예요.</p>'
+   +'<p>진짜 실험에서도 아주 어두운 곳에서 가까이 보면 볼 수 있어요.</p>',
+  core:'빛나는 쪽 = 전자가 <b>들어온 쪽</b>.', parts:['electrode']},
+
+ {g:'교과서와 견주기', id:'textbook', q:'교과서 풍선 실험이랑 뭐가 같고 뭐가 달라요?', kw:['교과서','풍선','플라스틱컵','컵','비교','차이'],
+  a:'<table><tr><th>교과서 (해 보기)</th><th>이 실험</th></tr>'
+   +'<tr><td>털가죽으로 문지른 고무풍선 (−)</td><td>털가죽으로 문지른 스타이로폼 접시 (−)</td></tr>'
+   +'<tr><td>뒤집어 놓은 플라스틱 컵 = 받침</td><td>뒤집어 놓은 스타이로폼 접시 = 받침이면서 (−)</td></tr>'
+   +'<tr><td>알루미늄 컵</td><td>알루미늄 접시</td></tr>'
+   +'<tr><td>「알루미늄 컵에 손이 닿지 않게」</td><td>수수깡 손잡이</td></tr>'
+   +'<tr><td>네온전구 한쪽 극은 손으로</td><td>같아요</td></tr></table>'
+   +'<p><b>같은 점</b> — (−)로 대전된 물체 때문에 알루미늄 속 전자가 움직이고, 그 전자가 전구 → 손으로 지나가는 순간 불이 켜져요.</p>'
+   +'<p><b>다른 점</b> — 풍선은 알루미늄 컵에 직접 대서 풍선의 전자가 조금 옮겨 가기도 해요. 이 실험은 스타이로폼의 (−)를 그대로 두고 알루미늄 접시 속 전자만 움직여서, 한 번 문지르고 여러 번 켤 수 있어요.</p>',
+  core:'원리는 같아요 — <b>대전된 물체 → 알루미늄 속 전자 이동 → 전구를 지나감</b>.', parts:['induce','touch']}
+];
+var QMAP = {}; QS.forEach(function(q){ QMAP[q.id] = q; });
+
+/* ── 장면 조각 — 하나하나가 스스로 상태를 차린다(앞뒤로 건너뛸 수 있게) ── */
+var curScnCam = null;
+function shot(c){ curScnCam = c; return camTo(c, .9); }
+var PART = {
+  rub: async function(cap){
+    setup({phase:'held', foamN:0, pan:'home'}); S.showRubLbl = false;
+    await shot(CAMS.held);
+    cap('문지르기 전 — 털가죽과 스타이로폼 접시는 모두 <b>(+)와 (−)의 양이 같아요.</b> (흐린 알갱이 = 짝을 이룬 전하)');
+    await wait(2.6);
+    cap('털가죽으로 접시 <b>바닥면</b>을 문지르면, <b>털가죽의 전자(−)가 스타이로폼으로</b> 옮겨 가요.');
+    await autoRub(4.4);
+    S.showRubLbl = true;
+    cap('전자를 얻은 스타이로폼은 <b>(−)</b>, 전자를 잃은 털가죽은 <b>(+)</b>로 대전됐어요. 옮겨 간 것은 전자뿐이에요.');
+    await furHome(.8); await wait(3);
+  },
+  flip: async function(cap){
+    setup({phase:'held', foamN:8, pan:'home'}); S.showRubLbl = false;
+    await shot(CAMS.held);
+    cap('(−)가 붙은 곳은 문지른 <b>바닥면</b>이에요. 이 면이 <b>위로</b> 오게 뒤집어 놓아요.');
+    await wait(1.4);
+    await doFlip();
+    await shot(CAMS.stack);
+    cap('(−)가 붙은 면이 위로 왔고, 테두리가 받침이 되어 그 면이 <b>책상에서 떨어져</b> 있어요. 바닥면은 평평해서 알루미늄 접시가 넓게 앉아요.');
+    await wait(3.4);
+  },
+  noflip: async function(cap){
+    setup({phase:'up', flip:false, foamN:8, pan:'home', neon:true});
+    await shot(CAMS.stack);
+    cap('<b>만약 뒤집지 않으면?</b> 문지른 바닥면(−)이 책상에 닿고, 알루미늄 접시는 문지르지 않은 안쪽에 앉아요.');
+    await wait(2.4);
+    await autoPlace(true);
+    cap('(−)가 알루미늄 접시와 <b>접시 두께만큼 떨어져</b> 있어서, 밀려나는 전자가 <b>훨씬 적어요.</b>');
+    await wait(2.4);
+    S.weakGlow = true;
+    await autoTouch();
+    cap('지나가는 전자가 적어서 불빛이 <b>약하거나 거의 안 보여요.</b> (습한 날엔 책상에 닿은 (−)가 조금씩 빠져나가 더 약해져요)');
+    await wait(3);
+  },
+  flipok: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'home', neon:true});
+    await shot(CAMS.stack);
+    cap('<b>뒤집으면</b> 문지른 면이 위로 와서 알루미늄 접시와 <b>바로 맞닿아요.</b>');
+    await autoPlace(true);
+    cap('(−)와 가까워서 전자가 <b>훨씬 많이</b> 밀려나요.');
+    await wait(1.8);
+    await autoTouch();
+    cap('그래서 불빛도 <b>또렷해요.</b>');
+    await wait(2.2);
+  },
+  induce: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'home'});
+    await shot(CAMS.start);
+    cap('알루미늄 접시도 처음엔 <b>(+)와 (−)의 양이 같아요.</b> (+)는 제자리, 전자는 금속 안을 자유롭게 움직여요.');
+    await wait(2.6);
+    cap('수수깡을 잡고 가까이 가져가면, 스타이로폼의 (−)가 접시 속 <b>전자를 밀어내기</b> 시작해요.');
+    await autoPlace(true);
+    await shot(CAMS.stack);
+    S.hiFoam = true;
+    cap('전자는 <b>먼 쪽(위·가장자리)</b>으로 몰리고, <b>닿은 쪽(아래)엔 (+)</b>가 남아요. 깜빡이는 스타이로폼의 (−)는 <b>한 개도 움직이지 않았어요.</b>');
+    await wait(4);
+    S.hiFoam = false;
+  },
+  touch: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'placed', neon:true});
+    await shot(CAMS.stack);
+    cap('네온전구 한쪽 극은 손에 — 다른 쪽 극을 <b>가장자리</b>에 대면…');
+    await wait(1.2);
+    var pr = autoTouch();
+    await wait(1.2);
+    cap('몰려 있던 전자가 <b>접시 → 전구 → 손 → 몸</b>으로 빠져나가요. 전자가 전구를 <b>지나가는 동안만</b> 번쩍!');
+    await pr;
+    cap('빠져나갈 전자가 다 빠지면 흐름이 멈추고, <b>불도 꺼져요.</b> 그래서 잠깐만 켜져요.');
+    await wait(3);
+  },
+  plus: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'placed', q:8, neon:true});
+    await shot(CAMS.stack);
+    cap('전구를 대고 난 접시는 전자가 모자라 <b>(+)</b>예요. 아래쪽 (+)는 스타이로폼의 (−)에 <b>붙들려</b> 있어요.');
+    await wait(3.2);
+  },
+  lift: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'placed', q:8, neon:true});
+    await shot(CAMS.start);
+    cap('수수깡을 잡고 접시를 <b>들어 올려요.</b> 남은 전자들이 접시 전체로 다시 퍼져서, 전자가 모자란 <b>(+) 자리</b>가 곳곳에 드러나요. (+)는 움직이지 않아요.');
+    await doLift();
+    await wait(1.2);
+    var pr = autoTouch();
+    await wait(1.0);
+    cap('들어 올린 접시에 전구를 대면, 이번엔 <b>손 → 전구 → 접시</b>로 전자가 들어와요. 또 번쩍! (이번엔 <b>손 쪽</b> 전극이 빛나요)');
+    await pr;
+    cap('접시는 다시 <b>(+)와 (−)의 양이 같아졌어요.</b>');
+    await wait(2.4);
+  },
+  lower: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'lifted', q:0, neon:true});
+    await shot(CAMS.start);
+    cap('다시 내려놓으면 처음처럼 <b>정전기 유도</b> — 전자가 밀려나 가장자리로 몰려요.');
+    await doLower(); await wait(.6);
+    var pr = autoTouch();
+    await wait(.9);
+    cap('대면 또 번쩍! 스타이로폼의 (−) <b>8개는 처음부터 그대로</b>예요 — 그래서 문지르지 않아도 몇 번이고 켜져요.');
+    await pr; await wait(2.6);
+  },
+  skip: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'placed', q:8, neon:true});
+    await shot(CAMS.start);
+    cap('들어 올린 뒤 <b>전구를 대지 않고</b> 그냥 내려놓으면?');
+    await doLift(); await wait(.8); await doLower();
+    cap('접시의 (+)가 스타이로폼의 (−)와 <b>딱 맞게</b> 마주해서, 밀려날 전자가 <b>없어요.</b>');
+    await wait(2.2);
+    await autoTouch();
+    cap('그래서 대도 <b>안 켜져요.</b> 들어 올렸을 때 한 번 대서 전자를 채워 주어야 해요.');
+    await wait(2.6);
+  },
+  hand: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'home', handOnPan:true, neon:true});
+    await shot(CAMS.start);
+    cap('<b>만약 알루미늄 접시를 맨손으로 잡고</b> 올리면?');
+    await wait(1.8);
+    var pr = autoPlace(true);
+    await wait(1.6);
+    cap('밀려난 전자가 <b>손 → 몸으로 바로 빠져나가요.</b> 이 길에는 전구가 없으니 빛도 없어요.');
+    await pr; await wait(1.2);
+    cap('이제 전구를 대면…');
+    await autoTouch();
+    cap('지나갈 전자가 이미 없어서 <b>켜지지 않아요.</b>');
+    await wait(2.6);
+  },
+  stickok: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'home', neon:true});
+    await shot(CAMS.start);
+    cap('<b>수수깡(부도체)</b>을 잡으면 전자가 손으로 빠져나가지 못해요.');
+    await autoPlace(true);
+    cap('밀려난 전자는 접시에 남아 있고, 빠져나갈 길은 <b>전구 하나뿐!</b>');
+    await wait(1.6);
+    await autoTouch(); await wait(2);
+  },
+  nohand: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'placed', neon:true, neonHand:false});
+    await shot(CAMS.stack);
+    cap('<b>만약 극을 손으로 잡지 않고</b> 유리 부분만 잡고 대면?');
+    await wait(1.4);
+    await autoTouch();
+    cap('전자가 빠져나갈 <b>곳이 없어서</b> 거의 움직이지 않아요. 불도 <b>안 켜져요.</b>');
+    await wait(3);
+  },
+  neonok: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'placed', neon:true});
+    await shot(CAMS.stack);
+    cap('한쪽 극을 손으로 잡으면 <b>손 → 몸</b>이 전자의 길이 돼요.');
+    await autoTouch(); await wait(2.2);
+  },
+  electrode: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'placed', neon:true});
+    var c = neonContactPose(NEON_A0).p;
+    var zoom = {p:V(c.x + .85, c.y + .62, c.z + 1.55), t:V(c.x + .1, c.y + .22, c.z + .05)};
+    await shot(zoom);
+    cap('전구를 확대했어요. <b>어느 쪽 전극</b>이 빛나는지 보세요.');
+    await wait(1.4);
+    var pr = autoTouch();
+    await wait(1.4);
+    cap('<b>접시 쪽 전극</b>이 빛나요 — 전자가 접시 쪽에서 들어왔어요.');
+    await pr; await wait(1.4);
+    await neonGoHome(false);
+    cap('이번엔 접시를 들어 올려서 대 볼게요.');
+    await doLift();
+    var c2 = neonContactPose(NEON_A0).p;
+    await shot({p:V(c2.x + .85, c2.y + .62, c2.z + 1.55), t:V(c2.x + .1, c2.y + .22, c2.z + .05)});
+    var pr2 = autoTouch();
+    await wait(1.4);
+    cap('이번엔 <b>손 쪽 전극</b>이 빛나요! 전자가 <b>반대로(손 → 접시)</b> 지나갔다는 증거예요.');
+    await pr2; await wait(2.4);
+  },
+  edge: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'placed', neon:true});
+    await shot(CAMS.stack);
+    cap('이번엔 가장자리의 <b>다른 곳</b>에 대 볼게요.');
+    await wait(1);
+    var pr = autoTouch(140*Math.PI/180);
+    await wait(1.4);
+    cap('금속은 전체가 이어져 있어서, <b>어디를 대도</b> 전자가 그 점으로 모여 빠져나가요.');
+    await pr; await wait(2.4);
+  },
+  dark: async function(cap){
+    var was = S.dark;
+    setDark(false);
+    setup({phase:'flipped', foamN:8, pan:'placed', neon:true});
+    await shot(CAMS.stack);
+    cap('<b>교실 불을 켠 채로</b> 대면?');
+    await autoTouch();
+    cap('번쩍여도 밝은 곳에서는 <b>거의 안 보여요.</b>');
+    await wait(1.8);
+    setDark(true);
+    setup({phase:'flipped', foamN:8, pan:'placed', neon:true});
+    cap('<b>불을 끄면</b>…');
+    await wait(.6);
+    await autoTouch();
+    cap('어두워야 <b>잘 보여요.</b>');
+    await wait(2.2);
+    if(!was) setDark(false);
+  },
+  transfer: async function(cap){
+    setup({phase:'flipped', foamN:8, pan:'home', neon:true});
+    await shot(CAMS.stack);
+    S.hiFoam = true;
+    cap('깜빡이는 것이 스타이로폼의 (−) 8개예요. 접시를 올리고 전구를 대는 동안 <b>잘 지켜보세요.</b>');
+    await wait(1.8);
+    await autoPlace(true);
+    await autoTouch();
+    cap('스타이로폼의 (−)는 <b>그대로 8개</b> — 전구를 지나간 것은 <b>알루미늄 접시 안에 원래 있던 전자</b>예요.');
+    await wait(3.4);
+    S.hiFoam = false;
+  }
 };
+var SCN_ALL = ['rub','flip','induce','touch','plus','lift','lower'];
 
-draw(); updateTodo(); updateCount(); brief(0);
+var scn = null;   /* {ids:[], i, id} */
+function playScene(ids, qid){
+  scn = {ids:ids, i:0, qid:qid};
+  S.mode = 'scene';
+  $('playbar').hidden = false;
+  playPart();
+}
+function playPart(){
+  var id = scn.ids[scn.i];
+  drawDots();
+  var cap = function(h){ var el = $('cap'); el.hidden = false; el.innerHTML = '<span class="no">' + (scn.ids.length > 1 ? (scn.i+1) + '/' + scn.ids.length : '▶') + '</span>' + h; };
+  S.playing = true;
+  PART[id](cap).then(function(){
+    S.playing = false;
+    if(!scn) return;
+    if(scn.i < scn.ids.length - 1){ scn.i++; playPart(); }
+    else { drawDots(true); }
+  }, function(e){ S.playing = false; if(e !== 'abort') console.error(e); });
+}
+function drawDots(done){
+  if(!scn){ $('pbDots').innerHTML = ''; return; }
+  $('pbDots').innerHTML = scn.ids.map(function(_, i){ return '<span class="' + (i === scn.i && !done ? 'on' : (i < scn.i || done ? 'done' : '')) + '"></span>'; }).join('');
+  $('pbPrev').disabled = scn.i === 0; $('pbNext').disabled = scn.i >= scn.ids.length - 1;
+  $('pbPrev').style.visibility = $('pbNext').style.visibility = scn.ids.length > 1 ? 'visible' : 'hidden';
+}
+$('pbReplay').addEventListener('click', function(){ if(scn){ playPart(); } });
+$('pbPrev').addEventListener('click', function(){ if(scn && scn.i > 0){ scn.i--; playPart(); } });
+$('pbNext').addEventListener('click', function(){ if(scn && scn.i < scn.ids.length - 1){ scn.i++; playPart(); } });
+$('pbSlow').addEventListener('click', function(){
+  SPEED = SPEED === 1 ? .5 : 1; this.classList.toggle('on', SPEED !== 1);
+  this.textContent = SPEED === 1 ? '🐢 느리게' : '🐇 보통 빠르기';
+});
 
-/* 검증용 훅 — 다른 시뮬의 __step 과 같은 관례 */
+/* ── 질문 목록 ── */
+function buildQList(){
+  var groups = [], gmap = {};
+  QS.forEach(function(q){ if(!gmap[q.g]){ gmap[q.g] = []; groups.push(q.g); } gmap[q.g].push(q); });
+  $('qList').innerHTML = groups.map(function(g){
+    return '<div class="qg-t">' + g + '</div><div class="qchips">' + gmap[g].map(function(q){
+      return '<button class="qc" type="button" data-q="' + q.id + '">' + q.q + '</button>';
+    }).join('') + '</div>';
+  }).join('');
+}
+$('qList').addEventListener('click', function(e){ var b = e.target.closest('.qc'); if(b) pickQ(b.dataset.q); });
+$('qAll').addEventListener('click', function(){ pickQ('all'); });
+function pickQ(id){
+  Array.prototype.forEach.call(document.querySelectorAll('.qc'), function(b){ b.classList.toggle('on', b.dataset.q === id); });
+  $('qAll').classList.toggle('on', id === 'all');
+  var card = $('ansCard');
+  if(id === 'all'){
+    card.innerHTML = '<div class="k">처음부터 끝까지</div><h3>숨은 과정 모두 보기</h3>'
+      + '<p>문지르기 → 뒤집기 → 접시 올리기 → 전구 대기 → 들어 올려 대기 → 내려놓고 대기까지, 실험에서 <b>눈에 안 보였던 전자의 움직임</b>을 차례로 보여 줘요.</p>'
+      + '<p>왼쪽(또는 위) 화면 아래의 <b>⏮ ⏭</b>로 장면을 건너뛸 수 있어요.</p>';
+    playScene(SCN_ALL, 'all');
+  } else {
+    var q = QMAP[id];
+    card.innerHTML = '<div class="k">' + q.g + '</div><h3>' + q.q + '</h3>' + q.a
+      + '<div class="core">💡 ' + q.core + '</div>'
+      + (q.parts.length ? '<button class="play" type="button" id="playAgain">▶ 3D로 다시 보기</button>' : '');
+    var pa = $('playAgain'); if(pa) pa.addEventListener('click', function(){ playScene(q.parts, id); });
+    if(q.parts.length) playScene(q.parts, id);
+  }
+  $('apScroll').scrollTop = 0;
+  if(window.matchMedia('(max-width:780px)').matches){
+    var r = $('stageCard').getBoundingClientRect();
+    if(r.top < 0 || r.top > innerHeight*.4) $('stageCard').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+/* 내 질문 적고 찾기 — 낱말 맞추기 */
+function norm(s){ return (s||'').replace(/\s+/g,'').replace(/[?？!.,~]/g,'').toLowerCase(); }
+function findQ(){
+  var t = norm($('qIn').value);
+  Array.prototype.forEach.call(document.querySelectorAll('.qc'), function(b){ b.classList.remove('hit'); });
+  if(!t){ $('qMsg').textContent = ''; return; }
+  var scored = QS.map(function(q){
+    var s = 0; q.kw.forEach(function(k){ if(t.indexOf(norm(k)) >= 0) s += norm(k).length >= 3 ? 2 : 1; });
+    return {q:q, s:s};
+  }).filter(function(x){ return x.s > 0; }).sort(function(a,b){ return b.s - a.s; });
+  if(!scored.length){
+    $('qMsg').innerHTML = '🤔 비슷한 질문을 못 찾았어요 — <b>목록에 없는 좋은 질문</b>일 수 있어요. 아래 목록도 훑어보세요.';
+    return;
+  }
+  var top = scored.slice(0, 3);
+  top.forEach(function(x){ var b = document.querySelector('.qc[data-q="' + x.q.id + '"]'); if(b) b.classList.add('hit'); });
+  $('qMsg').innerHTML = '🔎 비슷한 질문 <b>' + top.length + '개</b>를 찾았어요 — 주황 테두리를 눌러 보세요.';
+  pickQ(top[0].q.id);
+}
+$('qGo').addEventListener('click', findQ);
+$('qIn').addEventListener('keydown', function(e){ if(e.key === 'Enter' && !e.isComposing) findQ(); });
+
+/* ── 답 찾기 모드 들어가기 · 나오기 ── */
+var snap = null;
+function enterAns(){
+  closePop();
+  if(drag) endDrag();
+  snap = {step:S.step, phase:S.phase, flipped:S.flipped, foamN:S.foamN, q:P.q, panAt:S.panAt === 'moving' || S.panAt === 'carry' ? 'placed' : S.panAt,
+          lit:S.lit, neon:neonG.visible, xray:S.xray};
+  $('btnAns').classList.remove('pulse');
+  document.body.classList.add('ans');
+  $('ansHead').hidden = false; $('ansPanel').hidden = false;
+  $('stageHint').textContent = '화면을 끌면 돌려 볼 수 있어요 · 굴리면 확대';
+  setXray(true);
+  S.mode = 'scene';
+  buildQList();
+  $('ansCard').innerHTML = '<div class="k">이렇게 써요</div><h3>내 질문의 답이 있을까?</h3>'
+    + '<p>위 칸에 <b>내가 적은 질문</b>을 그대로 써 보거나, 아래 목록에서 <b>비슷한 질문</b>을 골라 보세요.</p>'
+    + '<p>고르면 답과 함께 <b>3D 화면</b>이 실험에서 생략됐던 과정을 전자가 보이게 다시 보여 줘요.</p>';
+  syncPanelH();
+  setTimeout(resize, 30);
+  setTimeout(function(){ try{ $('qIn').focus({preventScroll:true}); }catch(_){} }, 200);
+  updTally(); updLegend();
+  pickQ('all');
+}
+function leaveAns(free){
+  abortAll(); scn = null;
+  document.body.classList.remove('ans');
+  $('ansHead').hidden = true; $('ansPanel').hidden = true; $('cap').hidden = true; $('playbar').hidden = true;
+  $('stageHint').textContent = '도구를 끌어다 옮기세요 · 빈 곳을 끌면 돌려 볼 수 있어요';
+  SPEED = 1; $('pbSlow').classList.remove('on'); $('pbSlow').textContent = '🐢 느리게';
+  S.mode = 'live';
+  if(free){ setXray(true); liveReset(false); }
+  else {
+    var s = snap || {step:3, phase:'flipped', flipped:true, foamN:8, q:8, panAt:'placed', lit:1, neon:true, xray:false};
+    setup({phase:s.phase, flip:s.flipped, foamN:s.foamN, q:s.q, pan:s.panAt, neon:s.neon});
+    S.step = s.step; S.lit = s.lit;
+    setXray(!!s.xray);
+    if(!s.xray) chgVisT = chgVis = (s.step >= 3 ? 0 : 1);
+    camTo(CAMS.start, .8).catch(function(){});
+  }
+  setTimeout(resize, 30);
+  updateTodo(); updateCount(); updTally(); updLegend();
+}
+$('btnAns').addEventListener('click', enterAns);
+$('btnBack').addEventListener('click', function(){ leaveAns(false); });
+$('btnFree').addEventListener('click', function(){ leaveAns(true); });
+function syncPanelH(){
+  var side = window.matchMedia('(min-width:781px)').matches;
+  $('ansPanel').style.maxHeight = side ? ($('stageCard').offsetHeight + 'px') : 'none';
+  $('ansPanel').style.height = side ? ($('stageCard').offsetHeight + 'px') : 'auto';
+}
+addEventListener('resize', function(){ if(document.body.classList.contains('ans')) syncPanelH(); });
+
+/* ═══════════════════════════════════════════════════════════
+   시작
+   ═══════════════════════════════════════════════════════════ */
+setDark(true);
+S.showRubLbl = true;
+setup({phase:'held', foamN:0, pan:'home', neon:false});
+chgVis = chgVisT = 1;
+cam.position.copy(CAMS.held.p); ctl.target.copy(CAMS.held.t); ctl.update();
+resize();
+updateTodo(); updateCount();
+if(THUMB){
+  setup({phase:'flipped', foamN:8, pan:'placed', neon:true});
+  setXray(true); chgVis = chgVisT = 1; S.mode = 'scene';
+  cam.position.set(0.95, 1.4, 2.85); ctl.target.set(0.05, 0.36, 0.22); ctl.update();
+  S.freezeOnGlow = true;
+  autoTouch().catch(function(){});
+  /* 헤드리스 크롬은 화면 갱신이 띄엄띄엄이라, 고정 간격으로 직접 돌려 전구가 빛나는 순간까지 간다 */
+  (async function(){
+    for(var i=0;i<1200 && S.freezeOnGlow;i++){ tick(1/60); await Promise.resolve(); await Promise.resolve(); }
+    for(var j=0;j<6;j++) tick(1/60);
+    document.documentElement.setAttribute('data-thumb-ready','1');
+  })();
+} else brief(0);
+raf = requestAnimationFrame(frame);
+
+/* 검증용 훅 */
 window.__eph = {
-  state:function(){ return {step:S.step, lit:S.lit, aluT:aluT, armed:S.armed, aluOn:S.aluOn}; },
-  toStep3:function(){ S.rub = RUB_NEED; S.flipped = true; S.aluOn = true; S.armed = true; S.step = 3;
-    aluT = 0; draw(); updateTodo(); startAnim(); },
-  touch:function(){ contact(); },
-  chgHtml:function(){ return {a:document.getElementById('chgA').innerHTML,
-                              s:document.getElementById('chgS').innerHTML}; },
-  setT:function(v){ aluT = v; paintChg(); }
+  state:function(){ return {step:S.step, lit:S.lit, phase:S.phase, foamN:S.foamN, q:P.q, A:P.A, panAt:S.panAt, neon:S.neon,
+    flowing:S.flowing, xray:S.xray, mode:S.mode, frames:FRAMES, tw:TW.length, els:P.els.length, parts:PARTS.length, tally:$('tally').innerText}; },
+  toStep3:function(){ closePop(); setup({phase:'flipped', foamN:8, pan:'placed', neon:true}); S.step = 3; chgVisT = 0; updateTodo(); },
+  touch:function(a){ liveTouch(a === undefined ? NEON_A0 : a); },
+  lift:function(){ return doLift().then(updateTodo); },
+  lower:function(){ return doLower().then(updateTodo); },
+  rubAll:function(){ while(S.foamN < 8) hopOne(); S.rub = RUB_NEED; ready1(); },
+  flip:function(){ $('btnFlip').click(); },
+  place:function(){ S.busy = false; drag = {what:'pan'}; S.panAt = 'carry'; panG.position.set(FOAM_C.x, CARRY_Y, FOAM_C.z); endDrag(); },
+  ans:function(){ enterAns(); }, back:function(f){ leaveAns(!!f); },
+  pick:function(id){ pickQ(id); }, speed:function(s){ SPEED = s; },
+  calcA:calcA, cam:function(){ return {p:cam.position.toArray(), t:ctl.target.toArray()}; },
+  glow:function(){ return {A:glowA, B:glowB}; },
+  proj:function(name){
+    var w = name === 'fur' ? furG.position.clone() : name === 'face' ? faceFrame().c :
+            name === 'stick' ? panG.localToWorld(V(0,.8,0)) : name === 'neon' ? neonG.localToWorld(V(.16,.3,0)) :
+            name === 'foamC' ? V(FOAM_C.x, PLACED_Y + .3, FOAM_C.z) : name === 'overFoam' ? V(FOAM_C.x, 1.42, FOAM_C.z) :
+            name === 'panHigh' ? V(panG.position.x, rimY() + .39, panG.position.z) : name === 'rim' ? panG.localToWorld(contactPt(NEON_A0)) : V(0,0,0);
+    var r = renderer.domElement.getBoundingClientRect(), v = w.project(cam);
+    return {x: r.left + (v.x*.5+.5)*r.width, y: r.top + (-v.y*.5+.5)*r.height};
+  }
 };
 })();
 </script>
