@@ -208,6 +208,22 @@ html.student #notes{display:none!important}
 .qbox .qh{font-size:26px;font-weight:600;color:var(--t2);margin-bottom:6px}
 .say-line{position:absolute;left:120px;right:120px;text-align:center;font-size:44px;font-weight:600;letter-spacing:-.02em;z-index:3}
 .fine{position:absolute;left:120px;bottom:40px;font-size:24px;color:var(--t3);z-index:3}
+/* ── 키워드 진행 표시(무대 오른쪽 위) — core.js buildKw/syncKw ── */
+#kwbar{position:absolute;top:34px;right:44px;z-index:30;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(-8px);pointer-events:none;
+  transition:opacity .45s var(--ease-out),transform .45s var(--ease-out)}
+#kwbar.show{opacity:1;transform:none;pointer-events:auto}
+#kwbar .kw{display:flex;align-items:center;height:46px;min-width:46px;border-radius:9999px;background:rgba(0,0,0,.055);color:#86868b;
+  font-size:24px;font-weight:600;letter-spacing:-.01em;line-height:1;transition:background .45s,color .45s;cursor:pointer}
+#kwbar .kw b{width:46px;height:46px;flex:none;display:grid;place-items:center;font-weight:700;font-variant-numeric:tabular-nums}
+#kwbar .kw span{max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .6s var(--ease-out),padding .6s var(--ease-out)}
+#kwbar .kw.done{background:rgba(0,0,0,.13);color:#3a3a3c}
+#kwbar .kw.cur{background:var(--action);color:#fff}
+#kwbar .kw.cur span{max-width:460px;padding-right:22px}
+#kwbar .kw:active{transform:scale(.95)}
+body:not(.on-light) #kwbar .kw{background:rgba(255,255,255,.1);color:#8e8e93}
+body:not(.on-light) #kwbar .kw.done{background:rgba(255,255,255,.24);color:#f5f5f7}
+body:not(.on-light) #kwbar .kw.cur{background:var(--action-dark);color:#fff}
+html.still #kwbar,html.still #kwbar *{transition:none!important}
 
 /* ── 10_elec.css ── */
 /* ── 전기와 자기 강의 덱 공용 색·글자 — 의미마다 색 하나(같은 뜻은 어느 장·어느 덱에서나 같은 색) ──
@@ -284,9 +300,11 @@ html.student #notes{display:none!important}
 /* ── e5.css ── */
 /* ═══════════════════════════════════════════════════════════════
    objects/e5/e5.css — 학습지 5(저항의 직렬연결과 병렬연결) 강의 덱 전용 색 변수·글자 조각
-   색 약속(10_elec.css): 전류 = --light · 전압 = --kin · 저항 = --sound · 전자 = --elec · 빈칸·표 답 = --act
+   색 약속(10_elec.css): 전류 = --light · 전압 = --kin · 저항 = --sound · 전자 = --elec · 빈칸·표 답·고른 칩 = --act
    --e5bg  : 면 색(부품 뒤 가림판 — 도선·전자가 부품 밑으로 지나가게)
-   --e5tube: 도선(속이 보이는 관) · --e5edge: 관 가장자리 빛 · --e5ink: 회로 기호 선 · --e5pill: 읽은 값 알약 바탕
+   --e5tube: 도선(속이 보이는 관) · --e5edge: 관 가장자리 · --e5ink: 회로 기호 선 · --e5pill: 읽은 값 알약 바탕
+   --e5chev / --e5chevS: 전류의 방향 꺾쇠(노랑) / 그 테두리(흰 면에서도 또렷하게)
+   --e5psu… : 실험 회로의 전원 장치(밝은 면 = 흰 몸체 + 짙은 테두리, 학습지 그림처럼)
    ═══════════════════════════════════════════════════════════════ */
 .slide[data-tile="black"]{--e5bg:#000000}
 .slide[data-tile="dark"]{--e5bg:#1d1d1f}
@@ -296,17 +314,22 @@ html.student #notes{display:none!important}
 .slide[data-tile="black"],.slide[data-tile="dark"],.slide[data-tile="graphite"]{
   --e5tube:#333336; --e5edge:rgba(255,255,255,.16); --e5ink:#d1d1d6; --e5pill:rgba(255,255,255,.08); --e5line:#8e8e93;
   --e5glass:#3a3a3c; --e5card:rgba(255,255,255,.06); --e5cardS:rgba(255,255,255,.1); --e5hot:#FF6A3D;
+  --e5chev:#FFD60A; --e5chevS:rgba(0,0,0,.55); --e5seg:rgba(255,255,255,.08);
+  --e5psu:url(#lg-graphite); --e5psuS:rgba(255,255,255,.18); --e5scr:#0b0b0c; --e5knob:#d1d1d6; --e5knobS:#3a3a3c;
 }
 .slide[data-tile="black"]{--e5tube:#2a2a2d}
 .slide[data-tile="graphite"]{--e5tube:#3f3f42}
 .slide[data-tile="light"],.slide[data-tile="parchment"]{
-  --e5tube:#e3e3e8; --e5edge:rgba(0,0,0,.08); --e5ink:#3a3a3c; --e5pill:#f5f5f7; --e5line:#3a3a3c;
+  --e5tube:#e6e6eb; --e5edge:rgba(0,0,0,.16); --e5ink:#3a3a3c; --e5pill:#f5f5f7; --e5line:#3a3a3c;
   --e5glass:#e9e9ee; --e5card:#f5f5f7; --e5cardS:rgba(0,0,0,.06); --e5hot:#C4391B;
+  --e5chev:#FFC21A; --e5chevS:#8A6500; --e5seg:#ededf0;
+  --e5psu:#ffffff; --e5psuS:#3a3a3c; --e5scr:#1d1d1f; --e5knob:#ffffff; --e5knobS:#3a3a3c;
 }
-.slide[data-tile="parchment"]{--e5pill:#ffffff; --e5card:#ffffff}
+.slide[data-tile="parchment"]{--e5pill:#ffffff; --e5card:#ffffff; --e5seg:#e6e6ea}
 
 /* SVG 글자 */
 .e5-lbl{font-size:28px;font-weight:600;fill:var(--t2)}
+.e5-lbl.halo{paint-order:stroke;stroke:var(--e5bg);stroke-width:9px;stroke-linejoin:round}   /* 전구 빛 번짐 위에서도 또렷하게 */
 .e5-rl{font-size:30px;font-weight:600;fill:var(--sound)}
 .e5-sym-t{font-size:28px;font-weight:700;fill:var(--e5ink)}
 .e5-pn{font-size:30px;font-weight:700}
@@ -326,12 +349,90 @@ html.student #notes{display:none!important}
 .e5-eq{position:absolute;font-size:40px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;z-index:3}
 .e5-cur{color:var(--light)} .e5-volt{color:var(--kin)} .e5-res{color:var(--sound)} .e5-ele{color:var(--elec)}
 
+/* 정의 띠(전류의 세기) · 범례 */
+.e5-def{position:absolute;display:flex;align-items:center;gap:14px;font-size:30px;font-weight:500;letter-spacing:-.012em;white-space:nowrap;z-index:3}
+.e5-def b{font-weight:700}
+.e5-leg{position:absolute;font-size:26px;line-height:1.6;color:var(--t2);z-index:3;white-space:nowrap}
+.e5-leg .e5-li{display:inline-flex;align-items:center;gap:8px;margin-right:28px}
+.e5-leg b{font-weight:700}
+
+/* 단추 판(애플식 알약 칩) — [data-interactive] 안이라 눌러도 다음 장으로 넘어가지 않음 */
+.e5-ctl{position:absolute;z-index:4;display:flex;flex-direction:column;gap:12px}
+.e5-row{display:flex;align-items:center;gap:18px}
+.e5-rk{min-width:52px;font-size:32px;font-weight:700;color:var(--sound)}
+.e5-seg{display:inline-flex;gap:4px;padding:5px;border-radius:9999px;background:var(--e5seg)}
+.e5-seg button{min-width:116px;height:52px;padding:0 18px;border-radius:9999px;font-size:28px;font-weight:600;letter-spacing:-.01em;color:inherit;font-variant-numeric:tabular-nums;
+  transition:background-color .2s var(--ease-out),color .2s var(--ease-out),transform .15s var(--ease-out)}
+.e5-seg button:hover{background:rgba(0,0,0,.05)}
+.slide[data-tile="black"] .e5-seg button:hover,.slide[data-tile="dark"] .e5-seg button:hover{background:rgba(255,255,255,.08)}
+.e5-seg button:active{transform:scale(.96)}
+.e5-seg button.on{background:var(--act);color:#fff}
+.e5-fix{font-size:26px;color:var(--t2)}
+.e5-ro{font-size:28px;line-height:1.5;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.e5-ro div{white-space:nowrap}
+.e5-ro.sm{font-size:26px;line-height:1.4}
+.e5-ro .k{color:var(--t2);font-weight:500}
+.e5-btns{display:flex;gap:14px;flex-wrap:wrap}
+.e5-btn{height:58px;padding:0 28px;border-radius:9999px;font-size:28px;font-weight:600;letter-spacing:-.01em;background:var(--act);color:#fff;border:2px solid var(--act);
+  transition:background-color .2s var(--ease-out),color .2s var(--ease-out),transform .15s var(--ease-out)}
+.e5-btn:active{transform:scale(.96)}
+.e5-btn.on{background:transparent;color:var(--act)}
+.e5-msg{font-size:28px;line-height:1.45;padding:16px 24px;border-radius:16px;background:var(--e5card);border:1px solid var(--e5cardS)}
+.e5-msg b{font-weight:700}
+.e5-msg.hit{border-color:var(--e5hot)}
+.e5-msg.good{border-color:var(--kin)}
+
 /* 빈칸 폭(학습지 답 길이에 맞춤 — class 로만: check_blanks 가 style 붙은 .bk 를 못 읽음) */
 .bk.e5n{min-width:2.4em}
 .bk.e5w5{min-width:5em}
 .bk.e5w6{min-width:6.2em}
 .bk.e5w8{min-width:8.4em}
 .bk.e5w10{min-width:10.4em}
+
+/* ── 02_hookk_keywords.html ── */
+
+#e5_02_hookk_keywords .kwk-n{font-size:48px;font-weight:700;fill:var(--act);font-variant-numeric:tabular-nums}
+#e5_02_hookk_keywords .kwk-end{position:absolute;width:200px;text-align:center;font-size:26px;font-weight:600;color:var(--t3);z-index:3}
+#e5_02_hookk_keywords .kwk-t{position:absolute;text-align:center;font-size:46px;font-weight:700;letter-spacing:-.025em;line-height:1.25;word-break:keep-all;z-index:3}
+#e5_02_hookk_keywords .kwk-start{position:absolute;width:220px;text-align:center;font-size:28px;font-weight:600;color:var(--act);z-index:3}
+#e5_02_hookk_keywords .kwk-mock{position:absolute;top:34px;right:44px;display:flex;gap:8px;z-index:3}
+#e5_02_hookk_keywords .kwk-mock .mk{display:flex;align-items:center;height:46px;min-width:46px;border-radius:9999px;background:rgba(0,0,0,.055);color:#86868b;font-size:24px;font-weight:600;line-height:1}
+#e5_02_hookk_keywords .kwk-mock .mk b{width:46px;height:46px;display:grid;place-items:center;font-weight:700}
+#e5_02_hookk_keywords .kwk-mock .mk.cur{background:var(--act);color:#fff}
+#e5_02_hookk_keywords .kwk-mock .mk i{font-style:normal;padding-right:22px;white-space:nowrap}
+#e5_02_hookk_keywords .kwk-hint{position:absolute;top:96px;right:44px;font-size:26px;color:var(--t2);z-index:3}
+
+/* ── 04a_strength.html ── */
+
+#e5_04a_strength .kw{font-weight:700;border-radius:10px;padding:0 .14em;transition:color .5s var(--ease-out),background-color .5s var(--ease-out)}
+#e5_04a_strength .kw.on{color:var(--act);background-color:rgba(0,102,204,.12)}
+
+/* ── 05_scur.html ── */
+
+#e5_05_scur #e5_05_scur-seg{display:flex;flex-direction:column;gap:12px}
+
+/* ── 11a_ammeter.html ── */
+
+#e5_11a_ammeter .e5-am{position:absolute;width:670px;height:100px;padding:10px 24px;border-radius:18px;background:var(--e5card);border:2px solid transparent;z-index:3;
+  display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:16px;align-content:center;transition:border-color .4s var(--ease-out)}
+#e5_11a_ammeter .e5-am .nm{font-size:30px;font-weight:700;letter-spacing:-.015em}
+#e5_11a_ammeter .e5-am .nm b{margin-right:.3em}
+#e5_11a_ammeter .e5-am .ds{font-size:25px;color:var(--t2);grid-row:2}
+#e5_11a_ammeter .e5-am .ds b{color:var(--ink)}
+#e5_11a_ammeter .e5-am .ct{grid-column:2;grid-row:1;text-align:right;font-size:28px;font-weight:600;line-height:1}
+#e5_11a_ammeter .e5-am .ct .num{display:inline-block;min-width:1.1em;font-size:52px;font-weight:700;color:var(--elec);margin-right:4px}
+#e5_11a_ammeter .e5-am .va{grid-column:2;grid-row:2;text-align:right;font-size:25px;font-weight:700;font-variant-numeric:tabular-nums}
+#e5_11a_ammeter .e5-am.hot{border-color:#FFC21A}
+#e5_11a_ammeter .e5-tk{transform-box:fill-box;transform-origin:center}
+
+/* ── 12_pcut.html ── */
+
+#e5_12_pcut .e5-bars{position:absolute;display:flex;flex-direction:column;gap:12px;z-index:3}
+#e5_12_pcut .e5-bars .br{display:flex;align-items:center;gap:18px;font-size:26px;font-weight:600;color:var(--t2)}
+#e5_12_pcut .e5-bars .br span{width:170px;white-space:nowrap}
+#e5_12_pcut .e5-bars .br i{position:relative;display:block;flex:1;height:26px;border-radius:13px;background:var(--e5seg);overflow:hidden}
+#e5_12_pcut .e5-bars .br b{position:absolute;left:0;top:0;bottom:0;width:100%;border-radius:13px;background:var(--light)}
+#e5_12_pcut .e5-bars .br:nth-child(-n+2) b{background:#FFC21A}
 
 /* ── 17_use.html ── */
 
@@ -356,6 +457,10 @@ html.student #notes{display:none!important}
 #e5_21_recap .rc li small{display:block;font-size:26px;font-weight:600;color:var(--t2);margin-top:2px;font-variant-numeric:tabular-nums}
 #e5_21_recap .rc .big{margin-top:auto;padding-top:18px;border-top:2px solid #e5e5ea;font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.36}
 #e5_21_recap .rc .big small{display:block;font-size:26px;font-weight:600;color:var(--t2);margin-top:2px}
+
+/* ── 90_quiz0.html ── */
+
+#e5_90_quiz0 .qz-dots span{border-color:#c7c7cc}
 
 </style>
 </head>
@@ -391,32 +496,53 @@ html.student #notes{display:none!important}
 
 <div id="viewport"><div id="stage">
 <!-- ═══ 01_cover.html ═══ -->
-<section class="slide" id="e5_01_cover" data-tile="black" data-title="표지" data-notes="P1" data-say="어두운 방의 트리 전구 줄입니다. 딸깍 — 모든 전구가 같은 순간에 켜져요(앞쪽 전구부터 차례로 켜지는 것이 아님). 전구 하나가 빠지는 순간 줄 전체가 꺼집니다. 왜 그런지는 아직 말하지 않아요 — 오늘 끝날 때 답합니다.">
-  <svg class="full-svg" id="e5_01_cover-svg" viewBox="300 40 1320 742.5">
+<section class="slide" id="e5_01_cover" data-tile="light" data-title="표지" data-notes="P1" data-say="어두운 방의 트리 전구 줄입니다. 딸깍 — 모든 전구가 같은 순간에 켜져요(앞쪽 전구부터 차례로 켜지는 것이 아님). 전구 하나가 빠지는 순간 줄 전체가 꺼집니다. 왜 그런지는 아직 말하지 않아요 — 오늘 끝날 때 답합니다.">
+  <svg class="full-svg" id="e5_01_cover-svg" viewBox="406 48 1108 623.25">
+    <rect id="e5_01_cover-panel" x="0" y="0" width="1920" height="1080" rx="0" fill="#000"/>
     <g id="e5_01_cover-tree"></g>
     <g id="e5_01_cover-halo" opacity="0"></g>
     <g id="e5_01_cover-wire"></g>
     <g id="e5_01_cover-bulbs"></g>
     <g id="e5_01_cover-on" opacity="0" filter="url(#glow-s)"></g>
   </svg>
-  <div class="abs t-eyebrow center" style="left:0;width:1920px;top:690px" data-in="4900">VII. 전기와 자기 · 2. 전기의 이용</div>
-  <div class="abs t-title center" style="left:0;width:1920px;top:736px" data-in="5100">한 줄로 이을까, 나란히 이을까</div>
+  <div class="abs t-eyebrow center" style="left:0;width:1920px;top:700px" data-in="4900">VII. 전기와 자기 · 2. 전기의 이용</div>
+  <div class="abs t-title center" style="left:0;width:1920px;top:742px" data-in="5100">한 줄로 이을까요, 나란히 이을까요?</div>
   <div class="abs t-lead center mute" style="left:0;width:1920px;top:850px" data-in="5500">저항의 직렬연결과 병렬연결</div>
   <div class="abs center" style="left:0;width:1920px;top:926px;font-size:26px;color:var(--t3)" data-in="5900">학습지 5 · 개념정리</div>
 </section>
 <!-- ═══ 02_hook.html ═══ -->
-<section class="slide" id="e5_02_hook" data-tile="dark" data-title="하나가 꺼지면, 나머지는?" data-notes="P2" data-say="수업 페이지 생각 열기와 같은 질문입니다(간판·교실 조명 하나가 꺼져도 나머지는 켜져 있다). 답은 말하지 않고 「어떻게 이었길래?」로 좁혀 갑니다. 2단계 실험(전구 빼 보기)에서 학생이 직접 확인해요.">
-  <div class="hd" data-in><div class="eb">도입</div><h2>하나가 꺼지면, 나머지는?</h2></div>
+<section class="slide" id="e5_02_hook" data-tile="light" data-title="하나가 꺼지면, 나머지는?" data-notes="P2" data-say="수업 페이지 생각 열기와 같은 질문입니다(간판·교실 조명 하나가 꺼져도 나머지는 켜져 있다). 답은 말하지 않고 「어떻게 이었길래?」로 좁혀 갑니다. 2단계 실험(전구 빼 보기)에서 학생이 직접 확인해요.">
+  <div class="hd" data-in><div class="eb">도입</div><h2>하나가 꺼지면, 나머지는 어떻게 될까요?</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
-    <g transform="translate(-235 214) scale(.62)"><g id="e5_02_hook-tree" data-in="200" data-fx="fade"></g></g>
-    <g id="e5_02_hook-house" data-in="500" data-fx="fade"></g>
+    <!-- 밤 장면은 어두운 창(카드) 안에 — 불빛이 흰 면에서도 또렷하게 -->
+    <rect x="120" y="250" width="640" height="550" rx="32" fill="#000" data-in="100" data-fx="fade"/>
+    <rect x="800" y="250" width="1000" height="550" rx="32" fill="#000" data-in="300" data-fx="fade"/>
+    <g transform="translate(-245 292) scale(.62)"><g id="e5_02_hook-tree" data-in="200" data-fx="fade"></g></g>
+    <g transform="translate(255 146) scale(.78)"><g id="e5_02_hook-house" data-in="500" data-fx="fade"></g></g>
   </svg>
-  <div class="e5-cap center mute" style="left:60px;width:600px;top:650px" data-in="900">트리 전구 — 하나가 빠지자 줄 전체가 꺼졌다</div>
-  <div class="e5-cap center" style="left:960px;width:760px;top:826px" data-step="1" data-delay="700">방 하나의 불을 꺼도 — 나머지는 그대로</div>
-  <div class="abs center" style="left:0;width:1920px;top:892px;font-size:64px;font-weight:600;letter-spacing:-.028em" data-step="2" data-fx="blur">무엇이 다를까?</div>
+  <div class="e5-cap center mute" style="left:120px;width:640px;top:826px" data-in="900">트리 전구 — 하나가 빠지자 줄 전체가 꺼졌다</div>
+  <div class="e5-cap center" style="left:800px;width:1000px;top:826px" data-step="1" data-delay="700">방 하나의 불을 꺼도 — 나머지는 그대로</div>
+  <div class="abs center" style="left:0;width:1920px;top:890px;font-size:64px;font-weight:600;letter-spacing:-.028em" data-step="2" data-fx="blur">무엇이 다를까요?</div>
+</section>
+<!-- ═══ 02_hookk_keywords.html ═══ -->
+<section class="slide" id="e5_02_hookk_keywords" data-tile="light" data-title="오늘의 키워드" data-notes="P2k" data-say="오늘의 키워드 6개를 먼저 훑어봅니다. 다음 장부터 오른쪽 위에 지금 배우는 키워드가 표시되고, 칩을 누르면 그 키워드의 첫 장으로 갑니다.">
+  <div class="hd" data-in><div class="eb">학습지 5 · 저항의 직렬연결과 병렬연결</div><h2>오늘의 키워드</h2></div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <path d="M230 610H1480" stroke="#e8e8ed" stroke-width="12" stroke-linecap="round" fill="none"/>
+    <g data-in="3160" data-fx="fade"><path d="M1544 610H1666" stroke="#c7c7cc" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round" fill="none"/>
+      <circle cx="1700" cy="610" r="30" fill="#f5f5f7" stroke="#c7c7cc" stroke-width="5"/><path d="M1689 611l8 8 15-17" stroke="#aeaeb2" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>
+    <path d="M230 610H1480" stroke="var(--act)" stroke-width="12" stroke-linecap="round" fill="none" data-in="600" data-fx="draw" data-dur="2460" data-ease="inOut"/>
+    <circle id="e5_02_hookk_keywords-ring" cx="230" cy="610" r="54" fill="none" stroke="var(--act)" stroke-width="4" opacity="0"/>
+    <g data-in="600" data-fx="pop"><circle cx="230" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="230" y="627" text-anchor="middle" class="kwk-n">1</text></g><g data-in="1092" data-fx="pop"><circle cx="480" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="480" y="627" text-anchor="middle" class="kwk-n">2</text></g><g data-in="1584" data-fx="pop"><circle cx="730" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="730" y="627" text-anchor="middle" class="kwk-n">3</text></g><g data-in="2076" data-fx="pop"><circle cx="980" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="980" y="627" text-anchor="middle" class="kwk-n">4</text></g><g data-in="2568" data-fx="pop"><circle cx="1230" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="1230" y="627" text-anchor="middle" class="kwk-n">5</text></g><g data-in="3060" data-fx="pop"><circle cx="1480" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="1480" y="627" text-anchor="middle" class="kwk-n">6</text></g>
+  </svg>
+  <div class="kwk-t" style="left:117px;top:694px;width:226px" data-in="740" data-fx="rise">잇는 방법</div><div class="kwk-t" style="left:367px;top:694px;width:226px" data-in="1232" data-fx="rise">직렬연결</div><div class="kwk-t" style="left:617px;top:694px;width:226px" data-in="1724" data-fx="rise">병렬연결</div><div class="kwk-t" style="left:867px;top:694px;width:226px" data-in="2216" data-fx="rise">전구 실험</div><div class="kwk-t" style="left:1117px;top:694px;width:226px" data-in="2708" data-fx="rise">쓰임새</div><div class="kwk-t" style="left:1367px;top:694px;width:226px" data-in="3200" data-fx="rise">전체 저항</div>
+  <div class="kwk-end" style="left:1600px;top:526px" data-in="3260" data-fx="fade">정리 · 문제</div>
+  <div class="kwk-start" style="left:120px;top:470px" data-in="3260" data-fx="pop">여기서 출발!</div>
+  <div class="kwk-mock" data-in="3660" data-fx="fade"><span class="mk cur"><b>1</b><i>잇는 방법</i></span><span class="mk"><b>2</b></span><span class="mk"><b>3</b></span><span class="mk"><b>4</b></span><span class="mk"><b>5</b></span><span class="mk"><b>6</b></span></div>
+  <div class="kwk-hint" data-in="3960" data-fx="fade">지금 배우는 키워드는 오른쪽 위에 계속 표시돼요</div>
 </section>
 <!-- ═══ 03_two.html ═══ -->
-<section class="slide" id="e5_03_two" data-tile="light" data-title="잇는 방법은 딱 두 가지" data-notes="P3" data-say="학습지 1쪽 두 회로도와 같은 그림입니다. 앰버 점은 (+)극에서 나와 (−)극으로 들어가는 «전류의 길»을 따라갑니다. 병렬에서는 갈림길에서 둘로 나뉘었다가 다시 만나요. 「두 그림에서 가장 크게 다른 곳은?」 → 갈림길.">
+<section class="slide" id="e5_03_two" data-tile="light" data-title="잇는 방법은 딱 두 가지" data-notes="P3" data-say="학습지 1쪽 두 회로도와 같은 그림입니다. 노란 점은 (+)극에서 나와 (−)극으로 들어가는 «전류의 길»을 따라갑니다. 병렬에서는 갈림길에서 둘로 나뉘었다가 다시 만나요. 「두 그림에서 가장 크게 다른 곳은?」 → 갈림길.">
   <div class="hd" data-in><div class="eb">A ① · 잇는 방법</div><h2>저항을 잇는 방법은 딱 두 가지</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
     <g data-step="1" data-fx="scale"><rect x="120" y="262" width="820" height="560" rx="18" fill="var(--e5card)"/><g id="e5_03_two-L"></g><g id="e5_03_two-trL"></g></g>
@@ -427,58 +553,130 @@ html.student #notes{display:none!important}
 </section>
 <!-- ═══ 04_quiz.html ═══ -->
 <section class="slide" id="e5_04_quiz" data-tile="parchment" data-title="연습 — 직렬? 병렬?" data-notes="P4" data-say="넘기기 전에 학생이 손가락으로 (+)극에서 (−)극까지 길을 따라가 보게 합니다. (라)가 함정 — 저항이 위아래에 있어 병렬처럼 보이지만 갈림길이 없어요. (다)는 세로로 선 병렬입니다.">
-  <div class="hd" data-in><div class="eb">연습</div><h2>이 회로는 직렬? 병렬?</h2></div>
+  <div class="hd" data-in><div class="eb">연습</div><h2>이 회로는 직렬일까요, 병렬일까요?</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080"><g id="e5_04_quiz-g"></g></svg>
   <div class="abs center" style="left:0;width:1920px;top:800px;font-size:36px;font-weight:600;letter-spacing:-.015em" data-step="4" data-delay="2900">모양에 속지 말자 — <b>갈림길이 있느냐 없느냐</b>로 판단한다</div>
 </section>
+<!-- ═══ 04a_strength.html ═══ -->
+<section class="slide" id="e5_04a_strength" data-tile="light" data-title="다시 보기 — 전류의 세기" data-notes="P4a" data-say="지난 시간(학습지 3) 복습 — 이 장에는 빈칸이 없어요. 파란 점(전자)은 처음부터 도선에 가득하고 전류의 방향(노란 꺾쇠)과 반대로 움직입니다. ① 1초 시계 ② 단면 ③ 1초 동안 단면을 지나간 전하를 셉니다(그림 속 단면을 실제로 지나간 수 — 6개) ④ 전류를 세게 하면 같은 1초에 12개. 모형이라 실제로는 1초에 셀 수 없이 많이 지나가요. 다음 장 «어디서나 같다»로 이어집니다.">
+  <div class="hd" data-in><div class="eb">다시 보기 · 지난 시간에 배운 것</div><h2>전류의 세기 — 얼마나 많이 지나갈까요?</h2></div>
+  <div class="ws-card" style="left:120px;top:236px;width:1680px" data-in="300">
+    <div class="ws-line" style="font-size:38px"><b>전류의 세기</b> : <span class="kw" id="e5_04a_strength-k1">1초</span> 동안 도선의 <span class="kw" id="e5_04a_strength-k2">단면</span>을 통과하는 <span class="kw" id="e5_04a_strength-k3">전하의 양</span> <span class="mute" style="font-size:30px;margin-left:.4em">· 단위 A (암페어)</span></div>
+  </div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <!-- 크게 본 도선(관) — 왼쪽 끝은 둥근 테두리, 오른쪽 끝은 잘린 면 -->
+    <path d="M240 540H1380V740H240A30 100 0 0 1 240 540Z" fill="var(--e5tube)" stroke="#c7c7cc" stroke-width="2"/>
+    <path d="M256 560H1366" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".75"/>
+    <ellipse cx="240" cy="640" rx="30" ry="100" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="1.5"/>
+    <g id="e5_04a_strength-e"></g>
+    <ellipse cx="1380" cy="640" rx="30" ry="100" fill="#d8d8de" stroke="#b5b5bb" stroke-width="2"/>
+    <!-- 단면(문) -->
+    <g id="e5_04a_strength-gate" data-step="2" data-fx="fade" data-delay="200">
+      <ellipse id="e5_04a_strength-gl" cx="920" cy="640" rx="30" ry="100" fill="var(--act)" opacity="0"/>
+      <ellipse cx="920" cy="640" rx="30" ry="100" fill="var(--act)" fill-opacity=".07" stroke="var(--act)" stroke-width="4" stroke-dasharray="11 8"/>
+      <text x="920" y="800" text-anchor="middle" style="font-size:32px;font-weight:700;fill:var(--act)">단면</text>
+    </g>
+    <!-- 전류의 방향(노란 꺾쇠 — 05 장부터와 같은 모양) · 전자의 이동 방향 -->
+    <text x="240" y="478" style="font-size:28px;font-weight:400;fill:var(--t2)" data-in="500" data-fx="fade">도선 속을 크게 본 모습 (모형)</text>
+    <g data-in="900" data-fx="fade">
+      <text x="1292" y="478" text-anchor="end" class="e5-cur-t">전류의 방향</text>
+      <g id="e5_04a_strength-carr"></g>
+      <g id="e5_04a_strength-ch"></g>
+    </g>
+    <g data-in="1200" data-fx="fade">
+      <g id="e5_04a_strength-earr"></g>
+      <text x="490" y="800" style="font-size:28px;font-weight:600;fill:var(--elec)">전자의 이동 방향</text>
+    </g>
+    <!-- 1초 시계 -->
+    <g id="e5_04a_strength-clk" data-step="1" data-fx="pop">
+      <circle cx="1630" cy="600" r="66" fill="none" stroke="#e5e5ea" stroke-width="12"/>
+      <circle id="e5_04a_strength-arc" cx="1630" cy="600" r="66" fill="none" stroke="var(--act)" stroke-width="12" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" transform="rotate(-90 1630 600)"/>
+      <text x="1630" y="614" text-anchor="middle" style="font-size:40px;font-weight:700;fill:var(--ink)">1초</text>
+    </g>
+  </svg>
+  <div class="abs center mute" style="left:1440px;width:380px;top:700px;font-size:26px" data-step="3" data-fx="fade">1초 동안 단면을 지나간 전하</div>
+  <div class="abs center" style="left:1440px;width:380px;top:734px;font-size:36px;font-weight:600" data-step="3" data-fx="fade"><span class="num c-neg" id="e5_04a_strength-n" style="display:inline-block;font-size:84px;font-weight:700;margin-right:8px">0</span>개</div>
+  <div class="abs center" style="left:1440px;width:380px;top:858px;font-size:24px;line-height:1.4;color:var(--t3)" data-step="3" data-fx="fade" data-delay="1400">모형 — 실제 도선에서는<br>1초 동안 셀 수 없이 많은<br>전하가 지나간다</div>
+  <div class="abs center" style="left:240px;width:1140px;top:870px;font-size:40px;font-weight:600;letter-spacing:-.02em" data-step="4" data-fx="fade" data-delay="1600">1초 동안 <span class="c-neg">6개 → 12개</span> — 더 많이 지나가면 <span class="c-cur">전류</span>가 더 세다</div>
+</section>
 <!-- ═══ 05_scur.html ═══ -->
-<section class="slide" id="e5_05_scur" data-tile="black" data-title="직렬 ① 전류는 어디서나 같다" data-notes="P5" data-say="빈칸 ① 한 개 · ② I₁ · ③ I₂. 하늘색 점은 전자(전류와 반대 방향으로 움직임) — 간격이 같으니 빠르기가 곧 «1초에 지나가는 수»예요. 3단계에서 R₁ 을 10 Ω 으로 바꾸면 세 전류계가 함께 0.30 A 가 됩니다. 「R₁ 을 지나면서 전류가 쓰여서 줄지 않을까?」 → 줄지 않는다.">
+<section class="slide" id="e5_05_scur" data-tile="light" data-title="직렬 ① 전류는 어디서나 같다" data-notes="P5" data-say="빈칸 ① 한 개 · ② I₁ · ③ I₂. 파란 점은 전자(전류와 반대 방향), 노란 꺾쇠는 전류의 방향 — 간격이 모두 같아서 빠르기가 곧 «1초 동안 단면을 지나가는 수»예요. 2단계의 점선 고리 = 단면(04a 에서 본 것). 오른쪽 R₁·R₂ 단추를 눌러 보세요 — 세 전류계가 언제나 함께 같은 값으로 바뀝니다. 3단계는 R₁ 을 10 Ω 으로(R₂ 는 10 Ω · 단추와 같은 동작) → 세 곳 모두 0.30 A.">
   <div class="hd" data-in><div class="eb">직렬연결 ①</div><h2>전류의 세기는 어디서나 같다</h2></div>
+  <div class="e5-def" style="left:180px;top:222px" data-in="500" data-fx="fade">
+    <svg viewBox="-16 -26 32 52" width="26" height="42" aria-hidden="true"><ellipse rx="10" ry="22" fill="var(--act)" fill-opacity=".1" stroke="var(--act)" stroke-width="3.5" stroke-dasharray="6 4"/></svg>
+    <span><b class="e5-cur">전류의 세기</b> = 1초 동안 도선의 <b>단면</b>을 통과하는 <b>전하의 양</b></span>
+  </div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
     <g id="e5_05_scur-c"></g>
+    <g id="e5_05_scur-ring" data-step="2" data-fx="fade" data-delay="600"></g>
     <g data-step="2" data-fx="fade" id="e5_05_scur-pills"></g>
   </svg>
-  <div class="ws-card" style="left:1130px;top:262px;width:670px" data-in="300">
+  <div class="e5-leg" id="e5_05_scur-leg" style="left:452px;top:552px" data-in="900" data-fx="fade"></div>
+  <div class="e5-note" style="left:180px;top:884px;width:900px;color:var(--ink)" data-step="2" data-delay="1600" data-fx="fade">
+    <svg viewBox="-12 -22 24 44" width="18" height="34" aria-hidden="true" style="vertical-align:-8px;margin-right:6px"><ellipse rx="8" ry="18" fill="var(--act)" fill-opacity=".1" stroke="var(--act)" stroke-width="3" stroke-dasharray="5 3.5"/></svg>세 곳 모두 <b>1초 동안 단면을 지나가는 전하의 양</b>이 같다 → <b class="e5-cur">전류의 세기가 같다</b>
+  </div>
+  <div class="ws-card" style="left:1130px;top:248px;width:670px" data-in="300">
     <div class="ws-h"><b>직렬연결</b><span>한 줄로 — 갈림길이 없다</span></div>
     <div class="e5-note" style="position:static;margin:2px 0 8px" data-step="1" data-delay="1500" data-fx="fade">저항을 한 줄로 이어, 전류가 지나갈 길이 하나뿐</div>
     <div class="ws-line">전류의 길 : <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="1200">한 개</span><span class="n">1</span></span></div>
     <div class="ws-line">전류 세기(어디서나 같다):</div>
     <div class="ws-line">I = <span class="bk e5n"><span class="a" data-step="2" data-fx="pop" data-delay="1500">I₁</span><span class="n">2</span></span> = <span class="bk e5n"><span class="a" data-step="2" data-fx="pop" data-delay="1800">I₂</span><span class="n">3</span></span></div>
   </div>
-  <div class="e5-call" style="left:1130px;top:700px;width:670px" data-step="3" data-delay="1300">R₁ 을 바꾸면 세 곳이 <span class="e5-cur">함께</span> 변한다<small>전류는 저항을 지나며 «쓰여서» 줄어들지 않는다</small></div>
-  <div class="e5-note" style="left:180px;top:906px;width:960px" data-in="800">하늘색 점 = 전자(전류와 반대 방향으로 움직임)<br>1초에 한 곳을 지나가는 수가 많을수록 센 전류(모형)</div>
+  <div class="e5-ctl" id="e5_05_scur-ctl" style="left:1130px;top:608px;width:670px" data-interactive data-in="700" data-fx="fade">
+    <div id="e5_05_scur-seg"></div>
+    <div class="e5-ro" data-step="2" data-fx="fade" data-delay="400">
+      <div><span class="k">전체 저항 = R₁ + R₂ =</span> <span id="e5_05_scur-ra">20 + 10</span> = <b class="e5-res" id="e5_05_scur-rt">30</b> Ω</div>
+      <div><span class="k">전류 = 6 V ÷</span> <span id="e5_05_scur-rt2">30</span> Ω = <b class="e5-cur" id="e5_05_scur-ri">0.20</b> A</div>
+    </div>
+  </div>
+  <div class="e5-call" style="left:1130px;top:894px;width:670px;padding:12px 26px" data-step="3" data-delay="1300">R₁ 을 바꾸면 세 곳이 <span class="e5-cur">함께</span> 변한다</div>
 </section>
 <!-- ═══ 06_svolt.html ═══ -->
-<section class="slide" id="e5_06_svolt" data-tile="dark" data-title="직렬 ② 전압은 나뉜다" data-notes="P6" data-say="빈칸 ④ V₁ · ⑤ V₂. 전압계는 저항의 양 끝 두 곳에 댑니다. R₁ 20 Ω · R₂ 10 Ω 이면 4 V · 2 V(합 6 V). 3단계에서 R₁ 을 10 Ω 으로 바꾸면 3 V · 3 V — 어떻게 바꿔도 V₁ + V₂ 는 전원 전압 6 V 그대로입니다.">
+<section class="slide" id="e5_06_svolt" data-tile="light" data-title="직렬 ② 전압은 나뉜다" data-notes="P6" data-say="빈칸 ④ V₁ · ⑤ V₂. 전압계는 저항의 양 끝 두 곳에 댑니다. R₁ 20 Ω · R₂ 10 Ω 이면 4 V · 2 V(합 6 V). 오른쪽 단추로 R₁·R₂ 를 바꿔 보세요 — 전압이 저항에 비례해 나뉘고(전류는 6 ÷ 전체 저항), V₁ + V₂ 는 언제나 6 V. 3단계는 R₁ 을 10 Ω 으로(R₂ 도 10 Ω) → 3 V · 3 V.">
   <div class="hd" data-in><div class="eb">직렬연결 ②</div><h2>전압은 각 저항에 따라 나뉜다</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
     <g id="e5_06_svolt-c"></g>
     <g id="e5_06_svolt-pills" data-step="1" data-fx="fade"></g>
-    <g id="e5_06_svolt-bar"></g>
+    <g id="e5_06_svolt-bar" data-in="900" data-fx="fade"></g>
   </svg>
-  <div class="ws-card" style="left:1130px;top:262px;width:670px" data-in="300">
+  <div class="e5-leg" id="e5_06_svolt-leg" style="left:300px;top:600px" data-in="900" data-fx="fade"></div>
+  <div class="ws-card" style="left:1130px;top:248px;width:670px" data-in="300">
     <div class="ws-h"><b>직렬연결</b><span>전압</span></div>
     <div class="ws-line">전압(각 저항에 따라 나뉜다!):</div>
     <div class="ws-line">V = <span class="bk e5n"><span class="a" data-step="1" data-fx="pop" data-delay="1700">V₁</span><span class="n">4</span></span> + <span class="bk e5n"><span class="a" data-step="1" data-fx="pop" data-delay="2000">V₂</span><span class="n">5</span></span></div>
   </div>
-  <div class="e5-call" style="left:1130px;top:770px;width:670px" data-step="2" data-out="3">저항이 큰 쪽(R₁)에 전압이 더 크게 걸린다<small>R₁ 이 R₂ 의 2배 → V₁ 도 V₂ 의 2배 · 4 V + 2 V = 6 V</small></div>
-  <div class="e5-call" style="left:1130px;top:770px;width:670px" data-step="3" data-delay="1400">같은 저항이면 반씩 — 3 V + 3 V = 6 V<small>어떻게 바꿔도 V₁ + V₂ = 전원 전압</small></div>
+  <div class="e5-ctl" style="left:1130px;top:500px;width:670px" data-interactive data-in="700" data-fx="fade">
+    <div id="e5_06_svolt-seg" style="display:flex;flex-direction:column;gap:12px"></div>
+    <div class="e5-ro sm" data-step="1" data-fx="fade" data-delay="900">
+      <div><span class="k">전류 I = 6 V ÷</span> <span id="e5_06_svolt-rt">30</span> Ω = <b class="e5-cur" id="e5_06_svolt-ri">0.20</b> A</div>
+      <div><span class="k">V₁ = I × R₁ =</span> <span id="e5_06_svolt-c1">0.20 × 20</span> = <b class="e5-volt" id="e5_06_svolt-o1">4.0</b> V</div>
+      <div><span class="k">V₂ = I × R₂ =</span> <span id="e5_06_svolt-c2">0.20 × 10</span> = <b class="e5-volt" id="e5_06_svolt-o2">2.0</b> V</div>
+      <div><span class="k">V₁ + V₂ =</span> <b class="e5-volt" id="e5_06_svolt-os">6.0</b> V <span class="k">(전원 전압)</span></div>
+    </div>
+  </div>
+  <div class="e5-call" style="left:1130px;top:852px;width:670px;padding:12px 26px" data-step="2" data-out="3">저항이 큰 쪽에 전압이 더 크게 걸린다<small>저항이 2배면 전압도 2배 · <span id="e5_06_svolt-k2">4 V + 2 V</span> = 6 V</small></div>
+  <div class="e5-call" style="left:1130px;top:852px;width:670px;padding:12px 26px" data-step="3" data-delay="1400"><span id="e5_06_svolt-k3h">같은 저항이면 반씩</span> — <span id="e5_06_svolt-k3">3 V + 3 V</span> = 6 V<small>어떻게 바꿔도 V₁ + V₂ = 전원 전압</small></div>
 </section>
 <!-- ═══ 07_scut.html ═══ -->
-<section class="slide" id="e5_07_scut" data-tile="black" data-title="직렬 ③ 하나라도 빼면" data-notes="P7" data-say="빈칸 ⑥ 모두 꺼진다. 넘기기 전에 예측을 먼저 받으세요(「㉮는 그대로 켜져 있다」를 고르는 학생이 많습니다). 전구는 저항의 하나예요. ㉯를 빼는 순간 건드리지 않은 ㉮까지 꺼지고, 회로 모든 곳의 전자 흐름이 같은 순간에 멈춥니다(전자는 제자리에서 흔들리기만).">
-  <div class="hd" data-in><div class="eb">직렬연결 ③</div><h2>저항을 하나라도 빼면?</h2></div>
+<section class="slide" id="e5_07_scut" data-tile="light" data-title="직렬 ③ 하나라도 빼면" data-notes="P7" data-say="빈칸 ⑥ 모두 꺼진다. 넘기기 전에 예측을 먼저 받으세요(「㉮는 그대로 켜져 있다」를 고르는 학생이 많습니다). 전구는 저항의 하나예요. ㉯를 빼는 순간 건드리지 않은 ㉮까지 꺼지고, 회로 모든 곳의 전자와 노란 꺾쇠가 같은 순간에 멈춥니다(전자는 제자리에서 흔들리기만). 오른쪽 단추로 몇 번이고 빼고 다시 끼워 볼 수 있어요.">
+  <div class="hd" data-in><div class="eb">직렬연결 ③</div><h2>저항을 하나라도 빼면 어떻게 될까요?</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080"><g id="e5_07_scut-c"></g></svg>
-  <div class="e5-big" style="left:1130px;top:280px;width:680px" data-in="600">전구 ㉯를 빼면,<br><span class="mute">건드리지 않은 ㉮는?</span></div>
-  <div class="ws-card" style="left:1130px;top:470px;width:670px" data-in="300">
+  <div class="e5-leg" id="e5_07_scut-leg" style="left:300px;top:610px" data-in="900" data-fx="fade"></div>
+  <div class="e5-big" style="left:180px;top:214px;width:900px;font-size:42px" data-in="600">전구 ㉯를 빼면, <span class="mute">㉮는 어떻게 될까요?</span></div>
+  <div class="ws-card" style="left:1130px;top:262px;width:670px" data-in="300">
     <div class="ws-h"><b>직렬연결</b><span>하나라도 빼면</span></div>
     <div class="ws-line">저항을 하나라도 빼면:</div>
     <div class="ws-line"><span class="bk e5w6"><span class="a" data-step="1" data-fx="pop" data-delay="1300">모두 꺼진다</span><span class="n">6</span></span></div>
   </div>
-  <div class="e5-call" style="left:1130px;top:780px;width:670px" data-step="2">길이 하나뿐 — 한 곳이 끊기면 회로 전체에 전류가 흐르지 않는다<small>전자가 «사라진» 것이 아니라 모든 곳에서 함께 멈춘 것</small></div>
+  <div class="e5-ctl" style="left:1130px;top:518px;width:670px" data-interactive data-in="800" data-fx="fade">
+    <div class="e5-btns"><button type="button" class="e5-btn" id="e5_07_scut-tg">✂ 전구 ㉯ 빼기</button></div>
+    <div class="e5-msg" id="e5_07_scut-msg">지금은 길이 하나로 이어져 두 전구가 함께 켜져 있어요.</div>
+  </div>
+  <div class="e5-call" style="left:1130px;top:780px;width:670px" data-step="2">길이 하나뿐 — 한 곳이 끊기면 회로 전체에 전류가 흐르지 않는다</div>
 </section>
 <!-- ═══ 08_road.html ═══ -->
-<section class="slide" id="e5_08_road" data-tile="graphite" data-title="왜? 막힌 도로" data-notes="P8" data-say="세 곳 모두 «5초 동안 지나간 차»를 셉니다 — 셋 다 10대. 공사 구간에서 차가 빽빽해 보여도 5초에 지나가는 대수는 같아요(빽빽한 것 ≠ 많이 지나가는 것). 좁은 곳이 전체 통과량을 정합니다. 비유의 한계: 전자는 차처럼 따로 운전하지 않고, 회로 전체가 함께 밀립니다.">
-  <div class="hd" data-in><div class="eb">직렬 · 왜?</div><h2>전류는 왜 어디서나 같을까? — 막힌 도로</h2></div>
+<section class="slide" id="e5_08_road" data-tile="light" data-title="왜? 막힌 도로" data-notes="P8" data-say="세 곳 모두 «5초 동안 지나간 차»를 셉니다 — 셋 다 10대. 공사 구간에서 차가 빽빽해 보여도 5초에 지나가는 대수는 같아요(빽빽한 것 ≠ 많이 지나가는 것). 좁은 곳이 전체 통과량을 정합니다. 비유의 한계: 전자는 차처럼 따로 운전하지 않고, 회로 전체가 함께 밀립니다.">
+  <div class="hd" data-in><div class="eb">직렬 · 왜 그럴까요?</div><h2>전류는 왜 어디서나 같을까요? — 막힌 도로</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
     <g id="e5_08_road-road"></g><g id="e5_08_road-gates"></g><g id="e5_08_road-cars"></g><g id="e5_08_road-labs"></g>
   </svg>
@@ -487,64 +685,124 @@ html.student #notes{display:none!important}
 </section>
 <!-- ═══ 09_boba.html ═══ -->
 <section class="slide" id="e5_09_boba" data-tile="light" data-title="왜? 버블티 빨대" data-notes="P9" data-say="두 빨대로 올라오는 펄 수가 5초에 10개로 같다 — 직렬에서 전류가 같다는 뜻입니다. 좁은 빨대에서는 펄이 한 줄로 빨리, 넓은 빨대에서는 두 줄로 천천히 올라와요(빠른 것과 많은 것은 다름). 같은 양을 올리려면 좁은 빨대를 더 세게 빨아야 한다 → 저항이 큰 곳에 더 큰 전압. 앞 장 시뮬의 4 V · 2 V 와 잇습니다.">
-  <div class="hd" data-in><div class="eb">직렬 · 왜?</div><h2>전압은 왜 저항에 따라 나뉠까? — 버블티 빨대</h2></div>
+  <div class="hd" data-in><div class="eb">직렬 · 왜 그럴까요?</div><h2>전압은 왜 저항에 따라 나뉠까요? — 버블티 빨대</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
     <defs><clipPath id="e5_09_boba-c1"><rect x="315" y="300" width="30" height="512"/></clipPath><clipPath id="e5_09_boba-c2"><rect x="714" y="300" width="92" height="512"/></clipPath></defs>
     <g id="e5_09_boba-cups"></g><g id="e5_09_boba-p1" clip-path="url(#e5_09_boba-c1)"></g><g id="e5_09_boba-p2" clip-path="url(#e5_09_boba-c2)"></g><g id="e5_09_boba-over"></g>
   </svg>
   <div class="e5-call" style="left:1060px;top:262px;width:740px;font-size:30px" data-step="1"><span class="e5-res">빨대 = 저항</span> · 좁은 빨대 → 저항이 크다<small>넓은 빨대 → 저항이 작다</small></div>
   <div class="e5-call" style="left:1060px;top:410px;width:740px;font-size:30px" data-step="2">직렬에서는 전류가 같다 = 빨대를 지나는 <b>펄의 양이 같다</b><small>1초 동안 도선의 단면을 지나는 전하의 양</small></div>
-  <div class="e5-call" style="left:1060px;top:558px;width:740px;font-size:30px" data-step="3">같은 양을 빨아올리려면? 좁은 빨대는 <b>더 세게</b><small>→ 저항이 큰 곳에 <b class="e5-volt">더 큰 전압</b>이 걸린다</small></div>
+  <div class="e5-call" style="left:1060px;top:558px;width:740px;font-size:30px" data-step="3">같은 양을 빨아올리려면? 좁은 빨대는 <b>더 세게</b> 빨아야 해요<small>→ 저항이 큰 곳에 <b class="e5-volt">더 큰 전압</b>이 걸린다</small></div>
   <div class="e5-call" style="left:1060px;top:706px;width:740px;font-size:30px" data-step="4"><b class="e5-volt">V = I R</b> — I 가 같으면 R 이 큰 쪽의 V 가 크다<small>6 V · R₁ 20 Ω · R₂ 10 Ω → I = 0.2 A · V₁ = 0.2 × 20 = 4 V · V₂ = 0.2 × 10 = 2 V</small></div>
 </section>
 <!-- ═══ 10_ppath.html ═══ -->
-<section class="slide" id="e5_10_ppath" data-tile="black" data-title="병렬 ① 갈래 전압은 같다" data-notes="P10" data-say="빈칸 ⑦ 여러 개. 앰버 점이 갈림길에서 둘로 나뉘었다가 다시 만납니다. 두 전압계는 저항을 아무리 바꿔도 6 V — 3 V + 3 V 로 나눠 갖지 않아요. 3단계: 도선은 «같은 자리» — (+)극에 이어진 쪽(붉은빛)과 (−)극에 이어진 쪽(파란빛)이 각각 한 덩어리이고, 두 갈래 모두 그 사이에 걸쳐 있어요.">
+<section class="slide" id="e5_10_ppath" data-tile="light" data-title="병렬 ① 갈래 전압은 같다" data-notes="P10" data-say="빈칸 ⑦ 여러 개. 큰 사각형이 줄기, 안쪽 작은 사각형이 두 갈래예요. 노란 점이 위 변의 갈림점(J₁)에서 둘로 나뉘었다가 오른쪽 갈림점(J₂)에서 다시 만납니다. 두 전압계는 R₁·R₂ 단추를 아무리 바꿔도 6.0 V — 3 V + 3 V 로 나눠 갖지 않아요. 3단계: 도선은 «같은 자리» — (+)극에 저항 없이 이어진 도선(붉은빛)과 (−)극에 이어진 도선(파란빛)이 각각 한 덩어리이고, 두 갈래 모두 그 사이에 걸쳐 있어요.">
   <div class="hd" data-in><div class="eb">병렬연결 ①</div><h2>나란히 — 갈래마다 따로</h2></div>
+  <div class="e5-leg" id="e5_10_ppath-leg" style="left:170px;top:214px" data-in="900" data-fx="fade"></div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
     <g id="e5_10_ppath-c"></g>
     <g id="e5_10_ppath-pills" data-step="2" data-fx="fade"></g>
-    <g id="e5_10_ppath-bar" data-step="2" data-fx="fade"></g>
   </svg>
-  <div class="ws-card" style="left:1130px;top:262px;width:670px" data-in="300">
+  <div class="ws-card" style="left:1130px;top:248px;width:670px" data-in="300">
     <div class="ws-h"><b>병렬연결</b><span>나란히 — 갈래마다 따로</span></div>
     <div class="e5-note" style="position:static;margin:0 0 6px">(전원 장치 = 전압을 걸어줌!, 전지라고 생각)</div>
     <div class="e5-note" style="position:static;margin:0 0 6px" data-step="1" data-delay="1600" data-fx="fade">저항을 나란히 이어, 전류가 지나갈 길이 여러 갈래</div>
     <div class="ws-line">전류의 길 : <span class="bk e5w5"><span class="a" data-step="1" data-fx="pop" data-delay="1300">여러 개</span><span class="n">7</span></span></div>
     <div class="ws-line" style="font-size:34px" data-step="2" data-fx="fade">갈래 전압(전원 전압과 같다): <b class="e5-volt">V = V₁ = V₂</b></div>
   </div>
-  <div class="e5-call" style="left:1130px;top:800px;width:670px" data-step="3" data-delay="1000">두 갈래의 양 끝이 전지의 <span class="c-pos">같은 두 점</span>에 이어져 있다<small>그래서 갈래마다 전원 전압이 그대로 걸린다</small></div>
+  <div class="e5-ctl" style="left:1130px;top:582px;width:670px" data-interactive data-in="700" data-fx="fade">
+    <div id="e5_10_ppath-seg" style="display:flex;flex-direction:column;gap:12px"></div>
+    <div class="e5-ro sm" data-step="2" data-fx="fade" data-delay="300">
+      <div>V₁ = <b class="e5-volt">6.0</b> V <span class="k">·</span> V₂ = <b class="e5-volt">6.0</b> V</div>
+      <div><span class="k">저항을 바꿔도 두 갈래 모두</span> <b class="e5-volt">전원 전압 6 V</b></div>
+    </div>
+  </div>
+  <div class="e5-call" style="left:1130px;top:858px;width:670px;padding:12px 26px" data-step="3" data-delay="1000">두 갈래의 양 끝이 전지의 <span class="c-pos">같은 두 점</span>에 이어져 있다<small>그래서 갈래마다 전원 전압이 그대로 걸린다</small></div>
 </section>
 <!-- ═══ 11_pcur.html ═══ -->
-<section class="slide" id="e5_11_pcur" data-tile="dark" data-title="병렬 ② 갈래마다 전류는?" data-notes="P11" data-say="빈칸 ⑧ 나뉜다. 직렬 때와 같은 부품(20 Ω · 10 Ω, 6 V)입니다. 갈래마다 6 V 가 걸리니 I₁ = 6 ÷ 20 = 0.30 A, I₂ = 6 ÷ 10 = 0.60 A, 줄기는 둘을 합친 0.90 A. 직렬에서는 전압이 2 : 1 로 나뉘었는데, 병렬에서는 전류가 1 : 2 로 나뉩니다.">
-  <div class="hd" data-in><div class="eb">병렬연결 ②</div><h2>갈래마다 전류는 어떻게 될까?</h2></div>
+<section class="slide" id="e5_11_pcur" data-tile="light" data-title="병렬 ② 갈래마다 전류는?" data-notes="P11" data-say="빈칸 ⑧ 나뉜다. 직렬 때와 같은 부품(20 Ω · 10 Ω, 6 V). 전류계 자리: I 는 줄기(왼쪽 변), I₁ 은 R₁ 갈래 위(J₁ 과 R₁ 사이), I₂ 는 R₂ 갈래 위(R₂ 앞). 갈래마다 6 V 가 걸리니 I₁ = 6 ÷ 20 = 0.30 A, I₂ = 6 ÷ 10 = 0.60 A, 줄기는 0.90 A. 전자 간격이 어디나 같아서 1초에 지나가는 전자 수도 3 : 6 : 9 로 정확히 맞아요. 단추로 R₁·R₂ 를 바꿔도 언제나 I = I₁ + I₂.">
+  <div class="hd" data-in><div class="eb">병렬연결 ②</div><h2>갈래마다 전류는 어떻게 될까요?</h2></div>
+  <div class="e5-leg" id="e5_11_pcur-leg" style="left:170px;top:214px" data-in="900" data-fx="fade"></div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
     <g id="e5_11_pcur-c"></g>
     <g id="e5_11_pcur-pa" data-step="1" data-fx="fade"></g>
     <g id="e5_11_pcur-pb" data-step="2" data-fx="fade"></g>
   </svg>
-  <div class="ws-card" style="left:1130px;top:262px;width:670px" data-in="300">
+  <div class="ws-card" style="left:1130px;top:248px;width:670px" data-in="300">
     <div class="ws-h"><b>병렬연결</b><span>전류</span></div>
     <div class="ws-line">전류(갈래마다 나뉜다):</div>
     <div class="ws-line">갈래마다 <span class="bk e5w5"><span class="a" data-step="1" data-fx="pop" data-delay="1500">나뉜다</span><span class="n">8</span></span></div>
     <div class="ws-line" data-step="2" data-fx="fade" data-delay="900"><b class="e5-cur">I = I₁ + I₂</b></div>
   </div>
-  <div class="e5-eq" style="left:1130px;top:632px" data-step="2" data-delay="1500"><span class="e5-cur">0.90 A</span> = 0.30 A + 0.60 A</div>
-  <div class="e5-call" style="left:1130px;top:770px;width:670px" data-step="3">저항이 작은 갈래(R₂)로 전류가 더 많이 흐른다<small>저항이 2배면 전류는 절반 — 전압은 두 갈래 모두 6 V</small></div>
+  <div class="e5-ctl" style="left:1130px;top:560px;width:670px" data-interactive data-in="700" data-fx="fade">
+    <div id="e5_11_pcur-seg" style="display:flex;flex-direction:column;gap:12px"></div>
+    <div class="e5-ro sm">
+      <div data-step="1" data-fx="fade" data-delay="300"><span class="k">I₁ = 6 V ÷</span> <span id="e5_11_pcur-q1">20</span> Ω = <b class="e5-cur" id="e5_11_pcur-o1">0.30</b> A</div>
+      <div data-step="1" data-fx="fade" data-delay="500"><span class="k">I₂ = 6 V ÷</span> <span id="e5_11_pcur-q2">10</span> Ω = <b class="e5-cur" id="e5_11_pcur-o2">0.60</b> A</div>
+      <div data-step="2" data-fx="fade" data-delay="1500"><span class="k">I = I₁ + I₂ =</span> <span id="e5_11_pcur-qs">0.30 + 0.60</span> = <b class="e5-cur" id="e5_11_pcur-os">0.90</b> A</div>
+    </div>
+  </div>
+  <div class="e5-call" style="left:1130px;top:846px;width:670px;padding:12px 26px;font-size:30px" data-step="3">저항이 작은 갈래로 전류가 더 많이 흐른다<small>저항이 2배면 전류는 절반 — 전압은 두 갈래 모두 6 V</small></div>
+</section>
+<!-- ═══ 11a_ammeter.html ═══ -->
+<section class="slide" id="e5_11a_ammeter" data-tile="light" data-title="전류계는 왜 여기에?" data-notes="P11a" data-say="빈칸 없음. 전류계는 자기 속을 지나가는 전하만 셀 수 있어요 — 전자가 전류계를 지날 때마다 노랗게 반짝입니다. ① 줄기의 전류계: 전류 전체가 지나감 ② 갈래의 전류계: 자기 갈래로 가는 것만 ③ 1초 동안 센 수(실제 자리로 센 값): 9 = 3 + 6 → I = I₁ + I₂ (0.90 = 0.30 + 0.60) ④ 그래서 재고 싶은 전류가 지나가는 길을 끊고 그 사이에 끼워(직렬) 연결합니다. 모형이라 실제로는 1초에 셀 수 없이 많은 전자가 지나가요.">
+  <div class="hd" data-in><div class="eb">병렬연결 · 전류계 연결</div><h2>전류계는 왜 여기에 꽂을까요?</h2></div>
+  <div class="e5-leg" id="e5_11a_ammeter-leg" style="left:170px;top:214px" data-in="900" data-fx="fade"></div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <g id="e5_11a_ammeter-c"></g>
+    <g id="e5_11a_ammeter-clk" data-step="1" data-fx="pop">
+      <circle cx="1172" cy="342" r="30" fill="none" stroke="#e5e5ea" stroke-width="9"/>
+      <circle id="e5_11a_ammeter-arc" cx="1172" cy="342" r="30" fill="none" stroke="var(--act)" stroke-width="9" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" transform="rotate(-90 1172 342)"/>
+      <text x="1172" y="351" text-anchor="middle" style="font-size:25px;font-weight:700;fill:var(--ink)">1초</text>
+    </g>
+  </svg>
+  <div class="e5-call" style="left:1130px;top:228px;width:670px;padding:10px 26px;font-size:30px" data-in="500">전류계는 <span class="e5-cur">자기 속을 지나가는</span> 전하만 센다</div>
+  <div class="e5-note" style="left:1220px;top:323px;width:580px;font-size:26px" data-step="1" data-fx="fade">1초 동안 전류계를 지나간 전자 수 <span style="color:var(--t3)">(모형)</span></div>
+  <div class="e5-am" id="e5_11a_ammeter-r0" style="left:1130px;top:384px" data-step="1" data-fx="fade" data-delay="300">
+    <div class="nm"><b class="e5-cur">I</b> 줄기의 전류계</div>
+    <div class="ds">전지에서 나온 전류가 <b>모두</b> 지나간다</div>
+    <div class="ct"><span class="num" id="e5_11a_ammeter-n0">0</span><small>개</small></div>
+    <div class="va e5-cur">0.90 A</div>
+  </div>
+  <div class="e5-am" id="e5_11a_ammeter-r1" style="left:1130px;top:494px" data-step="2" data-fx="fade" data-delay="300">
+    <div class="nm"><b class="e5-cur">I₁</b> R₁ 갈래의 전류계</div>
+    <div class="ds">R₁ 갈래로 가는 전류<b>만</b> 지나간다</div>
+    <div class="ct"><span class="num" id="e5_11a_ammeter-n1">0</span><small>개</small></div>
+    <div class="va e5-cur">0.30 A</div>
+  </div>
+  <div class="e5-am" id="e5_11a_ammeter-r2" style="left:1130px;top:604px" data-step="2" data-fx="fade" data-delay="600">
+    <div class="nm"><b class="e5-cur">I₂</b> R₂ 갈래의 전류계</div>
+    <div class="ds">R₂ 갈래로 가는 전류<b>만</b> 지나간다</div>
+    <div class="ct"><span class="num" id="e5_11a_ammeter-n2">0</span><small>개</small></div>
+    <div class="va e5-cur">0.60 A</div>
+  </div>
+  <div class="e5-eq" style="left:1130px;top:716px;font-size:38px" data-step="3" data-delay="300"><span class="num">9</span> = <span class="num">3</span> + <span class="num">6</span> <span style="color:var(--t3);font-weight:500">→</span> <span class="e5-cur">I = I₁ + I₂</span></div>
+  <div class="e5-call" style="left:1130px;top:782px;width:670px;padding:12px 26px;font-size:30px" data-step="4" data-delay="200">전류계는 재려는 전류가 <span class="e5-cur">지나가는 길 위에</span> 끼워(직렬로) 연결한다<small>길을 끊고 그 사이에 넣어야 그 전류가 모두 전류계를 지나간다</small></div>
 </section>
 <!-- ═══ 12_pcut.html ═══ -->
-<section class="slide" id="e5_12_pcut" data-tile="black" data-title="병렬 ③ 하나 빼도" data-notes="P12" data-say="빈칸 ⑨ 켜져 있다. 직렬에서 꺼지는 것을 봤으니 「이번에도 꺼지겠지」라고 생각하기 쉬워요. ㉮를 빼도 ㉯는 같은 밝기로 켜져 있습니다. 「㉯가 더 밝아졌나요?」를 꼭 물으세요 — 전류가 «몰려서» 밝아지지 않아요. ㉯에 걸리는 전압이 그대로라 ㉯의 전류도 그대로, 줄어드는 것은 전원 쪽(줄기) 전류뿐입니다.">
-  <div class="hd" data-in><div class="eb">병렬연결 ③</div><h2>하나 빼도 — 나머지는?</h2></div>
-  <svg class="full-svg" viewBox="0 0 1920 1080"><g id="e5_12_pcut-c"></g><g id="e5_12_pcut-g"></g></svg>
-  <div class="e5-big" style="left:1130px;top:280px;width:680px" data-in="600">전구 ㉮를 빼면,<br><span class="mute">㉯는?</span></div>
-  <div class="ws-card" style="left:1130px;top:470px;width:670px" data-in="300">
+<section class="slide" id="e5_12_pcut" data-tile="light" data-title="병렬 ③ 하나 빼도" data-notes="P12" data-say="빈칸 ⑨ 켜져 있다. 직렬에서 꺼지는 것을 봤으니 「이번에도 꺼지겠지」라고 생각하기 쉬워요. ㉮를 빼도 ㉯는 같은 밝기로 켜져 있습니다 — ㉯ 갈래의 전자·꺾쇠 빠르기도 그대로. 「㉯가 더 밝아졌나요?」를 꼭 물으세요 — 전류가 «몰려서» 밝아지지 않아요. ㉯에 걸리는 전압이 그대로라 ㉯의 전류도 그대로, 줄어드는 것은 전원 쪽(줄기) 전류뿐입니다. 오른쪽 단추로 ㉮·㉯를 따로 빼고 끼워 볼 수 있어요(둘 다 빼면 전류가 흐르지 않음).">
+  <div class="hd" data-in><div class="eb">병렬연결 ③</div><h2>하나를 빼면, 나머지는 어떻게 될까요?</h2></div>
+  <div class="e5-leg" id="e5_12_pcut-leg" style="left:170px;top:214px" data-in="900" data-fx="fade"></div>
+  <svg class="full-svg" viewBox="0 0 1920 1080"><g id="e5_12_pcut-c"></g></svg>
+  <div class="e5-big" style="left:1130px;top:236px;width:680px" data-in="600">전구 ㉮를 빼면, <span class="mute">㉯는 어떻게 될까요?</span></div>
+  <div class="ws-card" style="left:1130px;top:316px;width:670px" data-in="300">
     <div class="ws-h"><b>병렬연결</b><span>하나 빼도</span></div>
     <div class="ws-line">하나 빼도: 나머지는 <span class="bk e5w5"><span class="a" data-step="1" data-fx="pop" data-delay="1400">켜져 있다</span><span class="n">9</span></span></div>
   </div>
-  <div class="e5-call" style="left:1130px;top:826px;width:670px" data-step="2" data-delay="300">㉯는 더 밝아지지 않는다 — 밝기 그대로<small>㉯에 걸리는 전압이 그대로 · 줄어드는 것은 전원 쪽 전류뿐</small></div>
+  <div class="e5-ctl" style="left:1130px;top:506px;width:670px" data-interactive data-in="800" data-fx="fade">
+    <div class="e5-btns"><button type="button" class="e5-btn" id="e5_12_pcut-t1">✂ 전구 ㉮ 빼기</button><button type="button" class="e5-btn" id="e5_12_pcut-t2">✂ 전구 ㉯ 빼기</button></div>
+    <div class="e5-msg" id="e5_12_pcut-msg"></div>
+  </div>
+  <div class="e5-bars" id="e5_12_pcut-bars" style="left:1130px;top:744px;width:670px" data-in="1000" data-fx="fade">
+    <div class="br"><span>㉮의 밝기</span><i><b id="e5_12_pcut-g1"></b></i></div>
+    <div class="br"><span>㉯의 밝기</span><i><b id="e5_12_pcut-g2"></b></i></div>
+    <div class="br"><span>전원 쪽 전류</span><i><b id="e5_12_pcut-gm"></b></i></div>
+  </div>
+  <div class="e5-call" style="left:1130px;top:880px;width:670px;padding:12px 26px;font-size:30px" data-step="2" data-delay="300">㉯는 더 밝아지지 않는다 — 밝기 그대로</div>
 </section>
 <!-- ═══ 13_slide.html ═══ -->
 <section class="slide" id="e5_13_slide" data-tile="light" data-title="왜? 미끄럼틀" data-notes="P13" data-say="엘리베이터 = 전지, 올라간 높이 = 전압, 미끄럼틀 = 저항, 1초에 내려오는 사람 수 = 전류. 두 미끄럼틀은 같은 층에서 출발해 같은 땅에 닿으니 내려오는 높이가 같습니다(V = V₁ = V₂). 5초 동안 좁은 쪽 5명, 넓은 쪽 10명 — 앞 시뮬의 0.30 A · 0.60 A 와 같은 1 : 2. 전류는 «흐른다», 전압은 «걸린다». 비유의 한계: 전자가 미끄럼틀을 고르는 것이 아니라 넓은 길로 그냥 더 많이 지나갈 뿐이에요.">
-  <div class="hd" data-in><div class="eb">병렬 · 왜?</div><h2>전압은 같은데 전류는 왜 다를까? — 미끄럼틀</h2></div>
+  <div class="hd" data-in><div class="eb">병렬 · 왜 그럴까요?</div><h2>전압은 같은데 전류는 왜 다를까요? — 미끄럼틀</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
     <g id="e5_13_slide-bg"></g><g id="e5_13_slide-ppl"></g><g id="e5_13_slide-over"></g>
   </svg>
@@ -552,8 +810,8 @@ html.student #notes{display:none!important}
   <div class="e5-call" style="left:980px;top:800px;width:820px;font-size:30px" data-step="2" data-delay="1200">넓은 미끄럼틀(저항 작음)로 더 많이 내려온다<small>→ 저항이 작은 곳에 더 센 전류 · 모두 합치면 15명 = 5 + 10 (전원 쪽 전류)</small></div>
 </section>
 <!-- ═══ 14_fork.html ═══ -->
-<section class="slide" id="e5_14_fork" data-tile="graphite" data-title="왜? 갈림길" data-notes="P14" data-say="네 곳에서 6초 동안 지나간 차를 셉니다. 들어오는 곳 18대 = 좁은 길 6대 + 넓은 길 12대 = 나가는 곳 18대. 앞의 막힌 도로 비유를 병렬로 이어 간 것이에요. 차가 중간에 사라지지 않듯 전하도 사라지지 않습니다.">
-  <div class="hd" data-in><div class="eb">병렬 · 왜?</div><h2>갈래 전류를 다 더하면? — 갈림길</h2></div>
+<section class="slide" id="e5_14_fork" data-tile="light" data-title="왜? 갈림길" data-notes="P14" data-say="네 곳에서 6초 동안 지나간 차를 셉니다. 들어오는 곳 18대 = 좁은 길 6대 + 넓은 길 12대 = 나가는 곳 18대. 앞의 막힌 도로 비유를 병렬로 이어 간 것이에요. 차가 중간에 사라지지 않듯 전하도 사라지지 않습니다.">
+  <div class="hd" data-in><div class="eb">병렬 · 왜 그럴까요?</div><h2>갈래 전류를 다 더하면 어떻게 될까요? — 갈림길</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
     <g id="e5_14_fork-road"></g><g id="e5_14_fork-gates"></g><g id="e5_14_fork-cars"></g><g id="e5_14_fork-labs"></g>
   </svg>
@@ -561,7 +819,7 @@ html.student #notes{display:none!important}
   <div class="abs center mute" style="left:0;width:1920px;top:926px;font-size:30px" data-step="2" data-delay="500">차가 중간에 사라지지 않듯, 전하도 사라지지 않는다 — 갈래 전류를 다 더하면 전원 쪽 전류</div>
 </section>
 <!-- ═══ 15_bulbs.html ═══ -->
-<section class="slide" id="e5_15_bulbs" data-tile="dark" data-title="실험 ① 직렬 전구" data-notes="P15" data-say="빈칸 ⑩ &lt; · ⑪ 모든 · ⑫ 커지고 · ⑬ 작아지기. 전원 전압은 그대로, 잇는 방법만 바꿉니다. ①과 ②의 밝기를 나란히 견주고, ③에서 전구 사이가 끊기면 모든 전구가 꺼지는 것을 봅니다. 꺾쇠(앰버)는 전류의 방향이고, 빠르기는 전류의 세기를 견주기 위한 모형이에요. 화면의 밝기는 밝게/어둡게만 나타낸 것(실제 전구는 온도에 따라 저항이 달라져 값을 계산하지 않음).">
+<section class="slide" id="e5_15_bulbs" data-tile="light" data-title="실험 ① 직렬 전구" data-notes="P15" data-say="빈칸 ⑩ &lt; · ⑪ 모든 · ⑫ 커지고 · ⑬ 작아지기. 전원 전압은 그대로, 잇는 방법만 바꿉니다. ①과 ②의 밝기를 나란히 견주고, ③에서 전구 사이가 끊기면 모든 전구가 꺼지는 것을 봅니다. 노란 꺾쇠는 전류의 방향이고, 빠르기는 전류의 세기를 견주기 위한 모형이에요. 화면의 밝기는 밝게/어둡게만 나타낸 것(실제 전구는 온도에 따라 저항이 달라져 값을 계산하지 않음).">
   <div class="hd" data-in><div class="eb">B · 실험으로 확인하기 — 전지(전원) 전압은 그대로, 잇는 방법만 바꾼다</div><h2>알아낸 것 ① — 직렬</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080"><g id="e5_15_bulbs-g"></g></svg>
   <div class="ws-card" style="left:120px;top:660px;width:1680px" data-in="300">
@@ -571,7 +829,7 @@ html.student #notes{display:none!important}
   </div>
 </section>
 <!-- ═══ 16_bulbp.html ═══ -->
-<section class="slide" id="e5_16_bulbp" data-tile="black" data-title="실험 ② 병렬 전구" data-notes="P16" data-say="빈칸 ⑭ = · ⑮ 끊어진 갈래의 전구만 · ⑯ 전지 전압과 같고 · ⑰ 변하지 않기. ①과 ②가 같은 밝기, ③에서 한 갈래가 끊겨도 남은 전구는 밝기 그대로입니다(더 밝아지지 않음). 줄기(전원 쪽)의 꺾쇠는 두 갈래를 합친 만큼 빠르고, ③에서는 한 갈래만큼으로 줄어요. 이유는 미끄럼틀 — 갈래마다 올라간 높이(전압)가 같으니 전구 하나의 전류도 한 개짜리 회로와 같습니다.">
+<section class="slide" id="e5_16_bulbp" data-tile="light" data-title="실험 ② 병렬 전구" data-notes="P16" data-say="빈칸 ⑭ = · ⑮ 끊어진 갈래의 전구만 · ⑯ 전지 전압과 같고 · ⑰ 변하지 않기. ①과 ②가 같은 밝기, ③에서 한 갈래가 끊겨도 남은 전구는 밝기 그대로입니다(더 밝아지지 않음). 줄기(전원 쪽)의 노란 꺾쇠는 두 갈래를 합친 만큼 빠르고, ③에서는 한 갈래만큼으로 줄어요. 이유는 미끄럼틀 — 갈래마다 올라간 높이(전압)가 같으니 전구 하나의 전류도 한 개짜리 회로와 같습니다.">
   <div class="hd" data-in><div class="eb">B · 실험으로 확인하기 — 전지(전원) 전압은 그대로, 잇는 방법만 바꾼다</div><h2>알아낸 것 ② — 병렬</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080"><g id="e5_16_bulbp-g"></g></svg>
   <div class="ws-card" style="left:120px;top:604px;width:1680px;padding:22px 40px 18px" data-in="300">
@@ -583,7 +841,7 @@ html.student #notes{display:none!important}
 </section>
 <!-- ═══ 17_use.html ═══ -->
 <section class="slide" id="e5_17_use" data-tile="parchment" data-title="어디에 쓰일까? (직렬 VS 병렬)" data-notes="P17" data-say="빈칸 ⑱ 병렬 · ⑲ 직렬 · ⑳ 병렬. 퓨즈는 일부러 직렬 — 퓨즈가 끊기면 하나뿐인 길이 사라져 기구 전체의 전류가 멈춥니다. 멀티탭은 병렬이라 기구마다 220 V 를 그대로 받고, 기구마다 흐르는 전류가 코드 한 가닥에 모두 더해집니다. 주전자 + 드라이어 + 난로까지 꽂으면 24.5 A — 정격 16 A 를 넘어 코드가 뜨거워져요(전류 값은 예). 열을 많이 쓰는 기구는 벽 콘센트에 따로.">
-  <div class="hd" data-in><div class="eb">어디에 쓰일까? (직렬 VS 병렬)</div><h2>용도가 연결 방법을 정한다</h2></div>
+  <div class="hd" data-in><div class="eb">어디에 쓰일까요? (직렬 VS 병렬)</div><h2>용도가 연결 방법을 정한다</h2></div>
   <div class="ws-card" style="left:120px;top:262px;width:860px" data-in="300">
     <div class="e5-note" style="position:static;margin:0 0 10px">무엇을 하려는지가 잇는 방법을 정한다.</div>
     <div class="ws-line" style="font-size:34px"><b>가정의 전기 기구</b>: <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="300">병렬</span><span class="n">18</span></span> <span class="why">— 따로 켜고 끌 수 있어야 하니까</span></div>
@@ -595,7 +853,7 @@ html.student #notes{display:none!important}
 </section>
 <!-- ═══ 18_stot.html ═══ -->
 <section class="slide" id="e5_18_stot" data-tile="light" data-title="직렬 → 전체 저항 커짐" data-notes="P18" data-say="빈칸 ㉑ 길이 · ㉒ 커진다. 지난 시간 「도선이 길수록 저항이 크다」를 끌어옵니다. 같은 6 V 에서 10 Ω 하나는 0.6 A, 직렬로 둘(20 Ω)이면 0.3 A — 같은 전압에 전류가 줄었으니 전체 저항이 커진 것. 비유의 한계: 저항 하나하나는 그대로 10 Ω 이고 실제로 길어진 것이 아니라, 차례로 다 지나야 해서 그런 «효과»가 난다는 뜻이에요.">
-  <div class="hd" data-in><div class="eb">저항을 더 이어 붙이면 왜 그럴까? ①</div><h2>한 줄로 더 이으면?</h2></div>
+  <div class="hd" data-in><div class="eb">저항을 더 이어 붙이면 왜 그럴까요? ①</div><h2>한 줄로 더 이으면 어떻게 될까요?</h2></div>
   <div class="ws-card" style="left:120px;top:262px;width:1680px" data-in="300">
     <div class="ws-line" style="font-size:36px">직렬은 전류가 저항을 <b>차례로 다</b> 지나야 하므로 저항의 <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="2600">길이</span><span class="n">21</span></span>가 길어지는 효과 → 전체 저항이 <span class="bk e5w5"><span class="a" data-step="2" data-fx="pop" data-delay="300">커진다</span><span class="n">22</span></span></div>
   </div>
@@ -605,7 +863,7 @@ html.student #notes{display:none!important}
 </section>
 <!-- ═══ 19_ptot.html ═══ -->
 <section class="slide" id="e5_19_ptot" data-tile="parchment" data-title="병렬 → 전체 저항 작아짐" data-notes="P19" data-say="빈칸 ㉓ 굵기 · ㉔ 작아진다. 「저항을 더 달았는데 왜 작아지지?」가 가장 헷갈리는 곳이에요. 갈래마다 전압이 6 V 그대로라 갈래 전류(0.6 A)도 그대로이고, 그게 더해져 전체 전류가 1.2 A 로 커집니다. 같은 전압에 전류가 커졌으니 전체 저항은 작아진 것(6 ÷ 1.2 = 5 Ω — 옴의 법칙으로 거꾸로 구한 값, 합성 저항 공식은 다루지 않음). 저항 하나하나는 여전히 10 Ω.">
-  <div class="hd" data-in><div class="eb">저항을 더 이어 붙이면 왜 그럴까? ②</div><h2>나란히 더 이으면?</h2></div>
+  <div class="hd" data-in><div class="eb">저항을 더 이어 붙이면 왜 그럴까요? ②</div><h2>나란히 더 이으면 어떻게 될까요?</h2></div>
   <div class="ws-card" style="left:120px;top:262px;width:1680px" data-in="300">
     <div class="ws-line" style="font-size:36px">병렬은 지나갈 <b>통로가 하나 더</b> 생기므로 저항의 <span class="bk"><span class="a" data-step="1" data-fx="pop" data-delay="2600">굵기</span><span class="n">23</span></span>가 굵어지는 효과 → 전체 저항이 <span class="bk e5w5"><span class="a" data-step="2" data-fx="pop" data-delay="300">작아진다</span><span class="n">24</span></span></div>
   </div>
@@ -624,22 +882,25 @@ html.student #notes{display:none!important}
   <div id="e5_21_recap-cards"></div>
 </section>
 <!-- ═══ 22_answer.html ═══ -->
-<section class="slide" id="e5_22_answer" data-tile="black" data-title="처음 질문의 답" data-notes="P22" data-say="표지와 도입의 질문으로 돌아갑니다. 트리 전구 줄은 전구가 한 줄로 이어진 직렬 — 하나가 빠지면 하나뿐인 길이 끊겨 모두 꺼져요. 집 안 전등은 하나하나가 전원의 같은 두 선에 따로 이어진 병렬 — 하나를 꺼도 다른 갈래에는 같은 전압이 걸려 그대로 켜져 있습니다. 우연이 아니라 «무엇을 하려는지»에 맞춘 선택이에요. 마지막 한 줄은 판서로 남기세요.">
-  <div class="hd" data-in><div class="eb">처음 질문의 답</div><h2>트리 전구와 집 안 전등, 무엇이 달랐나</h2></div>
+<section class="slide" id="e5_22_answer" data-tile="light" data-title="처음 질문의 답" data-notes="P22" data-say="표지와 도입의 질문으로 돌아갑니다. 트리 전구 줄은 전구가 한 줄로 이어진 직렬 — 하나가 빠지면 하나뿐인 길이 끊겨 모두 꺼져요. 집 안 전등은 하나하나가 전원의 같은 두 선에 따로 이어진 병렬 — 하나를 꺼도 다른 갈래에는 같은 전압이 걸려 그대로 켜져 있습니다. 우연이 아니라 «무엇을 하려는지»에 맞춘 선택이에요. 마지막 한 줄은 판서로 남기세요.">
+  <div class="hd" data-in><div class="eb">처음 질문의 답</div><h2>트리 전구와 집 안 전등, 무엇이 달랐을까요?</h2></div>
   <svg class="full-svg" viewBox="0 0 1920 1080">
-    <g transform="translate(-45 178) scale(.48)"><g id="e5_22_answer-tree" data-in="200" data-fx="fade"></g></g>
-    <g transform="translate(745 138) scale(.5)"><g id="e5_22_answer-house" data-in="400" data-fx="fade"></g></g>
+    <!-- 밤 장면은 어두운 창(카드) 안에 -->
+    <rect x="120" y="222" width="600" height="318" rx="28" fill="#000" data-in="100" data-fx="fade"/>
+    <rect x="1100" y="222" width="600" height="318" rx="28" fill="#000" data-in="300" data-fx="fade"/>
+    <g transform="translate(-110 199) scale(.48)"><g id="e5_22_answer-tree" data-in="200" data-fx="fade"></g></g>
+    <g transform="translate(784 156) scale(.46)"><g id="e5_22_answer-house" data-in="400" data-fx="fade"></g></g>
     <g id="e5_22_answer-sL"></g><g id="e5_22_answer-sR"></g>
   </svg>
-  <div class="e5-tag" style="left:330px;top:556px;color:#f5f5f7" data-step="1" data-fx="pop" data-delay="1300">직렬연결</div>
-  <div class="e5-tag" style="left:1330px;top:556px;color:#f5f5f7" data-step="2" data-fx="pop" data-delay="1500">병렬연결</div>
+  <div class="e5-tag" style="left:330px;top:556px;color:var(--ink)" data-step="1" data-fx="pop" data-delay="1300">직렬연결</div>
+  <div class="e5-tag" style="left:1330px;top:556px;color:var(--ink)" data-step="2" data-fx="pop" data-delay="1500">병렬연결</div>
   <div class="e5-cap center" style="left:120px;width:780px;top:834px" data-step="1" data-delay="1600">한 줄 — 하나가 빠지면 길이 끊겨 <b>모두 꺼진다</b></div>
   <div class="e5-cap center" style="left:1000px;width:800px;top:834px" data-step="2" data-delay="1800">나란히 — 하나를 꺼도 나머지는 <b>그대로</b></div>
   <div class="abs center" style="left:0;width:1920px;top:900px;font-size:40px;font-weight:600;letter-spacing:-.02em" data-step="3" data-fx="blur">한 줄이면 <span class="e5-cur">전류</span>가 같고, 나란히면 <span class="e5-volt">전압</span>이 같다</div>
   <div id="app-credit" class="abs center" style="left:0;width:1920px;top:1016px;font-size:24px;color:var(--t3)">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트: 2026-10-03</div>
 </section>
 <!-- ═══ 90_quiz0.html ═══ -->
-<section class="slide" id="e5_90_quiz0" data-tile="black" data-title="문제로 확인하기" data-notes="" data-say="수업 페이지 확인하기에서 고른 4문제입니다. 문제마다 먼저 풀어 보게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다.">
+<section class="slide" id="e5_90_quiz0" data-tile="light" data-title="문제로 확인하기" data-notes="" data-say="수업 페이지 확인하기에서 고른 4문제입니다. 문제마다 먼저 풀어 보게 한 뒤 한 번 누르면 정답과 풀이가 함께 나옵니다.">
   <div class="qz-intro">
     <div class="qz-k" data-in>저항의 직렬연결과 병렬연결</div>
     <h2 data-in="200" data-fx="blur">문제로 확인하기</h2>
@@ -686,7 +947,8 @@ html.student #notes{display:none!important}
 <div id="gridov"></div>
 </div></div>
 
-<script>window.NOTES = {"P1": "불을 끄고 시작해 볼까요. 어두운 방에 트리가 하나 있어요. 딸깍 — 전구 줄이 켜졌습니다. 잘 보세요, 위쪽 전구부터 차례로 켜지나요? 아니죠, 모든 전구가 같은 순간에 켜집니다. 그런데 전구 하나가 빠지자… 줄 전체가 한꺼번에 꺼져 버렸어요. 건드린 건 전구 하나뿐인데요. 오늘 주제는 「한 줄로 이을까, 나란히 이을까」, 저항의 직렬연결과 병렬연결입니다. 학습지 5를 펴고, 화면에 번호가 붙은 칸이 열리면 그 번호 칸에 적어 주세요. <span class=\"cue\">화면: 트리 전구 줄 — 같은 순간에 켜짐 → 하나 빠지자 모두 꺼짐</span>", "P2": "이번엔 우리 집입니다. 방마다 불이 하나씩 켜져 있어요. 위층 오른쪽 방의 스위치를 내려 볼게요. 그 방만 꺼지고 나머지 방은 그대로입니다. 교실 형광등 한 칸이 나가도, 길거리 간판 조명 하나가 꺼져도 나머지는 켜져 있죠. 트리 전구는 하나가 빠지니 다 꺼졌는데, 집 안 전등은 하나를 꺼도 나머지가 그대로예요. 무엇이 다를까요? 답은 지금 말하지 않을게요. 힌트는 하나 — 「어떻게 이었길래?」입니다.", "P3": "저항을 잇는 방법은 딱 두 가지입니다. 직렬, 그리고 병렬! 학습지 1쪽의 두 회로도와 같은 그림이에요. 앰버색 점이 (+)극에서 나와 (−)극으로 들어가는 길을 따라갑니다. 왼쪽 직렬은 한 줄로 쭉 — 갈림길이 없어요. 오른쪽 병렬은 갈림길에서 둘로 나뉘었다가 다시 만납니다. 두 그림에서 가장 크게 다른 곳, 바로 갈림길이에요. 그런데 왜 「전구의 연결」이 아니라 「저항의 연결」이라고 할까요? 전구도, 전열기도 전류의 흐름을 방해하는 저항이기 때문입니다. 참, 초등학교 때 「직렬로 이으면 더 밝아진다」고 배운 것은 전지의 직렬연결 이야기예요. 오늘 잇는 것은 전구, 저항입니다.", "P4": "연습해 볼까요. 손가락으로 (+)극에서 (−)극까지 길을 따라가 보세요. (가)는 꺾여 있어도 갈림길이 없으니 직렬, (나)는 갈림길에서 두 갈래로 나뉘니 병렬, (다)는 세로로 서 있지만 갈림길이 있으니 병렬. (라)가 함정이에요. 저항이 위아래에 있어서 병렬처럼 보이지만, 따라가 보면 갈림길이 없죠? 직렬입니다. 모양에 속지 말고, 갈림길이 있느냐 없느냐로 판단하세요.", "P5": "먼저 직렬입니다. 전원 장치 6 V 에 R₁ 20 Ω, R₂ 10 Ω 을 한 줄로 이었어요. 하늘색 점은 전자예요. 전류와 반대 방향으로 움직이고, 간격이 같으니 빠르기가 곧 「1초에 한 곳을 지나가는 수」, 전류의 세기를 보여 줍니다. 앰버 점이 길을 따라가 볼게요. 갈림길 없이 한 바퀴 — 그래서 전류의 길은 「한 개」, 1번입니다. 이제 세 곳에 전류계를 달았어요. 전지 옆, R₁ 옆, R₂ 옆. 숫자를 보세요. 셋 다 0.20 A! 전류의 세기는 어디서나 같아서 I = 「I₁」 = 「I₂」, 2번·3번입니다. R₁ 을 10 Ω 으로 바꿔 볼게요. 세 곳이 함께 0.30 A 가 됩니다. 「R₁ 을 지나면서 전류가 좀 쓰여서 줄지 않을까?」 — 줄지 않아요. 전류는 저항을 지나며 소모되지 않습니다. <span class=\"cue\">화면: 세 전류계 0.20 A → 함께 0.30 A</span>", "P6": "이번엔 전압계를 저항의 양 끝 두 곳에 댔어요. 전원 전압 6 V 막대가 둘로 나뉩니다 — R₁ 에 4 V, R₂ 에 2 V. 전압은 각 저항에 따라 나뉘어서 V = 「V₁」 + 「V₂」, 4번·5번이에요. 저항이 큰 쪽, R₁ 에 전압이 더 크게 걸렸죠? 저항이 2배면 전압도 2배입니다. R₁ 을 10 Ω 으로 바꾸면 3 V 와 3 V — 같은 저항이면 반씩. 어떻게 바꿔도 V₁ + V₂ 는 전원 전압 6 V 그대로예요.", "P7": "직렬에서 저항을 하나 빼면 어떻게 될까요? 저항 대신 전구 두 개로 볼게요 — 전구도 저항이니까요. 전구 ㉯를 빼면, 건드리지 않은 ㉮는? 손 들어 볼까요. 「㉮는 그대로 켜져 있다」… 정말 그럴까요? 빼 봅니다. ㉮까지 꺼졌어요! 회로의 모든 전자가 같은 순간에 흐름을 멈췄죠. 전자가 사라진 게 아니라 제자리에서 흔들리기만 합니다. 저항을 하나라도 빼면 「모두 꺼진다」, 6번이에요. 길이 하나뿐이라 한 곳이 끊기면 회로 전체가 끊기는 겁니다. 트리 전구가 그랬죠.", "P8": "그럼 직렬에서 전류는 왜 어디서나 같을까요? 막힌 도로로 생각해 봅시다. 편도 3차선인데 중간에 공사로 1차선이 됐어요. 세 곳에서 5초 동안 지나가는 차를 세어 보면… 셋 다 10대! 공사 구간을 1시간에 600대가 지나간다면 3차선 구간도 1시간에 600대예요. 그렇지 않으면 공사 구간 앞에 차가 끝없이 쌓여야 하니까요. 직렬은 길이 하나뿐이라 전하가 중간에 쌓이거나 사라질 수 없어요. 그래서 어디서 재도 I = I₁ = I₂ — 좁은 곳, 큰 저항이 전체 양을 정합니다. 조심할 것 하나. 공사 구간에서 차가 빽빽해 보여도 5초에 지나가는 대수는 같아요. 빽빽한 것과 많이 지나가는 것은 다릅니다. 그리고 비유의 한계 하나 — 전자는 차처럼 따로따로 운전하지 않고, 회로 전체의 전자가 함께 밀려 움직여요.", "P9": "그럼 전압은 왜 저항에 따라 나뉠까요? 버블티 빨대로 생각해 봅시다. 빨대가 저항이에요. 좁은 빨대는 저항이 크고, 넓은 빨대는 저항이 작아요. 직렬에서는 전류가 같다고 했죠? 빨대로 치면 5초 동안 올라오는 펄의 수가 같다는 뜻이에요. 화면에서도 둘 다 5초에 10개. 좁은 빨대는 한 줄로 빨리, 넓은 빨대는 두 줄로 천천히 올라오죠. 자, 같은 양의 펄을 빨아올리려면? 좁은 빨대는 입으로 더 세게 빨아야 해요. 빠는 힘이 바로 전압 — 저항이 큰 곳에 더 큰 전압이 걸립니다. 식으로는 V = I R. 6 V 에 20 Ω 과 10 Ω 이면 전류는 0.2 A, V₁ = 0.2 × 20 = 4 V, V₂ = 0.2 × 10 = 2 V. 앞의 시뮬과 똑같죠?", "P10": "이제 병렬입니다. 같은 6 V, 같은 20 Ω 과 10 Ω 을 이번엔 나란히 이었어요. 전원 장치는 전압을 걸어 주는 장치, 전지라고 생각하면 됩니다. 앰버 점이 따라가 볼게요. 갈림길에서 둘로 나뉘었다가 다시 만나죠? 전류의 길이 「여러 개」, 7번입니다. 두 저항의 양 끝에 전압계를 대 보면… 둘 다 6 V! 3 V + 3 V 로 나눠 갖는 게 아니에요. 갈래 전압은 전원 전압과 같아서 V = V₁ = V₂. 왜 그럴까요? 도선은 저항이 거의 없어서 「같은 자리」예요. (+)극에 이어진 붉은빛 부분이 한 덩어리, (−)극에 이어진 파란빛 부분이 또 한 덩어리 — 두 갈래 모두 그 두 덩어리 사이에 걸쳐 있으니 걸리는 전압이 같을 수밖에 없습니다. <span class=\"cue\">화면: (+)극 쪽 한 덩어리 · (−)극 쪽 한 덩어리</span>", "P11": "병렬에서 전류는 어떨까요? 전자의 빠르기부터 보세요. 줄기가 가장 빠르고, 아래 갈래가 위 갈래보다 빠르죠. 전류계를 읽어 봅시다. R₁ 갈래 0.30 A, R₂ 갈래 0.60 A. 전류는 갈래마다 「나뉜다」, 8번입니다. 전지 옆 줄기는? 0.90 A — 두 갈래를 합친 것과 같아요. I = I₁ + I₂. 그리고 저항이 작은 R₂ 갈래로 전류가 더 많이 흐르죠? 저항이 2배면 전류는 절반이에요. 직렬에서는 같은 부품으로 전압이 2 : 1 로 나뉘었는데, 병렬에서는 전류가 1 : 2 로 나뉩니다. 잇는 방법만 바꿨는데 나뉘는 것이 뒤바뀌었어요.", "P12": "병렬에서 전구 ㉮를 빼면 ㉯는 어떻게 될까요? 방금 직렬에서 다 꺼지는 걸 봤으니 「이번에도 꺼지겠지」 싶죠. 빼 봅니다. ㉯는 그대로 켜져 있어요! 하나 빼도 나머지는 「켜져 있다」, 9번. 그럼 ㉯가 더 밝아졌을까요? ㉮가 쓰던 전류가 몰려와서? 아니에요. 밝기 막대를 보세요 — 그대로입니다. ㉯에 걸리는 전압이 그대로라 ㉯에 흐르는 전류도 그대로예요. 줄어든 건 전원 쪽, 줄기의 전류뿐입니다. 갈래가 하나 줄었으니까요.", "P13": "병렬에서 전압은 같은데 전류는 왜 다를까요? 미끄럼틀로 생각해 봅시다. 전지는 엘리베이터예요. 사람을 위층으로 올려 주죠. 올려 준 높이가 전압입니다. 미끄럼틀이 저항이고, 1초에 내려오는 사람 수가 전류예요. 두 미끄럼틀은 같은 층에서 출발해서 같은 땅에 닿죠? 어느 쪽을 타도 내려오는 높이는 6 V 로 같아요. 그래서 V = V₁ = V₂. 그런데 5초 동안 세어 보면 좁은 미끄럼틀은 5명, 넓은 미끄럼틀은 10명. 넓은 쪽, 저항이 작은 쪽으로 더 많이 내려옵니다 — 저항이 작은 곳에 더 센 전류. 모두 합치면 15명, 엘리베이터가 올려 보낸 사람 수와 같아요. 전류는 「흐른다」, 전압은 「걸린다」로 말을 맞춰 주세요. 비유의 한계 하나 — 전자가 어느 쪽이 편한지 골라서 가는 게 아니라, 넓은 길로 그냥 더 많이 지나갈 뿐입니다.", "P14": "갈래 전류를 다 더하면 왜 줄기 전류가 될까요? 아까 그 도로가 이번엔 두 갈래로 갈라졌다가 다시 합쳐져요. 6초 동안 세어 보면 들어오는 곳 18대, 좁은 길 6대, 넓은 길 12대, 나가는 곳 18대. 18 = 6 + 12! 차가 중간에 사라지지 않듯 전하도 사라지지 않아요. 그래서 I = I₁ + I₂ — 갈래 전류를 다 더하면 전원 쪽 전류와 같습니다.", "P15": "실제 전구로 확인해 봅시다. 전원 전압은 그대로 두고 잇는 방법만 바꿔요. ① 전구 한 개를 이은 회로 — 이 밝기가 기준입니다. ② 전구 두 개를 직렬로 이으면… 두 전구 모두 어두워졌어요. 꺾쇠도 느려졌죠? 전류가 줄었다는 뜻이에요. 밝기는 두 개 직렬 「<」 한 개, 10번. ③ 전구 사이의 연결을 끊으면 「모든」 전구의 불이 꺼집니다, 11번. 왜 어두워졌을까요? 직렬로 이으면 전체 저항이 「커지고」, 전지에서 나가는 전류가 「작아지기」 때문이에요. 12번·13번. V = I R, 같은 전압에 저항이 커지면 전류는 작아지죠. 화면의 밝기는 밝게·어둡게만 나타낸 거예요.", "P16": "이번엔 병렬입니다. ① 기준 전구 한 개. ② 두 개를 병렬로 이으면… 두 전구 모두 한 개일 때와 같은 밝기예요! 두 개 병렬 「=」 한 개, 14번. 대신 줄기의 꺾쇠는 두 배로 빨라졌어요 — 전지에서 나가는 전류가 두 갈래를 합친 만큼이니까요. ③ 한 갈래의 연결을 끊으면 「끊어진 갈래의 전구만」 불이 꺼집니다, 15번. 남은 전구는 더 밝아지지 않고 밝기 그대로예요. 이유는? 병렬은 각 갈래가 전지에 그대로 이어져 있어서 갈래마다 걸리는 전압이 「전지 전압과 같고」, 그래서 각 전구에 흐르는 전류도 「변하지 않기」 때문입니다. 16번·17번. 미끄럼틀의 높이가 같았던 것과 같아요.", "P17": "그럼 어디에 직렬을 쓰고 어디에 병렬을 쓸까요? 무엇을 하려는지가 잇는 방법을 정합니다. 가정의 전기 기구는 따로 켜고 끌 수 있어야 하니까 「병렬」, 18번. 퓨즈와 누전 차단기는 끊기면 회로 전체가 끊겨야 하니까 「직렬」, 19번. 퓨즈가 끊어지면 하나뿐인 길이 사라져 기구 전체의 전류가 멈추죠. 직렬의 약점을 거꾸로 이용한 거예요. 멀티탭은 코드 하나 뽑아도 나머지가 작동하니까 「병렬」, 20번. 멀티탭에 하나씩 꽂아 볼게요. 기구마다 220 V 를 그대로 받고, 기구마다 흐르는 전류가 코드 한 가닥에 모두 더해져요. 충전기, 노트북, 전기주전자까지 8.6 A. 드라이어와 전기난로까지 꽂으면… 24.5 A! 정격 16 A 를 훌쩍 넘었어요. 문어발 연결을 하면 전류가 모두 더해져 과부하, 과열, 화재로 이어질 수 있습니다. 그래서 열을 많이 쓰는 기구는 벽 콘센트에 따로 꽂아야 해요. (전류 값은 예입니다.) <span class=\"cue\">화면: 멀티탭 — 코드 한 가닥의 전류가 정격을 넘음</span>", "P18": "직렬로 저항을 더 이으면 왜 전체 저항이 커질까요? 지난 시간에 도선이 길수록 저항이 크다고 배웠죠. 10 Ω 저항 옆에 10 Ω 을 하나 더 한 줄로 이어 볼게요. 전류는 이 둘을 차례로 다 지나가야 해요. 빠져나갈 샛길이 없죠. 그래서 저항의 「길이」가 길어지는 효과가 나고, 전체 저항이 「커진다」. 21번·22번. 같은 6 V 에서 저항 1개면 0.6 A, 직렬 2개, 20 Ω 이면 0.3 A 로 줄어요. 단, 저항 하나하나는 그대로 10 Ω 이에요. 실제로 길어진 게 아니라 차례로 다 지나야 해서 그런 효과가 난다는 뜻입니다.", "P19": "병렬로 저항을 더 이으면? 저항을 더 달았는데 전체 저항이 작아진다니, 가장 헷갈리는 곳이에요. 10 Ω 아래에 10 Ω 을 나란히 이어 볼게요. 전류가 지나갈 통로가 하나 더 생겼죠? 그래서 저항의 「굵기」가 굵어지는 효과가 나고, 전체 저항이 「작아진다」. 23번·24번. 숫자로 확인해 봅시다. 갈래마다 6 V 가 그대로 걸리니 갈래마다 0.6 A, 합치면 1.2 A. 같은 6 V 에서 전류가 두 배가 됐으니 전체 저항은 6 ÷ 1.2 = 5 Ω 으로 작아진 거예요. 저항 하나하나는 여전히 10 Ω 이고요 — 전류가 지나갈 길이 늘어나서 그런 효과가 나는 겁니다.", "P20": "한 표로 정리해 봅시다. 열기 전에 먼저 말해 볼까요? 직렬 전류는? 각 저항에 흐르는 전류가 전체 전류와 같다. 병렬 전류는? 저항에 반비례해서 나뉜다. 전압은? 직렬은 저항에 비례해서 나뉘고, 병렬은 전체 전압과 같다. 저항은? 직렬은 이을수록 커지고 — 길이 효과, 병렬은 이을수록 작아진다 — 굵기 효과. 특징은? 직렬은 하나라도 끊어지면 모두 꺼지고, 병렬은 하나가 끊어져도 나머지는 켜져 있다. 전체는? 직렬은 전체 전압이 각 전압의 합, 병렬은 전체 전류가 각 전류의 합. 세로로 읽어 보세요. 직렬은 「전류 같고 전압 나뉨」, 병렬은 「전압 같고 전류 나뉨」 — 서로 거울처럼 뒤바뀌어 있어요.", "P21": "오늘 배운 것을 정리합시다. 화면에 빈칸이 나오면 먼저 말해 보세요. 직렬연결은 전류의 길이 한 개라서 전류가 어디서나 같고, 전압은 저항에 따라 나뉩니다. 하나라도 끊어지면 모두 꺼지고, 저항을 이을수록 전체 저항이 커져요 — 길이가 길어지는 효과. 병렬연결은 전류의 길이 여러 개라서 전압이 전원 전압과 같고, 전류는 갈래마다 나뉩니다. 하나가 끊어져도 나머지는 켜져 있고, 저항을 이을수록 전체 저항이 작아져요 — 굵기가 굵어지는 효과. 그래서 가정의 전기 기구와 멀티탭은 병렬, 퓨즈와 누전 차단기는 직렬로 잇습니다. 멀티탭에 문어발로 꽂으면 기구마다의 전류가 모두 더해져 과열될 수 있다는 것도 꼭 기억하세요.", "P22": "처음 질문으로 돌아가 봅시다. 트리 전구는 왜 하나가 빠지자 다 꺼졌을까요? 전구들이 한 줄로 이어진 직렬이라서, 하나가 빠지면 하나뿐인 길이 끊겨 모두 꺼진 거예요. 집 안 전등은 왜 하나를 꺼도 나머지가 그대로였을까요? 전등 하나하나가 전원의 같은 두 선에 따로 이어진 병렬이라서, 한 갈래를 꺼도 다른 갈래에는 같은 전압이 걸려 그대로 켜져 있는 겁니다. 이건 우연이 아니라 선택이에요. 무엇을 한 줄로 묶어 함께 끊기게 하고, 무엇을 나란히 두어 따로 살게 할지 — 전기 제품 뒤에는 그런 고민이 숨어 있습니다. 마지막 한 줄을 적어 두세요. 한 줄이면 전류가 같고, 나란히면 전압이 같다! <span class=\"cue\">화면: 한 줄이면 전류가 같고, 나란히면 전압이 같다</span>"};</script>
+<script>window.NOTES = {"P1": "불을 끄고 시작해 볼까요. 어두운 방에 트리가 하나 있어요. 딸깍 — 전구 줄이 켜졌습니다. 잘 보세요, 위쪽 전구부터 차례로 켜지나요? 아니죠, 모든 전구가 같은 순간에 켜집니다. 그런데 전구 하나가 빠지자… 줄 전체가 한꺼번에 꺼져 버렸어요. 건드린 건 전구 하나뿐인데요. 오늘 주제는 「한 줄로 이을까, 나란히 이을까」, 저항의 직렬연결과 병렬연결입니다. 학습지 5를 펴고, 화면에 번호가 붙은 칸이 열리면 그 번호 칸에 적어 주세요. <span class=\"cue\">화면: 트리 전구 줄 — 같은 순간에 켜짐 → 하나 빠지자 모두 꺼짐</span>", "P2": "이번엔 우리 집입니다. 방마다 불이 하나씩 켜져 있어요. 위층 오른쪽 방의 스위치를 내려 볼게요. 그 방만 꺼지고 나머지 방은 그대로입니다. 교실 형광등 한 칸이 나가도, 길거리 간판 조명 하나가 꺼져도 나머지는 켜져 있죠. 트리 전구는 하나가 빠지니 다 꺼졌는데, 집 안 전등은 하나를 꺼도 나머지가 그대로예요. 무엇이 다를까요? 답은 지금 말하지 않을게요. 힌트는 하나 — 「어떻게 이었길래?」입니다.", "P2k": "본격적으로 들어가기 전에 오늘의 키워드부터 볼까요? 오늘은 여섯 가지 키워드를 따라갑니다. 첫 번째 「잇는 방법」, 두 번째 「직렬연결」, 세 번째 「병렬연결」, 네 번째 「전구 실험」, 다섯 번째 「쓰임새」, 그리고 마지막 「전체 저항」입니다. 화면 오른쪽 위를 보면 지금 어떤 키워드를 배우고 있는지 계속 표시해 둘게요. 그럼 첫 번째 키워드, 「잇는 방법」부터 시작해 볼까요? <span class=\"cue\">화면: 오늘의 키워드 6개 — 오른쪽 위 진행 표시 안내</span>", "P3": "저항을 잇는 방법은 딱 두 가지입니다. 직렬, 그리고 병렬! 학습지 1쪽의 두 회로도와 같은 그림이에요. 노란 점이 (+)극에서 나와 (−)극으로 들어가는 길을 따라갑니다. 왼쪽 직렬은 한 줄로 쭉 — 갈림길이 없어요. 오른쪽 병렬은 갈림길에서 둘로 나뉘었다가 다시 만납니다. 두 그림에서 가장 크게 다른 곳, 바로 갈림길이에요. 그런데 왜 「전구의 연결」이 아니라 「저항의 연결」이라고 할까요? 전구도, 전열기도 전류의 흐름을 방해하는 저항이기 때문입니다. 참, 초등학교 때 「직렬로 이으면 더 밝아진다」고 배운 것은 전지의 직렬연결 이야기예요. 오늘 잇는 것은 전구, 저항입니다.", "P4": "연습해 볼까요. 손가락으로 (+)극에서 (−)극까지 길을 따라가 보세요. (가)는 꺾여 있어도 갈림길이 없으니 직렬, (나)는 갈림길에서 두 갈래로 나뉘니 병렬, (다)는 세로로 서 있지만 갈림길이 있으니 병렬. (라)가 함정이에요. 저항이 위아래에 있어서 병렬처럼 보이지만, 따라가 보면 갈림길이 없죠? 직렬입니다. 모양에 속지 말고, 갈림길이 있느냐 없느냐로 판단하세요.", "P4a": "직렬 회로 속을 들여다보기 전에, 지난 시간에 배운 전류의 세기를 잠깐 다시 볼게요. 도선 속을 크게 확대한 모습입니다. 파란 점이 전자예요. 전자는 전지에서 새로 만들어져 나오는 게 아니라, 처음부터 도선 안에 가득 들어 있다가 다 같이 움직이는 거예요. 전자는 왼쪽으로 움직이고, 전류의 방향은 그 반대 — 노란 꺾쇠처럼 오른쪽이죠. 자, 시계를 1초로 맞추고, 도선을 칼로 똑 자른 면, 단면을 하나 정해요. 이제 1초 동안 이 단면을 지나간 전하를 세어 봅시다. 하나, 둘, 셋… 6개! 이것이 바로 전류의 세기, 「1초 동안 도선의 단면을 통과하는 전하의 양」입니다. 단위는 A, 암페어였죠. 이번에는 전류를 더 세게 해 볼게요. 같은 1초 동안 몇 개가 지나가나요? 12개 — 아까의 두 배예요. 1초 동안 단면을 더 많이 지나갈수록 전류가 더 센 겁니다. 물론 이건 셀 수 있을 만큼만 그린 모형이고, 실제 도선에서는 1초 동안 셀 수 없이 많은 전하가 지나가요. 그럼 직렬 회로에서는 이 양이 곳곳에서 어떨까요? <span class=\"cue\">화면: 1초 시계 → 단면 → 1초 동안 지나간 전하 6개 → 전류를 세게 하면 같은 1초에 12개</span>", "P5": "먼저 직렬입니다. 전원 장치 6 V 에 R₁ 20 Ω, R₂ 10 Ω 을 한 줄로 이었어요. 화면에서 두 가지가 움직이죠? 노란 꺾쇠는 전류의 방향이에요. (+)극에서 나와 회로를 한 바퀴 돌아 (−)극으로 들어갑니다. 파란 점은 전자예요. 전류와 반대 방향으로 움직이죠. 노란 점이 길을 따라가 볼게요. 갈림길 없이 한 바퀴 — 그래서 전류의 길은 「한 개」, 1번입니다. 이제 세 곳에 전류계를 달았어요. 왼쪽 변의 전원 쪽, R₁ 옆, R₂ 옆. 방금 본 것처럼 전류의 세기는 1초 동안 도선의 단면을 통과하는 전하의 양이었죠. 전류계 옆의 점선 고리가 바로 그 단면이에요. 전자의 간격이 어디서나 같고 빠르기도 같으니까, 세 단면을 1초 동안 지나가는 전자 수도 똑같습니다. 숫자를 보세요. 셋 다 0.20 A! 전류의 세기는 어디서나 같아서 I = 「I₁」 = 「I₂」, 2번·3번입니다. 오른쪽 단추로 저항을 바꿔 볼게요. R₁ 을 10 Ω 으로 — 전체 저항이 30 Ω 에서 20 Ω 으로 줄어서 전류는 6 ÷ 20 = 0.30 A. 세 곳이 함께 0.30 A 가 됩니다. 어떤 단추를 눌러도 세 전류계는 언제나 같은 값이에요. <span class=\"cue\">화면: 세 단면(점선 고리) · 세 전류계 0.20 A → R₁ 10 Ω 에서 함께 0.30 A · 단추로 R₁·R₂ 바꾸기</span>", "P6": "이번엔 전압계를 저항의 양 끝 두 곳에 댔어요. 아래의 전원 전압 6 V 막대가 둘로 나뉩니다 — R₁ 에 4 V, R₂ 에 2 V. 전압은 각 저항에 따라 나뉘어서 V = 「V₁」 + 「V₂」, 4번·5번이에요. 오른쪽 계산을 보면 전류는 6 V ÷ 30 Ω = 0.20 A, V₁ = 0.20 × 20 = 4 V, V₂ = 0.20 × 10 = 2 V. 저항이 큰 쪽, R₁ 에 전압이 더 크게 걸렸죠? 저항이 2배면 전압도 2배입니다. 단추로 R₁ 을 30 Ω 으로 바꿔 볼까요? 4.5 V 와 1.5 V. 이번엔 R₁ 과 R₂ 를 모두 10 Ω 으로 — 3 V 와 3 V, 같은 저항이면 반씩. 어떻게 바꿔도 V₁ + V₂ 는 전원 전압 6 V 그대로예요.", "P7": "직렬에서 저항을 하나 빼면 어떻게 될까요? 저항 대신 전구 두 개로 볼게요 — 전구도 저항이니까요. 전구 ㉯를 빼면, 건드리지 않은 ㉮는? 손 들어 볼까요. 「㉮는 그대로 켜져 있다」… 정말 그럴까요? 빼 봅니다. ㉮까지 꺼졌어요! 회로 모든 곳의 전자와 노란 꺾쇠가 같은 순간에 멈췄죠. 전자가 사라진 게 아니라 제자리에서 흔들리기만 합니다. 저항을 하나라도 빼면 「모두 꺼진다」, 6번이에요. 다시 끼우면? 모든 곳이 함께 다시 흐르고 두 전구가 함께 켜집니다. 길이 하나뿐이라 한 곳이 끊기면 회로 전체가 끊기는 거예요. 트리 전구가 그랬죠.", "P8": "그럼 직렬에서 전류는 왜 어디서나 같을까요? 막힌 도로로 생각해 봅시다. 편도 3차선인데 중간에 공사로 1차선이 됐어요. 세 곳에서 5초 동안 지나가는 차를 세어 보면… 셋 다 10대! 공사 구간을 1시간에 600대가 지나간다면 3차선 구간도 1시간에 600대예요. 그렇지 않으면 공사 구간 앞에 차가 끝없이 쌓여야 하니까요. 직렬은 길이 하나뿐이라 전하가 중간에 쌓이거나 사라질 수 없어요. 그래서 어디서 재도 I = I₁ = I₂ — 좁은 곳, 큰 저항이 전체 양을 정합니다. 조심할 것 하나. 공사 구간에서 차가 빽빽해 보여도 5초에 지나가는 대수는 같아요. 빽빽한 것과 많이 지나가는 것은 다릅니다. 그리고 비유의 한계 하나 — 전자는 차처럼 따로따로 운전하지 않고, 회로 전체의 전자가 함께 밀려 움직여요.", "P9": "그럼 전압은 왜 저항에 따라 나뉠까요? 버블티 빨대로 생각해 봅시다. 빨대가 저항이에요. 좁은 빨대는 저항이 크고, 넓은 빨대는 저항이 작아요. 직렬에서는 전류가 같다고 했죠? 빨대로 치면 5초 동안 올라오는 펄의 수가 같다는 뜻이에요. 화면에서도 둘 다 5초에 10개. 좁은 빨대는 한 줄로 빨리, 넓은 빨대는 두 줄로 천천히 올라오죠. 자, 같은 양의 펄을 빨아올리려면? 좁은 빨대는 입으로 더 세게 빨아야 해요. 빠는 힘이 바로 전압 — 저항이 큰 곳에 더 큰 전압이 걸립니다. 식으로는 V = I R. 6 V 에 20 Ω 과 10 Ω 이면 전류는 0.2 A, V₁ = 0.2 × 20 = 4 V, V₂ = 0.2 × 10 = 2 V. 앞의 시뮬과 똑같죠?", "P10": "이제 병렬입니다. 같은 6 V, 같은 20 Ω 과 10 Ω 을 이번엔 나란히 이었어요. 큰 사각형이 줄기, 그 안의 작은 사각형이 두 갈래예요. 전원 장치는 전압을 걸어 주는 장치, 전지라고 생각하면 됩니다. 노란 점이 따라가 볼게요. 위쪽 왼쪽 갈림점에서 둘로 나뉘어서 — 하나는 위 변으로 R₁ 을, 하나는 아래로 내려가 R₂ 를 지나 — 오른쪽 갈림점에서 다시 만나죠? 전류의 길이 「여러 개」, 7번입니다. 노란 꺾쇠도 갈림점에서 두 갈래로 나뉘어 흐릅니다. 두 저항의 양 끝에 전압계를 대 보면… 둘 다 6 V! 3 V + 3 V 로 나눠 갖는 게 아니에요. 단추로 저항을 바꿔도 6.0 V 그대로입니다. 갈래 전압은 전원 전압과 같아서 V = V₁ = V₂. 왜 그럴까요? 도선은 저항이 거의 없어서 「같은 자리」예요. (+)극에서 저항을 거치지 않고 이어진 붉은빛 부분이 한 덩어리, (−)극에 이어진 파란빛 부분이 또 한 덩어리 — 두 갈래 모두 그 두 덩어리 사이에 걸쳐 있으니 걸리는 전압이 같을 수밖에 없습니다. <span class=\"cue\">화면: (+)극 쪽 한 덩어리 · (−)극 쪽 한 덩어리</span>", "P11": "병렬에서 전류는 어떨까요? 전자와 노란 꺾쇠의 빠르기부터 보세요. 줄기가 가장 빠르고, R₂ 갈래가 R₁ 갈래보다 빠르죠. 전류계는 세 곳에 달았어요. I₁ 은 R₁ 갈래 위, I₂ 는 R₂ 갈래 위, I 는 줄기예요. 읽어 봅시다. R₁ 갈래 0.30 A, R₂ 갈래 0.60 A. 갈래마다 6 V 가 걸리니까 6 ÷ 20 = 0.30, 6 ÷ 10 = 0.60 이에요. 전류는 갈래마다 「나뉜다」, 8번입니다. 줄기는? 0.90 A — 두 갈래를 합친 것과 같아요. I = I₁ + I₂. 저항이 작은 R₂ 갈래로 전류가 더 많이 흐르죠? 저항이 2배면 전류는 절반이에요. 단추로 바꿔 보세요. R₁ 을 10 Ω 으로 하면 0.60 + 0.60 = 1.20 A — 어떻게 바꿔도 줄기는 두 갈래의 합입니다. 직렬에서는 같은 부품으로 전압이 2 : 1 로 나뉘었는데, 병렬에서는 전류가 1 : 2 로 나뉩니다. 잇는 방법만 바꿨는데 나뉘는 것이 뒤바뀌었어요.", "P11a": "그런데 전류계는 왜 꼭 저 자리에 꽂았을까요? 전류계는 자기 속을 지나가는 전하만 셀 수 있어요. 전자가 전류계를 지날 때마다 노랗게 반짝이죠? 먼저 줄기의 전류계 I. 전지에서 나온 전류가 갈라지기 전에 모두 이 전류계를 지나가요. 1초 동안 세어 보면 9개. 이번엔 갈래의 전류계 I₁ 과 I₂. I₁ 에는 R₁ 갈래로 가는 전류만, I₂ 에는 R₂ 갈래로 가는 전류만 지나갑니다. 1초에 3개, 6개. 나란히 놓고 보면 9 = 3 + 6 — 0.90 = 0.30 + 0.60, 곧 I = I₁ + I₂ 예요. 화면의 점은 모형이라서, 실제 도선에서는 1초에 셀 수 없이 많은 전자가 지나갑니다. 정리하면, 전류계는 재려는 전류가 지나가는 길 위에 끼워서, 곧 직렬로 연결합니다. 길을 끊고 그 사이에 넣어야 그 전류가 모두 전류계를 지나가니까요. R₁ 의 전류를 재고 싶으면 R₁ 갈래 위에, 전체 전류를 재고 싶으면 줄기에 꽂으면 됩니다. <span class=\"cue\">화면: 전류계 I · I₁ · I₂ 가 1초 동안 센 수 9 · 3 · 6 → 9 = 3 + 6</span>", "P12": "병렬에서 전구 ㉮를 빼면 ㉯는 어떻게 될까요? 방금 직렬에서 다 꺼지는 걸 봤으니 「이번에도 꺼지겠지」 싶죠. 빼 봅니다. ㉯는 그대로 켜져 있어요! 하나 빼도 나머지는 「켜져 있다」, 9번. ㉮ 갈래의 전자와 꺾쇠만 멈추고, ㉯ 갈래는 빠르기가 그대로예요. 그럼 ㉯가 더 밝아졌을까요? ㉮ 쪽으로 가던 전류가 ㉯로 몰려와서? 아니에요. 밝기 막대를 보세요 — 그대로입니다. ㉯에 걸리는 전압이 그대로라 ㉯에 흐르는 전류도 그대로예요. 줄어든 건 전원 쪽, 줄기의 전류뿐입니다. 갈래가 하나 줄었으니까요. 오른쪽 단추로 ㉯까지 빼면? 두 갈래가 모두 끊겨 전류가 흐르지 않아요. 다시 끼우면 각자 다시 켜집니다.", "P13": "병렬에서 전압은 같은데 전류는 왜 다를까요? 미끄럼틀로 생각해 봅시다. 전지는 엘리베이터예요. 사람을 위층으로 올려 주죠. 올려 준 높이가 전압입니다. 미끄럼틀이 저항이고, 1초에 내려오는 사람 수가 전류예요. 두 미끄럼틀은 같은 층에서 출발해서 같은 땅에 닿죠? 어느 쪽을 타도 내려오는 높이는 6 V 로 같아요. 그래서 V = V₁ = V₂. 그런데 5초 동안 세어 보면 좁은 미끄럼틀은 5명, 넓은 미끄럼틀은 10명. 넓은 쪽, 저항이 작은 쪽으로 더 많이 내려옵니다 — 저항이 작은 곳에 더 센 전류. 모두 합치면 15명, 엘리베이터가 올려 보낸 사람 수와 같아요. 전류는 「흐른다」, 전압은 「걸린다」로 말을 맞춰 주세요. 비유의 한계 하나 — 전자가 어느 쪽이 편한지 골라서 가는 게 아니라, 넓은 길로 그냥 더 많이 지나갈 뿐입니다.", "P14": "갈래 전류를 다 더하면 왜 줄기 전류가 될까요? 아까 그 도로가 이번엔 두 갈래로 갈라졌다가 다시 합쳐져요. 6초 동안 세어 보면 들어오는 곳 18대, 좁은 길 6대, 넓은 길 12대, 나가는 곳 18대. 18 = 6 + 12! 차가 중간에 사라지지 않듯 전하도 사라지지 않아요. 그래서 I = I₁ + I₂ — 갈래 전류를 다 더하면 전원 쪽 전류와 같습니다.", "P15": "실제 전구로 확인해 봅시다. 전원 전압은 그대로 두고 잇는 방법만 바꿔요. ① 전구 한 개를 이은 회로 — 이 밝기가 기준입니다. ② 전구 두 개를 직렬로 이으면… 두 전구 모두 어두워졌어요. 노란 꺾쇠도 느려졌죠? 전류가 줄었다는 뜻이에요. 밝기는 두 개 직렬 「<」 한 개, 10번. ③ 전구 사이의 연결을 끊으면 「모든」 전구의 불이 꺼집니다, 11번. 왜 어두워졌을까요? 직렬로 이으면 전체 저항이 「커지고」, 전지에서 나가는 전류가 「작아지기」 때문이에요. 12번·13번. V = I R, 같은 전압에 저항이 커지면 전류는 작아지죠. 화면의 밝기는 밝게·어둡게만 나타낸 거예요.", "P16": "이번엔 병렬입니다. ① 기준 전구 한 개. ② 두 개를 병렬로 이으면… 두 전구 모두 한 개일 때와 같은 밝기예요! 두 개 병렬 「=」 한 개, 14번. 대신 줄기의 노란 꺾쇠는 두 배로 빨라졌어요 — 전지에서 나가는 전류가 두 갈래를 합친 만큼이니까요. ③ 한 갈래의 연결을 끊으면 「끊어진 갈래의 전구만」 불이 꺼집니다, 15번. 남은 전구는 더 밝아지지 않고 밝기 그대로예요. 이유는? 병렬은 각 갈래가 전지에 그대로 이어져 있어서 갈래마다 걸리는 전압이 「전지 전압과 같고」, 그래서 각 전구에 흐르는 전류도 「변하지 않기」 때문입니다. 16번·17번. 미끄럼틀의 높이가 같았던 것과 같아요.", "P17": "그럼 어디에 직렬을 쓰고 어디에 병렬을 쓸까요? 무엇을 하려는지가 잇는 방법을 정합니다. 가정의 전기 기구는 따로 켜고 끌 수 있어야 하니까 「병렬」, 18번. 퓨즈와 누전 차단기는 끊기면 회로 전체가 끊겨야 하니까 「직렬」, 19번. 퓨즈가 끊어지면 하나뿐인 길이 사라져 기구 전체의 전류가 멈추죠. 직렬의 약점을 거꾸로 이용한 거예요. 멀티탭은 코드 하나 뽑아도 나머지가 작동하니까 「병렬」, 20번. 멀티탭에 하나씩 꽂아 볼게요. 기구마다 220 V 를 그대로 받고, 기구마다 흐르는 전류가 코드 한 가닥에 모두 더해져요. 충전기, 노트북, 전기주전자까지 8.6 A. 드라이어와 전기난로까지 꽂으면… 24.5 A! 정격 16 A 를 훌쩍 넘었어요. 문어발 연결을 하면 전류가 모두 더해져 과부하, 과열, 화재로 이어질 수 있습니다. 그래서 열을 많이 쓰는 기구는 벽 콘센트에 따로 꽂아야 해요. (전류 값은 예입니다.) <span class=\"cue\">화면: 멀티탭 — 코드 한 가닥의 전류가 정격을 넘음</span>", "P18": "직렬로 저항을 더 이으면 왜 전체 저항이 커질까요? 지난 시간에 도선이 길수록 저항이 크다고 배웠죠. 10 Ω 저항 옆에 10 Ω 을 하나 더 한 줄로 이어 볼게요. 전류는 이 둘을 차례로 다 지나가야 해요. 빠져나갈 샛길이 없죠. 그래서 저항의 「길이」가 길어지는 효과가 나고, 전체 저항이 「커진다」. 21번·22번. 같은 6 V 에서 저항 1개면 0.6 A, 직렬 2개, 20 Ω 이면 0.3 A 로 줄어요. 단, 저항 하나하나는 그대로 10 Ω 이에요. 실제로 길어진 게 아니라 차례로 다 지나야 해서 그런 효과가 난다는 뜻입니다.", "P19": "병렬로 저항을 더 이으면? 저항을 더 달았는데 전체 저항이 작아진다니, 가장 헷갈리는 곳이에요. 10 Ω 아래에 10 Ω 을 나란히 이어 볼게요. 전류가 지나갈 통로가 하나 더 생겼죠? 그래서 저항의 「굵기」가 굵어지는 효과가 나고, 전체 저항이 「작아진다」. 23번·24번. 숫자로 확인해 봅시다. 갈래마다 6 V 가 그대로 걸리니 갈래마다 0.6 A, 합치면 1.2 A. 같은 6 V 에서 전류가 두 배가 됐으니 전체 저항은 6 ÷ 1.2 = 5 Ω 으로 작아진 거예요. 저항 하나하나는 여전히 10 Ω 이고요 — 전류가 지나갈 길이 늘어나서 그런 효과가 나는 겁니다.", "P20": "한 표로 정리해 봅시다. 열기 전에 먼저 말해 볼까요? 직렬 전류는? 각 저항에 흐르는 전류가 전체 전류와 같다. 병렬 전류는? 저항에 반비례해서 나뉜다. 전압은? 직렬은 저항에 비례해서 나뉘고, 병렬은 전체 전압과 같다. 저항은? 직렬은 이을수록 커지고 — 길이 효과, 병렬은 이을수록 작아진다 — 굵기 효과. 특징은? 직렬은 하나라도 끊어지면 모두 꺼지고, 병렬은 하나가 끊어져도 나머지는 켜져 있다. 전체는? 직렬은 전체 전압이 각 전압의 합, 병렬은 전체 전류가 각 전류의 합. 세로로 읽어 보세요. 직렬은 「전류 같고 전압 나뉨」, 병렬은 「전압 같고 전류 나뉨」 — 서로 거울처럼 뒤바뀌어 있어요.", "P21": "오늘 배운 것을 정리합시다. 화면에 빈칸이 나오면 먼저 말해 보세요. 직렬연결은 전류의 길이 한 개라서 전류가 어디서나 같고, 전압은 저항에 따라 나뉩니다. 하나라도 끊어지면 모두 꺼지고, 저항을 이을수록 전체 저항이 커져요 — 길이가 길어지는 효과. 병렬연결은 전류의 길이 여러 개라서 전압이 전원 전압과 같고, 전류는 갈래마다 나뉩니다. 하나가 끊어져도 나머지는 켜져 있고, 저항을 이을수록 전체 저항이 작아져요 — 굵기가 굵어지는 효과. 그래서 가정의 전기 기구와 멀티탭은 병렬, 퓨즈와 누전 차단기는 직렬로 잇습니다. 멀티탭에 문어발로 꽂으면 기구마다의 전류가 모두 더해져 과열될 수 있다는 것도 꼭 기억하세요.", "P22": "처음 질문으로 돌아가 봅시다. 트리 전구는 왜 하나가 빠지자 다 꺼졌을까요? 전구들이 한 줄로 이어진 직렬이라서, 하나가 빠지면 하나뿐인 길이 끊겨 모두 꺼진 거예요. 집 안 전등은 왜 하나를 꺼도 나머지가 그대로였을까요? 전등 하나하나가 전원의 같은 두 선에 따로 이어진 병렬이라서, 한 갈래를 꺼도 다른 갈래에는 같은 전압이 걸려 그대로 켜져 있는 겁니다. 이건 우연이 아니라 선택이에요. 무엇을 한 줄로 묶어 함께 끊기게 하고, 무엇을 나란히 두어 따로 살게 할지 — 전기 제품 뒤에는 그런 고민이 숨어 있습니다. 마지막 한 줄을 적어 두세요. 한 줄이면 전류가 같고, 나란히면 전압이 같다! <span class=\"cue\">화면: 한 줄이면 전류가 같고, 나란히면 전압이 같다</span>"};</script>
+<script>window.KW = {"items": [{"kw": "잇는 방법"}, {"kw": "직렬연결"}, {"kw": "병렬연결"}, {"kw": "전구 실험"}, {"kw": "쓰임새"}, {"kw": "전체 저항"}], "at": [-1, -1, -1, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 4, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6]};</script>
 <script>
 /* ═══════════════════════════════════════════════════════════════
    core.js — 강의 덱 엔진
@@ -1056,7 +1318,30 @@ html.student #notes{display:none!important}
     const on = !window.SFX || SFX.isOn();
     b.innerHTML = on ? ICON.sound : ICON.mute; b.classList.toggle('off', !on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
+  /* ── 키워드 진행 표시(무대 오른쪽 위 · 녹화 화면에도 보임) ──
+     window.KW = {items:[{kw}], at:[장마다 키워드 번호]} — build.py 가 slides/…/_keywords.json 으로 넣는다.
+     at: -1 = 숨김(표지·도입·키워드 장), 0..n-1 = 그 키워드, n = 모두 끝(정리·문제). 칩을 누르면 그 키워드의 첫 장으로 */
+  let kwEl = null;
+  function buildKw() {
+    const K = window.KW; if (!K || !K.items || !K.items.length || !K.at) return;
+    kwEl = document.createElement('div'); kwEl.id = 'kwbar'; kwEl.setAttribute('data-interactive', '');
+    kwEl.innerHTML = K.items.map((it, j) => `<button type="button" class="kw" data-j="${j}" aria-label="키워드 ${j + 1}: ${it.kw}"><b>${j + 1}</b><span>${it.kw}</span></button>`).join('');
+    stage.appendChild(kwEl);
+    kwEl.addEventListener('click', e => {
+      const b = e.target.closest('.kw'); if (!b) return; e.stopPropagation();
+      const i = K.at.indexOf(+b.dataset.j); if (i >= 0 && i !== Deck.i) show(i, 0);
+    });
+  }
+  function syncKw() {
+    if (!kwEl) return;
+    const K = window.KW, a = K.at[Deck.i], sec = Deck.list[Deck.i];
+    const hide = a == null || a < 0 || (sec && sec.hasAttribute('data-kw-hide'));
+    kwEl.classList.toggle('show', !hide);
+    kwEl.classList.toggle('end', a >= K.items.length);
+    kwEl.querySelectorAll('.kw').forEach((b, j) => { b.classList.toggle('done', j < a); b.classList.toggle('cur', j === a); });
+  }
   function buildChrome() {
+    buildKw();
     hud = document.createElement('div'); hud.id = 'hud';
     hud.innerHTML = `<button data-a="replay" aria-label="이 단계 다시 보기(R)">${ICON.replay}</button>${STUDENT ? '' : `<button data-a="notes" aria-label="대본 보기(T)">${ICON.notes}</button>`}<button data-a="grid" aria-label="전체 보기(O)">${ICON.grid}</button><button data-a="prev" aria-label="이전">${ICON.prev}</button><span class="count" id="count">1 / 1</span><button data-a="next" aria-label="다음">${ICON.next}</button><button data-a="sound" aria-label="소리 켜기/끄기(M)">${ICON.sound}</button><button data-a="full" aria-label="전체 화면(F)">${ICON.full}</button>`;
     document.body.appendChild(hud); syncSound();
@@ -1094,6 +1379,7 @@ html.student #notes{display:none!important}
     hud.querySelector('#count').textContent = `${Deck.i + 1} / ${n}`;
     prog.firstChild.style.width = `${((Deck.i + (st ? Deck.k / (st + 1) : 0)) / Math.max(1, n - 1)) * 100}%`;
     dots.innerHTML = st ? Array.from({ length: st + 1 }, (_, j) => `<i class="${j <= Deck.k ? 'on' : ''}"></i>`).join('') : '';
+    syncKw();
     if (notesEl.classList.contains('show')) renderNotes();
     if (ovEl.classList.contains('show')) renderOverview();
   }
@@ -1892,16 +2178,21 @@ try{
 try{
 /* ═══════════════════════════════════════════════════════════════
    objects/e5/e5.js — 학습지 5(저항의 직렬연결과 병렬연결) 강의 덱 전용 그림·시뮬 · 전역 이름 window.E5
-   · E5.poly(pts, closed)        꺾은선 — L(길이), at(s) → [x, y, tx, ty]
+   · E5.poly(pts, closed)        꺾은선 — L(길이), at(s) → [x, y, tx, ty], sOf(x, y) → 가장 가까운 자리의 s
+   · E5.offset(pts, d, closed) · E5.sub(pts, s0, s1)   나란한 길(진행 방향 왼쪽으로 d) · 꺾은선 일부
    · E5.res / bulb / bat / amm / node / vm / pill   회로 기호(기본 모양: 저항 지그재그 · 전구 원+필라멘트 반원 · 전지 긴선/짧은선)
-   · E5.series(o) / E5.parallel(o) → {svg, branches, …}   직렬·병렬 회로(학습지 회로도와 같은 배치)
-   · E5.flow(c, g, branches, o)   도선 속 전자: 갈래마다 «1초에 지나가는 수 ∝ 그 갈래의 전류»
-   · E5.light(c, id, v, ms) · E5.lift(c, id, ms)     전구 밝기 · 전구 빼기(소켓에서 들어 올림)
+   · E5.series(o) / E5.parallel(o) → {svg, branches, lanes, legs, pos, hide}
+        직렬: 큰 사각형 한 고리 · 병렬: 큰 사각형(줄기) 안에 작은 사각형(갈래 둘) — 위 갈래 R₁, 아래로 내려간 갈래 R₂
+   · E5.flow(c, g, branches, o)   도선 속 전자 — 모든 갈래가 «같은 간격 E5.G» · 빠르기 = E5.K × 전류
+   · E5.chev(c, g, lanes, o)      전류의 방향 꺾쇠(노랑) — 같은 간격 · 빠르기 ∝ 전류 · 부품 둘레(hide)에서는 숨김
+   · E5.sim(c, CK, o)             전자 + 꺾쇠를 한 번에 — set({갈래: 전류}, ms) 로 같은 순간에 함께 바뀜
+   · E5.light / lift / drop       전구 밝기 · 소켓에서 빼기 · 다시 끼우기
    · E5.tracer(c, g, legs, o)     전류의 길 따라가기(앰버 점 + 자취) — 갈림길에서 둘로 나뉘었다가 다시 만남
-   · E5.lab(o) · E5.chev(c, g, pts, o)   실험 회로(학습지 B: 전원 장치 + 전구) · 전류의 방향 꺾쇠 흐름
-   과학 규약: 전자는 처음부터 도선 전체에 고르게 있다(전지가 만들어 내보내지 않음). 갈래마다 전자 간격이 같으므로
-   빠르기 ∝ 전류 → 직렬 고리에서는 어디서나 같은 빠르기(전구·저항을 지나도 줄지 않음), 병렬에서는 줄기 = 갈래의 합.
-   회로가 끊기면 같은 순간에 모든 곳의 흐름이 멎는다(전자는 제자리에서 흔들림만). 전류의 방향은 전자의 이동 방향과 반대.
+   · E5.lab(o) → {svg, bulbs, chevs, hide} · E5.segHTML / bindSeg / legendHTML   실험 회로(학습지 B) · 단추(알약 칩) · 범례
+   과학 규약: 전자는 처음부터 도선 전체에 고르게 있다(전지가 만들어 내보내지 않음). 모든 갈래의 전자 간격이 정확히 같고
+   (갈래 길이 = 간격의 정수배 — 아니면 console.warn), 빠르기 = K × 전류 → 1초에 한 곳을 지나는 전자 수 = K·I/G = 10 × I(A).
+   그래서 직렬 고리에서는 어디서나 같은 수, 병렬에서는 줄기 = 갈래 1 + 갈래 2 가 «정확히» 맞는다(꺾쇠도 같은 원리).
+   회로가 끊기면 같은 순간에 모든 곳의 흐름이 멎는다(전자는 제자리에서 흔들림만). 전류의 방향 = (+)극 → 회로 → (−)극 = 전자의 이동 방향과 반대.
    ═══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -1910,7 +2201,16 @@ try{
   const f3 = v => (Math.round(v * 1000) / 1000);
   const TAU = Math.PI * 2;
   const mod = (a, n) => ((a % n) + n) % n;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   E.f = f; E.f3 = f3; E.mod = mod;
+  E.f2s = v => (Math.round(v * 100) / 100).toFixed(2);   // A: 소수 둘째 자리
+  E.f1s = v => (Math.round(v * 10) / 10).toFixed(1);     // V: 소수 첫째 자리
+
+  /* 모형의 약속(모든 회로 시뮬 공통) */
+  E.G = 30;      // 전자 간격(px) — 모든 갈래가 같다
+  E.K = 300;     // 전자의 빠르기(px/s) = K × 전류(A) → 1초에 한 곳을 지나는 전자 수 = K·I/G = 10 × I
+  E.GC = 60;     // 꺾쇠 간격(px)
+  E.LANE = 34;   // 꺾쇠 길: 도선 가운데에서 «전류 진행 방향의 왼쪽»으로 떨어진 거리
 
   /* 꺾은선 */
   E.poly = function (pts, closed = false) {
@@ -1927,10 +2227,42 @@ try{
       const g = seg[lo], u = s - g.s;
       return [g.x1 + g.tx * u, g.y1 + g.ty * u, g.tx, g.ty];
     };
-    return { L, seg, at, pts: P, closed };
+    /* (x, y) 에 가장 가까운 자리의 s */
+    const sOf = (x, y) => {
+      let best = 0, bd = Infinity;
+      seg.forEach(g => {
+        const u = clamp((x - g.x1) * g.tx + (y - g.y1) * g.ty, 0, g.l), px = g.x1 + g.tx * u, py = g.y1 + g.ty * u, dd = Math.hypot(px - x, py - y);
+        if (dd < bd) { bd = dd; best = g.s + u; }
+      });
+      return best;
+    };
+    return { L, seg, at, sOf, pts: P, closed };
   };
   const dOf = (pts, closed) => 'M' + pts.map(p => `${f(p[0])} ${f(p[1])}`).join(' L') + (closed ? 'Z' : '');
   E.dOf = dOf;
+
+  /* 나란한 길 — 진행 방향의 왼쪽(화면 좌표: 오른쪽으로 가면 위쪽)으로 d 만큼. 꺾이는 곳은 맞춤(miter) */
+  E.offset = function (pts, d, closed = false) {
+    const n = pts.length, N = [];
+    const nrm = (a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1; return [dy / l, -dx / l]; };
+    for (let i = 0; i < n - 1; i++) N.push(nrm(pts[i], pts[i + 1]));
+    if (closed) N.push(nrm(pts[n - 1], pts[0]));
+    return pts.map((p, i) => {
+      let a, b;
+      if (closed) { a = N[(i - 1 + n) % n]; b = N[i]; }
+      else { a = N[Math.max(0, i - 1)]; b = N[Math.min(N.length - 1, i)]; }
+      const k = 1 + a[0] * b[0] + a[1] * b[1];
+      const mx = (a[0] + b[0]) / (k || 1), my = (a[1] + b[1]) / (k || 1);
+      return [p[0] + d * mx, p[1] + d * my];
+    });
+  };
+  /* 꺾은선의 s0 ~ s1 부분 */
+  E.sub = function (pts, s0, s1) {
+    const P = E.poly(pts, false), out = [P.at(s0).slice(0, 2)];
+    P.seg.forEach(g => { const e = g.s + g.l; if (e > s0 + 1e-6 && e < s1 - 1e-6) out.push([g.x1 + g.tx * g.l, g.y1 + g.ty * g.l]); });
+    out.push(P.at(s1).slice(0, 2));
+    return out;
+  };
 
   /* 관(도선) — 가장자리 빛 + 몸통. 여러 토막이면 가장자리를 모두 먼저, 몸통을 나중에(이음매에 금이 안 보이게) */
   E.tubes = (ds, T) => ds.map(d => `<path d="${d}" fill="none" stroke="var(--e5edge)" stroke-width="${T + 3}" stroke-linejoin="round" stroke-linecap="round"/>`).join('') +
@@ -2020,67 +2352,116 @@ try{
       (o.name ? `<text x="${f(x + (o.tx || 0))}" y="${f(y + (o.ty || 0))}" text-anchor="${o.anchor || 'middle'}" class="e5-cur-t">${o.name}</text>` : '') + `</g>`;
   };
 
+  /* 그룹 묶음(관 위에 차례로): 같은 자리 색(hl) → 따라가기(trace) → 전자(e) → 꺾쇠(ch) → 부품(front) → 덧그림(over) */
+  const layers = id => `<g id="${id}-hl"></g><g id="${id}-trace"></g><g id="${id}-e"></g><g id="${id}-ch"></g>`;
+
   /* ═════ 직렬 회로(학습지 회로도 배치: 위 변에 R₁·R₂, 아래 변 가운데 전지 — (+)극 왼쪽) ═════
-     o: {id, x, y, w, h, T, kind:'res'|'bulb', a1, a2, amm, vm, r1, r2(이름표), vLabel, bulbR}
-     전자 방향 고리: 오른쪽 아래 → 위 → 왼쪽 → 아래 → (아래 변을 왼→오) */
+     o: {id, x, y, w, h, T, kind:'res'|'bulb', a1, a2, amm, vm, vmH, vLabel, bulbR, aI/pa1/pa2(전류계 자리)}
+     전자(닫힌 고리, 전자 방향): 오른쪽 아래 → 위 → 왼쪽 → 아래 → (아래 변을 왼→오) — 길이 2(w+h) 는 E5.G 의 정수배로 고를 것
+     꺾쇠(전류 방향): (+)극 → 왼쪽 → 위 → 오른쪽 → 아래 → (−)극, 고리 바깥쪽 길 */
   E.series = function (o) {
-    const id = o.id, x = o.x, y = o.y, w = o.w, h = o.h, T = o.T || 22, kind = o.kind || 'res';
-    const x1 = x + w * (o.a1 ?? .34), x2 = x + w * (o.a2 ?? .66), xb = x + w * .5;
-    const loop = [[x + w, y + h], [x + w, y], [x, y], [x, y + h]];
+    const id = o.id, x = o.x, y = o.y, w = o.w, h = o.h, T = o.T || 22, kind = o.kind || 'res', d = o.lane == null ? E.LANE : o.lane;
+    const x1 = x + w * (o.a1 ?? .34), x2 = x + w * (o.a2 ?? .66), xb = x + w * .5, yB = y + h, R = o.bulbR || 38;
+    const loop = [[x + w, yB], [x + w, y], [x, y], [x, yB]];
     let back = '', front = '';
     if (kind === 'res') {
       front += E.res(x1, y, { id: `${id}-r1`, T }) + E.res(x2, y, { id: `${id}-r2`, T });
     } else {
-      const b1 = E.bulb(x1, y, { id: `${id}-b1`, T, r: o.bulbR || 38, glow: o.glow || 170 }), b2 = E.bulb(x2, y, { id: `${id}-b2`, T, r: o.bulbR || 38, glow: o.glow || 170 });
-      back += b1.back + b2.back; front += b1.front + b2.front;
-    }
-    front += E.bat(xb, y + h, { id: `${id}-bat`, T, label: o.vLabel });
-    const pos = { x1, x2, xb, aI: [x, y + h * .5], a1: [x + w * .12, y], a2: [x + w * .88, y] };
-    if (o.amm) front += E.amm(pos.aI[0], pos.aI[1], { id: `${id}-aI` }) + E.amm(pos.a1[0], pos.a1[1], { id: `${id}-a1` }) + E.amm(pos.a2[0], pos.a2[1], { id: `${id}-a2` });
-    if (o.vm) front += E.vm(x1 - 60, x1 + 60, y, -(o.vmH || 104), { id: `${id}-v1` }) + E.vm(x2 - 60, x2 + 60, y, -(o.vmH || 104), { id: `${id}-v2` });
-    const svg = back + E.tubes([dOf(loop, true)], T) + `<g id="${id}-trace"></g><g id="${id}-e"></g>` + front + `<g id="${id}-over"></g>`;
-    return { id, svg, x, y, w, h, T, pos,
-      branches: [{ key: 'loop', pts: loop, closed: true }],
-      legs: [[[[xb - 11, y + h], [x, y + h], [x, y], [x + w, y], [x + w, y + h], [xb + 11, y + h]]]] };
-  };
-
-  /* ═════ 병렬 회로(학습지 회로도 배치: 위 갈래 R₁, 아래 갈래 R₂ — 갈림점은 아래 갈래 높이 yb, 전지는 바닥 가운데) ═════
-     전자: 줄기(왼쪽 갈림점 → 아래로 → 바닥(전지) → 오른쪽 갈림점) · 위 갈래(오른쪽 갈림점 → 위 → 왼쪽 → 아래) · 아래 갈래(오른쪽 → 왼쪽) */
-  E.parallel = function (o) {
-    const id = o.id, x = o.x, y = o.y, w = o.w, h = o.h, yb = o.yb, T = o.T || 22, kind = o.kind || 'res';
-    const xr = x + w * (o.ar ?? .5), xb = x + w * .5, yB = y + h;
-    const main = [[x, yb], [x, yB], [x + w, yB], [x + w, yb]];
-    const top = [[x + w, yb], [x + w, y], [x, y], [x, yb]];
-    const low = [[x + w, yb], [x, yb]];
-    let back = '', front = '';
-    if (kind === 'res') front += E.res(xr, y, { id: `${id}-r1`, T }) + E.res(xr, yb, { id: `${id}-r2`, T });
-    else {
-      const b1 = E.bulb(xr, y, { id: `${id}-b1`, T, r: o.bulbR || 38, glow: o.glow || 170 }), b2 = E.bulb(xr, yb, { id: `${id}-b2`, T, r: o.bulbR || 38, glow: o.glow || 170 });
+      const b1 = E.bulb(x1, y, { id: `${id}-b1`, T, r: R, glow: o.glow || 170 }), b2 = E.bulb(x2, y, { id: `${id}-b2`, T, r: R, glow: o.glow || 170 });
       back += b1.back + b2.back; front += b1.front + b2.front;
     }
     front += E.bat(xb, yB, { id: `${id}-bat`, T, label: o.vLabel });
-    const pos = { xr, xb, aI: [x, (yb + yB) / 2], a1: [x + w * (o.aa ?? .2), y], a2: [x + w * (o.aa ?? .2), yb] };
+    const pos = { x1, x2, xb, yB, aI: o.aI || [x, y + h * .5], a1: o.pa1 || [x + w * .12, y], a2: o.pa2 || [x + w * .88, y] };
     if (o.amm) front += E.amm(pos.aI[0], pos.aI[1], { id: `${id}-aI` }) + E.amm(pos.a1[0], pos.a1[1], { id: `${id}-a1` }) + E.amm(pos.a2[0], pos.a2[1], { id: `${id}-a2` });
-    if (o.vm) front += E.vm(xr - 60, xr + 60, y, -(o.vmH || 96), { id: `${id}-v1` }) + E.vm(xr - 60, xr + 60, yb, (o.vmH2 || 96), { id: `${id}-v2` });
-    front += E.node(x, yb) + E.node(x + w, yb);
-    const svg = back + E.tubes([dOf(main), dOf(top), dOf(low)], T) + `<g id="${id}-hl"></g><g id="${id}-trace"></g><g id="${id}-e"></g>` + front + `<g id="${id}-over"></g>`;
-    return { id, svg, x, y, w, h, yb, T, pos,
-      branches: [{ key: 'main', pts: main }, { key: 'top', pts: top }, { key: 'low', pts: low }],
-      legs: [[[[xb - 11, yB], [x, yB], [x, yb]]], [[[x, yb], [x, y], [x + w, y], [x + w, yb]], [[x, yb], [x + w, yb]]], [[[x + w, yb], [x + w, yB], [xb + 11, yB]]]] };
+    if (o.vm) front += E.vm(x1 - 60, x1 + 60, y, -(o.vmH || 104), { id: `${id}-v1` }) + E.vm(x2 - 60, x2 + 60, y, -(o.vmH || 104), { id: `${id}-v2` });
+    const hide = [[xb, yB, 84]];   // 전지 둘레((+)/(−) 글자 옆에 반쯤 흐린 꺾쇠가 남지 않게 넉넉히)
+    if (o.amm) hide.push([pos.aI[0], pos.aI[1], 44], [pos.a1[0], pos.a1[1], 44], [pos.a2[0], pos.a2[1], 44]);
+    if (kind === 'bulb') hide.push([x1, y, R + 22], [x2, y, R + 22]);
+    if (o.vm) [x1 - 60, x1 + 60, x2 - 60, x2 + 60].forEach(xl => hide.push([xl, y - d, 14]));   // 전압계 도선이 위 꺾쇠 길을 가로지르는 곳
+    const cur = [[xb - 40, yB], [x, yB], [x, y], [x + w, y], [x + w, yB], [xb + 40, yB]];
+    const svg = back + E.tubes([dOf(loop, true)], T) + layers(id) + front + `<g id="${id}-over"></g>`;
+    return { id, svg, x, y, w, h, T, pos, hide,
+      branches: [{ key: 'loop', pts: loop, closed: true }],
+      lanes: [{ key: 'loop', pts: E.offset(cur, d) }],
+      legs: [[[[xb - 11, yB], [x, yB], [x, y], [x + w, y], [x + w, yB], [xb + 11, yB]]]] };
   };
 
-  /* ═════ 도선 속 전자 ═════
-     갈래마다 간격이 같다 → 빠르기 = k × 전류 → 1초에 한 지점을 지나는 전자 수 ∝ 전류.
-     갈래 하나를 열린 꺾은선으로 두고 끝에 닿은 전자는 같은 간격으로 처음에 다시 나타난다(갈림점은 여러 갈래가 함께 쓰는 점). */
+  /* ═════ 병렬 회로 — 큰 사각형(줄기) 안에 작은 사각형(갈래 둘) ═════
+     o: {id, x0, x1, y0(위 변), yb(아래 변 · 전지), xj1, xj2(위 변의 갈림점 J1 · J2), y2(작은 사각형 아래 변), T, kind, amm, vm, vmH, vmH2, vLabel, bulbR, aI}
+     · 줄기: 전지 (+)극 → 왼쪽 → 위로 → 위 변 → J1  ·  J2 → 위 변 → 오른쪽 아래로 → 아래 변 → 전지 (−)극
+     · 갈래 1(R₁): J1 → 위 변 → J2  ·  갈래 2(R₂): J1 → 아래로 → 작은 사각형 아래 변 → 위로 → J2
+     전자(전류와 반대): main = J1 → 왼쪽 위 → 아래 → 아래 변 → 오른쪽 → 위 → J2 · top = J2 → J1 · low = J2 → 아래 → 왼쪽 → 위 → J1
+     길이(main · top · low)가 모두 E5.G 의 정수배가 되게 좌표를 고를 것(아니면 E5.flow 가 console.warn) */
+  E.parallel = function (o) {
+    if (o.x0 == null && o.x != null) {   // 옛 호출 {x, y, w, h, yb} — 새 배치로 옮겨 그림(갈래 2 아래 변 = 옛 yb)
+      o = Object.assign({}, o, { x0: o.x, x1: o.x + o.w, y0: o.y, yb: o.y + o.h, xj1: o.x + o.w * .18, xj2: o.x + o.w * .82, y2: o.yb ?? (o.y + o.h * .5) });
+    }
+    const id = o.id, X0 = o.x0, X1 = o.x1, Y0 = o.y0, YB = o.yb, J1 = o.xj1, J2 = o.xj2, Y2 = o.y2, T = o.T || 22, kind = o.kind || 'res', d = o.lane == null ? E.LANE : o.lane;
+    const xr = (J1 + J2) / 2, xb = o.xb ?? (X0 + X1) / 2, R = o.bulbR || 38;
+    const main = [[J1, Y0], [X0, Y0], [X0, YB], [X1, YB], [X1, Y0], [J2, Y0]];
+    const top = [[J2, Y0], [J1, Y0]];
+    const low = [[J2, Y0], [J2, Y2], [J1, Y2], [J1, Y0]];
+    let back = '', front = '';
+    if (kind === 'res') front += E.res(xr, Y0, { id: `${id}-r1`, T }) + E.res(xr, Y2, { id: `${id}-r2`, T });
+    else {
+      const b1 = E.bulb(xr, Y0, { id: `${id}-b1`, T, r: R, glow: o.glow || 170 }), b2 = E.bulb(xr, Y2, { id: `${id}-b2`, T, r: R, glow: o.glow || 170 });
+      back += b1.back + b2.back; front += b1.front + b2.front;
+    }
+    front += E.bat(xb, YB, { id: `${id}-bat`, T, label: o.vLabel });
+    const aa = (J1 + xr - 60) / 2;   // 갈림점과 저항 왼쪽 끝의 가운데
+    const pos = { xr, xb, X0, X1, Y0, YB, Y2, J1, J2, aI: o.aI || [X0, YB - 100], a1: [aa, Y0], a2: [aa, Y2] };
+    if (o.amm) front += E.amm(pos.aI[0], pos.aI[1], { id: `${id}-aI` }) + E.amm(pos.a1[0], pos.a1[1], { id: `${id}-a1` }) + E.amm(pos.a2[0], pos.a2[1], { id: `${id}-a2` });
+    if (o.vm) front += E.vm(xr - 60, xr + 60, Y0, -(o.vmH || 96), { id: `${id}-v1` }) + E.vm(xr - 60, xr + 60, Y2, (o.vmH2 || 96), { id: `${id}-v2` });
+    front += E.node(J1, Y0) + E.node(J2, Y0);
+    const hide = [[xb, YB, 84]];
+    if (o.amm) hide.push([pos.aI[0], pos.aI[1], 44], [pos.a1[0], pos.a1[1], 44], [pos.a2[0], pos.a2[1], 44]);
+    if (kind === 'bulb') hide.push([xr, Y0, R + 22], [xr, Y2, R + 22]);
+    if (o.vm) hide.push([xr - 60, Y0 - d, 14], [xr + 60, Y0 - d, 14]);   // V₁ 도선이 위 갈래 꺾쇠 길을 가로지르는 곳(V₂ 는 아래로 뻗어 갈래 2 꺾쇠 길과 만나지 않음)
+    // 꺾쇠 길(전류 방향 · 진행 방향의 왼쪽): 줄기 = 큰 사각형 바깥쪽, 갈래 1 = 위 변 위쪽, 갈래 2 = 작은 사각형 안쪽
+    const lowLane = E.offset([[J1, Y0], [J1, Y2], [J2, Y2], [J2, Y0]], d), lowP = E.poly(lowLane);
+    const lanes = [
+      { key: 'main', pts: E.offset([[J2, Y0], [X1, Y0], [X1, YB], [X0, YB], [X0, Y0], [J1, Y0]], d) },
+      { key: 'top', pts: E.offset([[J1, Y0], [J2, Y0]], d) },
+      { key: 'low', pts: E.sub(lowLane, d, lowP.L - d) },
+    ];
+    const svg = back + E.tubes([dOf([[X0, Y0], [X1, Y0], [X1, YB], [X0, YB]], true), dOf([[J1, Y0], [J1, Y2], [J2, Y2], [J2, Y0]])], T) + layers(id) + front + `<g id="${id}-over"></g>`;
+    return { id, svg, T, pos, hide, lanes,
+      x0: X0, x1: X1, y0: Y0, yb: YB, y2: Y2, xj1: J1, xj2: J2,
+      branches: [{ key: 'main', pts: main }, { key: 'top', pts: top }, { key: 'low', pts: low }],
+      legs: [[[[xb - 11, YB], [X0, YB], [X0, Y0], [J1, Y0]]], [[[J1, Y0], [J2, Y0]], [[J1, Y0], [J1, Y2], [J2, Y2], [J2, Y0]]], [[[J2, Y0], [X1, Y0], [X1, YB], [xb + 11, YB]]]] };
+  };
+
+  /* ═════ 도선 속 전자 — 계산 부분(화면과 무관 · 검증용으로 따로 부를 수 있음) ═════
+     모든 갈래의 간격 sp = E5.G (갈래 길이 L = n × G 이어야 이음매 없이 돈다) · 빠르기 = K × I
+     → 한 자리를 지나는 수 = 빠르기 ÷ 간격 = K·I/G 가 갈래와 무관하게 정확히 전류에 비례 */
+  E.flowModel = function (brs, o = {}) {
+    const gap = o.gap || E.G, K = o.k || E.K, I0 = o.I || {}, rnd = U.rng(o.seed || 5);
+    const B = brs.map(b => {
+      const P = E.poly(b.pts, !!b.closed), q = P.L / gap, n = Math.max(1, Math.round(q)), exact = Math.abs(q - n) < 1e-6;
+      if (!exact && !o.quiet) console.warn(`E5.flow: 갈래 ${b.key} 의 길이 ${f(P.L)} 가 간격 ${gap} 의 정수배가 아님 — 갈래마다 간격이 달라져 «1초에 지나가는 수 ∝ 전류»가 어긋남`);
+      return { key: b.key, P, n, sp: P.L / n, exact, I: I0[b.key] || 0, D: rnd() * P.L / n, gates: [] };
+    });
+    /* D 가 D1 → D2 로 가는 동안 자리 s 를 지난 전자 수(정확한 자리로 센 값) */
+    const cross = (b, s, D1, D2) => Math.floor((D2 - s) / b.sp) - Math.floor((D1 - s) / b.sp);
+    const M = {
+      B, K, gap, cross,
+      get: key => B.find(b => b.key === key),
+      step(dt) {
+        B.forEach(b => {
+          const D1 = b.D; b.D += K * b.I * dt;
+          b.gates.forEach(gt => { const k = cross(b, gt.s, D1, b.D); if (k > 0) gt.fn(k); });
+        });
+      },
+    };
+    return M;
+  };
+
+  /* ═════ 도선 속 전자(화면) ═════ */
   E.flow = function (c, g, brs, o = {}) {
     g = typeof g === 'string' ? c.$(g) : g; if (!g) { console.error('E5.flow 대상 없음'); return null; }
-    const K = o.k || 150, gap = o.gap || 42, r = o.r || 7, A = o.jitter == null ? 4 : o.jitter, Ap = o.jitterPerp == null ? 2.5 : o.jitterPerp;
-    const rnd = U.rng(o.seed || 5), I0 = o.I || {};
-    const B = brs.map(b => {
-      const P = E.poly(b.pts, !!b.closed), n = Math.max(1, Math.round(P.L / gap)), list = [];
-      for (let i = 0; i < n; i++) list.push({ s: i * P.L / n, j: jit(rnd) });
-      return { key: b.key, P, n, list, I: I0[b.key] || 0, D: rnd() * P.L / n };
-    });
+    const r = o.r || 7, A = o.jitter == null ? 4 : o.jitter, Ap = o.jitterPerp == null ? 2.5 : o.jitterPerp;
+    const M = E.flowModel(brs, o), B = M.B, rnd = U.rng((o.seed || 5) + 101);
+    B.forEach(b => { b.list = []; for (let i = 0; i < b.n; i++) b.list.push({ s: i * b.sp, j: jit(rnd) }); });
     let html = '';
     B.forEach(b => { for (let i = 0; i < b.n; i++) html += `<g>${EL.electron(0, 0, { r })}</g>`; });
     g.innerHTML = html;
@@ -2093,15 +2474,20 @@ try{
       }
     });
     place(0);
-    c.loop((t, dt) => { B.forEach(b => { b.D += K * b.I * dt; }); place(t); });
+    c.loop((t, dt) => { M.step(dt); place(t); });
     const api = {
-      B,
-      I: key => (B.find(b => b.key === key) || {}).I,
+      B, M,
+      I: key => (M.get(key) || {}).I,
       /** 전류 바꾸기 {갈래: 값} — 같은 순간에 함께 */
       set(map, ms = 600, ease = 'inOut') {
         const from = {}; B.forEach(b => { from[b.key] = b.I; });
         return c.tween(ms, p => { B.forEach(b => { if (b.key in map) b.I = from[b.key] + (map[b.key] - from[b.key]) * p; }); }, { ease });
       },
+      /** 갈래 key 의 (x, y) 자리를 전자가 지날 때마다 fn(지난 수) */
+      gate(key, x, y, fn) { const b = M.get(key); if (!b) return null; const gt = { s: b.P.sOf(x, y), fn }; b.gates.push(gt); return gt; },
+      sOf: (key, x, y) => M.get(key).P.sOf(x, y),
+      D: key => M.get(key).D,
+      cross: (key, s, D1, D2) => M.cross(M.get(key), s, D1, D2),
     };
     return api;
   };
@@ -2112,19 +2498,24 @@ try{
     if (!gl) return Promise.resolve();
     const v0 = +(gl.dataset.v || 0);
     if (v0 < .05 && v > .05 && !quiet) c.sfx('bulbOn');
+    gl.dataset.v = v;
     return c.tween(ms, p => {
       const q = v0 + (v - v0) * p;
       gl.setAttribute('opacity', f3(q)); bf.setAttribute('opacity', f3(Math.min(1, q * 1.1))); fl.setAttribute('opacity', f3(Math.min(1, q * 1.6)));
       if (ry) ry.setAttribute('opacity', f3(Math.max(0, (q - .5) * 2)));
-      if (p === 1) gl.dataset.v = v;
     }, { ease: 'out' });
   };
-  /* 전구를 소켓에서 빼서 들어 올림 */
+  /* 전구를 소켓에서 빼서 들어 올림 · 다시 끼움 */
+  const liftKF = o => { const dx = o.dx || 0, dy = o.dy == null ? -118 : o.dy, rot = o.rot == null ? -16 : o.rot; return { transform: `translate(${dx}px,${dy}px) rotate(${rot}deg)`, opacity: o.op == null ? .55 : o.op }; };
   E.lift = function (c, id, o = {}) {
     const el = c.$(`#${id}`); if (!el) return Promise.resolve();
     c.sfx('pop');
-    const dx = o.dx || 0, dy = o.dy == null ? -118 : o.dy, rot = o.rot == null ? -16 : o.rot;
-    return c.a(el, [{ transform: 'translate(0px,0px) rotate(0deg)', opacity: 1 }, { transform: `translate(${dx}px,${dy}px) rotate(${rot}deg)`, opacity: o.op == null ? .55 : o.op }], { dur: o.dur || 620, ease: 'outQuint' }).finished;
+    return c.a(el, [{ transform: 'translate(0px,0px) rotate(0deg)', opacity: 1 }, liftKF(o)], { dur: o.dur || 620, ease: 'outQuint' }).finished;
+  };
+  E.drop = function (c, id, o = {}) {
+    const el = c.$(`#${id}`); if (!el) return Promise.resolve();
+    c.sfx('pop');
+    return c.a(el, [liftKF(o), { transform: 'translate(0px,0px) rotate(0deg)', opacity: 1 }], { dur: o.dur || 520, ease: 'outQuint' }).finished;
   };
 
   /* ═════ 전류의 길 따라가기 ═════
@@ -2161,27 +2552,88 @@ try{
     }, { ease: 'linear' });
   };
 
-  /* ═════ 전류의 방향 꺾쇠(앰버) — 열린 꺾은선 pts 를 따라 (전류 방향으로) 흐름. 끝에 닿으면 처음에서 다시 ═════ */
+  /* ═════ 전류의 방향 꺾쇠(노랑 + 짙은 테두리) ═════
+     list = [{key, pts, closed?, I|v}] — 꺾은선 pts 를 따라 (전류 방향으로) 흐름. 빠르기 = K × I (K 기본 1 → I 를 px/s 로 써도 됨)
+     · 열린 길: 길이를 간격 gap 의 정수배로 양 끝을 조금 잘라 맞춤 → 모든 길의 간격이 정확히 gap → 1초에 지나가는 꺾쇠 수 ∝ 전류
+     · 닫힌 길: 간격 = L / round(L / gap)
+     · hide = [[x, y, r], …] 부품 둘레에서는 숨김 · 끝 edge px 에서 흐려짐 · 전류가 0 이면 사라짐 */
   E.chev = function (c, g, list, o = {}) {
     g = typeof g === 'string' ? c.$(g) : g; if (!g) return null;
-    const gap = o.gap || 64, sz = o.size || 9;
-    const B = list.map(b => { const P = E.poly(b.pts, false), n = Math.max(1, Math.round(P.L / gap)); return { key: b.key, P, n, v: b.v || 0, D: 0 }; });
+    const gap = o.gap || E.GC, sz = o.size || 10, K = o.K == null ? 1 : o.K, hide = o.hide || [], edge = o.edge == null ? 14 : o.edge, I0 = o.I || {}, vmin = o.vmin || 6;
+    const B = list.map(b => {
+      let pts = b.pts, P = E.poly(pts, !!b.closed), n, sp;
+      if (b.closed) { n = Math.max(1, Math.round(P.L / gap)); sp = P.L / n; }
+      else {
+        n = Math.max(1, Math.floor(P.L / gap + 1e-9)); sp = gap;
+        const cut = (P.L - n * gap) / 2; if (cut > 1e-6) { pts = E.sub(pts, cut, P.L - cut); P = E.poly(pts, false); }
+      }
+      const I = (b.key in I0) ? I0[b.key] : (b.I != null ? b.I : (b.v || 0));
+      return { key: b.key, P, n, sp, I, D: 0, closed: !!b.closed };
+    });
+    const one = `<g><path d="M${-sz} ${-sz} L0 0 L${-sz} ${sz}" fill="none" stroke="var(--e5chevS)" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>` +
+      `<path d="M${-sz} ${-sz} L0 0 L${-sz} ${sz}" fill="none" stroke="var(--e5chev)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></g>`;
     let html = '';
-    B.forEach(b => { for (let i = 0; i < b.n; i++) html += `<g><path d="M${-sz} ${-sz} L0 0 L${-sz} ${sz}" fill="none" stroke="var(--light)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></g>`; });
+    B.forEach(b => { for (let i = 0; i < b.n; i++) html += one; });
     g.innerHTML = html;
     const els = Array.from(g.children); let k = 0;
     B.forEach(b => { b.els = els.slice(k, k + b.n); k += b.n; });
     const place = () => B.forEach(b => {
+      const vis = clamp(K * b.I / vmin, 0, 1);
       for (let i = 0; i < b.n; i++) {
-        const s = mod(i * b.P.L / b.n + b.D, b.P.L), [px, py, tx, ty] = b.P.at(s), edge = Math.min(s, b.P.L - s);
+        const s = mod(i * b.sp + b.D, b.P.L), [px, py, tx, ty] = b.P.at(s);
+        let op = vis;
+        if (!b.closed && edge > 0) op *= clamp(Math.min(s, b.P.L - s) / edge, 0, 1);
+        for (let h = 0; h < hide.length && op > 0; h++) { const z = hide[h]; op *= clamp((Math.hypot(px - z[0], py - z[1]) - z[2]) / 10, 0, 1); }
         b.els[i].setAttribute('transform', `translate(${f(px)} ${f(py)}) rotate(${f(Math.atan2(ty, tx) * 180 / Math.PI)})`);
-        b.els[i].setAttribute('opacity', f3(Math.min(1, edge / 18) * (b.v > 0.01 ? 1 : .0)));
+        b.els[i].setAttribute('opacity', f3(op));
       }
     });
     place();
-    c.loop((t, dt) => { B.forEach(b => { b.D += b.v * dt; }); place(); });
-    return { B, set(map, ms = 500) { const from = {}; B.forEach(b => { from[b.key] = b.v; }); return c.tween(ms, p => { B.forEach(b => { if (b.key in map) b.v = from[b.key] + (map[b.key] - from[b.key]) * p; }); if (p === 1) place(); }, { ease: 'inOut' }); } };
+    c.loop((t, dt) => { B.forEach(b => { b.D += K * b.I * dt; }); place(); });
+    return {
+      B,
+      set(map, ms = 500, ease = 'inOut') {
+        const from = {}; B.forEach(b => { from[b.key] = b.I; });
+        return c.tween(ms, p => { B.forEach(b => { if (b.key in map) b.I = from[b.key] + (map[b.key] - from[b.key]) * p; }); if (p === 1) place(); }, { ease });
+      },
+    };
   };
+
+  /* ═════ 전자 + 꺾쇠 한 번에 — CK = E5.series/parallel 의 결과 ═════
+     set({갈래: 전류(A)}, ms) → 전자와 꺾쇠가 같은 트윈으로 함께 바뀜(끊기면 같은 순간에 멎음) */
+  E.sim = function (c, CK, o = {}) {
+    const I = o.I || {};
+    const flow = E.flow(c, `#${CK.id}-e`, CK.branches, { I, seed: o.seed || 5 });
+    const chev = E.chev(c, `#${CK.id}-ch`, CK.lanes, { K: E.K, I, hide: CK.hide.concat(o.hide || []) });
+    return {
+      flow, chev,
+      set(map, ms = 600, ease = 'inOut') { if (chev) chev.set(map, ms, ease); return flow ? flow.set(map, ms, ease) : Promise.resolve(); },
+    };
+  };
+
+  /* ═════ 단추(알약 칩) · 범례 ═════ */
+  E.segHTML = (key, vals, cur, unit = ' Ω') => `<div class="e5-seg" role="group">` +
+    vals.map(v => `<button type="button" data-k="${key}" data-v="${v}" class="${v === cur ? 'on' : ''}" aria-pressed="${v === cur}">${v}${unit}</button>`).join('') + `</div>`;
+  /** R₁ · R₂ 칩 두 줄 + 고정 문구 */
+  E.rCtlHTML = (r1 = 20, r2 = 10) => `<div class="e5-row"><span class="e5-rk">R₁</span>${E.segHTML('r1', [10, 20, 30], r1)}</div>` +
+    `<div class="e5-row"><span class="e5-rk">R₂</span>${E.segHTML('r2', [10, 20, 30], r2)}</div>` +
+    `<div class="e5-fix">전원 장치 6 V — 이 실험에서는 바꾸지 않아요</div>`;
+  /** 칩 선택 표시를 상태에 맞춤 */
+  E.paintSeg = (box, st) => { if (!box) return; box.querySelectorAll('button[data-k]').forEach(b => { const on = st[b.dataset.k] === +b.dataset.v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); }); };
+  /** 칩 누르기 → st[k] = v → onChange(k). enter(c) 에서 부른다(장면이 다시 보일 때마다 처음 상태로) */
+  E.bindSeg = function (c, box, st, onChange) {
+    if (!box) return;
+    box.addEventListener('click', e => {
+      const b = e.target.closest('button[data-k]'); if (!b || !box.contains(b)) return;
+      e.stopPropagation(); b.blur();
+      const k = b.dataset.k, v = +b.dataset.v;
+      if (st[k] === v) return;
+      st[k] = v; E.paintSeg(box, st); c.sfx('tick'); onChange(k, v);
+    });
+  };
+  /** 범례: 노란 꺾쇠 = 전류의 방향 · 파란 점 = 전자 */
+  E.legendHTML = (o = {}) => `<span class="e5-li"><svg viewBox="-16 -14 26 28" width="30" height="32" aria-hidden="true"><path d="M-8 -9L1 0L-8 9" fill="none" stroke="var(--e5chevS)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M-8 -9L1 0L-8 9" fill="none" stroke="var(--e5chev)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/></svg>노란 꺾쇠 = <b class="e5-cur">전류의 방향</b></span>` +
+    `${o.br ? '<br>' : ''}<span class="e5-li"><svg viewBox="-14 -14 28 28" width="30" height="30" aria-hidden="true"><circle r="9" fill="var(--elec)"/><path d="M-4.5 0H4.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>파란 점 = <b class="e5-ele">전자</b> (전류와 반대 방향으로 이동)</span>`;
 
   /* ═════ 트리 전구 줄(표지·도입·답) — 좌표는 트리 가운데 x=960 · 꼭대기 별 y=118 · 바닥 y≈646 ═════
      한 가닥 줄에 전구가 줄지어 달린 옛날식 장식 전구(직렬). 반환: {tree, wire, halo, bulbs, on, pts, bulbPts, lead}
@@ -2269,7 +2721,8 @@ try{
 
   /* ═════ 실험 회로(학습지 B 그림) — 로컬 520 × 300 ═════
      kind: 'one' | 's2'(직렬 둘) | 'p2'(병렬 둘) · cut: 's2' 는 'mid'(전구 사이), 'p2' 는 'b1'(왼쪽 갈래)
-     전원 장치(화면 · 손잡이 · (+)/(−) 단자) → 위 도선 → 전구 → 아래 도선 → (−) 단자 */
+     전원 장치(화면 · 손잡이 · (+)/(−) 단자) → 위 도선 → 전구 → 아래 도선 → (−) 단자
+     색은 면에 따라(--e5psu 등, e5.css): 밝은 면 = 흰 몸체 + 짙은 테두리(학습지 그림처럼), 어두운 면 = 그래파이트 */
   E.lab = function (o) {
     const id = o.id, X = o.x, Y = o.y, s = o.s || 1, kind = o.kind;
     const tf = (x, y) => [X + x * s, Y + y * s];
@@ -2279,17 +2732,19 @@ try{
     // 전원 장치
     const [bx, by] = tf(14, 92);
     front += `<g transform="translate(${f(bx)} ${f(by)}) scale(${s})">` +
-      `<rect x="0" y="0" width="136" height="128" rx="16" fill="url(#lg-graphite)" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>` +
-      `<rect x="16" y="16" width="104" height="34" rx="7" fill="#0b0b0c"/>` +
+      `<rect x="0" y="0" width="136" height="128" rx="16" fill="var(--e5psu)" stroke="var(--e5psuS)" stroke-width="3"/>` +
+      `<rect x="16" y="16" width="104" height="34" rx="7" fill="var(--e5scr)"/>` +
       [0, 1, 2, 3].map(i => `<rect x="${24 + i * 24}" y="22" width="16" height="22" rx="3" fill="#30D158" opacity=".85"/>`).join('') +
-      `<circle cx="40" cy="88" r="16" fill="#d1d1d6"/><line x1="40" y1="88" x2="40" y2="75" stroke="#3a3a3c" stroke-width="4" stroke-linecap="round"/>` +
-      `<circle cx="84" cy="88" r="16" fill="#d1d1d6"/><line x1="84" y1="88" x2="94" y2="79" stroke="#3a3a3c" stroke-width="4" stroke-linecap="round"/></g>`;
+      `<circle cx="40" cy="88" r="16" fill="var(--e5knob)" stroke="var(--e5knobS)" stroke-width="3"/><line x1="40" y1="88" x2="40" y2="75" stroke="var(--e5knobS)" stroke-width="4" stroke-linecap="round"/>` +
+      `<circle cx="84" cy="88" r="16" fill="var(--e5knob)" stroke="var(--e5knobS)" stroke-width="3"/><line x1="84" y1="88" x2="94" y2="79" stroke="var(--e5knobS)" stroke-width="4" stroke-linecap="round"/></g>`;
     const [tpx, tpy] = tf(...TP), [tnx, tny] = tf(...TN);
     front += `<circle cx="${f(tpx)}" cy="${f(tpy)}" r="${f(9 * s)}" fill="var(--heat)"/><circle cx="${f(tnx)}" cy="${f(tny)}" r="${f(9 * s)}" fill="var(--elec)"/>` +
       EL.sign(tpx + 26 * s, tpy - 22 * s, '+', { s: 8 * s, color: 'var(--heat)', w: 3.5 }) + EL.sign(tnx + 26 * s, tny + 24 * s, '-', { s: 8 * s, color: 'var(--elec)', w: 3.5 });
     const bulbs = [];
     const R = 30;
-    const addBulb = (key, x, y, vert) => { const [cx, cy] = tf(x, y), b = E.bulb(cx, cy, { id: `${id}-${key}`, r: R * s, T: 10 * s, vert, glow: 120 * s, rays: true }); back += b.back; front += b.front; bulbs.push(`${id}-${key}`); };
+    // 꺾쇠를 숨길 곳: 단자의 (+)/(−) 글자 · 전구(유리와 햇살 위에 꺾쇠가 겹치지 않게)
+    const hide = [[tpx + 26 * s, tpy - 22 * s, 16 * s], [tnx + 26 * s, tny + 24 * s, 16 * s]];
+    const addBulb = (key, x, y, vert) => { const [cx, cy] = tf(x, y), b = E.bulb(cx, cy, { id: `${id}-${key}`, r: R * s, T: 10 * s, vert, glow: 120 * s, rays: true }); back += b.back; front += b.front; bulbs.push(`${id}-${key}`); hide.push([cx, cy, (R + 10) * s]); };
     const cross = (x, y) => { const [cx, cy] = tf(x, y), q = 14 * s; return `<g id="${id}-x" class="tb" opacity="${o.cutShow ? 1 : 0}"><rect x="${f(cx - 16 * s)}" y="${f(cy - 9 * s)}" width="${f(32 * s)}" height="${f(18 * s)}" fill="var(--e5bg)"/>` +
       `<path d="M${f(cx - q)} ${f(cy - q)}L${f(cx + q)} ${f(cy + q)}M${f(cx + q)} ${f(cy - q)}L${f(cx - q)} ${f(cy + q)}" stroke="var(--e5hot)" stroke-width="${f(6 * s)}" stroke-linecap="round"/></g>`; };
     if (kind === 'one' || kind === 's2') {
@@ -2310,7 +2765,7 @@ try{
       chevs.push({ key: 'b', pts: [[XA, YT], [XB, YT], [XB, YBt], [XA, YBt]].map(p => tf(p[0], p[1])) });
     }
     const wsvg = wires.map(d => `<path d="${d}" fill="none" stroke="var(--e5line)" stroke-width="${f(5 * s)}" stroke-linejoin="round" stroke-linecap="round"/>`).join('');
-    return { id, svg: back + wsvg + `<g id="${id}-ch"></g>` + front, bulbs, chevs };
+    return { id, svg: back + wsvg + `<g id="${id}-ch"></g>` + front, bulbs, chevs, hide };
   };
 })();
 
@@ -2333,6 +2788,14 @@ try{
       c.reveal(`#${S}-tree`, 'fade', { dur: 1400 });
       c.reveal(`#${S}-wire`, 'fade', { dur: 1200, delay: 200 });
       c.camera(`#${S}-svg`, [0, 0, 1920, 1080], { dur: 5600, delay: 300 });
+      // 어두운 판: 카메라가 반쯤 물러날 때까지 화면을 꽉 채우다가, 그 뒤 네 변이 함께 줄어 흰 면 위의 둥근 창(x120 y48 · 1680×624)이 된다
+      const panel = c.$(`#${S}-panel`), V0 = [406, 48, 1108, 623.25], V1 = [0, 0, 1920, 1080], CARD = [120, 48, 1680, 624];
+      c.tween(5600, p => {
+        const v = V0.map((a, i) => a + (V1[i] - a) * p), q = Math.max(0, Math.min(1, (p - .5) / .5)), s = q * q * (3 - 2 * q);
+        const box = [v[0] - 4, v[1] - 4, v[2] + 8, v[3] + 8].map((a, i) => a + (CARD[i] - a) * s);
+        ['x', 'y', 'width', 'height'].forEach((k, i) => panel.setAttribute(k, box[i].toFixed(1)));
+        panel.setAttribute('rx', (40 * s).toFixed(1));
+      }, { ease: 'inOut', delay: 300 });
       // 줄 전체가 하나의 전류로 이어져 있으니 밝기는 모두 같이(따로 깜빡이지 않음)
       c.loop(t => { const k = c.reduced ? 1 : .93 + .07 * Math.sin(t * 2.3); on.setAttribute('opacity', (st.v * k).toFixed(3)); halo.setAttribute('opacity', (st.v * .8 * k).toFixed(3)); });
       await c.wait(1500);
@@ -2380,6 +2843,25 @@ try{
 })();
 
 }catch(e){console.error("[slide 02_hook.html]",e)}
+/* ── 02_hookk_keywords.html ── */
+try{
+
+(function () {
+  const S = 'e5_02_hookk_keywords', TT = [600, 1092, 1584, 2076, 2568, 3060], TEND = 3060;
+  Deck.scene(S, {
+    steps: 0,
+    enter(c) {
+      if (!c.instant) { c.sfx('scan', 600, 2460); TT.forEach(t => c.sfx('tick', t)); c.sfx('chime', TEND + 250); }
+      const ring = c.$(`#${S}-ring`);
+      c.loop(t => {   // 「여기서 출발!」 — 첫 키워드 둘레가 천천히 숨 쉬듯
+        const k = t * 1000 < TEND ? 0 : (Math.sin((t * 1000 - TEND) / 420) + 1) / 2;
+        ring.setAttribute('r', (54 + 4 + 12 * k).toFixed(1)); ring.setAttribute('opacity', (t * 1000 < TEND ? 0 : .55 - .45 * k).toFixed(3));
+      });
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 02_hookk_keywords.html]",e)}
 /* ── 03_two.html ── */
 try{
 
@@ -2448,7 +2930,7 @@ try{
       svg: W('M40 40H320V260H40Z') + R(130, 40, 230, 40) + R(320, 100, 320, 200) + E5.sBat(40, 150, { vert: true, plus: 'up', signSide: 1 }),
       legs: [[[[40, 142], [40, 40], [320, 40], [320, 260], [40, 260], [40, 158]]]] },
     { n: '(나)', a: '병렬', why: '갈림길에서 두 갈래로 나뉜다',
-      svg: W('M40 40H320V260H40Z') + W('M40 150H320') + R(130, 40, 230, 40) + R(130, 150, 230, 150) + E5.node(40, 150, 7) + E5.node(320, 150, 7) + E5.sBat(180, 260, { plus: 'left', signSide: -1 }),
+      svg: W('M40 40H320V260H40Z') + W('M40 150H320') + R(130, 40, 230, 40) + R(130, 150, 230, 150) + E5.node(40, 150, 7) + E5.node(320, 150, 7) + E5.sBat(180, 260, { plus: 'left', signSide: 1 }),
       legs: [[[[172, 260], [40, 260], [40, 150]]], [[[40, 150], [40, 40], [320, 40], [320, 150]], [[40, 150], [320, 150]]], [[[320, 150], [320, 260], [188, 260]]]] },
     { n: '(다)', a: '병렬', why: '세로로 섰어도 갈림길이 있다',
       svg: W('M40 40H320V260H40Z') + W('M180 40V260') + R(180, 100, 180, 200) + R(320, 100, 320, 200) + E5.node(180, 40, 7) + E5.node(180, 260, 7) + E5.sBat(40, 150, { vert: true, plus: 'up', signSide: 1 }),
@@ -2479,36 +2961,174 @@ try{
 })();
 
 }catch(e){console.error("[slide 04_quiz.html]",e)}
+/* ── 04a_strength.html ── */
+try{
+
+(function () {
+  /* 크게 본 도선 속 전자(모형) — 전자는 처음부터 도선 전체에 고르게 있고(전지가 내보내는 것이 아님), 전류와 반대 방향(왼쪽)으로 움직인다.
+     줄마다 간격이 같으므로 단면을 1초 동안 지나간 수 = (1초에 움직인 거리 ÷ 간격) × 줄 수 — 숫자는 실제 자리로 센 값(crossings).
+     처음: 1초에 간격 2칸 → 줄마다 2개 × 3줄 = 6개 · 4단계: 1초에 간격 4칸 → 12개(같은 도선에서 전류가 세지면 더 빨리 움직인다). */
+  const S = 'e5_04a_strength', f = v => Math.round(v * 10) / 10, TAU = Math.PI * 2;
+  const X1 = 240, X2 = 1380, L = X2 - X1, Y = 640, ROWS = 3, RG = 58, R = 12, GX = 920, FADE = 60, A = 6, AP = 5;
+  const N = Math.round(L / 60), GAP = L / N;
+  const CY = 516, CX1 = 252, CX2 = 1368, CGAP = 60;   // 꺾쇠 길(관 위)
+  const mod = (a, n) => ((a % n) + n) % n;
+  const jv = (j, t, k) => .62 * Math.sin(j.w[k] * t + j.a[k]) + .38 * Math.sin(j.w[k + 1] * t + j.a[k + 1]);
+  Deck.scene(S, {
+    steps: 4,
+    build(root) {
+      let h = '';
+      for (let i = 0; i < ROWS * N; i++) h += `<g>${EL.electron(0, 0, { r: R })}</g>`;
+      root.querySelector(`#${S}-e`).innerHTML = h;
+      const nc = Math.round((CX2 - CX1) / CGAP);
+      let ch = '';
+      for (let i = 0; i < nc; i++) ch += `<g><path d="M-10 -10L0 0L-10 10" fill="none" stroke="var(--e5chevS)" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M-10 -10L0 0L-10 10" fill="none" stroke="var(--e5chev)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></g>`;   // E5.chev 와 같은 두 겹 꺾쇠
+      root.querySelector(`#${S}-ch`).innerHTML = ch;
+      root.querySelector(`#${S}-carr`).innerHTML = EL.arrow(1306, 468, 1380, 468, { color: 'var(--light)', w: 5, head: 18 });
+      root.querySelector(`#${S}-earr`).innerHTML = EL.arrow(470, 790, 250, 790, { color: 'var(--elec)', w: 5, head: 18 });
+    },
+    enter(c) {
+      const rnd = U.rng(41), list = [];
+      for (let j = 0; j < ROWS; j++) {
+        const off = rnd() * GAP, yy = Y + (j - (ROWS - 1) / 2) * RG;
+        for (let i = 0; i < N; i++) list.push({ u: i * GAP + off, y: yy, j: { a: [rnd() * TAU, rnd() * TAU, rnd() * TAU, rnd() * TAU], w: [TAU * (1.3 + rnd() * 1.4), TAU * (2.4 + rnd() * 2.2), TAU * (1.1 + rnd() * 1.5), TAU * (2.2 + rnd() * 2.4)] } });
+      }
+      const els = Array.from(c.$(`#${S}-e`).children), chs = Array.from(c.$(`#${S}-ch`).children);
+      const arc = c.$(`#${S}-arc`), num = c.$(`#${S}-n`), gl = c.$(`#${S}-gl`);
+      const cs = c.data.cs = { v: 2 * GAP, V: 2 * GAP, D: 0, Dc: 0, phase: 'count', Da: 0, hold: 0, last: 0, on: false, gate: false };
+      const g0 = GX - X1;
+      // D 가 Da → Db 로 가는 동안 단면(x = GX)을 왼쪽으로 지나간 전자 수
+      cs.cross = (Da, Db) => { let k = 0; list.forEach(e => { k += Math.floor((e.u - Da - g0) / L) - Math.floor((e.u - Db - g0) / L); }); return k; };
+      const place = t => {
+        list.forEach((e, i) => {
+          const u = mod(e.u - cs.D, L);
+          els[i].setAttribute('transform', `translate(${f(X1 + u + A * jv(e.j, t, 0))} ${f(e.y + AP * jv(e.j, t, 2))})`);
+          els[i].setAttribute('opacity', Math.max(0, Math.min(1, u / FADE, (L - u) / FADE)).toFixed(3));
+        });
+        const CL = CX2 - CX1, n = chs.length;
+        chs.forEach((el, i) => {
+          const s = mod(i * CL / n + cs.Dc, CL), edge = Math.min(s, CL - s);
+          el.setAttribute('transform', `translate(${f(CX1 + s)} ${CY})`);
+          el.setAttribute('opacity', Math.min(1, edge / 24).toFixed(3));
+        });
+      };
+      place(0);
+      c.loop((t, dt) => {
+        cs.D += cs.v * dt; cs.Dc += cs.v * dt;   // 꺾쇠(전류의 방향)도 전류에 비례한 빠르기로 오른쪽으로
+        place(t);
+        if (cs.phase === 'count') {
+          const p = Math.min(1, (cs.D - cs.Da) / cs.V);
+          arc.setAttribute('stroke-dashoffset', (1 - p).toFixed(3));
+          const k = cs.cross(cs.Da, Math.min(cs.D, cs.Da + cs.V));
+          if (k > cs.last) {
+            cs.last = k;
+            if (cs.gate) c.a(gl, [{ opacity: .3 }, { opacity: 0 }], { dur: 320, fill: 'none' });
+            if (cs.on) num.textContent = k;
+          }
+          if (p >= 1) { cs.phase = 'hold'; cs.hold = 0; if (cs.on) c.a(num, [{ transform: 'scale(1.18)' }, { transform: 'scale(1)' }], { dur: 420, ease: 'spring', fill: 'none' }); }
+        } else if (!c.still) {   // 검증 정지 화면에서는 다 센 순간에 멈춰 둔다
+          cs.hold += dt;
+          if (cs.hold >= .8) { cs.phase = 'count'; cs.Da = cs.D; cs.last = 0; if (cs.on) num.textContent = 0; }
+        }
+      });
+    },
+    async go(c, k) {
+      const cs = c.data.cs, num = c.$(`#${S}-n`);
+      const restart = () => { cs.phase = 'count'; cs.Da = cs.D; cs.last = 0; };
+      // 검증 정지 화면(?still=1): 방금 끝난 1초를 다 센 상태로 둔다(숫자는 실제 자리로 센 값)
+      const settle = () => { if (!c.still) return; cs.Da = cs.D - cs.V; cs.phase = 'hold'; cs.last = cs.cross(cs.Da, cs.D); c.$(`#${S}-arc`).setAttribute('stroke-dashoffset', '0'); if (cs.on) num.textContent = cs.last; };
+      const kw = i => { const el = c.$(`#${S}-k${i}`); if (el) el.classList.add('on'); };
+      if (k >= 1) kw(1);
+      if (k >= 2) kw(2);
+      if (k >= 3) kw(3);
+      if (k === 1) { c.sfx('tick', 300); restart(); settle(); }
+      if (k === 2) cs.gate = true;
+      if (k === 3) { cs.gate = true; cs.on = true; restart(); num.textContent = 0; settle(); }
+      if (k === 4) {
+        cs.V = 4 * GAP; c.sfx('rise', 0, 900);
+        await c.tween(900, p => { cs.v = 2 * GAP + 2 * GAP * p; }, { ease: 'inOut' });
+        restart(); num.textContent = 0; settle();
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 04a_strength.html]",e)}
 /* ── 05_scur.html ── */
 try{
 
 (function () {
   const S = 'e5_05_scur';
-  const CK = E5.series({ id: `${S}-k`, x: 180, y: 420, w: 860, h: 400, kind: 'res', amm: true, vLabel: '6 V' });
+  // 고리 길이 2(840 + 390) = 2460 = 82 × E5.G → 전자 간격이 어디서나 정확히 같다
+  const CK = E5.series({ id: `${S}-k`, x: 180, y: 430, w: 840, h: 390, kind: 'res', amm: true, vLabel: '6 V', aI: [180, 625], pa1: [285, 430], pa2: [915, 430] });
   const P = CK.pos;
+  // 단면(점선 고리) — 세 전류계 바로 옆
+  const RINGS = [{ x: 180, y: 565, v: true }, { x: 345, y: 430 }, { x: 855, y: 430 }];
   Deck.scene(S, {
     steps: 3,
     build(root) {
       root.querySelector(`#${S}-c`).innerHTML = CK.svg +
         `<text id="${S}-r1l" x="${P.x1}" y="${CK.y + 70}" text-anchor="middle" class="e5-rl">R₁ 20 Ω</text>` +
-        `<text x="${P.x2}" y="${CK.y + 70}" text-anchor="middle" class="e5-rl">R₂ 10 Ω</text>`;
+        `<text id="${S}-r2l" x="${P.x2}" y="${CK.y + 70}" text-anchor="middle" class="e5-rl">R₂ 10 Ω</text>`;
+      root.querySelector(`#${S}-ring`).innerHTML = RINGS.map((r, i) => {
+        const rx = r.v ? 23 : 9, ry = r.v ? 9 : 23;
+        return `<ellipse id="${S}-rf${i}" cx="${r.x}" cy="${r.y}" rx="${rx}" ry="${ry}" fill="var(--act)" opacity="0"/>` +
+          `<ellipse cx="${r.x}" cy="${r.y}" rx="${rx}" ry="${ry}" fill="var(--act)" fill-opacity=".08" stroke="var(--act)" stroke-width="3.5" stroke-dasharray="6 4"/>`;
+      }).join('');
       root.querySelector(`#${S}-pills`).innerHTML =
-        E5.pill(P.aI[0] + 40, P.aI[1], { id: `${S}-pI`, name: 'I', val: '0.00', w: 210 }) +
-        E5.pill(P.a1[0] - 105, P.a1[1] - 64, { id: `${S}-p1`, name: 'I₁', val: '0.00', w: 210 }) +
-        E5.pill(P.a2[0] - 105, P.a2[1] - 64, { id: `${S}-p2`, name: 'I₂', val: '0.00', w: 210 });
+        E5.pill(P.aI[0] + 40, P.aI[1], { id: `${S}-pI`, name: 'I', val: '0.00', w: 200 }) +
+        E5.pill(P.a1[0] - 100, P.a1[1] - 90, { id: `${S}-p1`, name: 'I₁', val: '0.00', w: 200 }) +
+        E5.pill(P.a2[0] - 100, P.a2[1] - 90, { id: `${S}-p2`, name: 'I₂', val: '0.00', w: 200 });
+      root.querySelector(`#${S}-seg`).innerHTML = E5.rCtlHTML(20, 10);
+      root.querySelector(`#${S}-leg`).innerHTML = E5.legendHTML({ br: true });
     },
-    enter(c) { c.data.fl = E5.flow(c, `#${CK.id}-e`, CK.branches, { k: 180, I: { loop: .2 }, seed: 11 }); },
+    enter(c) {
+      const st = c.data.st = { r1: 20, r2: 10 };
+      c.data.showI = false; c.data.ringOn = false;
+      c.data.sim = E5.sim(c, CK, { I: { loop: 6 / (st.r1 + st.r2) }, seed: 11 });
+      // 전자가 단면(점선 고리)을 지날 때마다 고리가 살짝 빛남 — 실제 자리로 센 순간
+      RINGS.forEach((r, i) => c.data.sim.flow.gate('loop', r.x, r.y, () => {
+        if (!c.data.ringOn || c.still || !c.alive) return;
+        const el = c.$(`#${S}-rf${i}`); if (el) el.animate([{ opacity: .38 }, { opacity: 0 }], { duration: 320, easing: 'ease-out' });
+      }));
+      const V = ['pI', 'p1', 'p2'].map(n => c.$(`#${S}-${n}-v`));
+      c.data.shown = 0;
+      /* 상태 → 화면(단추와 단계가 같은 길을 쓴다) */
+      c.data.apply = (ms = 600) => {
+        const R = st.r1 + st.r2, I = 6 / R;
+        c.data.sim.set({ loop: I }, ms);
+        c.$(`#${S}-r1l`).textContent = `R₁ ${st.r1} Ω`; c.$(`#${S}-r2l`).textContent = `R₂ ${st.r2} Ω`;
+        c.$(`#${S}-ra`).textContent = `${st.r1} + ${st.r2}`; c.$(`#${S}-rt`).textContent = R; c.$(`#${S}-rt2`).textContent = R; c.$(`#${S}-ri`).textContent = E5.f2s(I);
+        E5.paintSeg(c.$(`#${S}-seg`), st);
+        if (c.data.showI) { const a = c.data.shown; c.data.shown = I; return c.tween(ms, p => V.forEach(e => { e.textContent = E5.f2s(a + (I - a) * p); }), { ease: 'outQuint' }); }
+        return Promise.resolve();
+      };
+      E5.bindSeg(c, c.$(`#${S}-seg`), st, k => {
+        const lab = c.$(`#${S}-${k}l`); if (lab) c.a(lab, [{ opacity: .2 }, { opacity: 1 }], { dur: 420, fill: 'none' });
+        c.data.apply(600);
+      });
+    },
     async go(c, k) {
-      const V = ['pI', 'p1', 'p2'].map(n => c.$(`#${S}-${n}-v`)), fmt = v => v.toFixed(2);
+      const st = c.data.st;
       if (k === 1) { await c.wait(300); await E5.tracer(c, `#${CK.id}-trace`, CK.legs, { dur: 2600, w: 8 }); }
-      if (k === 2) { await c.wait(300); c.sfx('counter', 0, 1100); await c.tween(1100, p => V.forEach(e => { e.textContent = fmt(.2 * p); }), { ease: 'outQuint' }); }
-      if (k === 3) {   // R₁ 20 Ω → 10 Ω : 전체 저항 30 → 20 Ω, 전류 6 ÷ 20 = 0.30 A — 세 곳이 함께
-        const lab = c.$(`#${S}-r1l`);
+      if (k === 2) {
+        c.data.ringOn = true;
+        c.a(`#${CK.id}-trace`, [{ opacity: 1 }, { opacity: 0 }], { dur: 700 });   // 길 자취는 걷고 전자·꺾쇠·단면에 눈이 가게
+        await c.wait(300);
+        c.data.showI = true; c.sfx('counter', 0, 1100);
+        await c.data.apply(1100);
+      }
+      if (k === 3) {   // R₁ → 10 Ω (단추를 누른 것과 같은 길, R₂ 는 기본 10 Ω 으로) : 전체 저항 20 Ω · 전류 0.30 A — 단추를 먼저 눌렀어도 대본과 같은 끝 상태
+        const lab = c.$(`#${S}-r1l`), lab2 = c.$(`#${S}-r2l`), r2moved = st.r2 !== 10;
         c.sfx('pop');
-        await c.tween(500, p => { lab.setAttribute('opacity', (Math.abs(1 - 2 * p)).toFixed(3)); if (p >= .5) lab.textContent = 'R₁ 10 Ω'; }, { ease: 'linear' });
+        await c.tween(500, p => {
+          const o = (Math.abs(1 - 2 * p)).toFixed(3); lab.setAttribute('opacity', o); if (r2moved) lab2.setAttribute('opacity', o);
+          if (p >= .5) { st.r1 = 10; st.r2 = 10; E5.paintSeg(c.$(`#${S}-seg`), st); lab.textContent = 'R₁ 10 Ω'; lab2.textContent = 'R₂ 10 Ω'; }
+        }, { ease: 'linear' });
+        st.r1 = 10; st.r2 = 10;
         c.a(`#${CK.id}-r1-z`, [{ strokeWidth: 5 }, { strokeWidth: 9 }, { strokeWidth: 5 }], { dur: 600 });
-        c.data.fl.set({ loop: .3 }, 900);
-        c.sfx('counter', 0, 900); await c.tween(900, p => V.forEach(e => { e.textContent = fmt(.2 + .1 * p); }), { ease: 'outQuint' });
+        c.sfx('counter', 0, 900);
+        await c.data.apply(900);
       }
     },
   });
@@ -2520,52 +3140,85 @@ try{
 
 (function () {
   const S = 'e5_06_svolt';
-  const CK = E5.series({ id: `${S}-k`, x: 180, y: 470, w: 860, h: 370, kind: 'res', vm: true, vmH: 112, vLabel: '전원 6 V' });
-  const P = CK.pos, BX = 1170, BY = 600, UPV = 100;   // 막대: 1 V = 100 px
+  // 고리 길이 2(840 + 330) = 2340 = 78 × E5.G
+  const CK = E5.series({ id: `${S}-k`, x: 180, y: 480, w: 840, h: 330, kind: 'res', vm: true, vmH: 112, vLabel: '전원 6 V' });
+  const P = CK.pos, BX = 400, BY = 884, BH = 58, UPV = 100;   // 전압 막대: 1 V = 100 px (6 V = 600 px)
   Deck.scene(S, {
     steps: 3,
     build(root) {
       root.querySelector(`#${S}-c`).innerHTML = CK.svg +
         `<text id="${S}-r1l" x="${P.x1}" y="${CK.y + 70}" text-anchor="middle" class="e5-rl">R₁ 20 Ω</text>` +
-        `<text x="${P.x2}" y="${CK.y + 70}" text-anchor="middle" class="e5-rl">R₂ 10 Ω</text>`;
+        `<text id="${S}-r2l" x="${P.x2}" y="${CK.y + 70}" text-anchor="middle" class="e5-rl">R₂ 10 Ω</text>`;
       const my = CK.y - 112;
       root.querySelector(`#${S}-pills`).innerHTML =
         E5.pill(P.x1 - 100, my - 64, { id: `${S}-p1`, name: 'V₁', val: '0.0', unit: 'V', cls: 'volt', w: 200 }) +
         E5.pill(P.x2 - 100, my - 64, { id: `${S}-p2`, name: 'V₂', val: '0.0', unit: 'V', cls: 'volt', w: 200 });
-      // 전압 막대: 처음엔 전원 6 V 한 덩어리 → 1단계에 V₁ 4 V · V₂ 2 V 로 나뉜다
+      // 전압 막대: 처음엔 전원 6 V 한 덩어리 → 1단계에 V₁ · V₂ 로 나뉜다
       root.querySelector(`#${S}-bar`).innerHTML =
-        `<text x="${BX}" y="${BY - 24}" class="e5-lbl" id="${S}-bt">전원 전압 6 V</text>` +
-        `<rect id="${S}-b1" x="${BX}" y="${BY}" width="${4 * UPV + 14}" height="60" rx="12" fill="var(--kin)"/>` +
-        `<rect id="${S}-b2" x="${BX + 4 * UPV}" y="${BY}" width="${2 * UPV}" height="60" rx="12" fill="var(--kin)"/>` +
-        `<text id="${S}-l1" x="${BX + 2 * UPV}" y="${BY + 100}" text-anchor="middle" class="e5-volt-t" opacity="0">V₁ 4 V</text>` +
-        `<text id="${S}-l2" x="${BX + 5 * UPV}" y="${BY + 100}" text-anchor="middle" class="e5-volt-t" opacity="0">V₂ 2 V</text>`;
+        `<text x="${BX - 24}" y="${BY + 40}" text-anchor="end" class="e5-lbl" id="${S}-bt">전원 전압 6 V</text>` +
+        `<rect id="${S}-b1" x="${BX}" y="${BY}" width="${4 * UPV + 14}" height="${BH}" rx="12" fill="var(--kin)"/>` +
+        `<rect id="${S}-b2" x="${BX + 4 * UPV}" y="${BY}" width="${2 * UPV}" height="${BH}" rx="12" fill="var(--kin)"/>` +
+        `<text id="${S}-l1" x="${BX + 2 * UPV}" y="${BY + 40}" text-anchor="middle" style="font-size:28px;font-weight:700;fill:#fff" opacity="0">V₁ 4.0 V</text>` +
+        `<text id="${S}-l2" x="${BX + 5 * UPV}" y="${BY + 40}" text-anchor="middle" style="font-size:28px;font-weight:700;fill:var(--kin)" opacity="0">V₂ 2.0 V</text>`;
+      root.querySelector(`#${S}-seg`).innerHTML = E5.rCtlHTML(20, 10);
+      root.querySelector(`#${S}-leg`).innerHTML = E5.legendHTML({ br: true });
     },
-    enter(c) { c.data.fl = E5.flow(c, `#${CK.id}-e`, CK.branches, { k: 180, I: { loop: .2 }, seed: 12 }); },
-    async go(c, k) {
+    enter(c) {
+      const st = c.data.st = { r1: 20, r2: 10 };
+      c.data.sim = E5.sim(c, CK, { I: { loop: .2 }, seed: 12 });
+      c.data.split = false;
       const v1 = c.$(`#${S}-p1-v`), v2 = c.$(`#${S}-p2-v`), b1 = c.$(`#${S}-b1`), b2 = c.$(`#${S}-b2`), l1 = c.$(`#${S}-l1`), l2 = c.$(`#${S}-l2`);
-      const lay = (a, gapPx) => {   // a = V₁(V) · 나머지 6 − a 가 V₂
+      c.data.cur = { a: 4 };   // 막대가 지금 나타내는 V₁
+      c.data.lay = (a, gapPx) => {   // a = V₁(V) · 나머지 6 − a 가 V₂
         b1.setAttribute('width', (a * UPV - gapPx / 2).toFixed(1));
         b2.setAttribute('x', (BX + a * UPV + gapPx / 2).toFixed(1)); b2.setAttribute('width', ((6 - a) * UPV - gapPx / 2).toFixed(1));
         l1.setAttribute('x', (BX + a * UPV / 2).toFixed(1)); l2.setAttribute('x', (BX + a * UPV + (6 - a) * UPV / 2).toFixed(1));
+        l1.textContent = `V₁ ${E5.f1s(a)} V`; l2.textContent = `V₂ ${E5.f1s(6 - a)} V`;
+        v1.textContent = E5.f1s(a); v2.textContent = E5.f1s(6 - a);
       };
-      if (k === 1) {
+      /* 상태 → 화면(단추와 단계가 같은 길) */
+      c.data.apply = (ms = 600) => {
+        const R = st.r1 + st.r2, I = 6 / R, V1 = I * st.r1, V2 = I * st.r2;
+        c.data.sim.set({ loop: I }, ms);
+        c.$(`#${S}-r1l`).textContent = `R₁ ${st.r1} Ω`; c.$(`#${S}-r2l`).textContent = `R₂ ${st.r2} Ω`;
+        c.$(`#${S}-rt`).textContent = R; c.$(`#${S}-ri`).textContent = E5.f2s(I);
+        c.$(`#${S}-c1`).textContent = `${E5.f2s(I)} × ${st.r1}`; c.$(`#${S}-c2`).textContent = `${E5.f2s(I)} × ${st.r2}`;
+        c.$(`#${S}-o1`).textContent = E5.f1s(V1); c.$(`#${S}-o2`).textContent = E5.f1s(V2); c.$(`#${S}-os`).textContent = E5.f1s(V1 + V2);
+        // 말풍선의 숫자도 지금 상태로(단추를 눌러도 막대·알약·계산과 어긋나지 않게)
+        const fv = v => E5.f1s(v).replace(/\.0$/, ''), sum = `${fv(V1)} V + ${fv(V2)} V`;
+        c.$(`#${S}-k2`).textContent = sum; c.$(`#${S}-k3`).textContent = sum;
+        c.$(`#${S}-k3h`).textContent = st.r1 === st.r2 ? '같은 저항이면 반씩' : `${st.r1 > st.r2 ? 'R₁' : 'R₂'} 쪽에 더 크게`;
+        E5.paintSeg(c.$(`#${S}-seg`), st);
+        if (!c.data.split) { c.data.cur.a = V1; return Promise.resolve(); }
+        const a0 = c.data.cur.a; c.data.cur.a = V1;
+        return c.tween(ms, p => c.data.lay(a0 + (V1 - a0) * p, 22), { ease: 'inOut' });
+      };
+      E5.bindSeg(c, c.$(`#${S}-seg`), st, k => {
+        const lab = c.$(`#${S}-${k}l`); if (lab) c.a(lab, [{ opacity: .2 }, { opacity: 1 }], { dur: 420, fill: 'none' });
+        c.data.apply(600);
+      });
+    },
+    async go(c, k) {
+      const st = c.data.st, b2 = c.$(`#${S}-b2`), l1 = c.$(`#${S}-l1`), l2 = c.$(`#${S}-l2`);
+      if (k === 1) {   // 전원 6 V 막대가 V₁ · V₂ 로 나뉜다(지금 상태의 값으로)
         await c.wait(400);
+        const a = c.data.cur.a;
         c.sfx('whoosh', 0, 700, .6);
-        await c.tween(800, p => { lay(4, 22 * p); const q = Math.min(1, p); l1.setAttribute('opacity', q.toFixed(3)); l2.setAttribute('opacity', q.toFixed(3)); b2.setAttribute('opacity', (1 - .45 * q).toFixed(3)); }, { ease: 'spring' });
-        c.sfx('counter', 0, 1000);
-        await c.tween(1000, p => { v1.textContent = (4 * p).toFixed(1); v2.textContent = (2 * p).toFixed(1); }, { ease: 'outQuint' });
+        await c.tween(800, p => {
+          c.data.lay(a, 22 * p);
+          l1.setAttribute('opacity', p.toFixed(3)); l2.setAttribute('opacity', p.toFixed(3)); b2.setAttribute('opacity', (1 - .7 * p).toFixed(3));
+          c.$(`#${S}-p1-v`).textContent = E5.f1s(a * p); c.$(`#${S}-p2-v`).textContent = E5.f1s((6 - a) * p);
+        }, { ease: 'spring' });
+        c.data.split = true;
+        c.sfx('counter', 0, 600);
       }
-      if (k === 3) {   // R₁ 20 → 10 Ω : 전류 0.3 A · V₁ = V₂ = 3 V
+      if (k === 3) {   // R₁ → 10 Ω, R₂ = 10 Ω (단추를 누른 것과 같은 길) : 전류 0.30 A · V₁ = V₂ = 3 V
         const lab = c.$(`#${S}-r1l`);
         c.sfx('pop');
-        await c.tween(500, p => { lab.setAttribute('opacity', Math.abs(1 - 2 * p).toFixed(3)); if (p >= .5) lab.textContent = 'R₁ 10 Ω'; }, { ease: 'linear' });
-        c.data.fl.set({ loop: .3 }, 900);
+        await c.tween(500, p => { lab.setAttribute('opacity', Math.abs(1 - 2 * p).toFixed(3)); if (p >= .5) { st.r1 = 10; st.r2 = 10; E5.paintSeg(c.$(`#${S}-seg`), st); lab.textContent = 'R₁ 10 Ω'; } }, { ease: 'linear' });
+        st.r1 = 10; st.r2 = 10;
         c.sfx('counter', 0, 900);
-        await c.tween(900, p => {
-          const a = 4 - p; lay(a, 22);
-          l1.textContent = `V₁ ${Math.round(a * 10) / 10} V`; l2.textContent = `V₂ ${Math.round((6 - a) * 10) / 10} V`;
-          v1.textContent = a.toFixed(1); v2.textContent = (6 - a).toFixed(1);
-        }, { ease: 'inOut' });
+        await c.data.apply(900);
       }
     },
   });
@@ -2577,27 +3230,52 @@ try{
 
 (function () {
   const S = 'e5_07_scut';
-  const CK = E5.series({ id: `${S}-k`, x: 200, y: 440, w: 840, h: 380, kind: 'bulb', bulbR: 40 });
-  const P = CK.pos;
+  // 고리 길이 2(840 + 390) = 2460 = 82 × E5.G
+  const CK = E5.series({ id: `${S}-k`, x: 180, y: 440, w: 840, h: 390, kind: 'bulb', bulbR: 40, glow: 125 });
+  const P = CK.pos, I_ON = .2;
+  const MSG_ON = '지금은 길이 하나로 이어져 두 전구가 함께 켜져 있어요.';
+  const MSG_CUT = '건드리지 않은 ㉮까지 <b>꺼졌어요</b>. 회로 <b>모든 곳</b>의 전자와 꺾쇠가 <b>같은 순간</b>에 멈췄어요 — 전자는 사라지지 않고 제자리에서 흔들리기만 해요.';
   Deck.scene(S, {
     steps: 2,
     build(root) {
       root.querySelector(`#${S}-c`).innerHTML = CK.svg +
-        `<text x="${P.x1}" y="${CK.y + 92}" text-anchor="middle" class="e5-lbl">전구 ㉮</text>` +
-        `<text x="${P.x2}" y="${CK.y + 92}" text-anchor="middle" class="e5-lbl">전구 ㉯</text>`;
+        `<text x="${P.x1}" y="${CK.y + 92}" text-anchor="middle" class="e5-lbl halo">전구 ㉮</text>` +
+        `<text x="${P.x2}" y="${CK.y + 92}" text-anchor="middle" class="e5-lbl halo">전구 ㉯</text>`;
+      root.querySelector(`#${S}-leg`).innerHTML = E5.legendHTML({ br: true });
     },
     enter(c) {
-      c.data.fl = E5.flow(c, `#${CK.id}-e`, CK.branches, { k: 180, I: { loop: .2 }, seed: 13 });
+      const st = c.data.st = { cut: false };
+      c.data.sim = E5.sim(c, CK, { I: { loop: I_ON }, seed: 13 });
       E5.light(c, `${CK.id}-b1`, .6, 10, true); E5.light(c, `${CK.id}-b2`, .6, 10, true);
+      /* 상태 → 화면(단추와 단계가 같은 길) */
+      c.data.setCut = async (on) => {
+        if (st.cut === on) return;
+        st.cut = on;
+        const tg = c.$(`#${S}-tg`), msg = c.$(`#${S}-msg`);
+        tg.textContent = on ? '↩ 전구 ㉯ 다시 끼우기' : '✂ 전구 ㉯ 빼기'; tg.classList.toggle('on', on);
+        msg.innerHTML = on ? MSG_CUT : MSG_ON; msg.classList.toggle('hit', on);
+        const tok = c.data.tok = (c.data.tok || 0) + 1;   // 빠르게 두 번 누르면 나중 것만 끝까지
+        if (on) {
+          const lp = E5.lift(c, `${CK.id}-b2`);              // 빼는 순간(소켓에서 떨어지는 순간) 바로 끊김 — 들어 올리는 동안 켜진 채로 두지 않음
+          await c.wait(60);
+          if (tok !== c.data.tok) return;
+          c.sfx('sweepDown', 0, 700);
+          c.data.sim.set({ loop: 0 }, 220);                 // 모든 곳이 같은 순간에 멈춤
+          E5.light(c, `${CK.id}-b1`, 0, 220); E5.light(c, `${CK.id}-b2`, 0, 220);
+          await lp;
+        } else {
+          await E5.drop(c, `${CK.id}-b2`);
+          if (tok !== c.data.tok) return;
+          c.sfx('ledOn', 60);
+          c.data.sim.set({ loop: I_ON }, 220);              // 다시 이어지면 모든 곳이 함께 흐름
+          E5.light(c, `${CK.id}-b1`, .6, 220, true); await E5.light(c, `${CK.id}-b2`, .6, 220, true);
+        }
+      };
+      const tg = c.$(`#${S}-tg`);
+      tg.addEventListener('click', e => { e.stopPropagation(); tg.blur(); if (!st.cut) c.sfx('snip'); c.data.setCut(!st.cut); });
     },
     async go(c, k) {
-      if (k === 1) {
-        await c.wait(300);
-        await E5.lift(c, `${CK.id}-b2`);
-        c.sfx('sweepDown', 0, 700);
-        c.data.fl.set({ loop: 0 }, 220);                 // 모든 곳이 같은 순간에 멈춤
-        E5.light(c, `${CK.id}-b1`, 0, 220); await E5.light(c, `${CK.id}-b2`, 0, 220);
-      }
+      if (k === 1) { await c.wait(300); await c.data.setCut(true); }
     },
   });
 })();
@@ -2621,14 +3299,14 @@ try{
       // 공사 구역(막힌 차선) · 고깔
       s += `<path d="M${TA} 412L${TB} 492H${TC}L${TD} 412Z" fill="#FF9F0A" fill-opacity=".16"/><path d="M${TA} 652L${TB} 572H${TC}L${TD} 652Z" fill="#FF9F0A" fill-opacity=".16"/>`;
       for (let x = TB + 10; x <= TC - 10; x += 54) s += `<path d="M${x - 9} 486l9 -24l9 24z" fill="#FF9F0A"/><path d="M${x - 9} 600l9 -24l9 24z" fill="#FF9F0A"/>`;
-      s += `<text x="960" y="396" text-anchor="middle" style="font-size:30px;font-weight:700;fill:#FF9F0A">공사 중 — 1차선</text>`;
+      s += `<text x="960" y="396" text-anchor="middle" style="font-size:30px;font-weight:700;fill:#B45309">공사 중 — 1차선</text>`;
       root.querySelector(`#${S}-road`).innerHTML = s;
       root.querySelector(`#${S}-gates`).innerHTML = GX.map((x, i) => `<line id="${S}-g${i}" x1="${x}" y1="${i === 1 ? 484 : 404}" x2="${x}" y2="${i === 1 ? 580 : 660}" stroke="#FFD60A" stroke-width="5" stroke-dasharray="10 8" opacity=".5"/>`).join('');
       let cars = '';
       for (let i = 0; i < NP; i++) cars += `<g><rect x="-32" y="-17" width="64" height="34" rx="9"/><rect x="8" y="-12" width="13" height="24" rx="3" fill="#1c1c1e" opacity=".75"/></g>`;
       root.querySelector(`#${S}-cars`).innerHTML = cars;
       const NM = ['A · 3차선', 'B · 공사 구간', 'C · 3차선'];
-      root.querySelector(`#${S}-labs`).innerHTML = GX.map((x, i) => `<g transform="translate(${x} 280)"><rect x="-130" y="-46" width="260" height="92" rx="16" fill="rgba(255,255,255,.07)"/>` +
+      root.querySelector(`#${S}-labs`).innerHTML = GX.map((x, i) => `<g transform="translate(${x} 280)"><rect x="-130" y="-46" width="260" height="92" rx="16" fill="var(--e5card)"/>` +
         `<text y="-8" text-anchor="middle" class="e5-lbl">${NM[i]}</text><text y="32" text-anchor="middle" style="font-size:32px;font-weight:700;fill:var(--light)"><tspan id="${S}-n${i}">–</tspan></text></g>`).join('');
     },
     enter(c) {
@@ -2723,34 +3401,47 @@ try{
 
 (function () {
   const S = 'e5_10_ppath';
-  const CK = E5.parallel({ id: `${S}-k`, x: 180, y: 410, w: 860, h: 440, yb: 620, kind: 'res', vm: true, vmH: 100, vmH2: 100, vLabel: '전원 6 V' });
-  const P = CK.pos, X0 = CK.x, X1 = CK.x + CK.w, Y0 = CK.y, YB = CK.yb, YBt = CK.y + CK.h;
-  const BX = 1170, BY = 640, UPV = 80;
+  // 큰 사각형 170..1010 × 400..880 · 작은 사각형 320..860 × 400..640 → 줄기 2100 · 갈래 1 540 · 갈래 2 1020 = 70 · 18 · 34 × E5.G
+  const CK = E5.parallel({ id: `${S}-k`, x0: 170, x1: 1010, y0: 400, yb: 880, xj1: 320, xj2: 860, y2: 640, kind: 'res', vm: true, vmH: 96, vmH2: 96, vLabel: '전원 6 V' });
+  const P = CK.pos;
   Deck.scene(S, {
     steps: 3,
     build(root) {
       root.querySelector(`#${S}-c`).innerHTML = CK.svg +
-        `<text x="${P.xr - 140}" y="${Y0 + 66}" text-anchor="middle" class="e5-rl">R₁ 20 Ω</text>` +
-        `<text x="${P.xr - 140}" y="${YB - 34}" text-anchor="middle" class="e5-rl">R₂ 10 Ω</text>`;
+        `<text id="${S}-r1l" x="${P.xr}" y="${P.Y0 + 68}" text-anchor="middle" class="e5-rl">R₁ 20 Ω</text>` +
+        `<text id="${S}-r2l" x="${P.xr}" y="${P.Y2 - 58}" text-anchor="middle" class="e5-rl">R₂ 10 Ω</text>`;
       root.querySelector(`#${S}-pills`).innerHTML =
-        E5.pill(P.xr + 40, Y0 - 100, { id: `${S}-p1`, name: 'V₁', val: '6.0', unit: 'V', cls: 'volt', w: 200 }) +
-        E5.pill(P.xr + 40, YB + 100, { id: `${S}-p2`, name: 'V₂', val: '6.0', unit: 'V', cls: 'volt', w: 200 });
-      root.querySelector(`#${S}-bar`).innerHTML =
-        `<text x="${BX}" y="${BY - 20}" class="e5-lbl">갈래마다 걸리는 전압</text>` +
-        `<rect x="${BX}" y="${BY}" width="${6 * UPV}" height="44" rx="10" fill="var(--kin)"/><text x="${BX + 6 * UPV + 16}" y="${BY + 33}" class="e5-volt-t">V₁ 6 V</text>` +
-        `<rect x="${BX}" y="${BY + 60}" width="${6 * UPV}" height="44" rx="10" fill="var(--kin)" opacity=".55"/><text x="${BX + 6 * UPV + 16}" y="${BY + 93}" class="e5-volt-t">V₂ 6 V</text>`;
-      // 같은 자리(도선으로 이어진 곳) — (+)극 쪽 · (−)극 쪽
-      const T = CK.T + 12, xb = P.xb;
-      const plus = [E5.dOf([[xb - 14, YBt], [X0, YBt], [X0, Y0], [P.xr - 66, Y0]]), E5.dOf([[X0, YB], [P.xr - 66, YB]])];
-      const minus = [E5.dOf([[P.xr + 66, Y0], [X1, Y0], [X1, YBt], [xb + 14, YBt]]), E5.dOf([[P.xr + 66, YB], [X1, YB]])];
+        E5.pill(P.xr + 64, P.Y0 - 96, { id: `${S}-p1`, name: 'V₁', val: '6.0', unit: 'V', cls: 'volt', w: 200 }) +
+        E5.pill(P.xr + 64, P.Y2 + 96, { id: `${S}-p2`, name: 'V₂', val: '6.0', unit: 'V', cls: 'volt', w: 200 });
+      // 같은 자리(저항을 거치지 않고 도선으로 이어진 곳) — (+)극 쪽 · (−)극 쪽
+      const T = CK.T + 12, xb = P.xb, x1 = P.xr - 66, x2 = P.xr + 66;
+      const plus = [E5.dOf([[xb - 14, P.YB], [P.X0, P.YB], [P.X0, P.Y0], [x1, P.Y0]]), E5.dOf([[P.J1, P.Y0], [P.J1, P.Y2], [x1, P.Y2]])];
+      const minus = [E5.dOf([[x2, P.Y0], [P.X1, P.Y0], [P.X1, P.YB], [xb + 14, P.YB]]), E5.dOf([[P.J2, P.Y0], [P.J2, P.Y2], [x2, P.Y2]])];
       root.querySelector(`#${CK.id}-hl`).innerHTML =
-        `<g id="${S}-hp" opacity="0">${plus.map(d => `<path d="${d}" fill="none" stroke="var(--heat)" stroke-width="${T}" stroke-linejoin="round" stroke-linecap="round" opacity=".42"/>`).join('')}</g>` +
-        `<g id="${S}-hm" opacity="0">${minus.map(d => `<path d="${d}" fill="none" stroke="var(--elec)" stroke-width="${T}" stroke-linejoin="round" stroke-linecap="round" opacity=".42"/>`).join('')}</g>`;
+        `<g id="${S}-hp" opacity="0">${plus.map(d => `<path d="${d}" fill="none" stroke="var(--heat)" stroke-width="${T}" stroke-linejoin="round" stroke-linecap="round" opacity=".3"/>`).join('')}</g>` +
+        `<g id="${S}-hm" opacity="0">${minus.map(d => `<path d="${d}" fill="none" stroke="var(--elec)" stroke-width="${T}" stroke-linejoin="round" stroke-linecap="round" opacity=".3"/>`).join('')}</g>`;
+      root.querySelector(`#${S}-seg`).innerHTML = E5.rCtlHTML(20, 10);
+      root.querySelector(`#${S}-leg`).innerHTML = E5.legendHTML();
     },
-    enter(c) { c.data.fl = E5.flow(c, `#${CK.id}-e`, CK.branches, { k: 180, I: { main: .9, top: .3, low: .6 }, seed: 21 }); },
+    enter(c) {
+      const st = c.data.st = { r1: 20, r2: 10 };
+      const cur = () => ({ top: 6 / st.r1, low: 6 / st.r2, main: 6 / st.r1 + 6 / st.r2 });
+      c.data.sim = E5.sim(c, CK, { I: cur(), seed: 21 });
+      /* 상태 → 화면: 전류는 갈래마다 6 ÷ R(전자·꺾쇠 빠르기), 전압계는 언제나 6.0 V */
+      c.data.apply = (ms = 600) => {
+        c.data.sim.set(cur(), ms);
+        c.$(`#${S}-r1l`).textContent = `R₁ ${st.r1} Ω`; c.$(`#${S}-r2l`).textContent = `R₂ ${st.r2} Ω`;
+        E5.paintSeg(c.$(`#${S}-seg`), st);
+        ['p1', 'p2'].forEach(n => { const v = c.$(`#${S}-${n}-v`); v.textContent = '6.0'; c.a(v, [{ opacity: .35 }, { opacity: 1 }], { dur: 500, fill: 'none' }); });
+      };
+      E5.bindSeg(c, c.$(`#${S}-seg`), st, k => {
+        const lab = c.$(`#${S}-${k}l`); if (lab) c.a(lab, [{ opacity: .2 }, { opacity: 1 }], { dur: 420, fill: 'none' });
+        c.data.apply(600);
+      });
+    },
     async go(c, k) {
-      if (k === 1) { await c.wait(300); await E5.tracer(c, `#${CK.id}-trace`, CK.legs, { dur: 2600, w: 8 }); }
-      if (k === 2) { c.sfx('ding', 600); }
+      if (k === 1) { await c.wait(300); await E5.tracer(c, `#${CK.id}-trace`, CK.legs, { dur: 2800, w: 8 }); }
+      if (k === 2) { c.a(`#${CK.id}-trace`, [{ opacity: 1 }, { opacity: 0 }], { dur: 700 }); c.sfx('ding', 600); }
       if (k === 3) {
         c.sfx('scan', 0, 900);
         c.a(`#${S}-hp`, [{ opacity: 0 }, { opacity: 1 }], { dur: 700 });
@@ -2766,68 +3457,202 @@ try{
 
 (function () {
   const S = 'e5_11_pcur';
-  const CK = E5.parallel({ id: `${S}-k`, x: 180, y: 410, w: 860, h: 440, yb: 620, kind: 'res', amm: true, vLabel: '전원 6 V' });
-  const P = CK.pos, Y0 = CK.y, YB = CK.yb;
+  // 10_ppath 와 같은 회로(줄기 2100 · 갈래 540 · 1020 = E5.G 의 정수배) + 전류계 셋
+  const CK = E5.parallel({ id: `${S}-k`, x0: 170, x1: 1010, y0: 400, yb: 880, xj1: 320, xj2: 860, y2: 640, kind: 'res', amm: true, vLabel: '전원 6 V', aI: [170, 800] });
+  const P = CK.pos;
   Deck.scene(S, {
     steps: 3,
     build(root) {
       root.querySelector(`#${S}-c`).innerHTML = CK.svg +
-        `<text x="${P.xr + 150}" y="${Y0 + 66}" text-anchor="middle" class="e5-rl">R₁ 20 Ω</text>` +
-        `<text x="${P.xr + 150}" y="${YB - 34}" text-anchor="middle" class="e5-rl">R₂ 10 Ω</text>`;
+        `<text id="${S}-r1l" x="${P.xr}" y="${P.Y0 + 68}" text-anchor="middle" class="e5-rl">R₁ 20 Ω</text>` +
+        `<text id="${S}-r2l" x="${P.xr}" y="${P.Y2 - 58}" text-anchor="middle" class="e5-rl">R₂ 10 Ω</text>`;
       root.querySelector(`#${S}-pa`).innerHTML =
-        E5.pill(P.a1[0] - 105, P.a1[1] - 64, { id: `${S}-p1`, name: 'I₁', val: '0.00', w: 210 }) +
-        E5.pill(P.a2[0] - 105, P.a2[1] - 64, { id: `${S}-p2`, name: 'I₂', val: '0.00', w: 210 });
-      root.querySelector(`#${S}-pb`).innerHTML = E5.pill(P.aI[0] + 40, P.aI[1], { id: `${S}-pI`, name: 'I', val: '0.00', w: 210 });
+        E5.pill(P.a1[0] - 100, P.a1[1] - 84, { id: `${S}-p1`, name: 'I₁', val: '0.00', w: 200 }) +
+        E5.pill(P.a2[0] - 100, P.a2[1] + 66, { id: `${S}-p2`, name: 'I₂', val: '0.00', w: 200 });
+      root.querySelector(`#${S}-pb`).innerHTML = E5.pill(P.aI[0] + 40, P.aI[1] + 4, { id: `${S}-pI`, name: 'I', val: '0.00', w: 200 });
+      root.querySelector(`#${S}-seg`).innerHTML = E5.rCtlHTML(20, 10).replace(/<div class="e5-fix">.*?<\/div>/, '');
+      root.querySelector(`#${S}-leg`).innerHTML = E5.legendHTML();
     },
-    enter(c) { c.data.fl = E5.flow(c, `#${CK.id}-e`, CK.branches, { k: 180, I: { main: .9, top: .3, low: .6 }, seed: 22 }); },
+    enter(c) {
+      const st = c.data.st = { r1: 20, r2: 10 };
+      const cur = () => { const a = 6 / st.r1, b = 6 / st.r2; return { top: a, low: b, main: a + b }; };
+      c.data.sim = E5.sim(c, CK, { I: cur(), seed: 22 });
+      c.data.show = { ab: false, m: false };
+      c.data.shown = { p1: 0, p2: 0, pI: 0 };
+      const roll = (n, to, ms) => { const el = c.$(`#${S}-${n}-v`), a = c.data.shown[n]; c.data.shown[n] = to; return c.tween(ms, p => { el.textContent = E5.f2s(a + (to - a) * p); }, { ease: 'outQuint' }); };
+      /* 상태 → 화면(단추와 단계가 같은 길) */
+      c.data.apply = (ms = 600) => {
+        const I = cur();
+        c.data.sim.set(I, ms);
+        c.$(`#${S}-r1l`).textContent = `R₁ ${st.r1} Ω`; c.$(`#${S}-r2l`).textContent = `R₂ ${st.r2} Ω`;
+        c.$(`#${S}-q1`).textContent = st.r1; c.$(`#${S}-q2`).textContent = st.r2;
+        c.$(`#${S}-o1`).textContent = E5.f2s(I.top); c.$(`#${S}-o2`).textContent = E5.f2s(I.low);
+        c.$(`#${S}-qs`).textContent = `${E5.f2s(I.top)} + ${E5.f2s(I.low)}`; c.$(`#${S}-os`).textContent = E5.f2s(I.main);
+        E5.paintSeg(c.$(`#${S}-seg`), st);
+        const w = [];
+        if (c.data.show.ab) w.push(roll('p1', I.top, ms), roll('p2', I.low, ms));
+        if (c.data.show.m) w.push(roll('pI', I.main, ms));
+        return Promise.all(w);
+      };
+      c.data.roll = roll;
+      E5.bindSeg(c, c.$(`#${S}-seg`), st, k => {
+        const lab = c.$(`#${S}-${k}l`); if (lab) c.a(lab, [{ opacity: .2 }, { opacity: 1 }], { dur: 420, fill: 'none' });
+        c.data.apply(600);
+      });
+    },
     async go(c, k) {
-      const fmt = v => v.toFixed(2);
-      if (k === 1) {
-        const a = c.$(`#${S}-p1-v`), b = c.$(`#${S}-p2-v`);
-        await c.wait(300); c.sfx('counter', 0, 1100);
-        await c.tween(1100, p => { a.textContent = fmt(.3 * p); b.textContent = fmt(.6 * p); }, { ease: 'outQuint' });
-      }
-      if (k === 2) {
-        const v = c.$(`#${S}-pI-v`);
-        await c.wait(300);
-        await c.count(v, 0, .9, { fmt, dur: 1000 });
-      }
+      if (k === 1) { await c.wait(300); c.data.show.ab = true; c.sfx('counter', 0, 1100); await c.data.apply(1100); }
+      if (k === 2) { await c.wait(300); c.data.show.m = true; c.sfx('counter', 0, 1000); await c.data.apply(1000); }
     },
   });
 })();
 
 }catch(e){console.error("[slide 11_pcur.html]",e)}
+/* ── 11a_ammeter.html ── */
+try{
+
+(function () {
+  const S = 'e5_11a_ammeter';
+  // 10·11 과 같은 회로(줄기 2100 · 갈래 540 · 1020 = E5.G 의 정수배) — 1초에 지나가는 전자 수 = 10 × I → 9 · 3 · 6
+  const CK = E5.parallel({ id: `${S}-k`, x0: 170, x1: 1010, y0: 400, yb: 880, xj1: 320, xj2: 860, y2: 640, kind: 'res', amm: true, vLabel: '전원 6 V', aI: [170, 800] });
+  const P = CK.pos, X0 = P.X0, X1 = P.X1, Y0 = P.Y0, YB = P.YB, Y2 = P.Y2, J1 = P.J1, J2 = P.J2;
+  const AM = [
+    { key: 'main', x: P.aI[0], y: P.aI[1], nm: 'I' },
+    { key: 'top', x: P.a1[0], y: P.a1[1], nm: 'I₁' },
+    { key: 'low', x: P.a2[0], y: P.a2[1], nm: 'I₂' },
+  ];
+  const BANDS = [
+    [[J1, Y0], [X0, Y0], [X0, YB], [X1, YB], [X1, Y0], [J2, Y0]],
+    [[J1, Y0], [J2, Y0]],
+    [[J1, Y0], [J1, Y2], [J2, Y2], [J2, Y0]],
+  ];
+  Deck.scene(S, {
+    steps: 4,
+    build(root) {
+      root.querySelector(`#${S}-c`).innerHTML = CK.svg +
+        `<text x="${P.xr}" y="${Y0 + 68}" text-anchor="middle" class="e5-rl">R₁ 20 Ω</text>` +
+        `<text x="${P.xr}" y="${Y2 - 58}" text-anchor="middle" class="e5-rl">R₂ 10 Ω</text>` +
+        AM.map((a, i) => `<text x="${a.x + (i ? 0 : 44)}" y="${a.y + (i === 0 ? 10 : i === 1 ? -44 : 62)}" text-anchor="${i ? 'middle' : 'start'}" class="e5-cur-t">${a.nm}</text>`).join('');
+      // 이 전류계를 지나가는 전류의 길(노란 띠)
+      root.querySelector(`#${CK.id}-hl`).innerHTML = BANDS.map((pts, i) =>
+        `<path id="${S}-b${i}" d="${E5.dOf(pts)}" fill="none" stroke="#FFC21A" stroke-width="${CK.T + 22}" stroke-linejoin="round" stroke-linecap="round" opacity="0"/>`).join('');
+      root.querySelector(`#${CK.id}-over`).innerHTML = AM.map((a, i) =>
+        `<circle id="${S}-g${i}" class="e5-tk" cx="${a.x}" cy="${a.y}" r="27" fill="none" stroke="#FFC21A" stroke-width="9" opacity="0"/>`).join('');
+      root.querySelector(`#${S}-leg`).innerHTML = E5.legendHTML();
+    },
+    enter(c) {
+      const sim = c.data.sim = E5.sim(c, CK, { I: { main: .9, top: .3, low: .6 }, seed: 24 }), F = sim.flow;
+      const arc = c.$(`#${S}-arc`);
+      const A = c.data.A = AM.map((a, i) => ({ ...a, i, s: F.sOf(a.key, a.x, a.y), v: E5.K * F.I(a.key), on: false, Da: 0, num: c.$(`#${S}-n${i}`), ring: c.$(`#${S}-g${i}`) }));
+      // 전자가 전류계를 지날 때마다 반짝(실제 자리로 센 순간)
+      A.forEach(a => F.gate(a.key, a.x, a.y, () => {
+        if (!a.on || c.still || !c.alive) return;
+        a.ring.animate([{ opacity: .95, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(1.5)' }], { duration: 420, easing: 'ease-out' });
+      }));
+      // 1초 세기 → 잠깐 멈춰 보여 주기 → 다시. 숫자 = 그 1초 동안 그 자리를 지난 전자 수(정확한 자리로 센 값)
+      const ts = c.data.ts = { phase: 'count', t: 0, hold: 0 };
+      const final = a => F.cross(a.key, a.s, a.Da, a.Da + a.v);   // 1초 동안 = 빠르기 × 1초 = K·I → K·I/G 개
+      c.data.restart = () => { ts.phase = 'count'; ts.t = 0; A.forEach(a => { a.Da = F.D(a.key); if (a.on) a.num.textContent = 0; }); };
+      c.data.settle = () => {   // 검증 정지 화면: 방금 끝난 1초를 다 센 상태
+        if (!c.still) return;
+        ts.phase = 'hold'; ts.hold = 0; arc.setAttribute('stroke-dashoffset', '0');
+        A.forEach(a => { a.Da = F.D(a.key) - a.v; if (a.on) a.num.textContent = final(a); });
+      };
+      c.loop((t, dt) => {
+        if (ts.phase === 'count') {
+          ts.t += dt; const p = Math.min(1, ts.t);
+          arc.setAttribute('stroke-dashoffset', (1 - p).toFixed(3));
+          A.forEach(a => { if (a.on) a.num.textContent = p >= 1 ? final(a) : F.cross(a.key, a.s, a.Da, Math.min(F.D(a.key), a.Da + a.v)); });
+          if (p >= 1) { ts.phase = 'hold'; ts.hold = 0; A.forEach(a => { if (a.on) a.num.animate([{ transform: 'scale(1.2)' }, { transform: 'scale(1)' }], { duration: 420, easing: 'cubic-bezier(.34,1.56,.64,1)' }); }); }
+        } else if (!c.still) {
+          ts.hold += dt;
+          if (ts.hold >= 1.1) c.data.restart();
+        }
+      });
+    },
+    async go(c, k) {
+      const A = c.data.A;
+      const band = (i, on, ms = 600) => c.a(`#${S}-b${i}`, [{ opacity: on ? 0 : .42 }, { opacity: on ? .42 : 0 }], { dur: ms });
+      const hot = (i, on) => { const r = c.$(`#${S}-r${i}`); if (r) r.classList.toggle('hot', on); };
+      if (k === 1) {   // 줄기의 전류계 — 전류 전체가 지나간다
+        band(0, true); hot(0, true);
+        A[0].on = true; c.sfx('tick', 400);
+        c.data.restart(); c.data.settle();
+      }
+      if (k === 2) {   // 갈래의 전류계 — 자기 갈래로 가는 것만
+        band(0, false); hot(0, false);
+        band(1, true); band(2, true); hot(1, true); hot(2, true);
+        A[1].on = true; A[2].on = true; c.sfx('tick', 400);
+        c.data.restart(); c.data.settle();
+      }
+      if (k === 3) {   // 나란히 견주기 — 9 = 3 + 6
+        band(1, false); band(2, false); hot(1, false); hot(2, false);
+        [0, 1, 2].forEach(i => hot(i, true));
+        c.sfx('ding', 500);
+      }
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 11a_ammeter.html]",e)}
 /* ── 12_pcut.html ── */
 try{
 
 (function () {
   const S = 'e5_12_pcut';
-  const CK = E5.parallel({ id: `${S}-k`, x: 200, y: 420, w: 840, h: 420, yb: 630, kind: 'bulb', bulbR: 40 });
-  const P = CK.pos, GX = 1130, GY = 706, GW = 380;   // 막대 두 개: ㉯의 밝기 · 전원 쪽 전류
+  // 10·11 과 같은 틀(줄기 2100 · 갈래 540 · 1020 = E5.G 의 정수배). 같은 전구 둘 → 갈래 전류 같음(모형 값 0.3 · 0.3 → 줄기 0.6)
+  const CK = E5.parallel({ id: `${S}-k`, x0: 170, x1: 1010, y0: 400, yb: 880, xj1: 320, xj2: 860, y2: 640, kind: 'bulb', bulbR: 40, glow: 125 });
+  const P = CK.pos, IB = .3;
+  const MSG = {
+    none: '두 갈래 모두 흐르는 중 — 전원 쪽 전류 = ㉮ 갈래 + ㉯ 갈래.',
+    one: k => `${k === 1 ? '㉮' : '㉯'}를 빼도 남은 ${k === 1 ? '㉯' : '㉮'} 갈래에는 전원 전압이 <b>그대로</b> 걸려 <b>같은 밝기</b>로 켜져 있어요. 줄어든 것은 <b>전원 쪽 전류</b>뿐 — 갈래가 하나 줄었으니까요.`,
+    both: '두 갈래가 모두 끊겨 전류가 흐르지 않아요.',
+  };
   Deck.scene(S, {
     steps: 2,
     build(root) {
       root.querySelector(`#${S}-c`).innerHTML = CK.svg +
-        `<text x="${P.xr + 120}" y="${CK.y + 70}" text-anchor="middle" class="e5-lbl">전구 ㉮</text>` +
-        `<text x="${P.xr + 120}" y="${CK.yb + 70}" text-anchor="middle" class="e5-lbl">전구 ㉯</text>`;
-      const bar = (y, lab, cls, idn) => `<text x="${GX}" y="${y - 14}" class="e5-lbl">${lab}</text>` +
-        `<rect x="${GX + 230}" y="${y - 44}" width="${GW}" height="34" rx="17" fill="var(--e5pill)"/>` +
-        `<rect id="${S}-${idn}" x="${GX + 230}" y="${y - 44}" width="${GW}" height="34" rx="17" fill="var(${cls})"/>`;
-      root.querySelector(`#${S}-g`).innerHTML = `<g data-step="1" data-fx="fade" data-delay="900">` + bar(GY, '㉯의 밝기', '--light', 'gb') + bar(GY + 70, '전원 쪽 전류', '--light', 'gi') + `</g>`;
+        `<text x="${P.xr}" y="${P.Y0 + 88}" text-anchor="middle" class="e5-lbl halo">전구 ㉮</text>` +
+        `<text x="${P.xr}" y="${P.Y2 - 62}" text-anchor="middle" class="e5-lbl halo">전구 ㉯</text>`;
+      root.querySelector(`#${S}-leg`).innerHTML = E5.legendHTML();
+      root.querySelector(`#${S}-msg`).innerHTML = MSG.none;
     },
     enter(c) {
-      c.data.fl = E5.flow(c, `#${CK.id}-e`, CK.branches, { k: 180, I: { main: .6, top: .3, low: .3 }, seed: 23 });
+      const st = c.data.st = { c1: false, c2: false };
+      c.data.sim = E5.sim(c, CK, { I: { main: 2 * IB, top: IB, low: IB }, seed: 23 });
       E5.light(c, `${CK.id}-b1`, 1, 10, true); E5.light(c, `${CK.id}-b2`, 1, 10, true);
+      const bar = (id, v, ms) => { const el = c.$(`#${S}-${id}`), w0 = parseFloat(el.style.width || '100') || 0, w1 = v * 100; return c.tween(ms, p => { el.style.width = (w0 + (w1 - w0) * p).toFixed(1) + '%'; }, { ease: 'inOut' }); };
+      const paint = () => {
+        const t1 = c.$(`#${S}-t1`), t2 = c.$(`#${S}-t2`), msg = c.$(`#${S}-msg`);
+        t1.textContent = st.c1 ? '↩ 전구 ㉮ 다시 끼우기' : '✂ 전구 ㉮ 빼기'; t1.classList.toggle('on', st.c1);
+        t2.textContent = st.c2 ? '↩ 전구 ㉯ 다시 끼우기' : '✂ 전구 ㉯ 빼기'; t2.classList.toggle('on', st.c2);
+        const n = (st.c1 ? 1 : 0) + (st.c2 ? 1 : 0);
+        msg.innerHTML = n === 0 ? MSG.none : n === 2 ? MSG.both : MSG.one(st.c1 ? 1 : 2);
+        msg.classList.toggle('good', n === 1); msg.classList.toggle('hit', n === 2);
+      };
+      /* 상태 → 화면(단추와 단계가 같은 길) — 남은 갈래의 전류·밝기는 그대로, 줄기만 줄어든다 */
+      c.data.setCut = async (k, on) => {
+        const key = k === 1 ? 'c1' : 'c2'; if (st[key] === on) return;
+        st[key] = on; paint();
+        const tk = 'tok' + k, tok = c.data[tk] = (c.data[tk] || 0) + 1, bid = `${CK.id}-b${k}`, lift = { dy: k === 1 ? -96 : 104, rot: k === 1 ? 14 : -14 };
+        // 뺄 때: 소켓에서 떨어지는 순간 그 갈래가 끊김(들어 올리는 동안 켜진 채로 두지 않음) · 끼울 때: 다 끼운 뒤에 다시 흐름
+        const mv = on ? E5.lift(c, bid, lift) : E5.drop(c, bid, lift);
+        if (on) await c.wait(60); else await mv;
+        if (tok !== c.data[tk]) return;   // 같은 전구를 빠르게 두 번 누르면 나중 것만 끝까지(흐름은 언제나 지금 상태로 다시 계산)
+        const a = st.c1 ? 0 : IB, b = st.c2 ? 0 : IB;
+        c.sfx(on ? ((st.c1 && st.c2) ? 'sweepDown' : 'ding') : 'ledOn', on ? 0 : 80, (st.c1 && st.c2) ? 700 : undefined);
+        c.data.sim.set({ top: a, low: b, main: a + b }, 260);   // 끊긴 갈래만 멈춤 · 줄기는 남은 갈래만큼
+        E5.light(c, bid, on ? 0 : 1, 240, true);
+        bar(`g${k}`, on ? 0 : 1, 300);
+        await bar('gm', (a + b) / (2 * IB), 700);
+        if (on) await mv;
+      };
+      const t1 = c.$(`#${S}-t1`), t2 = c.$(`#${S}-t2`);
+      t1.addEventListener('click', e => { e.stopPropagation(); t1.blur(); if (!st.c1) c.sfx('snip'); c.data.setCut(1, !st.c1); });
+      t2.addEventListener('click', e => { e.stopPropagation(); t2.blur(); if (!st.c2) c.sfx('snip'); c.data.setCut(2, !st.c2); });
     },
     async go(c, k) {
-      if (k === 1) {
-        await c.wait(300);
-        await E5.lift(c, `${CK.id}-b1`, { dy: -112, rot: 14 });
-        c.data.fl.set({ top: 0, main: .3 }, 260);        // ㉮ 갈래만 멈춤 · 줄기는 ㉯ 갈래만큼
-        await E5.light(c, `${CK.id}-b1`, 0, 220);
-        const gi = c.$(`#${S}-gi`);
-        await c.tween(700, p => { gi.setAttribute('width', (380 - 190 * p).toFixed(1)); }, { delay: 1200, ease: 'inOut' });
-      }
+      if (k === 1) { await c.wait(300); await c.data.setCut(1, true); }
     },
   });
 })();
@@ -2924,7 +3749,7 @@ try{
       let cars = '';
       for (let i = 0; i < NP; i++) cars += `<g><rect x="-28" y="-15" width="56" height="30" rx="8"/><rect x="7" y="-10" width="11" height="20" rx="3" fill="#1c1c1e" opacity=".75"/></g>`;
       root.querySelector(`#${S}-cars`).innerHTML = cars;
-      root.querySelector(`#${S}-labs`).innerHTML = GT.map((g, i) => `<g transform="translate(${g.x} ${g.y})" data-step="1" data-fx="fade"><rect x="-150" y="-30" width="300" height="60" rx="30" fill="rgba(255,255,255,.08)"/>` +
+      root.querySelector(`#${S}-labs`).innerHTML = GT.map((g, i) => `<g transform="translate(${g.x} ${g.y})" data-step="1" data-fx="fade"><rect x="-150" y="-30" width="300" height="60" rx="30" fill="var(--e5card)"/>` +
         `<text y="10" text-anchor="middle" style="font-size:28px;font-weight:700;fill:var(--light)">${g.n} · <tspan id="${S}-n${i}">–</tspan></text></g>`).join('');
     },
     enter(c) {
@@ -2971,7 +3796,7 @@ try{
         `<text x="${PX[i] + 260}" y="${PY - 30}" text-anchor="middle" style="font-size:27px;font-weight:600;fill:var(--t2)">${TT[i]}</text>${l.svg}</g>`).join('');
     },
     enter(c) {
-      c.data.ch = L.map(l => E5.chev(c, `#${l.id}-ch`, l.chevs.map(x => Object.assign({}, x, { v: 0 }))));
+      c.data.ch = L.map(l => E5.chev(c, `#${l.id}-ch`, l.chevs.map(x => Object.assign({}, x, { v: 0 })), { hide: l.hide }));
       c.data.ch[0].set({ m: 70 }, 10);
       E5.light(c, L[0].bulbs[0], 1, 10, true);
     },
@@ -3008,7 +3833,7 @@ try{
         `<text x="${PX[i] + 260}" y="${PY - 26}" text-anchor="middle" style="font-size:27px;font-weight:600;fill:var(--t2)">${TT[i]}</text>${l.svg}</g>`).join('');
     },
     enter(c) {
-      c.data.ch = L.map(l => E5.chev(c, `#${l.id}-ch`, l.chevs.map(x => Object.assign({}, x, { v: 0 })), { gap: 56 }));
+      c.data.ch = L.map(l => E5.chev(c, `#${l.id}-ch`, l.chevs.map(x => Object.assign({}, x, { v: 0 })), { gap: 56, hide: l.hide }));
       c.data.ch[0].set({ m: 64 }, 10);
       E5.light(c, L[0].bulbs[0], 1, 10, true);
     },
@@ -3239,7 +4064,7 @@ try{
       `<span class="c-cur">전류</span>는 갈래마다 ${b('나뉜다', 'flow', 2, 'c-cur')}<small>I = I₁ + I₂</small>`,
       `하나가 끊어져도 나머지는 ${b('켜져 있다', 'glow', 2)}`,
     ], `이을수록 전체 <span class="c-res">저항</span> ${b('작아진다', 'down', 2, 'c-res')}<small>저항의 굵기가 굵어지는 효과</small>`],
-    ['어디에 쓸까', '하려는 일이 잇는 방법을 정한다', [
+    ['어디에 쓸까요?', '하려는 일이 잇는 방법을 정한다', [
       `가정의 전기 기구 · 멀티탭 → ${b('병렬', 'fork', 3)}<small>기구마다 따로 켜고 끈다</small>`,
       `퓨즈 · 누전 차단기 → ${b('직렬', 'chain', 3)}<small>끊기면 회로 전체가 끊긴다</small>`,
       `문어발 연결 → <span class="c-cur">전류</span>가 모두 ${b('더해진다', 'up', 3, 'c-cur')}<small>과열 · 화재 위험 — 열 쓰는 기구는 벽 콘센트에</small>`,
@@ -3266,7 +4091,7 @@ try{
 (function () {
   const S = 'e5_22_answer', INK = 'var(--e5ink)', R = 22;
   const W = d => `<path d="${d}" fill="none" stroke="${INK}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`;
-  // 얇은 선 전구 기호(검은 면) — 켜짐이면 번짐 + 노란 유리
+  // 얇은 선 전구 기호(흰 면) — 켜짐이면 번짐 + 노란 유리
   const bulb = (x, y, on, id, vert) => {
     const a = R * .55, fd = vert ? `M${x} ${y - R}V${y - a}A${a} ${a} 0 0 1 ${x} ${y + a}V${y + R}` : `M${x - R} ${y}H${x - a}A${a} ${a} 0 0 1 ${x + a} ${y}H${x + R}`;
     return `<g id="${id}">${on ? `<circle cx="${x}" cy="${y}" r="80" fill="url(#rg-light)" opacity=".75"/>` : ''}<circle cx="${x}" cy="${y}" r="${R}" fill="${on ? '#FFE27A' : 'var(--e5bg)'}" stroke="${INK}" stroke-width="3.5"/><path d="${fd}" fill="none" stroke="${on ? '#A35F00' : INK}" stroke-width="3.5"/></g>`;

@@ -208,6 +208,22 @@ html.student #notes{display:none!important}
 .qbox .qh{font-size:26px;font-weight:600;color:var(--t2);margin-bottom:6px}
 .say-line{position:absolute;left:120px;right:120px;text-align:center;font-size:44px;font-weight:600;letter-spacing:-.02em;z-index:3}
 .fine{position:absolute;left:120px;bottom:40px;font-size:24px;color:var(--t3);z-index:3}
+/* ── 키워드 진행 표시(무대 오른쪽 위) — core.js buildKw/syncKw ── */
+#kwbar{position:absolute;top:34px;right:44px;z-index:30;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(-8px);pointer-events:none;
+  transition:opacity .45s var(--ease-out),transform .45s var(--ease-out)}
+#kwbar.show{opacity:1;transform:none;pointer-events:auto}
+#kwbar .kw{display:flex;align-items:center;height:46px;min-width:46px;border-radius:9999px;background:rgba(0,0,0,.055);color:#86868b;
+  font-size:24px;font-weight:600;letter-spacing:-.01em;line-height:1;transition:background .45s,color .45s;cursor:pointer}
+#kwbar .kw b{width:46px;height:46px;flex:none;display:grid;place-items:center;font-weight:700;font-variant-numeric:tabular-nums}
+#kwbar .kw span{max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .6s var(--ease-out),padding .6s var(--ease-out)}
+#kwbar .kw.done{background:rgba(0,0,0,.13);color:#3a3a3c}
+#kwbar .kw.cur{background:var(--action);color:#fff}
+#kwbar .kw.cur span{max-width:460px;padding-right:22px}
+#kwbar .kw:active{transform:scale(.95)}
+body:not(.on-light) #kwbar .kw{background:rgba(255,255,255,.1);color:#8e8e93}
+body:not(.on-light) #kwbar .kw.done{background:rgba(255,255,255,.24);color:#f5f5f7}
+body:not(.on-light) #kwbar .kw.cur{background:var(--action-dark);color:#fff}
+html.still #kwbar,html.still #kwbar *{transition:none!important}
 
 /* ── 10_elec.css ── */
 /* ── 전기와 자기 강의 덱 공용 색·글자 — 의미마다 색 하나(같은 뜻은 어느 장·어느 덱에서나 같은 색) ──
@@ -306,6 +322,19 @@ html.student #notes{display:none!important}
 .e2-tbl tbody th{font-size:30px;font-weight:700}
 .e2-tbl .ans{display:inline-block;color:var(--act);font-weight:700}
 .e2-tbl .given{color:inherit}
+
+/* ── 02_hookk_keywords.html ── */
+
+#e2_02_hookk_keywords .kwk-n{font-size:48px;font-weight:700;fill:var(--act);font-variant-numeric:tabular-nums}
+#e2_02_hookk_keywords .kwk-end{position:absolute;width:200px;text-align:center;font-size:26px;font-weight:600;color:var(--t3);z-index:3}
+#e2_02_hookk_keywords .kwk-t{position:absolute;text-align:center;font-size:46px;font-weight:700;letter-spacing:-.025em;line-height:1.25;word-break:keep-all;z-index:3}
+#e2_02_hookk_keywords .kwk-start{position:absolute;width:220px;text-align:center;font-size:28px;font-weight:600;color:var(--act);z-index:3}
+#e2_02_hookk_keywords .kwk-mock{position:absolute;top:34px;right:44px;display:flex;gap:8px;z-index:3}
+#e2_02_hookk_keywords .kwk-mock .mk{display:flex;align-items:center;height:46px;min-width:46px;border-radius:9999px;background:rgba(0,0,0,.055);color:#86868b;font-size:24px;font-weight:600;line-height:1}
+#e2_02_hookk_keywords .kwk-mock .mk b{width:46px;height:46px;display:grid;place-items:center;font-weight:700}
+#e2_02_hookk_keywords .kwk-mock .mk.cur{background:var(--act);color:#fff}
+#e2_02_hookk_keywords .kwk-mock .mk i{font-style:normal;padding-right:22px;white-space:nowrap}
+#e2_02_hookk_keywords .kwk-hint{position:absolute;top:96px;right:44px;font-size:26px;color:var(--t2);z-index:3}
 
 /* ── 05_pos.html ── */
 
@@ -423,6 +452,23 @@ html.student #notes{display:none!important}
   <div class="abs t-label" style="left:1000px;width:800px;top:800px;text-align:center" data-step="2" data-delay="2600">→ 이번에도 끌려온다!</div>
   <div class="abs mute" style="left:1000px;width:800px;top:852px;text-align:center;font-size:28px" data-step="2" data-delay="3000">캔이 원래 (+)였다면 밀려났어야 하는데…</div>
   <div class="abs center" style="left:0;width:1920px;top:916px;font-size:44px;font-weight:600;letter-spacing:-.02em" data-step="3">문지르지도 않은 캔에 어떻게 전기가 생겼을까?</div>
+</section>
+<!-- ═══ 02_hookk_keywords.html ═══ -->
+<section class="slide" id="e2_02_hookk_keywords" data-tile="light" data-title="오늘의 키워드" data-notes="P2k" data-say="오늘의 키워드 4개를 먼저 훑어봅니다. 다음 장부터 오른쪽 위에 지금 배우는 키워드가 표시되고, 칩을 누르면 그 키워드의 첫 장으로 갑니다.">
+  <div class="hd" data-in><div class="eb">학습지 2 · 정전기 유도</div><h2>오늘의 키워드</h2></div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <path d="M230 610H1480" stroke="#e8e8ed" stroke-width="12" stroke-linecap="round" fill="none"/>
+    <g data-in="2640" data-fx="fade"><path d="M1544 610H1666" stroke="#c7c7cc" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round" fill="none"/>
+      <circle cx="1700" cy="610" r="30" fill="#f5f5f7" stroke="#c7c7cc" stroke-width="5"/><path d="M1689 611l8 8 15-17" stroke="#aeaeb2" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>
+    <path d="M230 610H1480" stroke="var(--act)" stroke-width="12" stroke-linecap="round" fill="none" data-in="600" data-fx="draw" data-dur="1940" data-ease="inOut"/>
+    <circle id="e2_02_hookk_keywords-ring" cx="230" cy="610" r="54" fill="none" stroke="var(--act)" stroke-width="4" opacity="0"/>
+    <g data-in="600" data-fx="pop"><circle cx="230" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="230" y="627" text-anchor="middle" class="kwk-n">1</text></g><g data-in="1246" data-fx="pop"><circle cx="647" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="647" y="627" text-anchor="middle" class="kwk-n">2</text></g><g data-in="1893" data-fx="pop"><circle cx="1063" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="1063" y="627" text-anchor="middle" class="kwk-n">3</text></g><g data-in="2540" data-fx="pop"><circle cx="1480" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="1480" y="627" text-anchor="middle" class="kwk-n">4</text></g>
+  </svg>
+  <div class="kwk-t" style="left:34px;top:694px;width:392px" data-in="740" data-fx="rise">정전기 유도</div><div class="kwk-t" style="left:451px;top:694px;width:392px" data-in="1386" data-fx="rise">유도되는 전하</div><div class="kwk-t" style="left:867px;top:694px;width:392px" data-in="2033" data-fx="rise">유도 vs 마찰</div><div class="kwk-t" style="left:1284px;top:694px;width:392px" data-in="2680" data-fx="rise">두 금속 구</div>
+  <div class="kwk-end" style="left:1600px;top:526px" data-in="2740" data-fx="fade">정리 · 문제</div>
+  <div class="kwk-start" style="left:120px;top:470px" data-in="2740" data-fx="pop">여기서 출발!</div>
+  <div class="kwk-mock" data-in="3140" data-fx="fade"><span class="mk cur"><b>1</b><i>정전기 유도</i></span><span class="mk"><b>2</b></span><span class="mk"><b>3</b></span><span class="mk"><b>4</b></span></div>
+  <div class="kwk-hint" data-in="3440" data-fx="fade">지금 배우는 키워드는 오른쪽 위에 계속 표시돼요</div>
 </section>
 <!-- ═══ 03_define.html ═══ -->
 <section class="slide" id="e2_03_define" data-tile="light" data-title="정전기 유도" data-notes="P3" data-say="빈칸 ① 전하 · ② 다른 · ③ 같은. 막대 속 (+)·(−) 기호의 이름(원자핵·전자)은 다음 장 빈칸이라 여기서는 「(−)가 밀려났다」까지만 말합니다. 막대 전체의 (+)·(−) 수는 16개씩 그대로예요.">
@@ -608,7 +654,8 @@ html.student #notes{display:none!important}
 <div id="gridov"></div>
 </div></div>
 
-<script>window.NOTES = {"P1": "화면을 볼까요? 전기를 띤 막대를 빈 알루미늄 캔 옆에 가까이 댑니다. 막대는 캔에 닿지 않았어요. 그런데 캔이 데굴데굴 막대를 따라 굴러옵니다. 이번엔 막대를 캔 너머로 넘기면서 캔 속을 비춰 볼게요. 막대를 반대편으로 옮기니 방향을 바꿔 또 따라와요. 캔 속을 보면 무언가가 막대 반대쪽으로 쏠려 있죠. 캔은 문지르지도 않았고, 막대에 닿지도 않았습니다. 문지르지 않은 캔은 왜 끌려올까요? 오늘 수업이 끝나면 설명할 수 있어요.", "P2": "지난 시간에 전기력은 전기를 띤 두 물체 사이에 작용하는 힘이라고 배웠죠. 털가죽에 문지른 빨대는 (−)전기를 띱니다. 이 빨대를 문지르지 않은 캔에 가까이 하면, 캔이 끌려옵니다. 누군가는 「캔이 원래 (+)를 띠고 있었다」고 생각할 수 있어요. 그 말이 맞다면, 빨대를 문질렀던 털가죽은 (+)를 띠니까 이번엔 캔이 밀려나야 합니다. 해 볼까요? 이번에도 끌려옵니다. 부호를 바꿔도 끌려와요. 그렇다면 문지르지도 않은 캔에 어떻게 전기가 생긴 걸까요?", "P3": "금속 막대 하나로 알아봅시다. 막대 속 (+)와 (−)는 16개씩, 양이 같아서 막대는 전기를 띠지 않아요. 전하가 없는 게 아니라 양이 같은 겁니다. 여기에 (−)대전체를 가까이 가져가 볼게요. 닿지 않았는데 (−)들이 반대쪽으로 밀려났죠. 이렇게 대전되지 않은 금속 물체에 대전체를 가까이 가져갈 때, 금속 물체에 전하가 유도되는 현상을 정전기 유도라고 합니다. 대전체와 가까운 쪽에는 대전체와 다른 종류의 전하, 먼 쪽에는 대전체와 같은 종류의 전하가 유도돼요. 학습지 1번부터 3번 빈칸입니다.", "P4": "닿지도 않았는데 왜 이런 일이 일어날까요? 금속 막대 속을 크게 보면 금속 안을 돌아다닐 수 있는 자유 전자가 있습니다. 금속 물체 내부의 전자와 대전체 사이에 전기력이 작용해서 전자가 이동하는 거예요. 보라색 화살표가 전자가 받는 전기력입니다. 대전체에 가까운 전자일수록 화살표가 길죠. 거리가 가까울수록 전기력이 세기 때문이에요. 이때 (+)를 띤 원자핵은 제자리에 붙박여 한 칸도 움직이지 않습니다. 움직이는 것은 전자뿐이에요.", "P5": "이번에는 (+)대전체를 가까이 가져가 볼까요? (+)와 (−)는 서로 끌어당기니까 전자가 대전체와 가까운 쪽으로 이동합니다. 그러면 가까운 쪽은 전자가 많아져 (−)전하, 먼 쪽은 전자가 빠져나가 (+)전하가 유도돼요. 먼 쪽의 (+)는 원자핵이 새로 생긴 게 아니라 전자가 빠져나가서 (+)가 더 많아진 겁니다. 먼 쪽에도 전자는 남아 있어요. 대전체와 전자 사이에는 끌어당기는 방향으로 전기력이 작용합니다.", "P6": "이번엔 (−)대전체입니다. 같은 전하끼리는 밀어내니까 전자가 대전체와 먼 쪽으로 이동해요. 밀려나는 거죠. 그래서 가까운 쪽은 (+)전하, 먼 쪽은 (−)전하가 유도됩니다. 대전체의 전하를 바꿔도 가까운 쪽은 언제나 대전체와 반대 전하예요. 먼 쪽의 같은 전하와는 미는 힘도 작용하지만 멀리 있어서 약하고, 가까운 쪽의 반대 전하와 끌어당기는 힘이 더 셉니다. 그래서 이번에도 인력이에요. 처음 장면에서 빨대에도 털가죽에도 캔이 끌려온 까닭이 이것입니다.", "P7": "학습지 1쪽 아래 그림에 직접 그려 볼까요? 금속 막대 양 끝에 전하 부호를 그려 넣고, 자유 전자가 이동하는 방향을 화살표로 그려 보세요. 1분 드릴게요. 자, (+)대전체부터 정답을 볼게요. 가까운 쪽은 (−), 먼 쪽은 (+), 화살표는 대전체 쪽을 향합니다. (−)대전체는 가까운 쪽 (+), 먼 쪽 (−), 화살표는 대전체에서 먼 쪽을 향해요. 양 끝 부호의 수를 같게 그렸는지도 확인하세요. 막대 전체의 (+)와 (−)의 양은 그대로이기 때문입니다.", "P8": "학습지 2쪽 첫 표로 정리해 봅시다. (+)대전체를 가까이 하면 전자는 대전체 쪽, 그러니까 가까운 쪽으로 이동해서 가까운 쪽은 (−)전하, 먼 쪽은 (+)전하를 띱니다. (−)대전체를 가까이 하면 전자는 먼 쪽으로 밀려나서 가까운 쪽은 (+)전하, 먼 쪽은 (−)전하를 띠어요. 어느 대전체든 가까운 쪽은 반대 전하라서 언제나 끌어당깁니다.", "P9": "지난 시간에 배운 마찰에 의한 대전과 비교해 볼까요? 마찰 전기는 두 물체가 접촉해서, 한 물체에서 다른 물체로 전자가 이동하니까 각 물체의 전체 전하량이 변해요. 정전기 유도는 접촉하지 않고, 한 물체 안에서 전자가 이동할 뿐이라 전체 전하량은 변하지 않습니다. 대전체와 가까운 곳에는 다른 종류의 전하, 먼 곳에는 같은 종류의 전하가 나타나고, 가까이 둔 대전체를 치우면 즉시 중성으로 돌아가요. 한 줄로 말하면, 대전은 전자가 드나든 것이고 유도는 전자가 안에서 쏠린 것입니다.", "P10": "정말 그런지 세어 볼게요. 대전체가 가까이 있을 때 왼쪽 절반에는 (+) 8개, (−) 6개, 오른쪽 절반에는 (+) 8개, (−) 10개가 있어요. (+)를 띤 쪽에도 전자는 남아 있죠. 이제 대전체를 치워 봅시다. 전자가 다시 고르게 퍼져서 양쪽 모두 8개와 8개, 즉시 중성이 됩니다. 막대 전체는 처음부터 끝까지 (+) 16개, (−) 16개 그대로예요. 그렇다면 유도된 전하를 그대로 남길 수는 없을까요?", "P11": "심화 문제입니다. 붙여 놓은 두 금속 구 A와 B가 있어요. 처음엔 둘 다 (+) 4개, (−) 4개로 중성입니다. 접촉시킨 채 A 쪽에 (+)대전체를 가까이 하면, 전자는 두 금속 구의 접촉면을 통해 대전체 쪽으로 끌려옵니다. B에 있던 전자 2개가 접촉면을 건너 A로 왔어요. 이제 대전체를 그대로 둔 채 먼저 A와 B를 분리합니다. 그러면 A는 전자 6개, B는 전자 2개인 채로 갇혀요. (+)는 4개씩 그대로입니다. 그다음 대전체를 멀리하면 전자가 각 구 안에서 고르게 퍼지지만, A는 (−)전하, B는 (+)전하를 그대로 띱니다. A가 얻은 전자 수와 B가 잃은 전자 수가 2개로 같으니, 두 구가 띠는 전하의 양은 같고 종류는 반대예요.", "P12": "그런데 순서를 바꾸면 어떻게 될까요? 두 구를 붙여 둔 채 대전체를 먼저 멀리해 봅시다. A로 끌려왔던 전자 2개가 접촉면을 건너 B로 되돌아가요. 두 구 모두 4개와 4개, 중성입니다. 그다음에 떼어 봐도 둘 다 중성 그대로예요. 그래서 A는 (−), B는 (+)로 남기려면 반드시 먼저 분리한 다음 대전체를 멀리해야 합니다. 떼는 순서가 전부예요.", "P13": "정리합니다. 대전체를 가까이 하면 금속의 가까운 쪽에는 다른 종류, 먼 쪽에는 같은 종류의 전하가 유도됩니다. 이것이 정전기 유도예요. 움직이는 건 전자뿐이고 원자핵은 제자리, 금속 전체의 (+)와 (−)의 양은 그대로라서 대전체를 치우면 즉시 중성으로 돌아갑니다. 가까운 쪽이 늘 반대 전하라서 결과는 언제나 끌어당김이에요. 처음의 캔도 그랬죠. 문지르지 않은 캔이 끌려온 까닭은 가까운 쪽에 반대 전하가 유도되었기 때문입니다."};</script>
+<script>window.NOTES = {"P1": "화면을 볼까요? 전기를 띤 막대를 빈 알루미늄 캔 옆에 가까이 댑니다. 막대는 캔에 닿지 않았어요. 그런데 캔이 데굴데굴 막대를 따라 굴러옵니다. 이번엔 막대를 캔 너머로 넘기면서 캔 속을 비춰 볼게요. 막대를 반대편으로 옮기니 방향을 바꿔 또 따라와요. 캔 속을 보면 무언가가 막대 반대쪽으로 쏠려 있죠. 캔은 문지르지도 않았고, 막대에 닿지도 않았습니다. 문지르지 않은 캔은 왜 끌려올까요? 오늘 수업이 끝나면 설명할 수 있어요.", "P2": "지난 시간에 전기력은 전기를 띤 두 물체 사이에 작용하는 힘이라고 배웠죠. 털가죽에 문지른 빨대는 (−)전기를 띱니다. 이 빨대를 문지르지 않은 캔에 가까이 하면, 캔이 끌려옵니다. 누군가는 「캔이 원래 (+)를 띠고 있었다」고 생각할 수 있어요. 그 말이 맞다면, 빨대를 문질렀던 털가죽은 (+)를 띠니까 이번엔 캔이 밀려나야 합니다. 해 볼까요? 이번에도 끌려옵니다. 부호를 바꿔도 끌려와요. 그렇다면 문지르지도 않은 캔에 어떻게 전기가 생긴 걸까요?", "P2k": "본격적으로 들어가기 전에 오늘의 키워드부터 볼까요? 오늘은 네 가지 키워드를 따라갑니다. 첫 번째 「정전기 유도」, 두 번째 「유도되는 전하」, 세 번째 「유도 vs 마찰」, 그리고 마지막 「두 금속 구」입니다. 화면 오른쪽 위를 보면 지금 어떤 키워드를 배우고 있는지 계속 표시해 둘게요. 그럼 첫 번째 키워드, 「정전기 유도」부터 시작해 볼까요? <span class=\"cue\">화면: 오늘의 키워드 4개 — 오른쪽 위 진행 표시 안내</span>", "P3": "금속 막대 하나로 알아봅시다. 막대 속 (+)와 (−)는 16개씩, 양이 같아서 막대는 전기를 띠지 않아요. 전하가 없는 게 아니라 양이 같은 겁니다. 여기에 (−)대전체를 가까이 가져가 볼게요. 닿지 않았는데 (−)들이 반대쪽으로 밀려났죠. 이렇게 대전되지 않은 금속 물체에 대전체를 가까이 가져갈 때, 금속 물체에 전하가 유도되는 현상을 정전기 유도라고 합니다. 대전체와 가까운 쪽에는 대전체와 다른 종류의 전하, 먼 쪽에는 대전체와 같은 종류의 전하가 유도돼요. 학습지 1번부터 3번 빈칸입니다.", "P4": "닿지도 않았는데 왜 이런 일이 일어날까요? 금속 막대 속을 크게 보면 금속 안을 돌아다닐 수 있는 자유 전자가 있습니다. 금속 물체 내부의 전자와 대전체 사이에 전기력이 작용해서 전자가 이동하는 거예요. 보라색 화살표가 전자가 받는 전기력입니다. 대전체에 가까운 전자일수록 화살표가 길죠. 거리가 가까울수록 전기력이 세기 때문이에요. 이때 (+)를 띤 원자핵은 제자리에 붙박여 한 칸도 움직이지 않습니다. 움직이는 것은 전자뿐이에요.", "P5": "이번에는 (+)대전체를 가까이 가져가 볼까요? (+)와 (−)는 서로 끌어당기니까 전자가 대전체와 가까운 쪽으로 이동합니다. 그러면 가까운 쪽은 전자가 많아져 (−)전하, 먼 쪽은 전자가 빠져나가 (+)전하가 유도돼요. 먼 쪽의 (+)는 원자핵이 새로 생긴 게 아니라 전자가 빠져나가서 (+)가 더 많아진 겁니다. 먼 쪽에도 전자는 남아 있어요. 대전체와 전자 사이에는 끌어당기는 방향으로 전기력이 작용합니다.", "P6": "이번엔 (−)대전체입니다. 같은 전하끼리는 밀어내니까 전자가 대전체와 먼 쪽으로 이동해요. 밀려나는 거죠. 그래서 가까운 쪽은 (+)전하, 먼 쪽은 (−)전하가 유도됩니다. 대전체의 전하를 바꿔도 가까운 쪽은 언제나 대전체와 반대 전하예요. 먼 쪽의 같은 전하와는 미는 힘도 작용하지만 멀리 있어서 약하고, 가까운 쪽의 반대 전하와 끌어당기는 힘이 더 셉니다. 그래서 이번에도 인력이에요. 처음 장면에서 빨대에도 털가죽에도 캔이 끌려온 까닭이 이것입니다.", "P7": "학습지 1쪽 아래 그림에 직접 그려 볼까요? 금속 막대 양 끝에 전하 부호를 그려 넣고, 자유 전자가 이동하는 방향을 화살표로 그려 보세요. 1분 드릴게요. 자, (+)대전체부터 정답을 볼게요. 가까운 쪽은 (−), 먼 쪽은 (+), 화살표는 대전체 쪽을 향합니다. (−)대전체는 가까운 쪽 (+), 먼 쪽 (−), 화살표는 대전체에서 먼 쪽을 향해요. 양 끝 부호의 수를 같게 그렸는지도 확인하세요. 막대 전체의 (+)와 (−)의 양은 그대로이기 때문입니다.", "P8": "학습지 2쪽 첫 표로 정리해 봅시다. (+)대전체를 가까이 하면 전자는 대전체 쪽, 그러니까 가까운 쪽으로 이동해서 가까운 쪽은 (−)전하, 먼 쪽은 (+)전하를 띱니다. (−)대전체를 가까이 하면 전자는 먼 쪽으로 밀려나서 가까운 쪽은 (+)전하, 먼 쪽은 (−)전하를 띠어요. 어느 대전체든 가까운 쪽은 반대 전하라서 언제나 끌어당깁니다.", "P9": "지난 시간에 배운 마찰에 의한 대전과 비교해 볼까요? 마찰 전기는 두 물체가 접촉해서, 한 물체에서 다른 물체로 전자가 이동하니까 각 물체의 전체 전하량이 변해요. 정전기 유도는 접촉하지 않고, 한 물체 안에서 전자가 이동할 뿐이라 전체 전하량은 변하지 않습니다. 대전체와 가까운 곳에는 다른 종류의 전하, 먼 곳에는 같은 종류의 전하가 나타나고, 가까이 둔 대전체를 치우면 즉시 중성으로 돌아가요. 한 줄로 말하면, 대전은 전자가 드나든 것이고 유도는 전자가 안에서 쏠린 것입니다.", "P10": "정말 그런지 세어 볼게요. 대전체가 가까이 있을 때 왼쪽 절반에는 (+) 8개, (−) 6개, 오른쪽 절반에는 (+) 8개, (−) 10개가 있어요. (+)를 띤 쪽에도 전자는 남아 있죠. 이제 대전체를 치워 봅시다. 전자가 다시 고르게 퍼져서 양쪽 모두 8개와 8개, 즉시 중성이 됩니다. 막대 전체는 처음부터 끝까지 (+) 16개, (−) 16개 그대로예요. 그렇다면 유도된 전하를 그대로 남길 수는 없을까요?", "P11": "심화 문제입니다. 붙여 놓은 두 금속 구 A와 B가 있어요. 처음엔 둘 다 (+) 4개, (−) 4개로 중성입니다. 접촉시킨 채 A 쪽에 (+)대전체를 가까이 하면, 전자는 두 금속 구의 접촉면을 통해 대전체 쪽으로 끌려옵니다. B에 있던 전자 2개가 접촉면을 건너 A로 왔어요. 이제 대전체를 그대로 둔 채 먼저 A와 B를 분리합니다. 그러면 A는 전자 6개, B는 전자 2개인 채로 갇혀요. (+)는 4개씩 그대로입니다. 그다음 대전체를 멀리하면 전자가 각 구 안에서 고르게 퍼지지만, A는 (−)전하, B는 (+)전하를 그대로 띱니다. A가 얻은 전자 수와 B가 잃은 전자 수가 2개로 같으니, 두 구가 띠는 전하의 양은 같고 종류는 반대예요.", "P12": "그런데 순서를 바꾸면 어떻게 될까요? 두 구를 붙여 둔 채 대전체를 먼저 멀리해 봅시다. A로 끌려왔던 전자 2개가 접촉면을 건너 B로 되돌아가요. 두 구 모두 4개와 4개, 중성입니다. 그다음에 떼어 봐도 둘 다 중성 그대로예요. 그래서 A는 (−), B는 (+)로 남기려면 반드시 먼저 분리한 다음 대전체를 멀리해야 합니다. 떼는 순서가 전부예요.", "P13": "정리합니다. 대전체를 가까이 하면 금속의 가까운 쪽에는 다른 종류, 먼 쪽에는 같은 종류의 전하가 유도됩니다. 이것이 정전기 유도예요. 움직이는 건 전자뿐이고 원자핵은 제자리, 금속 전체의 (+)와 (−)의 양은 그대로라서 대전체를 치우면 즉시 중성으로 돌아갑니다. 가까운 쪽이 늘 반대 전하라서 결과는 언제나 끌어당김이에요. 처음의 캔도 그랬죠. 문지르지 않은 캔이 끌려온 까닭은 가까운 쪽에 반대 전하가 유도되었기 때문입니다."};</script>
+<script>window.KW = {"items": [{"kw": "정전기 유도"}, {"kw": "유도되는 전하"}, {"kw": "유도 vs 마찰"}, {"kw": "두 금속 구"}], "at": [-1, -1, -1, 0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4]};</script>
 <script>
 /* ═══════════════════════════════════════════════════════════════
    core.js — 강의 덱 엔진
@@ -978,7 +1025,30 @@ html.student #notes{display:none!important}
     const on = !window.SFX || SFX.isOn();
     b.innerHTML = on ? ICON.sound : ICON.mute; b.classList.toggle('off', !on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
+  /* ── 키워드 진행 표시(무대 오른쪽 위 · 녹화 화면에도 보임) ──
+     window.KW = {items:[{kw}], at:[장마다 키워드 번호]} — build.py 가 slides/…/_keywords.json 으로 넣는다.
+     at: -1 = 숨김(표지·도입·키워드 장), 0..n-1 = 그 키워드, n = 모두 끝(정리·문제). 칩을 누르면 그 키워드의 첫 장으로 */
+  let kwEl = null;
+  function buildKw() {
+    const K = window.KW; if (!K || !K.items || !K.items.length || !K.at) return;
+    kwEl = document.createElement('div'); kwEl.id = 'kwbar'; kwEl.setAttribute('data-interactive', '');
+    kwEl.innerHTML = K.items.map((it, j) => `<button type="button" class="kw" data-j="${j}" aria-label="키워드 ${j + 1}: ${it.kw}"><b>${j + 1}</b><span>${it.kw}</span></button>`).join('');
+    stage.appendChild(kwEl);
+    kwEl.addEventListener('click', e => {
+      const b = e.target.closest('.kw'); if (!b) return; e.stopPropagation();
+      const i = K.at.indexOf(+b.dataset.j); if (i >= 0 && i !== Deck.i) show(i, 0);
+    });
+  }
+  function syncKw() {
+    if (!kwEl) return;
+    const K = window.KW, a = K.at[Deck.i], sec = Deck.list[Deck.i];
+    const hide = a == null || a < 0 || (sec && sec.hasAttribute('data-kw-hide'));
+    kwEl.classList.toggle('show', !hide);
+    kwEl.classList.toggle('end', a >= K.items.length);
+    kwEl.querySelectorAll('.kw').forEach((b, j) => { b.classList.toggle('done', j < a); b.classList.toggle('cur', j === a); });
+  }
   function buildChrome() {
+    buildKw();
     hud = document.createElement('div'); hud.id = 'hud';
     hud.innerHTML = `<button data-a="replay" aria-label="이 단계 다시 보기(R)">${ICON.replay}</button>${STUDENT ? '' : `<button data-a="notes" aria-label="대본 보기(T)">${ICON.notes}</button>`}<button data-a="grid" aria-label="전체 보기(O)">${ICON.grid}</button><button data-a="prev" aria-label="이전">${ICON.prev}</button><span class="count" id="count">1 / 1</span><button data-a="next" aria-label="다음">${ICON.next}</button><button data-a="sound" aria-label="소리 켜기/끄기(M)">${ICON.sound}</button><button data-a="full" aria-label="전체 화면(F)">${ICON.full}</button>`;
     document.body.appendChild(hud); syncSound();
@@ -1016,6 +1086,7 @@ html.student #notes{display:none!important}
     hud.querySelector('#count').textContent = `${Deck.i + 1} / ${n}`;
     prog.firstChild.style.width = `${((Deck.i + (st ? Deck.k / (st + 1) : 0)) / Math.max(1, n - 1)) * 100}%`;
     dots.innerHTML = st ? Array.from({ length: st + 1 }, (_, j) => `<i class="${j <= Deck.k ? 'on' : ''}"></i>`).join('') : '';
+    syncKw();
     if (notesEl.classList.contains('show')) renderNotes();
     if (ovEl.classList.contains('show')) renderOverview();
   }
@@ -1632,13 +1703,13 @@ try{
    · 마크업: RK.b('척력', 'push', 2)  → 빈칸(밑줄만, 낱말은 숨김). 세 번째 값 = 채워지는 단계(k)
    · 장면 go(c, k) 에서 RK.fill(c, k) → 그 단계의 빈칸이 차례로(시차 ms) 모션그래픽과 함께 채워진다
    · 순간 모드(되돌리기·건너뛰기)에서는 c.a/c.wait 가 곧장 끝 상태 → 낱말만 보이고 효과는 사라진 상태
-   종류(kind): electron · pos · neg · push · pull · spark · rub · flow · volt · zigzag · line · curve · press · hits
+   종류(kind): electron · pos · neg · push · pull · spark · rub · flow · volt · zigzag · line · curve · press · hits · chain · fork · cut
               · grow · shrink · up · down · glow · equal · pop(기본)
    ═══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
   const SND = { electron: 'zip', pos: 'pop', neg: 'pop', push: 'whoosh', pull: 'whoosh', spark: 'spark', rub: 'zip', flow: 'slide', volt: 'rise',
-    zigzag: 'scan', line: 'scan', curve: 'scan', press: 'thunk', hits: 'tick', grow: 'rise', shrink: 'pop', up: 'rise', down: 'pop', glow: 'ding', equal: 'step', pop: 'pop' };
+    zigzag: 'scan', line: 'scan', curve: 'scan', press: 'thunk', hits: 'tick', grow: 'rise', shrink: 'pop', up: 'rise', down: 'pop', glow: 'ding', equal: 'step', chain: 'step', fork: 'slide', cut: 'sweepDown', pop: 'pop' };
   const R = window.RK = {
     /** 빈칸 하나(문자열). word 는 HTML 가능(색 span 등). cls 로 색(c-neg 등)을 줄 수 있다 */
     b(word, kind, step, cls) {
@@ -1772,6 +1843,32 @@ try{
       const g = R.el(fx, '', { left: '50%', top: '50%', width: '200px', height: '200px', margin: '-100px 0 0 -100px', borderRadius: '50%', background: 'radial-gradient(circle, color-mix(in srgb, var(--light) 70%, transparent) 0%, transparent 65%)' });
       c.a(g, [{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1)', opacity: 1, offset: .5 }, { transform: 'scale(1.2)', opacity: 0 }], { dur: 1000, ease: 'out' });
       return 300;
+    },
+    chain(c, el, fx) {   // 낱말 위 한 줄 도선에 전구 셋이 차례로 — 직렬(길이 하나)
+      const s = R.svg(fx, 140, 36, '<path d="M4 18H136" fill="none" stroke="var(--t3)" stroke-width="4" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>' +
+        [34, 70, 106].map(x => `<circle cx="${x}" cy="18" r="9" fill="#FFE27A" stroke="var(--t2)" stroke-width="3" opacity="0"/>`).join(''), { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      c.a(s.querySelector('path'), [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: 420, ease: 'inOut' });
+      s.querySelectorAll('circle').forEach((b, i) => c.a(b, [{ opacity: 0, transform: 'scale(.3)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 260, delay: 300 + i * 110, ease: 'spring' }));
+      return 420;
+    },
+    fork(c, el, fx) {    // 낱말 위에서 한 줄기가 두 갈래로 나뉘었다가 다시 만난다 — 병렬(길이 여러 개)
+      const P = ['M4 22H34', 'M34 22C44 22 44 5 58 5H82C96 5 96 22 106 22', 'M34 22C44 22 44 39 58 39H82C96 39 96 22 106 22', 'M106 22H136'];
+      const s = R.svg(fx, 140, 44, P.map(d => `<path d="${d}" fill="none" stroke="var(--light)" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>`).join(''),
+        { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      const ps = s.querySelectorAll('path'), D = [[0, 220], [200, 420], [200, 420], [600, 220]];
+      ps.forEach((p, i) => c.a(p, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: D[i][1], delay: D[i][0], ease: 'linear' }));
+      return 520;
+    },
+    cut(c, el, fx) {     // 한 줄 도선의 켜진 전구들 — 가운데가 끊기면 모두 함께 꺼진다
+      const xs = [30, 70, 110];
+      const s = R.svg(fx, 140, 40, '<path d="M4 20H56M84 20H136" fill="none" stroke="var(--t3)" stroke-width="4" stroke-linecap="round"/><path d="M56 20H84" fill="none" stroke="var(--t3)" stroke-width="4"/>' +
+        xs.map(x => `<circle cx="${x}" cy="20" r="9" fill="var(--t3)" opacity=".5"/><circle class="on" cx="${x}" cy="20" r="9" fill="#FFE27A"/>`).join('') +
+        '<path d="M60 10L80 30M80 10L60 30" stroke="var(--heat)" stroke-width="5" stroke-linecap="round" opacity="0"/>', { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      const p = s.querySelectorAll('path');
+      c.a(p[1], [{ opacity: 1 }, { opacity: 0 }], { dur: 120, delay: 380 });
+      c.a(p[2], [{ opacity: 0, transform: 'scale(1.6)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 260, delay: 380, ease: 'out' });
+      s.querySelectorAll('.on').forEach(b => c.a(b, [{ opacity: 1 }, { opacity: 0 }], { dur: 180, delay: 460 }));   // 같은 순간에 모두
+      return 520;
     },
     equal(c, el, fx) {
       const a = R.el(fx, '', { left: '-30px', right: '-30px', top: '-16px', height: '6px', borderRadius: '3px', background: 'var(--act)' });
@@ -2168,6 +2265,25 @@ try{
 })();
 
 }catch(e){console.error("[slide 02_hook.html]",e)}
+/* ── 02_hookk_keywords.html ── */
+try{
+
+(function () {
+  const S = 'e2_02_hookk_keywords', TT = [600, 1246, 1893, 2540], TEND = 2540;
+  Deck.scene(S, {
+    steps: 0,
+    enter(c) {
+      if (!c.instant) { c.sfx('scan', 600, 1940); TT.forEach(t => c.sfx('tick', t)); c.sfx('chime', TEND + 250); }
+      const ring = c.$(`#${S}-ring`);
+      c.loop(t => {   // 「여기서 출발!」 — 첫 키워드 둘레가 천천히 숨 쉬듯
+        const k = t * 1000 < TEND ? 0 : (Math.sin((t * 1000 - TEND) / 420) + 1) / 2;
+        ring.setAttribute('r', (54 + 4 + 12 * k).toFixed(1)); ring.setAttribute('opacity', (t * 1000 < TEND ? 0 : .55 - .45 * k).toFixed(3));
+      });
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 02_hookk_keywords.html]",e)}
 /* ── 03_define.html ── */
 try{
 

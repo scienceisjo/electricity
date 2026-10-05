@@ -208,6 +208,22 @@ html.student #notes{display:none!important}
 .qbox .qh{font-size:26px;font-weight:600;color:var(--t2);margin-bottom:6px}
 .say-line{position:absolute;left:120px;right:120px;text-align:center;font-size:44px;font-weight:600;letter-spacing:-.02em;z-index:3}
 .fine{position:absolute;left:120px;bottom:40px;font-size:24px;color:var(--t3);z-index:3}
+/* ── 키워드 진행 표시(무대 오른쪽 위) — core.js buildKw/syncKw ── */
+#kwbar{position:absolute;top:34px;right:44px;z-index:30;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(-8px);pointer-events:none;
+  transition:opacity .45s var(--ease-out),transform .45s var(--ease-out)}
+#kwbar.show{opacity:1;transform:none;pointer-events:auto}
+#kwbar .kw{display:flex;align-items:center;height:46px;min-width:46px;border-radius:9999px;background:rgba(0,0,0,.055);color:#86868b;
+  font-size:24px;font-weight:600;letter-spacing:-.01em;line-height:1;transition:background .45s,color .45s;cursor:pointer}
+#kwbar .kw b{width:46px;height:46px;flex:none;display:grid;place-items:center;font-weight:700;font-variant-numeric:tabular-nums}
+#kwbar .kw span{max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .6s var(--ease-out),padding .6s var(--ease-out)}
+#kwbar .kw.done{background:rgba(0,0,0,.13);color:#3a3a3c}
+#kwbar .kw.cur{background:var(--action);color:#fff}
+#kwbar .kw.cur span{max-width:460px;padding-right:22px}
+#kwbar .kw:active{transform:scale(.95)}
+body:not(.on-light) #kwbar .kw{background:rgba(255,255,255,.1);color:#8e8e93}
+body:not(.on-light) #kwbar .kw.done{background:rgba(255,255,255,.24);color:#f5f5f7}
+body:not(.on-light) #kwbar .kw.cur{background:var(--action-dark);color:#fff}
+html.still #kwbar,html.still #kwbar *{transition:none!important}
 
 /* ── 10_elec.css ── */
 /* ── 전기와 자기 강의 덱 공용 색·글자 — 의미마다 색 하나(같은 뜻은 어느 장·어느 덱에서나 같은 색) ──
@@ -295,6 +311,19 @@ html.student #notes{display:none!important}
 .bk.e1-w1{min-width:10.4em}
 .bk.e1-w2{min-width:7.4em}
 .bk.e1-w3{min-width:6.6em}
+
+/* ── 02_hookk_keywords.html ── */
+
+#e1_02_hookk_keywords .kwk-n{font-size:48px;font-weight:700;fill:var(--act);font-variant-numeric:tabular-nums}
+#e1_02_hookk_keywords .kwk-end{position:absolute;width:200px;text-align:center;font-size:26px;font-weight:600;color:var(--t3);z-index:3}
+#e1_02_hookk_keywords .kwk-t{position:absolute;text-align:center;font-size:46px;font-weight:700;letter-spacing:-.025em;line-height:1.25;word-break:keep-all;z-index:3}
+#e1_02_hookk_keywords .kwk-start{position:absolute;width:220px;text-align:center;font-size:28px;font-weight:600;color:var(--act);z-index:3}
+#e1_02_hookk_keywords .kwk-mock{position:absolute;top:34px;right:44px;display:flex;gap:8px;z-index:3}
+#e1_02_hookk_keywords .kwk-mock .mk{display:flex;align-items:center;height:46px;min-width:46px;border-radius:9999px;background:rgba(0,0,0,.055);color:#86868b;font-size:24px;font-weight:600;line-height:1}
+#e1_02_hookk_keywords .kwk-mock .mk b{width:46px;height:46px;display:grid;place-items:center;font-weight:700}
+#e1_02_hookk_keywords .kwk-mock .mk.cur{background:var(--act);color:#fff}
+#e1_02_hookk_keywords .kwk-mock .mk i{font-style:normal;padding-right:22px;white-space:nowrap}
+#e1_02_hookk_keywords .kwk-hint{position:absolute;top:96px;right:44px;font-size:26px;color:var(--t2);z-index:3}
 
 /* ── 07_draw.html ── */
 
@@ -412,6 +441,23 @@ html.student #notes{display:none!important}
   </svg>
   <div class="e1-say" style="left:120px;top:330px;width:860px" data-step="1">타닥 · 찌릿 · 일어선 머리카락<span class="m">모두 바로 전에 두 물체가 서로 문질렀다</span></div>
   <div class="e1-big" style="left:120px;top:600px;width:880px" data-step="2"><span class="mute">그렇다면 이 전기,</span><br>새로 생긴 걸까?</div>
+</section>
+<!-- ═══ 02_hookk_keywords.html ═══ -->
+<section class="slide" id="e1_02_hookk_keywords" data-tile="light" data-title="오늘의 키워드" data-notes="P2k" data-say="오늘의 키워드 4개를 먼저 훑어봅니다. 다음 장부터 오른쪽 위에 지금 배우는 키워드가 표시되고, 칩을 누르면 그 키워드의 첫 장으로 갑니다.">
+  <div class="hd" data-in><div class="eb">학습지 1 · 마찰 전기</div><h2>오늘의 키워드</h2></div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <path d="M230 610H1480" stroke="#e8e8ed" stroke-width="12" stroke-linecap="round" fill="none"/>
+    <g data-in="2640" data-fx="fade"><path d="M1544 610H1666" stroke="#c7c7cc" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round" fill="none"/>
+      <circle cx="1700" cy="610" r="30" fill="#f5f5f7" stroke="#c7c7cc" stroke-width="5"/><path d="M1689 611l8 8 15-17" stroke="#aeaeb2" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>
+    <path d="M230 610H1480" stroke="var(--act)" stroke-width="12" stroke-linecap="round" fill="none" data-in="600" data-fx="draw" data-dur="1940" data-ease="inOut"/>
+    <circle id="e1_02_hookk_keywords-ring" cx="230" cy="610" r="54" fill="none" stroke="var(--act)" stroke-width="4" opacity="0"/>
+    <g data-in="600" data-fx="pop"><circle cx="230" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="230" y="627" text-anchor="middle" class="kwk-n">1</text></g><g data-in="1246" data-fx="pop"><circle cx="647" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="647" y="627" text-anchor="middle" class="kwk-n">2</text></g><g data-in="1893" data-fx="pop"><circle cx="1063" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="1063" y="627" text-anchor="middle" class="kwk-n">3</text></g><g data-in="2540" data-fx="pop"><circle cx="1480" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="1480" y="627" text-anchor="middle" class="kwk-n">4</text></g>
+  </svg>
+  <div class="kwk-t" style="left:34px;top:694px;width:392px" data-in="740" data-fx="rise">마찰 전기</div><div class="kwk-t" style="left:451px;top:694px;width:392px" data-in="1386" data-fx="rise">전기력</div><div class="kwk-t" style="left:867px;top:694px;width:392px" data-in="2033" data-fx="rise">대전</div><div class="kwk-t" style="left:1284px;top:694px;width:392px" data-in="2680" data-fx="rise">대전열</div>
+  <div class="kwk-end" style="left:1600px;top:526px" data-in="2740" data-fx="fade">정리 · 문제</div>
+  <div class="kwk-start" style="left:120px;top:470px" data-in="2740" data-fx="pop">여기서 출발!</div>
+  <div class="kwk-mock" data-in="3140" data-fx="fade"><span class="mk cur"><b>1</b><i>마찰 전기</i></span><span class="mk"><b>2</b></span><span class="mk"><b>3</b></span><span class="mk"><b>4</b></span></div>
+  <div class="kwk-hint" data-in="3440" data-fx="fade">지금 배우는 키워드는 오른쪽 위에 계속 표시돼요</div>
 </section>
 <!-- ═══ 03_define.html ═══ -->
 <section class="slide" id="e1_03_define" data-tile="light" data-title="마찰 전기" data-notes="P3" data-say="빈칸 ① 종류가 다른 두 물체가 마찰하여 · ② 전기. 「마찰 전기도 그냥 전기다」를 짚어 줍니다.">
@@ -669,7 +715,8 @@ html.student #notes{display:none!important}
 <div id="gridov"></div>
 </div></div>
 
-<script>window.NOTES = {"P1": "오늘부터 「전기와 자기」 단원을 시작합니다. 화면을 볼까요? 겨울에 스웨터를 벗을 때 «타닥» 하고 작은 불꽃이 튀고, 문고리에 손을 대기 직전에 «찌릿» 하고 불꽃이 튀었어요. 이런 일 겪어 본 사람 손 들어 볼까요? 찌릿은 몸에 쌓여 있던 전하가 손끝에서 문고리로 한꺼번에 옮겨 가는 순간이에요. 그런데 이 전기는 도대체 어디서 왔을까요? 오늘 수업 끝에 이 질문에 답해 봅시다.", "P2": "하나 더 볼게요. 풍선을 머리카락에 대고 문지른 다음 위로 들어 올리면, 손을 대지도 않았는데 머리카락이 풍선 쪽으로 끌려 올라갑니다. 타닥, 찌릿, 일어선 머리카락. 세 장면의 공통점이 보이나요? 모두 바로 전에 두 물체가 서로 문질러졌다는 거예요. 그렇다면 이 전기는 문지를 때 새로 생긴 걸까요? 지금 떠오르는 생각을 공책 귀퉁이에 한 줄 적어 두세요. 마지막에 다시 봅니다. <span class=\"cue\">화면: 답은 말하지 말고 질문만 남기기</span>", "P3": "털가죽과 고무풍선처럼 종류가 다른 두 물체가 마찰하여 발생하는 전기, 이것을 마찰 전기라고 해요. 마찰은 서로 문지르는 것입니다. 학습지 1번에는 「종류가 다른 두 물체가 마찰하여」, 2번에는 「전기」를 써 볼까요? 마찰 전기라고 해서 특별한 전기가 아니에요. 전기는 전기입니다. 그냥 마찰해서 생겼을 뿐이에요.", "P4": "잠깐 사전 지식입니다. 자석에 N극과 S극, 두 극이 있듯이 전기에도 (+)전하와 (−)전하, 두 종류가 있어요. 다만 닮은 점은 «두 종류»라는 것뿐이에요. N극이 (+)전하라는 뜻은 아니니까 섞어 쓰지 마세요.", "P5": "털가죽으로 문지른 풍선 두 개를 준비했어요. 하나는 매달고, 다른 하나를 손에 들고 가까이 가져가 볼게요. 닿지도 않았는데 매달린 풍선이 밀려납니다. 이렇게 전기를 띤 두 물체 사이에 작용하는 힘을 전기력이라고 해요. 3번은 「전기를 띤 두 물체」, 4번은 「힘」입니다. 화살표를 보세요. 매달린 풍선에만 있지 않고 손에 든 풍선에도 있어요. 손에 든 풍선은 손이 붙잡고 있어서 안 움직일 뿐, 똑같은 크기의 힘을 반대 방향으로 받고 있어요.", "P6": "전기력의 방향에는 규칙이 있어요. 왼쪽은 같은 종류의 전하를 띤 두 공이에요. 서로 밀어내며 벌어지죠? 이것을 척력이라고 해요. 5번 척력. 오른쪽은 다른 종류예요. 서로 끌어당겨 가까워집니다. 이것이 인력, 6번 인력이에요. 그래서 같은 종류의 전기를 띤 두 물체는 서로 밀어내는 방향, 7번 「밀어내는」, 다른 종류의 전기를 띤 두 물체는 서로 끌어당기는 방향, 8번 「끌어당기는」으로 힘을 받아요. 자석이 같은 극끼리 밀어내고 다른 극끼리 끌어당기는 것과 방향 규칙이 닮았죠?", "P7": "표의 둘째 줄을 채워 볼까요? (+)와 (+)가 척력이었으니, (−)와 (−)도 같은 종류라서 척력, 그래서 밀어냅니다. 이제 학습지 그림에 전기력의 방향을 화살표로 직접 그려 보세요. 1분 드릴게요. … 다 그렸으면 정답을 봅시다. 화살표는 두 공 모두에 하나씩 그려야 해요. 한 쌍 안에서 두 화살표는 길이가 같고 방향은 반대예요. 척력이면 서로 멀어지는 쪽, 인력이면 서로 가까워지는 쪽입니다. 내 그림과 비교해 보세요. <span class=\"cue\">화면: 1분 기다린 뒤 다음 단계</span>", "P8": "띨 대(帶) 자에 번개 전(電) 자를 써서 「전기를 띤다」는 뜻이에요. 털가죽으로 풍선을 문지르면 풍선이 전기를 띠게 되죠. 이렇게 물체가 전기를 띠는 현상을 대전, 9번이에요. 그리고 대전된 물체를 대전체라고 해요, 10번. 그럼 대전체는 풍선 하나뿐일까요? 아니요, 함께 문지른 털가죽도 전기를 띠었으니 털가죽도 대전체예요. 문지른 두 물체가 모두 대전체입니다.", "P9": "그럼 문지르면 물체 속에서 무슨 일이 일어날까요? 원자 모형으로 들여다봅시다. 처음에는 두 물체 모두 (+)와 (−)가 6개씩 같아서 전기를 띠지 않아요. 전하가 없는 게 아니라 양이 같은 거예요. 두 물체를 서로 마찰하면, 한 물체에서 다른 물체로 전자가 이동합니다. 11번 마찰, 12번 전자. 원자핵은 옮겨 갔나요? 아니요, 제자리에 있어요. 이제 수를 세어 볼까요? 털가죽은 (−)가 4개, 풍선은 8개. 합하면 처음과 똑같이 12개예요. 전기는 새로 생긴 것이 아니라 옮겨 갔을 뿐입니다. 그래서 전자를 얻은 물체는 (−)전하로 대전되고, 13번 「전자를 얻은 물체」, 전자를 잃은 물체는 (+)전하로 대전돼요, 14번 「전자를 잃은 물체」. 학습지 2쪽의 빈 그림 칸에 이 그림을 따라 그려 두세요. <span class=\"cue\">화면: 「원자핵은 옮겨 갔나요?」「전자 수의 합은?」 꼭 묻기</span>", "P10": "그런데 왜 털가죽이 전자를 잃고 풍선이 얻었을까요? 물체마다 전자를 잃기 쉬운 정도가 다르기 때문이에요. 이 정도에 따라 물체를 한 줄로 늘어놓은 것이 대전열입니다. 띠의 앞쪽에 있을수록 (+)가 되기 쉽고, 15번 앞쪽, 뒤쪽에 있을수록 (−)가 되기 쉬워요, 16번 뒤쪽. 털가죽과 고무풍선을 마찰하면 앞쪽인 털가죽의 전자가 뒤쪽인 고무풍선으로 옮겨 가서, 털가죽은 (+), 고무풍선은 (−)가 됩니다. 순서는 외우지 않아도 돼요. 시험에는 조건이 주어집니다.", "P11": "대전열로 표를 채워 봅시다. 띠에서 두 물체를 찾고, 앞쪽에 있는 물체가 (+)예요. 털가죽과 고무풍선은 털가죽이 (+), 고무풍선이 (−). 명주 헝겊과 유리막대는 유리가 앞쪽이라 유리막대가 (+), 명주 헝겊이 (−)입니다. 번호 (1), (2) 순서에 속지 마세요. 머리카락은 띠에 없지만, 플라스틱 자와 문지르면 머리카락의 전자가 자로 옮겨 가서 머리카락이 (+), 플라스틱 자가 (−)가 돼요.", "P12": "오늘 정리입니다. 종류가 다른 두 물체를 문지르면 마찰 전기가 생기고, 전기를 띤 두 물체 사이에는 전기력이 작용해요. 같은 종류는 척력, 다른 종류는 인력이에요. 문지를 때 옮겨 가는 것은 전자뿐이고, 전자를 얻으면 (−), 잃으면 (+)가 됩니다. 대전열에서 앞쪽이 (+), 뒤쪽이 (−)예요. 이제 처음 질문에 답해 볼까요? 타닥, 찌릿, 지지직의 정체는 새로 생긴 전기가 아니라 옮겨 간 전자예요. 풍선을 머리카락에 문지르면 머리카락의 전자가 풍선으로 옮겨 가서, 머리카락은 (+), 풍선은 (−). 다른 종류끼리라 서로 끌어당긴 거예요. 처음에 적어 둔 내 생각과 비교해 보세요. 그런데 문지른 적도 없는 물체가 대전체에 끌려오기도 해요. 그건 다음 시간, 정전기 유도에서 풀어 봅시다."};</script>
+<script>window.NOTES = {"P1": "오늘부터 「전기와 자기」 단원을 시작합니다. 화면을 볼까요? 겨울에 스웨터를 벗을 때 «타닥» 하고 작은 불꽃이 튀고, 문고리에 손을 대기 직전에 «찌릿» 하고 불꽃이 튀었어요. 이런 일 겪어 본 사람 손 들어 볼까요? 찌릿은 몸에 쌓여 있던 전하가 손끝에서 문고리로 한꺼번에 옮겨 가는 순간이에요. 그런데 이 전기는 도대체 어디서 왔을까요? 오늘 수업 끝에 이 질문에 답해 봅시다.", "P2": "하나 더 볼게요. 풍선을 머리카락에 대고 문지른 다음 위로 들어 올리면, 손을 대지도 않았는데 머리카락이 풍선 쪽으로 끌려 올라갑니다. 타닥, 찌릿, 일어선 머리카락. 세 장면의 공통점이 보이나요? 모두 바로 전에 두 물체가 서로 문질러졌다는 거예요. 그렇다면 이 전기는 문지를 때 새로 생긴 걸까요? 지금 떠오르는 생각을 공책 귀퉁이에 한 줄 적어 두세요. 마지막에 다시 봅니다. <span class=\"cue\">화면: 답은 말하지 말고 질문만 남기기</span>", "P2k": "본격적으로 들어가기 전에 오늘의 키워드부터 볼까요? 오늘은 네 가지 키워드를 따라갑니다. 첫 번째 「마찰 전기」, 두 번째 「전기력」, 세 번째 「대전」, 그리고 마지막 「대전열」입니다. 화면 오른쪽 위를 보면 지금 어떤 키워드를 배우고 있는지 계속 표시해 둘게요. 그럼 첫 번째 키워드, 「마찰 전기」부터 시작해 볼까요? <span class=\"cue\">화면: 오늘의 키워드 4개 — 오른쪽 위 진행 표시 안내</span>", "P3": "털가죽과 고무풍선처럼 종류가 다른 두 물체가 마찰하여 발생하는 전기, 이것을 마찰 전기라고 해요. 마찰은 서로 문지르는 것입니다. 학습지 1번에는 「종류가 다른 두 물체가 마찰하여」, 2번에는 「전기」를 써 볼까요? 마찰 전기라고 해서 특별한 전기가 아니에요. 전기는 전기입니다. 그냥 마찰해서 생겼을 뿐이에요.", "P4": "잠깐 사전 지식입니다. 자석에 N극과 S극, 두 극이 있듯이 전기에도 (+)전하와 (−)전하, 두 종류가 있어요. 다만 닮은 점은 «두 종류»라는 것뿐이에요. N극이 (+)전하라는 뜻은 아니니까 섞어 쓰지 마세요.", "P5": "털가죽으로 문지른 풍선 두 개를 준비했어요. 하나는 매달고, 다른 하나를 손에 들고 가까이 가져가 볼게요. 닿지도 않았는데 매달린 풍선이 밀려납니다. 이렇게 전기를 띤 두 물체 사이에 작용하는 힘을 전기력이라고 해요. 3번은 「전기를 띤 두 물체」, 4번은 「힘」입니다. 화살표를 보세요. 매달린 풍선에만 있지 않고 손에 든 풍선에도 있어요. 손에 든 풍선은 손이 붙잡고 있어서 안 움직일 뿐, 똑같은 크기의 힘을 반대 방향으로 받고 있어요.", "P6": "전기력의 방향에는 규칙이 있어요. 왼쪽은 같은 종류의 전하를 띤 두 공이에요. 서로 밀어내며 벌어지죠? 이것을 척력이라고 해요. 5번 척력. 오른쪽은 다른 종류예요. 서로 끌어당겨 가까워집니다. 이것이 인력, 6번 인력이에요. 그래서 같은 종류의 전기를 띤 두 물체는 서로 밀어내는 방향, 7번 「밀어내는」, 다른 종류의 전기를 띤 두 물체는 서로 끌어당기는 방향, 8번 「끌어당기는」으로 힘을 받아요. 자석이 같은 극끼리 밀어내고 다른 극끼리 끌어당기는 것과 방향 규칙이 닮았죠?", "P7": "표의 둘째 줄을 채워 볼까요? (+)와 (+)가 척력이었으니, (−)와 (−)도 같은 종류라서 척력, 그래서 밀어냅니다. 이제 학습지 그림에 전기력의 방향을 화살표로 직접 그려 보세요. 1분 드릴게요. … 다 그렸으면 정답을 봅시다. 화살표는 두 공 모두에 하나씩 그려야 해요. 한 쌍 안에서 두 화살표는 길이가 같고 방향은 반대예요. 척력이면 서로 멀어지는 쪽, 인력이면 서로 가까워지는 쪽입니다. 내 그림과 비교해 보세요. <span class=\"cue\">화면: 1분 기다린 뒤 다음 단계</span>", "P8": "띨 대(帶) 자에 번개 전(電) 자를 써서 「전기를 띤다」는 뜻이에요. 털가죽으로 풍선을 문지르면 풍선이 전기를 띠게 되죠. 이렇게 물체가 전기를 띠는 현상을 대전, 9번이에요. 그리고 대전된 물체를 대전체라고 해요, 10번. 그럼 대전체는 풍선 하나뿐일까요? 아니요, 함께 문지른 털가죽도 전기를 띠었으니 털가죽도 대전체예요. 문지른 두 물체가 모두 대전체입니다.", "P9": "그럼 문지르면 물체 속에서 무슨 일이 일어날까요? 원자 모형으로 들여다봅시다. 처음에는 두 물체 모두 (+)와 (−)가 6개씩 같아서 전기를 띠지 않아요. 전하가 없는 게 아니라 양이 같은 거예요. 두 물체를 서로 마찰하면, 한 물체에서 다른 물체로 전자가 이동합니다. 11번 마찰, 12번 전자. 원자핵은 옮겨 갔나요? 아니요, 제자리에 있어요. 이제 수를 세어 볼까요? 털가죽은 (−)가 4개, 풍선은 8개. 합하면 처음과 똑같이 12개예요. 전기는 새로 생긴 것이 아니라 옮겨 갔을 뿐입니다. 그래서 전자를 얻은 물체는 (−)전하로 대전되고, 13번 「전자를 얻은 물체」, 전자를 잃은 물체는 (+)전하로 대전돼요, 14번 「전자를 잃은 물체」. 학습지 2쪽의 빈 그림 칸에 이 그림을 따라 그려 두세요. <span class=\"cue\">화면: 「원자핵은 옮겨 갔나요?」「전자 수의 합은?」 꼭 묻기</span>", "P10": "그런데 왜 털가죽이 전자를 잃고 풍선이 얻었을까요? 물체마다 전자를 잃기 쉬운 정도가 다르기 때문이에요. 이 정도에 따라 물체를 한 줄로 늘어놓은 것이 대전열입니다. 띠의 앞쪽에 있을수록 (+)가 되기 쉽고, 15번 앞쪽, 뒤쪽에 있을수록 (−)가 되기 쉬워요, 16번 뒤쪽. 털가죽과 고무풍선을 마찰하면 앞쪽인 털가죽의 전자가 뒤쪽인 고무풍선으로 옮겨 가서, 털가죽은 (+), 고무풍선은 (−)가 됩니다. 순서는 외우지 않아도 돼요. 시험에는 조건이 주어집니다.", "P11": "대전열로 표를 채워 봅시다. 띠에서 두 물체를 찾고, 앞쪽에 있는 물체가 (+)예요. 털가죽과 고무풍선은 털가죽이 (+), 고무풍선이 (−). 명주 헝겊과 유리막대는 유리가 앞쪽이라 유리막대가 (+), 명주 헝겊이 (−)입니다. 번호 (1), (2) 순서에 속지 마세요. 머리카락은 띠에 없지만, 플라스틱 자와 문지르면 머리카락의 전자가 자로 옮겨 가서 머리카락이 (+), 플라스틱 자가 (−)가 돼요.", "P12": "오늘 정리입니다. 종류가 다른 두 물체를 문지르면 마찰 전기가 생기고, 전기를 띤 두 물체 사이에는 전기력이 작용해요. 같은 종류는 척력, 다른 종류는 인력이에요. 문지를 때 옮겨 가는 것은 전자뿐이고, 전자를 얻으면 (−), 잃으면 (+)가 됩니다. 대전열에서 앞쪽이 (+), 뒤쪽이 (−)예요. 이제 처음 질문에 답해 볼까요? 타닥, 찌릿, 지지직의 정체는 새로 생긴 전기가 아니라 옮겨 간 전자예요. 풍선을 머리카락에 문지르면 머리카락의 전자가 풍선으로 옮겨 가서, 머리카락은 (+), 풍선은 (−). 다른 종류끼리라 서로 끌어당긴 거예요. 처음에 적어 둔 내 생각과 비교해 보세요. 그런데 문지른 적도 없는 물체가 대전체에 끌려오기도 해요. 그건 다음 시간, 정전기 유도에서 풀어 봅시다."};</script>
+<script>window.KW = {"items": [{"kw": "마찰 전기"}, {"kw": "전기력"}, {"kw": "대전"}, {"kw": "대전열"}], "at": [-1, -1, -1, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4]};</script>
 <script>
 /* ═══════════════════════════════════════════════════════════════
    core.js — 강의 덱 엔진
@@ -1039,7 +1086,30 @@ html.student #notes{display:none!important}
     const on = !window.SFX || SFX.isOn();
     b.innerHTML = on ? ICON.sound : ICON.mute; b.classList.toggle('off', !on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
+  /* ── 키워드 진행 표시(무대 오른쪽 위 · 녹화 화면에도 보임) ──
+     window.KW = {items:[{kw}], at:[장마다 키워드 번호]} — build.py 가 slides/…/_keywords.json 으로 넣는다.
+     at: -1 = 숨김(표지·도입·키워드 장), 0..n-1 = 그 키워드, n = 모두 끝(정리·문제). 칩을 누르면 그 키워드의 첫 장으로 */
+  let kwEl = null;
+  function buildKw() {
+    const K = window.KW; if (!K || !K.items || !K.items.length || !K.at) return;
+    kwEl = document.createElement('div'); kwEl.id = 'kwbar'; kwEl.setAttribute('data-interactive', '');
+    kwEl.innerHTML = K.items.map((it, j) => `<button type="button" class="kw" data-j="${j}" aria-label="키워드 ${j + 1}: ${it.kw}"><b>${j + 1}</b><span>${it.kw}</span></button>`).join('');
+    stage.appendChild(kwEl);
+    kwEl.addEventListener('click', e => {
+      const b = e.target.closest('.kw'); if (!b) return; e.stopPropagation();
+      const i = K.at.indexOf(+b.dataset.j); if (i >= 0 && i !== Deck.i) show(i, 0);
+    });
+  }
+  function syncKw() {
+    if (!kwEl) return;
+    const K = window.KW, a = K.at[Deck.i], sec = Deck.list[Deck.i];
+    const hide = a == null || a < 0 || (sec && sec.hasAttribute('data-kw-hide'));
+    kwEl.classList.toggle('show', !hide);
+    kwEl.classList.toggle('end', a >= K.items.length);
+    kwEl.querySelectorAll('.kw').forEach((b, j) => { b.classList.toggle('done', j < a); b.classList.toggle('cur', j === a); });
+  }
   function buildChrome() {
+    buildKw();
     hud = document.createElement('div'); hud.id = 'hud';
     hud.innerHTML = `<button data-a="replay" aria-label="이 단계 다시 보기(R)">${ICON.replay}</button>${STUDENT ? '' : `<button data-a="notes" aria-label="대본 보기(T)">${ICON.notes}</button>`}<button data-a="grid" aria-label="전체 보기(O)">${ICON.grid}</button><button data-a="prev" aria-label="이전">${ICON.prev}</button><span class="count" id="count">1 / 1</span><button data-a="next" aria-label="다음">${ICON.next}</button><button data-a="sound" aria-label="소리 켜기/끄기(M)">${ICON.sound}</button><button data-a="full" aria-label="전체 화면(F)">${ICON.full}</button>`;
     document.body.appendChild(hud); syncSound();
@@ -1077,6 +1147,7 @@ html.student #notes{display:none!important}
     hud.querySelector('#count').textContent = `${Deck.i + 1} / ${n}`;
     prog.firstChild.style.width = `${((Deck.i + (st ? Deck.k / (st + 1) : 0)) / Math.max(1, n - 1)) * 100}%`;
     dots.innerHTML = st ? Array.from({ length: st + 1 }, (_, j) => `<i class="${j <= Deck.k ? 'on' : ''}"></i>`).join('') : '';
+    syncKw();
     if (notesEl.classList.contains('show')) renderNotes();
     if (ovEl.classList.contains('show')) renderOverview();
   }
@@ -1693,13 +1764,13 @@ try{
    · 마크업: RK.b('척력', 'push', 2)  → 빈칸(밑줄만, 낱말은 숨김). 세 번째 값 = 채워지는 단계(k)
    · 장면 go(c, k) 에서 RK.fill(c, k) → 그 단계의 빈칸이 차례로(시차 ms) 모션그래픽과 함께 채워진다
    · 순간 모드(되돌리기·건너뛰기)에서는 c.a/c.wait 가 곧장 끝 상태 → 낱말만 보이고 효과는 사라진 상태
-   종류(kind): electron · pos · neg · push · pull · spark · rub · flow · volt · zigzag · line · curve · press · hits
+   종류(kind): electron · pos · neg · push · pull · spark · rub · flow · volt · zigzag · line · curve · press · hits · chain · fork · cut
               · grow · shrink · up · down · glow · equal · pop(기본)
    ═══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
   const SND = { electron: 'zip', pos: 'pop', neg: 'pop', push: 'whoosh', pull: 'whoosh', spark: 'spark', rub: 'zip', flow: 'slide', volt: 'rise',
-    zigzag: 'scan', line: 'scan', curve: 'scan', press: 'thunk', hits: 'tick', grow: 'rise', shrink: 'pop', up: 'rise', down: 'pop', glow: 'ding', equal: 'step', pop: 'pop' };
+    zigzag: 'scan', line: 'scan', curve: 'scan', press: 'thunk', hits: 'tick', grow: 'rise', shrink: 'pop', up: 'rise', down: 'pop', glow: 'ding', equal: 'step', chain: 'step', fork: 'slide', cut: 'sweepDown', pop: 'pop' };
   const R = window.RK = {
     /** 빈칸 하나(문자열). word 는 HTML 가능(색 span 등). cls 로 색(c-neg 등)을 줄 수 있다 */
     b(word, kind, step, cls) {
@@ -1833,6 +1904,32 @@ try{
       const g = R.el(fx, '', { left: '50%', top: '50%', width: '200px', height: '200px', margin: '-100px 0 0 -100px', borderRadius: '50%', background: 'radial-gradient(circle, color-mix(in srgb, var(--light) 70%, transparent) 0%, transparent 65%)' });
       c.a(g, [{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1)', opacity: 1, offset: .5 }, { transform: 'scale(1.2)', opacity: 0 }], { dur: 1000, ease: 'out' });
       return 300;
+    },
+    chain(c, el, fx) {   // 낱말 위 한 줄 도선에 전구 셋이 차례로 — 직렬(길이 하나)
+      const s = R.svg(fx, 140, 36, '<path d="M4 18H136" fill="none" stroke="var(--t3)" stroke-width="4" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>' +
+        [34, 70, 106].map(x => `<circle cx="${x}" cy="18" r="9" fill="#FFE27A" stroke="var(--t2)" stroke-width="3" opacity="0"/>`).join(''), { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      c.a(s.querySelector('path'), [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: 420, ease: 'inOut' });
+      s.querySelectorAll('circle').forEach((b, i) => c.a(b, [{ opacity: 0, transform: 'scale(.3)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 260, delay: 300 + i * 110, ease: 'spring' }));
+      return 420;
+    },
+    fork(c, el, fx) {    // 낱말 위에서 한 줄기가 두 갈래로 나뉘었다가 다시 만난다 — 병렬(길이 여러 개)
+      const P = ['M4 22H34', 'M34 22C44 22 44 5 58 5H82C96 5 96 22 106 22', 'M34 22C44 22 44 39 58 39H82C96 39 96 22 106 22', 'M106 22H136'];
+      const s = R.svg(fx, 140, 44, P.map(d => `<path d="${d}" fill="none" stroke="var(--light)" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>`).join(''),
+        { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      const ps = s.querySelectorAll('path'), D = [[0, 220], [200, 420], [200, 420], [600, 220]];
+      ps.forEach((p, i) => c.a(p, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: D[i][1], delay: D[i][0], ease: 'linear' }));
+      return 520;
+    },
+    cut(c, el, fx) {     // 한 줄 도선의 켜진 전구들 — 가운데가 끊기면 모두 함께 꺼진다
+      const xs = [30, 70, 110];
+      const s = R.svg(fx, 140, 40, '<path d="M4 20H56M84 20H136" fill="none" stroke="var(--t3)" stroke-width="4" stroke-linecap="round"/><path d="M56 20H84" fill="none" stroke="var(--t3)" stroke-width="4"/>' +
+        xs.map(x => `<circle cx="${x}" cy="20" r="9" fill="var(--t3)" opacity=".5"/><circle class="on" cx="${x}" cy="20" r="9" fill="#FFE27A"/>`).join('') +
+        '<path d="M60 10L80 30M80 10L60 30" stroke="var(--heat)" stroke-width="5" stroke-linecap="round" opacity="0"/>', { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      const p = s.querySelectorAll('path');
+      c.a(p[1], [{ opacity: 1 }, { opacity: 0 }], { dur: 120, delay: 380 });
+      c.a(p[2], [{ opacity: 0, transform: 'scale(1.6)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 260, delay: 380, ease: 'out' });
+      s.querySelectorAll('.on').forEach(b => c.a(b, [{ opacity: 1 }, { opacity: 0 }], { dur: 180, delay: 460 }));   // 같은 순간에 모두
+      return 520;
     },
     equal(c, el, fx) {
       const a = R.el(fx, '', { left: '-30px', right: '-30px', top: '-16px', height: '6px', borderRadius: '3px', background: 'var(--act)' });
@@ -2183,6 +2280,25 @@ try{
 })();
 
 }catch(e){console.error("[slide 02_hook.html]",e)}
+/* ── 02_hookk_keywords.html ── */
+try{
+
+(function () {
+  const S = 'e1_02_hookk_keywords', TT = [600, 1246, 1893, 2540], TEND = 2540;
+  Deck.scene(S, {
+    steps: 0,
+    enter(c) {
+      if (!c.instant) { c.sfx('scan', 600, 1940); TT.forEach(t => c.sfx('tick', t)); c.sfx('chime', TEND + 250); }
+      const ring = c.$(`#${S}-ring`);
+      c.loop(t => {   // 「여기서 출발!」 — 첫 키워드 둘레가 천천히 숨 쉬듯
+        const k = t * 1000 < TEND ? 0 : (Math.sin((t * 1000 - TEND) / 420) + 1) / 2;
+        ring.setAttribute('r', (54 + 4 + 12 * k).toFixed(1)); ring.setAttribute('opacity', (t * 1000 < TEND ? 0 : .55 - .45 * k).toFixed(3));
+      });
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 02_hookk_keywords.html]",e)}
 /* ── 03_define.html ── */
 try{
 

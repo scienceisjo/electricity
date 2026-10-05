@@ -208,6 +208,22 @@ html.student #notes{display:none!important}
 .qbox .qh{font-size:26px;font-weight:600;color:var(--t2);margin-bottom:6px}
 .say-line{position:absolute;left:120px;right:120px;text-align:center;font-size:44px;font-weight:600;letter-spacing:-.02em;z-index:3}
 .fine{position:absolute;left:120px;bottom:40px;font-size:24px;color:var(--t3);z-index:3}
+/* ── 키워드 진행 표시(무대 오른쪽 위) — core.js buildKw/syncKw ── */
+#kwbar{position:absolute;top:34px;right:44px;z-index:30;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(-8px);pointer-events:none;
+  transition:opacity .45s var(--ease-out),transform .45s var(--ease-out)}
+#kwbar.show{opacity:1;transform:none;pointer-events:auto}
+#kwbar .kw{display:flex;align-items:center;height:46px;min-width:46px;border-radius:9999px;background:rgba(0,0,0,.055);color:#86868b;
+  font-size:24px;font-weight:600;letter-spacing:-.01em;line-height:1;transition:background .45s,color .45s;cursor:pointer}
+#kwbar .kw b{width:46px;height:46px;flex:none;display:grid;place-items:center;font-weight:700;font-variant-numeric:tabular-nums}
+#kwbar .kw span{max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .6s var(--ease-out),padding .6s var(--ease-out)}
+#kwbar .kw.done{background:rgba(0,0,0,.13);color:#3a3a3c}
+#kwbar .kw.cur{background:var(--action);color:#fff}
+#kwbar .kw.cur span{max-width:460px;padding-right:22px}
+#kwbar .kw:active{transform:scale(.95)}
+body:not(.on-light) #kwbar .kw{background:rgba(255,255,255,.1);color:#8e8e93}
+body:not(.on-light) #kwbar .kw.done{background:rgba(255,255,255,.24);color:#f5f5f7}
+body:not(.on-light) #kwbar .kw.cur{background:var(--action-dark);color:#fff}
+html.still #kwbar,html.still #kwbar *{transition:none!important}
 
 /* ── 10_energy.css ── */
 /* objects/10_energy.css — 묶음 O1 공용(에너지 라벨 · 글자 나누기 · 조각 아이콘) */
@@ -431,6 +447,19 @@ html.still .o-cellgrid .p-cell{transition:none}
 
 #s02_grid .s02-lab{display:flex;align-items:center;justify-content:center;gap:12px;font-size:38px;font-weight:600;color:var(--elec);opacity:0}
 #s02_grid .s02-ico svg{width:42px;height:42px;display:block;overflow:visible}
+
+/* ── s02_gridk_keywords.html ── */
+
+#s02_gridk_keywords .kwk-n{font-size:48px;font-weight:700;fill:var(--act);font-variant-numeric:tabular-nums}
+#s02_gridk_keywords .kwk-end{position:absolute;width:200px;text-align:center;font-size:26px;font-weight:600;color:var(--t3);z-index:3}
+#s02_gridk_keywords .kwk-t{position:absolute;text-align:center;font-size:46px;font-weight:700;letter-spacing:-.025em;line-height:1.25;word-break:keep-all;z-index:3}
+#s02_gridk_keywords .kwk-start{position:absolute;width:220px;text-align:center;font-size:28px;font-weight:600;color:var(--act);z-index:3}
+#s02_gridk_keywords .kwk-mock{position:absolute;top:34px;right:44px;display:flex;gap:8px;z-index:3}
+#s02_gridk_keywords .kwk-mock .mk{display:flex;align-items:center;height:46px;min-width:46px;border-radius:9999px;background:rgba(0,0,0,.055);color:#86868b;font-size:24px;font-weight:600;line-height:1}
+#s02_gridk_keywords .kwk-mock .mk b{width:46px;height:46px;display:grid;place-items:center;font-weight:700}
+#s02_gridk_keywords .kwk-mock .mk.cur{background:var(--act);color:#fff}
+#s02_gridk_keywords .kwk-mock .mk i{font-style:normal;padding-right:22px;white-space:nowrap}
+#s02_gridk_keywords .kwk-hint{position:absolute;top:96px;right:44px;font-size:26px;color:var(--t2);z-index:3}
 
 /* ── s03_energy.html ── */
 
@@ -662,6 +691,23 @@ html.still .o-cellgrid .p-cell{transition:none}
   </svg>
   <div class="hd" data-in="1600"><div class="eb">도입</div><h2>발전소에서 우리 집까지</h2></div>
   <div class="abs s02-lab" id="s02_grid-lab" style="left:930px;top:400px;width:400px"><span class="s02-ico" id="s02_grid-ico"></span>전기 에너지</div>
+</section>
+<!-- ═══ s02_gridk_keywords.html ═══ -->
+<section class="slide" id="s02_gridk_keywords" data-tile="light" data-title="오늘의 키워드" data-notes="P1k" data-say="오늘의 키워드 4개를 먼저 훑어봅니다. 다음 장부터 오른쪽 위에 지금 배우는 키워드가 표시되고, 칩을 누르면 그 키워드의 첫 장으로 갑니다.">
+  <div class="hd" data-in><div class="eb">학습지 6 · 소비 전력</div><h2>오늘의 키워드</h2></div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <path d="M230 610H1480" stroke="#e8e8ed" stroke-width="12" stroke-linecap="round" fill="none"/>
+    <g data-in="2640" data-fx="fade"><path d="M1544 610H1666" stroke="#c7c7cc" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round" fill="none"/>
+      <circle cx="1700" cy="610" r="30" fill="#f5f5f7" stroke="#c7c7cc" stroke-width="5"/><path d="M1689 611l8 8 15-17" stroke="#aeaeb2" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>
+    <path d="M230 610H1480" stroke="var(--act)" stroke-width="12" stroke-linecap="round" fill="none" data-in="600" data-fx="draw" data-dur="1940" data-ease="inOut"/>
+    <circle id="s02_gridk_keywords-ring" cx="230" cy="610" r="54" fill="none" stroke="var(--act)" stroke-width="4" opacity="0"/>
+    <g data-in="600" data-fx="pop"><circle cx="230" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="230" y="627" text-anchor="middle" class="kwk-n">1</text></g><g data-in="1246" data-fx="pop"><circle cx="647" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="647" y="627" text-anchor="middle" class="kwk-n">2</text></g><g data-in="1893" data-fx="pop"><circle cx="1063" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="1063" y="627" text-anchor="middle" class="kwk-n">3</text></g><g data-in="2540" data-fx="pop"><circle cx="1480" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="1480" y="627" text-anchor="middle" class="kwk-n">4</text></g>
+  </svg>
+  <div class="kwk-t" style="left:34px;top:694px;width:392px" data-in="740" data-fx="rise">전기 에너지</div><div class="kwk-t" style="left:451px;top:694px;width:392px" data-in="1386" data-fx="rise">소비 전력</div><div class="kwk-t" style="left:867px;top:694px;width:392px" data-in="2033" data-fx="rise">전력량</div><div class="kwk-t" style="left:1284px;top:694px;width:392px" data-in="2680" data-fx="rise">에너지 효율</div>
+  <div class="kwk-end" style="left:1600px;top:526px" data-in="2740" data-fx="fade">정리 · 문제</div>
+  <div class="kwk-start" style="left:120px;top:470px" data-in="2740" data-fx="pop">여기서 출발!</div>
+  <div class="kwk-mock" data-in="3140" data-fx="fade"><span class="mk cur"><b>1</b><i>전기 에너지</i></span><span class="mk"><b>2</b></span><span class="mk"><b>3</b></span><span class="mk"><b>4</b></span></div>
+  <div class="kwk-hint" data-in="3440" data-fx="fade">지금 배우는 키워드는 오른쪽 위에 계속 표시돼요</div>
 </section>
 <!-- ═══ s03_energy.html ═══ -->
 <section class="slide" id="s03_energy" data-tile="light" data-title="1. 전기 에너지 — 여러 형태로 전환" data-notes="P1">
@@ -1092,7 +1138,8 @@ html.still .o-cellgrid .p-cell{transition:none}
 <div id="gridov"></div>
 </div></div>
 
-<script>window.NOTES = {"P1": "발전소에서 만들어진 전기 에너지는 전선을 통해 우리 집으로 전달됩니다. 그리고 집에 있는 전기 기구를 만나면, 우리가 필요한 다른 형태의 에너지로 전환됩니다.", "P2": "예를 들어 토스터기는 전기 에너지를 열에너지로 바꾸어 빵을 굽고, 스피커는 소리 에너지로 바꾸어 음악을 들려줍니다. 선풍기는 전기 에너지로 날개를 돌려 바람을 만들죠. 이때 전기 에너지는 주로 **운동 에너지**로 전환됩니다.", "P3": "그런데 선풍기가 돌아갈 때 날개가 움직이기만 하나요? ‘윙’ 하는 소리도 나고, 모터에서는 열도 발생합니다. 즉, 선풍기에 공급된 전기 에너지가 모두 날개를 돌리는 데 쓰이는 것은 아닙니다. 일부는 소리 에너지와 열에너지로도 전환돼요.", "P4": "전구도 마찬가지입니다. 전구를 켜는 목적은 **빛**을 얻기 위해서인데, 켜진 전구에서는 **열**도 나옵니다. 이렇게 전기 기구에서는 전기 에너지가 주된 용도에 필요한 에너지 외의 형태로도 전환됩니다. 목적에 사용되지 못한 부분을 ‘에너지 손실’이라고 해요. 에너지가 사라졌다는 뜻은 아니고, **우리가 원한 일에 쓰이지 못했다**는 뜻입니다.", "P5": "그렇다면 같은 일을 하는 전기 기구 두 개가 있다면, 어느 쪽이 전기 에너지를 더 많이 필요로 할까요? 다른 형태로 전환되어 손실되는 에너지가 많은 기구일수록 더 많은 전기 에너지를 공급받아야겠죠. 이것을 비교할 때 살펴볼 수 있는 것이 **소비 전력**입니다.", "P6": "전기 기구에 적힌 **30W**, **100W** 같은 표시를 본 적 있나요? W는 ‘와트’라고 읽고, 소비 전력의 단위입니다. **소비 전력은 전기 기구가 1초 동안 사용하는 전기 에너지의 양**을 나타냅니다.", "P7": "전기 에너지의 양은 J, ‘줄’로 나타내고 시간은 s, ‘초’로 나타냅니다. 그래서 소비 전력의 단위인 **1W는 1J/s**와 같아요. <span class=\"cue\">화면: 1W = 1J/s</span>", "P8": "여기서 J/s는 ‘줄 나누기 초’라는 뜻입니다. 다시 말해 **1W는 1초에 1J의 전기 에너지를 사용한다**는 의미예요. 그럼 30W는요? 1초에 30J를 사용한다는 뜻이고, 100W는 1초에 100J를 사용한다는 뜻입니다.", "P9": "이번에는 직접 소비 전력을 구해 볼까요? 어떤 전기 기구가 **5초 동안 150J**의 전기 에너지를 사용했습니다. 1초에는 몇 J를 사용한 걸까요?", "P10": "150J을 5초로 나누면 **30J/s**입니다. 그리고 1J/s가 1W이니까, 이 기구의 소비 전력은 **30W**예요. <span class=\"cue\">화면: 소비 전력 = 사용한 전기 에너지 ÷ 사용 시간</span>", "P11": "이제 소비 전력이 왜 중요한지, 전구를 비교해 보겠습니다. 비슷한 밝기의 **백열전구 60W**와 **LED 램프 8W**가 있다고 해 볼게요. 두 전구가 우리에게 해 주는 일은 비슷합니다. 둘 다 주변을 밝히죠. 그런데 백열전구는 1초에 60J, LED 램프는 1초에 8J의 전기 에너지를 사용합니다.", "P12": "백열전구는 전기 에너지의 상당 부분, 약 **95%를 열로 발산**하는 저효율 조명 기구입니다. 빛을 얻으려고 켰는데 많은 에너지가 열로 전환되는 거예요. 반면 LED 램프는 비슷한 밝기를 내는 데 필요한 전기 에너지가 더 적습니다. 방금 비교한 60W와 8W 제품이라면, LED가 같은 시간 동안 사용하는 전기 에너지가 **약 87% 적은 셈**입니다.", "P13": "여기서 **소비 전력이 작은 기구가 언제나 더 좋다**고 생각하면 안 됩니다. 작은 선풍기가 큰 선풍기보다 소비 전력이 작아도 바람의 세기가 다를 수 있으니까요. **밝기나 바람의 세기처럼 우리가 원하는 성능이 비슷할 때** 소비 전력을 비교해야 합니다. 같은 성능이라면 소비 전력이 작은 기구를 선택해 전기 에너지를 더 효율적으로 사용할 수 있겠죠.", "P14": "오늘 배운 내용을 정리해 볼게요. 전기 기구는 전기 에너지를 빛, 열, 운동, 소리 등 여러 형태로 전환합니다. 그중에는 우리가 원한 일에 쓰이는 에너지도 있고, 다른 형태로 전환되어 손실되는 에너지도 있습니다. 그리고 **소비 전력은 1초 동안 사용하는 전기 에너지의 양**으로, **1W는 1J/s**입니다.", "P15": "이제 전기 기구에서 W 표시를 발견하면 이렇게 읽어 보세요. “이 기구는 **1초에 몇 J의 전기 에너지를 사용할까?**”"};</script>
+<script>window.NOTES = {"P1": "발전소에서 만들어진 전기 에너지는 전선을 통해 우리 집으로 전달됩니다. 그리고 집에 있는 전기 기구를 만나면, 우리가 필요한 다른 형태의 에너지로 전환됩니다.", "P1k": "본격적으로 들어가기 전에 오늘의 키워드부터 볼까요? 오늘은 네 가지 키워드를 따라갑니다. 첫 번째 「전기 에너지」, 두 번째 「소비 전력」, 세 번째 「전력량」, 그리고 마지막 「에너지 효율」입니다. 화면 오른쪽 위를 보면 지금 어떤 키워드를 배우고 있는지 계속 표시해 둘게요. 그럼 첫 번째 키워드, 「전기 에너지」부터 시작해 볼까요? <span class=\"cue\">화면: 오늘의 키워드 4개 — 오른쪽 위 진행 표시 안내</span>", "P2": "예를 들어 토스터기는 전기 에너지를 열에너지로 바꾸어 빵을 굽고, 스피커는 소리 에너지로 바꾸어 음악을 들려줍니다. 선풍기는 전기 에너지로 날개를 돌려 바람을 만들죠. 이때 전기 에너지는 주로 **운동 에너지**로 전환됩니다.", "P3": "그런데 선풍기가 돌아갈 때 날개가 움직이기만 하나요? ‘윙’ 하는 소리도 나고, 모터에서는 열도 발생합니다. 즉, 선풍기에 공급된 전기 에너지가 모두 날개를 돌리는 데 쓰이는 것은 아닙니다. 일부는 소리 에너지와 열에너지로도 전환돼요.", "P4": "전구도 마찬가지입니다. 전구를 켜는 목적은 **빛**을 얻기 위해서인데, 켜진 전구에서는 **열**도 나옵니다. 이렇게 전기 기구에서는 전기 에너지가 주된 용도에 필요한 에너지 외의 형태로도 전환됩니다. 목적에 사용되지 못한 부분을 ‘에너지 손실’이라고 해요. 에너지가 사라졌다는 뜻은 아니고, **우리가 원한 일에 쓰이지 못했다**는 뜻입니다.", "P5": "그렇다면 같은 일을 하는 전기 기구 두 개가 있다면, 어느 쪽이 전기 에너지를 더 많이 필요로 할까요? 다른 형태로 전환되어 손실되는 에너지가 많은 기구일수록 더 많은 전기 에너지를 공급받아야겠죠. 이것을 비교할 때 살펴볼 수 있는 것이 **소비 전력**입니다.", "P6": "전기 기구에 적힌 **30W**, **100W** 같은 표시를 본 적 있나요? W는 ‘와트’라고 읽고, 소비 전력의 단위입니다. **소비 전력은 전기 기구가 1초 동안 사용하는 전기 에너지의 양**을 나타냅니다.", "P7": "전기 에너지의 양은 J, ‘줄’로 나타내고 시간은 s, ‘초’로 나타냅니다. 그래서 소비 전력의 단위인 **1W는 1J/s**와 같아요. <span class=\"cue\">화면: 1W = 1J/s</span>", "P8": "여기서 J/s는 ‘줄 나누기 초’라는 뜻입니다. 다시 말해 **1W는 1초에 1J의 전기 에너지를 사용한다**는 의미예요. 그럼 30W는요? 1초에 30J를 사용한다는 뜻이고, 100W는 1초에 100J를 사용한다는 뜻입니다.", "P9": "이번에는 직접 소비 전력을 구해 볼까요? 어떤 전기 기구가 **5초 동안 150J**의 전기 에너지를 사용했습니다. 1초에는 몇 J를 사용한 걸까요?", "P10": "150J을 5초로 나누면 **30J/s**입니다. 그리고 1J/s가 1W이니까, 이 기구의 소비 전력은 **30W**예요. <span class=\"cue\">화면: 소비 전력 = 사용한 전기 에너지 ÷ 사용 시간</span>", "P11": "이제 소비 전력이 왜 중요한지, 전구를 비교해 보겠습니다. 비슷한 밝기의 **백열전구 60W**와 **LED 램프 8W**가 있다고 해 볼게요. 두 전구가 우리에게 해 주는 일은 비슷합니다. 둘 다 주변을 밝히죠. 그런데 백열전구는 1초에 60J, LED 램프는 1초에 8J의 전기 에너지를 사용합니다.", "P12": "백열전구는 전기 에너지의 상당 부분, 약 **95%를 열로 발산**하는 저효율 조명 기구입니다. 빛을 얻으려고 켰는데 많은 에너지가 열로 전환되는 거예요. 반면 LED 램프는 비슷한 밝기를 내는 데 필요한 전기 에너지가 더 적습니다. 방금 비교한 60W와 8W 제품이라면, LED가 같은 시간 동안 사용하는 전기 에너지가 **약 87% 적은 셈**입니다.", "P13": "여기서 **소비 전력이 작은 기구가 언제나 더 좋다**고 생각하면 안 됩니다. 작은 선풍기가 큰 선풍기보다 소비 전력이 작아도 바람의 세기가 다를 수 있으니까요. **밝기나 바람의 세기처럼 우리가 원하는 성능이 비슷할 때** 소비 전력을 비교해야 합니다. 같은 성능이라면 소비 전력이 작은 기구를 선택해 전기 에너지를 더 효율적으로 사용할 수 있겠죠.", "P14": "오늘 배운 내용을 정리해 볼게요. 전기 기구는 전기 에너지를 빛, 열, 운동, 소리 등 여러 형태로 전환합니다. 그중에는 우리가 원한 일에 쓰이는 에너지도 있고, 다른 형태로 전환되어 손실되는 에너지도 있습니다. 그리고 **소비 전력은 1초 동안 사용하는 전기 에너지의 양**으로, **1W는 1J/s**입니다.", "P15": "이제 전기 기구에서 W 표시를 발견하면 이렇게 읽어 보세요. “이 기구는 **1초에 몇 J의 전기 에너지를 사용할까?**”"};</script>
+<script>window.KW = {"items": [{"kw": "전기 에너지"}, {"kw": "소비 전력"}, {"kw": "전력량"}, {"kw": "에너지 효율"}], "at": [-1, -1, -1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4]};</script>
 <script>
 /* ═══════════════════════════════════════════════════════════════
    core.js — 강의 덱 엔진
@@ -1462,7 +1509,30 @@ html.still .o-cellgrid .p-cell{transition:none}
     const on = !window.SFX || SFX.isOn();
     b.innerHTML = on ? ICON.sound : ICON.mute; b.classList.toggle('off', !on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
+  /* ── 키워드 진행 표시(무대 오른쪽 위 · 녹화 화면에도 보임) ──
+     window.KW = {items:[{kw}], at:[장마다 키워드 번호]} — build.py 가 slides/…/_keywords.json 으로 넣는다.
+     at: -1 = 숨김(표지·도입·키워드 장), 0..n-1 = 그 키워드, n = 모두 끝(정리·문제). 칩을 누르면 그 키워드의 첫 장으로 */
+  let kwEl = null;
+  function buildKw() {
+    const K = window.KW; if (!K || !K.items || !K.items.length || !K.at) return;
+    kwEl = document.createElement('div'); kwEl.id = 'kwbar'; kwEl.setAttribute('data-interactive', '');
+    kwEl.innerHTML = K.items.map((it, j) => `<button type="button" class="kw" data-j="${j}" aria-label="키워드 ${j + 1}: ${it.kw}"><b>${j + 1}</b><span>${it.kw}</span></button>`).join('');
+    stage.appendChild(kwEl);
+    kwEl.addEventListener('click', e => {
+      const b = e.target.closest('.kw'); if (!b) return; e.stopPropagation();
+      const i = K.at.indexOf(+b.dataset.j); if (i >= 0 && i !== Deck.i) show(i, 0);
+    });
+  }
+  function syncKw() {
+    if (!kwEl) return;
+    const K = window.KW, a = K.at[Deck.i], sec = Deck.list[Deck.i];
+    const hide = a == null || a < 0 || (sec && sec.hasAttribute('data-kw-hide'));
+    kwEl.classList.toggle('show', !hide);
+    kwEl.classList.toggle('end', a >= K.items.length);
+    kwEl.querySelectorAll('.kw').forEach((b, j) => { b.classList.toggle('done', j < a); b.classList.toggle('cur', j === a); });
+  }
   function buildChrome() {
+    buildKw();
     hud = document.createElement('div'); hud.id = 'hud';
     hud.innerHTML = `<button data-a="replay" aria-label="이 단계 다시 보기(R)">${ICON.replay}</button>${STUDENT ? '' : `<button data-a="notes" aria-label="대본 보기(T)">${ICON.notes}</button>`}<button data-a="grid" aria-label="전체 보기(O)">${ICON.grid}</button><button data-a="prev" aria-label="이전">${ICON.prev}</button><span class="count" id="count">1 / 1</span><button data-a="next" aria-label="다음">${ICON.next}</button><button data-a="sound" aria-label="소리 켜기/끄기(M)">${ICON.sound}</button><button data-a="full" aria-label="전체 화면(F)">${ICON.full}</button>`;
     document.body.appendChild(hud); syncSound();
@@ -1500,6 +1570,7 @@ html.still .o-cellgrid .p-cell{transition:none}
     hud.querySelector('#count').textContent = `${Deck.i + 1} / ${n}`;
     prog.firstChild.style.width = `${((Deck.i + (st ? Deck.k / (st + 1) : 0)) / Math.max(1, n - 1)) * 100}%`;
     dots.innerHTML = st ? Array.from({ length: st + 1 }, (_, j) => `<i class="${j <= Deck.k ? 'on' : ''}"></i>`).join('') : '';
+    syncKw();
     if (notesEl.classList.contains('show')) renderNotes();
     if (ovEl.classList.contains('show')) renderOverview();
   }
@@ -7630,13 +7701,13 @@ try{
    · 마크업: RK.b('척력', 'push', 2)  → 빈칸(밑줄만, 낱말은 숨김). 세 번째 값 = 채워지는 단계(k)
    · 장면 go(c, k) 에서 RK.fill(c, k) → 그 단계의 빈칸이 차례로(시차 ms) 모션그래픽과 함께 채워진다
    · 순간 모드(되돌리기·건너뛰기)에서는 c.a/c.wait 가 곧장 끝 상태 → 낱말만 보이고 효과는 사라진 상태
-   종류(kind): electron · pos · neg · push · pull · spark · rub · flow · volt · zigzag · line · curve · press · hits
+   종류(kind): electron · pos · neg · push · pull · spark · rub · flow · volt · zigzag · line · curve · press · hits · chain · fork · cut
               · grow · shrink · up · down · glow · equal · pop(기본)
    ═══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
   const SND = { electron: 'zip', pos: 'pop', neg: 'pop', push: 'whoosh', pull: 'whoosh', spark: 'spark', rub: 'zip', flow: 'slide', volt: 'rise',
-    zigzag: 'scan', line: 'scan', curve: 'scan', press: 'thunk', hits: 'tick', grow: 'rise', shrink: 'pop', up: 'rise', down: 'pop', glow: 'ding', equal: 'step', pop: 'pop' };
+    zigzag: 'scan', line: 'scan', curve: 'scan', press: 'thunk', hits: 'tick', grow: 'rise', shrink: 'pop', up: 'rise', down: 'pop', glow: 'ding', equal: 'step', chain: 'step', fork: 'slide', cut: 'sweepDown', pop: 'pop' };
   const R = window.RK = {
     /** 빈칸 하나(문자열). word 는 HTML 가능(색 span 등). cls 로 색(c-neg 등)을 줄 수 있다 */
     b(word, kind, step, cls) {
@@ -7771,6 +7842,32 @@ try{
       c.a(g, [{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1)', opacity: 1, offset: .5 }, { transform: 'scale(1.2)', opacity: 0 }], { dur: 1000, ease: 'out' });
       return 300;
     },
+    chain(c, el, fx) {   // 낱말 위 한 줄 도선에 전구 셋이 차례로 — 직렬(길이 하나)
+      const s = R.svg(fx, 140, 36, '<path d="M4 18H136" fill="none" stroke="var(--t3)" stroke-width="4" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>' +
+        [34, 70, 106].map(x => `<circle cx="${x}" cy="18" r="9" fill="#FFE27A" stroke="var(--t2)" stroke-width="3" opacity="0"/>`).join(''), { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      c.a(s.querySelector('path'), [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: 420, ease: 'inOut' });
+      s.querySelectorAll('circle').forEach((b, i) => c.a(b, [{ opacity: 0, transform: 'scale(.3)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 260, delay: 300 + i * 110, ease: 'spring' }));
+      return 420;
+    },
+    fork(c, el, fx) {    // 낱말 위에서 한 줄기가 두 갈래로 나뉘었다가 다시 만난다 — 병렬(길이 여러 개)
+      const P = ['M4 22H34', 'M34 22C44 22 44 5 58 5H82C96 5 96 22 106 22', 'M34 22C44 22 44 39 58 39H82C96 39 96 22 106 22', 'M106 22H136'];
+      const s = R.svg(fx, 140, 44, P.map(d => `<path d="${d}" fill="none" stroke="var(--light)" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>`).join(''),
+        { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      const ps = s.querySelectorAll('path'), D = [[0, 220], [200, 420], [200, 420], [600, 220]];
+      ps.forEach((p, i) => c.a(p, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: D[i][1], delay: D[i][0], ease: 'linear' }));
+      return 520;
+    },
+    cut(c, el, fx) {     // 한 줄 도선의 켜진 전구들 — 가운데가 끊기면 모두 함께 꺼진다
+      const xs = [30, 70, 110];
+      const s = R.svg(fx, 140, 40, '<path d="M4 20H56M84 20H136" fill="none" stroke="var(--t3)" stroke-width="4" stroke-linecap="round"/><path d="M56 20H84" fill="none" stroke="var(--t3)" stroke-width="4"/>' +
+        xs.map(x => `<circle cx="${x}" cy="20" r="9" fill="var(--t3)" opacity=".5"/><circle class="on" cx="${x}" cy="20" r="9" fill="#FFE27A"/>`).join('') +
+        '<path d="M60 10L80 30M80 10L60 30" stroke="var(--heat)" stroke-width="5" stroke-linecap="round" opacity="0"/>', { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      const p = s.querySelectorAll('path');
+      c.a(p[1], [{ opacity: 1 }, { opacity: 0 }], { dur: 120, delay: 380 });
+      c.a(p[2], [{ opacity: 0, transform: 'scale(1.6)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 260, delay: 380, ease: 'out' });
+      s.querySelectorAll('.on').forEach(b => c.a(b, [{ opacity: 1 }, { opacity: 0 }], { dur: 180, delay: 460 }));   // 같은 순간에 모두
+      return 520;
+    },
     equal(c, el, fx) {
       const a = R.el(fx, '', { left: '-30px', right: '-30px', top: '-16px', height: '6px', borderRadius: '3px', background: 'var(--act)' });
       const b = R.el(fx, '', { left: '-30px', right: '-30px', bottom: '-16px', height: '6px', borderRadius: '3px', background: 'var(--act)' });
@@ -7853,6 +7950,25 @@ try{
 })();
 
 }catch(e){console.error("[slide s02_grid.html]",e)}
+/* ── s02_gridk_keywords.html ── */
+try{
+
+(function () {
+  const S = 's02_gridk_keywords', TT = [600, 1246, 1893, 2540], TEND = 2540;
+  Deck.scene(S, {
+    steps: 0,
+    enter(c) {
+      if (!c.instant) { c.sfx('scan', 600, 1940); TT.forEach(t => c.sfx('tick', t)); c.sfx('chime', TEND + 250); }
+      const ring = c.$(`#${S}-ring`);
+      c.loop(t => {   // 「여기서 출발!」 — 첫 키워드 둘레가 천천히 숨 쉬듯
+        const k = t * 1000 < TEND ? 0 : (Math.sin((t * 1000 - TEND) / 420) + 1) / 2;
+        ring.setAttribute('r', (54 + 4 + 12 * k).toFixed(1)); ring.setAttribute('opacity', (t * 1000 < TEND ? 0 : .55 - .45 * k).toFixed(3));
+      });
+    },
+  });
+})();
+
+}catch(e){console.error("[slide s02_gridk_keywords.html]",e)}
 /* ── s03_energy.html ── */
 try{
 

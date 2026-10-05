@@ -208,6 +208,22 @@ html.student #notes{display:none!important}
 .qbox .qh{font-size:26px;font-weight:600;color:var(--t2);margin-bottom:6px}
 .say-line{position:absolute;left:120px;right:120px;text-align:center;font-size:44px;font-weight:600;letter-spacing:-.02em;z-index:3}
 .fine{position:absolute;left:120px;bottom:40px;font-size:24px;color:var(--t3);z-index:3}
+/* ── 키워드 진행 표시(무대 오른쪽 위) — core.js buildKw/syncKw ── */
+#kwbar{position:absolute;top:34px;right:44px;z-index:30;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(-8px);pointer-events:none;
+  transition:opacity .45s var(--ease-out),transform .45s var(--ease-out)}
+#kwbar.show{opacity:1;transform:none;pointer-events:auto}
+#kwbar .kw{display:flex;align-items:center;height:46px;min-width:46px;border-radius:9999px;background:rgba(0,0,0,.055);color:#86868b;
+  font-size:24px;font-weight:600;letter-spacing:-.01em;line-height:1;transition:background .45s,color .45s;cursor:pointer}
+#kwbar .kw b{width:46px;height:46px;flex:none;display:grid;place-items:center;font-weight:700;font-variant-numeric:tabular-nums}
+#kwbar .kw span{max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .6s var(--ease-out),padding .6s var(--ease-out)}
+#kwbar .kw.done{background:rgba(0,0,0,.13);color:#3a3a3c}
+#kwbar .kw.cur{background:var(--action);color:#fff}
+#kwbar .kw.cur span{max-width:460px;padding-right:22px}
+#kwbar .kw:active{transform:scale(.95)}
+body:not(.on-light) #kwbar .kw{background:rgba(255,255,255,.1);color:#8e8e93}
+body:not(.on-light) #kwbar .kw.done{background:rgba(255,255,255,.24);color:#f5f5f7}
+body:not(.on-light) #kwbar .kw.cur{background:var(--action-dark);color:#fff}
+html.still #kwbar,html.still #kwbar *{transition:none!important}
 
 /* ── 10_elec.css ── */
 /* ── 전기와 자기 강의 덱 공용 색·글자 — 의미마다 색 하나(같은 뜻은 어느 장·어느 덱에서나 같은 색) ──
@@ -323,6 +339,19 @@ html.student #notes{display:none!important}
 
 #e4_02_knobs .e4-tag{background:var(--c-dark)}
 
+/* ── 02_knobsk_keywords.html ── */
+
+#e4_02_knobsk_keywords .kwk-n{font-size:48px;font-weight:700;fill:var(--act);font-variant-numeric:tabular-nums}
+#e4_02_knobsk_keywords .kwk-end{position:absolute;width:200px;text-align:center;font-size:26px;font-weight:600;color:var(--t3);z-index:3}
+#e4_02_knobsk_keywords .kwk-t{position:absolute;text-align:center;font-size:46px;font-weight:700;letter-spacing:-.025em;line-height:1.25;word-break:keep-all;z-index:3}
+#e4_02_knobsk_keywords .kwk-start{position:absolute;width:220px;text-align:center;font-size:28px;font-weight:600;color:var(--act);z-index:3}
+#e4_02_knobsk_keywords .kwk-mock{position:absolute;top:34px;right:44px;display:flex;gap:8px;z-index:3}
+#e4_02_knobsk_keywords .kwk-mock .mk{display:flex;align-items:center;height:46px;min-width:46px;border-radius:9999px;background:rgba(0,0,0,.055);color:#86868b;font-size:24px;font-weight:600;line-height:1}
+#e4_02_knobsk_keywords .kwk-mock .mk b{width:46px;height:46px;display:grid;place-items:center;font-weight:700}
+#e4_02_knobsk_keywords .kwk-mock .mk.cur{background:var(--act);color:#fff}
+#e4_02_knobsk_keywords .kwk-mock .mk i{font-style:normal;padding-right:22px;white-space:nowrap}
+#e4_02_knobsk_keywords .kwk-hint{position:absolute;top:96px;right:44px;font-size:26px;color:var(--t2);z-index:3}
+
 /* ── 05_formula.html ── */
 
 #e4_05_formula .tk{font-size:128px;font-weight:700;letter-spacing:-.02em}
@@ -437,6 +466,23 @@ html.student #notes{display:none!important}
   <div class="e4-ro" style="left:1480px;top:262px" data-in="500"><span class="l">전류계가 읽은 값</span><span class="v e4-i"><span id="e4_02_knobs-i">0.0</span><span class="u">A</span></span></div>
   <div class="e4-note" style="left:1480px;top:420px;width:330px" data-step="1" data-delay="1700">전압은 그대로인데<br>니크롬선을 2배로 길게 하니<br>전류가 줄었다</div>
   <div class="say-line" style="top:882px;font-size:52px" data-step="2" data-fx="blur"><span class="c-volt">전압</span> · <span class="c-res">저항</span> · <span class="c-cur">전류</span>, 셋은 어떤 관계일까?</div>
+</section>
+<!-- ═══ 02_knobsk_keywords.html ═══ -->
+<section class="slide" id="e4_02_knobsk_keywords" data-tile="light" data-title="오늘의 키워드" data-notes="P2k" data-say="오늘의 키워드 4개를 먼저 훑어봅니다. 다음 장부터 오른쪽 위에 지금 배우는 키워드가 표시되고, 칩을 누르면 그 키워드의 첫 장으로 갑니다.">
+  <div class="hd" data-in><div class="eb">학습지 4 · 옴의 법칙</div><h2>오늘의 키워드</h2></div>
+  <svg class="full-svg" viewBox="0 0 1920 1080">
+    <path d="M230 610H1480" stroke="#e8e8ed" stroke-width="12" stroke-linecap="round" fill="none"/>
+    <g data-in="2640" data-fx="fade"><path d="M1544 610H1666" stroke="#c7c7cc" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round" fill="none"/>
+      <circle cx="1700" cy="610" r="30" fill="#f5f5f7" stroke="#c7c7cc" stroke-width="5"/><path d="M1689 611l8 8 15-17" stroke="#aeaeb2" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>
+    <path d="M230 610H1480" stroke="var(--act)" stroke-width="12" stroke-linecap="round" fill="none" data-in="600" data-fx="draw" data-dur="1940" data-ease="inOut"/>
+    <circle id="e4_02_knobsk_keywords-ring" cx="230" cy="610" r="54" fill="none" stroke="var(--act)" stroke-width="4" opacity="0"/>
+    <g data-in="600" data-fx="pop"><circle cx="230" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="230" y="627" text-anchor="middle" class="kwk-n">1</text></g><g data-in="1246" data-fx="pop"><circle cx="647" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="647" y="627" text-anchor="middle" class="kwk-n">2</text></g><g data-in="1893" data-fx="pop"><circle cx="1063" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="1063" y="627" text-anchor="middle" class="kwk-n">3</text></g><g data-in="2540" data-fx="pop"><circle cx="1480" cy="610" r="54" fill="#fff" stroke="var(--act)" stroke-width="7"/><text x="1480" y="627" text-anchor="middle" class="kwk-n">4</text></g>
+  </svg>
+  <div class="kwk-t" style="left:34px;top:694px;width:392px" data-in="740" data-fx="rise">옴의 법칙</div><div class="kwk-t" style="left:451px;top:694px;width:392px" data-in="1386" data-fx="rise">그래프 그리기</div><div class="kwk-t" style="left:867px;top:694px;width:392px" data-in="2033" data-fx="rise">그래프 읽기</div><div class="kwk-t" style="left:1284px;top:694px;width:392px" data-in="2680" data-fx="rise">도체 · 부도체 · 반도체</div>
+  <div class="kwk-end" style="left:1600px;top:526px" data-in="2740" data-fx="fade">정리 · 문제</div>
+  <div class="kwk-start" style="left:120px;top:470px" data-in="2740" data-fx="pop">여기서 출발!</div>
+  <div class="kwk-mock" data-in="3140" data-fx="fade"><span class="mk cur"><b>1</b><i>옴의 법칙</i></span><span class="mk"><b>2</b></span><span class="mk"><b>3</b></span><span class="mk"><b>4</b></span></div>
+  <div class="kwk-hint" data-in="3440" data-fx="fade">지금 배우는 키워드는 오른쪽 위에 계속 표시돼요</div>
 </section>
 <!-- ═══ 03_review.html ═══ -->
 <section class="slide" id="e4_03_review" data-tile="light" data-title="되짚기 — 전압과 저항" data-notes="P3" data-say="지난 시간 내용이에요. 굵기는 «단면적»으로 말해 주세요(단면적 2배 → 저항 절반). 마지막 단계가 중요합니다 — 전압을 올려도 니크롬선의 저항은 그대로예요(저항은 물질·길이·굵기가 정함). 빈칸 ① V · ② Ω · ③ 커지고 · ④ 작아진다 · ⑤ 일정하.">
@@ -632,7 +678,8 @@ html.student #notes{display:none!important}
 <div id="gridov"></div>
 </div></div>
 
-<script>window.NOTES = {"P1": "오늘은 옴의 법칙을 배웁니다. 화면을 보세요. 전원 장치, 전류계, 그리고 니크롬선 하나를 이었어요. 전원 장치의 손잡이를 돌릴 때마다 숫자가 올라가고, 전류계 바늘도 따라 올라가죠? 오른쪽에는 그때마다 점이 하나씩 찍혀요. 점들이 어떤 모양을 만드나요? 오늘 끝날 때 이 모양이 무슨 뜻인지 말할 수 있게 됩니다. <span class=\"cue\">화면: 손잡이를 돌리면 바늘이 오르고 점이 하나씩 찍힌다</span>", "P2": "지난 시간에 전류를 바꾸는 손잡이가 두 개 있다고 했어요. 하나는 방금 본 전원 장치의 손잡이예요. 다른 하나는 무엇일까요? 이번에는 손잡이는 그대로 두고, 집게를 옮겨서 니크롬선을 2배로 길게 해 볼게요. 바늘이 어떻게 되나요? 내려갔죠. 그럼 질문입니다. 전압, 저항, 전류 — 이 셋은 서로 어떤 관계일까요? 오늘 표와 그래프로 찾아봅시다.", "P3": "먼저 지난 시간을 되짚어 볼게요. 전압은 전류를 흐르게 하는 능력이고, 단위는 무엇이었죠? 네, V, 볼트예요. 저항은 전류의 흐름을 방해하는 정도이고, 단위는 Ω, 옴입니다. 저항의 크기는 물질의 종류, 길이, 굵기가 정해요. 니크롬선을 2배로 길게 하면 저항은 어떻게 될까요? 커지죠. 2 Ω이 4 Ω이 됐어요. 반대로 굵게, 곧 단면적을 넓게 하면 저항은 작아집니다. 그러면 전압을 올리면 저항은요? 전압을 2 V에서 6 V로 올려도 니크롬선의 저항은 2 Ω 그대로예요. 전압을 올려도 저항은 일정합니다. 저항은 니크롬선이 가진 성질이라 전압이 바꾸지 못해요.", "P4": "이제 오늘의 법칙입니다. 왼쪽은 저항이 2 Ω인 니크롬선을 그대로 두고 전압만 바꿨어요. 전압이 2배, 3배가 되면 전류도 2배, 3배가 되죠. 이런 관계를 무엇이라고 하나요? 비례예요. 그래서 저항이 일정할 때 전류의 세기는 전압에 비례합니다. 오른쪽은 전압을 6 V로 그대로 두고 저항만 바꿨어요. 저항이 2배가 되면 전류는 2로 나눈 값, 3배가 되면 3으로 나눈 값이 돼요. 이것은 반비례입니다. 전압이 일정할 때 전류의 세기는 저항에 반비례해요. 이 관계를 처음 밝힌 사람은 독일의 수학 교사 옴이에요. 직접 만든 장치로 꼼꼼히 재서 찾아냈고, 그래서 저항의 단위에 옴이라는 이름이 붙었습니다.", "P5": "옴의 법칙을 식으로 써 봅시다. 전류는 전압을 저항으로 나눈 값이에요. 전류 = 전압 ÷ 저항, 기호로는 I = V / R입니다. I는 전류, V는 전압, R은 저항이에요. 이 식 하나만 확실히 알면 나머지는 글자 자리만 옮기면 됩니다. 전압을 구할 때는 V = I × R, 저항을 구할 때는 R = V ÷ I예요. <span class=\"cue\">화면: I = V ÷ R → V = I × R → R = V ÷ I</span>", "P6": "계산 연습을 해 볼게요. 먼저 비어 있는 칸이 무엇인지 찾고, 그 양이 왼쪽에 오는 식을 고르면 됩니다. 첫째 줄은 전류가 비었으니 I = V ÷ R, 6 V ÷ 3 Ω = 2 A예요. 둘째 줄은 저항이 비었으니 R = V ÷ I, 9 V ÷ 0.5 A = 18 Ω. 셋째 줄은 전압이 비었으니 V = I × R, 1.5 A × 4 Ω = 6 V. 넷째 줄은 다시 전류, 12 V ÷ 40 Ω = 0.3 A입니다. 오늘 내용 어렵죠? 힘내 봅시다.", "P7": "이제 표를 만들어 그래프로 바꿔 볼게요. 저항이 2 Ω인 니크롬선 하나에 거는 전압을 0 V부터 2 V씩 올립니다. 넘기기 전에 옴의 법칙으로 먼저 계산해 보세요. 0 V면 0 A, 2 V면 2 ÷ 2 = 1 A, 4 V면 2 A, 6 V면 3 A, 8 V면 4 A. 계산한 값과 전류계 바늘이 가리키는 값이 똑같죠? 학습지 표에 채워 보세요.", "P8": "표의 값을 그래프로 옮겨 봅시다. 먼저 학습지에 직접 그려 보세요. 가로축은 두 칸에 1 V, 그러니까 한 칸이 0.5 V이고, 세로축은 한 칸에 0.5 A입니다. 눈금을 적고 점을 찍어 이어 보세요. 어떤 모양이 나왔나요? 저항이 일정할 때 전압이 커지면 전류의 세기는 커집니다. 그래프는 원점을 지나는 직선이에요. 전압이 2배가 되면 전류도 2배 — 그래서 전류는 전압에 비례합니다.", "P9": "이번에는 반대로 해 볼게요. 전압을 6 V로 맞춘 뒤에는 손잡이를 건드리지 않습니다. 저항이 다른 니크롬선을 차례로 연결해요. 화면에서는 집게를 옮겨 니크롬선의 길이를 바꿨어요. 굵기가 같으면 길이가 2배일 때 저항도 2배죠. 1 Ω이면 6 ÷ 1 = 6 A, 2 Ω이면 3 A, 3 Ω이면 2 A, 4 Ω이면 1.5 A, 6 Ω이면 1 A. 학습지 표에 채워 보세요.", "P10": "이 표도 그래프로 그려 봅시다. 가로축은 두 칸에 1 Ω, 세로축은 한 칸에 0.5 A입니다. 학습지에 먼저 점을 찍고 부드럽게 이어 보세요. 전압이 일정할 때 저항이 커지면 전류의 세기는 작아집니다. 2 Ω에서 4 Ω으로 저항이 2배가 되면 전류는 3 A에서 1.5 A로 절반이 되죠. 그래서 전류는 저항에 반비례해요. 그래프는 직선이 아니라 아래로 휘어지는 곡선입니다. 1 Ω부터 6 Ω까지만 쟀으니 그 사이만 이어요.", "P11": "이제 그래프를 읽어 봅시다. 두 니크롬선 A, B의 전압–전류 그래프예요. 같은 전압, 예를 들어 4 V에 세로선을 그어 보세요. A는 2 A, B는 1 A예요. 같은 전압을 걸었을 때 전류가 더 많이 흐르는 것은 A입니다. 전류가 더 많이 흐른다는 것은 저항이 작다는 뜻이에요. 그래서 그림 아래 물음의 답은 «작다»입니다.", "P12": "그래프의 기울기로도 말할 수 있어요. 가로로 똑같이 4 V를 갈 때 A는 2 A, B는 1 A 올라가요. A가 더 가파르죠. 전압–전류 그래프에서 기울기가 클수록 저항이 작습니다. 저항이 일정한 니크롬선은 어느 것이든 그래프가 원점을 지나는 직선이 돼요. 기울기는 세로로 올라간 값 ÷ 가로로 간 값, 곧 전류 ÷ 전압이에요. A는 2 ÷ 4 = 2분의 1이고, A의 저항은 R = V ÷ I = 4 ÷ 2 = 2 Ω이니 기울기는 저항의 역수예요. B도 1 ÷ 4 = 4분의 1, 저항 4 Ω의 역수입니다. 기울기가 저항 그 자체가 아니라 저항의 역수라는 것, 꼭 기억하세요. <span class=\"cue\">화면: 기울기 = 전류 ÷ 전압 = 1 ÷ 저항</span>", "P13": "마지막으로 물질을 저항이라는 하나의 잣대로 나눠 봅시다. 저항이 매우 작아 전류가 잘 흐르는 물질이 도체예요. 철, 구리, 알루미늄 같은 대부분의 금속, 그리고 연필심의 흑연이 도체입니다. 흑연은 금속이 아닌데도 도체라는 점이 재미있죠. 저항이 매우 커서 전류가 거의 흐르지 않는 물질은 부도체, 또는 절연체예요. 고무, 유리, 나무, 플라스틱이 있습니다. 전혀 안 흐르는 것이 아니라 «거의» 흐르지 않는 거예요. 저항이 도체와 부도체의 중간 정도인 물질은 반도체입니다. 규소, 기호로 Si와 저마늄이 있어요. 반도체는 불순물을 넣어 전류의 흐름을 조절할 수 있어서 전자 부품에 씁니다.", "P14": "오늘 배운 것을 정리해 볼게요. 첫째, 옴의 법칙 — 전류는 전압에 비례하고 저항에 반비례합니다. I = V ÷ R. 둘째, 그래프 — 전압–전류 그래프는 원점을 지나는 직선이고 기울기는 저항의 역수, 저항–전류 그래프는 아래로 휘어지는 곡선이에요. 셋째, 물질은 저항의 크기로 도체, 반도체, 부도체로 나눕니다. 처음 질문, 전압·저항·전류는 어떤 관계였죠? 전류는 전압에 비례하고 저항에 반비례합니다. 처음에 본 두 손잡이를 떠올려 보세요. 전압을 올리면 전류가 커졌고, 니크롬선을 길게 해 저항을 키우면 전류가 작아졌죠? 그게 바로 오늘 배운 관계예요."};</script>
+<script>window.NOTES = {"P1": "오늘은 옴의 법칙을 배웁니다. 화면을 보세요. 전원 장치, 전류계, 그리고 니크롬선 하나를 이었어요. 전원 장치의 손잡이를 돌릴 때마다 숫자가 올라가고, 전류계 바늘도 따라 올라가죠? 오른쪽에는 그때마다 점이 하나씩 찍혀요. 점들이 어떤 모양을 만드나요? 오늘 끝날 때 이 모양이 무슨 뜻인지 말할 수 있게 됩니다. <span class=\"cue\">화면: 손잡이를 돌리면 바늘이 오르고 점이 하나씩 찍힌다</span>", "P2": "지난 시간에 전류를 바꾸는 손잡이가 두 개 있다고 했어요. 하나는 방금 본 전원 장치의 손잡이예요. 다른 하나는 무엇일까요? 이번에는 손잡이는 그대로 두고, 집게를 옮겨서 니크롬선을 2배로 길게 해 볼게요. 바늘이 어떻게 되나요? 내려갔죠. 그럼 질문입니다. 전압, 저항, 전류 — 이 셋은 서로 어떤 관계일까요? 오늘 표와 그래프로 찾아봅시다.", "P2k": "본격적으로 들어가기 전에 오늘의 키워드부터 볼까요? 오늘은 네 가지 키워드를 따라갑니다. 첫 번째 「옴의 법칙」, 두 번째 「그래프 그리기」, 세 번째 「그래프 읽기」, 그리고 마지막 「도체 · 부도체 · 반도체」입니다. 화면 오른쪽 위를 보면 지금 어떤 키워드를 배우고 있는지 계속 표시해 둘게요. 그럼 첫 번째 키워드, 「옴의 법칙」부터 시작해 볼까요? <span class=\"cue\">화면: 오늘의 키워드 4개 — 오른쪽 위 진행 표시 안내</span>", "P3": "먼저 지난 시간을 되짚어 볼게요. 전압은 전류를 흐르게 하는 능력이고, 단위는 무엇이었죠? 네, V, 볼트예요. 저항은 전류의 흐름을 방해하는 정도이고, 단위는 Ω, 옴입니다. 저항의 크기는 물질의 종류, 길이, 굵기가 정해요. 니크롬선을 2배로 길게 하면 저항은 어떻게 될까요? 커지죠. 2 Ω이 4 Ω이 됐어요. 반대로 굵게, 곧 단면적을 넓게 하면 저항은 작아집니다. 그러면 전압을 올리면 저항은요? 전압을 2 V에서 6 V로 올려도 니크롬선의 저항은 2 Ω 그대로예요. 전압을 올려도 저항은 일정합니다. 저항은 니크롬선이 가진 성질이라 전압이 바꾸지 못해요.", "P4": "이제 오늘의 법칙입니다. 왼쪽은 저항이 2 Ω인 니크롬선을 그대로 두고 전압만 바꿨어요. 전압이 2배, 3배가 되면 전류도 2배, 3배가 되죠. 이런 관계를 무엇이라고 하나요? 비례예요. 그래서 저항이 일정할 때 전류의 세기는 전압에 비례합니다. 오른쪽은 전압을 6 V로 그대로 두고 저항만 바꿨어요. 저항이 2배가 되면 전류는 2로 나눈 값, 3배가 되면 3으로 나눈 값이 돼요. 이것은 반비례입니다. 전압이 일정할 때 전류의 세기는 저항에 반비례해요. 이 관계를 처음 밝힌 사람은 독일의 수학 교사 옴이에요. 직접 만든 장치로 꼼꼼히 재서 찾아냈고, 그래서 저항의 단위에 옴이라는 이름이 붙었습니다.", "P5": "옴의 법칙을 식으로 써 봅시다. 전류는 전압을 저항으로 나눈 값이에요. 전류 = 전압 ÷ 저항, 기호로는 I = V / R입니다. I는 전류, V는 전압, R은 저항이에요. 이 식 하나만 확실히 알면 나머지는 글자 자리만 옮기면 됩니다. 전압을 구할 때는 V = I × R, 저항을 구할 때는 R = V ÷ I예요. <span class=\"cue\">화면: I = V ÷ R → V = I × R → R = V ÷ I</span>", "P6": "계산 연습을 해 볼게요. 먼저 비어 있는 칸이 무엇인지 찾고, 그 양이 왼쪽에 오는 식을 고르면 됩니다. 첫째 줄은 전류가 비었으니 I = V ÷ R, 6 V ÷ 3 Ω = 2 A예요. 둘째 줄은 저항이 비었으니 R = V ÷ I, 9 V ÷ 0.5 A = 18 Ω. 셋째 줄은 전압이 비었으니 V = I × R, 1.5 A × 4 Ω = 6 V. 넷째 줄은 다시 전류, 12 V ÷ 40 Ω = 0.3 A입니다. 오늘 내용 어렵죠? 힘내 봅시다.", "P7": "이제 표를 만들어 그래프로 바꿔 볼게요. 저항이 2 Ω인 니크롬선 하나에 거는 전압을 0 V부터 2 V씩 올립니다. 넘기기 전에 옴의 법칙으로 먼저 계산해 보세요. 0 V면 0 A, 2 V면 2 ÷ 2 = 1 A, 4 V면 2 A, 6 V면 3 A, 8 V면 4 A. 계산한 값과 전류계 바늘이 가리키는 값이 똑같죠? 학습지 표에 채워 보세요.", "P8": "표의 값을 그래프로 옮겨 봅시다. 먼저 학습지에 직접 그려 보세요. 가로축은 두 칸에 1 V, 그러니까 한 칸이 0.5 V이고, 세로축은 한 칸에 0.5 A입니다. 눈금을 적고 점을 찍어 이어 보세요. 어떤 모양이 나왔나요? 저항이 일정할 때 전압이 커지면 전류의 세기는 커집니다. 그래프는 원점을 지나는 직선이에요. 전압이 2배가 되면 전류도 2배 — 그래서 전류는 전압에 비례합니다.", "P9": "이번에는 반대로 해 볼게요. 전압을 6 V로 맞춘 뒤에는 손잡이를 건드리지 않습니다. 저항이 다른 니크롬선을 차례로 연결해요. 화면에서는 집게를 옮겨 니크롬선의 길이를 바꿨어요. 굵기가 같으면 길이가 2배일 때 저항도 2배죠. 1 Ω이면 6 ÷ 1 = 6 A, 2 Ω이면 3 A, 3 Ω이면 2 A, 4 Ω이면 1.5 A, 6 Ω이면 1 A. 학습지 표에 채워 보세요.", "P10": "이 표도 그래프로 그려 봅시다. 가로축은 두 칸에 1 Ω, 세로축은 한 칸에 0.5 A입니다. 학습지에 먼저 점을 찍고 부드럽게 이어 보세요. 전압이 일정할 때 저항이 커지면 전류의 세기는 작아집니다. 2 Ω에서 4 Ω으로 저항이 2배가 되면 전류는 3 A에서 1.5 A로 절반이 되죠. 그래서 전류는 저항에 반비례해요. 그래프는 직선이 아니라 아래로 휘어지는 곡선입니다. 1 Ω부터 6 Ω까지만 쟀으니 그 사이만 이어요.", "P11": "이제 그래프를 읽어 봅시다. 두 니크롬선 A, B의 전압–전류 그래프예요. 같은 전압, 예를 들어 4 V에 세로선을 그어 보세요. A는 2 A, B는 1 A예요. 같은 전압을 걸었을 때 전류가 더 많이 흐르는 것은 A입니다. 전류가 더 많이 흐른다는 것은 저항이 작다는 뜻이에요. 그래서 그림 아래 물음의 답은 «작다»입니다.", "P12": "그래프의 기울기로도 말할 수 있어요. 가로로 똑같이 4 V를 갈 때 A는 2 A, B는 1 A 올라가요. A가 더 가파르죠. 전압–전류 그래프에서 기울기가 클수록 저항이 작습니다. 저항이 일정한 니크롬선은 어느 것이든 그래프가 원점을 지나는 직선이 돼요. 기울기는 세로로 올라간 값 ÷ 가로로 간 값, 곧 전류 ÷ 전압이에요. A는 2 ÷ 4 = 2분의 1이고, A의 저항은 R = V ÷ I = 4 ÷ 2 = 2 Ω이니 기울기는 저항의 역수예요. B도 1 ÷ 4 = 4분의 1, 저항 4 Ω의 역수입니다. 기울기가 저항 그 자체가 아니라 저항의 역수라는 것, 꼭 기억하세요. <span class=\"cue\">화면: 기울기 = 전류 ÷ 전압 = 1 ÷ 저항</span>", "P13": "마지막으로 물질을 저항이라는 하나의 잣대로 나눠 봅시다. 저항이 매우 작아 전류가 잘 흐르는 물질이 도체예요. 철, 구리, 알루미늄 같은 대부분의 금속, 그리고 연필심의 흑연이 도체입니다. 흑연은 금속이 아닌데도 도체라는 점이 재미있죠. 저항이 매우 커서 전류가 거의 흐르지 않는 물질은 부도체, 또는 절연체예요. 고무, 유리, 나무, 플라스틱이 있습니다. 전혀 안 흐르는 것이 아니라 «거의» 흐르지 않는 거예요. 저항이 도체와 부도체의 중간 정도인 물질은 반도체입니다. 규소, 기호로 Si와 저마늄이 있어요. 반도체는 불순물을 넣어 전류의 흐름을 조절할 수 있어서 전자 부품에 씁니다.", "P14": "오늘 배운 것을 정리해 볼게요. 첫째, 옴의 법칙 — 전류는 전압에 비례하고 저항에 반비례합니다. I = V ÷ R. 둘째, 그래프 — 전압–전류 그래프는 원점을 지나는 직선이고 기울기는 저항의 역수, 저항–전류 그래프는 아래로 휘어지는 곡선이에요. 셋째, 물질은 저항의 크기로 도체, 반도체, 부도체로 나눕니다. 처음 질문, 전압·저항·전류는 어떤 관계였죠? 전류는 전압에 비례하고 저항에 반비례합니다. 처음에 본 두 손잡이를 떠올려 보세요. 전압을 올리면 전류가 커졌고, 니크롬선을 길게 해 저항을 키우면 전류가 작아졌죠? 그게 바로 오늘 배운 관계예요."};</script>
+<script>window.KW = {"items": [{"kw": "옴의 법칙"}, {"kw": "그래프 그리기"}, {"kw": "그래프 읽기"}, {"kw": "도체 · 부도체 · 반도체"}], "at": [-1, -1, -1, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4]};</script>
 <script>
 /* ═══════════════════════════════════════════════════════════════
    core.js — 강의 덱 엔진
@@ -1002,7 +1049,30 @@ html.student #notes{display:none!important}
     const on = !window.SFX || SFX.isOn();
     b.innerHTML = on ? ICON.sound : ICON.mute; b.classList.toggle('off', !on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
+  /* ── 키워드 진행 표시(무대 오른쪽 위 · 녹화 화면에도 보임) ──
+     window.KW = {items:[{kw}], at:[장마다 키워드 번호]} — build.py 가 slides/…/_keywords.json 으로 넣는다.
+     at: -1 = 숨김(표지·도입·키워드 장), 0..n-1 = 그 키워드, n = 모두 끝(정리·문제). 칩을 누르면 그 키워드의 첫 장으로 */
+  let kwEl = null;
+  function buildKw() {
+    const K = window.KW; if (!K || !K.items || !K.items.length || !K.at) return;
+    kwEl = document.createElement('div'); kwEl.id = 'kwbar'; kwEl.setAttribute('data-interactive', '');
+    kwEl.innerHTML = K.items.map((it, j) => `<button type="button" class="kw" data-j="${j}" aria-label="키워드 ${j + 1}: ${it.kw}"><b>${j + 1}</b><span>${it.kw}</span></button>`).join('');
+    stage.appendChild(kwEl);
+    kwEl.addEventListener('click', e => {
+      const b = e.target.closest('.kw'); if (!b) return; e.stopPropagation();
+      const i = K.at.indexOf(+b.dataset.j); if (i >= 0 && i !== Deck.i) show(i, 0);
+    });
+  }
+  function syncKw() {
+    if (!kwEl) return;
+    const K = window.KW, a = K.at[Deck.i], sec = Deck.list[Deck.i];
+    const hide = a == null || a < 0 || (sec && sec.hasAttribute('data-kw-hide'));
+    kwEl.classList.toggle('show', !hide);
+    kwEl.classList.toggle('end', a >= K.items.length);
+    kwEl.querySelectorAll('.kw').forEach((b, j) => { b.classList.toggle('done', j < a); b.classList.toggle('cur', j === a); });
+  }
   function buildChrome() {
+    buildKw();
     hud = document.createElement('div'); hud.id = 'hud';
     hud.innerHTML = `<button data-a="replay" aria-label="이 단계 다시 보기(R)">${ICON.replay}</button>${STUDENT ? '' : `<button data-a="notes" aria-label="대본 보기(T)">${ICON.notes}</button>`}<button data-a="grid" aria-label="전체 보기(O)">${ICON.grid}</button><button data-a="prev" aria-label="이전">${ICON.prev}</button><span class="count" id="count">1 / 1</span><button data-a="next" aria-label="다음">${ICON.next}</button><button data-a="sound" aria-label="소리 켜기/끄기(M)">${ICON.sound}</button><button data-a="full" aria-label="전체 화면(F)">${ICON.full}</button>`;
     document.body.appendChild(hud); syncSound();
@@ -1040,6 +1110,7 @@ html.student #notes{display:none!important}
     hud.querySelector('#count').textContent = `${Deck.i + 1} / ${n}`;
     prog.firstChild.style.width = `${((Deck.i + (st ? Deck.k / (st + 1) : 0)) / Math.max(1, n - 1)) * 100}%`;
     dots.innerHTML = st ? Array.from({ length: st + 1 }, (_, j) => `<i class="${j <= Deck.k ? 'on' : ''}"></i>`).join('') : '';
+    syncKw();
     if (notesEl.classList.contains('show')) renderNotes();
     if (ovEl.classList.contains('show')) renderOverview();
   }
@@ -1656,13 +1727,13 @@ try{
    · 마크업: RK.b('척력', 'push', 2)  → 빈칸(밑줄만, 낱말은 숨김). 세 번째 값 = 채워지는 단계(k)
    · 장면 go(c, k) 에서 RK.fill(c, k) → 그 단계의 빈칸이 차례로(시차 ms) 모션그래픽과 함께 채워진다
    · 순간 모드(되돌리기·건너뛰기)에서는 c.a/c.wait 가 곧장 끝 상태 → 낱말만 보이고 효과는 사라진 상태
-   종류(kind): electron · pos · neg · push · pull · spark · rub · flow · volt · zigzag · line · curve · press · hits
+   종류(kind): electron · pos · neg · push · pull · spark · rub · flow · volt · zigzag · line · curve · press · hits · chain · fork · cut
               · grow · shrink · up · down · glow · equal · pop(기본)
    ═══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
   const SND = { electron: 'zip', pos: 'pop', neg: 'pop', push: 'whoosh', pull: 'whoosh', spark: 'spark', rub: 'zip', flow: 'slide', volt: 'rise',
-    zigzag: 'scan', line: 'scan', curve: 'scan', press: 'thunk', hits: 'tick', grow: 'rise', shrink: 'pop', up: 'rise', down: 'pop', glow: 'ding', equal: 'step', pop: 'pop' };
+    zigzag: 'scan', line: 'scan', curve: 'scan', press: 'thunk', hits: 'tick', grow: 'rise', shrink: 'pop', up: 'rise', down: 'pop', glow: 'ding', equal: 'step', chain: 'step', fork: 'slide', cut: 'sweepDown', pop: 'pop' };
   const R = window.RK = {
     /** 빈칸 하나(문자열). word 는 HTML 가능(색 span 등). cls 로 색(c-neg 등)을 줄 수 있다 */
     b(word, kind, step, cls) {
@@ -1796,6 +1867,32 @@ try{
       const g = R.el(fx, '', { left: '50%', top: '50%', width: '200px', height: '200px', margin: '-100px 0 0 -100px', borderRadius: '50%', background: 'radial-gradient(circle, color-mix(in srgb, var(--light) 70%, transparent) 0%, transparent 65%)' });
       c.a(g, [{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1)', opacity: 1, offset: .5 }, { transform: 'scale(1.2)', opacity: 0 }], { dur: 1000, ease: 'out' });
       return 300;
+    },
+    chain(c, el, fx) {   // 낱말 위 한 줄 도선에 전구 셋이 차례로 — 직렬(길이 하나)
+      const s = R.svg(fx, 140, 36, '<path d="M4 18H136" fill="none" stroke="var(--t3)" stroke-width="4" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>' +
+        [34, 70, 106].map(x => `<circle cx="${x}" cy="18" r="9" fill="#FFE27A" stroke="var(--t2)" stroke-width="3" opacity="0"/>`).join(''), { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      c.a(s.querySelector('path'), [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: 420, ease: 'inOut' });
+      s.querySelectorAll('circle').forEach((b, i) => c.a(b, [{ opacity: 0, transform: 'scale(.3)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 260, delay: 300 + i * 110, ease: 'spring' }));
+      return 420;
+    },
+    fork(c, el, fx) {    // 낱말 위에서 한 줄기가 두 갈래로 나뉘었다가 다시 만난다 — 병렬(길이 여러 개)
+      const P = ['M4 22H34', 'M34 22C44 22 44 5 58 5H82C96 5 96 22 106 22', 'M34 22C44 22 44 39 58 39H82C96 39 96 22 106 22', 'M106 22H136'];
+      const s = R.svg(fx, 140, 44, P.map(d => `<path d="${d}" fill="none" stroke="var(--light)" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>`).join(''),
+        { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      const ps = s.querySelectorAll('path'), D = [[0, 220], [200, 420], [200, 420], [600, 220]];
+      ps.forEach((p, i) => c.a(p, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { dur: D[i][1], delay: D[i][0], ease: 'linear' }));
+      return 520;
+    },
+    cut(c, el, fx) {     // 한 줄 도선의 켜진 전구들 — 가운데가 끊기면 모두 함께 꺼진다
+      const xs = [30, 70, 110];
+      const s = R.svg(fx, 140, 40, '<path d="M4 20H56M84 20H136" fill="none" stroke="var(--t3)" stroke-width="4" stroke-linecap="round"/><path d="M56 20H84" fill="none" stroke="var(--t3)" stroke-width="4"/>' +
+        xs.map(x => `<circle cx="${x}" cy="20" r="9" fill="var(--t3)" opacity=".5"/><circle class="on" cx="${x}" cy="20" r="9" fill="#FFE27A"/>`).join('') +
+        '<path d="M60 10L80 30M80 10L60 30" stroke="var(--heat)" stroke-width="5" stroke-linecap="round" opacity="0"/>', { left: '50%', bottom: '100%', marginLeft: '-70px', marginBottom: '2px' });
+      const p = s.querySelectorAll('path');
+      c.a(p[1], [{ opacity: 1 }, { opacity: 0 }], { dur: 120, delay: 380 });
+      c.a(p[2], [{ opacity: 0, transform: 'scale(1.6)' }, { opacity: 1, transform: 'scale(1)' }], { dur: 260, delay: 380, ease: 'out' });
+      s.querySelectorAll('.on').forEach(b => c.a(b, [{ opacity: 1 }, { opacity: 0 }], { dur: 180, delay: 460 }));   // 같은 순간에 모두
+      return 520;
     },
     equal(c, el, fx) {
       const a = R.el(fx, '', { left: '-30px', right: '-30px', top: '-16px', height: '6px', borderRadius: '3px', background: 'var(--act)' });
@@ -2092,6 +2189,25 @@ try{
 })();
 
 }catch(e){console.error("[slide 02_knobs.html]",e)}
+/* ── 02_knobsk_keywords.html ── */
+try{
+
+(function () {
+  const S = 'e4_02_knobsk_keywords', TT = [600, 1246, 1893, 2540], TEND = 2540;
+  Deck.scene(S, {
+    steps: 0,
+    enter(c) {
+      if (!c.instant) { c.sfx('scan', 600, 1940); TT.forEach(t => c.sfx('tick', t)); c.sfx('chime', TEND + 250); }
+      const ring = c.$(`#${S}-ring`);
+      c.loop(t => {   // 「여기서 출발!」 — 첫 키워드 둘레가 천천히 숨 쉬듯
+        const k = t * 1000 < TEND ? 0 : (Math.sin((t * 1000 - TEND) / 420) + 1) / 2;
+        ring.setAttribute('r', (54 + 4 + 12 * k).toFixed(1)); ring.setAttribute('opacity', (t * 1000 < TEND ? 0 : .55 - .45 * k).toFixed(3));
+      });
+    },
+  });
+})();
+
+}catch(e){console.error("[slide 02_knobsk_keywords.html]",e)}
 /* ── 03_review.html ── */
 try{
 
