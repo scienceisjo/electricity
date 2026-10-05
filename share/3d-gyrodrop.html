@@ -1,0 +1,1330 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>떨어지던 자이로드롭이 스르륵 멈췄다 · 자석 브레이크 3D 실험실</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{
+ --abyss:#f2eade; --surface2:#fffcf4; --line:#c1ac82; --line-soft:#dccfae;
+ --ink:#2e2315; --ink-dim:#5c4a33; --ink-mute:#96805c;
+ --accent:#a8552a; --accent2:#2c6e5f; --gold:#8a5f24; --ok:#2c7a44; --danger:#b3362e;
+ --north:#c8402f; --south:#2f6ea8; --cur:#e0782f;
+ --disp:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+ --jua:"Jua",var(--disp); --gowun:"Gowun Dodum",var(--disp);
+ --r:16px; --shadow:0 18px 50px -22px rgba(0,0,0,.45);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overscroll-behavior:none}
+body{font-family:var(--disp);color:var(--ink);background:
+ radial-gradient(900px 560px at 8% 6%, rgba(168,85,42,.08), transparent 60%),
+ radial-gradient(700px 480px at 92% 90%, rgba(44,110,95,.07), transparent 55%),
+ var(--abyss); min-height:100vh; -webkit-font-smoothing:antialiased}
+header.top{padding:20px 20px 2px; text-align:center}
+header.top h1{font-family:var(--jua); font-size:clamp(21px,4.2vw,32px); line-height:1.3}
+header.top h1 .em{color:var(--accent)}
+header.top p{font-family:var(--gowun); color:var(--ink-dim); font-size:clamp(13px,2.3vw,15.5px); margin-top:6px}
+header.top p .tag{display:inline-block; font-family:var(--jua); font-size:12.5px; color:#fff; background:var(--accent2); border-radius:999px; padding:2px 10px; margin-right:6px; vertical-align:1px}
+.wrap{max-width:1040px; margin:0 auto; padding:10px 14px 40px}
+
+.modes{display:flex; gap:8px; justify-content:center; margin:12px 0 2px; flex-wrap:wrap}
+.mode{font-family:var(--jua); font-size:15.5px; padding:10px 18px; border-radius:999px; border:2px solid var(--line);
+ background:rgba(255,252,244,.85); color:var(--ink-dim); cursor:pointer; transition:.15s}
+.mode:hover{border-color:var(--accent); color:var(--accent)}
+.mode.on{background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:0 8px 20px -10px rgba(168,85,42,.7)}
+
+.card{background:rgba(255,252,244,.86); border:1.5px solid var(--line); border-radius:var(--r);
+ box-shadow:var(--shadow); overflow:hidden; margin-top:13px}
+.card-h{display:flex; align-items:center; gap:9px; padding:10px 16px; border-bottom:1px dashed var(--line-soft)}
+.card-h .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
+.card-h h2{font-family:var(--jua); font-size:16px; color:var(--accent)}
+.card-h .hint{margin-left:auto; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun); text-align:right}
+@media (max-width:560px){ .card-h .hint{display:none} }
+
+#stage{position:relative; width:100%; height:clamp(340px,56vw,540px); background:#cfe2ee; overflow:hidden;
+ user-select:none; -webkit-user-select:none}
+#stage canvas{display:block; width:100% !important; height:100% !important; touch-action:none; outline:none}
+#labels{position:absolute; inset:0; pointer-events:none; overflow:hidden}
+.lbl{position:absolute; left:0; top:0; white-space:nowrap; pointer-events:none; font-family:var(--gowun); font-size:13px;
+ color:#2e2315; text-shadow:0 1px 2px rgba(255,255,255,.95),0 0 6px rgba(255,255,255,.8); will-change:transform}
+.lbl.k{font-weight:700; font-size:13px; padding:2px 8px; border-radius:8px; background:rgba(255,252,244,.9); border:1px solid rgba(0,0,0,.1); text-shadow:none}
+.lbl.f{color:#1f5c4f; font-weight:700} .lbl.gr{color:#4a4f55; font-weight:700}
+.lbl.pole{font-family:var(--jua); font-size:15px; padding:1px 8px; border-radius:9px; color:#fff; text-shadow:none}
+.lbl.pole.n{background:var(--north)} .lbl.pole.s{background:var(--south)}
+.lbl.pole small{font-family:var(--gowun); font-size:12px; margin-left:4px; opacity:.95}
+.lbl.time{font-family:var(--jua); font-size:15px; padding:2px 8px; border-radius:8px; background:rgba(255,252,244,.92); border:1px solid rgba(0,0,0,.12); text-shadow:none}
+.lbl.time.done{background:#2e2315; color:#ffe9a8}
+.sbtn{position:absolute; top:10px; z-index:5; font-family:var(--gowun); font-size:12.5px; padding:6px 10px; border-radius:9px;
+ border:1px solid rgba(0,0,0,.15); background:rgba(255,252,244,.9); color:var(--ink-dim); cursor:pointer}
+#camReset{right:10px} #fsBtn{right:104px}
+#meter{position:absolute; left:10px; top:10px; z-index:4; background:rgba(255,252,244,.93); border:1px solid var(--line);
+ border-radius:11px; padding:7px 11px; font-family:var(--gowun); font-size:13px; line-height:1.6; color:var(--ink); pointer-events:none; max-width:62%}
+#meter b{font-family:var(--jua); font-weight:400; font-size:17px}
+#meter .ph{display:inline-block; font-family:var(--jua); font-size:12.5px; color:#fff; background:var(--accent2); border-radius:7px; padding:0 7px; margin-left:4px}
+#meter .ph.free{background:#7d5ba6} #meter .ph.catch{background:#5b6b78} #meter .ph.bad{background:var(--danger)}
+#meter .bar{display:inline-block; height:8px; border-radius:4px; background:var(--cur); vertical-align:1px; margin-left:4px; min-width:2px}
+#meter .bar.f{background:var(--accent2)} #meter .bar.v{background:#7b8794}
+#meter .hot{color:var(--danger); font-weight:700}
+#cap{position:absolute; left:12px; right:12px; bottom:12px; z-index:6; background:rgba(255,252,244,.96); color:var(--ink);
+ border:1.4px solid var(--accent); border-radius:13px; padding:9px 14px; font-family:var(--gowun); font-size:15px; line-height:1.6;
+ box-shadow:0 10px 30px -12px rgba(0,0,0,.35)}
+#cap b{color:var(--accent); font-family:var(--disp)}
+#cap .dim{color:var(--ink-mute); font-size:13px}
+#warn{position:absolute; left:50%; top:54px; transform:translateX(-50%); z-index:7; max-width:min(560px,92%); background:#fff3ec;
+ border:2px solid var(--danger); color:#7a2418; border-radius:13px; padding:9px 14px; font-family:var(--gowun); font-size:14.5px; line-height:1.55;
+ box-shadow:0 12px 30px -14px rgba(120,20,10,.5); text-align:center}
+#warn b{font-family:var(--disp)}
+#cap[hidden], #warn[hidden], #meter[hidden]{display:none}
+#stage.narrow #cap{font-size:13px; line-height:1.5; padding:7px 10px; left:8px; right:8px; bottom:8px}
+#stage.narrow .sbtn{font-size:11.5px; padding:5px 8px} #stage.narrow #fsBtn{right:90px}
+#stage.narrow #meter{font-size:11.5px; padding:5px 8px; top:44px; max-width:80%} #stage.narrow #meter b{font-size:14px}
+#stage.narrow #warn{top:44px; font-size:13px}
+#noGL{position:absolute; inset:0; display:grid; place-items:center; text-align:center; padding:30px; font-family:var(--gowun)}
+#noGL[hidden]{display:none}
+#viewRow{display:flex; gap:6px; flex-wrap:wrap; align-items:center; padding:8px 12px; border-top:1px dashed var(--line-soft); background:#f6f9f7}
+#viewRow .t{font-family:var(--jua); font-size:13px; color:var(--accent2); margin-right:2px}
+.vc{font-family:var(--gowun); font-size:13px; padding:5px 10px; border-radius:999px; border:1.4px solid var(--line-soft); background:#fff; color:var(--ink-dim); cursor:pointer}
+.vc.on{background:var(--accent2); border-color:var(--accent2); color:#fff}
+#legend{padding:7px 14px; font-family:var(--gowun); font-size:13px; line-height:1.6; color:var(--ink-dim);
+ border-top:1px dashed var(--line-soft); background:rgba(255,252,244,.9)}
+#legend i{display:inline-block; width:20px; height:7px; border-radius:3px; vertical-align:1px; margin:0 4px 0 2px}
+
+/* 조작판 */
+.ctrl{display:flex; gap:10px 12px; flex-wrap:wrap; justify-content:center; align-items:center; margin-top:14px}
+.ctrl[hidden]{display:none}
+.opts{display:flex; gap:9px; flex-wrap:wrap; justify-content:center; align-items:center}
+.opts.locked{opacity:.45; pointer-events:none}
+.btn{font-family:var(--jua); font-size:15.5px; padding:11px 18px; border-radius:12px; cursor:pointer;
+ border:1.8px solid var(--line); background:var(--surface2); color:var(--ink-dim); transition:.15s}
+.btn:hover:not(:disabled){border-color:var(--accent); color:var(--accent)}
+.btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+.btn.primary:hover:not(:disabled){color:#fff; filter:brightness(1.06)}
+.btn.teal{background:var(--accent2); color:#fff; border-color:var(--accent2)}
+.btn.teal:hover:not(:disabled){color:#fff; filter:brightness(1.08)}
+.btn.sm{font-size:13.5px; padding:8px 12px}
+.btn.pulse{animation:bpulse 1.2s infinite}
+@keyframes bpulse{0%,100%{box-shadow:0 0 0 0 rgba(168,85,42,.55)}55%{box-shadow:0 0 0 11px rgba(168,85,42,0)}}
+.btn:disabled{opacity:.36; cursor:not-allowed}
+#tGo{min-width:200px; font-size:17px}
+.seg{display:inline-flex; border:1.8px solid var(--line); border-radius:12px; overflow:hidden; background:var(--surface2)}
+.seg span{font-family:var(--jua); font-size:13px; color:var(--ink-mute); padding:0 9px; display:grid; place-items:center; border-right:1px solid var(--line-soft)}
+.seg button{font-family:var(--jua); font-size:14px; padding:8px 11px; border:0; background:none; color:var(--ink-dim); cursor:pointer}
+.seg button.on{background:var(--accent2); color:#fff}
+.rng{display:inline-flex; align-items:center; gap:8px; border:1.8px solid var(--line); border-radius:12px; background:var(--surface2); padding:5px 12px;
+ font-family:var(--jua); font-size:13.5px; color:var(--ink-mute)}
+.rng input{accent-color:var(--accent2); width:130px}
+.rng b{font-weight:400; color:var(--ink); min-width:40px; display:inline-block}
+.chk{display:inline-flex; align-items:center; gap:7px; border:1.8px solid var(--line); border-radius:12px; background:var(--surface2); padding:8px 12px;
+ font-family:var(--jua); font-size:14px; color:var(--ink-dim); cursor:pointer}
+.chk input{accent-color:var(--danger); width:17px; height:17px}
+.chk.on{border-color:var(--danger); color:var(--danger)}
+.smallnote{width:100%; text-align:center; font-family:var(--gowun); font-size:13px; color:var(--ink-mute)}
+
+/* 기록 */
+.rec{margin-top:13px}
+.rec[hidden]{display:none}
+.recgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+@media (max-width:760px){ .recgrid{grid-template-columns:1fr} }
+.rc{background:#fff; border:1.4px solid var(--line-soft); border-radius:13px; padding:9px 11px 10px}
+.rc h4{font-family:var(--jua); font-size:14px; color:var(--accent2); margin-bottom:4px; display:flex; justify-content:space-between; gap:8px}
+.rc h4 small{font-family:var(--gowun); color:var(--ink-mute); font-size:12px}
+.rc svg{display:block; width:100%; height:auto}
+.rc .empty{font-family:var(--gowun); font-size:13px; color:var(--ink-mute); text-align:center; padding:26px 6px}
+.tbl{width:100%; border-collapse:collapse; font-family:var(--gowun); font-size:13.5px}
+.tbl td,.tbl th{border-bottom:1px dashed var(--line-soft); padding:6px 5px; text-align:center; vertical-align:middle}
+.tbl th{font-family:var(--jua); font-weight:400; color:var(--gold); font-size:13px}
+.tbl td.l{text-align:left}
+.tbl .no{display:inline-block; width:20px; height:20px; border-radius:50%; color:#fff; font-family:var(--jua); font-size:12px; line-height:20px}
+.tbl .ok{color:var(--ok); font-weight:700} .tbl .warn{color:#b26a12; font-weight:700} .tbl .bad{color:var(--danger); font-weight:700}
+.tscroll{overflow-x:auto}
+
+/* 질문 */
+#qa .body{padding:12px 14px 14px}
+#qa .lead{font-family:var(--gowun); font-size:14px; color:var(--ink-dim); margin-bottom:10px}
+#qList{display:flex; flex-wrap:wrap; gap:7px}
+.qc{font-family:var(--gowun); font-size:14px; text-align:left; padding:8px 12px; border-radius:11px; border:1.5px solid var(--line-soft);
+ background:#fff; color:var(--ink); cursor:pointer; line-height:1.4}
+.qc:hover{border-color:var(--accent)} .qc.on{border-color:var(--accent); background:#fbf1e4}
+.qc.seen{color:var(--ink-mute)}
+#qAns{margin-top:12px; border:1.8px solid var(--accent); border-radius:14px; background:#fbf1e4; padding:12px 15px}
+#qAns[hidden]{display:none}
+#qAns h3{font-family:var(--jua); font-size:17px; color:#7a4520; margin-bottom:6px}
+#qAns p{font-family:var(--gowun); font-size:15.5px; line-height:1.75; color:var(--ink)}
+#qAns p b{font-family:var(--disp); color:var(--accent)}
+#qAns .go{margin-top:10px}
+
+.notes{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:13px}
+@media (max-width:760px){ .notes{grid-template-columns:1fr} }
+.note{background:rgba(255,252,244,.75); border:1.4px solid var(--line-soft); border-radius:14px; padding:12px 15px; font-family:var(--gowun);
+ font-size:13.8px; line-height:1.7; color:var(--ink-dim)}
+.note h4{font-family:var(--jua); font-size:15px; color:var(--accent2); margin-bottom:5px}
+.note ul{padding-left:18px}
+.note b{font-family:var(--disp); color:var(--ink)}
+.note.teach{border-style:dashed}
+.backline{margin-top:22px; text-align:center}
+.backline a{display:inline-flex; gap:8px; text-decoration:none; font-family:var(--jua); font-size:15px; color:var(--ink-dim);
+ background:var(--surface2); border:1.5px solid var(--line); border-radius:12px; padding:11px 22px}
+#app-credit{width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:15px;
+ line-height:1.6;color:#8a755c;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25)}
+.stagecard:fullscreen{border-radius:0; margin:0; display:flex; flex-direction:column}
+.stagecard:fullscreen #stage{height:auto; flex:1}
+html.embed body{background:none}
+html.embed header.top, html.embed .backline, html.embed #app-credit, html.embed .notes{display:none}
+html.embed .wrap{padding:4px 12px 12px; max-width:none}
+html.embed .card{box-shadow:none}
+html.thumb header.top, html.thumb .modes, html.thumb .ctrl, html.thumb .rec, html.thumb #qa, html.thumb .notes,
+html.thumb .backline, html.thumb #app-credit, html.thumb .card-h, html.thumb #legend, html.thumb #viewRow, html.thumb .sbtn,
+html.thumb #labels, html.thumb #meter, html.thumb #cap, html.thumb #warn{display:none !important}
+html.thumb .wrap{padding:0; max-width:none} html.thumb .card{margin:0; border:0; border-radius:0; box-shadow:none}
+html.thumb #stage{height:100vh !important}
+</style>
+<!-- CLICK SCIENCE 갤러리 카드 — 이 페이지를 배포(push)하면 sim-lab 에 자동으로 올라간다(sim-lab/tools/sync_labs.py) -->
+<script type="application/json" id="click-science">
+{"id":"gyrodrop-brake", "subject":"phys", "unit":"전기와 자기", "grade":"중2", "tags":["sim","3d"],
+ "title":"자이로드롭 자석 브레이크 3D",
+ "desc":"닿지도 않는 자석이 어떻게 시속 90 km로 떨어지던 놀이기구를 멈출까? 판 재료·자석·탄 사람 수를 바꿔 타 보고, 구리판 속 소용돌이 전류와 구리관 속 자석 낙하로 원리를 확인합니다. (교과서 밖 · 다음 학년 예고편)",
+ "shot":"?thumb=1", "added":"2026-10-05"}
+</script>
+</head>
+<body>
+<header class="top">
+  <h1>떨어지던 자이로드롭이 <span class="em">스르륵 멈췄다</span></h1>
+  <p><span class="tag">교과서 밖 · 다음 학년 예고편</span>닿지도 않는 자석이 어떻게 시속 90 km를 멈출까?</p>
+</header>
+
+<div class="wrap">
+  <div class="modes" id="modes">
+    <button class="mode on" data-m="tower" type="button">🎢 자이로드롭 타기</button>
+    <button class="mode" data-m="zoom" type="button">🔍 구리판 속 들여다보기</button>
+    <button class="mode" data-m="pipe" type="button">🧪 구리관에 자석 떨어뜨리기</button>
+  </div>
+
+  <div class="card stagecard" id="stageCard">
+    <div class="card-h"><span class="dot"></span><h2 id="stageTitle">3D 놀이기구</h2>
+      <span class="hint">화면을 끌면 돌려 볼 수 있어요 · 굴리면 확대</span></div>
+    <div id="stage">
+      <div id="labels"></div>
+      <div id="meter"></div>
+      <button class="sbtn" id="camReset" type="button">⌖ 처음 시점</button>
+      <button class="sbtn" id="fsBtn" type="button">⛶ 크게 보기</button>
+      <div id="warn" hidden></div>
+      <div id="cap"></div>
+      <div id="noGL" hidden>이 기기에서는 3D 화면을 그릴 수 없어요.<br>크롬 브라우저 최신판에서 다시 열어 보세요.</div>
+    </div>
+    <div id="viewRow"><span class="t">보기</span></div>
+    <div id="legend"></div>
+  </div>
+
+  <!-- 🎢 놀이기구 조작판 -->
+  <div class="ctrl" id="ctrlT">
+    <button class="btn primary pulse" id="tGo" type="button">⬆ 올라가기</button>
+    <button class="btn sm" id="tSkip" type="button">⏩ 꼭대기에서 바로</button>
+    <div class="opts" id="tOpts">
+      <div class="seg" id="segMat"><span>판 재료</span><button data-v="cu" class="on">구리</button><button data-v="al">알루미늄</button><button data-v="pl">플라스틱</button></div>
+      <div class="seg" id="segMag"><span>자석</span><button data-v="perm" class="on">영구 자석</button><button data-v="electro">전자석</button></div>
+      <div class="seg" id="segStr"><span>자석 세기</span><button data-v="w">약하게</button><button data-v="m" class="on">보통</button><button data-v="s">세게</button></div>
+      <div class="seg" id="segShape"><span>판 모양</span><button data-v="taper" class="on">아래로 넓어짐</button><button data-v="even">처음부터 넓게</button></div>
+      <label class="rng">탄 사람 <input id="tN" type="range" min="0" max="40" step="1" value="20"><b id="tNv">20명</b></label>
+      <label class="chk" id="tBlackL"><input id="tBlack" type="checkbox"> ⚡ 떨어지는 동안 정전시키기</label>
+    </div>
+    <button class="btn sm" id="tSlow" type="button">🐢 느리게</button>
+  </div>
+
+  <!-- 🔍 확대 조작판 -->
+  <div class="ctrl" id="ctrlZ" hidden>
+    <button class="btn primary" id="zDown" type="button">▼ 자석을 아래로 지나가게</button>
+    <button class="btn" id="zUp" type="button">▲ 위로 지나가게</button>
+    <button class="btn" id="zStop" type="button">⏸ 멈추기</button>
+    <div class="opts">
+      <div class="seg" id="segZMat"><span>판 재료</span><button data-v="cu" class="on">구리</button><button data-v="al">알루미늄</button><button data-v="pl">플라스틱</button></div>
+      <label class="rng">빠르기 <input id="zSp" type="range" min="1" max="10" step="1" value="5"><b id="zSpv">보통</b></label>
+      <label class="chk" id="zSlotL"><input id="zSlot" type="checkbox"> ✂️ 판에 세로 틈 내기</label>
+    </div>
+    <div class="smallnote">자석(빨강·파랑 덩어리)을 마우스로 직접 끌어 위아래로 움직여도 돼요.</div>
+  </div>
+
+  <!-- 🧪 구리관 조작판 -->
+  <div class="ctrl" id="ctrlP" hidden>
+    <div class="opts">
+      <div class="seg" id="segObj"><span>넣을 것</span><button data-v="mag" class="on">네오디뮴 자석</button><button data-v="ball">자석 아닌 쇠구슬</button></div>
+      <div class="seg" id="segFlip"><span>자석 방향</span><button data-v="n" class="on">N극이 아래</button><button data-v="s">S극이 아래</button></div>
+    </div>
+    <div class="opts">
+      <button class="btn sm" data-p="0" type="button">구리관에 넣기</button>
+      <button class="btn sm" data-p="1" type="button">틈 난 구리관에</button>
+      <button class="btn sm" data-p="2" type="button">알루미늄관에</button>
+      <button class="btn sm" data-p="3" type="button">플라스틱관에</button>
+      <button class="btn primary" id="pAll" type="button">▶ 네 관에 한꺼번에</button>
+      <button class="btn sm" id="pSlow" type="button">🐢 느리게(¼)</button>
+    </div>
+  </div>
+
+  <div class="rec" id="recT">
+    <div class="recgrid">
+      <div class="rc"><h4>속력 <small>km/h · 떨어뜨린 뒤 시간(초)</small></h4><div id="chV"><div class="empty">한 번 타 보면 그래프가 그려져요</div></div></div>
+      <div class="rc"><h4>몸이 느끼는 무게 <small>평소의 몇 배 · 1 = 평소</small></h4><div id="chG"><div class="empty">0 = 붕 뜸 · 1 = 평소 · 3 = 세 배로 눌림</div></div></div>
+    </div>
+    <div class="rc" style="margin-top:10px"><h4>타 본 기록 <small>설정을 바꿔 가며 비교해 보세요</small></h4><div class="tscroll" id="tbT"><div class="empty">아직 기록이 없어요</div></div></div>
+  </div>
+  <div class="rec" id="recP" hidden>
+    <div class="rc"><h4>관을 지나는 데 걸린 시간 <small>관 길이 1 m</small></h4><div class="tscroll" id="tbP"><div class="empty">관에 자석을 넣어 보세요</div></div></div>
+  </div>
+
+  <div class="card" id="qa">
+    <div class="card-h"><span class="dot" style="background:var(--gold)"></span><h2 style="color:#7a4520">🔎 내 질문의 답 찾기</h2>
+      <span class="hint">질문을 누르면 답과 3D 장면이 나와요</span></div>
+    <div class="body">
+      <p class="lead">자이로드롭을 타 보고 궁금한 점이 생겼나요? 같은 질문이 있는지 찾아보세요. 목록에 없는 질문은 <b>아주 좋은 질문</b>이에요 — 학습지에 적어 두세요.</p>
+      <div id="qList"></div>
+      <div id="qAns" hidden></div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="note">
+      <h4>📏 이 실험실의 약속 — 단순하게 만든 점</h4>
+      <ul>
+        <li>높이 70 m 탑, 좌석 높이 64 m에서 떨어져 32 m부터 자석 구간이 시작되는 <b>예시 놀이기구</b>예요. 실제 놀이기구마다 높이·속력·브레이크 배치가 달라요.</li>
+        <li>실제 낙하 탑처럼 <b>곤돌라에 영구 자석, 탑 아래쪽에 구리판</b>을 달았어요. 반대로 다는 놀이기구도 있지만, 서로 스치며 움직이기만 하면 똑같이 브레이크가 걸려요.</li>
+        <li>브레이크 힘 = (판이 전기를 통하는 정도) × (자석 세기)² × (자석이 덮은 구리판의 넓이) × 속력으로 계산했어요. 아주 빠를 때는 이 비례에서 조금 벗어나요.</li>
+        <li>곤돌라 4톤 + 사람 1명 60 kg. 공기 저항은 작아서 뺐어요. 알루미늄은 구리보다 전기가 덜 통해요(약 60 %).</li>
+        <li>관 실험: 속이 보이게 관을 잘라 굵게, 자석은 극이 보이게 칠해서(빨강 N · 파랑 S) 그렸어요. 걸리는 시간은 관 두께와 자석 세기에 따라 달라져요.</li>
+      </ul>
+    </div>
+    <div class="note teach">
+      <h4>👩‍🏫 수업에서 쓰기</h4>
+      교과서 밖 내용이에요. 고등학교 통합과학의 <b>전자기 유도</b>를 미리 엿보는 예고편으로, 시험 범위가 아니에요.<br>
+      그래도 이번 단원에서 배운 것만으로 대부분 설명할 수 있어요 —
+      <b>전류가 흐르는 고리는 자석이 된다</b>(코일 주위의 자기장), <b>자기장 속 전류는 힘을 받는다</b>(전동기),
+      <b>전류가 흐르면 열이 난다</b>(소비 전력). 정답을 알려 주기보다 “왜 닿지 않는데 멈출까?”를 붙잡고 이야기 나누는 데 쓰세요.
+    </div>
+  </div>
+
+  <div class="backline"><a href="08-motor.html">← 수업 페이지로 돌아가기</a></div>
+</div>
+
+<footer id="app-credit">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-10-05</span></footer>
+
+<script src="lib/three.min.js"></script>
+<script src="lib/OrbitControls.js"></script>
+<script>
+"use strict";
+(function(){
+var EMBED = /[?&]embed=1/.test(location.search); if(EMBED) document.documentElement.classList.add('embed');
+var THUMB = /[?&]thumb=1/.test(location.search); if(THUMB) document.documentElement.classList.add('thumb');
+function $(id){ return document.getElementById(id); }
+var stageEl = $('stage');
+
+/* ═══════════════════════════════════════════════════════════
+   모형의 약속 (화면 뒤 계산)
+   🎢 놀이기구 (길이 1 = 1 m)
+   · 탑 70 m. 좌석 높이 64 m에서 놓으면 32 m까지 자유 낙하(약 2.6초, 시속 90 km).
+   · 브레이크: 곤돌라 위쪽의 영구 자석 4쌍이 탑의 구리판 4장을 사이에 두고 지나간다.
+     위로 미는 힘 F = K × (전기 전도: 구리 1·알루미늄 0.6·플라스틱 0) × (자석 세기)² × (덮인 판 비율 c) × 속력
+     c 는 아래로 갈수록 커진다(0.06 → 0.62): 빠를 때는 조금만 덮어도 세니까, 몸이 받는 힘이 3배 안팎으로 고르게.
+     K 는 「구리·보통·20명」 곤돌라가 판을 다 덮었을 때 끝속력 1 m/s 가 되도록 정했다.
+   · 자석만으로는 0이 되지 않는다(느려질수록 힘이 작아짐) → 좌석 3 m 아래는 공기 완충 장치가 1.5 m 동안 고르게 받아 멈춘다.
+   · 몸이 느끼는 무게(배) = (g − 아래쪽 가속도) ÷ g. 자유 낙하 0, 멈춰 있으면 1.
+   · 판에 생긴 열 = ∫F·v dt (자석이 빼앗은 에너지 전부가 판의 열이 된다고 본다).
+   🔍 확대: 자석 한 쌍(앞 N·뒤 S, 판 쪽 면 기준)이 고정된 구리판을 스쳐 지나간다.
+     자석이 내려가면 판 속 전류는 두 자석 사이에서 왼쪽(−x)으로 흐르고, 아래·위로 돌아 나가 소용돌이 두 개가 된다.
+     앞에서 보면 아래 소용돌이는 시계 반대 방향(앞면 N), 위 소용돌이는 시계 방향(앞면 S). 세기 ∝ 전도 × 속력.
+   🧪 관: 1 m 관, 네오디뮴 자석. 끝속력 구리 0.25 m/s · 알루미늄 0.42 · 세로 틈 난 구리 1.7 · 플라스틱은 그냥 낙하.
+     a = g − g·v/v끝 (관 속에서만). 고리 전류: N극이 아래면 아래 고리는 위에서 볼 때 시계 반대(윗면 N), 위 고리는 시계 방향(아랫면 N).
+   ═══════════════════════════════════════════════════════════ */
+
+if(!window.THREE){ $('noGL').hidden = false; return; }
+var renderer;
+try{ renderer = new THREE.WebGLRenderer({antialias:true}); }catch(err){ $('noGL').hidden = false; return; }
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stageEl.insertBefore(renderer.domElement, stageEl.firstChild);
+
+function V(x,y,z){ return new THREE.Vector3(x,y,z); }
+function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+function ease(t){ return t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
+function lerp(a,b,t){ return a+(b-a)*t; }
+function f1(x){ return (Math.round(x*10)/10).toFixed(1); }
+var seed = 20261005;
+function rnd(){ seed = (seed*1664525 + 1013904223) % 4294967296; return seed/4294967296; }
+function canvasTex(w,h,draw){ var c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); var t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t; }
+var UPV = V(0,1,0), _tv = V(0,0,0), _pv = V(0,0,0);
+var G = 9.8;
+
+var cam = new THREE.PerspectiveCamera(40, 16/10, .1, 900);
+var ctl = new THREE.OrbitControls(cam, renderer.domElement);
+ctl.enableDamping = true; ctl.dampingFactor = .12; ctl.enablePan = false;
+
+var MODE = 'tower';
+var SCN = {};
+
+/* ── 글자 이름표 ── */
+var LBL = [];
+function lbl(mode, html, cls, at, opt){
+  var el = document.createElement('div'); el.className = 'lbl ' + (cls || ''); el.innerHTML = html; $('labels').appendChild(el);
+  var L = {el:el, mode:mode, at:at, on:true, maxD:(opt && opt.maxD) || 1e9, minD:(opt && opt.minD) || 0, _h:html, _vis:null};
+  LBL.push(L); return L;
+}
+function setL(L, html){ if(L._h !== html){ L.el.innerHTML = html; L._h = html; } }
+function updLabels(){
+  var w = stageEl.clientWidth, h = stageEl.clientHeight, d = cam.position.distanceTo(ctl.target);
+  for(var i=0;i<LBL.length;i++){
+    var L = LBL[i], vis = L.mode === MODE && L.on && d <= L.maxD && d >= L.minD;
+    if(vis){
+      var p = typeof L.at === 'function' ? L.at() : L.at;
+      if(!p) vis = false;
+      else { _pv.copy(p).project(cam);
+        if(_pv.z > 1 || _pv.x < -1.2 || _pv.x > 1.2 || _pv.y < -1.2 || _pv.y > 1.2) vis = false;
+        else L.el.style.transform = 'translate(' + ((_pv.x+1)/2*w).toFixed(1) + 'px,' + ((1-_pv.y)/2*h).toFixed(1) + 'px) translate(-50%,-50%)'; }
+    }
+    if(L._vis !== vis){ L.el.style.display = vis ? '' : 'none'; L._vis = vis; }
+  }
+}
+
+/* ── 굵은 화살표 (위·아래) ── */
+function Arrow(parent, color, r){
+  this.g = new THREE.Group(); parent.add(this.g);
+  var m = new THREE.MeshBasicMaterial({color:color});
+  this.shaft = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 1, 12), m);
+  this.hl = r*5; this.head = new THREE.Mesh(new THREE.ConeGeometry(r*2.4, this.hl, 16), m);
+  this.g.add(this.shaft); this.g.add(this.head); this.g.visible = false; this.tip = V(0,0,0);
+}
+Arrow.prototype.set = function(x, y, z, len, dir){
+  if(len < .03){ this.g.visible = false; return; }
+  this.g.visible = true; this.g.position.set(x, y, z);
+  var hl = Math.min(this.hl, len*.5), sl = len - hl;
+  this.shaft.scale.set(1, Math.max(.001, sl), 1); this.shaft.position.y = dir*sl/2;
+  this.head.scale.setScalar(hl/this.hl); this.head.position.y = dir*(sl + hl/2); this.head.rotation.x = dir > 0 ? 0 : Math.PI;
+  this.tip.set(x, y + dir*len, z);
+};
+
+/* ── 소용돌이 전류 고리 (판 안, 그룹의 xy 평면) — dir +1 = +z 쪽에서 볼 때 시계 반대 방향 ── */
+function Eddy(parent, color, opt){
+  opt = opt || {};
+  this.g = new THREE.Group(); parent.add(this.g);
+  this.mat = new THREE.MeshBasicMaterial({color:color, transparent:true, opacity:0, depthWrite:false});
+  this.tube = opt.tube || 0; this.q = opt.q || 0; this.rx = -1; this.ry = -1; this.mesh = null;
+  if(!this.tube){
+    var pts = []; for(var i=0;i<72;i++){ var t = i/72*Math.PI*2; pts.push(V(Math.cos(t), Math.sin(t), 0)); }
+    this.lmat = new THREE.LineBasicMaterial({color:color, transparent:true, opacity:0});
+    this.line = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), this.lmat); this.g.add(this.line);
+  }
+  this.cones = []; var cs = opt.cone || .06, cg = new THREE.ConeGeometry(cs*.62, cs*1.7, 10);
+  for(var k=0;k<(opt.n || 4);k++){ var c = new THREE.Mesh(cg, this.mat); this.g.add(c); this.cones.push(c); }
+  this.ph = 0; this.g.visible = false;
+}
+Eddy.prototype.shape = function(rx, ry){
+  if(this.q){ rx = Math.round(rx/this.q)*this.q; ry = Math.round(ry/this.q)*this.q; }
+  if(Math.abs(rx - this.rx) < 1e-3 && Math.abs(ry - this.ry) < 1e-3) return;
+  this.rx = rx; this.ry = ry;
+  if(this.tube){
+    if(this.mesh){ this.g.remove(this.mesh); this.mesh.geometry.dispose(); }
+    var p3 = []; for(var i=0;i<64;i++){ var t = i/64*Math.PI*2; p3.push(V(rx*Math.cos(t), ry*Math.sin(t), 0)); }
+    this.mesh = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(p3, true), 96, this.tube, 8, true), this.mat); this.g.add(this.mesh);
+  } else this.line.scale.set(rx, ry, 1);
+};
+Eddy.prototype.set = function(x, y, z, rx, ry, dir, I, dt){
+  this.g.position.set(x, y, z); this.shape(Math.max(.01, rx), Math.max(.01, ry));
+  var op = clamp(I, 0, 1);
+  this.g.visible = op > .03; if(!this.g.visible) return;
+  this.mat.opacity = .25 + .72*op; if(this.lmat) this.lmat.opacity = .35 + .65*op;
+  this.ph += dir*dt*(.6 + 2.6*op);
+  var n = this.cones.length;
+  for(var i=0;i<n;i++){
+    var t = this.ph + i/n*Math.PI*2, c = this.cones[i];
+    c.position.set(this.rx*Math.cos(t), this.ry*Math.sin(t), 0);
+    _tv.set(-this.rx*Math.sin(t)*dir, this.ry*Math.cos(t)*dir, 0).normalize();
+    c.quaternion.setFromUnitVectors(UPV, _tv);
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   🎢 놀이기구 — 탑과 곤돌라
+   ══════════════════════════════════════════════════════════ */
+var TW = {H:70, R:1.5, TOP:64, Z1:32, Z0:3, BASE:1.5, M0:4000, MP:60, VT:1.0, C0:.06, LAM:12, EVEN:.62};
+var MO = 3.4;                                     /* 자석 묶음은 좌석보다 3.4 m 위에 달려 있다 */
+var FIN = {R0:1.85, W:.6, T:.08};                 /* 구리판: 탑 중심에서 1.85 m 부터 바깥으로 최대 60 cm */
+var FIN_ANG = [Math.PI/4, 3*Math.PI/4, 5*Math.PI/4, 7*Math.PI/4], A0 = Math.PI/4;   /* A0: 따라가기 화면에서 N 쪽 면이 보이는 판 */
+var RAIL_ANG = [0, Math.PI/2, Math.PI, 3*Math.PI/2];
+var KB = (TW.M0 + TW.MP*20)*G/TW.VT;
+var MATS = {cu:{name:'구리', s:1}, al:{name:'알루미늄', s:.6}, pl:{name:'플라스틱', s:0}};
+var BSTR = {w:{name:'약하게', b:.7}, m:{name:'보통', b:1}, s:{name:'세게', b:1.3}};
+function rHat(a){ return V(Math.cos(a), 0, -Math.sin(a)); }   /* rotation.y = a 일 때 그룹의 +x */
+function tHat(a){ return V(Math.sin(a), 0, Math.cos(a)); }    /* 그룹의 +z (N 자석 쪽) */
+
+var T = {mat:'cu', mag:'perm', str:'m', shape:'taper', n:20, black:false, slow:false,
+         phase:'ready', y:TW.BASE, v:0, t:0, lift:0, holdT:0, blackNow:false, F:0, Fpl:0, felt:1, part:'ready',
+         rec:null, runs:[], runNo:0, shake:0, view:'follow', arrows:true};
+function cov(d){ if(d < 0) return 0; if(T.shape === 'even') return TW.EVEN; return Math.min(1, TW.C0*Math.exp(d/TW.LAM)); }
+function covVis(ySeat){
+  var d = TW.Z1 - ySeat;
+  if(d < 0) return Math.max(0, cov(0)*(1 + d/1.2));
+  if(ySeat < TW.Z0) d = TW.Z1 - TW.Z0;
+  return cov(d);
+}
+function massT(){ return TW.M0 + TW.MP*T.n; }
+function bNow(){ return (T.mag === 'electro' && T.blackNow) ? 0 : BSTR[T.str].b; }
+function brakeK(){ var b = bNow(); return KB*MATS[T.mat].s*b*b; }
+
+var TS = new THREE.Scene(); SCN.tower = TS;
+TS.background = new THREE.Color(0xcfe2ee); TS.fog = new THREE.Fog(0xcfe2ee, 170, 430);
+TS.add(new THREE.HemisphereLight(0xffffff, 0x9aa48a, .78));
+var sun = new THREE.DirectionalLight(0xfff4e2, .82); sun.position.set(45, 95, 38); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+(function(c){ c.left = -40; c.right = 40; c.top = 55; c.bottom = -30; c.near = 10; c.far = 240; })(sun.shadow.camera);
+sun.shadow.bias = -.0006; TS.add(sun); TS.add(sun.target);
+
+var MT = {
+  ground: new THREE.MeshStandardMaterial({color:0xaebf9a, roughness:.95}),
+  plaza:  new THREE.MeshStandardMaterial({color:0xd8d1c2, roughness:.9}),
+  steel:  new THREE.MeshStandardMaterial({color:0x8d949b, roughness:.45, metalness:.5}),
+  dark:   new THREE.MeshStandardMaterial({color:0x3b4148, roughness:.55, metalness:.2, side:THREE.DoubleSide}),
+  frame:  new THREE.MeshStandardMaterial({color:0x5a636c, roughness:.5, metalness:.35}),
+  red:    new THREE.MeshStandardMaterial({color:0xc8402f, roughness:.5}),
+  yellow: new THREE.MeshStandardMaterial({color:0xf0b429, roughness:.5}),
+  seat:   new THREE.MeshStandardMaterial({color:0x2b4f7a, roughness:.6}),
+  floor:  new THREE.MeshStandardMaterial({color:0x9aa3ab, roughness:.7, side:THREE.DoubleSide}),
+  skin:   new THREE.MeshStandardMaterial({color:0xe7b98f, roughness:.7}),
+  lamp:   new THREE.MeshStandardMaterial({color:0xfff2c4, emissive:0xffc75a, emissiveIntensity:1, roughness:.4}),
+  magN:   new THREE.MeshStandardMaterial({color:0xc8402f, roughness:.4, metalness:.25}),
+  magS:   new THREE.MeshStandardMaterial({color:0x2f6ea8, roughness:.4, metalness:.25}),
+  magOff: new THREE.MeshStandardMaterial({color:0x8a8f95, roughness:.6, metalness:.3}),
+  finCu:  new THREE.MeshStandardMaterial({color:0xc4703f, roughness:.32, metalness:.55, side:THREE.DoubleSide}),
+  finAl:  new THREE.MeshStandardMaterial({color:0xc9ced4, roughness:.28, metalness:.6, side:THREE.DoubleSide}),
+  finPl:  new THREE.MeshStandardMaterial({color:0xf2f0e6, roughness:.75, side:THREE.DoubleSide}),
+  plunger:new THREE.MeshStandardMaterial({color:0xb9bec4, roughness:.3, metalness:.7})
+};
+/* 전자석: 구리 도선을 감은 무늬 */
+var coilTex = canvasTex(64, 256, function(g, w, h){ g.fillStyle = '#9a5a2e'; g.fillRect(0,0,w,h);
+  for(var y=0;y<h;y+=8){ g.fillStyle = '#d58a52'; g.fillRect(0, y, w, 5); g.fillStyle = 'rgba(0,0,0,.18)'; g.fillRect(0, y+5, w, 1); } });
+MT.elN = new THREE.MeshStandardMaterial({map:coilTex, color:0xffb0a0, roughness:.45, metalness:.3});
+MT.elS = new THREE.MeshStandardMaterial({map:coilTex, color:0xa8c6ff, roughness:.45, metalness:.3});
+
+/* 땅 · 광장 · 승강장 */
+(function(){
+  var gr = new THREE.Mesh(new THREE.CircleGeometry(260, 64), MT.ground); gr.rotation.x = -Math.PI/2; gr.receiveShadow = true; TS.add(gr);
+  var pz = new THREE.Mesh(new THREE.CircleGeometry(12, 64), MT.plaza); pz.rotation.x = -Math.PI/2; pz.position.y = .02; pz.receiveShadow = true; TS.add(pz);
+  var pf = new THREE.Mesh(new THREE.RingGeometry(4.6, 7.6, 64), MT.plaza); pf.rotation.x = -Math.PI/2; pf.position.y = .55; pf.receiveShadow = true; TS.add(pf);
+  var pw = new THREE.Mesh(new THREE.CylinderGeometry(7.6, 7.6, .55, 64, 1, true), MT.floor); pw.position.y = .275; TS.add(pw);
+  var pwi = new THREE.Mesh(new THREE.CylinderGeometry(4.6, 4.6, .55, 64, 1, true), MT.floor); pwi.position.y = .275; TS.add(pwi);
+  /* 울타리 */
+  for(var i=0;i<36;i++){ var a = i/36*Math.PI*2; if(Math.abs(Math.sin(a*.5 - .3)) < .08) continue;
+    var post = new THREE.Mesh(new THREE.CylinderGeometry(.04,.04,1.1,6), MT.frame); post.position.set(7.4*Math.cos(a), 1.1, -7.4*Math.sin(a)); TS.add(post); }
+  var rail = new THREE.Mesh(new THREE.TorusGeometry(7.4, .035, 6, 96), MT.frame); rail.rotation.x = Math.PI/2; rail.position.y = 1.62; TS.add(rail);
+  /* 나무 몇 그루 */
+  var trunk = new THREE.MeshStandardMaterial({color:0x7a5a3a, roughness:.9}), leaf = new THREE.MeshStandardMaterial({color:0x6f9a5a, roughness:.9});
+  for(var k=0;k<14;k++){ var ang = rnd()*Math.PI*2, rr = 18 + rnd()*40, s = .8 + rnd()*.8;
+    var tg = new THREE.Group(); tg.position.set(rr*Math.cos(ang), 0, rr*Math.sin(ang));
+    var tr = new THREE.Mesh(new THREE.CylinderGeometry(.18*s,.25*s,2.4*s,8), trunk); tr.position.y = 1.2*s; tg.add(tr);
+    var lf = new THREE.Mesh(new THREE.SphereGeometry(1.5*s, 12, 10), leaf); lf.position.y = 3.2*s; lf.castShadow = true; tg.add(lf); TS.add(tg); }
+})();
+
+/* 탑 */
+var towerTex = canvasTex(256, 1024, function(g, w, h){
+  g.fillStyle = '#f3f0e8'; g.fillRect(0,0,w,h);
+  for(var i=0;i<16;i++){ g.fillStyle = 'rgba(120,110,95,.25)'; g.fillRect(0, Math.round(i*h/16), w, 3); }
+  for(var k=0;k<8;k++){ g.fillStyle = 'rgba(120,110,95,.12)'; g.fillRect(Math.round(k*w/8), 0, 2, h); }
+});
+var tower = new THREE.Mesh(new THREE.CylinderGeometry(TW.R, TW.R*1.05, TW.H, 48), new THREE.MeshStandardMaterial({map:towerTex, roughness:.6}));
+tower.position.y = TW.H/2; tower.castShadow = true; tower.receiveShadow = true; TS.add(tower);
+var crown = new THREE.Mesh(new THREE.CylinderGeometry(3.0, 2.0, 3.4, 48), MT.red); crown.position.y = TW.H + 1.7; crown.castShadow = true; TS.add(crown);
+var cap2 = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 3.0, .6, 48), MT.red); cap2.position.y = TW.H + 3.7; TS.add(cap2);
+var ant = new THREE.Mesh(new THREE.CylinderGeometry(.08, .14, 7, 8), MT.steel); ant.position.y = TW.H + 7.4; TS.add(ant);
+var LAMPS = [];
+(function(){
+  var lg = new THREE.SphereGeometry(.11, 8, 6);
+  for(var y=6;y<=66;y+=6) for(var i=0;i<8;i++){ var a = (i+.5)/8*Math.PI*2, m = new THREE.Mesh(lg, MT.lamp); m.position.set((TW.R+.03)*Math.cos(a), y, -(TW.R+.03)*Math.sin(a)); TS.add(m); LAMPS.push(m); }
+  for(var j=0;j<16;j++){ var b = j/16*Math.PI*2, mm = new THREE.Mesh(lg, MT.lamp); mm.position.set(3.02*Math.cos(b), TW.H + 1.0, -3.02*Math.sin(b)); mm.scale.setScalar(1.6); TS.add(mm); }
+  /* 오르내리는 레일 4줄 */
+  RAIL_ANG.forEach(function(a){ var r = new THREE.Mesh(new THREE.BoxGeometry(.14, TW.H, .14), MT.frame); r.position.set((TW.R+.07)*Math.cos(a), TW.H/2, -(TW.R+.07)*Math.sin(a)); r.rotation.y = a; TS.add(r); });
+})();
+
+/* 구리판 4장 (탑에 고정) — 아래로 갈수록 넓어진다 */
+var FIN_MESH = [], STEEL_YB = TW.Z0 - 1.6 + MO, STEEL_YT = TW.Z1 + 1.2 + MO;
+function finGeo(){
+  var sh = new THREE.Shape(), y;
+  sh.moveTo(FIN.R0, STEEL_YB);
+  for(y = TW.Z0 - 1.6; y <= TW.Z1 + 1.2 + 1e-6; y += .2) sh.lineTo(FIN.R0 + .004 + FIN.W*covVis(y), y + MO);
+  sh.lineTo(FIN.R0, STEEL_YT); sh.lineTo(FIN.R0, STEEL_YB);
+  var geo = new THREE.ExtrudeGeometry(sh, {depth:FIN.T, bevelEnabled:false}); geo.translate(0, 0, -FIN.T/2); return geo;
+}
+var FIN_GRP = FIN_ANG.map(function(a){
+  var grp = new THREE.Group(); grp.rotation.y = a; TS.add(grp);
+  var st = new THREE.Mesh(new THREE.BoxGeometry(FIN.R0 - TW.R + .02, STEEL_YT - STEEL_YB + .4, .11), MT.steel);
+  st.position.set((TW.R + FIN.R0)/2 - .01, (STEEL_YT + STEEL_YB)/2 + .2, 0); st.castShadow = true; grp.add(st);
+  var cu = new THREE.Mesh(finGeo(), MT.finCu); cu.castShadow = true; grp.add(cu); FIN_MESH.push(cu);
+  return grp;
+});
+function rebuildFins(){
+  var geo = finGeo(), mat = T.mat === 'cu' ? MT.finCu : T.mat === 'al' ? MT.finAl : MT.finPl;
+  FIN_MESH.forEach(function(m, i){ if(m.geometry) m.geometry.dispose(); m.geometry = i ? geo.clone() : geo; m.material = mat; });
+}
+
+/* 공기 완충 장치 4개 */
+var PLUNGERS = RAIL_ANG.map(function(a){
+  var x = 2.05*Math.cos(a), z = -2.05*Math.sin(a);
+  var base = new THREE.Mesh(new THREE.CylinderGeometry(.24, .26, .14, 16), MT.frame); base.position.set(x, .07, z); TS.add(base);
+  var rod = new THREE.Mesh(new THREE.CylinderGeometry(.08, .08, 1, 12), MT.plunger); rod.position.set(x, .6, z); TS.add(rod);
+  var pad = new THREE.Mesh(new THREE.CylinderGeometry(.22, .22, .1, 16), MT.dark); pad.position.set(x, 1.2, z); TS.add(pad);
+  return {rod:rod, pad:pad};
+});
+
+/* 곤돌라: 안쪽 몸통(돌지 않음, 자석 달림) + 바깥 좌석 고리(올라갈 때 천천히 돈다) */
+var GD = new THREE.Group(); TS.add(GD);
+var CG = new THREE.Group(); GD.add(CG);
+var SR = new THREE.Group(); GD.add(SR);
+var MAGS = [], EDDY_T = [];
+(function(){
+  var shell = new THREE.Mesh(new THREE.CylinderGeometry(2.55, 2.55, 2.5, 48, 1, true), MT.dark); shell.position.y = -.05; shell.castShadow = true; CG.add(shell);
+  FIN_ANG.forEach(function(a){
+    [-1.3, 1.2].forEach(function(yy){
+      var rg = new THREE.Mesh(new THREE.RingGeometry(1.62, 2.55, 14, 1, a + .13, Math.PI/2 - .26), MT.dark); rg.rotation.x = -Math.PI/2; rg.position.y = yy; CG.add(rg); });
+  });
+  RAIL_ANG.forEach(function(a){
+    var arm = new THREE.Group(); arm.rotation.y = a; CG.add(arm);
+    var b = new THREE.Mesh(new THREE.BoxGeometry(.95, .3, .3), MT.frame); b.position.set(2.1, 0, 0); arm.add(b);
+    [-.9, .9].forEach(function(yy){ var wl = new THREE.Mesh(new THREE.CylinderGeometry(.13,.13,.12,14), MT.steel); wl.rotation.z = Math.PI/2; wl.rotation.y = Math.PI/2; wl.position.set(1.7, yy, 0); arm.add(wl);
+      var ax = new THREE.Mesh(new THREE.BoxGeometry(.85, .12, .12), MT.frame); ax.position.set(2.13, yy, 0); arm.add(ax); });
+  });
+  /* 자석 묶음 4개 — 판을 사이에 두고 +z 쪽 N, −z 쪽 S (판 쪽 면 기준) */
+  FIN_ANG.forEach(function(a){
+    var grp = new THREE.Group(); grp.rotation.y = a; CG.add(grp);
+    var nB = new THREE.Mesh(new THREE.BoxGeometry(.64, 2.0, .12), MT.magN); nB.position.set(2.18, MO, .13); nB.castShadow = true; grp.add(nB);
+    var sB = new THREE.Mesh(new THREE.BoxGeometry(.64, 2.0, .12), MT.magS); sB.position.set(2.18, MO, -.13); sB.castShadow = true; grp.add(sB);
+    var br = new THREE.Mesh(new THREE.BoxGeometry(.09, 2.2, .46), MT.frame); br.position.set(2.55, MO, 0); grp.add(br);
+    var tp = new THREE.Mesh(new THREE.BoxGeometry(.76, .08, .46), MT.frame); tp.position.set(2.2, MO + 1.06, 0); grp.add(tp);
+    var post = new THREE.Mesh(new THREE.BoxGeometry(.09, MO - 1.2 - 1.0 + .1, .2), MT.frame); post.position.set(2.55, (1.2 + MO - 1.0)/2, 0); grp.add(post);
+    MAGS.push({n:nB, s:sB});
+    EDDY_T.push({lo:new Eddy(FIN_GRP[MAGS.length-1], 0xe0782f, {tube:.022, q:.02, cone:.1, n:4}), hi:new Eddy(FIN_GRP[MAGS.length-1], 0xe0782f, {tube:.022, q:.02, cone:.1, n:4})});
+  });
+  var topRing = new THREE.Mesh(new THREE.TorusGeometry(2.55, .05, 6, 64), MT.frame); topRing.rotation.x = Math.PI/2; topRing.position.y = MO + 1.06; CG.add(topRing);
+  /* 좌석 고리 */
+  var fl = new THREE.Mesh(new THREE.RingGeometry(2.55, 4.35, 64), MT.floor); fl.rotation.x = -Math.PI/2; fl.position.y = -.95; fl.receiveShadow = true; SR.add(fl);
+  var rim = new THREE.Mesh(new THREE.CylinderGeometry(4.35, 4.35, .38, 64, 1, true), MT.red); rim.position.y = -.82; SR.add(rim);
+  var roof = new THREE.Mesh(new THREE.RingGeometry(2.55, 3.5, 64), MT.red); roof.rotation.x = -Math.PI/2; roof.position.y = 1.2; SR.add(roof);
+  var shirts = [0xe0563b, 0x3b7be0, 0xf2b33d, 0x4caf7a, 0x9b59b6, 0xe67ea4, 0x555555, 0x2bb3c0].map(function(c){ return new THREE.MeshStandardMaterial({color:c, roughness:.7}); });
+  var pants = new THREE.MeshStandardMaterial({color:0x3a3f4a, roughness:.8});
+  var gSeat = new THREE.BoxGeometry(.5, .1, .44), gBack = new THREE.BoxGeometry(.08, .9, .44), gBar = new THREE.BoxGeometry(.34, .07, .36),
+      gBody = new THREE.CylinderGeometry(.16, .17, .56, 10), gHead = new THREE.SphereGeometry(.12, 12, 10), gLeg = new THREE.BoxGeometry(.16, .55, .28);
+  var order = []; for(var i=0;i<40;i++) order.push(i);
+  order.sort(function(p, q){ return ((p*.618034)%1) - ((q*.618034)%1); });
+  T.riders = [];
+  for(i=0;i<40;i++){
+    var th = (i + .5)/40*Math.PI*2, sg = new THREE.Group(); sg.rotation.y = th; SR.add(sg);
+    var s1 = new THREE.Mesh(gSeat, MT.seat); s1.position.set(3.55, 0, 0); sg.add(s1);
+    var s2 = new THREE.Mesh(gBack, MT.seat); s2.position.set(3.27, .43, 0); sg.add(s2);
+    var s3 = new THREE.Mesh(gBar, MT.yellow); s3.position.set(3.52, .98, 0); sg.add(s3);
+    var rd = new THREE.Group(); sg.add(rd);
+    var bd = new THREE.Mesh(gBody, shirts[i % shirts.length]); bd.position.set(3.5, .34, 0); rd.add(bd);
+    var hd = new THREE.Mesh(gHead, MT.skin); hd.position.set(3.52, .76, 0); rd.add(hd);
+    var lg = new THREE.Mesh(gLeg, pants); lg.position.set(3.86, -.28, 0); rd.add(lg);
+    T.riders[order[i]] = rd;
+  }
+})();
+function updRiders(){ for(var i=0;i<40;i++) T.riders[i].visible = i < T.n; }
+
+/* 힘 화살표 (카메라 쪽에) */
+var ARR_A = 0.55, ARR_R = 5.5, CAM_A = -0.905;   /* 화살표는 따라가기 화면에서 곤돌라 오른쪽 옆 */
+var arUp = new Arrow(TS, 0x2c6e5f, .13), arDn = new Arrow(TS, 0x6b7179, .13);
+var ARR_X = ARR_R*Math.cos(ARR_A), ARR_Z = -ARR_R*Math.sin(ARR_A);
+
+/* 이름표 */
+function finPt(a, r, y){ return rHat(a).multiplyScalar(r).add(V(0, y, 0)); }
+var LT = {
+  top:  lbl('tower', '좌석 높이 64 m — 여기서 떨어져요', 'k', finPt(CAM_A, TW.R + .2, TW.TOP + 2.2), {maxD:140}),
+  zone: lbl('tower', '▶ 여기부터 구리판 (자석 브레이크 구간)', 'k', finPt(A0, FIN.R0 + .1, TW.Z1 + MO + 1.3), {maxD:140}),
+  fin:  lbl('tower', '구리판 — 탑에 붙어 있어요<br><small>아래로 갈수록 넓어져요</small>', 'k', function(){ var y = T.y + MO > 16 ? Math.max(TW.Z0 + MO + 1, Math.min(T.y + MO - 6, TW.Z1 + MO - 4)) : Math.min(TW.Z1 + MO, T.y + MO + 6); return finPt(A0, FIN.R0 + .32, y); }, {maxD:45}),
+  mag:  lbl('tower', '곤돌라의 자석 — 판을 사이에 두고 N·S', 'k', function(){ return finPt(A0, 2.4, T.y + MO + 1.5); }, {maxD:28}),
+  pl:   lbl('tower', '공기 완충 장치', 'k', finPt(3*Math.PI/2, 2.05, .25), {maxD:30}),
+  up:   lbl('tower', '', 'f', function(){ return arUp.g.visible ? arUp.tip.clone().add(V(0,.8,0)) : null; }, {maxD:70}),
+  dn:   lbl('tower', '중력', 'gr', function(){ return arDn.g.visible ? arDn.tip.clone().add(V(0,-.7,0)) : null; }, {maxD:70}),
+  eddy: lbl('tower', '판 속 소용돌이 전류 <small>(자세히: 🔍 구리판 속 들여다보기)</small>', 'k', function(){ return finPt(A0, FIN.R0 + .3, T.y + MO - 1.25).add(tHat(A0).multiplyScalar(.1)); }, {maxD:9})
+};
+
+/* ── 놀이기구 움직임 ── */
+function startRec(){
+  T.rec = {no:++T.runNo, cfg:{mat:T.mat, mag:T.mag, str:T.str, shape:T.shape, n:T.n, black:T.black},
+           hist:[[0,0,0]], lastS:0, vmax:0, gmax:0, E:0, vin:null, crash:false, tz:null};
+}
+function physT(h){
+  var m = massT(), y = T.y, v = T.v, a, F = 0, Fpl = 0, part;
+  if(y > TW.Z0){
+    part = y > TW.Z1 ? 'free' : 'brake';
+    if(y <= TW.Z1) F = brakeK()*cov(TW.Z1 - y)*v;
+    a = G - F/m;
+  } else {
+    part = 'catch';
+    if(T.rec.vin === null){ T.rec.vin = v; T.rec.tz = T.t; if(v > 12){ T.rec.crash = true; T.shake = .8; } }
+    var hh = Math.max(.002, y - TW.BASE);
+    if(v < .05 && hh > .01) v = .05;
+    a = -v*v/(2*hh); Fpl = m*(G - a);
+  }
+  var felt = (G - a)/G;
+  T.rec.gmax = Math.max(T.rec.gmax, felt); T.rec.E += F*v*h;
+  T.F = F; T.Fpl = Fpl; T.felt = felt; T.part = part;
+  v += a*h; if(v < 0) v = 0;
+  y -= v*h; T.t += h; T.rec.vmax = Math.max(T.rec.vmax, v);
+  T.y = y; T.v = v;
+  if(T.t - T.rec.lastS >= .04){ T.rec.hist.push([T.t, v*3.6, felt]); T.rec.lastS = T.t; }
+  if(part === 'catch' && y - TW.BASE < .01){ T.y = TW.BASE; T.v = 0; T.felt = 1; T.F = 0; T.Fpl = 0; T.rec.hist.push([T.t, 0, 1]); finishRun(); }
+}
+function dropNow(){
+  if(T.phase !== 'top' && T.phase !== 'hold') return;
+  T.blackNow = T.black; T.t = 0; T.v = 0; T.y = TW.TOP; startRec(); T.phase = 'fall'; $('warn').hidden = true; uiT();
+}
+function finishRun(){
+  T.phase = 'done'; var r = T.rec; r.T = T.t; r.res = judge(r); T.runs.push(r);
+  if(r.res[0] === 'bad'){
+    $('warn').innerHTML = r.crash
+      ? '⚠ 브레이크가 거의 없어서 <b>시속 ' + Math.round(r.vin*3.6) + ' km</b>로 바닥에 닿았어요.<br>실제 놀이기구는 절대 이렇게 만들지 않아요 — 그래서 <b>전기 없이도 작동하는 영구 자석</b>과 구리판을 써요.'
+      : '⚠ 몸이 평소 무게의 <b>' + f1(r.gmax) + '배</b>로 눌렸어요 — 몸에 위험할 만큼 세요.<br>그래서 실제 놀이기구는 판을 아래로 갈수록 넓혀 브레이크를 <b>점점</b> 세게 해요.';
+    $('warn').hidden = false;
+  }
+  drawCharts(); drawTableT(); uiT();
+}
+function judge(r){
+  if(r.crash) return ['bad', '⚠ 위험 — 거의 그대로 바닥까지'];
+  if(r.gmax > 6) return ['bad', '⚠ 너무 세게 눌림'];
+  if(r.vin > 5 || r.gmax > 4.5) return ['warn', '덜컹 — 완충 장치가 세게 받음'];
+  if(r.tz > 11) return ['ok', '안전 · 끝이 아주 느림'];
+  return ['ok', '✔ 부드럽게 멈춤'];
+}
+function resetTowerPose(){ T.phase = 'ready'; T.y = TW.BASE; T.v = 0; T.blackNow = false; T.F = 0; T.Fpl = 0; T.felt = 1; T.part = 'ready'; T.lift = 0; }
+
+function tickTower(dt){
+  var sdt = dt*(T.slow ? .4 : 1);
+  if(T.phase === 'lift'){
+    T.lift += sdt/7; var p = Math.min(1, T.lift);
+    T.y = lerp(TW.BASE, TW.TOP, ease(p)); SR.rotation.y = 2*Math.PI*ease(p)*.75; T.part = 'lift';
+    if(p >= 1){ T.phase = 'top'; T.part = 'top'; uiT(); }
+  } else if(T.phase === 'hold'){
+    T.holdT -= dt; T.part = 'top'; if(T.holdT <= 0) dropNow();
+  } else if(T.phase === 'fall' && !T.frozen){
+    var n = Math.ceil(sdt/(1/480)), hs = sdt/n;
+    for(var i=0;i<n && T.phase === 'fall';i++) physT(hs);
+  }
+  /* 그림 맞추기 */
+  var sh = 0; if(T.shake > 0){ T.shake -= dt; sh = Math.sin(performance.now()*.09)*.12*Math.max(0, T.shake); }
+  GD.position.y = T.y + sh;
+  var rodTop = Math.min(TW.Z0 - 1.3, T.y - 1.3);
+  PLUNGERS.forEach(function(P){ var L = Math.max(.05, rodTop - .14); P.rod.scale.y = L; P.rod.position.y = .14 + L/2; P.pad.position.y = rodTop - .05; });
+  /* 정전: 탑 불빛 · 전자석 */
+  var lampOn = !T.blackNow;
+  MT.lamp.emissiveIntensity = lampOn ? .75 + .35*Math.sin(performance.now()*.004) : 0;
+  MT.lamp.color.setHex(lampOn ? 0xfff2c4 : 0x6a6a6a);
+  var magOn = !(T.mag === 'electro' && T.blackNow), seeThru = T.view === 'brake';
+  [MT.magN, MT.magS, MT.elN, MT.elS].forEach(function(mm){ if(mm.transparent !== seeThru){ mm.transparent = seeThru; mm.needsUpdate = true; } mm.opacity = seeThru ? .42 : 1; mm.depthWrite = !seeThru; });
+  MAGS.forEach(function(M){ M.n.material = !magOn ? MT.magOff : (T.mag === 'electro' ? MT.elN : MT.magN); M.s.material = !magOn ? MT.magOff : (T.mag === 'electro' ? MT.elS : MT.magS); });
+  /* 판 속 소용돌이 전류 (구리판 위 +z 면) */
+  var moving = T.phase === 'fall' && T.v > .02;
+  var ym = T.y + MO, cw = covVis(T.y);
+  var I = moving && T.y <= TW.Z1 + .3 && T.y > TW.Z0 - .6 ? MATS[T.mat].s*bNow()*bNow()*cw*T.v/2.2 : 0;
+  EDDY_T.forEach(function(E){
+    var cx = FIN.R0 + FIN.W*cw/2, rx = Math.max(.04, FIN.W*cw/2*.85);
+    E.lo.set(cx, ym - 1.25, FIN.T/2 + .008, rx, .8, +1, I, sdt);
+    E.hi.set(cx, ym + 1.25, FIN.T/2 + .008, rx, .8, -1, I, sdt);
+  });
+  LT.eddy.on = I > .12;
+  /* 힘 화살표 (1 mg = 1.5 m) */
+  var m = massT(), sc = 1.5, cy = T.y + .3;
+  if(T.arrows && T.view !== 'brake' && (T.phase === 'fall' || T.phase === 'done' || T.phase === 'ready' || T.phase === 'top' || T.phase === 'hold' || T.phase === 'lift')){
+    var up = T.phase === 'fall' ? (T.F + T.Fpl)/(m*G) : 1;
+    if(T.phase === 'lift' || T.phase === 'top' || T.phase === 'hold') up = 1;
+    arUp.set(ARR_X, cy + .25, ARR_Z, Math.min(18, up*sc), 1);
+    arDn.set(ARR_X, cy - .25, ARR_Z, sc, -1);
+    var upName = T.phase !== 'fall' ? (T.phase === 'lift' || T.phase === 'top' || T.phase === 'hold' ? '붙잡는 힘(줄)' : '받치는 힘') : (T.Fpl > 0 ? '받치는 힘(완충 장치)' : '위로 미는 힘(자석)');
+    setL(LT.up, upName); LT.up.on = arUp.g.visible; LT.dn.on = true;
+  } else { arUp.g.visible = false; arDn.g.visible = false; LT.up.on = false; LT.dn.on = false; }
+  /* 카메라 따라가기 */
+  followCam(dt);
+  meterT(); capT();
+}
+
+/* ── 카메라 ── */
+var TWEEN = null;
+function viewTarget(){
+  if(MODE === 'tower'){
+    if(T.view === 'all') return V(0, 37, 0);
+    if(T.view === 'thumb') return V(0, T.y + 1.8, 0);
+    if(T.view === 'brake') return finPt(A0, 2.15, T.y + MO - .3);
+    return V(0, T.y + .6, 0);
+  }
+  if(MODE === 'pipe'){ if(P.view === 'follow' && P.focus >= 0){ var q = PIPES[P.focus]; return V(q.x, q.y*10, 0); } return V(0, 4.8, 0); }
+  return null;
+}
+function viewOffset(){
+  if(MODE === 'tower'){
+    if(T.view === 'all') return V(58, 14, 92);
+    if(T.view === 'brake') return tHat(A0).multiplyScalar(5.4).add(rHat(A0).multiplyScalar(2.4)).add(V(0, .6, 0));
+    return V(12, 4, 15.5);
+  }
+  if(MODE === 'pipe'){ if(P.view === 'follow' && P.focus >= 0) return V(1.6, .5, 3.1); return V(0, 1.2, 21); }
+  if(MODE === 'zoom') return V(2.6, 1.3, 7.4);
+  return V(0,0,10);
+}
+function camGo(dur){
+  var tg = viewTarget() || (MODE === 'zoom' ? V(0, .2, 0) : V(0,0,0));
+  TWEEN = {p0:cam.position.clone(), t0:ctl.target.clone(), off:viewOffset(), fixT:MODE === 'zoom' ? tg : null, t:0, dur:dur || .9};
+}
+function followCam(dt){
+  var tg = viewTarget();
+  if(TWEEN){
+    TWEEN.t += dt; var e = ease(Math.min(1, TWEEN.t/TWEEN.dur)), tt = TWEEN.fixT || tg;
+    ctl.target.lerpVectors(TWEEN.t0, tt, e); cam.position.lerpVectors(TWEEN.p0, tt.clone().add(TWEEN.off), e);
+    if(e >= 1) TWEEN = null; return;
+  }
+  if(!tg) return;
+  var k = 1 - Math.exp(-dt*10), d = tg.sub(ctl.target).multiplyScalar(k);
+  ctl.target.add(d); cam.position.add(d);
+  if(MODE === 'tower' && cam.position.y < .8) cam.position.y = .8;
+}
+
+/* ── 계기판 · 설명 ── */
+function feltWord(x){ return x < .15 ? '붕~ 떠요' : x < .85 ? '가벼워요' : x < 1.2 ? '평소' : x < 2.5 ? '꾹 눌려요' : x < 4.5 ? '아주 세게 눌려요' : '⚠ 위험할 만큼'; }
+var PHNAME = {ready:['타는 곳',''], lift:['올라가는 중',''], top:['꼭대기','free'], free:['자유 낙하','free'], brake:['자석 브레이크',''], 'catch':['공기 완충 장치','catch'], done:['도착','']};
+function meterT(){
+  if(MODE !== 'tower') return;
+  var part = T.phase === 'done' ? 'done' : T.part, ph = PHNAME[part] || ['',''];
+  var felt = (T.phase === 'fall') ? T.felt : 1, bad = felt > 4.5;
+  if(T.rec && T.rec.crash && (T.phase === 'done' || (T.phase === 'fall' && T.part === 'catch'))) { ph = ['⚠ 위험','bad']; }
+  var html = '높이 <b>' + f1(T.y) + '</b> m · 속력 <b>' + Math.round(T.v*3.6) + '</b> km/h <span class="ph ' + ph[1] + '">' + ph[0] + '</span><br>' +
+    '몸이 느끼는 무게: 평소의 <b class="' + (bad ? 'hot' : '') + '">' + (felt > 9.9 ? '10+' : f1(Math.max(0, felt))) + '</b>배 (' + feltWord(felt) + ')';
+  if(T.blackNow) html += '<br><span class="hot">⚡ 정전 중</span>' + (T.mag === 'electro' ? ' — 전자석이 자석의 힘을 잃었어요' : ' — 영구 자석은 그대로');
+  setMeter(html);
+}
+var _mh = '';
+function setMeter(h){ if(h !== _mh){ $('meter').innerHTML = h; _mh = h; } }
+var _ch = '';
+function setCap(h){ if(h !== _ch){ $('cap').innerHTML = h; _ch = h; } }
+function capT(){
+  if(MODE !== 'tower') return;
+  var s = '';
+  if(T.phase === 'ready') s = '<b>⬆ 올라가기</b>를 누르면 곤돌라가 꼭대기까지 올라가요. 먼저 아래 조작판에서 판 재료·자석·탄 사람 수를 골라 보세요.';
+  else if(T.phase === 'lift') s = '곤돌라가 천천히 돌며 올라가요. <span class="dim">(실제로는 1분쯤 — 여기서는 빨리 감기)</span>';
+  else if(T.phase === 'top' || T.phase === 'hold') s = '꼭대기 64 m! <b>▼ 떨어뜨리기</b>를 누르면 곤돌라를 붙잡던 장치가 풀려요. 탑 아래쪽의 <b>구리판</b>과 곤돌라 위쪽의 <b>자석</b>을 눈여겨보세요.';
+  else if(T.phase === 'fall'){
+    if(T.part === 'free') s = '<b>자유 낙하</b> — 아직 아무것도 곤돌라를 잡지 않아요. 몸이 붕 떠요(몸무게 0배).' + (T.blackNow ? ' <b>⚡ 정전!</b> 탑의 불이 꺼졌어요.' : '');
+    else if(T.part === 'brake'){
+      if(T.mag === 'electro' && T.blackNow) s = '⚡ 정전! 전자석은 전류가 흐를 때만 자석이에요. <b>브레이크가 사라졌어요!</b>';
+      else if(T.mat === 'pl') s = '플라스틱 판 사이를 지나도 <b>아무 일도 일어나지 않아요</b> — 전기가 통하지 않아 소용돌이 전류가 생기지 않거든요.';
+      else if(T.blackNow) s = '⚡ 정전됐지만 <b>영구 자석은 전기가 필요 없어요.</b> 브레이크는 그대로 걸려요!';
+      else s = '<b>자석 브레이크</b> — 곤돌라의 자석이 구리판을 스치며 지나가요. <b>닿지 않는데도</b> 속력이 줄어요! 판 속에 소용돌이 전류가 생겼거든요 <span class="dim">(🔍 구리판 속 들여다보기)</span>';
+    } else if(T.part === 'catch'){
+      s = T.rec && T.rec.crash ? '⚠ 브레이크가 거의 없어서 시속 <b>' + Math.round(T.rec.vin*3.6) + ' km</b>로 바닥에 닿아요! 완충 장치는 <b>느려진</b> 곤돌라를 받는 장치라 이 속력은 감당하지 못해요.'
+        : '느려진 곤돌라를 <b>공기 완충 장치</b>가 받아 내려 줘요. 자석만으로는 완전히 멈추지 못하거든요 — 느려질수록 브레이크도 약해지니까요.';
+    }
+  } else if(T.phase === 'done' && T.rec){
+    var r = T.rec;
+    s = '<b>도착!</b> 최고 시속 ' + Math.round(r.vmax*3.6) + ' km → 완충 장치에 닿을 때 초속 ' + f1(r.vin) + ' m. 가장 세게 눌린 순간은 평소 무게의 ' + (r.gmax > 9.9 ? '10배 넘게' : f1(r.gmax) + '배') + '. 아래 그래프와 표에서 비교해 보세요.';
+  }
+  setCap(s);
+}
+
+/* ── 그래프 · 표 ── */
+var RUNCOL = ['#a8552a', '#2c6e5f', '#6b5bd2', '#c0392b', '#2f6ea8', '#8a5f24'];
+function cfgText(c){ return MATS[c.mat].name + '·' + (c.mag === 'perm' ? '영구' : '전자석') + '·' + BSTR[c.str].name + '·' + (c.shape === 'taper' ? '넓어짐' : '넓게') + '·' + c.n + '명' + (c.black ? '·⚡정전' : ''); }
+function chartSVG(key, yMax, ticks, unit, refLine){
+  var runs = T.runs.slice(-6); if(!runs.length) return null;
+  var W = 340, H = 180, L = 34, R = 10, Tp = 10, B = 26, tMax = 4;
+  runs.forEach(function(r){ tMax = Math.max(tMax, r.T || 0); }); tMax = Math.ceil(tMax/2)*2;
+  function X(t){ return L + t/tMax*(W - L - R); } function Y(v){ return Tp + (1 - Math.min(v, yMax)/yMax)*(H - Tp - B); }
+  var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" font-family="Gowun Dodum,sans-serif" font-size="10.5">';
+  ticks.forEach(function(v){ s += '<line x1="' + L + '" x2="' + (W-R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="#e6dcc4"/><text x="' + (L-5) + '" y="' + (Y(v)+3.5) + '" text-anchor="end" fill="#96805c">' + v + '</text>'; });
+  for(var t=0;t<=tMax;t+=2) s += '<text x="' + X(t) + '" y="' + (H-9) + '" text-anchor="middle" fill="#96805c">' + t + '</text>';
+  if(refLine !== undefined) s += '<line x1="' + L + '" x2="' + (W-R) + '" y1="' + Y(refLine) + '" y2="' + Y(refLine) + '" stroke="#5c4a33" stroke-dasharray="4 3" stroke-width="1"/><text x="' + (W-R-2) + '" y="' + (Y(refLine)-3) + '" text-anchor="end" fill="#5c4a33">평소</text>';
+  runs.forEach(function(r){
+    var col = RUNCOL[(r.no-1) % RUNCOL.length], pts = r.hist.map(function(p){ return X(p[0]).toFixed(1) + ',' + Y(p[key]).toFixed(1); }).join(' ');
+    s += '<polyline points="' + pts + '" fill="none" stroke="' + col + '" stroke-width="2.2" stroke-linejoin="round"/>';
+    var last = r.hist[r.hist.length-1]; s += '<circle cx="' + X(last[0]) + '" cy="' + Y(last[key]) + '" r="8" fill="' + col + '"/><text x="' + X(last[0]) + '" y="' + (Y(last[key])+3.6) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="Jua,sans-serif">' + r.no + '</text>';
+    if(key === 2){ var mx = 0, mt = 0; r.hist.forEach(function(p){ if(p[2] > mx){ mx = p[2]; mt = p[0]; } }); if(mx > yMax) s += '<text x="' + X(mt) + '" y="' + (Tp+9) + '" text-anchor="middle" fill="' + col + '" font-size="10">▲' + (mx > 9.9 ? '10+' : f1(mx)) + '</text>'; }
+  });
+  s += '<text x="' + (L+2) + '" y="' + (Tp+8) + '" fill="#96805c">' + unit + '</text></svg>';
+  return s;
+}
+function drawCharts(){ var a = chartSVG(1, 130, [0,30,60,90,120], 'km/h'), b = chartSVG(2, 6, [0,1,2,3,4,5,6], '배', 1);
+  if(a) $('chV').innerHTML = a; if(b) $('chG').innerHTML = b; }
+function drawTableT(){
+  if(!T.runs.length){ $('tbT').innerHTML = '<div class="empty">아직 기록이 없어요</div>'; return; }
+  var h = '<table class="tbl"><tr><th>번</th><th>설정</th><th>최고 속력</th><th>가장 세게 눌림</th><th>완충 장치에 닿을 때</th><th>판에 생긴 열</th><th>결과</th></tr>';
+  T.runs.slice().reverse().forEach(function(r){
+    var wh = r.E/3600;
+    h += '<tr><td><span class="no" style="background:' + RUNCOL[(r.no-1) % RUNCOL.length] + '">' + r.no + '</span></td><td class="l">' + cfgText(r.cfg) + '</td>' +
+      '<td>시속 ' + Math.round(r.vmax*3.6) + ' km</td><td>' + (r.gmax > 9.9 ? '10배 넘게' : f1(r.gmax) + '배') + '</td>' +
+      '<td>초속 ' + f1(r.vin) + ' m</td><td>' + (wh < 5 ? '거의 없음' : Math.round(wh) + ' Wh<br><small>1000 W 난로 ' + Math.round(wh/1000*60) + '분</small>') + '</td>' +
+      '<td class="' + r.res[0] + '">' + r.res[1] + '</td></tr>';
+  });
+  $('tbT').innerHTML = h + '</table>';
+}
+
+/* ══════════════════════════════════════════════════════════
+   🔍 확대 — 자석이 구리판을 스쳐 지나갈 때
+   ══════════════════════════════════════════════════════════ */
+var ZS = new THREE.Scene(); SCN.zoom = ZS;
+ZS.background = new THREE.Color(0xe6e1d6);
+ZS.add(new THREE.HemisphereLight(0xffffff, 0x8a7a66, .85));
+(function(){ var k = new THREE.DirectionalLight(0xfff6e8, .7); k.position.set(-3, 6, 7); ZS.add(k); var f = new THREE.DirectionalLight(0xdfeaff, .3); f.position.set(5, 2, -4); ZS.add(f); })();
+var ZM = {
+  cu: new THREE.MeshStandardMaterial({color:0xc4703f, roughness:.32, metalness:.5}),
+  al: new THREE.MeshStandardMaterial({color:0xc9ced4, roughness:.28, metalness:.55}),
+  pl: new THREE.MeshStandardMaterial({color:0xf3f1e8, roughness:.75}),
+  n:  new THREE.MeshStandardMaterial({color:0xc8402f, roughness:.4, transparent:true, opacity:.78}),
+  s:  new THREE.MeshStandardMaterial({color:0x2f6ea8, roughness:.4, transparent:true, opacity:.78}),
+  fr: new THREE.MeshStandardMaterial({color:0x5a636c, roughness:.5, metalness:.3}),
+  slit: new THREE.MeshBasicMaterial({color:0x3a2a20})
+};
+var Z = {mat:'cu', slot:false, ym:1.6, v:0, mode:'idle', speed:1.5, drag:false, I:0, dir:1, lastMove:0};
+var plate = new THREE.Mesh(new THREE.BoxGeometry(3.4, 8, .08), ZM.cu); ZS.add(plate);
+var SLITS = new THREE.Group(); ZS.add(SLITS); SLITS.visible = false;
+[-1.02, -.34, .34, 1.02].forEach(function(x){ var s = new THREE.Mesh(new THREE.BoxGeometry(.05, 7.4, .1), ZM.slit); s.position.x = x; SLITS.add(s); });
+/* 탑 쪽 표시: 판 왼쪽 끝이 탑에 붙어 있다 */
+(function(){ var wall = new THREE.Mesh(new THREE.BoxGeometry(.5, 8.6, 1.4), new THREE.MeshStandardMaterial({color:0xe9e5dc, roughness:.7})); wall.position.set(-1.95, 0, 0); ZS.add(wall); })();
+var MG = new THREE.Group(); ZS.add(MG);
+var zN = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.0, .42), ZM.n); zN.position.z = .31; MG.add(zN);
+var zS = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.0, .42), ZM.s); zS.position.z = -.31; MG.add(zS);
+[.31, -.31].forEach(function(z){ var arm = new THREE.Mesh(new THREE.BoxGeometry(1.35, .22, .12), ZM.fr); arm.position.set(1.25, .3, z); MG.add(arm); });
+(function(){ var con = new THREE.Mesh(new THREE.BoxGeometry(.14, .22, .74), ZM.fr); con.position.set(1.95, .3, 0); MG.add(con);
+  var up = new THREE.Mesh(new THREE.BoxGeometry(.14, 1.2, .14), ZM.fr); up.position.set(1.95, .9, 0); MG.add(up); })();
+var EZ = [new Eddy(ZS, 0xe0782f, {tube:.035, cone:.13, n:6}), new Eddy(ZS, 0xe0782f, {tube:.035, cone:.13, n:6}),
+          new Eddy(ZS, 0xe0782f, {tube:.025, cone:.1, n:3}), new Eddy(ZS, 0xe0782f, {tube:.025, cone:.1, n:3}),
+          new Eddy(ZS, 0xe0782f, {tube:.025, cone:.1, n:3}), new Eddy(ZS, 0xe0782f, {tube:.025, cone:.1, n:3})];
+var zF = new Arrow(ZS, 0x2c6e5f, .06), zVel = new Arrow(ZS, 0x7b8794, .04);
+var LZ = {
+  plate: lbl('zoom', '구리판 — 탑에 고정', 'k', V(-.9, 3.6, .1)),
+  tower: lbl('zoom', '탑', 'k', V(-1.95, 4.5, .7)),
+  n:  lbl('zoom', '앞 자석 <small>(판 쪽 면이 N극)</small>', 'k', function(){ return V(-.35, Z.ym + .5, .55); }),
+  s:  lbl('zoom', '뒤 자석 <small>(판 쪽 면이 S극)</small>', 'k', function(){ return cam.position.z < .8 ? V(.2, Z.ym + .5, -.55) : null; }),
+  car: lbl('zoom', '곤돌라에 붙어 함께 움직여요', 'k', function(){ return V(1.95, Z.ym + 1.65, 0); }),
+  lo: lbl('zoom', '', 'pole n', function(){ return V(1.0, Z.ym - .62, .2); }),
+  hi: lbl('zoom', '', 'pole s', function(){ return V(1.0, Z.ym + .62, .2); }),
+  f:  lbl('zoom', '자석이 받는 힘', 'f', function(){ return zF.g.visible ? zF.tip.clone().add(V(-.15, .22*Math.sign(zF.tip.y - Z.ym), 0)) : null; }),
+  vel: lbl('zoom', '움직이는 방향', 'gr', function(){ return zVel.g.visible ? zVel.tip.clone().add(V(-.1, .2*Math.sign(zVel.tip.y - Z.ym), 0)) : null; })
+};
+function speedName(v){ return ['아주 느리게','아주 느리게','느리게','느리게','보통','보통','빠르게','빠르게','아주 빠르게','아주 빠르게'][v-1]; }
+function tickZoom(dt){
+  if(Z.mode === 'down'){ Z.v = -Z.speed; Z.ym += Z.v*dt; if(Z.ym < -2.7) Z.ym = 2.7; }
+  else if(Z.mode === 'up'){ Z.v = Z.speed; Z.ym += Z.v*dt; if(Z.ym > 2.7) Z.ym = -2.7; }
+  else if(Z.mode === 'drag'){ if(performance.now() - Z.lastMove > 70) Z.v *= Math.exp(-dt/.05); }
+  else Z.v = 0;
+  MG.position.y = Z.ym;
+  var s = MATS[Z.mat].s, Itg = s*Math.abs(Z.v)/2.4*(Z.slot ? .15 : 1);
+  Z.I += (Itg - Z.I)*(1 - Math.exp(-dt/.07));
+  if(Math.abs(Z.v) > .02) Z.dir = Z.v < 0 ? 1 : -1;     /* 내려가면 아래 고리 +1(앞에서 볼 때 시계 반대) */
+  var I = Math.min(1.1, Z.I);
+  if(!Z.slot){
+    EZ[0].set(0, Z.ym - .62, .05, .9, .58, Z.dir, I, dt); EZ[1].set(0, Z.ym + .62, .05, .9, .58, -Z.dir, I, dt);
+    for(var k=2;k<6;k++) EZ[k].set(0,0,0,.1,.1,1,0,dt);
+  } else {
+    var Is = I*4;   /* 틈이 있으면 좁은 띠 안에서만 작게 돈다 */
+    EZ[0].set(0,0,0,.1,.1,1,0,dt); EZ[1].set(0,0,0,.1,.1,1,0,dt);
+    EZ[2].set(-.17, Z.ym - .5, .05, .13, .42, Z.dir, Is, dt); EZ[3].set(.17, Z.ym - .5, .05, .13, .42, Z.dir, Is, dt);
+    EZ[4].set(-.17, Z.ym + .5, .05, .13, .42, -Z.dir, Is, dt); EZ[5].set(.17, Z.ym + .5, .05, .13, .42, -Z.dir, Is, dt);
+  }
+  var moving = Math.abs(Z.v) > .05, fDir = Z.v < 0 ? 1 : -1;
+  zF.set(-.95, Z.ym + fDir*.05, .62, moving ? Math.min(2.2, 1.9*I + .02) : 0, fDir);
+  zVel.set(-1.3, Z.ym - fDir*.05, .62, moving ? .9 : 0, -fDir);
+  LZ.f.on = zF.g.visible; LZ.vel.on = zVel.g.visible;
+  /* 소용돌이의 앞면 극: 앞에서 볼 때 시계 반대 = 앞면 N */
+  var showP = I > .12 && !Z.slot;
+  var loN = Z.dir > 0, ahead = Z.v < 0 ? 'lo' : 'hi';
+  setL(LZ.lo, (loN ? 'N' : 'S') + '<small>' + (ahead === 'lo' ? '같은 극 → 밀어냄' : '다른 극 → 붙잡음') + '</small>'); LZ.lo.el.className = 'lbl pole ' + (loN ? 'n' : 's');
+  setL(LZ.hi, (loN ? 'S' : 'N') + '<small>' + (ahead === 'hi' ? '같은 극 → 밀어냄' : '다른 극 → 붙잡음') + '</small>'); LZ.hi.el.className = 'lbl pole ' + (loN ? 's' : 'n');
+  LZ.lo.on = LZ.hi.on = showP;
+  var bar = function(x, c){ return '<span class="bar ' + c + '" style="width:' + Math.round(clamp(x,0,1)*90) + 'px"></span>'; };
+  setMeter('판: <b>' + MATS[Z.mat].name + '</b>' + (Z.slot ? ' (세로 틈)' : '') + '<br>자석의 빠르기 ' + bar(Math.abs(Z.v)/4, 'v') + '<br>소용돌이 전류 ' + bar(I, '') + '<br>브레이크 힘 ' + bar(I, 'f'));
+  var cs;
+  if(Z.mat === 'pl' && moving) cs = '플라스틱 판은 전기가 통하지 않아서 <b>소용돌이 전류가 생기지 않아요</b>. 그래서 힘도 없어요 — 자석이 그냥 스쳐 지나가요.';
+  else if(Z.slot && moving) cs = '판에 세로로 <b>틈</b>을 내면 전류가 크게 한 바퀴 돌 길이 끊겨요. 좁은 띠 안에서만 조금 돌아서 <b>브레이크가 훨씬 약해져요</b>.';
+  else if(moving) cs = '자석이 지나가면 판 속에 <b>소용돌이 전류</b>가 두 개 생겨요(주황 고리 · 화살표 = 전류의 방향). 전류가 빙 돌면 자석이 되니까, ' +
+    '자석이 <b>다가오는 쪽</b> 소용돌이는 같은 극으로 <b>밀어내고</b>, <b>멀어지는 쪽</b>은 다른 극으로 <b>붙잡아요</b>. 그래서 자석은 늘 <b>움직임과 반대쪽</b>으로 힘을 받아요.';
+  else cs = Z.I > .05 ? '자석이 멈추면 판을 지나는 자기장이 더는 변하지 않아서 소용돌이 전류도 <b>곧바로 사라져요</b>. 힘도 0 — 그래서 자석만으로는 완전히 멈출 수 없어요.'
+    : '<b>▼ 자석을 아래로 지나가게</b>를 누르거나, 자석을 마우스로 끌어 보세요. 자석이 <b>움직일 때만</b> 무슨 일이 생겨요.';
+  setCap(cs);
+}
+/* 자석 직접 끌기 */
+var ray = new THREE.Raycaster(), mouse = new THREE.Vector2(), dragPlane = new THREE.Plane(V(0,0,1), -.31), dragOff = 0, _hit = V(0,0,0), lastDragY = 0, lastDragT = 0;
+function ptr(e){ var r = renderer.domElement.getBoundingClientRect(); mouse.set((e.clientX - r.left)/r.width*2 - 1, -(e.clientY - r.top)/r.height*2 + 1); ray.setFromCamera(mouse, cam); }
+renderer.domElement.addEventListener('pointerdown', function(e){
+  if(MODE !== 'zoom') return; ptr(e);
+  var hits = ray.intersectObjects(MG.children, false); if(!hits.length) return;
+  if(ray.ray.intersectPlane(dragPlane, _hit)){ dragOff = _hit.y - Z.ym; }
+  Z.mode = 'drag'; Z.drag = true; ctl.enabled = false; lastDragY = Z.ym; lastDragT = performance.now(); Z.lastMove = lastDragT;
+  renderer.domElement.setPointerCapture(e.pointerId); zButtons();
+});
+renderer.domElement.addEventListener('pointermove', function(e){
+  if(!Z.drag) return; ptr(e);
+  if(ray.ray.intersectPlane(dragPlane, _hit)){
+    var ny = clamp(_hit.y - dragOff, -2.8, 2.8), now = performance.now(), dtm = Math.max(8, now - lastDragT)/1000;
+    var vNew = (ny - lastDragY)/dtm; Z.v = Z.v*.5 + vNew*.5; Z.ym = ny; lastDragY = ny; lastDragT = now; Z.lastMove = now;
+  }
+});
+function endDrag(){ if(!Z.drag) return; Z.drag = false; Z.mode = 'idle'; ctl.enabled = true; zButtons(); }
+renderer.domElement.addEventListener('pointerup', endDrag); renderer.domElement.addEventListener('pointercancel', endDrag);
+
+/* ══════════════════════════════════════════════════════════
+   🧪 관에 자석 떨어뜨리기 (길이 1 = 10 cm)
+   ══════════════════════════════════════════════════════════ */
+var PSn = new THREE.Scene(); SCN.pipe = PSn;
+PSn.background = new THREE.Color(0xe4ebee);
+PSn.add(new THREE.HemisphereLight(0xffffff, 0x8a7a66, .82));
+(function(){ var k = new THREE.DirectionalLight(0xfff6e8, .7); k.position.set(-4, 14, 9); k.castShadow = true; k.shadow.mapSize.set(1024,1024);
+  ['left','bottom'].forEach(function(q){ k.shadow.camera[q] = -10; }); ['right','top'].forEach(function(q){ k.shadow.camera[q] = 10; }); PSn.add(k);
+  var f = new THREE.DirectionalLight(0xdfeaff, .3); f.position.set(5, 4, -5); PSn.add(f); })();
+var PM = {
+  wood: new THREE.MeshStandardMaterial({color:0xb08458, roughness:.8}),
+  cu: new THREE.MeshStandardMaterial({color:0xc4703f, roughness:.32, metalness:.5, side:THREE.DoubleSide}),
+  al: new THREE.MeshStandardMaterial({color:0xc9ced4, roughness:.3, metalness:.55, side:THREE.DoubleSide}),
+  pl: new THREE.MeshStandardMaterial({color:0xeceae2, roughness:.7, side:THREE.DoubleSide}),
+  edge: new THREE.MeshStandardMaterial({color:0x6b5a48, roughness:.6}),
+  stand: new THREE.MeshStandardMaterial({color:0x6d757d, roughness:.4, metalness:.5}),
+  tray: new THREE.MeshStandardMaterial({color:0xdedad2, roughness:.7}),
+  n: new THREE.MeshStandardMaterial({color:0xc8402f, roughness:.35, metalness:.2}),
+  s: new THREE.MeshStandardMaterial({color:0x2f6ea8, roughness:.35, metalness:.2}),
+  ball: new THREE.MeshStandardMaterial({color:0x9aa1a8, roughness:.2, metalness:.85}),
+  slot: new THREE.MeshBasicMaterial({color:0x2a1e15}),
+  ring: new THREE.MeshBasicMaterial({color:0xe0782f, transparent:true, opacity:0, depthWrite:false})
+};
+var PR = .2, VT_CU = .25;
+var PIPES = [
+  {k:'cu', name:'구리관', x:-3.3, s:1, slot:false, mat:PM.cu},
+  {k:'cuslot', name:'세로 틈 난 구리관', x:-1.1, s:.15, slot:true, mat:PM.cu},
+  {k:'al', name:'알루미늄관', x:1.1, s:.6, slot:false, mat:PM.al},
+  {k:'pl', name:'플라스틱관', x:3.3, s:0, slot:false, mat:PM.pl}
+];
+var P = {obj:'mag', flip:false, slow:false, view:'all', focus:-1, rows:[], no:0};
+(function(){
+  var table = new THREE.Mesh(new THREE.BoxGeometry(11, .4, 4), PM.wood); table.position.y = -.2; table.receiveShadow = true; PSn.add(table);
+  var pole = new THREE.Mesh(new THREE.CylinderGeometry(.07,.07,11.6,10), PM.stand); pole.position.set(-5, 5.8, -.9); PSn.add(pole);
+  var foot = new THREE.Mesh(new THREE.BoxGeometry(1.2,.12,1.4), PM.stand); foot.position.set(-5, .06, -.9); PSn.add(foot);
+  [9.6, 2.6].forEach(function(y){ var bar = new THREE.Mesh(new THREE.BoxGeometry(9.4,.1,.1), PM.stand); bar.position.set(-.3, y, -.9); PSn.add(bar); });
+})();
+function arcCurve(r, a0, a1){ var pts = []; for(var i=0;i<=40;i++){ var t = a0 + (a1 - a0)*i/40; pts.push(V(r*Math.cos(t), 0, -r*Math.sin(t))); } return new THREE.CatmullRomCurve3(pts); }
+PIPES.forEach(function(q, i){
+  var g = new THREE.Group(); g.position.x = q.x; PSn.add(g); q.g = g;
+  var tube = new THREE.Mesh(new THREE.CylinderGeometry(PR, PR, 10, 48, 1, true, Math.PI/4, Math.PI*1.5), q.mat); tube.position.y = 5.6; tube.castShadow = true; g.add(tube);
+  [Math.PI/4, -Math.PI/4].forEach(function(t){ var e = new THREE.Mesh(new THREE.BoxGeometry(.03, 10, .03), PM.edge); e.position.set(PR*Math.sin(t), 5.6, PR*Math.cos(t)); g.add(e); });
+  [10.6, .6].forEach(function(y){ var rr = new THREE.Mesh(new THREE.TorusGeometry(PR, .018, 6, 40, Math.PI*1.5), PM.edge); rr.rotation.x = Math.PI/2; rr.rotation.z = 3*Math.PI/4; rr.position.y = y; g.add(rr); });
+  if(q.slot){ var sl = new THREE.Mesh(new THREE.BoxGeometry(.06, 10, .01), PM.slot); sl.position.set(0, 5.6, -PR + .012); g.add(sl); }
+  var clamp1 = new THREE.Mesh(new THREE.BoxGeometry(.12,.12,.8), PM.stand); clamp1.position.set(0, 9.6, -.5); g.add(clamp1);
+  var clamp2 = clamp1.clone(); clamp2.position.y = 2.6; g.add(clamp2);
+  var tray = new THREE.Mesh(new THREE.CylinderGeometry(.5, .45, .15, 24), PM.tray); tray.position.y = .075; tray.receiveShadow = true; g.add(tray);
+  /* 고리 전류 (보이는 쪽만 그린다 — 앞 90°는 잘라 낸 자리) */
+  var vis = q.slot ? [[-Math.PI/4, Math.PI/2 - .14], [Math.PI/2 + .14, 5*Math.PI/4]] : [[-Math.PI/4, 5*Math.PI/4]];
+  q.rings = [0,1].map(function(){
+    var rg = new THREE.Group(); g.add(rg);
+    vis.forEach(function(v){ rg.add(new THREE.Mesh(new THREE.TubeGeometry(arcCurve(PR - .012, v[0], v[1]), 40, .024, 6, false), PM.ring)); });
+    var cones = []; for(var k=0;k<3;k++){ var c = new THREE.Mesh(new THREE.ConeGeometry(.045, .12, 10), PM.ring); rg.add(c); cones.push(c); }
+    rg.visible = false; return {g:rg, cones:cones, ph:k*.7, vis:vis};
+  });
+  /* 넣을 물체 */
+  var mg = new THREE.Group(); g.add(mg);
+  var top = new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,.125,24), PM.s); top.position.y = .0625; mg.add(top);
+  var bot = new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,.125,24), PM.n); bot.position.y = -.0625; mg.add(bot);
+  var ball = new THREE.Mesh(new THREE.SphereGeometry(.12, 20, 14), PM.ball); mg.add(ball);
+  q.mg = mg; q.top = top; q.bot = bot; q.ball = ball; mg.visible = false;
+  q.st = 'idle'; q.y = 1.16; q.v = 0; q.t = 0; q.tIn = null; q.tOut = null;
+  q.lName = lbl('pipe', q.name, 'k', V(q.x, -.05, .9));
+  q.lTime = lbl('pipe', '', 'time', function(){ return V(q.x, 11.35, 0); });
+  q.lLo = lbl('pipe', '', 'pole n', function(){ return V(q.x + PR + .42, q.y*10 - .34, 0); });
+  q.lHi = lbl('pipe', '', 'pole n', function(){ return V(q.x + PR + .42, q.y*10 + .34, 0); });
+  q.lTime.on = false; q.lLo.on = q.lHi.on = false;
+});
+function freeT(){ var v0 = Math.sqrt(2*G*.07); return (-v0 + Math.sqrt(v0*v0 + 2*G*1))/G; }   /* 그냥 떨어질 때 관 1 m 를 지나는 시간 */
+function dropPipe(i){
+  var q = PIPES[i]; q.obj = P.obj; q.flip = P.flip; q.st = 'fall'; q.y = 1.16; q.v = 0; q.t = 0; q.tIn = null; q.tOut = null;
+  q.mg.visible = true; q.top.visible = q.bot.visible = q.obj === 'mag'; q.ball.visible = q.obj === 'ball';
+  q.top.material = q.flip ? PM.n : PM.s; q.bot.material = q.flip ? PM.s : PM.n;
+  P.focus = i;
+}
+function tickPipe(dt){
+  var sdt = dt*(P.slow ? .25 : 1);
+  PIPES.forEach(function(q, i){
+    if(q.st === 'fall'){
+      var n = Math.ceil(sdt/.0005), h = sdt/n;
+      for(var k=0;k<n && q.st === 'fall';k++){
+        var f = clamp((1.06 - q.y)/.025, 0, 1)*clamp((q.y - .06)/.025, 0, 1);
+        var a = G; if(q.obj === 'mag' && q.s > 0) a = G - f*G*q.v/(VT_CU/q.s);
+        q.v += a*h; q.y -= q.v*h; q.t += h;
+        if(q.tIn === null && q.y <= 1.06) q.tIn = q.t;
+        if(q.tOut === null && q.y <= .06){ q.tOut = q.t; logPipe(q); }
+        if(q.y <= .0275){ q.y = .0275; q.v = 0; q.st = 'done'; }
+      }
+    }
+    q.mg.position.y = q.y*10;
+    /* 고리 전류 */
+    var inPipe = q.y < 1.08 && q.y > .04, I = (q.obj === 'mag' && inPipe && q.st === 'fall') ? q.s*q.v/VT_CU : 0;
+    var dirLo = q.flip ? -1 : 1;     /* N극이 아래: 아래 고리는 위에서 볼 때 시계 반대(+1) */
+    [[q.rings[0], -.34, dirLo], [q.rings[1], .34, -dirLo]].forEach(function(R){
+      var rg = R[0]; rg.g.visible = I > .03; if(!rg.g.visible) return;
+      rg.g.position.y = q.y*10 + R[1]; rg.ph += R[2]*sdt*3.2;
+      rg.cones.forEach(function(c, j){
+        var th = rg.ph + j/3*Math.PI*2, tt = ((th % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI), ok = false;
+        rg.vis.forEach(function(v){ var a0 = ((v[0] % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI), len = v[1] - v[0], d = ((tt - a0) % (2*Math.PI) + 2*Math.PI) % (2*Math.PI); if(d <= len) ok = true; });
+        c.visible = ok; if(!ok) return;
+        c.position.set((PR - .012)*Math.cos(th), 0, -(PR - .012)*Math.sin(th));
+        _tv.set(-Math.sin(th)*R[2], 0, -Math.cos(th)*R[2]); c.quaternion.setFromUnitVectors(UPV, _tv);
+      });
+    });
+    PM.ring.opacity = .9;
+    /* 이름표 */
+    var showT = q.st !== 'idle';
+    q.lTime.on = showT; if(showT){ var tt2 = q.tOut !== null ? q.tOut - q.tIn : (q.tIn !== null ? q.t - q.tIn : 0); setL(q.lTime, tt2.toFixed(2) + ' 초'); q.lTime.el.className = 'lbl time' + (q.tOut !== null ? ' done' : ''); }
+    var showP = i === P.focus && I > .15 && q.k !== 'cuslot';
+    var pl = q.flip ? 'S' : 'N', cls = 'lbl pole ' + (q.flip ? 's' : 'n');
+    setL(q.lLo, pl + '<small>윗면 · 같은 극 → 밀어냄</small>'); q.lLo.el.className = cls;
+    setL(q.lHi, pl + '<small>아랫면 · 다른 극 → 붙잡음</small>'); q.lHi.el.className = cls;
+    q.lLo.on = q.lHi.on = showP;
+  });
+  meterP(); capP();
+}
+function meterP(){
+  if(P.focus < 0){ setMeter('관 길이 <b>1</b> m · 같은 자석을 네 관에 넣어 걸리는 시간을 비교해요'); return; }
+  var q = PIPES[P.focus];
+  setMeter(q.name + ' · ' + (q.obj === 'mag' ? '자석' : '쇠구슬') + '<br>속력 <b>' + q.v.toFixed(2) + '</b> m/s' + (q.tIn !== null ? ' · 관 속 <b>' + ((q.tOut !== null ? q.tOut : q.t) - q.tIn).toFixed(2) + '</b> 초' : ''));
+}
+function capP(){
+  var q = P.focus >= 0 ? PIPES[P.focus] : null, s;
+  if(!q) s = '같은 네오디뮴 자석을 <b>구리관 · 틈 난 구리관 · 알루미늄관 · 플라스틱관</b>에 떨어뜨려 걸리는 시간을 재 보세요. 넷 다 <b>자석에 붙지 않는</b> 재료예요.';
+  else if(q.st === 'fall' && q.y < 1.06){
+    if(q.obj === 'ball') s = '자석이 아닌 쇠구슬은 어느 관에서든 <b>그냥 떨어져요</b>. 관 속 자기장을 바꿀 자석이 없으니까요.';
+    else if(q.k === 'pl') s = '플라스틱관은 전기가 통하지 않아 고리 전류가 생기지 않아요. 자석이 <b>그냥 떨어져요</b>.';
+    else if(q.k === 'cuslot') s = '세로 틈이 고리 전류의 길을 끊어요. 전류가 약해서 <b>빨리 떨어져요</b> — 브레이크의 정체가 “관을 따라 도는 전류”라는 증거예요.';
+    else s = '자석 <b>아래</b>의 고리 전류는 같은 극으로 <b>밀어내고</b>, <b>위</b>의 고리 전류는 다른 극으로 <b>붙잡아요</b>. 전류가 흐르는 고리는 자석이 되니까요 — 그래서 천천히 떨어져요.';
+  } else if(q.st === 'done' || q.tOut !== null){
+    s = q.name + '을(를) 지나는 데 <b>' + (q.tOut - q.tIn).toFixed(2) + '초</b> 걸렸어요. 그냥 떨어질 때(' + freeT().toFixed(2) + '초)의 <b>' + ((q.tOut - q.tIn)/freeT()).toFixed(1) + '배</b>예요. 다른 관과 비교해 보세요.';
+  } else s = '떨어지는 중…';
+  setCap(s);
+}
+function logPipe(q){
+  var t = q.tOut - q.tIn; P.rows.push({no:++P.no, name:q.name, obj:q.obj, flip:q.flip, t:t});
+  var h = '<table class="tbl"><tr><th>번</th><th>관</th><th>넣은 것</th><th>걸린 시간</th><th>그냥 떨어질 때와 비교</th></tr>';
+  P.rows.slice().reverse().forEach(function(r){
+    h += '<tr><td>' + r.no + '</td><td>' + r.name + '</td><td>' + (r.obj === 'mag' ? '자석 (' + (r.flip ? 'S극' : 'N극') + '이 아래)' : '쇠구슬 (자석 아님)') + '</td>' +
+      '<td><b>' + r.t.toFixed(2) + '초</b></td><td>' + (r.t/freeT()).toFixed(1) + '배</td></tr>';
+  });
+  $('tbP').innerHTML = h + '</table>';
+}
+
+/* ══════════════════════════════════════════════════════════
+   화면 · 모드 전환
+   ══════════════════════════════════════════════════════════ */
+var CAMSAVE = {};
+var MODECFG = {
+  tower: {title:'3D 놀이기구 — 높이 70 m 낙하 탑 (예시)', near:.1, far:900, min:2.2, max:170, polar:1.75, bg:'#cfe2ee',
+    legend:'<i style="background:#c8402f"></i>자석 N · <i style="background:#2f6ea8"></i>자석 S <span style="opacity:.8">(판 쪽 면)</span> · <i style="background:#c4703f"></i>구리판(탑에 고정) · <i style="background:#2c6e5f"></i>위로 미는 힘 · <i style="background:#6b7179"></i>중력 · <i style="background:#e0782f"></i>판 속 소용돌이 전류(확대 보기)'},
+  zoom: {title:'3D 확대 — 자석이 구리판을 스쳐 지나갈 때', near:.05, far:120, min:2, max:16, polar:3.0, bg:'#e6e1d6',
+    legend:'<i style="background:#e0782f"></i>판 속 소용돌이 전류 (화살표 = 전류의 방향) · <b style="color:#c8402f">N</b>/<b style="color:#2f6ea8">S</b> 딱지 = 소용돌이가 만든 자석의 앞면 극 · <i style="background:#2c6e5f"></i>자석이 받는 힘 · 두 자석 사이에서는 자기장이 판을 뚫고 지나가요'},
+  pipe: {title:'3D 교실 실험 — 1 m 관 속으로 자석 떨어뜨리기', near:.03, far:200, min:1.2, max:32, polar:1.62, bg:'#e4ebee',
+    legend:'관은 속이 보이게 앞쪽을 잘라 냈어요 · 자석 <b style="color:#c8402f">빨강 N</b> · <b style="color:#2f6ea8">파랑 S</b> · <i style="background:#e0782f"></i>관을 따라 도는 고리 전류 · 딱지 = 고리 전류가 만든 자석의 극(자석 쪽 면)'}
+};
+var VIEWS = {
+  tower: [['all','탑 전체'], ['follow','곤돌라 따라가기'], ['brake','자석 브레이크 확대'], ['arrows','힘 화살표', true]],
+  zoom: [],
+  pipe: [['all','네 관 모두'], ['follow','자석 따라가기']]
+};
+function setMode(m){
+  if(!SCN[m]) return;
+  if(setMode.done) CAMSAVE[MODE] = {p:cam.position.clone(), t:ctl.target.clone()};
+  setMode.done = true;
+  if(MODE === 'zoom') endDrag();
+  MODE = m; var C = MODECFG[m];
+  document.querySelectorAll('.mode').forEach(function(b){ b.classList.toggle('on', b.dataset.m === m); });
+  $('stageTitle').textContent = C.title; $('legend').innerHTML = C.legend; stageEl.style.background = C.bg;
+  $('ctrlT').hidden = m !== 'tower'; $('ctrlZ').hidden = m !== 'zoom'; $('ctrlP').hidden = m !== 'pipe';
+  $('recT').hidden = m !== 'tower'; $('recP').hidden = m !== 'pipe';
+  $('warn').hidden = !(m === 'tower' && T.phase === 'done' && T.rec && T.rec.res[0] === 'bad');
+  cam.near = C.near; cam.far = C.far; cam.updateProjectionMatrix();
+  ctl.minDistance = C.min; ctl.maxDistance = C.max; ctl.maxPolarAngle = C.polar;
+  TWEEN = null;
+  if(CAMSAVE[m]){ cam.position.copy(CAMSAVE[m].p); ctl.target.copy(CAMSAVE[m].t); }
+  else { var tg = viewTarget() || V(0, .2, 0); ctl.target.copy(tg); cam.position.copy(tg).add(viewOffset()); }
+  ctl.update(); buildViewRow(); _mh = ''; _ch = '';
+}
+function buildViewRow(){
+  var row = $('viewRow'), list = VIEWS[MODE];
+  row.innerHTML = '<span class="t">보기</span>';
+  if(MODE === 'zoom'){ row.innerHTML += '<span style="font-family:var(--gowun);font-size:13px;color:var(--ink-mute)">자석을 끌거나 아래 단추로 움직여 보세요 · 화면을 돌려 판 뒤쪽(S 자석)도 보세요</span>'; return; }
+  list.forEach(function(v){
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'vc'; b.textContent = v[1];
+    var on = v[2] ? T.arrows : (MODE === 'tower' ? T.view === v[0] : P.view === v[0]);
+    b.classList.toggle('on', on);
+    b.addEventListener('click', function(){
+      if(v[2]){ T.arrows = !T.arrows; }
+      else if(MODE === 'tower'){ T.view = v[0]; camGo(.9); }
+      else { P.view = v[0]; camGo(.8); }
+      buildViewRow();
+    });
+    row.appendChild(b);
+  });
+}
+document.querySelectorAll('.mode').forEach(function(b){ b.addEventListener('click', function(){ setMode(b.dataset.m); }); });
+$('camReset').addEventListener('click', function(){ if(MODE === 'zoom'){ TWEEN = {p0:cam.position.clone(), t0:ctl.target.clone(), off:viewOffset(), fixT:V(0,.2,0), t:0, dur:.6}; } else camGo(.6); });
+$('fsBtn').addEventListener('click', function(){ var el = $('stageCard'); if(document.fullscreenElement) document.exitFullscreen(); else if(el.requestFullscreen) el.requestFullscreen().catch(function(){}); });
+
+/* ── 🎢 조작 ── */
+function seg(id, cb){ var el = $(id); el.querySelectorAll('button').forEach(function(b){ b.addEventListener('click', function(){ el.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x === b); }); cb(b.dataset.v); }); }); }
+function segSet(id, v){ $(id).querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x.dataset.v === v); }); }
+seg('segMat', function(v){ T.mat = v; rebuildFins(); });
+seg('segMag', function(v){ T.mag = v; });
+seg('segStr', function(v){ T.str = v; });
+seg('segShape', function(v){ T.shape = v; rebuildFins(); });
+$('tN').addEventListener('input', function(){ T.n = +this.value; $('tNv').textContent = T.n + '명'; updRiders(); });
+$('tBlack').addEventListener('change', function(){ T.black = this.checked; $('tBlackL').classList.toggle('on', T.black); });
+$('tSlow').addEventListener('click', function(){ T.slow = !T.slow; this.textContent = T.slow ? '🐇 보통 빠르기' : '🐢 느리게'; });
+function uiT(){
+  var b = $('tGo'), busy = T.phase === 'lift' || T.phase === 'fall' || T.phase === 'hold';
+  $('tOpts').classList.toggle('locked', busy || T.phase === 'top');
+  b.classList.remove('pulse');
+  if(T.phase === 'ready' || T.phase === 'done'){ b.disabled = false; b.textContent = T.phase === 'done' ? '⬆ 다시 올라가기' : '⬆ 올라가기'; if(T.phase === 'ready') b.classList.add('pulse'); }
+  else if(T.phase === 'top'){ b.disabled = false; b.textContent = '▼ 떨어뜨리기!'; b.classList.add('pulse'); }
+  else { b.disabled = true; b.textContent = T.phase === 'lift' ? '올라가는 중…' : '떨어지는 중…'; }
+  $('tSkip').disabled = busy || T.phase === 'top';
+}
+$('tGo').addEventListener('click', function(){
+  if(T.phase === 'ready' || T.phase === 'done'){ resetTowerPose(); T.phase = 'lift'; $('warn').hidden = true; uiT(); }
+  else if(T.phase === 'top') dropNow();
+});
+$('tSkip').addEventListener('click', function(){ if(T.phase === 'lift' || T.phase === 'fall') return; resetTowerPose(); T.y = TW.TOP; T.phase = 'top'; SR.rotation.y = 0; $('warn').hidden = true; uiT(); });
+function towerDemo(cfg){
+  setMode('tower'); cfg = cfg || {};
+  T.mat = cfg.mat || 'cu'; T.mag = cfg.mag || 'perm'; T.str = cfg.str || 'm'; T.shape = cfg.shape || 'taper';
+  T.n = cfg.n !== undefined ? cfg.n : 20; T.black = !!cfg.black;
+  segSet('segMat', T.mat); segSet('segMag', T.mag); segSet('segStr', T.str); segSet('segShape', T.shape);
+  $('tN').value = T.n; $('tNv').textContent = T.n + '명'; $('tBlack').checked = T.black; $('tBlackL').classList.toggle('on', T.black);
+  updRiders(); rebuildFins();
+  resetTowerPose(); T.y = TW.TOP; T.phase = 'hold'; T.holdT = 1.0; SR.rotation.y = 0; $('warn').hidden = true;
+  T.view = cfg.view || 'follow'; camGo(.8); buildViewRow(); uiT();
+}
+
+/* ── 🔍 조작 ── */
+function zButtons(){ $('zDown').classList.toggle('primary', Z.mode === 'down'); $('zUp').classList.toggle('primary', Z.mode === 'up'); }
+$('zDown').addEventListener('click', function(){ Z.mode = 'down'; zButtons(); });
+$('zUp').addEventListener('click', function(){ Z.mode = 'up'; zButtons(); });
+$('zStop').addEventListener('click', function(){ Z.mode = 'idle'; zButtons(); });
+seg('segZMat', function(v){ Z.mat = v; plate.material = ZM[v]; });
+$('zSp').addEventListener('input', function(){ Z.speed = .3*(+this.value); $('zSpv').textContent = speedName(+this.value); });
+$('zSlot').addEventListener('change', function(){ Z.slot = this.checked; SLITS.visible = Z.slot; $('zSlotL').classList.toggle('on', Z.slot); });
+function zoomDemo(cfg){
+  setMode('zoom'); cfg = cfg || {};
+  Z.mat = cfg.mat || 'cu'; segSet('segZMat', Z.mat); plate.material = ZM[Z.mat];
+  Z.slot = !!cfg.slot; $('zSlot').checked = Z.slot; SLITS.visible = Z.slot; $('zSlotL').classList.toggle('on', Z.slot);
+  var sp = cfg.sp || 5; $('zSp').value = sp; Z.speed = .3*sp; $('zSpv').textContent = speedName(sp);
+  Z.mode = cfg.mode || 'down'; if(Z.mode === 'down' && Z.ym < -1.5) Z.ym = 2.4; zButtons();
+}
+
+/* ── 🧪 조작 ── */
+seg('segObj', function(v){ P.obj = v; $('segFlip').style.opacity = v === 'mag' ? 1 : .4; });
+seg('segFlip', function(v){ P.flip = v === 's'; });
+document.querySelectorAll('#ctrlP [data-p]').forEach(function(b){ b.addEventListener('click', function(){ dropPipe(+b.dataset.p); if(P.view === 'follow') camGo(.5); }); });
+$('pAll').addEventListener('click', function(){ for(var i=0;i<4;i++) dropPipe(i); P.focus = 0; P.view = 'all'; camGo(.6); buildViewRow(); });
+$('pSlow').addEventListener('click', function(){ P.slow = !P.slow; this.textContent = P.slow ? '🐇 보통 빠르기' : '🐢 느리게(¼)'; });
+function pipeDemo(cfg){
+  setMode('pipe'); cfg = cfg || {};
+  P.obj = cfg.obj || 'mag'; P.flip = !!cfg.flip; segSet('segObj', P.obj); segSet('segFlip', P.flip ? 's' : 'n'); $('segFlip').style.opacity = P.obj === 'mag' ? 1 : .4;
+  if(cfg.slow !== undefined){ P.slow = cfg.slow; $('pSlow').textContent = P.slow ? '🐇 보통 빠르기' : '🐢 느리게(¼)'; }
+  if(cfg.all){ for(var i=0;i<4;i++) dropPipe(i); P.focus = cfg.focus || 0; }
+  else dropPipe(cfg.pipe || 0);
+  P.view = cfg.view || 'follow'; camGo(.7); buildViewRow();
+}
+
+/* ══════════════════════════════════════════════════════════
+   🔎 질문과 답
+   ══════════════════════════════════════════════════════════ */
+var QA = [
+  {q:'🧲 구리는 자석에 붙지도 않는데, 어떻게 브레이크가 돼요?',
+   a:'맞아요, 구리는 가만히 있는 자석에는 끌리지 않아요. 이 브레이크는 <b>움직일 때만</b> 생겨요. 자석이 구리판을 스쳐 지나가면 판 속에 <b>소용돌이 모양의 전류</b>가 생기고, 이 전류가 자석의 움직임을 방해해요. 자석이 멈춰 있으면 전류도 힘도 없어요.',
+   go:function(){ zoomDemo({mode:'down', sp:5}); }},
+  {q:'🌀 전지도 없는데 판 속에 왜 전류가 생겨요?',
+   a:'자석이 지나가면 판의 각 부분을 지나는 자기장이 커졌다 작아졌다 <b>변해요</b>. 자기장이 변하면 금속 속 전자가 밀려 움직여 전류가 돌아요. 전지 없이 자기장의 변화로 전류가 생기는 이 일을 <b>전자기 유도</b>라고 하고, 고등학교에서 배워요. 발전소의 발전기도 같은 원리예요.',
+   go:function(){ zoomDemo({mode:'down', sp:3}); }},
+  {q:'🔄 소용돌이 전류가 어떻게 자석을 붙잡아요?',
+   a:'코일 주위의 자기장 시간에 배웠듯이 <b>전류가 빙 돌면 그 고리는 자석이 돼요</b>. 자석이 <b>다가오는 쪽</b>의 고리 전류는 자석과 <b>같은 극</b>을 마주 보게 되어 밀어내고, 자석이 <b>멀어지는 쪽</b>의 고리 전류는 <b>다른 극</b>을 마주 보게 되어 끌어당겨요. 앞에서 밀고 뒤에서 붙잡으니, 어느 쪽이든 움직임을 방해해요. 구리관 속을 보면 가장 잘 보여요.',
+   go:function(){ pipeDemo({pipe:0, view:'follow'}); }},
+  {q:'⏩ 빠를수록 브레이크가 세져요?',
+   a:'네. 빨리 지나갈수록 자기장이 빨리 변해서 소용돌이 전류가 세지고, 힘도 세져요(대략 속력에 비례). 거꾸로 느려지면 약해지고, <b>멈추면 0</b>이에요. 확대 화면에서 빠르기를 바꿔 보세요.',
+   go:function(){ zoomDemo({mode:'down', sp:9}); }},
+  {q:'✋ 그럼 자석만으로 완전히 멈출 수 있어요?',
+   a:'아니요. 느려질수록 브레이크가 약해지니까, 위로 미는 힘이 중력과 같아지는 <b>아주 느린 속력</b>(이 실험실에서는 초속 1~2 m쯤)에서 더 줄지 않고 천천히 내려와요. 그래서 마지막에는 <b>공기 완충 장치</b>가 느려진 곤돌라를 받아 내려 줘요. 따라가기 화면에서 끝부분을 보세요.',
+   go:function(){ towerDemo({view:'follow'}); }},
+  {q:'⚡ 정전되면 브레이크도 꺼지나요?',
+   a:'<b>영구 자석</b>은 전기 없이도 자석이라, 정전이 되어도 브레이크가 그대로 걸려요. 그래서 낙하 놀이기구는 영구 자석을 써요. 만약 <b>전자석</b>이었다면? 전자석은 전류가 흐를 때만 자석이니 정전되면 브레이크가 사라져요. 이 장면은 전자석 + 정전이에요 — 영구 자석 + 정전과 비교해 보세요.',
+   go:function(){ towerDemo({mag:'electro', black:true, view:'follow'}); }},
+  {q:'🥤 플라스틱 판이면 어떻게 돼요?',
+   a:'플라스틱은 전기가 거의 통하지 않아서 소용돌이 전류가 생기지 않아요. 전류가 없으니 힘도 없어요 — 자석이 그냥 스쳐 지나가요. 관 실험에서 플라스틱관을 보세요.',
+   go:function(){ pipeDemo({pipe:3, view:'follow', slow:true}); }},
+  {q:'🔩 철판을 쓰면 더 세지 않아요?',
+   a:'철은 자석에 세게 달라붙어요. 판이 한쪽 자석에 끌려 붙어 버리면 부드러운 브레이크가 아니라 덜컥 걸리는 장치가 돼요. 게다가 철은 구리보다 전기가 훨씬 덜 통해요(약 6분의 1). 그래서 <b>자석에 붙지 않으면서 전기가 잘 통하는</b> 구리·알루미늄을 써요.'},
+  {q:'👨‍👩‍👧 사람이 많이 타면 더 늦게 멈춰요?',
+   a:'브레이크 힘은 판·자석·속력으로 정해져서 사람 수와 상관없어요. 하지만 무거울수록 같은 힘으로 속력을 줄이기 어려워서 조금 더 아래까지 빠르게 내려와요. 이 장면은 40명이에요 — 0명과 비교해 보세요.',
+   go:function(){ towerDemo({n:40, view:'follow'}); }},
+  {q:'📐 구리판이 왜 아래로 갈수록 넓어져요?',
+   a:'빠를 때는 판이 조금만 있어도 브레이크가 세요. 처음부터 판이 넓으면 들어가는 순간 너무 세게 잡혀 몸이 평소 무게의 <b>10배 넘게</b> 눌려요. 느려질수록 힘이 약해지니 판을 점점 넓혀 보충하면, 몸이 받는 힘이 고르게 유지돼요. 이 장면은 “처음부터 넓게”예요.',
+   go:function(){ towerDemo({shape:'even', view:'follow'}); }},
+  {q:'🔥 빠르게 떨어지던 에너지는 어디로 가요?',
+   a:'사라지지 않아요. 움직이던 에너지(운동 에너지) → 소용돌이 전류의 <b>전기 에너지</b> → 판을 데우는 <b>열 에너지</b>로 바뀌어요. 소비 전력 시간에 배운 것처럼 전류가 흐르면 열이 나니까요. 이 실험실에서 한 번 떨어질 때 판에 생기는 열은 약 0.86 kWh — 1000 W 전기난로를 50분쯤 켠 만큼이에요. 표의 “판에 생긴 열”을 보세요.',
+   go:function(){ towerDemo({view:'follow'}); }},
+  {q:'🔁 자석을 뒤집어 넣으면 달라져요?',
+   a:'고리 전류의 방향이 반대로 바뀌어 고리가 만든 자석의 극도 뒤집혀요. 그래도 여전히 다가오는 쪽은 같은 극으로 밀고, 멀어지는 쪽은 다른 극으로 붙잡아요. 그래서 <b>똑같이 느리게</b> 떨어져요.',
+   go:function(){ pipeDemo({pipe:0, flip:true, view:'follow'}); }},
+  {q:'✂️ 구리관에 세로로 틈을 내면요?',
+   a:'고리 모양 전류는 관을 한 바퀴 빙 돌아야 하는데, 틈이 그 길을 끊어요. 전류가 약해지니 자석이 <b>훨씬 빨리</b> 떨어져요. 브레이크의 정체가 “관을 따라 도는 전류”라는 좋은 증거예요.',
+   go:function(){ pipeDemo({all:true, focus:1, view:'all'}); }},
+  {q:'⚪ 자석이 아닌 쇠구슬을 넣으면요?',
+   a:'그냥 떨어져요. 관 속 전류는 <b>움직이는 자석</b>이 만드는 자기장의 변화 때문에 생기는데, 쇠구슬은 자석이 아니라서 바꿀 자기장이 없어요.',
+   go:function(){ pipeDemo({obj:'ball', pipe:0, view:'follow'}); }},
+  {q:'✋ 전동기 시간에 배운 “자기장 속 전류가 받는 힘”으로도 설명돼요?',
+   a:'네. 판 속 전류 중 두 자석 사이를 지나는 부분은 <b>자기장 속을 흐르는 전류</b>라서 힘을 받아요. 그 방법으로 따져 보면 판은 자석이 가는 쪽으로 끌려가는 힘을 받고, 자석(곤돌라)은 같은 크기의 힘을 반대쪽 — <b>움직임을 막는 쪽</b>으로 받아요. 두 설명은 같은 일을 다르게 본 거예요.',
+   go:function(){ zoomDemo({mode:'down', sp:4}); }},
+  {q:'🎡 이런 브레이크는 또 어디에 쓰여요?',
+   a:'롤러코스터의 마지막 브레이크 구간, 일부 고속 열차의 브레이크, 실내 자전거(자석을 바퀴 가까이 옮기면 페달이 무거워져요)에 쓰여요. 닿지 않으니 <b>닳지 않고</b>, 소리 없이 부드럽게 잡아 주는 게 장점이에요.'}
+];
+(function(){
+  var list = $('qList');
+  QA.forEach(function(it, i){
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'qc'; b.textContent = it.q;
+    b.addEventListener('click', function(){
+      list.querySelectorAll('.qc').forEach(function(x){ x.classList.remove('on'); }); b.classList.add('on', 'seen');
+      var box = $('qAns'); box.hidden = false;
+      box.innerHTML = '<h3>' + it.q + '</h3><p>' + it.a + '</p>' + (it.go ? '<button class="btn teal sm go" type="button">▶ 3D로 보기</button>' : '');
+      if(it.go) box.querySelector('.go').addEventListener('click', function(){ it.go(); $('stageCard').scrollIntoView({behavior:'smooth', block:'start'}); });
+    });
+    list.appendChild(b);
+  });
+})();
+
+/* ── 크기 맞추기 · 그리기 ── */
+function resize(){
+  var w = stageEl.clientWidth, h = stageEl.clientHeight; if(!w || !h) return;
+  renderer.setSize(w, h, false); cam.aspect = w/h; cam.updateProjectionMatrix();
+  stageEl.classList.toggle('narrow', w < 560);
+}
+if(window.ResizeObserver) new ResizeObserver(resize).observe(stageEl); else window.addEventListener('resize', resize);
+resize();
+
+function tick(dt){
+  if(MODE === 'tower') tickTower(dt); else if(MODE === 'zoom') tickZoom(dt); else tickPipe(dt);
+  if(MODE !== 'tower') followCam(dt);
+  ctl.update(); updLabels();
+}
+var last = performance.now();
+function frame(now){ requestAnimationFrame(frame); var dt = Math.min(.05, Math.max(0, (now - last)/1000)); last = now; tick(dt); renderer.render(SCN[MODE], cam); }
+
+/* 처음 상태 */
+updRiders(); rebuildFins(); uiT(); setMode('tower');
+if(THUMB){
+  T.y = TW.TOP; T.phase = 'top'; dropNow();
+  while(T.phase === 'fall' && T.y > 19.5) physT(1/480);
+  T.frozen = true; T.view = 'thumb';
+  ctl.target.set(0, T.y + 1.8, 0); cam.position.set(9.5, T.y - .6, 12.5); ctl.update();
+  tickTower(0);
+}
+renderer.render(SCN[MODE], cam);
+requestAnimationFrame(frame);
+
+window.__gyro = {T:T, Z:Z, P:P, PIPES:PIPES, setMode:setMode, towerDemo:towerDemo, zoomDemo:zoomDemo, pipeDemo:pipeDemo, physT:physT, tick:tick, cov:cov,
+  run:function(cfg){ towerDemo(cfg); T.phase = 'top'; dropNow(); var k = 0; while(T.phase === 'fall' && k++ < 200000) physT(1/480); return T.rec; }};
+})();
+</script>
+</body>
+</html>
