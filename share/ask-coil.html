@@ -293,7 +293,7 @@ html.thumb #stage{height:100vh !important}
 </div>
 
 <div id="pop"><div class="popbox" id="popbox"></div></div>
-<footer id="app-credit">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-10-04</span></footer>
+<footer id="app-credit">제작 : 과학을 사랑하는 선생님 · © 2026 · All rights reserved<br><span style="font-size:13.5px;opacity:.85;">최종 업데이트: 2026-10-06</span></footer>
 
 <script src="lib/three.min.js"></script>
 <script src="lib/OrbitControls.js"></script>
@@ -1120,9 +1120,6 @@ var QS = [
  {g:'클립이 움직일 때', id:'strength', q:'전류를 세게 하면 왜 더 많이 끌려와요?', kw:['세게','세기','더많이','약하게','강하게'],
   a:'<p><b>전류가 셀수록 코일 주위의 자기장이 세져요.</b> 그래서 클립이 받는 자기력도 커져 더 많이 끌려와요. 아주 세게 하면 코일에 달라붙기도 해요.</p><p>멀리 있는 나침반도 전류를 세게 하면 더 많이 돌아가요 — 같은 이야기예요.</p>',
   core:'전류 세기 ↑ → 자기장 세기 ↑ → <b>자기력 ↑</b>.', parts:['strength']},
- {g:'한 걸음 더', id:'turns', q:'코일을 더 많이 감으면 어떻게 돼요?', kw:['감은','많이감','촘촘','바퀴','더감'],
-  a:'<p>같은 전류라도 코일을 <b>촘촘히 더 많이 감으면</b> 자기장이 세져요. 그래서 전자석을 세게 만들 때 전선을 여러 번 감아요.</p>',
-  core:'감은 수 ↑ → 자기장 세기 ↑.', parts:['turns'], plus:true},
  {g:'한 걸음 더', id:'lines', q:'자기력선이 뭐예요? 나침반이랑 무슨 관계예요?', kw:['자기력선','자기선','화살표','선으로'],
   a:'<p>자기력선은 자기장의 모양과 방향을 <b>선과 화살표</b>로 그린 거예요. 비상 교과서에서는 자기력선을 다루지 않지만, 알아 두면 편해요.</p><p><b>나침반 바늘의 N극이 가리키는 방향이 곧 자기력선의 화살표 방향</b>이에요. 그래서 나침반을 촘촘히 늘어놓고 N극 방향을 이으면 자기력선이 돼요. 선이 촘촘한 곳(코일 안과 양 끝 가까이)일수록 자기장이 세요.</p><p>이 화면의 자기력선은 코일이 만든 자기장만 그린 것이라, 코일에서 먼 나침반은 지구 자기장 때문에 조금 어긋나요.</p>',
   core:'나침반 N극 방향 = <b>자기력선의 화살표 방향</b> (교과서 밖).', parts:['lines'], plus:true},
@@ -1202,12 +1199,6 @@ var PART = {
     setOn(true); cap('전류가 <b>약할 때</b>(1 A) — 자 눈금을 보세요. 조금만 끌려와요.'); await wait(3); setOn(false); await wait(1.4);
     setI(2); setOn(true); cap('<b>중간</b>(2 A) — 더 많이 끌려와요.'); await wait(3); setOn(false); await wait(1.4);
     setI(3); setOn(true); cap('<b>세게</b>(3 A) 하면 자기장이 아주 세져서 클립이 코일에 <b>달라붙어요.</b> 전류가 셀수록 자기력이 커요.'); await wait(3.2); setOn(false); await wait(1.2);
-  },
-  turns: async function(cap){
-    setup({stand:true, view:{nums:true}}); await shot(CAMS.coil);
-    setOn(true); cap('6바퀴 감은 코일, 2 A.'); await wait(2.8); setOn(false); await wait(1);
-    setN(12); cap('같은 길이에 <b>12바퀴</b>를 촘촘히 감고 같은 2 A 를 흘리면…'); await wait(1.2);
-    setOn(true); cap('자기장이 <b>세져서</b> 바늘이 더 많이 돌고 클립도 더 끌려와요.'); await wait(3.4); setOn(false); await wait(.6); setN(6);
   },
   lines: async function(cap){
     setup({on:true, view:{mini:true, poles:true}}); await shot(CAMS.top);
