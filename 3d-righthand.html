@@ -217,6 +217,37 @@ html.large-ui{zoom:1.35}
 }
 @media(max-height:560px){.is-fullscreen .scene-caption{display:none}.is-fullscreen .stage-gesture{display:none}}
 
+.compass-distance-control{margin:14px 0 16px;padding:15px 13px;background:#f0f6fc;border:1px solid #d5e4f2;border-radius:12px;color:#23364a}
+.compass-distance-control .control-row{gap:8px;font-size:15px;font-weight:600;align-items:flex-start}.compass-distance-control output{white-space:nowrap;color:#0059b3;font-variant-numeric:tabular-nums}
+.compass-distance-control input[type=range]{width:100%;margin:14px 0 5px;min-height:30px;accent-color:#0066cc}.compass-distance-ends{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+#compass-distance-help{font-size:13px;color:#23364a;font-weight:600;line-height:1.65;margin-top:9px}
+</style>
+
+<style id="rh-onboarding-style">
+.rh-help-button{margin-left:auto;flex:none;font-size:16px!important;font-weight:700!important;min-height:44px!important;padding:9px 14px!important;color:#0066cc!important;background:#fff!important;border:1px solid #b8cce0!important}
+#rh-welcome{position:fixed;inset:0;margin:auto;width:min(760px,calc(100vw - 28px));max-width:760px;max-height:calc(100dvh - 28px);padding:0;border:1px solid #d6dfe7;border-radius:20px;color:#23364a;background:#fff;font-family:inherit;line-height:1.7;box-shadow:0 16px 60px #13283d26;overflow:hidden}
+#rh-welcome:not([open]){display:none}
+#rh-welcome[open]{display:flex;flex-direction:column}
+#rh-welcome::backdrop{background:rgba(23,39,57,.42)}
+#rh-welcome *{box-sizing:border-box}
+.rh-welcome-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:23px 25px 17px;flex:none;border-bottom:1px solid #e1e6eb}
+#rh-welcome-title{font-size:27px;font-weight:700;line-height:1.45;letter-spacing:-.6px;margin:0;color:#1d3045}
+.rh-welcome-lead{font-size:17px;font-weight:600;margin:5px 0 0;color:#314c68;word-break:keep-all}
+.rh-welcome-close{font:inherit;font-size:16px;font-weight:700;min-width:60px;min-height:44px;padding:8px 12px;border:1px solid #c8d4df;background:#f5f5f7;color:#23364a;border-radius:9px;cursor:pointer;flex:none}
+.rh-welcome-body{overflow:auto;overscroll-behavior:contain;min-height:0;padding:6px 25px 8px;scrollbar-gutter:stable}
+.rh-welcome-steps{list-style:none;padding:0;margin:0;counter-reset:rh-step}
+.rh-welcome-steps li{display:grid;grid-template-columns:32px minmax(0,1fr);column-gap:12px;padding:16px 0;border-bottom:1px solid #e8edf1;counter-increment:rh-step}
+.rh-welcome-steps li:last-child{border-bottom:0}
+.rh-welcome-steps li::before{content:counter(rh-step);display:grid;place-items:center;align-self:start;width:32px;height:32px;border-radius:50%;background:#eaf3fc;color:#0066cc;font-size:17px;font-weight:700}
+.rh-welcome-steps h3{font-size:19px;line-height:1.5;font-weight:700;margin:0 0 4px;color:#23364a;letter-spacing:-.3px}
+.rh-welcome-steps p{font-size:18px;line-height:1.7;font-weight:600;margin:0;color:#314c68;word-break:keep-all;overflow-wrap:anywhere}
+.rh-welcome-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:17px 25px;border-top:1px solid #e1e6eb;flex:none;background:#f5f5f7}
+.rh-welcome-optout{display:flex;align-items:center;gap:8px;min-height:44px;font-size:16px;font-weight:600;line-height:1.6;cursor:pointer;color:#314c68}
+#rh-welcome-hide{width:20px;height:20px;accent-color:#0066cc;flex:none;margin:0}
+.rh-welcome-start{font:inherit;font-size:18px;font-weight:700;line-height:1.5;min-height:48px;padding:10px 24px;border:0;border-radius:24px;background:#0066cc;color:white;cursor:pointer}
+#rh-welcome button:focus-visible,#rh-welcome input:focus-visible{outline:3px solid #0066cc;outline-offset:3px}
+@media(max-width:540px){#rh-welcome{width:calc(100vw - 20px);max-height:calc(100dvh - 20px);border-radius:16px}.rh-welcome-head{padding:18px 16px 14px;gap:8px}#rh-welcome-title{font-size:23px}.rh-welcome-lead{font-size:16px}.rh-welcome-close{min-width:54px;padding:8px 10px}.rh-welcome-body{padding:3px 16px 5px;scrollbar-gutter:auto}.rh-welcome-steps li{grid-template-columns:28px minmax(0,1fr);gap:9px;padding:14px 0}.rh-welcome-steps li::before{width:28px;height:28px;font-size:16px}.rh-welcome-steps h3{font-size:18px}.rh-welcome-steps p{font-size:17px}.rh-welcome-foot{padding:12px 16px;gap:5px 10px}.rh-welcome-start{font-size:17px;padding:9px 18px;min-height:46px}.rh-welcome-optout{font-size:15px}}
+@media(max-height:500px){.rh-welcome-head{padding-top:12px;padding-bottom:10px}.rh-welcome-lead{display:none}.rh-welcome-foot{padding-top:8px;padding-bottom:8px}#rh-welcome-title{font-size:23px}}
 </style>
 </head>
 <body>
@@ -239,6 +270,19 @@ html.large-ui{zoom:1.35}
  </header>
 
  <div class="lab-layout" id="lab-workspace">
+<!-- RH_ONBOARDING_V1 -->
+<dialog id="rh-welcome" aria-labelledby="rh-welcome-title" aria-describedby="rh-welcome-lead">
+ <div class="rh-welcome-head"><div><h2 id="rh-welcome-title">실험실, 이렇게 사용해요</h2><p class="rh-welcome-lead" id="rh-welcome-lead">전류를 바꾸고 여러 위치의 자기장을 비교해 보세요.</p></div><button type="button" class="rh-welcome-close" id="rh-welcome-close" aria-label="조작법 소개 닫기">닫기</button></div>
+ <div class="rh-welcome-body"><ol class="rh-welcome-steps">
+  <li><div><h3>돌려 보고 확대하기</h3><p>빈 곳을 드래그하면 시점이 돌아갑니다. 마우스 휠이나 두 손가락으로 확대하고, ‘기본 시점’으로 돌아오세요.</p></div></li>
+  <li><div><h3>도선과 전류 바꾸기</h3><p>직선 도선·원형 도선·코일을 선택하세요. ‘전류의 세기’를 조절하고 ‘전류 방향 바꾸기’를 눌러 비교해 보세요.</p></div></li>
+  <li><div><h3>나침반 여러 개 놓기</h3><p>‘나침반 추가’로 여러 개 놓고 번호로 선택해 드래그하세요. 거리 슬라이더로 가까이·멀리 옮길 수도 있어요.</p></div></li>
+  <li><div><h3>3D 센서로 측정하기</h3><p>파란 센서를 드래그하면 초록 탐침 끝에서 측정합니다. ‘센서 드래그’의 이동 평면을 바꾸거나 ‘센서 좌표·높이 조절’에서 직접 위치를 입력하세요.</p></div></li>
+  <li><div><h3>자기장과 자기선속 살펴보기</h3><p>‘자기장 보기’에서 표시 방식을 바꾸세요. ‘자기선속 살펴보기’는 측정면을 켜서 관찰합니다. 전체화면에서도 모든 조작을 계속할 수 있어요.</p></div></li>
+ </ol></div>
+ <div class="rh-welcome-foot"><label class="rh-welcome-optout"><input type="checkbox" id="rh-welcome-hide">다음부터 보지 않기</label><button type="button" class="rh-welcome-start" id="rh-welcome-start">실험 시작하기</button></div>
+</dialog>
+
   <div class="fullscreen-toolbar" id="fullscreen-toolbar" hidden>
    <h2 class="fullscreen-title">오른손으로 찾는 자기장 방향</h2>
    <div class="fullscreen-modes" id="fullscreen-modes"></div>
@@ -246,7 +290,7 @@ html.large-ui{zoom:1.35}
   </div>
   <div class="scene-column">
    <section class="stage-card" aria-label="자기장 3D 실험">
-    <div class="stage-head"><h2 id="stage-title">직선 도선에 전류가 흐르면?</h2><span class="stage-badge">3D 실험</span></div>
+    <div class="stage-head"><h2 id="stage-title">직선 도선에 전류가 흐르면?</h2><button type="button" class="btn rh-help-button" id="rh-help-open" aria-haspopup="dialog" aria-controls="rh-welcome">사용법</button><span class="stage-badge">3D 실험</span></div>
     <div class="stage" id="stage" aria-label="드래그로 시점을 회전하거나 나침반과 센서를 옮기는 3D 실험판">
      <div class="legend"><span><i class="cur"></i>전류</span><span><i class="fld"></i>자기장</span><span><i class="needle-dot"></i>바늘의 N극</span></div>
      <p class="stage-gesture">빈 곳: 시점 회전 · 나침반·센서: 드래그 이동</p>
@@ -321,6 +365,12 @@ html.large-ui{zoom:1.35}
     <div class="instrument-actions"><button type="button" class="btn" id="compass-add">＋ 나침반 추가</button><button type="button" class="btn" id="compass-remove">선택한 것 삭제</button></div>
     <select class="instrument-select" id="compass-select" aria-label="움직일 나침반 선택"></select>
     <p class="help-text" id="compass-status" role="status">나침반 1을 선택했습니다.</p>
+    <div class="compass-distance-control">
+     <div class="control-row"><label for="compass-distance">도선과 거리 · 실험판 기준</label><output id="compass-distance-value" for="compass-distance">34.1 cm</output></div>
+     <input id="compass-distance" type="range" min="11" max="100" step="any" value="34.1" aria-describedby="compass-distance-help">
+     <div class="compass-distance-ends" aria-hidden="true"><span>가까이</span><span>멀리</span></div>
+     <p id="compass-distance-help">선택한 나침반의 거리를 조절합니다. 드래그와 좌표 입력으로도 자유롭게 놓을 수 있습니다.</p>
+    </div>
     <button type="button" class="btn primary full" id="place-btn" aria-pressed="false">실험판에서 위치 찍기</button>
     <div class="coords">
      <div class="coord-field"><label for="compass-x">x</label><input id="compass-x" type="number" min="-100" max="100" step="0.1" value="26" inputmode="decimal" aria-label="나침반 x 좌표"><span>cm</span></div>
@@ -1081,6 +1131,7 @@ function updateReadouts(){
   updateFlux();
 }
 function syncControls(){
+  syncCompassDistance();
   $('current-range').value=currentAmps;$('current-value').textContent=currentAmps.toFixed(1);
   $('turns-range').value=COIL_N;$('turns-value').textContent=COIL_N;
   $('turns-control').hidden=mode!=='coil';$('axis-view').disabled=mode==='wire';
@@ -1090,6 +1141,50 @@ function syncControls(){
   ['x','y','z'].forEach(axis=>$('sensor-'+axis).value=(sensor.position[axis]*10).toFixed(1));
   $('pause-btn').textContent=paused?'애니메이션 재생':'애니메이션 멈춤';$('pause-btn').setAttribute('aria-pressed',paused);
 }
+/* 실험판에서 도선이 지나는 자리와 나침반 중심 사이의 거리. */
+function compassDistanceTrack(){
+  if(!activeCompass)return null;
+  const p=activeCompass.group.position,old=activeCompass.distanceTrack;
+  if(old&&old.mode===mode&&old.last.distanceToSquared(p)<1e-12)return old;
+  const side=p.z<0?-1:p.z>0?1:old&&old.mode===mode?old.side:1;
+  const anchor=new THREE.Vector3();
+  let min=1.1;
+  if(mode==='loop'){anchor.z=side*Math.sqrt(LOOP_R*LOOP_R-AXIS_Y*AXIS_Y);min=1.08;}
+  if(mode==='coil'){anchor.set(THREE.MathUtils.clamp(p.x,-COIL_L/2,COIL_L/2),0,side*1.53);min=1;}
+  const direction=p.clone().sub(anchor);direction.y=0;
+  const distance=direction.length();
+  if(distance<1e-9)direction.set(1,0,0);else direction.divideScalar(distance);
+  let max=Infinity;
+  for(const [axis,bound]of [['x',10],['z',6]]){
+    const u=direction[axis];
+    if(Math.abs(u)>1e-9)max=Math.min(max,((u>0?bound:-bound)-anchor[axis])/u);
+  }
+  const innerLimit=mode!=='wire'&&anchor.z*direction.z<0?-anchor.z/direction.z:Infinity;
+  max=Math.max(min,Math.min(max,innerLimit));
+  const track={mode,side,anchor,direction,min,max,innerLimited:innerLimit<=max+1e-8,last:p.clone()};
+  activeCompass.distanceTrack=track;return track;
+}
+function syncCompassDistance(){
+  const input=$('compass-distance'),value=$('compass-distance-value'),help=$('compass-distance-help');
+  const track=compassDistanceTrack();input.disabled=!track;
+  if(!track){value.textContent='—';help.textContent='나침반을 추가한 뒤 거리를 조절하세요.';return;}
+  const distance=activeCompass.group.position.distanceTo(track.anchor);
+  input.min=(track.min*10).toFixed(2);input.max=(track.max*10).toFixed(2);input.value=(distance*10).toFixed(2);
+  input.setAttribute('aria-valuetext','나침반 '+activeCompass.id+', 도선과 거리 '+(distance*10).toFixed(1)+' 센티미터, 실험판 기준');
+  value.textContent=(distance*10).toFixed(1)+' cm';
+  const base=mode==='wire'?'현재 방향을 유지하며 직선 도선에 가까이·멀리 옮깁니다.':mode==='loop'?'도선이 실험판을 지나는 가까운 자리에서 나침반 중심까지의 거리입니다.':'실험판의 가까운 도선 묶음에서 나침반 중심까지의 거리입니다.';
+  help.textContent=base+(track.innerLimited?' 안쪽에서는 중심까지만 조절됩니다. 더 멀리 두려면 바깥쪽으로 드래그하세요.':' 선택한 나침반만 움직입니다.');
+}
+function setCompassDistance(cm){
+  const track=compassDistanceTrack();if(!track||!Number.isFinite(cm))return;
+  const distance=THREE.MathUtils.clamp(cm/10,track.min,track.max);
+  const p=track.anchor.clone().addScaledVector(track.direction,distance);
+  track.last.copy(p);setPlacing(false);placeCompass(p);
+  $('compass-status').textContent='나침반 '+activeCompass.id+' · 도선과 '+$('compass-distance-value').textContent+' (실험판 기준)';
+  draw();
+}
+$('compass-distance').addEventListener('input',e=>setCompassDistance(Number(e.target.value)));
+
 function setCurrent(v){
   if(!Number.isFinite(v))return;
   currentAmps=Math.max(0,Math.min(5,v));syncControls();applyFieldVisibility();updateReadouts();
@@ -1212,7 +1307,7 @@ function render(){
 /* 시작 */
 syncCompassList();placePoleLabels(); orientWireCones(); setMode('wire');placeSensor(sensor.position.clone());
 resize(); requestAnimationFrame(render);
-window.__rh3d = {CHECK, FL, CUR, MODEL, fieldAt, setMode, get compass(){return activeCompass&&activeCompass.group;},get needle(){return activeCompass&&activeCompass.needle;},compasses,addCompass,removeCompass,selectCompass,sensor,placeSensor, cam, ctl, step, draw,
+window.__rh3d = {CHECK, FL, CUR, MODEL, fieldAt, setMode, compassDistanceTrack,setCompassDistance,get compass(){return activeCompass&&activeCompass.group;},get needle(){return activeCompass&&activeCompass.needle;},compasses,addCompass,removeCompass,selectCompass,sensor,placeSensor, cam, ctl, step, draw,
   get mode(){ return mode; }, get dirSign(){ return dirSign; }, get showField(){ return showField; }, fieldIn, measureAt, fluxValue, placeCompass, setCurrent, setTurns, setFieldView, applyFieldVisibility, get currentAmps(){return currentAmps;},get turns(){return COIL_N;},get fieldView(){return fieldView;},axisArrow,wireRings,renderer};
 setTimeout(()=>{ ensureLines('loop'); applyFieldVisibility(); }, 60);   /* 첫 화면을 띄운 뒤 원형 도선·코일 자기력선을 나누어 미리 계산 */
 setTimeout(()=>{
@@ -1270,7 +1365,7 @@ setTimeout(()=>{
   });
   exitButton.addEventListener('click',exitFullscreen);
   document.addEventListener('fullscreenchange',()=>{setActive(document.fullscreenElement===lab);});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&fallback){e.preventDefault();exitFullscreen();}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&fallback&&!document.querySelector('dialog[open]')){e.preventDefault();exitFullscreen();}});
 })();
 
 </script>
@@ -1327,6 +1422,33 @@ setTimeout(()=>{
     });
     h.insertAdjacentElement('afterend', card);
   });
+})();
+</script>
+
+<script id="rh-onboarding-script">
+(function(){
+  'use strict';
+  const dialog=document.getElementById('rh-welcome'),openButton=document.getElementById('rh-help-open'),hide=document.getElementById('rh-welcome-hide');
+  if(!dialog||!openButton||typeof dialog.showModal!=='function')return;
+  const preference='rh3d.hide-instructions.v1';let returnFocus=openButton,previousOverflow='';
+  function isHidden(){try{return localStorage.getItem(preference)==='1';}catch(error){return false;}}
+  function savePreference(){try{if(hide.checked)localStorage.setItem(preference,'1');else localStorage.removeItem(preference);}catch(error){/* 사용법은 저장 권한과 무관하게 이용할 수 있다. */}}
+  function open(){
+    if(dialog.open)return;
+    returnFocus=document.activeElement&&document.activeElement!==document.body?document.activeElement:openButton;
+    hide.checked=isHidden();previousOverflow=document.body.style.overflow;
+    dialog.showModal();document.body.style.overflow='hidden';
+    dialog.querySelector('.rh-welcome-body').scrollTop=0;
+    document.getElementById('rh-welcome-close').focus({preventScroll:true});
+  }
+  function close(){if(!dialog.open)return;savePreference();dialog.close();}
+  openButton.addEventListener('click',open);
+  document.getElementById('rh-welcome-close').addEventListener('click',close);
+  document.getElementById('rh-welcome-start').addEventListener('click',close);
+  hide.addEventListener('change',savePreference);
+  dialog.addEventListener('cancel',event=>{event.preventDefault();close();});
+  dialog.addEventListener('close',()=>{document.body.style.overflow=previousOverflow;const target=returnFocus&&returnFocus.isConnected?returnFocus:openButton;target.focus({preventScroll:true});});
+  if(!isHidden())setTimeout(open,0);
 })();
 </script>
 </body>
