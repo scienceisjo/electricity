@@ -2174,6 +2174,169 @@ try{
 })();
 
 }catch(e){console.error("[object 91_recap.js]",e)}
+/* ── 90_laser.js ── */
+try{
+/* Lecture laser pointer v1 — canonical: 전기강의_빌드/objects/90_laser.js
+ * 소비전력강의_빌드/objects/90_laser.js is the identical build copy.
+ * Page-level UI: its RAF exists only while trails fade, independently of scene Ctx.
+ */
+(function () {
+  'use strict';
+  function mount() {
+    if (window.LectureLaser || !window.Deck || !document.getElementById('hud')) return;
+    var hud = document.getElementById('hud');
+    var canvas = document.createElement('canvas');
+    canvas.id = 'lecture-laser';
+    canvas.setAttribute('aria-hidden', 'true');
+    canvas.hidden = true;
+    var style = document.createElement('style');
+    style.textContent = '#lecture-laser{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:49;touch-action:none;cursor:none;user-select:none;-webkit-user-select:none;}#lecture-laser[hidden]{display:none!important}#hud #lecture-laser-toggle[aria-pressed="true"]{background:#c82044;color:#fff;outline:2px solid #fff;outline-offset:2px}@media print{#lecture-laser,#lecture-laser-toggle{display:none!important}}';
+    document.head.appendChild(style);
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+    if (!ctx) { canvas.remove(); style.remove(); return; }
+    var button = document.createElement('button');
+    button.id = 'lecture-laser-toggle';
+    button.type = 'button';
+    button.setAttribute('aria-label', '레이저 포인터 켜기/끄기 (L)');
+    button.setAttribute('aria-keyshortcuts', 'L');
+    button.setAttribute('aria-pressed', 'false');
+    button.title = '레이저 포인터 (L) · 드래그로 궤적 · Esc로 끄기';
+    button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 19 7-7 3 3-7 7zM14 10l2-2M17 12h4M12 7V3M17 7l3-3"/><circle cx="13" cy="11" r="1.5" fill="currentColor"/></svg>';
+    hud.insertBefore(button, hud.querySelector('[data-a="full"]'));
+    var table = document.querySelector('#help table');
+    if (table) {
+      var row = table.insertRow();
+      row.innerHTML = '<td><kbd>L</kbd> / <kbd>Esc</kbd></td><td>레이저 켜기·끄기 / 끄기 · 드래그하면 궤적 · 방향키로 진행</td>';
+    }
+
+    var enabled = false, pointer = null, activeId = null;
+    var points = [], strokeId = 0, raf = 0, dpr = 1;
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var lifetime = 1100, maxPoints = 800;
+    function stopFrame() { if (raf) cancelAnimationFrame(raf); raf = 0; }
+    function render(now) {
+      raf = 0;
+      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+      if (!enabled) return;
+      points = points.filter(function (p) { return now - p.t < lifetime; });
+      ctx.lineCap = ctx.lineJoin = 'round';
+      for (var i = 1; i < points.length; i++) {
+        var a = points[i - 1], b = points[i];
+        if (a.s !== b.s) continue;
+        var opacity = reduced.matches ? 1 : Math.max(0, 1 - (now - a.t) / lifetime);
+        ctx.globalAlpha = opacity;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+        ctx.lineWidth = 9; ctx.strokeStyle = 'rgba(180,0,38,.20)'; ctx.stroke();
+        ctx.lineWidth = 4.5; ctx.strokeStyle = '#f52651'; ctx.stroke();
+        ctx.lineWidth = 1.2; ctx.strokeStyle = '#fff1f4'; ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      if (pointer) {
+        var glow = ctx.createRadialGradient(pointer.x,pointer.y,2,pointer.x,pointer.y,18);
+        glow.addColorStop(0,'rgba(255,35,77,.7)'); glow.addColorStop(1,'rgba(255,35,77,0)');
+        ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(pointer.x,pointer.y,18,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#eb1243'; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.8;
+        ctx.beginPath(); ctx.arc(pointer.x,pointer.y,6,0,Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(pointer.x,pointer.y,1.8,0,Math.PI*2); ctx.fill();
+      }
+      if (points.length) raf = requestAnimationFrame(render);
+    }
+    function paint() { if (!raf) raf = requestAnimationFrame(render); }
+    function release() {
+      if (activeId !== null && canvas.hasPointerCapture(activeId)) canvas.releasePointerCapture(activeId);
+      activeId = null;
+    }
+    function clear() {
+      release(); pointer = null; points = []; stopFrame();
+      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    }
+    function resize() {
+      clear();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.style.width = window.innerWidth + 'px'; canvas.style.height = window.innerHeight + 'px';
+      canvas.width = Math.round(window.innerWidth * dpr); canvas.height = Math.round(window.innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function toggle(value) {
+      enabled = typeof value === 'boolean' ? value : !enabled;
+      clear(); canvas.hidden = !enabled; button.setAttribute('aria-pressed', String(enabled));
+      if (enabled) resize();
+    }
+    function position(e) { return { x:e.clientX, y:e.clientY }; }
+    function sample(e) {
+      pointer = position(e);
+      if (activeId !== null) {
+        var last = points[points.length - 1];
+        if (!last || last.s !== strokeId || Math.hypot(last.x-pointer.x,last.y-pointer.y) >= 2) {
+          points.push({x:pointer.x,y:pointer.y,t:performance.now(),s:strokeId});
+          if (points.length > maxPoints) points.splice(0,points.length-maxPoints);
+        }
+      }
+      paint();
+    }
+    button.addEventListener('click', function (e) { e.stopPropagation(); toggle(); button.blur(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.isComposing || (e.target.closest && e.target.closest('input,textarea,select,[contenteditable]'))) return;
+      if (e.key.toLowerCase() === 'l') {
+        if (!e.repeat) toggle();
+        e.preventDefault(); e.stopImmediatePropagation();
+      } else if (e.key === 'Escape' && enabled) {
+        toggle(false); e.preventDefault(); e.stopImmediatePropagation();
+      } else if (enabled) {
+        // Arrows, replay, overview, blanking and jumps clear old marks but retain laser mode.
+        clear();
+      }
+    }, true);
+    canvas.addEventListener('pointerdown', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      if (!enabled || activeId !== null || e.button !== 0 || !e.isPrimary) return;
+      activeId = e.pointerId; strokeId++;
+      canvas.setPointerCapture(e.pointerId); sample(e);
+    });
+    canvas.addEventListener('pointermove', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      if (!enabled || !e.isPrimary || (activeId !== null && e.pointerId !== activeId)) return;
+      sample(e);
+    });
+    function end(e) {
+      e.preventDefault(); e.stopPropagation();
+      if (e.pointerId !== activeId) return;
+      release();
+      if (e.pointerType !== 'mouse') pointer = null;
+      if (reduced.matches) points = [];
+      paint();
+    }
+    canvas.addEventListener('pointerup', end);
+    canvas.addEventListener('pointercancel', function (e) { if (e.pointerId === activeId) clear(); });
+    canvas.addEventListener('lostpointercapture', function () { activeId = null; if (reduced.matches) points = []; paint(); });
+    canvas.addEventListener('pointerleave', function () { if (activeId === null) { pointer = null; paint(); } });
+    canvas.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); });
+    canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); e.stopPropagation(); });
+    // Avoid a constantly visible toolbar in recordings; the lower edge still reveals it.
+    canvas.addEventListener('mousemove', function (e) { if (e.clientY < window.innerHeight - 90) e.stopPropagation(); });
+    hud.addEventListener('click', clear, true);
+    new MutationObserver(function () { if (enabled) clear(); }).observe(document.getElementById('count'), {childList:true,subtree:true,characterData:true});
+    new MutationObserver(function () { if (enabled) clear(); }).observe(document.getElementById('stepdots'), {childList:true});
+    window.addEventListener('resize', resize);
+    document.addEventListener('fullscreenchange', resize);
+    window.addEventListener('blur', clear);
+    document.addEventListener('visibilitychange', function () { if (document.hidden) clear(); });
+    window.addEventListener('pagehide', clear);
+    reduced.addEventListener('change', clear);
+    resize();
+    window.LectureLaser = Object.freeze({
+      setEnabled: toggle, clear: clear,
+      get enabled() { return enabled; },
+      get drawing() { return activeId !== null; },
+      get trailPoints() { return points.length; }
+    });
+  }
+  // The engine boots in its DOMContentLoaded timer, so queue ours immediately after it.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(mount,0); });
+  else setTimeout(mount,0);
+})();
+}catch(e){console.error("[object 90_laser.js]",e)}
 /* ── e5.js ── */
 try{
 /* ═══════════════════════════════════════════════════════════════
