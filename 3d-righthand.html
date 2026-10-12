@@ -107,6 +107,15 @@ input[type=range]{width:100%;height:24px;margin:0;accent-color:var(--accent);cur
 .switch-row input:before{content:"";position:absolute;width:17px;height:17px;left:2px;top:2px;border-radius:50%;background:#fff;transition:transform .15s}
 .switch-row input:checked{background:var(--accent)}
 .switch-row input:checked:before{transform:translateX(13px)}
+.info-button{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid #b7c7d9;border-radius:50%;background:transparent;color:var(--accent);font-size:15px;font-weight:600;vertical-align:middle;margin-left:5px;flex:none}
+.scope-note{font-size:12px;line-height:1.6;background:#eaf2fa;border-radius:8px;padding:9px 11px;margin:8px 0;color:#31516f;word-break:keep-all}
+.scope-note[hidden]{display:none}
+.instrument-select{width:100%;min-height:42px;border:1px solid var(--line);border-radius:8px;background:var(--canvas);color:var(--ink);font:inherit;font-size:13px;padding:7px 9px}
+.instrument-actions{display:flex;gap:7px;margin-bottom:9px}.instrument-actions .btn{flex:1;padding:9px 7px}
+.sensor-position{margin-top:13px;border-top:1px solid var(--line);padding-top:10px}.sensor-position>summary{cursor:pointer;font-size:12px;color:var(--accent);padding:5px 0}
+.sensor-coords{grid-template-columns:1fr 1fr}.sensor-coords .coord-field:last-child{grid-column:1/-1}
+.drag-plane{display:flex;align-items:center;gap:8px;margin-top:10px}.drag-plane label{font-size:11px;white-space:nowrap}.drag-plane select{flex:1;min-width:0;min-height:38px;font-size:12px}
+#compass-status{min-height:1.6em}.btn:disabled{opacity:.45;cursor:not-allowed}
 .coords{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
 .coord-field{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;min-width:0;height:41px}
 .coord-field label{font-size:12px;font-weight:600;color:var(--ink-dim)}
@@ -238,9 +247,9 @@ html.large-ui{zoom:1.35}
   <div class="scene-column">
    <section class="stage-card" aria-label="자기장 3D 실험">
     <div class="stage-head"><h2 id="stage-title">직선 도선에 전류가 흐르면?</h2><span class="stage-badge">3D 실험</span></div>
-    <div class="stage" id="stage" aria-label="드래그로 시점을 회전하거나 나침반을 옮기는 3D 실험판">
+    <div class="stage" id="stage" aria-label="드래그로 시점을 회전하거나 나침반과 센서를 옮기는 3D 실험판">
      <div class="legend"><span><i class="cur"></i>전류</span><span><i class="fld"></i>자기장</span><span><i class="needle-dot"></i>바늘의 N극</span></div>
-     <p class="stage-gesture">빈 곳 드래그: 회전 · 나침반 드래그: 이동</p>
+     <p class="stage-gesture">빈 곳: 시점 회전 · 나침반·센서: 드래그 이동</p>
      <div class="view-tools" aria-label="화면 조작">
       <button type="button" class="btn" id="home-view" title="처음 시점으로 돌아가기">기본 시점</button>
       <button type="button" class="btn" id="top-view" title="실험판을 위에서 보기">위에서 보기</button>
@@ -257,13 +266,26 @@ html.large-ui{zoom:1.35}
 
   <aside class="control-panel" aria-label="실험 제어판">
    <section class="control-section sensor-section" aria-labelledby="sensor-title">
-    <div class="section-title"><h3 id="sensor-title">자기장 센서</h3><span class="section-kicker">나침반 위치에서 측정</span></div>
-    <div class="sensor-label">자기장의 세기 |B|</div>
+    <div class="section-title"><h3 id="sensor-title">자기장 센서</h3><span class="section-kicker">초록 탐침 끝에서 측정</span></div>
+    <div class="sensor-label">자기장의 세기 |B| <button type="button" class="info-button" aria-label="자기장 세기 성취기준 안내" aria-expanded="false" aria-controls="strength-scope">!</button></div>
+    <p class="scope-note" id="strength-scope" hidden>자기장 세기의 정량적인 수치는 성취기준 밖입니다.</p>
     <div class="sensor-reading"><output id="sensor-value" aria-label="자기장 세기">0.000</output><span class="sensor-unit">µT</span></div>
     <p id="sensor-components">Bx 0.000 · By 0.000 · Bz 0.000 µT</p>
     <div class="meter" id="meter"><span class="bars" id="meter-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span>상대적인 세기</span></div>
     <p id="sensor-status">전류에 의한 자기장의 계산값입니다.</p>
     <p class="help-text">지구 자기장 제외 · 실제 센서 연결값 아님</p>
+    <div class="drag-plane"><label for="sensor-plane">센서 드래그</label><select id="sensor-plane" class="instrument-select" aria-label="센서 이동 평면"><option value="xz">수평면 xz</option><option value="xy">세로면 xy</option><option value="yz">세로면 yz</option></select></div>
+    <p class="help-text" id="sensor-drag-help">파란 센서를 드래그하면 높이 y를 유지하며 움직입니다.</p>
+    <details class="sensor-position"><summary>센서 좌표·높이 조절</summary>
+     <div class="coords sensor-coords">
+      <div class="coord-field"><label for="sensor-x">x</label><input id="sensor-x" type="number" min="-100" max="100" step="0.1" inputmode="decimal" aria-label="센서 x 좌표"><span>cm</span></div>
+      <div class="coord-field"><label for="sensor-y">y</label><input id="sensor-y" type="number" min="-40" max="80" step="0.1" inputmode="decimal" aria-label="센서 y 높이"><span>cm</span></div>
+      <div class="coord-field"><label for="sensor-z">z</label><input id="sensor-z" type="number" min="-60" max="60" step="0.1" inputmode="decimal" aria-label="센서 z 좌표"><span>cm</span></div>
+     </div>
+     <div class="position-actions"><button type="button" class="btn full" id="sensor-apply">센서 옮기기</button></div>
+     <div class="preset-row"><button type="button" class="btn" id="sensor-at-compass">선택한 나침반 위치</button><button type="button" class="btn" id="sensor-at-center">중심축 부근</button></div>
+     <p class="help-text">좌표는 초록 탐침 끝의 위치입니다. y = 0은 실험판 높이이며, 음수는 실험판 아래입니다.</p>
+    </details>
    </section>
 
    <section class="control-section" aria-labelledby="current-title">
@@ -274,7 +296,8 @@ html.large-ui{zoom:1.35}
      <div class="range-ends"><span>0 A</span><span>5 A</span></div>
     </div>
     <div class="range-group" id="turns-control" hidden>
-     <div class="control-row"><label for="turns-range">코일의 감은 수</label><span class="control-value"><output id="turns-value" for="turns-range">10</output><small>회</small></span></div>
+     <div class="control-row"><span><label for="turns-range">코일의 감은 수</label><button type="button" class="info-button" aria-label="코일 감은 수 시험 범위 안내" aria-expanded="false" aria-controls="turns-scope">!</button></span><span class="control-value"><output id="turns-value" for="turns-range">10</output><small>회</small></span></div>
+     <p class="scope-note" id="turns-scope" hidden>코일 감은 수에 따른 변화는 중학교 시험 범위 밖입니다.</p>
      <input id="turns-range" type="range" min="2" max="20" step="1" value="10" aria-label="코일의 감은 수">
      <div class="range-ends"><span>2회</span><span>20회</span></div>
      <p class="help-text">코일의 길이와 반지름은 일정합니다.</p>
@@ -295,6 +318,9 @@ html.large-ui{zoom:1.35}
 
    <section class="control-section" aria-labelledby="compass-title">
     <div class="section-title"><h3 id="compass-title">나침반 놓기</h3><span class="section-kicker">실험판 좌표</span></div>
+    <div class="instrument-actions"><button type="button" class="btn" id="compass-add">＋ 나침반 추가</button><button type="button" class="btn" id="compass-remove">선택한 것 삭제</button></div>
+    <select class="instrument-select" id="compass-select" aria-label="움직일 나침반 선택"></select>
+    <p class="help-text" id="compass-status" role="status">나침반 1을 선택했습니다.</p>
     <button type="button" class="btn primary full" id="place-btn" aria-pressed="false">실험판에서 위치 찍기</button>
     <div class="coords">
      <div class="coord-field"><label for="compass-x">x</label><input id="compass-x" type="number" min="-100" max="100" step="0.1" value="26" inputmode="decimal" aria-label="나침반 x 좌표"><span>cm</span></div>
@@ -302,7 +328,7 @@ html.large-ui{zoom:1.35}
     </div>
     <div class="position-actions"><button type="button" class="btn full" id="coords-apply">이 좌표에 놓기</button></div>
     <div class="preset-row" role="group" aria-label="자주 쓰는 나침반 위치"><button type="button" class="btn" data-position="center">중심 부근</button><button type="button" class="btn" data-position="near">도선 가까이</button><button type="button" class="btn" data-position="outside">바깥쪽</button></div>
-    <p class="help-text">실제 수평 나침반처럼 수평 자기장에 반응합니다. 도선과 겹치면 가까운 안전한 위치로 옮깁니다.</p>
+    <p class="help-text">번호나 나침반을 눌러 선택합니다. 각각 수평 자기장에 반응하며, 도선과 겹치면 가까운 안전한 위치로 옮깁니다.</p>
    </section>
 
    <section class="control-section" aria-labelledby="flux-title">
@@ -322,7 +348,7 @@ html.large-ui{zoom:1.35}
    <div class="note" data-m="coil"><span class="k">코일</span>오른손 <b>네 손가락을 전류의 방향</b>으로 감아쥐면 <b>엄지손가락</b>이 코일 안 자기장의 방향, 곧 <b>N극 쪽</b>을 가리킵니다. 전류의 방향을 바꾸면 N극과 S극도 바뀝니다.<span class="see">전류와 코일의 크기가 같을 때 감은 수를 늘리면 중심의 자기장이 세집니다.</span></div>
   </div>
   <div class="note myth"><span class="k">자기력선의 밀도와 자기선속은 어떻게 다를까요?</span><b>자기력선을 더 조밀하게 그려 더 센 자기장을 표현할 수 있습니다.</b> 다만 자기력선은 실제로 존재하는 실이 아니라 방향과 세기를 나타내는 그림입니다. 움직이는 화살표는 방향을 보여 주며, 자기장이 물질처럼 흘러간다는 뜻은 아닙니다. 이 화면의 선 개수는 세기 비교를 돕는 단계적 표현이며, 정확한 세기는 센서의 계산값으로 비교하세요. <b>자기선속은 정해진 면을 통과하는 자기장에 관한 값</b>이므로 면의 넓이와 방향이 정해져야 합니다. 세기가 같아도 면을 기울이면 자기선속은 달라집니다.</div>
-  <p class="calc-note">계산 조건: 직선 도선은 무한히 긴 가는 도선으로 근사합니다. 원형 도선의 반지름은 28 cm이며, 코일은 반지름 15.5 cm·길이 56 cm인 공심 코일을 여러 원형 도선의 합으로 근사합니다. 지구 자기장·철심·연결 도선의 영향은 제외합니다. 나침반 바늘은 도선 중심축 높이에서 수평으로 움직입니다. 센서는 자기장 전체의 크기 |B|를 표시하고, 수평 나침반은 그중 수평 성분의 방향에 반응합니다. 전류가 0 A이거나 수평 성분이 거의 0인 곳에서는 나침반이 가리킬 방향을 정할 수 없습니다.</p>
+  <p class="calc-note">계산 조건: 직선 도선은 무한히 긴 가는 도선으로 근사합니다. 원형 도선의 반지름은 28 cm이며, 코일은 반지름 15.5 cm·길이 56 cm인 공심 코일을 여러 원형 도선의 합으로 근사합니다. 지구 자기장·철심·연결 도선의 영향은 제외합니다. 나침반 바늘은 도선 중심축 높이에서 수평으로 움직입니다. 센서는 나침반과 독립적으로 움직이며 초록 탐침 끝에서 자기장 전체의 크기 |B|를 표시하고, 수평 나침반은 그중 수평 성분의 방향에 반응합니다. 전류가 0 A이거나 수평 성분이 거의 0인 곳에서는 나침반이 가리킬 방향을 정할 수 없습니다.</p>
   <p class="calc-note">자기선속 측정면: 직선 도선에서는 중심 (x = 26 cm, z = 0)에 놓인 반지름 6 cm의 xy 원판(면의 양의 방향 +z), 원형 도선과 코일에서는 중심에 놓인 반지름 7 cm의 yz 원판(면의 양의 방향 +x)을 사용합니다. 자기선속의 부호는 이 면의 방향을 기준으로 합니다.</p>
  </details>
  <div style="display:flex;justify-content:flex-end;margin-top:16px"><button type="button" class="btn" id="zoom-btn" aria-pressed="false">화면 크게 보기</button></div>
@@ -724,24 +750,37 @@ function ensureLines(m){
   return FL[m];
 }
 
-/* ══ 나침반 ══ */
-const compass = new THREE.Group(); scene.add(compass);
-const base = new THREE.Mesh(new THREE.CylinderGeometry(.75,.85,.3,24),
-  new THREE.MeshStandardMaterial({color:0xffffff, roughness:.4}));
-base.position.y = .15; compass.add(base);
-const rim = new THREE.Mesh(new THREE.TorusGeometry(.78,.08,8,28),
-  new THREE.MeshStandardMaterial({color:0x8e969e, roughness:.5}));
-rim.rotation.x = Math.PI/2; rim.position.y = .3; compass.add(rim);
-const needle = new THREE.Group(); needle.position.y = AXIS_Y; compass.add(needle);
-const nCone = new THREE.Mesh(new THREE.ConeGeometry(.13,.62,10),
-  new THREE.MeshStandardMaterial({color:0xb23a30}));
-nCone.rotation.z = -Math.PI/2; nCone.position.x = .31; needle.add(nCone);
-const sCone = new THREE.Mesh(new THREE.ConeGeometry(.13,.62,10),
-  new THREE.MeshStandardMaterial({color:0x2e5f8f}));
-sCone.rotation.z = Math.PI/2; sCone.position.x = -.31; needle.add(sCone);
-compass.position.set(2.6, 0, 2.2);
-/* 바늘은 수평으로만 돈다: N극 끝(+x 쪽 원뿔)이 자기장의 수평 성분을 향하는 각 */
-function needleTarget(B){ return (B.x*B.x + B.z*B.z) > 1e-12 ? Math.atan2(-B.z, B.x) : null; }
+/* ══ 각각 선택·이동할 수 있는 나침반 ══ */
+const compasses=[];let activeCompass=null,nextCompassId=1;
+function makeCompass(p){
+  const id=nextCompassId++,group=new THREE.Group();scene.add(group);
+  const base=new THREE.Mesh(new THREE.CylinderGeometry(.75,.85,.3,24),new THREE.MeshStandardMaterial({color:0xffffff,roughness:.4}));base.position.y=.15;group.add(base);
+  const rim=new THREE.Mesh(new THREE.TorusGeometry(.78,.08,8,28),new THREE.MeshStandardMaterial({color:0x8e969e,roughness:.5}));rim.rotation.x=Math.PI/2;rim.position.y=.3;group.add(rim);
+  const halo=new THREE.Mesh(new THREE.TorusGeometry(.92,.035,8,32),new THREE.MeshBasicMaterial({color:0x0066cc}));halo.rotation.x=Math.PI/2;halo.position.y=.12;group.add(halo);
+  const needle=new THREE.Group();needle.position.y=AXIS_Y;group.add(needle);
+  const nCone=new THREE.Mesh(new THREE.ConeGeometry(.13,.62,10),new THREE.MeshStandardMaterial({color:0xb23a30}));nCone.rotation.z=-Math.PI/2;nCone.position.x=.31;needle.add(nCone);
+  const sCone=new THREE.Mesh(new THREE.ConeGeometry(.13,.62,10),new THREE.MeshStandardMaterial({color:0x2e5f8f}));sCone.rotation.z=Math.PI/2;sCone.position.x=-.31;needle.add(sCone);
+  const label=textSprite(String(id),'#0066cc',.54);label.position.set(.78,.65,.5);group.add(label);
+  group.position.copy(p);const item={id,group,needle,halo,angle:0};group.userData.compassId=id;compasses.push(item);return item;
+}
+activeCompass=makeCompass(new THREE.Vector3(2.6,0,2.2));
+/* 바늘은 수평으로만 돈다: N극 끝(+x)이 자기장의 수평 성분을 향한다. */
+function needleTarget(B){return (B.x*B.x+B.z*B.z)>1e-12?Math.atan2(-B.z,B.x):null;}
+
+/* ══ 독립적인 3차원 자기장 센서: group 원점이 초록 탐침 끝 ══ */
+const sensor=new THREE.Group();scene.add(sensor);sensor.position.set(-2.8,AXIS_Y,2.1);
+const sensorTip=new THREE.Mesh(new THREE.SphereGeometry(.13,16,12),new THREE.MeshStandardMaterial({color:0x2c6e5f,emissive:0x12382f}));sensor.add(sensorTip);
+const sensorStem=new THREE.Mesh(new THREE.CylinderGeometry(.055,.055,.62,12),new THREE.MeshStandardMaterial({color:0x8594a3,metalness:.6,roughness:.3}));sensorStem.position.y=.38;sensor.add(sensorStem);
+const sensorBody=new THREE.Mesh(new THREE.BoxGeometry(.57,.85,.35),new THREE.MeshStandardMaterial({color:0x0066cc,roughness:.35}));sensorBody.position.y=1.07;sensor.add(sensorBody);
+const sensorScreen=new THREE.Mesh(new THREE.BoxGeometry(.39,.27,.025),new THREE.MeshBasicMaterial({color:0xe8f5f0}));sensorScreen.position.set(0,1.2,.187);sensor.add(sensorScreen);
+const sensorLabel=textSprite('B','#0066cc',.55);sensorLabel.position.set(0,1.78,0);sensor.add(sensorLabel);
+const sensorGuide=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineDashedMaterial({color:0x6c98c4,dashSize:.12,gapSize:.1,transparent:true,opacity:.7}));scene.add(sensorGuide);
+function constrainSensor(p){p.x=THREE.MathUtils.clamp(p.x,-10,10);p.y=THREE.MathUtils.clamp(p.y,-4,8);p.z=THREE.MathUtils.clamp(p.z,-6,6);}
+function sensorNearWire(p){
+  if(mode==='wire')return Math.hypot(p.x,p.z)<.17;
+  const model=MODEL[mode],rho=Math.hypot(p.y-AXIS_Y,p.z);
+  return model.wires.some(([x,r])=>Math.hypot(p.x-x,rho-r)<.17);
+}
 
 /* 나침반이 도선과 겹치지 않게 밀어내기 */
 function pushFromPoint(p, x0, z0, d){
@@ -765,16 +804,22 @@ function constrainCompass(p){
   p.y = 0;
 }
 (function(){
-  const ray=new THREE.Raycaster(),v2=new THREE.Vector2(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
-  let drag=false;
-  function hit(e){const r=renderer.domElement.getBoundingClientRect();v2.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(v2,cam);return ray.ray.intersectPlane(plane,new THREE.Vector3());}
+  const ray=new THREE.Raycaster(),v2=new THREE.Vector2(),plane=new THREE.Plane(),offset=new THREE.Vector3();
+  let drag=null;
+  function cast(e){const r=renderer.domElement.getBoundingClientRect();v2.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(v2,cam);}
+  function setPlane(kind,p){const normal=kind==='xy'?new THREE.Vector3(0,0,1):kind==='yz'?new THREE.Vector3(1,0,0):new THREE.Vector3(0,1,0);plane.setFromNormalAndCoplanarPoint(normal,p);}
   renderer.domElement.addEventListener('pointerdown',e=>{
-    const p=hit(e);
-    if(placing){e.stopImmediatePropagation();if(p)placeCompass(p);setPlacing(false);return;}
-    if(ray.intersectObject(compass,true).length){drag=true;ctl.enabled=false;renderer.domElement.setPointerCapture(e.pointerId);e.stopImmediatePropagation();}
+    if(e.button!==0)return;cast(e);
+    if(placing){setPlane('xz',new THREE.Vector3());const p=ray.ray.intersectPlane(plane,new THREE.Vector3());e.stopImmediatePropagation();if(p)placeCompass(p);setPlacing(false);return;}
+    const hits=ray.intersectObjects([sensor,...compasses.map(c=>c.group)],true);if(!hits.length)return;
+    let object=hits[0].object;while(object.parent&&object!==sensor&&!object.userData.compassId)object=object.parent;
+    if(object===sensor){drag={kind:'sensor',object:sensor};setPlane(document.getElementById('sensor-plane').value,sensor.position);}
+    else {const item=compasses.find(c=>c.id===object.userData.compassId);if(!item)return;selectCompass(item.id);drag={kind:'compass',object:item.group};setPlane('xz',item.group.position);}
+    const p=ray.ray.intersectPlane(plane,new THREE.Vector3());if(!p){drag=null;return;}
+    offset.copy(drag.object.position).sub(p);ctl.enabled=false;renderer.domElement.setPointerCapture(e.pointerId);renderer.domElement.style.cursor='grabbing';e.stopImmediatePropagation();
   },true);
-  renderer.domElement.addEventListener('pointermove',e=>{if(drag){const p=hit(e);if(p)placeCompass(p);}});
-  function end(){drag=false;ctl.enabled=!placing;}
+  renderer.domElement.addEventListener('pointermove',e=>{if(!drag)return;cast(e);const p=ray.ray.intersectPlane(plane,new THREE.Vector3());if(p){p.add(offset);if(drag.kind==='sensor')placeSensor(p);else placeCompass(p);}});
+  function end(){drag=null;ctl.enabled=!placing;renderer.domElement.style.cursor=placing?'crosshair':'grab';}
   renderer.domElement.addEventListener('pointerup',end);renderer.domElement.addEventListener('pointercancel',end);renderer.domElement.addEventListener('lostpointercapture',end);
 })();
 
@@ -937,7 +982,7 @@ function applyFieldVisibility(){
   axisArrow.visible=on&&mode!=='wire'&&fieldView==='axis';
   axisArrow.position.set(-dirSign*(mode==='coil'?3.8:2.6),AXIS_Y,0);axisArrow.setDirection(new THREE.Vector3(dirSign,0,0));axisArrow.setLength(mode==='coil'?7.6:5.2,.8,.42);const shaftLength=(mode==='coil'?7.6:5.2)-.65;axisShaft.scale.y=shaftLength;axisShaft.position.y=shaftLength/2;
   Object.values(CUR).forEach(c=>c.cones.forEach(o=>o.visible=currentAmps>0));
-  needle.visible=currentAmps>0;
+  compasses.forEach(c=>c.needle.visible=currentAmps>0);
   const count=densityEnabled?Math.max(1,Math.min(12,Math.ceil(12*(mode==='coil'?Math.sqrt(currentAmps/5*COIL_N/20):currentAmps/5)))):4;
   wireRings.children.forEach(g=>g.visible=g.userData.densityRank<count);
   Object.values(FL).forEach(f=>{if(f)f.group.children.forEach(g=>g.visible=g.userData.densityRank<count);});
@@ -955,7 +1000,7 @@ function setMode(m){
   document.getElementById('mode-tip').textContent = T.tip;
   document.querySelectorAll('.note[data-m]').forEach(n => n.classList.toggle('on', n.dataset.m === m));
   msg.innerHTML = showField ? T.msg : T.hide;
-  constrainCompass(compass.position);
+  compasses.forEach(c=>constrainCompass(c.group.position));
   applyFieldVisibility(); updateDirLabel(); refreshArrows(); syncControls(); updateReadouts();
 }
 document.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
@@ -1026,12 +1071,12 @@ function updateFlux(){
   $('flux-value').textContent=on?fluxValue().toFixed(2):'—';
 }
 function updateReadouts(){
-  const p=new THREE.Vector3(compass.position.x,AXIS_Y,compass.position.z),B=measureAt(p),v=B.length();
-  $('sensor-value').textContent=v.toFixed(2);
+  const p=sensor.position,B=measureAt(p),v=B.length(),near=sensorNearWire(p);
+  $('sensor-value').textContent=near?'—':v.toFixed(2);
   const f=n=>(Math.abs(n)<.005?0:n).toFixed(2);
-  $('sensor-components').textContent=`Bx ${f(B.x)} · By ${f(B.y)} · Bz ${f(B.z)} µT`;
-  $('sensor-status').textContent=currentAmps===0?'전류 0 A · 전류에 의한 자기장과 바늘 방향 없음':'계산값 · 빨간 N극은 수평 자기장 방향';
-  const n=v>0?Math.max(1,Math.min(5,Math.ceil(Math.log2(1+v)))):0;
+  $('sensor-components').textContent=near?'도선에서 탐침을 조금 떨어뜨려 주세요.':`Bx ${f(B.x)} · By ${f(B.y)} · Bz ${f(B.z)} µT`;
+  $('sensor-status').textContent=near?'도선 바로 위에서는 가는 도선 근사로 측정할 수 없습니다.':currentAmps===0?'전류 0 A · 전류에 의한 자기장과 바늘 방향 없음':'초록 탐침 끝의 계산값 · 나침반 위치와 독립';
+  const n=!near&&v>0?Math.max(1,Math.min(5,Math.ceil(Math.log2(1+v)))):0;
   document.querySelectorAll('#meter-bars i').forEach((b,i)=>b.classList.toggle('on',i<n));
   updateFlux();
 }
@@ -1041,7 +1086,8 @@ function syncControls(){
   $('turns-control').hidden=mode!=='coil';$('axis-view').disabled=mode==='wire';
   document.querySelectorAll('[data-view]').forEach(b=>{const on=b.dataset.view===fieldView;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
   document.querySelectorAll('.mode-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));
-  $('compass-x').value=(compass.position.x*10).toFixed(1);$('compass-z').value=(compass.position.z*10).toFixed(1);
+  if(activeCompass){$('compass-x').value=(activeCompass.group.position.x*10).toFixed(1);$('compass-z').value=(activeCompass.group.position.z*10).toFixed(1);}
+  ['x','y','z'].forEach(axis=>$('sensor-'+axis).value=(sensor.position[axis]*10).toFixed(1));
   $('pause-btn').textContent=paused?'애니메이션 재생':'애니메이션 멈춤';$('pause-btn').setAttribute('aria-pressed',paused);
 }
 function setCurrent(v){
@@ -1062,10 +1108,52 @@ function setFieldView(v){
   fieldView=mode==='wire'?'all':v==='axis'?'axis':'all';applyFieldVisibility();syncControls();
 }
 function setPlacing(v){placing=v;ctl.enabled=!v;renderer.domElement.style.cursor=v?'crosshair':'grab';$('place-btn').setAttribute('aria-pressed',v);$('place-btn').textContent=v?'실험판에서 위치를 눌러주세요':'위치 찍기';}
-function placeCompass(p){
-  const requested=p.clone();constrainCompass(p);compass.position.copy(p);syncControls();updateReadouts();
-  if(Math.hypot(p.x-requested.x,p.z-requested.z)>.01)$('sensor-status').textContent='도선과 겹치지 않도록 가까운 안전 위치로 옮겼습니다.';
+function syncCompassList(){
+  const list=$('compass-select');list.replaceChildren();
+  compasses.forEach(c=>{const option=document.createElement('option');option.value=c.id;option.textContent='나침반 '+c.id;list.appendChild(option);c.halo.visible=c===activeCompass;});
+  if(activeCompass)list.value=activeCompass.id;list.disabled=!activeCompass;
+  ['compass-remove','place-btn','coords-apply','compass-x','compass-z','sensor-at-compass'].forEach(id=>$(id).disabled=!activeCompass);
+  document.querySelectorAll('[data-position]').forEach(b=>b.disabled=!activeCompass);
+  $('compass-status').textContent=activeCompass?'나침반 '+activeCompass.id+' 선택 · 모두 '+compasses.length+'개':'나침반을 추가해 주세요.';
 }
+function selectCompass(id){const item=compasses.find(c=>c.id===Number(id));if(!item)return;activeCompass=item;syncCompassList();syncControls();}
+function addCompass(){
+  let p=new THREE.Vector3(2.6,0,2.2),best=-1;
+  const candidates=[[-2.6,2.2],[-2.6,-2.2],[2.6,-2.2],[0,0],[5,0],[-5,0],[0,4.5],[0,-4.5]];
+  for(let i=0;i<48;i++)candidates.push([-8+(i%8)*2.3,-4.5+Math.floor(i/8)*1.8]);
+  for(const [x,z]of candidates){const candidate=new THREE.Vector3(x,0,z);constrainCompass(candidate);const distance=compasses.length?Math.min(...compasses.map(c=>c.group.position.distanceTo(candidate))):3;
+    if(distance>best){best=distance;p=candidate;}if(distance>=2.1){p=candidate;break;}}
+  activeCompass=makeCompass(p);syncCompassList();syncControls();return activeCompass;
+}
+function removeCompass(){
+  if(!activeCompass)return;const old=activeCompass,index=compasses.indexOf(old);scene.remove(old.group);compasses.splice(index,1);
+  old.group.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){if(o.material.map)o.material.map.dispose();o.material.dispose();}});
+  activeCompass=compasses[Math.min(index,compasses.length-1)]||null;setPlacing(false);syncCompassList();syncControls();
+}
+function placeCompass(p){
+  if(!activeCompass)return;const requested=p.clone();constrainCompass(p);activeCompass.group.position.copy(p);syncControls();
+  $('compass-status').textContent=Math.hypot(p.x-requested.x,p.z-requested.z)>.01?'나침반 '+activeCompass.id+' · 도선과 겹치지 않는 가까운 위치로 옮겼습니다.':'나침반 '+activeCompass.id+' 선택 · 모두 '+compasses.length+'개';
+}
+function placeSensor(p){
+  if(![p.x,p.y,p.z].every(Number.isFinite))return;constrainSensor(p);sensor.position.copy(p);
+  const positions=sensorGuide.geometry.attributes.position;positions.setXYZ(0,p.x,0,p.z);positions.setXYZ(1,p.x,p.y,p.z);positions.needsUpdate=true;sensorGuide.geometry.computeBoundingSphere();sensorGuide.computeLineDistances();
+  syncControls();updateReadouts();
+}
+function applySensorCoords(){
+  const fields=['x','y','z'].map(axis=>$('sensor-'+axis));
+  if(fields.some(f=>f.value.trim()===''||!Number.isFinite(+f.value))){$('sensor-status').textContent='x, y, z에 숫자를 입력해 주세요.';return;}
+  placeSensor(new THREE.Vector3(...fields.map(f=>+f.value/10)));
+}
+$('compass-add').addEventListener('click',addCompass);$('compass-remove').addEventListener('click',removeCompass);
+$('compass-select').addEventListener('change',e=>selectCompass(+e.target.value));
+$('sensor-apply').addEventListener('click',applySensorCoords);
+['sensor-x','sensor-y','sensor-z'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')applySensorCoords();}));
+$('sensor-at-compass').addEventListener('click',()=>{if(activeCompass)placeSensor(new THREE.Vector3(activeCompass.group.position.x,AXIS_Y,activeCompass.group.position.z));});
+$('sensor-at-center').addEventListener('click',()=>placeSensor(new THREE.Vector3(mode==='wire'?1.2:0,AXIS_Y,0)));
+$('sensor-plane').addEventListener('change',e=>{$('sensor-drag-help').textContent={xz:'파란 센서를 드래그하면 높이 y를 유지하며 움직입니다.',xy:'파란 센서를 드래그하면 z를 유지하며 좌우·높이를 바꿉니다.',yz:'파란 센서를 드래그하면 x를 유지하며 앞뒤·높이를 바꿉니다.'}[e.target.value];});
+document.querySelectorAll('.info-button').forEach(button=>button.addEventListener('click',()=>{const note=$(button.getAttribute('aria-controls'));note.hidden=!note.hidden;button.setAttribute('aria-expanded',!note.hidden);}));
+
+
 $('current-range').addEventListener('input',e=>setCurrent(+e.target.value));
 let turnsTimer;
 $('turns-range').addEventListener('input',e=>{const n=+e.target.value;$('turns-value').textContent=n;clearTimeout(turnsTimer);turnsTimer=setTimeout(()=>setTurns(n),130);});
@@ -1077,7 +1165,7 @@ $('place-btn').addEventListener('click',()=>setPlacing(!placing));
 addEventListener('keydown',e=>{if(e.key==='Escape')setPlacing(false);});
 function applyCoords(){
   const x=$('compass-x'),z=$('compass-z');
-  if(x.value.trim()===''||z.value.trim()===''||!Number.isFinite(+x.value)||!Number.isFinite(+z.value)){$('sensor-status').textContent='x와 z에 숫자를 입력해 주세요.';return;}
+  if(x.value.trim()===''||z.value.trim()===''||!Number.isFinite(+x.value)||!Number.isFinite(+z.value)){$('compass-status').textContent='x와 z에 숫자를 입력해 주세요.';return;}
   placeCompass(new THREE.Vector3(+x.value/10,0,+z.value/10));
 }
 $('coords-apply').addEventListener('click',applyCoords);
@@ -1101,20 +1189,15 @@ function resize(){
   draw();
 }
 addEventListener('resize', resize);
-let last = performance.now(), needleAng = 0;
+let last = performance.now();
 const _np = new THREE.Vector3(), _B = new THREE.Vector3();
 function step(dt){
-  _np.set(compass.position.x, AXIS_Y, compass.position.z);
-  fieldAt(_np, _B);
-  const target = needleTarget(_B);
-  if (target !== null){
-    let diff = target - needleAng;
-    while(diff > Math.PI) diff -= Math.PI*2;
-    while(diff < -Math.PI) diff += Math.PI*2;
-    needleAng += diff * Math.min(1, dt*7);
-    needle.rotation.y = needleAng;
-  }
-  needle.visible=currentAmps>0 && target!==null;
+  compasses.forEach(c=>{
+    _np.set(c.group.position.x,AXIS_Y,c.group.position.z);fieldAt(_np,_B);const target=needleTarget(_B);
+    if(target!==null){let diff=target-c.angle;while(diff>Math.PI)diff-=Math.PI*2;while(diff< -Math.PI)diff+=Math.PI*2;c.angle+=diff*Math.min(1,dt*7);c.needle.rotation.y=c.angle;}
+    c.needle.visible=currentAmps>0&&target!==null;
+  });
+
   flowArrows(CUR[mode], (!paused&&currentAmps>0?CUR_SPEED*dt:0), dirSign);                     /* 전류: 천천히 흐르는 빨간 화살촉 */
   if (mode==='wire' && showField && !paused && currentAmps>0) orientWireCones(dt);
   const fl = FL[mode];
@@ -1127,9 +1210,9 @@ function render(){
 }
 
 /* 시작 */
-placePoleLabels(); orientWireCones(); setMode('wire');
+syncCompassList();placePoleLabels(); orientWireCones(); setMode('wire');placeSensor(sensor.position.clone());
 resize(); requestAnimationFrame(render);
-window.__rh3d = {CHECK, FL, CUR, MODEL, fieldAt, setMode, compass, needle, cam, ctl, step, draw,
+window.__rh3d = {CHECK, FL, CUR, MODEL, fieldAt, setMode, get compass(){return activeCompass&&activeCompass.group;},get needle(){return activeCompass&&activeCompass.needle;},compasses,addCompass,removeCompass,selectCompass,sensor,placeSensor, cam, ctl, step, draw,
   get mode(){ return mode; }, get dirSign(){ return dirSign; }, get showField(){ return showField; }, fieldIn, measureAt, fluxValue, placeCompass, setCurrent, setTurns, setFieldView, applyFieldVisibility, get currentAmps(){return currentAmps;},get turns(){return COIL_N;},get fieldView(){return fieldView;},axisArrow,wireRings,renderer};
 setTimeout(()=>{ ensureLines('loop'); applyFieldVisibility(); }, 60);   /* 첫 화면을 띄운 뒤 원형 도선·코일 자기력선을 나누어 미리 계산 */
 setTimeout(()=>{
