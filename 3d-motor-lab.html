@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="전류가 흐르는 코일이 받는 힘을 관찰하는 3D 실험실. 사각 코일, 원통형 전동기, 말굽자석 그네, 알루미늄 포일을 문제 해결 모드와 교사용 시연 모드로 탐구합니다.">
-<link rel="icon" href="data:,"><title>전류가 흐르면, 왜 움직일까? · 승재쌤의 실험실</title>
+<link rel="icon" href="data:,"><title>전류가 흐르면, 왜 움직일까? · 전기와자기 실험실</title>
 <style>
 :root{--paper:#fff;--surface:#f5f5f7;--soft:#fafafc;--line:#e0e0e0;--ink:#1d1d1f;--dim:#515154;--muted:#6e6e73;--blue:#0066cc;--current:#0057d9;--coil-field:#b52471;--field:#26716a;--force:#6b54ad;--radius:18px;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--ink);background:var(--surface);font-synthesis:none}
 *{box-sizing:border-box}body{margin:0;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}button,input,select,textarea{font:inherit}button,summary{cursor:pointer}button,input,select{touch-action:manipulation}button:active{transform:scale(.96)}button:disabled{opacity:.4;cursor:default;transform:none}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #0071e3;outline-offset:3px}button{color:var(--ink)}a{color:var(--blue)}h1,h2,h3,p{margin:0}h1,h2,h3{font-weight:600;letter-spacing:-.6px}[hidden]{display:none!important}input[type=checkbox]{accent-color:var(--blue);width:18px;height:18px;flex-shrink:0}input[type=range]{accent-color:var(--blue);width:100%;cursor:pointer;min-height:30px}label{cursor:pointer}button{border:1px solid var(--line);background:var(--paper);border-radius:8px;min-height:44px;padding:8px 13px;font-size:14px;line-height:1.35}.primary{background:var(--blue);border-color:var(--blue);color:white;border-radius:24px}.small{font-size:12px;color:var(--muted)}.muted{color:var(--dim)}.topbar{background:var(--paper);border-bottom:1px solid var(--line);font-size:13px}.topbar>div{max-width:1560px;min-height:48px;margin:auto;padding:8px 28px;display:flex;align-items:center;justify-content:space-between;gap:15px}.topbar a{text-decoration:none}.wrap{max-width:1560px;margin:auto;padding:28px}.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:24px}.eyebrow{color:var(--muted);font-size:13px;font-weight:600;margin-bottom:5px}h1{font-size:clamp(28px,3vw,39px);line-height:1.3;letter-spacing:-1.5px}.intro p{margin-top:7px;font-size:15px;color:var(--dim);word-break:keep-all}.mode-switch{display:flex;background:#e8e8ed;border-radius:12px;padding:4px;gap:3px;flex-shrink:0}.mode-switch button{background:transparent;border:0;font-weight:600;white-space:nowrap}.mode-switch button[aria-pressed=true]{background:white;color:var(--blue)}
@@ -200,7 +200,7 @@ footer{font-size:14px;font-weight:600;line-height:1.7;color:var(--muted)}
 </style>
 </head>
 <body>
-<header class="topbar"><div><strong>승재쌤의 실험실</strong><span class="topbar-extra">자기장 안에서 전류가 받는 힘</span><a href="3d-righthand.html">자기장 방향 실험실 ↗</a></div></header>
+<header class="topbar"><div><strong>전기와자기 실험실</strong><span class="topbar-extra">자기장 안에서 전류가 받는 힘</span><a href="3d-righthand.html">자기장 방향 실험실 ↗</a></div></header>
 <main class="wrap">
 <div class="intro"><div><div class="eyebrow">힘을 발견하고, 회전을 이어 가다</div><h1>전류가 흐르면, 왜 움직일까?</h1><p>돌아가는 순간을 멈추고, 전류·자기장·힘의 관계를 살펴보세요.</p></div><div class="mode-switch" role="group" aria-label="학습 모드"><button id="solve-mode" aria-pressed="true">문제 해결 모드</button><button id="teacher-mode" aria-pressed="false">교사용 시연 모드</button></div></div>
 <section id="lab" class="lab" aria-label="힘과 전동기 실험실">
@@ -226,7 +226,7 @@ footer{font-size:14px;font-weight:600;line-height:1.7;color:var(--muted)}
 <div class="control-section"><h3>보고 싶은 것</h3><div class="toggle-grid"><label class="toggle"><input id="show-current" type="checkbox" checked>전류 방향</label><label class="toggle"><input id="show-field" type="checkbox" checked>자석의 자기장</label><label class="toggle"><input id="show-force" type="checkbox">힘의 방향</label><label class="toggle" id="poles-label"><input id="show-poles" type="checkbox">전자석의 극</label><label class="toggle coil-field-label" id="coil-field-control"><input id="show-coil-field" type="checkbox">코일이 만드는 자기장</label></div><p class="hint coil-field-hint" id="coil-field-hint" hidden>자홍색 화살표는 코일 중심의 자기장 방향입니다. 자석의 자기장과 구분해서 보세요.</p><label class="toggle" id="transparent-label" hidden><input id="transparent" type="checkbox">철심을 투명하게</label><p class="hint" id="view-hint">양쪽 도선 A·B는 코일과 함께 움직입니다.</p></div>
 </section></aside></div><dialog id="moment-dialog" class="moment-dialog" aria-labelledby="moment-title" aria-describedby="moment-text"><div class="moment-eyebrow"><span aria-hidden="true">!</span>잠깐, 이 순간을 살펴보세요</div><h2 id="moment-title">중요한 순간</h2><div class="moment-context"><span id="moment-experiment"></span><span id="moment-position"></span><span id="moment-mode"></span></div><p id="moment-text" class="moment-text"></p><div class="moment-actions"><button id="moment-inspect" autofocus>멈춘 채 살펴보기</button><button id="moment-resume" class="primary">이어서 재생</button></div><p class="moment-help">설명은 저절로 사라지지 않습니다. 팝업을 닫은 뒤 3D 시점을 바꿔 관찰할 수 있어요.</p></dialog></section>
 <details class="reflection"><summary>내 말로 설명해 보기</summary><p id="reflection-prompt">정류자가 없을 때와 있을 때, 특정 자세를 지난 코일의 움직임이 어떻게 달라지나요?</p><textarea id="reflection" aria-label="관찰한 내용을 내 말로 정리" placeholder="바꾼 조건 → 관찰한 변화 → 그렇게 생각한 이유"></textarea><p class="small">작성한 내용은 이 브라우저에만 저장됩니다.</p></details>
-<details class="sources"><summary>모형과 학습 범위</summary><p>[9과14-04] 자기장 안에서 전류가 흐르는 코일이 받는 힘을 관찰하고, 전류와 자기장의 방향으로 힘의 방향을 찾습니다. 정류자의 자세한 구조·돌리는 효과의 정량 계산은 더 알아보기 내용입니다.</p><p>전동기는 균일한 외부 자기장 속 단일 코일과 마찰을 단순화한 모형입니다. 정류자는 이상적으로 연결이 바뀌며 접촉 공백은 생략했습니다. 실제 전동기의 여러 코일·전기 회로·역기전력은 재현하지 않습니다. 그네는 아래쪽 도선이 강한 자기장 속에 있고, 포일은 탄성으로 휘어지는 모형입니다.</p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/11-5-force-and-torque-on-a-current-loop" target="_blank" rel="noopener">OpenStax · 전류 고리의 힘과 돌림힘</a></li><li><a href="https://www.animations.physics.unsw.edu.au/jw/electricmotors.html" target="_blank" rel="noopener">UNSW · 전동기와 정류자</a></li><li><a href="https://web.physics.ucsb.edu/~lecturedemonstrations/Composer/Pages/68.27.html" target="_blank" rel="noopener">UCSB · 전류가 흐르는 알루미늄 포일 실험</a></li></ul></details>
+<details class="sources"><summary>모형과 학습 범위</summary><p>[9과14-04] 자기장 안에서 전류가 흐르는 코일이 받는 힘을 관찰하고, 전류와 자기장의 방향으로 힘의 방향을 찾습니다. 정류자의 자세한 구조·돌리는 효과의 정량 계산은 더 알아보기 내용입니다.</p><p>전동기는 균일한 외부 자기장 속 단일 코일과 마찰을 단순화한 모형입니다. 정류자는 이상적으로 연결이 바뀌며 접촉 공백은 생략했습니다. 실제 전동기의 여러 코일·전기 회로·역기전력은 재현하지 않습니다. 그네는 아래쪽 도선이 강한 자기장 속에 있고, 포일은 전류를 끈 상태의 평형 위치를 기준으로 위아래로 휘어지는 모형입니다. 중력과 기본 탄성력의 균형은 기준 위치에 포함하며, 변형은 관찰하기 쉽게 확대했습니다.</p><ul><li><a href="https://openstax.org/books/university-physics-volume-2/pages/11-5-force-and-torque-on-a-current-loop" target="_blank" rel="noopener">OpenStax · 전류 고리의 힘과 돌림힘</a></li><li><a href="https://www.animations.physics.unsw.edu.au/jw/electricmotors.html" target="_blank" rel="noopener">UNSW · 전동기와 정류자</a></li><li><a href="https://web.physics.ucsb.edu/~lecturedemonstrations/Composer/Pages/68.27.html" target="_blank" rel="noopener">UCSB · 전류가 흐르는 알루미늄 포일 실험</a></li></ul></details>
 <footer id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · 최종 업데이트 2026. 10. 12.</footer>
 </main>
 <script src="lib/three.min.js"></script><script src="lib/OrbitControls.js"></script>
@@ -239,9 +239,10 @@ footer{font-size:14px;font-weight:600;line-height:1.7;color:var(--muted)}
    * theta = 0: coil plane xz, left material side carries +z current,
    * its force is +y, magnetic moment is +y, and torque is -z.
    * Thus positive scalar torque increases theta (clockwise from +z).
-   * Swing: q is pendulum angle in rad; foil: q is relative displacement.
-   * In both cases q > 0 means displacement toward -z. Lower bar I = +x,
-   * B = -y, so its force points toward -z.
+   * Swing: q is pendulum angle in rad, positive toward -z (I=+x, B=-y).
+   * Foil: q is vertical displacement from the unpowered equilibrium,
+   * positive toward +y (I=+x, B=-z). Static gravity/elastic balance is
+   * included in that reference, so no extra gravity term is added.
    * Inputs current/field may be signed; direction toggles multiply them.
    * The ideal commutator has instantaneous reversal, no contact-open gap.
    */
@@ -319,9 +320,9 @@ footer{font-size:14px;font-weight:600;line-height:1.7;color:var(--muted)}
     r.turnEffect = sign(r.torque);
     r.time = finite(s.time, 0);
     r.powered = s.powered !== false;
-    r.fieldVector = motor ? [r.signedField, 0, 0] : [0, -r.signedField, 0];
+    r.fieldVector = motor ? [r.signedField, 0, 0] : s.experiment === 'foil' ? [0, 0, -r.signedField] : [0, -r.signedField, 0];
     r.currentVector = motor ? [0, 0, r.signedCurrent] : [r.signedCurrent, 0, 0];
-    r.forceVector = motor ? [0, r.signedForce, 0] : [0, 0, -r.signedForce];
+    r.forceVector = motor || s.experiment === 'foil' ? [0, r.signedForce, 0] : [0, 0, -r.signedForce];
     r.oppositeForceVector = motor ? [0, -r.signedForce, 0] : null;
     r.netMagneticForceVector = motor ? [0, 0, 0] : r.forceVector.slice();
     r.torqueVector = [0, 0, -r.torque];
@@ -339,7 +340,9 @@ footer{font-size:14px;font-weight:600;line-height:1.7;color:var(--muted)}
       // Constant field over the lower conductor, ideal pendulum and damping.
       return 0.3 * force * Math.cos(position) - 4 * Math.sin(position) - (2.35 + damping) * velocity;
     }
-    // First elastic bending mode of foil. q is not a calibrated distance.
+    // First vertical bending mode about the unpowered equilibrium.
+    // Gravity and baseline elastic force already balance at q=0.
+    // q is not a calibrated distance; display enlargement is in MotorScene.
     return 0.6 * force - 5 * position - (2.45 + damping) * velocity;
   }
 
@@ -726,6 +729,10 @@ footer{font-size:14px;font-weight:600;line-height:1.7;color:var(--muted)}
 
     buildFoil(){
       this.objects.foilSegments=60;
+      // q is the relative elastic deflection, displayed in the vertical plane.
+      // A fixed visual gain makes the foil's movement easy to compare with its
+      // neutral position; it does not change the force or the simulation.
+      this.objects.foilDisplayGain=2.2;
       const n=this.objects.foilSegments,positions=new Float32Array((n+1)*2*3),indices=[];
       for(let i=0;i<n;i++){const j=i*2;indices.push(j,j+2,j+1,j+1,j+2,j+3);}
       const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(positions,3));geo.setIndex(indices);
@@ -736,11 +743,48 @@ footer{font-size:14px;font-weight:600;line-height:1.7;color:var(--muted)}
         this.rod(this.root,[x,-1.84,0],[x,-.38,0],.1,0xb4bec8);
         this.box(this.root,[.67,.08,.75],[x,-1.88,0],0xcbd4dc);
       }
-      this.label(this.root,'알루미늄 포일',[-1.6,.68,.55],'#23364a',1.25);
+      this.label(this.root,'알루미늄 포일',[-1.65,1.14,.6],'#23364a',1.25);
       for(let i=0;i<5;i++)this.currentArrows.push(this.arrow(this.currentGroup,C.current));
-      this.objects.currentLabel=this.label(this.currentGroup,'전류 I',[1.65,.64,.5],'#0057d9',.7);
+      this.objects.currentLabel=this.label(this.currentGroup,'전류 I',[1.53,.78,.4],'#0057d9',.7);
       this.forceArrows.push(this.arrow(this.forceGroup,C.force));
-      this.buildHorseshoe();
+      this.buildFoilMagnet();
+      const neutralGeo=new T.BufferGeometry().setFromPoints([V(-1.82,.15,.24),V(1.82,.15,.24)]);
+      const neutral=new T.Line(neutralGeo,new T.LineDashedMaterial({color:0x68788c,dashSize:.11,gapSize:.07,depthTest:false,toneMapped:false}));
+      neutral.computeLineDistances();neutral.renderOrder=6;this.root.add(neutral);
+      this.objects.foilNeutral=neutral;
+      this.label(this.root,'처음 위치',[-1.04,-.13,.29],'#43566e',.73);
+      this.objects.foilMarker=this.mesh(this.root,new T.SphereGeometry(.085,20,12),new T.MeshBasicMaterial({color:0xa9478d,depthTest:false,toneMapped:false}),V(0,.15,.2));
+      this.objects.foilMarker.renderOrder=15;
+      const guideGeo=new T.BufferGeometry().setFromPoints([V(1.02,-1.4,.36),V(1.02,1.72,.36)]);
+      const guide=new T.Line(guideGeo,new T.LineDashedMaterial({color:0x9a5388,dashSize:.07,gapSize:.055,depthTest:false,toneMapped:false}));
+      guide.computeLineDistances();guide.renderOrder=7;this.root.add(guide);
+      this.objects.foilTrack=this.mesh(this.root,new T.SphereGeometry(.075,16,10),new T.MeshBasicMaterial({color:0xa9478d,depthTest:false,toneMapped:false}),V(1.02,.15,.36));
+      this.objects.foilTrack.renderOrder=15;
+      this.label(this.root,'위아래 움직임 확대',[1.2,1.99,.35],'#884474',1.37);
+      const up=this.arrow(this.root,0xa9478d),down=this.arrow(this.root,0xa9478d);
+      this.setArrow(up,V(1.02,1.55,.36),V(0,1,0),.27);
+      this.setArrow(down,V(1.02,-1.23,.36),V(0,-1,0),.27);
+      up.traverse(child=>{if(child.material)child.material.depthTest=false;});
+      down.traverse(child=>{if(child.material)child.material.depthTest=false;});
+    }
+
+    buildFoilMagnet(){
+      // The horseshoe opens downward. Its two legs are in front of and behind
+      // the strip, so positive external B is -z and I(+x) x B(-z) is upward.
+      // The front leg is translucent to keep the centre of the foil visible.
+      this.objects.magnetFront=this.box(this.root,[.78,3.65,.38],[0,.375,.72],C.red,{transparent:true,opacity:.34,depthWrite:false});
+      this.objects.magnetBack=this.box(this.root,[.78,3.65,.38],[0,.375,-.72],C.blue);
+      this.objects.magnetBridgeFront=this.box(this.root,[.78,.3,.91],[0,2.35,.455],C.red);
+      this.objects.magnetBridgeBack=this.box(this.root,[.78,.3,.91],[0,2.35,-.455],C.blue);
+      this.objects.frontPole=this.label(this.root,'N',[-.58,.98,.78],'#bc4a45',.5);
+      this.objects.backPole=this.label(this.root,'S',[.56,1.02,-.78],'#456fb0',.5);
+      this.label(this.root,'자석 입구 ↓',[0,2.73,0],'#23364a',1.07);
+      this.box(this.root,[.83,.1,.78],[0,-1.87,-1.36],0xcbd4dc);
+      this.rod(this.root,[0,-1.81,-1.36],[0,2.21,-1.36],.085,0xa1adb8);
+      this.rod(this.root,[0,2.21,-1.36],[0,2.35,-.8],.07,0xa1adb8);
+      for(const x of [-.27,.27])for(const y of [-1.08,.15,1.38]){
+        const ar=this.arrow(this.fieldGroup,C.field);ar.userData.base=V(x,y,0);this.fieldArrows.push(ar);
+      }
     }
 
     update(state, reading) {
@@ -820,16 +864,16 @@ footer{font-size:14px;font-weight:600;line-height:1.7;color:var(--muted)}
         }
       }else{
         const q=Number(state.q)||0;
-        this.fieldArrows.forEach(ar=>{
-          const base=ar.userData.base;
-          this.setArrow(ar,V(base.x,bdir>0?.34:-.27,base.z),V(0,-bdir,0),.60);
-        });
-        o.magnetUpper.material.color.setHex(bdir>0?C.red:C.blue).convertSRGBToLinear();
-        o.magnetLower.material.color.setHex(bdir>0?C.blue:C.red).convertSRGBToLinear();
-        o.backUpper.material.color.copy(o.magnetUpper.material.color);
-        o.backLower.material.color.copy(o.magnetLower.material.color);
-        o.upperPole.position.y=bdir>0?.8:-.74;o.lowerPole.position.y=bdir>0?-.74:.8;
         if(exp==='swing'){
+          this.fieldArrows.forEach(ar=>{
+            const base=ar.userData.base;
+            this.setArrow(ar,V(base.x,bdir>0?.34:-.27,base.z),V(0,-bdir,0),.60);
+          });
+          o.magnetUpper.material.color.setHex(bdir>0?C.red:C.blue).convertSRGBToLinear();
+          o.magnetLower.material.color.setHex(bdir>0?C.blue:C.red).convertSRGBToLinear();
+          o.backUpper.material.color.copy(o.magnetUpper.material.color);
+          o.backLower.material.color.copy(o.magnetLower.material.color);
+          o.upperPole.position.y=bdir>0?.8:-.74;o.lowerPole.position.y=bdir>0?-.74:.8;
           o.swing.rotation.x=q;
           o.swingCurrent.visible=state.showCurrent!==false&&hasI;
           const bottom=V(0,1.65-1.65*Math.cos(q),-1.65*Math.sin(q));
@@ -843,16 +887,29 @@ footer{font-size:14px;font-weight:600;line-height:1.7;color:var(--muted)}
             this.setArrow(this.currentArrows[i],p,d.multiplyScalar(idir),.46);
           }
         }else{
-          const attr=o.foil.geometry.attributes.position,n=o.foilSegments;
+          const attr=o.foil.geometry.attributes.position,n=o.foilSegments,deflection=q*o.foilDisplayGain;
+          this.fieldArrows.forEach(ar=>{
+            const base=ar.userData.base;
+            this.setArrow(ar,V(base.x,base.y,.50*bdir),V(0,0,-bdir),1.0);
+          });
+          o.magnetFront.material.color.setHex(bdir>0?C.red:C.blue).convertSRGBToLinear();
+          o.magnetBack.material.color.setHex(bdir>0?C.blue:C.red).convertSRGBToLinear();
+          o.magnetBridgeFront.material.color.copy(o.magnetFront.material.color);
+          o.magnetBridgeBack.material.color.copy(o.magnetBack.material.color);
+          o.frontPole.position.set(bdir>0?-.58:.56,bdir>0?.98:1.02,.78*bdir);
+          o.backPole.position.set(bdir>0?.56:-.58,bdir>0?1.02:.98,-.78*bdir);
           for(let i=0;i<=n;i++){
-            const x=-1.82+3.64*i/n,z=-q*(1-Math.pow(x/1.82,2));
-            attr.setXYZ(i*2,x,.15,z-.15);attr.setXYZ(i*2+1,x,.15,z+.15);
+            const x=-1.82+3.64*i/n,y=.15+deflection*(1-Math.pow(x/1.82,2));
+            attr.setXYZ(i*2,x,y,-.15);attr.setXYZ(i*2+1,x,y,.15);
           }
           attr.needsUpdate=true;o.foil.geometry.computeVertexNormals();o.foil.geometry.computeBoundingSphere();
-          this.setArrow(this.forceArrows[0],V(0,.16,-q),V(0,0,-fsign),forceLength);
+          const centerY=.15+deflection;
+          o.foilMarker.position.y=centerY;o.foilTrack.position.y=centerY;
+          this.setArrow(this.forceArrows[0],V(0,centerY,.22),V(0,fsign,0),forceLength);
           for(let i=0;i<this.currentArrows.length;i++){
             const t=((i/this.currentArrows.length+time*.18*idir)%1+1)%1,x=-1.7+3.4*t;
-            this.setArrow(this.currentArrows[i],V(x,.23,-q*(1-Math.pow(x/1.82,2))),V(idir,0,idir*q*2*x/(1.82*1.82)).normalize(),.46);
+            const y=.15+deflection*(1-Math.pow(x/1.82,2));
+            this.setArrow(this.currentArrows[i],V(x,y+.045,.19),V(idir,-idir*deflection*2*x/(1.82*1.82),0).normalize(),.46);
           }
         }
       }
@@ -867,6 +924,7 @@ footer{font-size:14px;font-weight:600;line-height:1.7;color:var(--muted)}
       this.camera.up.set(0,1,0);
       const target=V(0,isLab?.05:-.1,0);
       let pos=V(4.8,3.4,9.0);
+      if(exp==='foil'&&name==='perspective'){pos=V(4.2,2.4,9.6);target.set(0,.24,0);}
       if(name==='axis'||name==='front')pos=V(0,.05,10.4);
       else if(name==='top'){pos=V(.01,10.3,.01);this.camera.up.set(0,0,-1);}
       else if(name==='side')pos=V(9,1.5,.01);
@@ -911,7 +969,7 @@ const steps={
  {title:'연결을 바꿔, 회전을 이어 가기',question:'정류자를 켜고 85° → 90° → 95°를 비교하세요. 전지의 극은 그대로인데 무엇이 바뀌나요?',choices:['자석의 극','코일 속 전류','전지의 극'],answer:'정류자가 반 바퀴마다 코일의 연결을 바꿉니다. 코일 속 전류와 힘의 방향이 바뀌어 같은 회전 방향의 돌리는 효과를 유지합니다.',theta:85,comm:true,coasting:true}
  ],
  cylinder:[
- {title:'여러 번 감아도 같은 원리일까?',question:'철심을 투명하게 하고 도선의 경로를 살펴보세요. 사각 코일과 닮은 부분을 찾아보세요.',choices:['전류가 힘을 받는다','철심만 저절로 돈다','자석이 회전한다'],answer:'도선에 작용하는 힘이 회전축을 돌립니다. 감은 수는 전류를 일정하게 유지하는 조건에서만 비교합니다.',theta:0,comm:false},
+ {title:'여러 번 감아도 같은 원리일까?',question:'재생하여 전동기가 계속 도는 모습을 관찰하세요. 철심을 투명하게 하고 사각 코일과 닮은 부분을 찾아보세요.',choices:['전류가 힘을 받는다','철심만 저절로 돈다','자석이 회전한다'],answer:'정류자가 연결된 전동기입니다. 도선에 작용하는 힘이 회전축을 돌리고, 정류자가 코일의 연결을 바꾸어 회전을 이어 갑니다. 다음 단계에서는 정류자를 빼고 특정 자세에서 멈춰 비교합니다.',theta:0,comm:true,continuous:true},
  {title:'이번에는 전자석의 극으로 보기',question:'‘전자석의 극’을 켜 보세요. 코일의 N극이 영구자석의 어느 극을 향해 움직일까요?',choices:['N극','S극'],answer:'코일은 전자석처럼 작용합니다. 서로 다른 극은 끌어당기고 같은 극은 밀어내며, 도선이 받는 힘으로 본 회전과 같은 현상을 설명합니다.',theta:45,comm:false,poles:true},
  {title:'정렬된 자리에서 멈춰 보기',question:'90°에서 돌리는 효과를 확인하세요. 이미 돌던 경우와 정지한 경우를 비교해 보세요.',choices:['힘이 있으면 꼭 돈다','힘의 작용 위치도 중요하다'],answer:'전자석이 외부 자기장과 나란해진 순간에는 돌리는 효과가 0입니다. 이 자세에 정확히 정지한 단일 코일은 저절로 출발하지 않을 수 있습니다.',theta:90,comm:false,coasting:true,poles:true},
  {title:'정류자가 바꾸는 N극과 S극',question:'정류자를 확대하고 90°를 지나 보세요. 코일 속 전류와 전자석의 극을 함께 관찰하세요.',choices:['전류와 극이 함께 바뀐다','영구자석의 극이 바뀐다'],answer:'전류의 방향이 바뀌면 코일 전자석의 N극과 S극도 바뀝니다. 이 변화가 회전을 이어 가도록 합니다. 힘 보기와 전자석 보기의 설명을 연결해 보세요.',theta:85,comm:true,coasting:true,poles:true}
@@ -924,9 +982,9 @@ const steps={
  ],
  foil:[
  {title:'스위치를 닫으면 무엇이 달라질까?',question:'전류를 넣기 전입니다. 전류를 켜면 포일에 어떤 변화가 생길지 예상해 보세요.',choices:['움직인다','항상 그대로다'],answer:'자기장 속 포일에 전류가 흐르면 힘을 받습니다. ‘전류 꺼짐’을 눌러 전류를 켜고 재생해 보세요.',phase:'off-start'},
- {title:'움직이기 직전의 힘 찾기',question:'스위치를 닫은 직후, 포일은 아직 휘지 않았습니다. 전류·자기장·힘의 세 방향을 살펴보세요.',choices:['힘은 전류 방향이다','힘은 두 방향에 수직이다'],answer:'힘은 전류와 자기장 모두에 수직인 방향입니다. 포일이 움직이기 전에도 힘은 작용합니다.',phase:'start'},
+ {title:'움직이기 직전의 힘 찾기',question:'스위치를 닫은 직후, 포일은 아직 휘지 않았습니다. 전류·자기장·힘의 세 방향을 살펴보세요.',choices:['힘은 전류 방향이다','힘은 두 방향에 수직이다'],answer:'자석 사이의 자기장은 앞뒤 방향이고 전류는 좌우로 흐릅니다. 두 방향에 모두 수직인 위아래 방향으로 포일이 힘을 받습니다.',phase:'start'},
  {title:'반대로 움직이게 만들기',question:'전류 방향 또는 자석의 극을 바꿔 보세요. 포일을 반대로 움직이게 할 수 있나요?',choices:['둘 중 하나를 바꾼다','둘 다 바꾼다'],answer:'둘 중 하나만 바꾸면 힘의 방향이 바뀝니다. 알루미늄이 철처럼 자석에 붙는 현상과는 구분해서 관찰하세요.',phase:'start'},
- {title:'전류를 끄면 바로 멈출까?',question:'포일이 움직이는 중에 전류를 끈 장면입니다. 재생하면 어떻게 될까요?',choices:['바로 멈춘다','움직임이 잠시 이어진다'],answer:'자기력은 사라져도 움직임이 즉시 사라지는 것은 아닙니다. 포일은 관성과 탄성 때문에 움직이다가 점차 가라앉습니다.',phase:'off-moving'}
+ {title:'전류를 끄면 바로 멈출까?',question:'포일이 움직이는 중에 전류를 끈 장면입니다. 재생하면 어떻게 될까요?',choices:['바로 멈춘다','움직임이 잠시 이어진다'],answer:'자기력은 사라져도 움직임이 즉시 사라지는 것은 아닙니다. 포일은 관성과 탄성 때문에 위아래로 움직이다가 전류를 끈 상태의 기준 위치로 돌아옵니다.',phase:'off-moving'}
  ]};
 // Important observations remain visible until the learner chooses what to do.
 let momentPopups=true;
@@ -951,8 +1009,8 @@ function presentMoment(title,text,force=false){
 }
 function turningText(r=P.reading(state)){
   const intro='움직이는 방향이 바뀌는 순간입니다. 속도는 순간적으로 0이어도 힘은 작용할 수 있습니다.';
-  if(r.force>1e-8)return intro+'\n'+(state.experiment==='swing'?'자기력뿐 아니라 중력과 줄의 힘도 작용합니다.':'자기력과 포일의 탄성이 작용합니다.');
-  return intro+'\n'+(state.experiment==='swing'?'현재 자기력은 0이지만 중력과 줄의 힘 때문에 움직임이 바뀝니다.':'현재 자기력은 0이지만 포일의 탄성 때문에 움직임이 바뀝니다.');
+  if(r.force>1e-8)return intro+'\n'+(state.experiment==='swing'?'자기력뿐 아니라 중력과 줄의 힘도 작용합니다.':'자기력뿐 아니라 포일의 탄성과 중력도 작용합니다.');
+  return intro+'\n'+(state.experiment==='swing'?'현재 자기력은 0이지만 중력과 줄의 힘 때문에 움직임이 바뀝니다.':'현재 자기력은 0이지만 포일은 탄성 때문에 기준 위치 주위에서 위아래로 움직입니다.');
 }
 function angleMoment(direction=P.reading(state).signedSpeed){
   const r=P.reading(state),a=Math.round(angleValue());
@@ -975,12 +1033,32 @@ function record(force=false){if(force||state.time-lastRecord>=.04){if(historyInd
 function resetHistory(){history=[];historyIndex=0;lastRecord=-1;record(true);}
 function saveReflection(){try{localStorage.setItem('motor-lab-reflection-v1-'+state.experiment,$('reflection').value);}catch(_){}}
 function loadReflection(){try{$('reflection').value=localStorage.getItem('motor-lab-reflection-v1-'+state.experiment)||'';}catch(_){$('reflection').value='';}}
-function setRunning(value){running=!!value;lastTime=performance.now();if(running&&historyIndex<history.length-1){history=history.slice(0,historyIndex+1);lastRecord=state.time;}updateUI();}
+function setRunning(value){
+ running=!!value;
+ if(running&&isMotor()){
+  const r=P.reading(state);
+  if(r.deadPoint&&r.speed<.001&&r.force>0)notice='지금은 돌리는 효과가 0인 자세에 정지해 있습니다. ‘살짝 돌려 주기’로 관성을 더하거나 ‘처음으로’에서 다시 시작해 보세요.';
+ }
+ lastTime=performance.now();
+ if(running&&historyIndex<history.length-1){history=history.slice(0,historyIndex+1);lastRecord=state.time;}
+ updateUI();
+}
 function setMode(value){const next=value==='teacher'?'teacher':'solve';if(next===mode)return;mode=next;document.body.classList.toggle('teacher-mode',mode==='teacher');$('solve-mode').setAttribute('aria-pressed',mode==='solve');$('teacher-mode').setAttribute('aria-pressed',mode==='teacher');$('fullscreen-mode').textContent=mode==='teacher'?'문제 해결 모드':'교사용 모드';if(mode==='teacher'){savedGuideAutoStop=autoStop;autoStop=false;state.showForce=true;}else{autoStop=savedGuideAutoStop;}notice=mode==='teacher'?'교사용 시연 모드입니다. 각도와 실험 조건은 유지됩니다.':'문제 해결 모드입니다. 현재 장면에서 탐구를 이어가세요.';updateUI();}
-function chooseExperiment(key){if(!experiments[key])return;if(momentDialog.open)momentDialog.close();saveReflection();state={...defaults(),experiment:key,showForce:mode==='teacher'};running=false;guideIndex=0;revealed=false;prediction='';notice='';nonmotorMoment=0;lastAngleStop=null;view='perspective';resetHistory();loadReflection();renderGuide();if(mode==='solve')applyGuide(0);updateUI();scene.update(state,P.reading(state));scene.setView('perspective');}
+function chooseExperiment(key){
+ if(!experiments[key])return;if(momentDialog.open)momentDialog.close();saveReflection();
+ // Start the complete cylindrical motor with its commutator connected.
+ // Guided comparison stages still deliberately remove it and stop at angles.
+ state={...defaults(),experiment:key,commutator:key==='cylinder',showForce:mode==='teacher'};
+ savedGuideAutoStop=key!=='cylinder';autoStop=mode==='solve'&&savedGuideAutoStop;
+ running=false;guideIndex=0;revealed=false;prediction='';notice='';nonmotorMoment=0;lastAngleStop=null;view='perspective';
+ resetHistory();loadReflection();renderGuide();if(mode==='solve')applyGuide(0);
+ if(key==='cylinder')notice='정류자가 연결된 전동기입니다. 재생하면 계속 회전합니다. ‘핵심 순간 자동 멈춤’을 켜거나 다음 탐구 단계에서 자세히 살펴보세요.';
+ updateUI();scene.update(state,P.reading(state));scene.setView('perspective');
+}
 function evolveToAngle(degrees){const temp={...state,theta:0,omega:0,time:0,commutator:false};const target=rad(degrees);for(let i=0;i<6000&&temp.theta<target;i++)P.step(temp,1/240);state.theta=target;state.omega=temp.theta>=target?temp.omega:0;state.time=temp.time;}
 function evolveNonmotor(phase){state.q=0;state.v=0;state.time=0;state.powered=phase!=='off-start';if(phase==='off-moving'){for(let i=0;i<100;i++)P.step(state,1/240);state.powered=false;}else if(phase==='turn'){if(P.reading(state).force===0)return false;let seen=false;for(let i=0;i<3500;i++){const previous=state.v;P.step(state,1/240);if(Math.abs(state.v)>.001)seen=true;if(seen&&previous*state.v<0){state.v=0;break;}}}}
 function applyGuide(index){if(momentDialog.open)momentDialog.close();guideIndex=Math.max(0,Math.min(steps[state.experiment].length-1,index));const step=steps[state.experiment][guideIndex];running=false;prediction='';revealed=false;notice='';state.current=1;state.currentDir=1;state.field=1;state.fieldDir=1;state.powered=true;state.theta=0;state.omega=0;state.time=0;state.q=0;state.v=0;state.commutator=!!step.comm;state.showCurrent=true;state.showField=true;state.showForce=false;state.showPoles=!!step.poles;nonmotorMoment=0;lastAngleStop=null;
+if(mode==='solve'){autoStop=!step.continuous;savedGuideAutoStop=autoStop;}
 if(isMotor()){if(step.coasting)evolveToAngle(step.theta);else state.theta=rad(step.theta);state.commutator=!!step.comm;view=guideIndex>=2?'axis':'perspective';}else{evolveNonmotor(step.phase);view='perspective';}
 resetHistory();renderGuide();updateUI();scene.update(state,P.reading(state));scene.setView(view);}
 function renderGuide(){const list=steps[state.experiment],step=list[guideIndex];$('guide-title').textContent=step.title;$('guide-question').textContent=step.question;$('guide-kicker').textContent='예상 → 관찰 → 설명 · '+(guideIndex+1)+' / '+list.length;$('guide-dots').replaceChildren(...list.map((_,i)=>{const el=document.createElement('i');el.className=i===guideIndex?'on':'';return el;}));$('prediction').replaceChildren(...step.choices.map(text=>{const b=document.createElement('button');b.textContent=text;b.setAttribute('aria-pressed',prediction===text);b.onclick=()=>{prediction=text;renderGuide();};return b;}));$('guide-answer').textContent=step.answer;$('guide-answer').hidden=!revealed;$('reveal').textContent=revealed?'힘 표시 다시 숨기기':'예상하고 관찰하기';$('guide-prev').disabled=guideIndex===0;$('guide-next').disabled=guideIndex===list.length-1;}
@@ -1008,9 +1086,9 @@ function tickPhysics(dt){
  }
  record();
 }
-function describe(r){if(notice)return notice;if(mode==='solve'&&!revealed&&!state.showForce)return steps[state.experiment][guideIndex].question;if(!state.powered||state.current===0)return r.speed>.01?'전류가 없어 자기력은 0입니다. 이미 생긴 움직임은 관성으로 이어지며 점차 가라앉습니다.':'전류가 흐르지 않아 도선에 작용하는 자기력은 0입니다.';if(state.field===0)return '외부 자기장이 0이면 전류가 흘러도 이 모형의 자기력은 0입니다.';if(isMotor()){if(r.deadPoint)return r.speed>.001?'도선은 힘을 받지만 돌리는 효과는 0입니다. 이미 돌던 코일은 관성으로 이 위치를 지납니다.':'도선은 힘을 받지만 돌리는 효과는 0입니다. 정확히 이 자세에 멈춘 단일 코일은 스스로 출발하지 못할 수 있습니다.';if(state.commutator)return '정류자가 코일의 연결을 바꿉니다. 전지의 극을 바꾸지 않아도 코일 속 전류와 힘의 방향이 바뀝니다.';if(r.torque*r.signedSpeed<0)return '돌리는 효과가 현재 회전을 방해하는 방향입니다. 정류자가 없으면 코일이 되돌아오며 흔들릴 수 있습니다.';return '반대 방향의 두 힘이 서로 다른 위치에서 작용하여 코일을 돌립니다. 힘과 돌리는 효과를 비교해 보세요.';}return state.experiment==='swing'?'강한 자기장 사이의 아래쪽 도선이 힘을 받습니다. 전류나 자석의 극 하나를 바꾸면 힘의 방향이 바뀝니다.':'자기장 속에서 전류가 흐르는 포일이 힘을 받습니다. 휘어지는 방향과 힘의 방향을 비교해 보세요.';}
+function describe(r){if(notice)return notice;if(mode==='solve'&&!revealed&&!state.showForce)return steps[state.experiment][guideIndex].question;if(!state.powered||state.current===0)return r.speed>.01?'전류가 없어 자기력은 0입니다. 이미 생긴 움직임은 관성으로 이어지며 점차 가라앉습니다.':'전류가 흐르지 않아 도선에 작용하는 자기력은 0입니다.';if(state.field===0)return '외부 자기장이 0이면 전류가 흘러도 이 모형의 자기력은 0입니다.';if(isMotor()){if(r.deadPoint)return r.speed>.001?'도선은 힘을 받지만 돌리는 효과는 0입니다. 이미 돌던 코일은 관성으로 이 위치를 지납니다.':'도선은 힘을 받지만 돌리는 효과는 0입니다. 정확히 이 자세에 멈춘 단일 코일은 스스로 출발하지 못할 수 있습니다.';if(state.commutator)return '정류자가 코일의 연결을 바꿉니다. 전지의 극을 바꾸지 않아도 코일 속 전류와 힘의 방향이 바뀝니다.';if(r.torque*r.signedSpeed<0)return '돌리는 효과가 현재 회전을 방해하는 방향입니다. 정류자가 없으면 코일이 되돌아오며 흔들릴 수 있습니다.';return '반대 방향의 두 힘이 서로 다른 위치에서 작용하여 코일을 돌립니다. 힘과 돌리는 효과를 비교해 보세요.';}return state.experiment==='swing'?'강한 자기장 사이의 아래쪽 도선이 힘을 받습니다. 전류나 자석의 극 하나를 바꾸면 힘의 방향이 바뀝니다.':'자기장 속에서 전류가 흐르는 포일이 위아래로 힘을 받습니다. 점선의 기준 위치와 포일의 움직임을 비교해 보세요.';}
 const strength=v=>v<.000001?'0':v<.7?'작음':v<1.5?'보통':'큼';
-function updateUI(){const r=P.reading(state),motor=isMotor(),a=angleValue(),show=state.showForce||mode==='teacher';document.querySelectorAll('[data-experiment]').forEach(b=>b.setAttribute('aria-selected',b.dataset.experiment===state.experiment));document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.view===view));$('experiment-title').textContent=experiments[state.experiment].title;$('scene-badge').textContent=mode==='teacher'?'교사용 · 자유 시연':'문제 해결 · '+(guideIndex+1)+' / '+steps[state.experiment].length;$('reflection-prompt').textContent=experiments[state.experiment].reflection;$('play').textContent=running?'Ⅱ 일시정지':'▶ 재생';$('play').setAttribute('aria-pressed',running);$('time-display').textContent=state.time.toFixed(2)+' s';$('auto-stop').checked=autoStop;$('timeline').disabled=history.length<2;$('timeline').max=Math.max(0,history.length-1);$('timeline').value=historyIndex;$('history-label').textContent=(history[history.length-1]?.time||0).toFixed(2)+' s';$('current').value=state.current;$('current-value').textContent=state.current.toFixed(1)+' A';$('power').textContent=state.powered?'전류 켜짐':'전류 꺼짐';$('power').setAttribute('aria-pressed',state.powered);$('power').style.color=state.powered?'var(--blue)':'var(--muted)';$('current-direction').textContent='전원 방향: '+(state.currentDir===1?'기본':'반대')+(state.powered?'':' · 스위치 열림');$('field').value=state.field;$('field-value').textContent=strength(state.field);$('motor-controls').hidden=!motor;$('comm-view').hidden=!motor;$('turns-controls').hidden=state.experiment!=='cylinder';$('poles-label').hidden=state.experiment!=='cylinder';$('transparent-label').hidden=state.experiment!=='cylinder';$('commutator').checked=state.commutator;$('angle').value=Math.round(a);$('angle-value').textContent=Math.round(a)+'°';$('turns').value=state.turns;$('turns-value').textContent=state.turns+'회';$('comm-reading').textContent='코일 속 전류: '+(r.signedCurrent===0?'없음':r.signedCurrent>0?'A ⊙ / B ⊗':'A ⊗ / B ⊙')+(state.commutator?' · 정류자 연결 '+(r.coilSign>0?'①':'②'):' · 고정 연결');$('show-current').checked=state.showCurrent;$('show-field').checked=state.showField;$('show-force').checked=state.showForce;$('show-poles').checked=state.showPoles;$('show-coil-field').checked=state.showCoilField;$('coil-field-control').hidden=!motor;$('coil-field-hint').hidden=!motor||!state.showCoilField;$('coil-field-legend').hidden=!motor||!state.showCoilField;$('moment-popups').checked=momentPopups;$('transparent').checked=state.transparent;$('force-label').textContent=motor?'각 도선 묶음이 받는 힘':'도선이 받는 자기력';$('force-reading').textContent=show?strength(r.force):'보이기 전';$('force-detail').textContent=!show?'예상 후 관찰하기':r.force===0?'자기력 없음':motor?(r.signedForce>0?'A ↑ · B ↓':'A ↓ · B ↑'):(r.signedForce>0?'−z 방향':'＋z 방향');$('effect-label').textContent=motor?'코일을 돌리는 효과':'현재 위치';$('effect-reading').textContent=!show?'보이기 전':motor?(Math.abs(r.torque)<.000001?'0':r.torque>0?'시계 방향':'반시계 방향'):(Math.abs(state.q)<.003?'중앙':state.q>0?'−z 쪽':'＋z 쪽');$('effect-detail').textContent=motor?'회전축을 +z 쪽에서 본 기준':state.experiment==='swing'?'중력과 줄의 힘도 작용합니다.':'포일의 탄성도 작용합니다.';$('motion-reading').textContent=r.speed<.001?'정지':motor?'회전 중':'움직이는 중';$('motion-detail').textContent=!running&&r.speed>=.001?'일시정지 · 속도 보존 중':motor&&r.speed>=.001?(r.signedSpeed>0?'시계 방향으로 회전':'반시계 방향으로 회전'):!motor&&r.speed>=.001?(r.signedSpeed>0?'−z 방향으로 이동':'＋z 방향으로 이동'):'현재 속도가 0입니다.';$('force-meter').style.width=(show?100*r.force/(1+r.force):0)+'%';$('effect-meter').style.width=(show?100*(motor?Math.abs(r.torque)/(1+Math.abs(r.torque)):Math.abs(state.q)/(1+Math.abs(state.q))):0)+'%';$('motion-meter').style.width=Math.min(100,r.speed/4*100)+'%';$('observation').textContent=describe(r);$('frame-note').hidden=!show||running||!motor||Math.abs(r.torque)>.000001||r.force===0;$('frame-note').textContent='힘은 남아 있습니다 · 돌리는 효과는 0';$('moment-label').textContent=motor?'핵심 각도':'핵심 장면';$('view-hint').textContent=motor?'A·B는 같은 도선을 따라갑니다. 정류자는 전원의 극을 바꾸지 않습니다.':'화살표는 자기력입니다. 움직이는 방향과 다를 수 있습니다.';}
+function updateUI(){const r=P.reading(state),motor=isMotor(),a=angleValue(),show=state.showForce||mode==='teacher';document.querySelectorAll('[data-experiment]').forEach(b=>b.setAttribute('aria-selected',b.dataset.experiment===state.experiment));document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.view===view));$('experiment-title').textContent=experiments[state.experiment].title;$('scene-badge').textContent=mode==='teacher'?'교사용 · 자유 시연':'문제 해결 · '+(guideIndex+1)+' / '+steps[state.experiment].length;$('reflection-prompt').textContent=experiments[state.experiment].reflection;$('play').textContent=running?'Ⅱ 일시정지':'▶ 재생';$('play').setAttribute('aria-pressed',running);$('time-display').textContent=state.time.toFixed(2)+' s';$('auto-stop').checked=autoStop;$('timeline').disabled=history.length<2;$('timeline').max=Math.max(0,history.length-1);$('timeline').value=historyIndex;$('history-label').textContent=(history[history.length-1]?.time||0).toFixed(2)+' s';$('current').value=state.current;$('current-value').textContent=state.current.toFixed(1)+' A';$('power').textContent=state.powered?'전류 켜짐':'전류 꺼짐';$('power').setAttribute('aria-pressed',state.powered);$('power').style.color=state.powered?'var(--blue)':'var(--muted)';$('current-direction').textContent='전원 방향: '+(state.currentDir===1?'기본':'반대')+(state.powered?'':' · 스위치 열림');$('field').value=state.field;$('field-value').textContent=strength(state.field);$('motor-controls').hidden=!motor;$('comm-view').hidden=!motor;$('turns-controls').hidden=state.experiment!=='cylinder';$('poles-label').hidden=state.experiment!=='cylinder';$('transparent-label').hidden=state.experiment!=='cylinder';$('commutator').checked=state.commutator;$('angle').value=Math.round(a);$('angle-value').textContent=Math.round(a)+'°';$('turns').value=state.turns;$('turns-value').textContent=state.turns+'회';$('comm-reading').textContent='코일 속 전류: '+(r.signedCurrent===0?'없음':r.signedCurrent>0?'A ⊙ / B ⊗':'A ⊗ / B ⊙')+(state.commutator?' · 정류자 연결 '+(r.coilSign>0?'①':'②'):' · 고정 연결');$('show-current').checked=state.showCurrent;$('show-field').checked=state.showField;$('show-force').checked=state.showForce;$('show-poles').checked=state.showPoles;$('show-coil-field').checked=state.showCoilField;$('coil-field-control').hidden=!motor;$('coil-field-hint').hidden=!motor||!state.showCoilField;$('coil-field-legend').hidden=!motor||!state.showCoilField;$('moment-popups').checked=momentPopups;$('transparent').checked=state.transparent;$('force-label').textContent=motor?'각 도선 묶음이 받는 힘':'도선이 받는 자기력';$('force-reading').textContent=show?strength(r.force):'보이기 전';$('force-detail').textContent=!show?'예상 후 관찰하기':r.force===0?'자기력 없음':motor?(r.signedForce>0?'A ↑ · B ↓':'A ↓ · B ↑'):(state.experiment==='foil'?(r.signedForce>0?'위쪽 ↑':'아래쪽 ↓'):(r.signedForce>0?'−z 방향':'＋z 방향'));$('effect-label').textContent=motor?'코일을 돌리는 효과':'현재 위치';$('effect-reading').textContent=!show?'보이기 전':motor?(Math.abs(r.torque)<.000001?'0':r.torque>0?'시계 방향':'반시계 방향'):(Math.abs(state.q)<.003?'기준 위치':state.experiment==='foil'?(state.q>0?'기준보다 위':'기준보다 아래'):(state.q>0?'−z 쪽':'＋z 쪽'));$('effect-detail').textContent=motor?'회전축을 +z 쪽에서 본 기준':state.experiment==='swing'?'중력과 줄의 힘도 작용합니다.':'전류를 끈 상태의 위치를 기준으로 봅니다.';$('motion-reading').textContent=r.speed<.001?'정지':motor?'회전 중':'움직이는 중';$('motion-detail').textContent=!running&&r.speed>=.001?'일시정지 · 속도 보존 중':motor&&r.speed>=.001?(r.signedSpeed>0?'시계 방향으로 회전':'반시계 방향으로 회전'):!motor&&r.speed>=.001?(state.experiment==='foil'?(r.signedSpeed>0?'위로 이동 중 ↑':'아래로 이동 중 ↓'):(r.signedSpeed>0?'−z 방향으로 이동':'＋z 방향으로 이동')):'현재 속도가 0입니다.';$('force-meter').style.width=(show?100*r.force/(1+r.force):0)+'%';$('effect-meter').style.width=(show?100*(motor?Math.abs(r.torque)/(1+Math.abs(r.torque)):Math.abs(state.q)/(1+Math.abs(state.q))):0)+'%';$('motion-meter').style.width=Math.min(100,r.speed/4*100)+'%';$('observation').textContent=describe(r);$('frame-note').hidden=!show||running||!motor||Math.abs(r.torque)>.000001||r.force===0;$('frame-note').textContent='힘은 남아 있습니다 · 돌리는 효과는 0';$('moment-label').textContent=motor?'핵심 각도':'핵심 장면';document.querySelector('[data-view=axis]').textContent=motor?'회전축에서':'정면에서';$('view-hint').textContent=motor?'A·B는 같은 도선을 따라갑니다. 정류자는 전원의 극을 바꾸지 않습니다.':(state.experiment==='foil'?'점선은 전류 없이 멈춘 위치입니다. 위아래 변형을 확대하고, 앞쪽 자석은 반투명하게 표시했습니다.':'화살표는 자기력입니다. 움직이는 방향과 다를 수 있습니다.');}
 function capture(){scene.update(state,P.reading(state));scene.renderer.render(scene.scene,scene.camera);const r=P.reading(state);let image='';try{image=scene.renderer.domElement.toDataURL('image/png');}catch(_){}captures.push({image,title:experiments[state.experiment].title,time:state.time,angle:angleValue(),current:state.current,currentDir:state.currentDir,field:state.field,fieldDir:state.fieldDir,powered:state.powered,commutator:state.commutator,motor:isMotor(),force:r.force,torque:r.torque,turns:state.experiment==='cylinder'?state.turns:null});captures=captures.slice(-2);renderCaptures();}
 function renderCaptures(){$('comparison-empty').hidden=captures.length>0;$('comparison-grid').replaceChildren(...captures.map((c,i)=>{const fig=document.createElement('figure');fig.className='capture';if(c.image){const img=document.createElement('img');img.src=c.image;img.alt=c.title+' 비교 장면 '+(i+1);fig.append(img);}const cap=document.createElement('figcaption'),title=document.createElement('b');title.textContent=(i===0?'장면 A':'장면 B')+' · '+c.title;cap.append(title,document.createElement('br'),document.createTextNode('전류 '+(c.powered?c.current.toFixed(1):'0')+' A · '+(c.currentDir>0?'기본 방향':'반대 방향')),document.createElement('br'),document.createTextNode('자기장 '+strength(c.field)+' · 극 '+(c.fieldDir>0?'기본':'반전')),document.createElement('br'),document.createTextNode(c.motor?Math.round(c.angle)+'° · 정류자 '+(c.commutator?'사용':'없음'):'시각 '+c.time.toFixed(2)+' s'),document.createElement('br'),document.createTextNode('자기력 '+strength(c.force)+(c.motor?' · 돌리는 효과 '+strength(Math.abs(c.torque)):'')));if(c.turns)cap.append(document.createElement('br'),document.createTextNode('감은 수 '+c.turns+'회'));fig.append(cap);return fig;}));}
 async function fullscreen(){const lab=$('lab');if(document.fullscreenElement){await document.exitFullscreen();}else if(lab.classList.contains('fullscreen-fallback')){lab.classList.remove('fullscreen-fallback');}else if(lab.requestFullscreen){try{await lab.requestFullscreen();}catch(_){lab.classList.add('fullscreen-fallback');}}else lab.classList.add('fullscreen-fallback');syncFullscreen();}
