@@ -3,153 +3,346 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>엄지가 가리키는 곳 · 오른손 규칙 3D 트레이너</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
+<title>오른손으로 찾는 자기장 방향 · 자기장 3D 실험실</title>
 <style>
+
 :root{
- --abyss:#f2eade; --surface:#f3ede3; --line:#c1ac82; --line-soft:#dccfae;
- --ink:#2e2315; --ink-dim:#5c4a33; --ink-mute:#96805c;
- --accent:#a05c2c; --gold:#8a5f24; --ok:#2c7a44; --danger:#b3362e; --mag:#2c6e5f;
- --cur:#e0402a;
- --disp:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
- --jua:"Jua",var(--disp); --gowun:"Gowun Dodum",var(--disp);
- --r:16px; --shadow:0 18px 50px -22px rgba(0,0,0,.5);
+ --canvas:#fff; --surface:#f5f5f7; --surface-soft:#fafafc; --line:#e0e0e0;
+ --ink:#1d1d1f; --ink-dim:#515154; --ink-mute:#6e6e73;
+ --accent:#0066cc; --focus:#0071e3; --cur:#a05c2c; --mag:#2c6e5f;
+ --ok:#2c6e5f; --danger:#b23a30; --gold:#8a5f24;
+ --disp:system-ui,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+ --jua:var(--disp); --gowun:var(--disp); --r:18px;
 }
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--disp);color:var(--ink);background:
- radial-gradient(900px 560px at 8% 6%, rgba(44,110,95,.09), transparent 60%),
- radial-gradient(700px 480px at 92% 90%, rgba(160,92,44,.08), transparent 55%),
- var(--abyss); min-height:100vh; -webkit-font-smoothing:antialiased}
-header{padding:26px 20px 8px; text-align:center}
-header h1{font-family:var(--jua); font-size:clamp(22px,4.5vw,34px)}
-header h1 .em{color:var(--mag)}
-header p{color:var(--ink-dim); margin-top:6px; font-size:clamp(13px,2.4vw,15.5px); font-family:var(--gowun)}
-.wrap{max-width:1180px; margin:0 auto; padding:14px 16px 40px}
-.modes{display:flex; gap:10px; justify-content:center; margin:14px 0 18px; flex-wrap:wrap}
-.mode-btn{font-family:var(--jua); font-size:16.5px; padding:11px 22px; border-radius:999px;
- border:2px solid var(--line); background:rgba(255,252,244,.8); color:var(--ink-dim); cursor:pointer; transition:.18s}
-.mode-btn.on{background:var(--mag); border-color:var(--mag); color:#eefaf4; box-shadow:var(--shadow)}
-.stage-card{background:rgba(255,252,244,.75); border:1.5px solid var(--line); border-radius:var(--r);
- overflow:hidden; box-shadow:var(--shadow)}
-.stage-head{display:flex; align-items:center; gap:10px; padding:12px 18px; border-bottom:1px dashed var(--line-soft); flex-wrap:wrap}
-.stage-head .dot{width:10px;height:10px;border-radius:50%;background:var(--mag)}
-.stage-head h2{font-family:var(--jua); font-size:18px; color:var(--gold)}
-.stage-head .hint{margin-left:auto; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun)}
-.stage{position:relative; height:min(56vh,520px); background:linear-gradient(180deg,#efe6d3,#e7dcc4)}
-.stage canvas{display:block}
-.hud{position:absolute; left:14px; top:12px; display:flex; flex-direction:column; gap:8px; pointer-events:none; max-width:min(380px,60%)}
-.tag{background:rgba(46,35,21,.85); color:#f6eeda; font-size:13px; padding:7px 13px; border-radius:9px;
- font-family:var(--gowun); line-height:1.55}
-.tag b{color:#ffd166}
-.meter{display:flex; align-items:center; gap:9px; width:max-content; max-width:100%}
-.meter .bars{display:inline-flex; gap:3px}
-.meter .bars i{display:block; width:9px; height:13px; border-radius:2px; background:rgba(246,238,218,.22)}
-.meter .bars i.on{background:#ffd166}
-.hand{position:absolute; right:54px; top:12px; background:rgba(255,252,244,.94); border:1.5px solid var(--line);
- border-radius:12px; padding:10px 14px; width:224px; text-align:center; pointer-events:none}
-.hand .he{font-size:34px; line-height:1}
-.hand .ht{font-family:var(--jua); font-size:13px; color:var(--ink-dim); margin-top:6px; line-height:1.55; word-break:keep-all}
-.hand .ht b{color:var(--accent)}
-.legend{position:absolute; left:14px; bottom:12px; display:flex; gap:6px 14px; flex-wrap:wrap; align-items:center;
- background:rgba(255,252,244,.92); border:1px solid var(--line); border-radius:10px; padding:6px 12px;
- font-size:12.5px; color:var(--ink-dim); font-family:var(--gowun); pointer-events:none; max-width:calc(100% - 28px)}
-.legend .tri{display:inline-block; width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent;
- border-bottom:11px solid currentColor; margin-right:5px; vertical-align:-1px}
-.legend .cur{color:var(--cur)} .legend .fld{color:var(--mag)}
-.panel{display:flex; gap:14px; flex-wrap:wrap; align-items:center; padding:14px 18px; border-top:1px dashed var(--line-soft)}
-.btn{font-family:var(--jua); font-size:14px; padding:8px 16px; border-radius:10px; cursor:pointer;
- border:1.5px solid var(--line); background:#fffcf4; color:var(--ink-dim); transition:.15s}
-.btn:hover{border-color:var(--mag); color:var(--mag)}
-.btn.primary{background:var(--mag); color:#eefaf4; border-color:var(--mag)}
-.btn.warn{background:#fbf3ea; border-color:var(--accent); color:var(--accent)}
-.note-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin-top:16px}
-.note{background:rgba(255,252,244,.7); border:1px solid var(--line-soft); border-radius:12px; padding:13px 16px;
- font-size:14px; color:var(--ink-dim); line-height:1.6; font-family:var(--gowun); transition:.18s}
-.note.on{border-color:var(--mag); box-shadow:0 0 0 2px rgba(44,110,95,.18); background:rgba(255,252,244,.95)}
-.note b{color:var(--ink)} .note .k{color:var(--mag); font-family:var(--jua); font-size:13.5px}
-.note .see{display:block; margin-top:6px; font-size:13px; color:var(--ink-mute)}
-.calc-note{margin-top:12px; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun); line-height:1.6; text-align:center}
-#app-credit{margin:34px auto 18px; text-align:center; font-size:12.5px; color:var(--ink-mute); font-family:var(--gowun)}
-@media (max-width:640px){
- .hand{width:150px; padding:7px 9px; top:auto; bottom:10px; right:8px} .hand .he{font-size:20px} .hand .ht{font-size:11.5px; margin-top:3px}
- .hud{left:10px; top:10px; max-width:calc(100% - 62px)} .tag{font-size:12px; padding:6px 10px}
- .legend{font-size:11.5px; padding:5px 9px; left:10px; bottom:10px; max-width:calc(100% - 176px);
-  flex-direction:column; align-items:flex-start; gap:2px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--surface);color:var(--ink);font:17px/1.6 var(--disp);-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+button:active{transform:scale(.95)}
+button:disabled{cursor:default;opacity:.4;transform:none}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+button,input,summary{-webkit-tap-highlight-color:transparent}
+a{color:var(--accent)}
+h1,h2,h3,p{margin:0}
+button,summary,label{user-select:none}
+[hidden]{display:none!important}
+.topbar{background:var(--canvas);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1520px;min-height:54px;margin:auto;padding:9px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-size:14px;font-weight:600;letter-spacing:-.2px}
+.topbar-meta{font-size:12px;color:var(--ink-mute)}
+.wrap{max-width:1520px;margin:0 auto;padding:32px 32px 0}
+.intro{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:26px}
+.eyebrow{font-size:13px;font-weight:600;color:var(--ink-mute);margin-bottom:7px;letter-spacing:.02em}
+h1{font-size:clamp(28px,3.2vw,40px);line-height:1.2;font-weight:600;letter-spacing:-1.5px;word-break:keep-all}
+.intro-copy{color:var(--ink-dim);font-size:16px;margin-top:9px;word-break:keep-all}
+.modes{display:flex;background:#e8e8ed;padding:4px;border-radius:12px;gap:3px;flex-shrink:0}
+.mode-btn{min-height:43px;white-space:nowrap;border:0;border-radius:9px;background:transparent;color:var(--ink-dim);font-size:14px;font-weight:600;padding:8px 17px}
+.mode-btn.on{background:var(--canvas);color:var(--accent)}
+.lab-layout{display:grid;grid-template-columns:minmax(0,1fr) 334px;gap:20px;align-items:start}
+.scene-column{min-width:0}
+.stage-card{background:var(--canvas);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.stage-head{padding:18px 22px 14px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.stage-head h2{font-size:18px;font-weight:600;letter-spacing:-.4px}
+.stage-badge{font-size:11px;padding:3px 9px;border-radius:6px;background:var(--surface);color:var(--ink-mute);white-space:nowrap}
+.stage{height:clamp(460px,57vh,690px);position:relative;background:#f5f5f7;overflow:hidden;touch-action:none;isolation:isolate}
+.stage canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
+.stage.placing,.stage.placing canvas{cursor:crosshair}
+.stage:fullscreen{width:100vw;height:100vh;border-radius:0}
+.view-tools{position:absolute;right:14px;bottom:14px;display:flex;align-items:center;gap:5px;z-index:5}
+.view-tools .btn{min-height:38px;padding:7px 11px;background:rgba(255,255,255,.95);font-size:12px;border-radius:8px}
+.legend{position:absolute;left:16px;top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--ink-dim);pointer-events:none;padding:5px 9px;background:rgba(245,245,247,.88);border-radius:8px;max-width:calc(100% - 68px);z-index:2}
+.legend span{white-space:nowrap}
+.legend i{display:inline-block;width:15px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.legend .cur{background:var(--cur)}
+.legend .fld{background:var(--mag)}
+.legend .needle-dot{background:#c8453e;width:7px;height:7px;border-radius:50%}
+.stage-gesture{position:absolute;left:20px;bottom:20px;max-width:48%;font-size:11px;color:var(--ink-mute);pointer-events:none;z-index:2}
+.scene-caption{padding:17px 22px 19px;border-top:1px solid #eeeef1}
+#msg{font-size:14px;color:var(--ink-dim);line-height:1.65;word-break:keep-all}
+#msg b{color:var(--ink);font-weight:600}
+.hand{display:flex;align-items:center;gap:12px;margin-top:14px;padding-top:13px;border-top:1px solid #f0f0f0}
+.hand-symbol{display:grid;place-items:center;font-size:22px;flex:none;width:36px;height:36px;background:var(--surface);border-radius:10px}
+.hand .ht{font-size:13px;line-height:1.7;color:var(--ink-dim);word-break:keep-all}
+.hand .ht b{font-weight:600;color:var(--ink)}
+.observation{font-size:13px;color:var(--ink-mute);margin-top:13px;padding:0 2px;word-break:keep-all}
+.control-panel{background:var(--canvas);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.control-section{padding:20px;border-top:1px solid #ededf0}
+.control-section:first-child{border-top:0}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.section-title h3{font-size:15px;font-weight:600;letter-spacing:-.3px}
+.section-kicker{font-size:11px;letter-spacing:.02em;color:var(--ink-mute)}
+.sensor-section{background:var(--surface-soft);padding-top:22px;padding-bottom:19px}
+.sensor-label{font-size:12px;color:var(--ink-mute)}
+.sensor-reading{display:flex;align-items:baseline;gap:9px;margin:3px 0 6px;line-height:1.15}
+#sensor-value{font-size:42px;font-weight:600;letter-spacing:-1.5px;font-variant-numeric:tabular-nums;color:var(--mag)}
+.sensor-unit{font-size:17px;color:var(--mag)}
+#sensor-components{font-size:11px;color:var(--ink-mute);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#sensor-status{font-size:12px;margin-top:9px;color:var(--ink-dim);line-height:1.5;word-break:keep-all}
+.meter{display:flex;align-items:center;gap:9px;margin-top:11px;color:var(--ink-mute);font-size:11px}
+.meter .bars{display:inline-flex;gap:3px;align-items:flex-end}
+.meter .bars i{display:block;width:14px;height:5px;border-radius:2px;background:#dfebe6}
+.meter .bars i.on{background:var(--mag)}
+.control-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;font-size:13px}
+.control-row label{font-weight:600}
+.control-value{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--cur);line-height:1.3}
+.control-value small{font-size:12px;font-weight:400;margin-left:3px}
+input[type=range]{width:100%;height:24px;margin:0;accent-color:var(--accent);cursor:pointer;display:block}
+.range-ends{display:flex;justify-content:space-between;color:var(--ink-mute);font-size:10px;margin-top:2px}
+.range-group+.range-group{margin-top:17px}
+.btn{border:1px solid var(--line);color:var(--accent);background:var(--canvas);border-radius:9px;font-size:13px;line-height:1.5;padding:10px 13px;min-height:42px;font-weight:400;transition:transform .12s}
+.btn.primary,.btn.on,.btn[aria-pressed=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.full{display:block;width:100%}
+.btn.full.direction-button{margin-top:14px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--accent);background:#f0f6fc;border-color:transparent}
+.direction-button .flip-symbol{font-size:20px;flex:none}
+.direction-button .direction-label{font-size:12px;display:block;color:var(--ink-mute);margin-top:2px;line-height:1.45}
+#cur-dir{font-weight:400;color:var(--cur)}
+.segmented{display:flex;gap:4px;padding:4px;background:var(--surface);border-radius:10px}
+.segmented .btn{flex:1;min-height:36px;font-size:12px;padding:8px 5px;border:0;background:transparent;color:var(--ink-dim);border-radius:7px}
+.segmented .btn.on,.segmented .btn[aria-pressed=true]{background:#fff;color:var(--accent)}
+.help-text{font-size:11px;line-height:1.6;color:var(--ink-mute);margin-top:9px;word-break:keep-all}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;font-size:12px;min-height:42px;color:var(--ink-dim)}
+.switch-row input{appearance:none;-webkit-appearance:none;position:relative;margin:0;width:34px;height:21px;background:#d2d2d7;border-radius:20px;flex:none;cursor:pointer;transition:background .15s}
+.switch-row input:before{content:"";position:absolute;width:17px;height:17px;left:2px;top:2px;border-radius:50%;background:#fff;transition:transform .15s}
+.switch-row input:checked{background:var(--accent)}
+.switch-row input:checked:before{transform:translateX(13px)}
+.coords{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
+.coord-field{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;min-width:0;height:41px}
+.coord-field label{font-size:12px;font-weight:600;color:var(--ink-dim)}
+.coord-field input{border:0;outline:0;background:transparent;font-size:14px;min-width:0;width:100%;text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
+.coord-field:focus-within{outline:2px solid var(--focus);outline-offset:2px}
+.coord-field input:focus-visible{outline:0}
+.coord-field span{font-size:10px;color:var(--ink-mute)}
+.position-actions{display:flex;gap:7px;margin-top:9px;align-items:center}
+.position-actions .btn{flex:1}
+.preset-row{display:flex;gap:6px;margin-top:11px}
+.preset-row .btn{padding:7px 4px;min-height:34px;flex:1;font-size:11px;background:var(--surface-soft)}
+.flux-summary{font-size:12px;margin-top:8px;color:var(--ink-dim)}
+.flux-reading{font-size:22px;font-weight:600;color:var(--mag);font-variant-numeric:tabular-nums;margin-right:5px}
+.flux-details{background:var(--surface-soft);border-radius:9px;padding:8px 12px;margin-top:5px}
+.section-divider{height:1px;background:var(--line);margin:16px 0}
+.guide{margin-top:24px;border-top:1px solid var(--line);padding-top:6px}
+.guide>summary{list-style:none;padding:17px 0;display:flex;align-items:center;justify-content:space-between;font-size:15px;font-weight:600;cursor:pointer}
+.guide>summary::-webkit-details-marker{display:none}
+.guide>summary:after{content:"＋";color:var(--accent);font-size:20px;font-weight:400}
+.guide[open]>summary:after{content:"−"}
+.note-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:4px}
+.note{border:1px solid var(--line);border-radius:12px;background:var(--canvas);padding:18px;font-size:13px;line-height:1.75;color:var(--ink-dim);word-break:keep-all}
+.note.on{border-color:#a4bcb2}
+.note .k{display:block;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.note b{font-weight:600;color:var(--mag)}
+.note .see{display:block;margin-top:7px;color:var(--ink-mute);font-size:12px}
+.note.myth{margin-top:16px;background:transparent;border-color:#dddde2}
+.note.myth b{color:var(--ink)}
+.calc-note{font-size:12px;line-height:1.8;color:var(--ink-mute);margin-top:16px;word-break:keep-all}
+.sq-card{margin:18px 0 0!important;background:#fff!important;border:1px solid var(--line)!important;border-radius:var(--r)!important;padding:18px 22px!important}
+.sq-h{color:var(--ink-mute);font-size:12px!important;font-weight:600!important}
+.sq-q{font-size:14px!important}
+.sq-c{min-height:40px;border-color:var(--line)!important;background:var(--surface-soft)!important}
+.sq-c.ok{background:var(--mag)!important;border-color:var(--mag)!important;color:#fff!important}
+.sq-c.no{background:#fff0ed!important;color:var(--danger)!important}
+.sq-why{border-top:1px solid var(--line)!important}
+.simfs-btn{width:36px!important;height:36px!important;border:1px solid var(--line)!important;border-radius:9px!important;background:rgba(255,255,255,.92)!important;color:var(--ink-dim)!important;opacity:1!important;right:14px!important;top:14px!important}
+#app-credit{max-width:1456px;margin:30px auto 0;padding:20px 24px 26px;border-top:1px solid var(--line);text-align:center;color:var(--ink-mute);font:12px/1.7 var(--disp)}
+html.large-ui{zoom:1.35}
+@media(min-width:851px){.scene-column{position:sticky;top:12px}}
+@media(min-width:1600px){.stage{height:650px}}
+@media(max-width:1160px){.wrap{padding:26px 22px 0}.topbar-inner{padding-left:22px;padding-right:22px}.intro{align-items:flex-start;flex-direction:column;gap:20px}.modes{align-self:flex-start}.lab-layout{grid-template-columns:minmax(0,1fr) 312px;gap:16px}.control-section{padding:18px}.stage{height:530px}.stage-gesture{bottom:64px;left:16px;max-width:75%}.view-tools{left:14px;right:auto}.stage-head{padding:17px 18px 13px}.scene-caption{padding:16px 18px}}
+@media(max-width:850px){.lab-layout{grid-template-columns:1fr}.intro{gap:18px;margin-bottom:20px}.control-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.control-section{border-top:1px solid #ededf0}.control-section:nth-child(2){border-top:0}.control-section:nth-child(even){border-left:1px solid #ededf0}.sensor-section{grid-column:auto}.stage{height:500px}.stage-gesture{bottom:22px;max-width:50%}.view-tools{left:auto;right:14px}.note-row{grid-template-columns:1fr}.topbar-meta{display:none}}
+@media(max-width:540px){body{font-size:16px}.topbar-inner{min-height:47px;padding:9px 18px}.brand{font-size:12px}.wrap{padding:24px 14px 0}.intro{gap:18px}.eyebrow{font-size:11px;margin-bottom:7px}h1{font-size:29px;letter-spacing:-1.1px}.intro-copy{font-size:13px;line-height:1.65;margin-top:9px}.modes{width:100%;padding:4px;gap:2px}.mode-btn{flex:1;min-height:43px;padding:8px 6px;font-size:12px}.stage-head{padding:15px 15px 12px;gap:8px}.stage-head h2{font-size:15px}.stage-badge{font-size:10px}.stage{height:390px}.scene-caption{padding:15px}#msg{font-size:12px;line-height:1.75}.hand{gap:9px;margin-top:12px;padding-top:12px}.hand .ht{font-size:11px}.hand-symbol{width:30px;height:30px;font-size:18px}.legend{left:9px;top:12px;gap:5px 10px;font-size:10px;padding:4px 6px;max-width:calc(100% - 53px)}.legend i{width:10px;margin-right:4px}.stage-gesture{left:14px;bottom:59px;font-size:10px;max-width:80%}.view-tools{right:10px;left:10px;bottom:12px;gap:5px;justify-content:flex-end}.view-tools .btn{min-height:35px;font-size:11px;padding:6px 10px}.simfs-btn{right:10px!important;top:12px!important;width:30px!important;height:30px!important}.control-panel{display:block}.control-section{padding:20px}.control-section:nth-child(2){border-top:1px solid #ededf0}.control-section:nth-child(even){border-left:0}.sensor-reading{margin-top:8px}.sensor-section{position:relative}#sensor-value{font-size:38px}.sensor-section .section-title{margin-bottom:6px}.section-title h3{font-size:15px}.section-kicker{font-size:11px}.control-row{font-size:14px}.help-text{font-size:12px}.switch-row{font-size:13px}.btn{font-size:13px}.segmented .btn{font-size:13px}.preset-row .btn{font-size:12px;min-height:40px}.coord-field{height:44px}.position-actions .btn{min-height:44px}.sq-card{padding:17px 16px!important}.sq-c{font-size:12px!important;padding:7px 10px!important}.guide{margin-top:22px}.guide>summary{font-size:14px}#app-credit{margin-top:22px;padding:18px 18px 25px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* 전체화면: 실험판과 조작판을 함께 유지하고 조작판만 독립적으로 스크롤한다. */
+.simfs-btn{position:absolute;z-index:40;cursor:pointer;line-height:1}
+.is-fullscreen .simfs-btn{display:none}
+.fullscreen-toolbar[hidden]{display:none!important}
+.lab-layout.is-fullscreen{
+ position:fixed;inset:0;width:100vw;height:100vh;max-width:none;margin:0;padding:12px;
+ display:grid;grid-template-columns:minmax(0,1fr) 334px;grid-template-rows:auto minmax(0,1fr);
+ gap:12px;align-items:stretch;overflow:hidden;background:var(--surface);z-index:1000;
 }
+.lab-layout.is-fullscreen::backdrop{background:var(--surface)}
+.is-fullscreen .fullscreen-toolbar{grid-column:1/-1;display:flex;align-items:center;gap:16px;min-width:0}
+.fullscreen-title{font-size:17px;font-weight:600;letter-spacing:-.5px;margin-right:auto;word-break:keep-all}
+.fullscreen-modes{flex:none}
+.is-fullscreen .modes{margin:0;align-self:auto;width:auto}
+.is-fullscreen .mode-btn{min-height:40px;padding:8px 15px}
+#fullscreen-exit{white-space:nowrap;flex:none;min-height:44px}
+.is-fullscreen .scene-column{position:static;grid-column:1;grid-row:2;min-height:0;height:100%;overflow:hidden}
+.is-fullscreen .stage-card{display:flex;flex-direction:column;height:100%;min-height:0}
+.is-fullscreen .stage-head{flex:none;padding:12px 18px}
+.is-fullscreen .stage{flex:1 1 0;height:auto;min-height:0}
+.is-fullscreen .stage canvas{width:100%;height:100%}
+.is-fullscreen .scene-caption{flex:none;padding:10px 18px}
+.is-fullscreen .hand{margin-top:8px;padding-top:8px}
+.is-fullscreen .hand-symbol{display:none}
+.is-fullscreen .scene-column>.sq-card,.is-fullscreen .observation{display:none!important}
+.is-fullscreen .control-panel{grid-column:2;grid-row:2;display:block;height:100%;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scroll-behavior:auto}
+.is-fullscreen .control-section{padding:16px 18px;border-left:0;border-top:1px solid #ededf0}
+.is-fullscreen .control-section:first-child{border-top:0}
+.is-fullscreen .control-section:nth-child(2){border-top:1px solid #ededf0}
+.is-fullscreen .section-title{margin-bottom:10px}
+.is-fullscreen #sensor-value{font-size:36px}
+.is-fullscreen .view-tools{left:auto;right:12px}
+.is-fullscreen .stage-gesture{left:16px;bottom:62px;max-width:80%}
+@media(max-width:1050px){.fullscreen-title{font-size:15px;max-width:220px}.is-fullscreen .fullscreen-toolbar{gap:10px}.lab-layout.is-fullscreen{grid-template-columns:minmax(0,1fr) 302px}}
+@media(max-width:760px){
+ .lab-layout.is-fullscreen{padding:8px;gap:8px;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1.1fr) minmax(0,1fr)}
+ .is-fullscreen .fullscreen-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px}
+ .fullscreen-title{font-size:14px;max-width:none}
+ .fullscreen-modes{grid-column:1;grid-row:2;min-width:0}
+ .is-fullscreen .modes{width:100%;padding:3px}
+ .is-fullscreen .mode-btn{font-size:12px;min-height:38px;padding:6px}
+ #fullscreen-exit{grid-column:2;grid-row:1/3;font-size:12px;padding:8px 10px}
+ .is-fullscreen .scene-column{grid-column:1;grid-row:2}
+ .is-fullscreen .control-panel{grid-column:1;grid-row:3}
+ .is-fullscreen .stage-head{padding:8px 12px}
+ .is-fullscreen .stage-head h2{font-size:13px}
+ .is-fullscreen .scene-caption{display:none}
+ .is-fullscreen .view-tools{left:8px;right:8px;bottom:8px}
+ .is-fullscreen .view-tools .btn{min-height:36px;font-size:11px;padding:6px 8px}
+ .is-fullscreen .stage-gesture{bottom:49px;font-size:10px}
+ .is-fullscreen .legend{font-size:10px;left:7px;top:8px}
+ .is-fullscreen .control-section{padding:14px 18px}
+}
+@media(max-height:560px){.is-fullscreen .scene-caption{display:none}.is-fullscreen .stage-gesture{display:none}}
+
 </style>
 </head>
 <body>
-<header>
- <h1>✋ 엄지가 가리키는 곳 — <span class="em">오른손 규칙 3D</span></h1>
- <p>직선 도선 · 원형 도선 · 코일 — 나침반을 끌고 다니며 자기장의 방향을 직접 확인해 보세요</p>
-</header>
 
-<div class="wrap">
- <div class="modes">
-  <button class="mode-btn on" data-mode="wire">┃ 직선 도선 주위의 자기장</button>
-  <button class="mode-btn" data-mode="loop">◯ 원형 도선 주위의 자기장</button>
-  <button class="mode-btn" data-mode="coil">〇 코일(전자석)의 자기장</button>
- </div>
-
- <section class="stage-card">
-  <div class="stage-head"><span class="dot"></span><h2 id="stage-title">직선 도선에 전류가 흐르면?</h2>
-   <span class="hint">🧭 나침반을 드래그해 옮기기 · 빈 곳 드래그 = 시점 회전</span></div>
-  <div class="stage" id="stage">
-   <div class="hud">
-    <div class="tag" id="msg">나침반 바늘(빨강 = N극)이 그 자리의 <b>자기장 방향</b>을 가리킵니다. 도선 둘레를 한 바퀴 돌려 보세요!</div>
-    <div class="tag meter" id="meter">이 자리의 자기장 세기 <span class="bars" id="meter-bars"><i></i><i></i><i></i><i></i><i></i></span></div>
-   </div>
-   <div class="hand" id="hand-card">
-    <div class="he">👍</div>
-    <div class="ht" id="hand-text"><b>엄지손가락</b> = 전류의 방향<br><b>네 손가락이 도선을 감아쥐는 방향</b> = 자기장의 방향</div>
-   </div>
-   <div class="legend"><span><span class="tri cur"></span>빨간 화살촉 = 전류의 방향</span><span><span class="tri fld"></span>초록 화살촉 = 자기장의 방향</span></div>
-  </div>
-  <div class="panel">
-   <button class="btn primary" id="flip-btn">🔄 전류 방향 바꾸기 (지금: <b id="cur-dir">위쪽 ↑</b>)</button>
-   <button class="btn warn" id="predict-btn">🙈 자기장 숨기고 예상해 보기</button>
-   <span class="ctl" style="font-family:var(--gowun);font-size:13.5px;color:var(--ink-mute)" id="mode-tip">
-    도선 가까이일수록 자기장이 셉니다 — 나침반을 가까이/멀리 옮겨 보세요.</span>
-  </div>
- </section>
-
- <div class="note-row">
-  <div class="note on" data-m="wire"><span class="k">① 직선 도선</span><br>
-   오른손 <b>엄지손가락을 전류의 방향</b>으로 향하게 하고 네 손가락으로 도선을 감아쥘 때, <b>네 손가락이 감기는 방향</b>이 자기장의 방향입니다.
-   자기장은 도선을 중심으로 한 <b>동심원</b> 모양이고, 도선에 <b>가까울수록 셉니다</b>.</div>
-  <div class="note" data-m="loop"><span class="k">② 원형 도선</span><br>
-   도선 가까이에서는 도선을 감싸는 <b>원 모양</b>이고, <b>원의 중심</b>에서는 원이 이루는 면을 <b>수직으로 지나는</b> 자기장이 생깁니다.
-   원의 중심에서는 오른손 <b>네 손가락을 전류의 방향</b>으로 감아쥘 때 <b>엄지손가락</b>이 가리키는 방향이 자기장의 방향입니다.
-   <span class="see">화면에서 — 도선의 어느 부분이든 짧은 직선 도선처럼 둘레에 작은 원 모양 자기장이 생기고, 원 안쪽에서는 모두 같은 쪽으로 겹칩니다.</span></div>
-  <div class="note" data-m="coil"><span class="k">③ 코일</span><br>
-   코일은 <b>원형 도선을 여러 번 감은 것</b>입니다. 코일 주위의 자기장은 <b>막대자석 주위</b>와 비슷하고,
-   오른손 <b>네 손가락을 전류의 방향</b>으로 감아쥘 때 <b>엄지손가락</b>이 가리키는 쪽이 코일 안 자기장의 방향, 곧 <b>N극</b> 쪽입니다.
-   전류의 방향을 바꾸면 N극과 S극도 바뀝니다.</div>
-  <div class="note"><span class="k">④ 예상 → 확인</span><br>
-   「자기장 숨기기」를 누르고, 나침반이 어디를 가리킬지 <b>먼저 말한 다음</b> 옮겨서 확인해 보세요.
-   교과서 2D 그림에서 헷갈렸던 ⊙(나오는 방향)·⊗(들어가는 방향)이 3D에서는 그냥 보입니다.</div>
- </div>
- <p class="calc-note">자기력선과 나침반 바늘은 도선에 흐르는 전류가 만드는 자기장을 컴퓨터로 계산해 그렸습니다(코일은 원형 도선 10개를 나란히 놓은 것으로 계산).
-  실제 나침반은 처음에 북쪽을 가리키지만, 이 화면에서는 전류가 만든 자기장만 보여 줍니다.</p>
+<div class="topbar">
+ <div class="topbar-inner"><span class="brand">승재쌤의 과학실</span><span class="topbar-meta">전기와 자기 · 3D 실험실</span></div>
 </div>
+<main class="wrap">
+ <header class="intro">
+  <div>
+   <p class="eyebrow">전류에 의한 자기장</p>
+   <h1 id="title">오른손으로 찾는 자기장 방향</h1>
+   <p class="intro-copy">전류를 바꾸고, 나침반을 옮기며 오른손 규칙을 확인해 보세요.</p>
+  </div>
+  <nav class="modes" aria-label="도선 모양">
+   <button type="button" class="mode-btn on" data-mode="wire" aria-pressed="true">직선 도선</button>
+   <button type="button" class="mode-btn" data-mode="loop" aria-pressed="false">원형 도선</button>
+   <button type="button" class="mode-btn" data-mode="coil" aria-pressed="false">코일</button>
+  </nav>
+ </header>
 
-<footer id="app-credit">© 2026 승재쌤의 과학실 · 오른손 규칙 3D · 최종 업데이트 2026-10-05</footer>
+ <div class="lab-layout" id="lab-workspace">
+  <div class="fullscreen-toolbar" id="fullscreen-toolbar" hidden>
+   <h2 class="fullscreen-title">오른손으로 찾는 자기장 방향</h2>
+   <div class="fullscreen-modes" id="fullscreen-modes"></div>
+   <button type="button" class="btn" id="fullscreen-exit">전체화면 나가기</button>
+  </div>
+  <div class="scene-column">
+   <section class="stage-card" aria-label="자기장 3D 실험">
+    <div class="stage-head"><h2 id="stage-title">직선 도선에 전류가 흐르면?</h2><span class="stage-badge">3D 실험</span></div>
+    <div class="stage" id="stage" aria-label="드래그로 시점을 회전하거나 나침반을 옮기는 3D 실험판">
+     <div class="legend"><span><i class="cur"></i>전류</span><span><i class="fld"></i>자기장</span><span><i class="needle-dot"></i>바늘의 N극</span></div>
+     <p class="stage-gesture">빈 곳 드래그: 회전 · 나침반 드래그: 이동</p>
+     <div class="view-tools" aria-label="화면 조작">
+      <button type="button" class="btn" id="home-view" title="처음 시점으로 돌아가기">기본 시점</button>
+      <button type="button" class="btn" id="top-view" title="실험판을 위에서 보기">위에서 보기</button>
+      <button type="button" class="btn" id="pause-btn" aria-pressed="false" title="화살표 움직임 멈추기">일시 정지</button>
+     </div>
+    </div>
+    <div class="scene-caption">
+     <p id="msg">나침반 바늘의 빨간 N극이 그 자리에서 <b>수평 자기장의 방향</b>을 가리킵니다. 도선 둘레로 옮겨 보세요.</p>
+     <div class="hand" id="hand-card"><div class="hand-symbol" aria-hidden="true">👍</div><div class="ht" id="hand-text"><b>엄지손가락</b> = 전류의 방향<br><b>네 손가락이 도선을 감아쥐는 방향</b> = 자기장의 방향</div></div>
+    </div>
+   </section>
+   <p class="observation" id="mode-tip">도선에 가까울수록 자기장이 셉니다. 나침반을 가까이, 멀리 옮겨 보세요.</p>
+  </div>
+
+  <aside class="control-panel" aria-label="실험 제어판">
+   <section class="control-section sensor-section" aria-labelledby="sensor-title">
+    <div class="section-title"><h3 id="sensor-title">자기장 센서</h3><span class="section-kicker">나침반 위치에서 측정</span></div>
+    <div class="sensor-label">자기장의 세기 |B|</div>
+    <div class="sensor-reading"><output id="sensor-value" aria-label="자기장 세기">0.000</output><span class="sensor-unit">µT</span></div>
+    <p id="sensor-components">Bx 0.000 · By 0.000 · Bz 0.000 µT</p>
+    <div class="meter" id="meter"><span class="bars" id="meter-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span>상대적인 세기</span></div>
+    <p id="sensor-status">전류에 의한 자기장의 계산값입니다.</p>
+    <p class="help-text">지구 자기장 제외 · 실제 센서 연결값 아님</p>
+   </section>
+
+   <section class="control-section" aria-labelledby="current-title">
+    <div class="section-title"><h3 id="current-title">전류와 도선</h3></div>
+    <div class="range-group">
+     <div class="control-row"><label for="current-range">전류의 세기</label><span class="control-value"><output id="current-value" for="current-range">1.0</output><small>A</small></span></div>
+     <input id="current-range" type="range" min="0" max="5" step="0.1" value="1" aria-label="전류의 세기, 암페어">
+     <div class="range-ends"><span>0 A</span><span>5 A</span></div>
+    </div>
+    <div class="range-group" id="turns-control" hidden>
+     <div class="control-row"><label for="turns-range">코일의 감은 수</label><span class="control-value"><output id="turns-value" for="turns-range">10</output><small>회</small></span></div>
+     <input id="turns-range" type="range" min="2" max="20" step="1" value="10" aria-label="코일의 감은 수">
+     <div class="range-ends"><span>2회</span><span>20회</span></div>
+     <p class="help-text">코일의 길이와 반지름은 일정합니다.</p>
+    </div>
+    <button type="button" class="btn full direction-button" id="flip-btn"><span>전류 방향 바꾸기<span class="direction-label">지금: <b id="cur-dir">위쪽 ↑</b></span></span><span class="flip-symbol" aria-hidden="true">⇄</span></button>
+   </section>
+
+   <section class="control-section" aria-labelledby="field-title">
+    <div class="section-title"><h3 id="field-title">자기장 보기</h3></div>
+    <div class="segmented" id="field-view" role="group" aria-label="자기장 표시 방식">
+     <button type="button" class="btn view-btn on" data-view="all" aria-pressed="true">전체 자기장</button>
+     <button type="button" class="btn view-btn" id="axis-view" data-view="axis" aria-pressed="false" disabled>중심 방향만</button>
+    </div>
+    <p class="help-text" id="field-view-note">원형 도선·코일에서는 중심축 방향만 볼 수 있어요.</p>
+    <label class="switch-row" for="density-toggle"><span>세기에 따라 자기력선 밀도 바꾸기</span><input type="checkbox" id="density-toggle" checked></label>
+    <button type="button" class="btn full" id="predict-btn" aria-pressed="false">자기장 숨기고 예상하기</button>
+   </section>
+
+   <section class="control-section" aria-labelledby="compass-title">
+    <div class="section-title"><h3 id="compass-title">나침반 놓기</h3><span class="section-kicker">실험판 좌표</span></div>
+    <button type="button" class="btn primary full" id="place-btn" aria-pressed="false">실험판에서 위치 찍기</button>
+    <div class="coords">
+     <div class="coord-field"><label for="compass-x">x</label><input id="compass-x" type="number" min="-100" max="100" step="0.1" value="26" inputmode="decimal" aria-label="나침반 x 좌표"><span>cm</span></div>
+     <div class="coord-field"><label for="compass-z">z</label><input id="compass-z" type="number" min="-60" max="60" step="0.1" value="22" inputmode="decimal" aria-label="나침반 z 좌표"><span>cm</span></div>
+    </div>
+    <div class="position-actions"><button type="button" class="btn full" id="coords-apply">이 좌표에 놓기</button></div>
+    <div class="preset-row" role="group" aria-label="자주 쓰는 나침반 위치"><button type="button" class="btn" data-position="center">중심 부근</button><button type="button" class="btn" data-position="near">도선 가까이</button><button type="button" class="btn" data-position="outside">바깥쪽</button></div>
+    <p class="help-text">실제 수평 나침반처럼 수평 자기장에 반응합니다. 도선과 겹치면 가까운 안전한 위치로 옮깁니다.</p>
+   </section>
+
+   <section class="control-section" aria-labelledby="flux-title">
+    <div class="section-title"><h3 id="flux-title">자기선속 살펴보기</h3><span class="section-kicker">더 알아보기 · 시험 범위 밖</span></div>
+    <label class="switch-row" for="flux-toggle"><span>측정면 표시</span><input type="checkbox" id="flux-toggle"></label>
+    <div class="flux-details"><div class="flux-summary">측정면을 지나는 자기선속</div><div><output class="flux-reading" id="flux-value">0.000</output><span class="sensor-unit">nWb</span></div></div>
+    <p class="help-text" id="flux-note">자기선속은 선택한 면을 지나는 자기장의 양입니다. 면의 넓이와 방향도 함께 보세요.</p>
+   </section>
+  </aside>
+ </div>
+
+ <details class="guide">
+  <summary>오른손 규칙과 화면 읽는 법</summary>
+  <div class="note-row">
+   <div class="note on" data-m="wire"><span class="k">직선 도선</span>오른손 <b>엄지손가락을 전류의 방향</b>으로 향하게 하고 네 손가락으로 도선을 감아쥐세요. <b>네 손가락이 감기는 방향</b>이 자기장의 방향입니다. 자기력선은 도선을 중심으로 한 동심원 모양이고, 도선에 가까울수록 자기장이 셉니다.</div>
+   <div class="note" data-m="loop"><span class="k">원형 도선</span>오른손 <b>네 손가락을 전류의 방향</b>으로 감아쥐면 <b>엄지손가락</b>이 원의 중심에서 자기장의 방향을 가리킵니다. 중심의 자기장은 원이 이루는 면에 수직입니다.<span class="see">「중심 방향만」으로 엄지가 가리키는 방향을 확인한 다음 「전체 자기장」과 비교해 보세요.</span></div>
+   <div class="note" data-m="coil"><span class="k">코일</span>오른손 <b>네 손가락을 전류의 방향</b>으로 감아쥐면 <b>엄지손가락</b>이 코일 안 자기장의 방향, 곧 <b>N극 쪽</b>을 가리킵니다. 전류의 방향을 바꾸면 N극과 S극도 바뀝니다.<span class="see">전류와 코일의 크기가 같을 때 감은 수를 늘리면 중심의 자기장이 세집니다.</span></div>
+  </div>
+  <div class="note myth"><span class="k">자기력선의 밀도와 자기선속은 어떻게 다를까요?</span><b>자기력선을 더 조밀하게 그려 더 센 자기장을 표현할 수 있습니다.</b> 다만 자기력선은 실제로 존재하는 실이 아니라 방향과 세기를 나타내는 그림입니다. 움직이는 화살표는 방향을 보여 주며, 자기장이 물질처럼 흘러간다는 뜻은 아닙니다. 이 화면의 선 개수는 세기 비교를 돕는 단계적 표현이며, 정확한 세기는 센서의 계산값으로 비교하세요. <b>자기선속은 정해진 면을 통과하는 자기장에 관한 값</b>이므로 면의 넓이와 방향이 정해져야 합니다. 세기가 같아도 면을 기울이면 자기선속은 달라집니다.</div>
+  <p class="calc-note">계산 조건: 직선 도선은 무한히 긴 가는 도선으로 근사합니다. 원형 도선의 반지름은 28 cm이며, 코일은 반지름 15.5 cm·길이 56 cm인 공심 코일을 여러 원형 도선의 합으로 근사합니다. 지구 자기장·철심·연결 도선의 영향은 제외합니다. 나침반 바늘은 도선 중심축 높이에서 수평으로 움직입니다. 센서는 자기장 전체의 크기 |B|를 표시하고, 수평 나침반은 그중 수평 성분의 방향에 반응합니다. 전류가 0 A이거나 수평 성분이 거의 0인 곳에서는 나침반이 가리킬 방향을 정할 수 없습니다.</p>
+  <p class="calc-note">자기선속 측정면: 직선 도선에서는 중심 (x = 26 cm, z = 0)에 놓인 반지름 6 cm의 xy 원판(면의 양의 방향 +z), 원형 도선과 코일에서는 중심에 놓인 반지름 7 cm의 yz 원판(면의 양의 방향 +x)을 사용합니다. 자기선속의 부호는 이 면의 방향을 기준으로 합니다.</p>
+ </details>
+ <div style="display:flex;justify-content:flex-end;margin-top:16px"><button type="button" class="btn" id="zoom-btn" aria-pressed="false">화면 크게 보기</button></div>
+</main>
+<footer id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br>최종 업데이트: 2026-10-12</footer>
 
 <script src="lib/three.min.js"></script>
 <script src="lib/OrbitControls.js"></script>
 <script>
 'use strict';
 /* ═══════════════ 기본 값 ═══════════════ */
-const COPPER    = 0xb0713a;   // 도선(구리색)
-const CUR_COL   = 0xe0402a;   // 전류 화살촉 — 도선과 확실히 다른 빨강 계열
+const COPPER    = 0xc7a286;   // 도선(구리색)
+const CUR_COL   = 0xa05c2c;   // 전류 화살촉 — 도선과 확실히 다른 빨강 계열
 const FIELD_COL = 0x2c6e5f;   // 자기장(자기력선) 초록
 const FIELD_COL2= 0x5f978a;   // 비스듬한 평면의 자기력선(옅게)
 const DESK_TOP  = -5.2;       // 아래 책상 윗면
 const AXIS_Y    = 0.36;       // 나침반 바늘 높이 = 원형 도선·코일의 중심축 높이(실험판 윗면 y = 0)
 const BOARD_W = 22, BOARD_D = 15;              // 투명 실험판(아크릴)
 const LOOP_R = 2.8;                            // 원형 도선 반지름
-const COIL_R = 1.55, COIL_L = 5.6, COIL_N = 10; // 코일 반지름·길이·감은 수
+const COIL_R = 1.55, COIL_L = 5.6; let COIL_N = 10; // 코일 반지름·길이·감은 수
 const CUR_SPEED  = 0.9;                        // 전류 화살촉: 1초에 0.9칸
 const FIELD_REV  = 0.25, FIELD_VMAX = 3.2;     // 자기장 화살촉: 1초에 자기력선 0.25바퀴(긴 선은 1초에 3.2칸까지)
 const NAME = {wire:'직선 도선', loop:'원형 도선', coil:'코일'};
@@ -160,10 +353,10 @@ renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.setSize(stage.clientWidth, stage.clientHeight);
 stage.insertBefore(renderer.domElement, stage.firstChild);
 const scene = new THREE.Scene();
-scene.add(new THREE.AmbientLight(0xfff4e0,.8));
+scene.add(new THREE.AmbientLight(0xffffff,1.05));
 const dl = new THREE.DirectionalLight(0xffffff,.7); dl.position.set(6,10,8); scene.add(dl);
 const cam = new THREE.PerspectiveCamera(46, 2, .1, 200);
-cam.position.set(9,6.8,8.6);
+cam.position.set(13,10.5,15);
 const ctl = new THREE.OrbitControls(cam, renderer.domElement);
 ctl.target.set(0,.4,0);
 ctl.enableDamping = true; ctl.maxPolarAngle = Math.PI*.5; ctl.minDistance = 6; ctl.maxDistance = 40;
@@ -171,21 +364,26 @@ ctl.enableDamping = true; ctl.maxPolarAngle = Math.PI*.5; ctl.minDistance = 6; c
 let dirSign = 1;   // 직선 도선: +1 = 전류 위쪽 / 원형 도선·코일: +1 = 앞쪽 도선에서 전류가 아래로(원 안·코일 안 자기장 +x)
 let mode = 'wire';
 let showField = true;
+let currentAmps = 1, fieldView = 'all', densityEnabled = true, placing = false;
+let paused = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const METRES_PER_UNIT = .1; // 1 장면 단위 = 10 cm, 공기 코어
+const MICROTESLA_PER_UNIT = .1 / METRES_PER_UNIT;
+
 
 /* ══ 책상 + 투명 실험판(교과서 실험 장치처럼 도선이 판을 뚫고 지나감) ══ */
 const desk = new THREE.Mesh(new THREE.BoxGeometry(34,.5,24),
-  new THREE.MeshStandardMaterial({color:0xc9a86a, roughness:.85}));
+  new THREE.MeshStandardMaterial({color:0xe8eaed, roughness:.85}));
 desk.position.y = DESK_TOP - .25; scene.add(desk);
 const boardGeo = new THREE.BoxGeometry(BOARD_W,.12,BOARD_D);
-const board = new THREE.Mesh(boardGeo, new THREE.MeshStandardMaterial({color:0xe8f3f0, transparent:true, opacity:.45,
+const board = new THREE.Mesh(boardGeo, new THREE.MeshStandardMaterial({color:0xffffff, transparent:true, opacity:.16,
   roughness:.2, metalness:0, depthWrite:false}));
 board.position.y = -.06; board.renderOrder = -1; scene.add(board);
-const boardEdge = new THREE.LineSegments(new THREE.EdgesGeometry(boardGeo), new THREE.LineBasicMaterial({color:0x8c7a58}));
+const boardEdge = new THREE.LineSegments(new THREE.EdgesGeometry(boardGeo), new THREE.LineBasicMaterial({color:0xc2c8ce}));
 boardEdge.position.copy(board.position); scene.add(boardEdge);
 [[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([sx,sz])=>{
   const h = -.12 - DESK_TOP;
   const leg = new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,h,12),
-    new THREE.MeshStandardMaterial({color:0x9a7b4f, roughness:.7}));
+    new THREE.MeshStandardMaterial({color:0xc2c8ce, roughness:.7}));
   leg.position.set(sx*(BOARD_W/2-.6), DESK_TOP + h/2, sz*(BOARD_D/2-.6)); scene.add(leg);
 });
 const copperMat = new THREE.MeshStandardMaterial({color:COPPER, metalness:.5, roughness:.35});
@@ -228,7 +426,7 @@ function flowArrows(set, dist, sign){
     if (set.open){ const f = Math.min(1, u/.7, (L-u)/.7); c.scale.setScalar(Math.max(.001, f)); }
   });
 }
-const curMat = new THREE.MeshStandardMaterial({color:CUR_COL, emissive:0x6a1206, roughness:.45, metalness:0});
+const curMat = new THREE.MeshStandardMaterial({color:CUR_COL, emissive:0x211004, roughness:.45, metalness:0});
 function makeCurrentArrows(group, track, gap, rad, hgt, arc){
   const geo = new THREE.ConeGeometry(rad, hgt, 16);
   const n = Math.max(2, Math.round(track.len/gap)), cones = [];
@@ -251,25 +449,33 @@ const curW = makeCurrentArrows(wireG,
   new Track([new THREE.Vector3(0,DESK_TOP,0), new THREE.Vector3(0,WIRE_TOP,0)], false), 1.8, .34, .78, null);
 /* 자기장: 도선을 중심으로 한 동심원(실험판 높이 + 위쪽 두 층) */
 const wireRings = new THREE.Group(); wireG.add(wireRings);
-[1.4, 2.4, 4.0].forEach(R=>{
+const DENSITY_ORDER = [0,7,3,10,5,1,8,4,11,6,2,9];
+for(let k=0;k<12;k++){
+  const R=.95*Math.pow(5.6/.95,k/11);
   [AXIS_Y, 2.7, 5.0].forEach(h=>{
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(R,.045,8,64),
-      new THREE.MeshBasicMaterial({color:FIELD_COL, transparent:true, opacity: .66 - R*.09, depthWrite:false}));
-    ring.rotation.x = Math.PI/2; ring.position.y = h; wireRings.add(ring);
-    for(let k=0;k<3;k++){
-      const a = k/3*Math.PI*2 + R;
-      const cone = new THREE.Mesh(new THREE.ConeGeometry(.14,.4,10),
-        new THREE.MeshBasicMaterial({color:FIELD_COL, transparent:true, opacity:.9 - R*.1}));
-      cone.position.set(Math.cos(a)*R, h, Math.sin(a)*R);
-      cone.userData.ringCone = true;
-      wireRings.add(cone);
+    const g = new THREE.Group(); g.userData.densityRank=DENSITY_ORDER[k]; wireRings.add(g);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(R,.035,6,64),
+      new THREE.MeshBasicMaterial({color:FIELD_COL,transparent:true,opacity:.56,depthWrite:false}));
+    ring.rotation.x=Math.PI/2;ring.position.y=h;g.add(ring);
+    for(let j=0;j<3;j++){
+      const a=j/3*Math.PI*2+R;
+      const cone=new THREE.Mesh(new THREE.ConeGeometry(.12,.34,8),new THREE.MeshBasicMaterial({color:FIELD_COL}));
+      cone.position.set(Math.cos(a)*R,h,Math.sin(a)*R);cone.userData={ringCone:true,angle:a,radius:R};g.add(cone);
     }
   });
-});
-function orientWireCones(){
+}
+function orientWireCones(dt=0){
   const B = new THREE.Vector3();
-  wireRings.children.forEach(o=>{
+  wireRings.traverse(o=>{
     if (!o.userData.ringCone) return;
+    if (dt>0){
+      if (!o.parent.visible) return;
+      const R=o.userData.radius;
+      // +y 전류일 때 B=(z,0,-x): 원의 각도는 감소하는 방향으로 진행한다.
+      const omega=Math.min(FIELD_REV*2*Math.PI,FIELD_VMAX/R);
+      const a=o.userData.angle=(o.userData.angle-dirSign*omega*dt)%(2*Math.PI);
+      o.position.x=R*Math.cos(a);o.position.z=R*Math.sin(a);
+    }
     fieldIn('wire', o.position, B);          /* 화살촉 방향 = 그 자리에서 계산한 자기장 방향 */
     o.quaternion.setFromUnitVectors(_up, B.normalize());
   });
@@ -305,14 +511,17 @@ function helixPoint(t, out = new THREE.Vector3()){
   return out.set(-COIL_L/2 + COIL_L*t, AXIS_Y - COIL_R*Math.cos(a), -COIL_R*Math.sin(a));
 }
 class Helix extends THREE.Curve{ getPoint(t, out = new THREE.Vector3()){ return helixPoint(t, out); } }
-coilG.add(new THREE.Mesh(new THREE.TubeGeometry(new Helix(), COIL_N*64, .085, 10, false), copperMat));
-addLead(coilG, helixPoint(0), .085); addLead(coilG, helixPoint(1), .085);
-const curC = (function(){
-  const K = COIL_N*80, pts = [new THREE.Vector3(-COIL_L/2, DESK_TOP, 0)];
-  for (let i=0;i<=K;i++) pts.push(helixPoint(i/K));
-  pts.push(new THREE.Vector3(COIL_L/2, DESK_TOP, 0));
-  return makeCurrentArrows(coilG, new Track(pts,false), 2.45, .23, .55, [1, 1+K]);
-})();
+const coilWireG = new THREE.Group(); coilG.add(coilWireG);
+function buildCoilWire(){
+  coilWireG.traverse(o=>{if(o.geometry)o.geometry.dispose();}); coilWireG.clear();
+  coilWireG.add(new THREE.Mesh(new THREE.TubeGeometry(new Helix(),COIL_N*64,.065,8,false),copperMat));
+  addLead(coilWireG,helixPoint(0),.065);addLead(coilWireG,helixPoint(1),.065);
+  const K=COIL_N*80, pts=[new THREE.Vector3(-COIL_L/2,DESK_TOP,0)];
+  for(let i=0;i<=K;i++)pts.push(helixPoint(i/K));
+  pts.push(new THREE.Vector3(COIL_L/2,DESK_TOP,0));
+  return makeCurrentArrows(coilWireG,new Track(pts,false),2.45,.20,.48,[1,1+K]);
+}
+let curC=buildCoilWire();
 const CUR = {wire:curW, loop:curL, coil:curC};
 
 /* N/S 라벨 */
@@ -359,13 +568,18 @@ function biotSavart(S, px, py, pz, out){
   return out.set(bx, by, bz);
 }
 const MODEL = {
-  loop: (function(){ const a = []; ringSegs(a, LOOP_C, LOOP_R, 72);
+  loop: (function(){ const a = []; ringSegs(a, LOOP_C, LOOP_R, 96);
     return {segs:new Float64Array(a), C:LOOP_C, R:LOOP_R, wires:[[0, LOOP_R]], xs:[0]}; })(),
-  coil: (function(){ const a = [], w = [], xs = [];
-    for (let k=0;k<COIL_N;k++){ const x = -COIL_L/2 + COIL_L*(k+.5)/COIL_N;
-      ringSegs(a, new THREE.Vector3(x, AXIS_Y, 0), COIL_R, 40); w.push([x - COIL_C.x, COIL_R]); xs.push(x - COIL_C.x); }
-    return {segs:new Float64Array(a), C:COIL_C, R:COIL_R, wires:w, xs}; })(),
+  coil: makeCoilModel(),
 };
+function makeCoilModel(){
+  const a=[],w=[],xs=[];
+  for(let k=0;k<COIL_N;k++){
+    const x=-COIL_L/2+COIL_L*(k+.5)/COIL_N;
+    ringSegs(a,new THREE.Vector3(x,AXIS_Y,0),COIL_R,72);w.push([x,COIL_R]);xs.push(x);
+  }
+  return {segs:new Float64Array(a),C:COIL_C,R:COIL_R,wires:w,xs};
+}
 /* 자기장(μ0·I/4π = 1 단위). 직선 도선은 무한히 긴 도선: B = 2(Î × r⊥)/r⊥² */
 function fieldIn(m, p, out = new THREE.Vector3()){
   if (m === 'wire'){
@@ -375,15 +589,16 @@ function fieldIn(m, p, out = new THREE.Vector3()){
   biotSavart(MODEL[m].segs, p.x, p.y, p.z, out);
   return out.multiplyScalar(dirSign);
 }
-const fieldAt = (p, out) => fieldIn(mode, p, out);
+const fieldAt = (p, out) => fieldIn(mode, p, out).multiplyScalar(currentAmps);
 
 /* ══ 자기력선: 축을 품은 평면에서 RK4 로 따라가기 ══
    원형 도선·코일은 축에 대해 대칭이므로 한 반평면(s = 축 방향, ρ = 축에서 떨어진 거리)에서 선을 구한 뒤
    축을 품은 평면 4장(0°·45°·90°·135°)의 양쪽에 옮겨 그린다(대칭은 아래 단언으로 확인).                */
 const LINE_SPEC = {
-  loop: {seeds:[.65, 1.4, 2.0, 2.42], planes:[[90,[0,1,2,3],true],[0,[2,3],false],[45,[2,3],false],[135,[2,3],false]]},
-  coil: {seeds:[.5, 1.0, 1.2],         planes:[[90,[0,1,2],true],[0,[2],false],[45,[2],false],[135,[2],false]]},
+  loop:{seeds:[.45,.75,1.05,1.3,1.55,1.8,2,2.15,2.3,2.4,2.5,2.58]},
+  coil:{seeds:[.25,.4,.55,.7,.82,.94,1.04,1.13,1.21,1.28,1.34,1.4]},
 };
+Object.values(LINE_SPEC).forEach(s=>s.planes=[[90,Array.from({length:12},(_,i)=>i),true],[0,[0,2,4,6,8,10],false]]);
 const _bb = new THREE.Vector3();
 function dir2(model, s, r, sgn, out){
   const C = model.C; biotSavart(model.segs, C.x + s, C.y + r, C.z, _bb);
@@ -488,16 +703,17 @@ function ensureLines(m){
   const group = new THREE.Group(); group.visible = showField;
   (m === 'loop' ? loopG : coilG).add(group);
   const sets = [];
-  const addLine = (pts3, closed, strong)=>{
+  const addLine = (pts3, closed, strong, rank=-1)=>{
+    const lineGroup=new THREE.Group();lineGroup.userData.densityRank=rank;group.add(lineGroup);
     clipPieces(pts3, closed).forEach(pc=>{
-      splitAtBoard(pc.pts, pc.closed).forEach(run => addTube(group, run.pts, run.closed, strong, run.below));
-      sets.push(makeFieldArrows(group, new Track(pc.pts, pc.closed), strong));
+      splitAtBoard(pc.pts, pc.closed).forEach(run => addTube(lineGroup, run.pts, run.closed, strong, run.below));
+      const set=makeFieldArrows(lineGroup,new Track(pc.pts,pc.closed),strong);set.group=lineGroup;sets.push(set);
     });
   };
   spec.planes.forEach(([deg, idx, strong])=>{
     const th = deg*Math.PI/180, ey = Math.cos(th), ez = Math.sin(th);
     [1,-1].forEach(sg => idx.forEach(i=>{
-      addLine(L2[i].pts.map(([s,r]) => new THREE.Vector3(C.x + s, C.y + sg*r*ey, C.z + sg*r*ez)), L2[i].closed, strong);
+      addLine(L2[i].pts.map(([s,r]) => new THREE.Vector3(C.x + s, C.y + sg*r*ey, C.z + sg*r*ez)), L2[i].closed, strong, DENSITY_ORDER[i]);
     }));
   });
   const axis = []; for (let i=0;i<=42;i++) axis.push(new THREE.Vector3(C.x - 10.5 + 21*i/42, C.y, C.z));
@@ -511,17 +727,17 @@ function ensureLines(m){
 /* ══ 나침반 ══ */
 const compass = new THREE.Group(); scene.add(compass);
 const base = new THREE.Mesh(new THREE.CylinderGeometry(.75,.85,.3,24),
-  new THREE.MeshStandardMaterial({color:0xf3ede3, roughness:.4}));
+  new THREE.MeshStandardMaterial({color:0xffffff, roughness:.4}));
 base.position.y = .15; compass.add(base);
 const rim = new THREE.Mesh(new THREE.TorusGeometry(.78,.08,8,28),
-  new THREE.MeshStandardMaterial({color:0x8a5f24, roughness:.5}));
+  new THREE.MeshStandardMaterial({color:0x8e969e, roughness:.5}));
 rim.rotation.x = Math.PI/2; rim.position.y = .3; compass.add(rim);
 const needle = new THREE.Group(); needle.position.y = AXIS_Y; compass.add(needle);
 const nCone = new THREE.Mesh(new THREE.ConeGeometry(.13,.62,10),
   new THREE.MeshStandardMaterial({color:0xb23a30}));
 nCone.rotation.z = -Math.PI/2; nCone.position.x = .31; needle.add(nCone);
 const sCone = new THREE.Mesh(new THREE.ConeGeometry(.13,.62,10),
-  new THREE.MeshStandardMaterial({color:0xe8e0d0}));
+  new THREE.MeshStandardMaterial({color:0x2e5f8f}));
 sCone.rotation.z = Math.PI/2; sCone.position.x = -.31; needle.add(sCone);
 compass.position.set(2.6, 0, 2.2);
 /* 바늘은 수평으로만 돈다: N극 끝(+x 쪽 원뿔)이 자기장의 수평 성분을 향하는 각 */
@@ -541,29 +757,25 @@ function pushFromSeg(p, x0, x1, z0, d){
   p.x = nx + dx/r*d; p.z = z0 + dz/r*d;
 }
 function constrainCompass(p){
-  p.x = Math.max(-(BOARD_W/2 - .9), Math.min(BOARD_W/2 - .9, p.x));
-  p.z = Math.max(-(BOARD_D/2 - .9), Math.min(BOARD_D/2 - .9, p.z));
+  p.x = Math.max(-10, Math.min(10, p.x));
+  p.z = Math.max(-6, Math.min(6, p.z));
   if (mode === 'wire') pushFromPoint(p, 0, 0, 1.1);
   else if (mode === 'loop'){ const zc = Math.sqrt(LOOP_R*LOOP_R - AXIS_Y*AXIS_Y); pushFromPoint(p, 0, zc, 1.08); pushFromPoint(p, 0, -zc, 1.08); }
   else { const zw = 1.53; pushFromSeg(p, -COIL_L/2, COIL_L/2, zw, 1.0); pushFromSeg(p, -COIL_L/2, COIL_L/2, -zw, 1.0); }
   p.y = 0;
 }
 (function(){
-  const ray = new THREE.Raycaster(), v2 = new THREE.Vector2();
-  const plane = new THREE.Plane(new THREE.Vector3(0,1,0), 0);
-  let drag = false;
-  function pt(e){ const r = renderer.domElement.getBoundingClientRect();
-    v2.set(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1); }
-  renderer.domElement.addEventListener('pointerdown', e=>{
-    pt(e); ray.setFromCamera(v2, cam);
-    if (ray.intersectObject(compass, true).length){ drag = true; ctl.enabled = false; }
-  });
-  addEventListener('pointermove', e=>{
-    if(!drag) return; pt(e); ray.setFromCamera(v2, cam);
-    const hit = new THREE.Vector3();
-    if (ray.ray.intersectPlane(plane, hit)){ constrainCompass(hit); compass.position.copy(hit); }
-  });
-  addEventListener('pointerup', ()=>{ drag = false; ctl.enabled = true; });
+  const ray=new THREE.Raycaster(),v2=new THREE.Vector2(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+  let drag=false;
+  function hit(e){const r=renderer.domElement.getBoundingClientRect();v2.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(v2,cam);return ray.ray.intersectPlane(plane,new THREE.Vector3());}
+  renderer.domElement.addEventListener('pointerdown',e=>{
+    const p=hit(e);
+    if(placing){e.stopImmediatePropagation();if(p)placeCompass(p);setPlacing(false);return;}
+    if(ray.intersectObject(compass,true).length){drag=true;ctl.enabled=false;renderer.domElement.setPointerCapture(e.pointerId);e.stopImmediatePropagation();}
+  },true);
+  renderer.domElement.addEventListener('pointermove',e=>{if(drag){const p=hit(e);if(p)placeCompass(p);}});
+  function end(){drag=false;ctl.enabled=!placing;}
+  renderer.domElement.addEventListener('pointerup',end);renderer.domElement.addEventListener('pointercancel',end);renderer.domElement.addEventListener('lostpointercapture',end);
 })();
 
 /* ══ 확인 단언: 전류 방향 ↔ 자기장 방향 ↔ N극 위치 (좌표가 바뀌어도 외적으로 다시 계산해 대조) ══ */
@@ -604,7 +816,7 @@ function checkFieldCones(m){
   if (m === 'wire'){
     orientWireCones();
     let worst = 1; const B = new THREE.Vector3(), d = new THREE.Vector3();
-    wireRings.children.forEach(o=>{ if (!o.userData.ringCone) return;
+    wireRings.traverse(o=>{ if (!o.userData.ringCone) return;
       const r = new THREE.Vector3(o.position.x, 0, o.position.z);
       const rhr = new THREE.Vector3(0, dirSign, 0).cross(r).normalize();     /* 엄지 = 전류 → 네 손가락 = Î × r̂ */
       d.set(0,1,0).applyQuaternion(o.quaternion); worst = Math.min(worst, d.dot(rhr)); });
@@ -718,12 +930,22 @@ const TEXT = {
 /* ══ UI ══ */
 const msg = document.getElementById('msg');
 function applyFieldVisibility(){
-  wireRings.visible = showField;
-  Object.values(FL).forEach(f => f && (f.group.visible = showField));
-  Object.values(POLE).forEach(P => { P.n.visible = showField; P.s.visible = showField; });
+  const on=showField&&currentAmps>0;
+  wireRings.visible=on;
+  Object.values(FL).forEach(f=>{if(f)f.group.visible=on&&fieldView==='all';});
+  Object.values(POLE).forEach(P=>{P.n.visible=on;P.s.visible=on;});
+  axisArrow.visible=on&&mode!=='wire'&&fieldView==='axis';
+  axisArrow.position.set(-dirSign*(mode==='coil'?3.8:2.6),AXIS_Y,0);axisArrow.setDirection(new THREE.Vector3(dirSign,0,0));axisArrow.setLength(mode==='coil'?7.6:5.2,.8,.42);const shaftLength=(mode==='coil'?7.6:5.2)-.65;axisShaft.scale.y=shaftLength;axisShaft.position.y=shaftLength/2;
+  Object.values(CUR).forEach(c=>c.cones.forEach(o=>o.visible=currentAmps>0));
+  needle.visible=currentAmps>0;
+  const count=densityEnabled?Math.max(1,Math.min(12,Math.ceil(12*(mode==='coil'?Math.sqrt(currentAmps/5*COIL_N/20):currentAmps/5)))):4;
+  wireRings.children.forEach(g=>g.visible=g.userData.densityRank<count);
+  Object.values(FL).forEach(f=>{if(f)f.group.children.forEach(g=>g.visible=g.userData.densityRank<count);});
+  document.getElementById('field-view-note').textContent=mode==='wire'?'도선을 감싸는 자기장의 방향을 살펴보세요.':fieldView==='axis'?'중심부에서 엄지가 가리키는 방향만 표시합니다. 바깥쪽 자기장은 숨겨져 있습니다.':'도선 주변의 자기장을 전체적으로 살펴보세요.';
 }
 function setMode(m){
   mode = m;
+  if(m==='wire')fieldView='all';
   document.querySelectorAll('.mode-btn').forEach(x => x.classList.toggle('on', x.dataset.mode === m));
   wireG.visible = m === 'wire'; loopG.visible = m === 'loop'; coilG.visible = m === 'coil';
   if (m !== 'wire') ensureLines(m);
@@ -734,7 +956,7 @@ function setMode(m){
   document.querySelectorAll('.note[data-m]').forEach(n => n.classList.toggle('on', n.dataset.m === m));
   msg.innerHTML = showField ? T.msg : T.hide;
   constrainCompass(compass.position);
-  applyFieldVisibility(); updateDirLabel(); refreshArrows();
+  applyFieldVisibility(); updateDirLabel(); refreshArrows(); syncControls(); updateReadouts();
 }
 document.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
 function updateDirLabel(){
@@ -745,26 +967,132 @@ function updateDirLabel(){
 document.getElementById('flip-btn').addEventListener('click', ()=>{
   dirSign *= -1;
   placePoleLabels(); refreshArrows(); updateDirLabel();
-  runChecks([mode]);                     /* 뒤집을 때마다 다시 대조(틀리면 콘솔에 단언 실패) */
+  applyFieldVisibility(); updateReadouts();
+  runChecks([mode]);
 });
 document.getElementById('predict-btn').addEventListener('click', function(){
   showField = !showField;
   applyFieldVisibility();
-  this.textContent = showField ? '🙈 자기장 숨기고 예상해 보기' : '👀 자기장 다시 보기';
-  this.classList.toggle('primary', !showField);
+  this.textContent = showField ? '자기장 숨기기' : '자기장 다시 보기';
+  this.classList.toggle('primary', !showField);this.setAttribute('aria-pressed',!showField);
   msg.innerHTML = showField ? TEXT[mode].msg : TEXT[mode].hide;
 });
 
-/* 자기장 세기 칸(로그 눈금: 한 칸 = 2배) — 직선 도선은 도선에서 1.1칸, 원형 도선·코일은 중심 세기가 다섯 칸 */
-const meterBars = document.querySelectorAll('#meter-bars i');
-const BREF = {wire:2/1.1};
-let meterShown = -1;
-function updateMeter(B){
-  if (BREF[mode] === undefined) BREF[mode] = Math.abs(fieldIn(mode, MODEL[mode].C, new THREE.Vector3()).x);
-  const v = B.length(), n = v > 0 ? Math.max(0, Math.min(5, Math.round(5 + Math.log2(v/BREF[mode])))) : 0;
-  if (n === meterShown) return; meterShown = n;
-  meterBars.forEach((b, i) => b.classList.toggle('on', i < n));
+/* 센서와 조작 컨트롤 — 물리 계산값과 정성적 표현을 구분 */
+const $=id=>document.getElementById(id);
+const axisArrow=new THREE.ArrowHelper(new THREE.Vector3(1,0,0),new THREE.Vector3(-3.8,AXIS_Y,0),7.6,FIELD_COL,.6,.3);
+scene.add(axisArrow);
+axisArrow.line.visible=false;axisArrow.cone.material.depthTest=false;axisArrow.cone.renderOrder=15;
+const axisShaft=new THREE.Mesh(new THREE.CylinderGeometry(.075,.075,1,12),new THREE.MeshBasicMaterial({color:FIELD_COL,depthTest:false}));axisShaft.renderOrder=15;axisArrow.add(axisShaft);
+const fluxSurface=new THREE.Mesh(new THREE.CircleGeometry(.7,64),new THREE.MeshBasicMaterial({color:0x0066cc,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}));
+const fluxOutline=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(Array.from({length:64},(_,i)=>new THREE.Vector3(.7*Math.cos(i*Math.PI/32),.7*Math.sin(i*Math.PI/32),0))),new THREE.LineBasicMaterial({color:0x0066cc}));
+fluxSurface.add(fluxOutline);scene.add(fluxSurface);fluxSurface.visible=false;
+const fluxNormal=new THREE.ArrowHelper(new THREE.Vector3(1,0,0),new THREE.Vector3(0,AXIS_Y,0),1.2,0x0066cc,.25,.12);scene.add(fluxNormal);fluxNormal.visible=false;
+const originLabel=textSprite('O','#646b73',.55);originLabel.position.set(-.45,.5,-.35);scene.add(originLabel);
+const xLabel=textSprite('x','#646b73',.65);xLabel.position.set(9.5,.22,0);scene.add(xLabel);
+const zLabel=textSprite('z','#646b73',.65);zLabel.position.set(0,.22,6.1);scene.add(zLabel);
+const axesMat=new THREE.LineBasicMaterial({color:0xd4d9de,transparent:true,opacity:.7});
+scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-10,.01,0),new THREE.Vector3(10,.01,0)]),axesMat));
+scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,.01,-6.5),new THREE.Vector3(0,.01,6.5)]),axesMat));
+
+function measureAt(p,m=mode){return fieldIn(m,p,new THREE.Vector3()).multiplyScalar(currentAmps*MICROTESLA_PER_UNIT);}
+const fluxCache={};
+function fluxValue(){
+  const key=mode+':'+(mode==='coil'?COIL_N:0);
+  if(fluxCache[key]===undefined){
+    let sum=0;const nr=12,nt=48,R=mode==='wire'?.6:.7,B=new THREE.Vector3(),p=new THREE.Vector3();
+    for(let i=0;i<nr;i++)for(let j=0;j<nt;j++){
+      const r=R*Math.sqrt((i+.5)/nr),a=2*Math.PI*(j+.5)/nt;
+      if(mode==='wire')p.set(2.6+r*Math.cos(a),AXIS_Y+r*Math.sin(a),0);
+      else p.set(0,AXIS_Y+r*Math.cos(a),r*Math.sin(a));
+      fieldIn(mode,p,B);sum+=(mode==='wire'?B.z:B.x)/dirSign;
+    }
+    // B(unit)→T, scene area→m², Wb→nWb. Fixed surface normal, independent of current direction.
+    fluxCache[key]=sum/(nr*nt)*MICROTESLA_PER_UNIT*1e-6*Math.PI*Math.pow(R*METRES_PER_UNIT,2)*1e9;
+  }
+  return fluxCache[key]*currentAmps*dirSign;
 }
+function updateFlux(){
+  const on=$('flux-toggle').checked;fluxSurface.visible=on;fluxNormal.visible=on;
+  if(mode==='wire'){
+    fluxSurface.rotation.set(0,0,0);fluxSurface.scale.setScalar(.6/.7);fluxSurface.position.set(2.6,AXIS_Y,0);
+    fluxNormal.position.copy(fluxSurface.position);fluxNormal.setDirection(new THREE.Vector3(0,0,1));
+    $('flux-note').textContent='파란 측정면: (x=26 cm, z=0)의 반지름 6 cm 원판 · xy면 · +z 방향을 양(+)으로 정함. 1 nWb = 10⁻⁹ Wb.';
+  }else{
+    fluxSurface.rotation.set(0,Math.PI/2,0);fluxSurface.scale.setScalar(1);fluxSurface.position.set(0,AXIS_Y,0);
+    fluxNormal.position.copy(fluxSurface.position);fluxNormal.setDirection(new THREE.Vector3(1,0,0));
+    $('flux-note').textContent='파란 측정면: 중심의 반지름 7 cm 원판 · yz면 · +x 방향을 양(+)으로 정함. 1 nWb = 10⁻⁹ Wb.';
+  }
+  $('flux-value').textContent=on?fluxValue().toFixed(2):'—';
+}
+function updateReadouts(){
+  const p=new THREE.Vector3(compass.position.x,AXIS_Y,compass.position.z),B=measureAt(p),v=B.length();
+  $('sensor-value').textContent=v.toFixed(2);
+  const f=n=>(Math.abs(n)<.005?0:n).toFixed(2);
+  $('sensor-components').textContent=`Bx ${f(B.x)} · By ${f(B.y)} · Bz ${f(B.z)} µT`;
+  $('sensor-status').textContent=currentAmps===0?'전류 0 A · 전류에 의한 자기장과 바늘 방향 없음':'계산값 · 빨간 N극은 수평 자기장 방향';
+  const n=v>0?Math.max(1,Math.min(5,Math.ceil(Math.log2(1+v)))):0;
+  document.querySelectorAll('#meter-bars i').forEach((b,i)=>b.classList.toggle('on',i<n));
+  updateFlux();
+}
+function syncControls(){
+  $('current-range').value=currentAmps;$('current-value').textContent=currentAmps.toFixed(1);
+  $('turns-range').value=COIL_N;$('turns-value').textContent=COIL_N;
+  $('turns-control').hidden=mode!=='coil';$('axis-view').disabled=mode==='wire';
+  document.querySelectorAll('[data-view]').forEach(b=>{const on=b.dataset.view===fieldView;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
+  document.querySelectorAll('.mode-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));
+  $('compass-x').value=(compass.position.x*10).toFixed(1);$('compass-z').value=(compass.position.z*10).toFixed(1);
+  $('pause-btn').textContent=paused?'애니메이션 재생':'애니메이션 멈춤';$('pause-btn').setAttribute('aria-pressed',paused);
+}
+function setCurrent(v){
+  if(!Number.isFinite(v))return;
+  currentAmps=Math.max(0,Math.min(5,v));syncControls();applyFieldVisibility();updateReadouts();
+}
+function disposeField(f){
+  if(!f)return;f.group.parent.remove(f.group);
+  // Shared arrow geometry/materials are retained; only owned tubes are released.
+  f.group.traverse(o=>{if(o.geometry&&o.geometry!==coneGeoS&&o.geometry!==coneGeoW)o.geometry.dispose();});
+}
+function setTurns(n){
+  if(!Number.isFinite(n))return;n=Math.max(2,Math.min(20,Math.round(n)));if(n===COIL_N)return;
+  COIL_N=n;CUR.coil=curC=buildCoilWire();MODEL.coil=makeCoilModel();disposeField(FL.coil);FL.coil=null;
+  ensureLines('coil');refreshArrows();applyFieldVisibility();syncControls();updateReadouts();
+}
+function setFieldView(v){
+  fieldView=mode==='wire'?'all':v==='axis'?'axis':'all';applyFieldVisibility();syncControls();
+}
+function setPlacing(v){placing=v;ctl.enabled=!v;renderer.domElement.style.cursor=v?'crosshair':'grab';$('place-btn').setAttribute('aria-pressed',v);$('place-btn').textContent=v?'실험판에서 위치를 눌러주세요':'위치 찍기';}
+function placeCompass(p){
+  const requested=p.clone();constrainCompass(p);compass.position.copy(p);syncControls();updateReadouts();
+  if(Math.hypot(p.x-requested.x,p.z-requested.z)>.01)$('sensor-status').textContent='도선과 겹치지 않도록 가까운 안전 위치로 옮겼습니다.';
+}
+$('current-range').addEventListener('input',e=>setCurrent(+e.target.value));
+let turnsTimer;
+$('turns-range').addEventListener('input',e=>{const n=+e.target.value;$('turns-value').textContent=n;clearTimeout(turnsTimer);turnsTimer=setTimeout(()=>setTurns(n),130);});
+$('turns-range').addEventListener('change',e=>{clearTimeout(turnsTimer);setTurns(+e.target.value);});
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setFieldView(b.dataset.view)));
+$('density-toggle').addEventListener('change',e=>{densityEnabled=e.target.checked;applyFieldVisibility();});
+$('flux-toggle').addEventListener('change',updateFlux);
+$('place-btn').addEventListener('click',()=>setPlacing(!placing));
+addEventListener('keydown',e=>{if(e.key==='Escape')setPlacing(false);});
+function applyCoords(){
+  const x=$('compass-x'),z=$('compass-z');
+  if(x.value.trim()===''||z.value.trim()===''||!Number.isFinite(+x.value)||!Number.isFinite(+z.value)){$('sensor-status').textContent='x와 z에 숫자를 입력해 주세요.';return;}
+  placeCompass(new THREE.Vector3(+x.value/10,0,+z.value/10));
+}
+$('coords-apply').addEventListener('click',applyCoords);
+['compass-x','compass-z'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')applyCoords();}));
+document.querySelectorAll('[data-position]').forEach(b=>b.addEventListener('click',()=>{
+  const positions=mode==='wire'?{center:[2.6,0],near:[1.2,0],outside:[6,0]}:mode==='loop'?{center:[0,0],near:[1.2,2.4],outside:[0,4.5]}:{center:[0,0],near:[3.7,0],outside:[0,3.6]};
+  const [x,z]=positions[b.dataset.position];placeCompass(new THREE.Vector3(x,0,z));
+}));
+$('home-view').addEventListener('click',()=>{cam.position.set(13,10.5,15);ctl.target.set(0,.4,0);ctl.update();});
+$('top-view').addEventListener('click',()=>{cam.position.set(.01,24,.01);ctl.target.set(0,0,0);ctl.update();});
+$('pause-btn').addEventListener('click',()=>{paused=!paused;syncControls();});
+matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',e=>{paused=e.matches;syncControls();});
+let displayZoom=1;
+$('zoom-btn').addEventListener('click',()=>{displayZoom=displayZoom===1?1.2:displayZoom===1.2?1.4:1;document.documentElement.style.zoom=displayZoom;$('zoom-btn').textContent=Math.round(displayZoom*100)+'%';$('zoom-btn').setAttribute('aria-pressed',displayZoom!==1);resize();});
+new ResizeObserver(()=>resize()).observe(stage);
 
 function draw(){ ctl.update(); renderer.render(scene, cam); }
 function resize(){
@@ -786,10 +1114,11 @@ function step(dt){
     needleAng += diff * Math.min(1, dt*7);
     needle.rotation.y = needleAng;
   }
-  updateMeter(_B);
-  flowArrows(CUR[mode], CUR_SPEED*dt, dirSign);                     /* 전류: 천천히 흐르는 빨간 화살촉 */
+  needle.visible=currentAmps>0 && target!==null;
+  flowArrows(CUR[mode], (!paused&&currentAmps>0?CUR_SPEED*dt:0), dirSign);                     /* 전류: 천천히 흐르는 빨간 화살촉 */
+  if (mode==='wire' && showField && !paused && currentAmps>0) orientWireCones(dt);
   const fl = FL[mode];
-  if (fl && showField) fl.sets.forEach(s => flowArrows(s, s.v*dt, dirSign));   /* 자기장: 1초에 0.25바퀴 */
+  if (fl && showField && !paused && currentAmps>0 && fieldView==='all') fl.sets.forEach(s => {if(s.group.visible)flowArrows(s,s.v*dt,dirSign);});   /* 자기장: 1초에 0.25바퀴 */
 }
 function render(){
   const now = performance.now(); const dt = Math.min(.05,(now-last)/1000)||.016; last = now;
@@ -801,10 +1130,10 @@ function render(){
 placePoleLabels(); orientWireCones(); setMode('wire');
 resize(); requestAnimationFrame(render);
 window.__rh3d = {CHECK, FL, CUR, MODEL, fieldAt, setMode, compass, needle, cam, ctl, step, draw,
-  get mode(){ return mode; }, get dirSign(){ return dirSign; }, get showField(){ return showField; }};
-setTimeout(()=>{ ensureLines('loop'); }, 60);   /* 첫 화면을 띄운 뒤 원형 도선·코일 자기력선을 나누어 미리 계산 */
+  get mode(){ return mode; }, get dirSign(){ return dirSign; }, get showField(){ return showField; }, fieldIn, measureAt, fluxValue, placeCompass, setCurrent, setTurns, setFieldView, applyFieldVisibility, get currentAmps(){return currentAmps;},get turns(){return COIL_N;},get fieldView(){return fieldView;},axisArrow,wireRings,renderer};
+setTimeout(()=>{ ensureLines('loop'); applyFieldVisibility(); }, 60);   /* 첫 화면을 띄운 뒤 원형 도선·코일 자기력선을 나누어 미리 계산 */
 setTimeout(()=>{
-  ensureLines('coil');
+  ensureLines('coil'); applyFieldVisibility();
   const r = runChecks(['wire','loop','coil']);   /* 전체 단언 */
   const all = CHECK.pass + CHECK.fail;
   console.info(`[오른손 3D 단언] 전류 두 방향 × 세 모드 ${r.pass}/${r.pass + r.fail} 통과 · 계산 포함 누적 ${CHECK.pass}/${all}` +
@@ -813,48 +1142,54 @@ setTimeout(()=>{
 </script>
 
 <script id="sim-fullscreen">
-/* 시뮬 전체화면 버튼 — 전자칠판용. 큰 캔버스의 부모에 ⛶ 버튼을 단다. */
+/* 실험판과 동일한 조작판을 함께 전체화면으로 연다. DOM을 복제하지 않아 상태를 유지한다. */
 (function(){
-  var st = document.createElement('style');
-  st.textContent = '.simfs-btn{position:absolute;right:8px;top:8px;z-index:40;width:34px;height:34px;'+
-    'border-radius:9px;border:1.5px solid rgba(128,128,128,.45);cursor:pointer;font-size:17px;line-height:1;'+
-    'background:rgba(24,24,24,.45);color:#fff;backdrop-filter:blur(3px);opacity:.55;transition:.15s}'+
-    '.simfs-btn:hover{opacity:1}'+
-    '.simfs-on{display:grid !important;place-items:center;background:#0b0f1a}'+
-    '.simfs-on>canvas{width:min(97vw, 178vh) !important;height:auto !important;max-height:96vh}';
-  document.head.appendChild(st);
-  function attach(cv){
-    if (cv.dataset.fsDone) return;
-    var host = cv.parentElement;
-    if (!host || host.querySelector('.simfs-btn')) { cv.dataset.fsDone = 1; return; }
-    cv.dataset.fsDone = 1;
-    if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
-    var b = document.createElement('button');
-    b.className = 'simfs-btn'; b.type = 'button'; b.textContent = '⛶';
-    b.title = '전체화면 (전자칠판용) — 다시 누르거나 Esc로 나가기';
-    b.addEventListener('click', function(e){
-      e.stopPropagation();
-      if (document.fullscreenElement === host){ document.exitFullscreen(); }
-      else if (host.requestFullscreen){ host.requestFullscreen(); }
-    });
-    host.appendChild(b);
+  const lab=document.getElementById('lab-workspace');
+  const stage=document.getElementById('stage');
+  const toolbar=document.getElementById('fullscreen-toolbar');
+  const slot=document.getElementById('fullscreen-modes');
+  const modes=document.querySelector('.modes');
+  const home=document.createComment('도선 모양 선택의 원래 위치');
+  modes.before(home);
+  const button=document.createElement('button');
+  button.type='button';button.className='simfs-btn';button.textContent='⛶';
+  button.title='조작판과 함께 전체화면';button.setAttribute('aria-label','조작판과 함께 전체화면');
+  button.setAttribute('aria-pressed','false');stage.appendChild(button);
+  const exitButton=document.getElementById('fullscreen-exit');
+  let active=false,fallback=false,savedZoom='',savedOverflow='';
+  function setActive(on){
+    if(active===on)return;
+    active=on;
+    if(on){
+      savedZoom=document.documentElement.style.zoom;savedOverflow=document.body.style.overflow;
+      document.documentElement.style.zoom='1';document.body.style.overflow='hidden';
+      slot.appendChild(modes);toolbar.hidden=false;lab.classList.add('is-fullscreen');
+      exitButton.focus({preventScroll:true});
+    }else{
+      home.after(modes);toolbar.hidden=true;lab.classList.remove('is-fullscreen');
+      document.documentElement.style.zoom=savedZoom;document.body.style.overflow=savedOverflow;
+      button.focus({preventScroll:true});
+    }
+    button.setAttribute('aria-pressed',String(on));
+    button.setAttribute('aria-label',on?'전체화면 나가기':'조작판과 함께 전체화면');
+    button.title=on?'전체화면 나가기':'조작판과 함께 전체화면';
+    requestAnimationFrame(()=>dispatchEvent(new Event('resize')));
   }
-  document.addEventListener('fullscreenchange', function(){
-    var el = document.fullscreenElement;
-    document.querySelectorAll('.simfs-on').forEach(function(x){ if (x!==el) x.classList.remove('simfs-on'); });
-    if (el && el.querySelector('.simfs-btn') && typeof THREE === 'undefined') el.classList.add('simfs-on');
-    /* 시뮬들이 스스로 크기를 다시 재도록 */
-    setTimeout(function(){ dispatchEvent(new Event('resize')); }, 60);
-    setTimeout(function(){ dispatchEvent(new Event('resize')); }, 350);
+  async function exitFullscreen(){
+    if(fallback){fallback=false;setActive(false);return;}
+    if(document.fullscreenElement===lab)await document.exitFullscreen();
+  }
+  button.addEventListener('click',async()=>{
+    if(active){await exitFullscreen();return;}
+    if(!lab.requestFullscreen){fallback=true;setActive(true);return;}
+    try{await lab.requestFullscreen();}
+    catch(error){document.getElementById('sensor-status').textContent='전체화면을 열지 못했습니다. 브라우저에서 전체화면 사용을 허용해 주세요.';}
   });
-  function scan(){
-    document.querySelectorAll('canvas').forEach(function(cv){
-      if (cv.dataset.fsDone) return;
-      if (cv.clientWidth >= 290 && cv.clientHeight >= 150) attach(cv);
-    });
-  }
-  scan(); setInterval(scan, 1500);
+  exitButton.addEventListener('click',exitFullscreen);
+  document.addEventListener('fullscreenchange',()=>{setActive(document.fullscreenElement===lab);});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&fallback){e.preventDefault();exitFullscreen();}});
 })();
+
 </script>
 
 <script id="sim-quiz">
