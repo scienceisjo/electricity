@@ -111,7 +111,7 @@ input[type=range]{width:100%;height:24px;margin:0;accent-color:var(--accent);cur
 .scope-note{font-size:12px;line-height:1.6;background:#eaf2fa;border-radius:8px;padding:9px 11px;margin:8px 0;color:#31516f;word-break:keep-all}
 .scope-note[hidden]{display:none}
 .instrument-select{width:100%;min-height:42px;border:1px solid var(--line);border-radius:8px;background:var(--canvas);color:var(--ink);font:inherit;font-size:13px;padding:7px 9px}
-.instrument-actions{display:flex;gap:7px;margin-bottom:9px}.instrument-actions .btn{flex:1;padding:9px 7px}
+.instrument-actions{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px}.instrument-actions .btn{flex:1 1 110px;padding:9px 7px}#compass-clear{color:#b23a30}
 .sensor-position{margin-top:13px;border-top:1px solid var(--line);padding-top:10px}.sensor-position>summary{cursor:pointer;font-size:12px;color:var(--accent);padding:5px 0}
 .sensor-coords{grid-template-columns:1fr 1fr}.sensor-coords .coord-field:last-child{grid-column:1/-1}
 .drag-plane{display:flex;align-items:center;gap:8px;margin-top:10px}.drag-plane label{font-size:11px;white-space:nowrap}.drag-plane select{flex:1;min-width:0;min-height:38px;font-size:12px}
@@ -362,7 +362,7 @@ html.large-ui{zoom:1.35}
 
    <section class="control-section" aria-labelledby="compass-title">
     <div class="section-title"><h3 id="compass-title">나침반 놓기</h3><span class="section-kicker">실험판 좌표</span></div>
-    <div class="instrument-actions"><button type="button" class="btn" id="compass-add">＋ 나침반 추가</button><button type="button" class="btn" id="compass-remove">선택한 것 삭제</button></div>
+    <div class="instrument-actions"><button type="button" class="btn" id="compass-add">＋ 나침반 추가</button><button type="button" class="btn" id="compass-remove">선택한 것 삭제</button><button type="button" class="btn" id="compass-clear">모두 삭제</button></div>
     <select class="instrument-select" id="compass-select" aria-label="움직일 나침반 선택"></select>
     <p class="help-text" id="compass-status" role="status">나침반 1을 선택했습니다.</p>
     <div class="compass-distance-control">
@@ -403,7 +403,7 @@ html.large-ui{zoom:1.35}
  </details>
  <div style="display:flex;justify-content:flex-end;margin-top:16px"><button type="button" class="btn" id="zoom-btn" aria-pressed="false">화면 크게 보기</button></div>
 </main>
-<footer id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br>최종 업데이트: 2026-10-12</footer>
+<footer id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br>최종 업데이트: 2026-10-13</footer>
 
 <script src="lib/three.min.js"></script>
 <script src="lib/OrbitControls.js"></script>
@@ -801,7 +801,7 @@ function ensureLines(m){
 }
 
 /* ══ 각각 선택·이동할 수 있는 나침반 ══ */
-const compasses=[];let activeCompass=null,nextCompassId=1;
+const compasses=[];let activeCompass=null,nextCompassId=1,cancelCompassDrag=()=>{};
 function makeCompass(p){
   const id=nextCompassId++,group=new THREE.Group();scene.add(group);
   const base=new THREE.Mesh(new THREE.CylinderGeometry(.75,.85,.3,24),new THREE.MeshStandardMaterial({color:0xffffff,roughness:.4}));base.position.y=.15;group.add(base);
@@ -866,10 +866,11 @@ function constrainCompass(p){
     if(object===sensor){drag={kind:'sensor',object:sensor};setPlane(document.getElementById('sensor-plane').value,sensor.position);}
     else {const item=compasses.find(c=>c.id===object.userData.compassId);if(!item)return;selectCompass(item.id);drag={kind:'compass',object:item.group};setPlane('xz',item.group.position);}
     const p=ray.ray.intersectPlane(plane,new THREE.Vector3());if(!p){drag=null;return;}
-    offset.copy(drag.object.position).sub(p);ctl.enabled=false;renderer.domElement.setPointerCapture(e.pointerId);renderer.domElement.style.cursor='grabbing';e.stopImmediatePropagation();
+    drag.pointerId=e.pointerId;offset.copy(drag.object.position).sub(p);ctl.enabled=false;renderer.domElement.setPointerCapture(e.pointerId);renderer.domElement.style.cursor='grabbing';e.stopImmediatePropagation();
   },true);
   renderer.domElement.addEventListener('pointermove',e=>{if(!drag)return;cast(e);const p=ray.ray.intersectPlane(plane,new THREE.Vector3());if(p){p.add(offset);if(drag.kind==='sensor')placeSensor(p);else placeCompass(p);}});
   function end(){drag=null;ctl.enabled=!placing;renderer.domElement.style.cursor=placing?'crosshair':'grab';}
+  cancelCompassDrag=group=>{if(drag&&drag.kind==='compass'&&(!group||drag.object===group)){const pointerId=drag.pointerId;end();if(renderer.domElement.hasPointerCapture(pointerId))renderer.domElement.releasePointerCapture(pointerId);}};
   renderer.domElement.addEventListener('pointerup',end);renderer.domElement.addEventListener('pointercancel',end);renderer.domElement.addEventListener('lostpointercapture',end);
 })();
 
@@ -1208,6 +1209,7 @@ function syncCompassList(){
   compasses.forEach(c=>{const option=document.createElement('option');option.value=c.id;option.textContent='나침반 '+c.id;list.appendChild(option);c.halo.visible=c===activeCompass;});
   if(activeCompass)list.value=activeCompass.id;list.disabled=!activeCompass;
   ['compass-remove','place-btn','coords-apply','compass-x','compass-z','sensor-at-compass'].forEach(id=>$(id).disabled=!activeCompass);
+  $('compass-clear').disabled=compasses.length===0;
   document.querySelectorAll('[data-position]').forEach(b=>b.disabled=!activeCompass);
   $('compass-status').textContent=activeCompass?'나침반 '+activeCompass.id+' 선택 · 모두 '+compasses.length+'개':'나침반을 추가해 주세요.';
 }
@@ -1220,9 +1222,17 @@ function addCompass(){
     if(distance>best){best=distance;p=candidate;}if(distance>=2.1){p=candidate;break;}}
   activeCompass=makeCompass(p);syncCompassList();syncControls();return activeCompass;
 }
+function disposeCompass(item){
+  scene.remove(item.group);
+  item.group.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){if(o.material.map)o.material.map.dispose();o.material.dispose();}});
+}
+function clearCompasses(){
+  cancelCompassDrag();compasses.splice(0).forEach(disposeCompass);activeCompass=null;
+  setPlacing(false);syncCompassList();syncControls();
+  $('compass-status').textContent='나침반을 모두 삭제했습니다. 새 나침반을 추가할 수 있습니다.';
+}
 function removeCompass(){
-  if(!activeCompass)return;const old=activeCompass,index=compasses.indexOf(old);scene.remove(old.group);compasses.splice(index,1);
-  old.group.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){if(o.material.map)o.material.map.dispose();o.material.dispose();}});
+  if(!activeCompass)return;const old=activeCompass,index=compasses.indexOf(old);cancelCompassDrag(old.group);disposeCompass(old);compasses.splice(index,1);
   activeCompass=compasses[Math.min(index,compasses.length-1)]||null;setPlacing(false);syncCompassList();syncControls();
 }
 function placeCompass(p){
@@ -1239,7 +1249,7 @@ function applySensorCoords(){
   if(fields.some(f=>f.value.trim()===''||!Number.isFinite(+f.value))){$('sensor-status').textContent='x, y, z에 숫자를 입력해 주세요.';return;}
   placeSensor(new THREE.Vector3(...fields.map(f=>+f.value/10)));
 }
-$('compass-add').addEventListener('click',addCompass);$('compass-remove').addEventListener('click',removeCompass);
+$('compass-add').addEventListener('click',addCompass);$('compass-remove').addEventListener('click',removeCompass);$('compass-clear').addEventListener('click',clearCompasses);
 $('compass-select').addEventListener('change',e=>selectCompass(+e.target.value));
 $('sensor-apply').addEventListener('click',applySensorCoords);
 ['sensor-x','sensor-y','sensor-z'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')applySensorCoords();}));
