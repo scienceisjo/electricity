@@ -2669,7 +2669,7 @@ function setBg(tab){
 function fit(cv){
   const dpr=Math.min(devicePixelRatio||1,2.5);
   const w=cv.clientWidth||cv.parentElement.clientWidth||320;
-  const h=parseInt(cv.getAttribute('height'))||300;
+  if(!cv.dataset.baseh)cv.dataset.baseh=String(parseInt(cv.getAttribute('height'))||300);const h=parseInt(cv.dataset.baseh)||300;
   cv.style.height=h+'px';cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
   const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w,h};
 }
@@ -3456,7 +3456,7 @@ function makeObs(cvId,capId,sign,barName,result,onEnd){
   return {
     resize(){
       const w0=cv.clientWidth||cv.parentElement.clientWidth||320;
-      cv.setAttribute('height',Math.round(VH*Math.min(w0/VW,1)));
+      cv.dataset.baseh=String(Math.round(VH*Math.min(w0/VW,1)));cv.setAttribute('height',cv.dataset.baseh);
       ({ctx,w,h}=fit(cv));draw();},
     play,
     setDone(){t=1;draw();cap.innerHTML=result;}
@@ -3583,7 +3583,7 @@ const OBSV={};
   const strength=()=>(11-(+sl.value))/10;
   function resize(){
     const w0=cv.clientWidth||cv.parentElement.clientWidth||320;
-    cv.setAttribute('height',Math.round(VH*Math.min(w0/VW,1)));
+    cv.dataset.baseh=String(Math.round(VH*Math.min(w0/VW,1)));cv.setAttribute('height',cv.dataset.baseh);
     ({ctx,w,h}=fit(cv));draw();}
 
   function draw(){
